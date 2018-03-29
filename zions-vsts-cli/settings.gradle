@@ -15,4 +15,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'zions-vsts-service-framework'
+rootProject.name = 'zions-vsts-cli'
