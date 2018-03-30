@@ -11,7 +11,6 @@ import com.zions.vsts.services.work.templates.service.ProcessTemplateService
 
 @Component
 class ImportWIT implements CliAction {
-	static public String IMPORTWIT = 'importwit'
 	ProcessTemplateService processTemplateService
 	Map actionsMap
 	
@@ -19,7 +18,6 @@ class ImportWIT implements CliAction {
 	public ImportWIT(Map actionsMap, ProcessTemplateService processTemplateService) {
 		this.actionsMap = actionsMap;
 		this.processTemplateService = processTemplateService
-		this.actionsMap.put('importwit', this)
 	}
 
 	@Override

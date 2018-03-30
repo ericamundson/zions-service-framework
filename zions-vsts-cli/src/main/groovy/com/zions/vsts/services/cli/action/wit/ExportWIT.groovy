@@ -10,7 +10,6 @@ import groovy.json.JsonBuilder
 
 @Component
 class ExportWIT implements CliAction {
-	static public String EXPORTWIT = 'exportwit'
 	ProcessTemplateService processTemplateService;
 	Map actionsMap;
 	
@@ -18,7 +17,6 @@ class ExportWIT implements CliAction {
 	public ExportWIT(Map actionsMap, ProcessTemplateService processTemplateService) {
 		this.actionsMap = actionsMap;
 		this.processTemplateService = processTemplateService
-		actionsMap.put('exportwit',this);
 	}
 
 	public def execute(ApplicationArguments data) {
