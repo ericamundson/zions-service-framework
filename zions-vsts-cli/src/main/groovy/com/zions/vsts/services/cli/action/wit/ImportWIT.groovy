@@ -1,40 +1,41 @@
-package com.zions.vsts.services.cli.action
+package com.zions.vsts.services.cli.action.wit;
+
+import java.util.Map
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
+
+import com.zions.vsts.services.cli.action.CliAction
 import com.zions.vsts.services.work.templates.service.ProcessTemplateService
-import groovy.json.JsonBuilder
 
 @Component
-class ExportWIT implements CliAction {
-	static public String EXPORTWIT = 'exportwit'
-	ProcessTemplateService processTemplateService;
-	Map actionsMap;
+class ImportWIT implements CliAction {
+	static public String IMPORTWIT = 'importwit'
+	ProcessTemplateService processTemplateService
+	Map actionsMap
 	
 	@Autowired
-	public ExportWIT(Map actionsMap, ProcessTemplateService processTemplateService) {
+	public ImportWIT(Map actionsMap, ProcessTemplateService processTemplateService) {
 		this.actionsMap = actionsMap;
 		this.processTemplateService = processTemplateService
-		actionsMap.put('exportwit',this);
+		this.actionsMap.put('importwit', this)
 	}
 
+	@Override
 	public def execute(ApplicationArguments data) {
 		String collection = data.getOptionValues('tfs.collection')[0]
 		String project = data.getOptionValues('tfs.project')[0]
 		String workItemName = data.getOptionValues('tfs.workitem.name')[0]
-		def template = processTemplateService.getWorkitemTemplate(collection, project, workItemName)
-		def outFile = data.getOptionValues('out.file.name')[0];
-		File oFile = new File(outFile);
-		def w = oFile.newWriter();
-		def json = new JsonBuilder(template)
-		w << json.toPrettyString()
-		w.close();
+		String inFile = data.getOptionValues('in.file.name')[0]
+		String body = new File(inFile).text
+		def template = processTemplateService.updateWorkitemTemplate(collection, project, workItemName, body)
 		return null;
 	}
 
+	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.collection', 'tfs.token', 'tfs.project', 'tfs.workitem.name','out.file.name']
+		def required = ['tfs.url', 'tfs.collection', 'tfs.token', 'tfs.project', 'tfs.workitem.name','in.file.name']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
@@ -43,6 +44,4 @@ class ExportWIT implements CliAction {
 		return true
 	}
 	
-
-
 }
