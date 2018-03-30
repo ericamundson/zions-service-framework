@@ -1,0 +1,3 @@
+rootProject.name = 'zions-vsts-service-framework'
+include ':zions-vsts-cli'
+include ':zions-vsts-services'

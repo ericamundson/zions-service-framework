@@ -1,4 +1,4 @@
-package com.zions.vsts.services.rest
+package com.zions.vsts.services.tfs.rest
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
@@ -6,23 +6,33 @@ import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient;
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
 
+@Component
 class GenericRestClient {
 	private RESTClient delegate;
 	
-	@Value('${tfs.url}')
-	private String tfsUrl;
 	
-	@Value('${tfs.token')
+	String tfsUrl;
+	
+	private String user;
+		
 	private String token
 
-	public GenericRestClient() {
+	@Autowired
+	public GenericRestClient(@Value('${tfs.url}') String tfsUrl,
+		@Value('${tfs.user}') String user,
+		@Value('${tfs.token}') String token) {
+		this.tfsUrl = tfsUrl
+		this.token = token;
+		this.user = user;
 		delegate = new RESTClient(tfsUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		setProxy()
-		setCredentials(token);
+		setCredentials(user, token);
 
 	}
 	def setProxy() {
@@ -41,8 +51,8 @@ class GenericRestClient {
 		}
 	}
 	
-	void setCredentials(String token) {
-		String auth = "$token".bytes.encodeBase64()
+	void setCredentials(String user, String token) {
+		String auth = "$user:$token".bytes.encodeBase64()
 		delegate.headers['Authorization'] = 'Basic ' + auth
 		
 	}
@@ -51,11 +61,29 @@ class GenericRestClient {
 		HttpResponseDecorator resp = delegate.get(input)
 		JsonOutput t
 		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
-		println out
 		if ("${out}" == 'null') return null
 		JsonSlurper sl = new JsonSlurper()
 		def oOut = sl.parseText(out)
 		return oOut;
 	}
 	
+	def put(Map input) {
+		HttpResponseDecorator resp = delegate.put(input)
+		JsonOutput t
+		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
+		if ("${out}" == 'null') return null
+		JsonSlurper sl = new JsonSlurper()
+		def oOut = sl.parseText(out)
+		return oOut;
+	}
+	
+	def post(Map input) {
+		HttpResponseDecorator resp = delegate.post(input)
+		JsonOutput t
+		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
+		if ("${out}" == 'null') return null
+		JsonSlurper sl = new JsonSlurper()
+		def oOut = sl.parseText(out)
+		return oOut;
+	}
 }

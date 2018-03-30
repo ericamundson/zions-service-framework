@@ -15,5 +15,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'zions-vsts-cli'
-include 'zions-vsts-services'
+rootProject.name = 'zions-vsts-services'
