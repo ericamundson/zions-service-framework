@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @Slf4j
-class CliApplication implements ApplicationRunner {
+public class CliApplication implements ApplicationRunner {
 	
 	@Autowired
 	private Map<String, CliAction> actionsMap;
