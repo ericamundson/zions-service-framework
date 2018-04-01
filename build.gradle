@@ -26,6 +26,7 @@ allprojects {
     if ("${buildType}" == 'ci') {
         apply plugin: 'codenarc'
     }
+    
     bootJar {
         enabled = false
     }
