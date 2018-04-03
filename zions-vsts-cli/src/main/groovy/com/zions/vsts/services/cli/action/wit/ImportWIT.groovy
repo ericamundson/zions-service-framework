@@ -28,12 +28,15 @@ class ImportWIT implements CliAction {
 		String inFile = data.getOptionValues('in.file.name')[0]
 		String body = new File(inFile).text
 		def template = processTemplateService.updateWorkitemTemplate(collection, project, workItemName, body)
+		if (template == null) {
+			throw new Exception('Unable to update WIT');
+		}
 		return null;
 	}
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.collection', 'tfs.token', 'tfs.project', 'tfs.workitem.name','in.file.name']
+		def required = ['tfs.url', 'tfs.user', 'tfs.collection', 'tfs.token', 'tfs.project', 'tfs.workitem.name','in.file.name']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

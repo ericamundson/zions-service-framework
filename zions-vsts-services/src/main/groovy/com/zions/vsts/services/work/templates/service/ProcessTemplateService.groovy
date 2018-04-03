@@ -37,13 +37,12 @@ public class ProcessTemplateService  {
 	public def updateWorkitemTemplate(String collection, String project,  String workItemName, String body) {
 		def aproject = URLEncoder.encode(project).replace('+', '%20')
 		def aworkItemName = URLEncoder.encode(workItemName).replace('+', '%20')
-		def result = genericRestClient.post(
+		def result = genericRestClient.put(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${aproject}/_apis/wit/workItemTypes/${aworkItemName}",
 			body: body,
 			headers: [Accept: 'application/json']
 			)
-
 		return result;
 	}
 

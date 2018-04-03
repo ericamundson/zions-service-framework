@@ -69,7 +69,10 @@ class GenericRestClient {
 	
 	def put(Map input) {
 		HttpResponseDecorator resp = delegate.put(input)
-		JsonOutput t
+		
+		if (resp.status != 200) {
+			return null;
+		}
 		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
 		if ("${out}" == 'null') return null
 		JsonSlurper sl = new JsonSlurper()
@@ -77,6 +80,26 @@ class GenericRestClient {
 		return oOut;
 	}
 	
+	def delete(Map input) {
+		HttpResponseDecorator resp = delegate.delete(input)
+		if (resp.status != 204) {
+			return null;
+		}
+	}
+	
+	def patch(Map input) {
+		HttpResponseDecorator resp = delegate.patch(input)
+		
+		if (resp.status != 200) {
+			return null;
+		}
+		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
+		if ("${out}" == 'null') return null
+		JsonSlurper sl = new JsonSlurper()
+		def oOut = sl.parseText(out)
+		return oOut;
+	}
+
 	def post(Map input) {
 		HttpResponseDecorator resp = delegate.post(input)
 		JsonOutput t

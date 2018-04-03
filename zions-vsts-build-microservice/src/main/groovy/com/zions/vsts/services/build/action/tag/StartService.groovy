@@ -1,4 +1,4 @@
-package com.zions.vsts.services.cli.action.wit
+package com.zions.vsts.services.build.action.tag
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
@@ -9,12 +9,12 @@ import com.zions.vsts.services.work.templates.service.ProcessTemplateService
 import groovy.json.JsonBuilder
 
 @Component
-class ExportWIT implements CliAction {
+class StartService implements CliAction {
 	ProcessTemplateService processTemplateService;
 	Map actionsMap;
 	
 	@Autowired
-	public ExportWIT(Map actionsMap, ProcessTemplateService processTemplateService) {
+	public StartService(Map actionsMap, ProcessTemplateService processTemplateService) {
 		this.actionsMap = actionsMap;
 		this.processTemplateService = processTemplateService
 	}
