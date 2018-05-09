@@ -1,4 +1,7 @@
-rootProject.name = 'zions-vsts-service-framework'
+rootProject.name = 'zions-service-framework'
 include ':zions-vsts-cli'
 include ':zions-vsts-services'
 include ':zions-vsts-build-microservice'
+include ':zions-clm-cli'
+include ':zions-clm-services'
+include ':zions-common'

@@ -7,4 +7,6 @@ bootJar {
 
 dependencies {
 	compile project(':zions-vsts-services')
+	compile project(':zions-common')
+	
 }

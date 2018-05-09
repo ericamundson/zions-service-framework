@@ -4,3 +4,7 @@ bootJar {
 jar {
 	enabled = true
 }
+dependencies {
+	compile project(':zions-common')
+	
+}

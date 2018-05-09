@@ -1,6 +1,6 @@
 package com.zions.vsts.services.build;
 
-import com.zions.vsts.services.cli.action.CliAction
+import com.zions.common.services.cli.action.CliAction
 import com.zions.vsts.services.work.templates.service.ProcessTemplateService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
