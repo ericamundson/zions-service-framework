@@ -1,0 +1,6 @@
+<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	<rdf:Description
+		rdf:about='https://localhost:9443/ccm/oslc/workitems/77?oslc_cm.properties=rtc_ext%3Acom.tmb.team.workitem.att.child_tasks1'>
+		<rdf:type rdf:resource='http://open-services.net/ns/cm#ChangeRequest'></rdf:type>
+	</rdf:Description>
+</rdf:RDF>

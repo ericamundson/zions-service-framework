@@ -100,7 +100,6 @@ public class GenericRestClient {
 				query: [j_username: this.userid, j_password: this.password],
 				requestContentType: 'application/x-www-form-urlencoded'
 			);
-			println resp.data
 
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
@@ -122,10 +121,17 @@ public class GenericRestClient {
 	
 	def get(Map input) {
 		HttpResponseDecorator resp = delegate.get(input)
+		
 		def out = resp.data;
+		//println new groovy.xml.StreamingMarkupBuilder().bindNode(out) as String
 		return out;
 	}
-	
+	def getWResponse(Map input) {
+		HttpResponseDecorator resp = delegate.get(input)
+		
+		return resp;
+	}
+
 	def put(Map input) {
 		HttpResponseDecorator resp = delegate.put(input)
 		
