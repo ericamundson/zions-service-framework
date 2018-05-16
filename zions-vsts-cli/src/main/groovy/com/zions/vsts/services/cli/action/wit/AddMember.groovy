@@ -7,18 +7,18 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.cli.action.CliAction
-import com.zions.vsts.services.admin.user.services.UserManagementService
+import com.zions.vsts.services.admin.user.services.MemberManagementService
 import com.zions.vsts.services.work.templates.service.ProcessTemplateService
 
 @Component
-class AddUsers implements CliAction {
-	UserManagementService userManagmentService
+class AddMember implements CliAction {
+	MemberManagementService memberManagmentService
 	Map actionsMap
 	
 	@Autowired
-	public AddUsers(Map actionsMap, UserManagementService userManagmentService) {
+	public AddMember(Map actionsMap, MemberManagementService memberManagmentService) {
 		this.actionsMap = actionsMap;
-		this.userManagmentService = userManagmentService
+		this.memberManagmentService = memberManagmentService
 	}
 
 	@Override
