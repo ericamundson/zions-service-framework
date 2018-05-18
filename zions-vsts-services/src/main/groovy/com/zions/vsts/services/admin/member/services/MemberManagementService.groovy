@@ -16,7 +16,8 @@ public class MemberManagementService {
 		
 	}
 	
-	public def addMember(String id, String role, String[] projects) {
+	public def addMember(String collection, String id,  String[] teams) {
+		def teamsData = getAllTeams(collection);
 		return null;
 	
 	}
@@ -46,7 +47,7 @@ public class MemberManagementService {
 				query: query
 				)
 			result.value.each { team ->
-				teams[team.name] = team
+				teams["${project.name}:${team.name}"] = team
 				
 			}
 			
