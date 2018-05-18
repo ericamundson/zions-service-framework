@@ -7,7 +7,7 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.cli.action.CliAction
-import com.zions.vsts.services.admin.member.services.MemberManagementService
+import com.zions.vsts.services.admin.member.MemberManagementService
 
 
 @Component

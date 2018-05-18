@@ -1,4 +1,4 @@
-package com.zions.vsts.services.admin.member.services;
+package com.zions.vsts.services.admin.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

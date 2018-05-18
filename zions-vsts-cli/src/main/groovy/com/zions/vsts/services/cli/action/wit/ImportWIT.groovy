@@ -7,7 +7,7 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.cli.action.CliAction
-import com.zions.vsts.services.work.templates.service.ProcessTemplateService
+import com.zions.vsts.services.work.templates.ProcessTemplateService
 
 @Component
 class ImportWIT implements CliAction {

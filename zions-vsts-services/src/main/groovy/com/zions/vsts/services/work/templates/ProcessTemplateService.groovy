@@ -1,4 +1,4 @@
-package com.zions.vsts.services.work.templates.service
+package com.zions.vsts.services.work.templates
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 
 import groovy.json.JsonBuilder

@@ -1,7 +1,8 @@
 package com.zions.vsts.services.build.rest
 
-import com.zions.vsts.services.build.service.BuildService
 import com.zions.common.services.model.response.Status
+import com.zions.vsts.services.build.BuildService
+
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
