@@ -1,7 +1,7 @@
 package com.zions.vsts.services.admin.rest
 
 import com.zions.common.services.model.response.Status
-import com.zions.vsts.services.admin.user.services.MemberManagementService
+import com.zions.vsts.services.admin.member.MemberManagementService
 
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,4 +1,4 @@
-package com.zions.vsts.services.build.service;
+package com.zions.vsts.services.build;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
