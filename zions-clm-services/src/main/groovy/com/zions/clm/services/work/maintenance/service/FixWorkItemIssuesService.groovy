@@ -11,14 +11,14 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service;
 
-import com.zions.clm.services.rtc.rest.GenericRestClient
+import com.zions.clm.services.rest.ClmGenericRestClient
 
 @Component
 public class FixWorkItemIssuesService  {
 
 
 	@Autowired(required=true)
-	private GenericRestClient genericRestClient;
+	private ClmGenericRestClient clmGenericRestClient;
 
 
 
@@ -59,9 +59,9 @@ public class FixWorkItemIssuesService  {
 				node.replaceNode {};
 			}
 			def body = new groovy.xml.StreamingMarkupBuilder().bindNode(rdf) as String
-			String uri = "${this.genericRestClient.clmUrl}/ccm/oslc/workitems/${workitem.id.text()}"
+			String uri = "${this.clmGenericRestClient.clmUrl}/ccm/oslc/workitems/${workitem.id.text()}"
 			def query = ['oslc_cm.properties': 'rtc_ext:com.tmb.team.workitem.att.child_tasks1']
-			def result = genericRestClient.put(
+			def result = clmGenericRestClient.put(
 					uri: uri,
 					headers: ['Content-Type': 'application/rdf+xml', Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0','If-Match':childFieldData.etag],
 					requestContentType: 'application/xml',
@@ -75,8 +75,8 @@ public class FixWorkItemIssuesService  {
 	private def getDefects(String project) {
 		def query = "workitem/workItem[projectArea/name='${project}' and type/id='defect']/(id|itemId|stateId|contextId|projectArea/itemId|projectArea/stateId)"
 		def encoded = URLEncoder.encode(query, 'UTF-8')
-		String uri = this.genericRestClient.clmUrl + "/ccm/rpt/repository/workitem?fields=" + encoded;
-		def result = genericRestClient.get(
+		String uri = this.clmGenericRestClient.clmUrl + "/ccm/rpt/repository/workitem?fields=" + encoded;
+		def result = clmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'text/xml'] );
 		//println result;
@@ -84,9 +84,9 @@ public class FixWorkItemIssuesService  {
 	}
 
 	private getDefectChildField(String id) {
-		String uri = "${this.genericRestClient.clmUrl}/ccm/oslc/workitems/${id}"
+		String uri = "${this.clmGenericRestClient.clmUrl}/ccm/oslc/workitems/${id}"
 		def query = ['oslc_cm.properties': 'rtc_ext:com.tmb.team.workitem.att.child_tasks1']
-		def result = genericRestClient.getWResponse(
+		def result = clmGenericRestClient.getWResponse(
 				uri: uri,
 				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'],
 				requestContentType: 'application/rdf+xml',
@@ -96,7 +96,7 @@ public class FixWorkItemIssuesService  {
 		return childData
 	}
 	private nextPage(String url) {
-		def result = genericRestClient.get(
+		def result = clmGenericRestClient.get(
 				uri: url,
 				headers: [Accept: 'text/xml']
 				)
