@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ComponentScan("com.zions.vsts.services")
+@ComponentScan(["com.zions.vsts.services","com.zions.clm.services"])
 public class AppConfig {
 	Map<String, CliAction> actions;
 	

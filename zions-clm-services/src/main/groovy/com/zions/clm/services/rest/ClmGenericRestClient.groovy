@@ -1,4 +1,4 @@
-package com.zions.clm.services.rtc.rest;
+package com.zions.clm.services.rest;
 
 import groovy.json.JsonBuilder
 import groovy.json.JsonOutput
@@ -53,7 +53,7 @@ import org.springframework.stereotype.Component
 @SuppressWarnings("deprecation")
 //@Slf4j
 @Component
-public class GenericRestClient {
+public class ClmGenericRestClient {
 	private RESTClient delegate;
 	
 	String userid = "";
@@ -61,7 +61,7 @@ public class GenericRestClient {
 	public String clmUrl = "";
 	
 	@Autowired
-	public GenericRestClient(@Value('${clm.url}') String clmUrl, @Value('${clm.user}') String userid, @Value('${clm.password}') String password) {
+	public ClmGenericRestClient(@Value('${clm.url}') String clmUrl, @Value('${clm.user}') String userid, @Value('${clm.password}') String password) {
 		this.clmUrl = clmUrl;
 		this.userid = userid;
 		this.password = password;

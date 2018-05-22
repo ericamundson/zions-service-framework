@@ -2,56 +2,55 @@ package com.zions.vsts.services.admin.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient;
-
+import groovy.json.JsonBuilder
 import groovyx.net.http.ContentType
 
 @Component
 public class MemberManagementService {
 	@Autowired(required=true)
 	private GenericRestClient genericRestClient;
+	
+	@Autowired(required=true)
+	private ProjectManagementService projectManagementService
 
 	public MemberManagementService() {
 		
 	}
 	
-	public def addMember(String collection, String id,  String[] teams) {
-		def teamsData = getAllTeams(collection);
+	public def addMember(String collection, String id,  def teams) {
+		teams.each { team ->
+			try {
+				def tTeam = projectManagementService.ensureTeam(collection, team.project, team.team)
+				if (tTeam != null) {
+					addToTeam(collection, id, tTeam)
+				}
+				
+			} catch (e) {}
+		}
 		return null;
 	
 	}
 	
-	public def getAllProjects(String collection) {
-		def query = ['api-version':'4.0']
-		def result = genericRestClient.get(
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects",
+	/**
+	 * Accessing TFS private rest API to perform adding a member to a team.
+	 * 
+	 * @param collection
+	 * @param id
+	 * @param team
+	 * @return
+	 */
+	private def addToTeam(String collection, String id, def team) {
+		def req = [ 'aadGroups': "[]", 'exitingUsersJson': "[]", 'groupsToJoinJson': "[\"${team.id}\"]", 'newUsersJson': "[\"ZBC\\\\${id}\"]" ]
+		def body = new JsonBuilder( req ).toString()
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${team.projectId}/${team.id}/_api/_identity/AddIdentities",
+			query: ['__v': '5'],
+			body: body,
 			headers: [Accept: 'application/json'],
-			query: query
 			)
-		return result
-
 	}
 	
-	public def getAllTeams(String collection) {
-		def projects = getAllProjects(collection)
-		def teams = [:]
-		def query = ['api-version':'4.0']
-		projects.value.each { project -> 
-			def name = project.name
-			def result = genericRestClient.get(
-				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${name}/teams",
-				headers: [Accept: 'application/json'],
-				query: query
-				)
-			result.value.each { team ->
-				teams["${project.name}:${team.name}"] = team
-				
-			}
-			
-		}
-		return teams
-	}
 }
