@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>zions-clm-cli</name>
-	<comment>Project zions-vsts-cli created by Buildship.</comment>
+	<name>zions-ext-services</name>
+	<comment>Project zions-clm-services created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>

@@ -1,11 +1,11 @@
 bootJar {
 	enabled = true
 	mainClassName = 'com.zion.vsts.services.cli.CliApplication'
-	baseName = 'zions-clm-cli'
+	baseName = 'zions-ext-cli'
 	version =  '0.1.0'
 }
 
 dependencies {
-	compile project(':zions-clm-services')
+	compile project(':zions-ext-services')
 	compile project(':zions-common')
 }

@@ -15,7 +15,7 @@ class ProjectManagementService {
 		
 	}
 	
-	private boolean getProject(String collection, String name) {
+	public def getProject(String collection, String name) {
 		def query = ['api-version':'4.0']
 		def eproject = URLEncoder.encode(name, 'UTF-8')
 		def result = genericRestClient.get(
