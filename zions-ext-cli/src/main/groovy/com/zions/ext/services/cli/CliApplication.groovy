@@ -1,4 +1,4 @@
-package com.zions.clm.services.cli;
+package com.zions.ext.services.cli;
 
 import com.zions.clm.services.work.maintenance.service.FixWorkItemIssuesService
 import com.zions.common.services.cli.action.CliAction

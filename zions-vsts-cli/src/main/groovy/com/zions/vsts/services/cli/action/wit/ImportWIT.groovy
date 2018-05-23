@@ -12,11 +12,9 @@ import com.zions.vsts.services.work.templates.ProcessTemplateService
 @Component
 class ImportWIT implements CliAction {
 	ProcessTemplateService processTemplateService
-	Map actionsMap
 	
 	@Autowired
-	public ImportWIT(Map actionsMap, ProcessTemplateService processTemplateService) {
-		this.actionsMap = actionsMap;
+	public ImportWIT(ProcessTemplateService processTemplateService) {
 		this.processTemplateService = processTemplateService
 	}
 

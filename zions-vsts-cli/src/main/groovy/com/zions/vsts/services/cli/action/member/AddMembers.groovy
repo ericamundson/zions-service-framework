@@ -14,11 +14,9 @@ import groovy.json.JsonSlurper
 @Component
 class AddMembers implements CliAction {
 	MemberManagementService memberManagmentService
-	Map actionsMap
 	
 	@Autowired
-	public AddMembers(Map actionsMap, MemberManagementService memberManagmentService) {
-		this.actionsMap = actionsMap;
+	public AddMembers(MemberManagementService memberManagmentService) {
 		this.memberManagmentService = memberManagmentService
 	}
 

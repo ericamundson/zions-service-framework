@@ -12,11 +12,9 @@ import groovy.json.JsonBuilder
 @Component
 class ExportWIT implements CliAction {
 	ProcessTemplateService processTemplateService;
-	Map actionsMap;
 	
 	@Autowired
-	public ExportWIT(Map actionsMap, ProcessTemplateService processTemplateService) {
-		this.actionsMap = actionsMap;
+	public ExportWIT(ProcessTemplateService processTemplateService) {
 		this.processTemplateService = processTemplateService
 	}
 

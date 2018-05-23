@@ -1,4 +1,4 @@
-package com.zions.vsts.services.cli.action.member;
+package com.zions.clm.services.cli.action.member;
 
 import java.util.Map
 
@@ -15,11 +15,9 @@ import groovy.json.JsonSlurper
 class SyncProjectWithRTCMembers implements CliAction {
 	MemberManagementService memberManagmentService
 	CcmMemberManagementService ccmMemberManagmentService
-	Map actionsMap
 	
 	@Autowired
-	public SyncProjectWithRTCMembers(Map actionsMap, MemberManagementService memberManagmentService, CcmMemberManagementService ccmMemberManagmentService) {
-		this.actionsMap = actionsMap;
+	public SyncProjectWithRTCMembers(MemberManagementService memberManagmentService, CcmMemberManagementService ccmMemberManagmentService) {
 		this.memberManagmentService = memberManagmentService
 		this.ccmMemberManagmentService = ccmMemberManagmentService;
 	}

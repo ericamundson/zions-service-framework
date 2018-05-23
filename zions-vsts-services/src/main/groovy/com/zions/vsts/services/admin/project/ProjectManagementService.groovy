@@ -18,6 +18,7 @@ class ProjectManagementService {
 	public def getProject(String collection, String name) {
 		def query = ['api-version':'4.0']
 		def eproject = URLEncoder.encode(name, 'UTF-8')
+		eproject = eproject.replace('+', '%20')
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${eproject}",
