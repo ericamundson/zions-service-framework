@@ -59,7 +59,7 @@ public class CcmMemberManagementService {
 			out.add([id: key, teams: val])
 		}
 		def json = new JsonBuilder(['members': out]).toPrettyString()
-		println json
+		//println json
 		return ['members': out]
 	}
 
