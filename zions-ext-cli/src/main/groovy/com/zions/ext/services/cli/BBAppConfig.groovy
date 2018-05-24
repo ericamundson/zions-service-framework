@@ -11,12 +11,4 @@ import org.springframework.context.annotation.Profile
 @Profile("bb")
 @ComponentScan(["com.zions.vsts.services","com.zions.bb.services","com.zions.ext.services"])
 public class BBAppConfig {
-	Map<String, CliAction> actions;
-	
-	@Bean
-	public Map<String, CliAction> actionsMap() {
-		if (actions == null)
-			actions = [:];
-		return actions;
-	}
 }

@@ -17,8 +17,9 @@ public class EndpointManagementService {
 		
 	}
 	public def createServiceEndpoint(String collection, String projectId, String repoUrl, String bbUser, String bbPassword) {
-		def epname = RandomStringUtils.random(5,true,true)
-		def query = ['api-version':'4.1']
+		def epname = RandomStringUtils.random(5,true,false)
+		epname = epname.toLowerCase()
+		def query = ['api-version':'4.1-preview.2']
 		def reqObj = [name: epname, type:'git', url: repoUrl, authorization: [parameters: [password: bbPassword, username: bbUser], scheme:'UsernamePassword']]
 		def body = new JsonBuilder(reqObj).toString()
 		ContentType t

@@ -12,11 +12,9 @@ import groovy.json.JsonBuilder
 @Component
 class ClearDefectTaskType implements CliAction {
 	FixWorkItemIssuesService fixWorkItemIssuesService;
-	Map actionsMap;
 	
 	@Autowired
-	public ClearDefectTaskType(Map actionsMap, FixWorkItemIssuesService fixWorkItemIssuesService) {
-		this.actionsMap = actionsMap;
+	public ClearDefectTaskType(FixWorkItemIssuesService fixWorkItemIssuesService) {
 		this.fixWorkItemIssuesService = fixWorkItemIssuesService
 	}
 
