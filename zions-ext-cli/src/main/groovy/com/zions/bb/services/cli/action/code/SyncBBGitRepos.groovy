@@ -27,11 +27,13 @@ class SyncBBGitRepos implements CliAction {
 		String collection = data.getOptionValues('tfs.collection')[0]
 		String project = data.getOptionValues('bb.project')[0]
 		String outproject = data.getOptionValues('tfs.project')[0]
-		def repoData = bBCodeManagmentService.getProjectRepoData(project)
-//		memberData.members.each { member ->
-//			def teams = memberManagmentService.addMember(collection, member.id, member.teams)
-//			
-//		}
+		String bbUser = data.getOptionValues('bb.user')[0]
+		String bbPassword = data.getOptionValues('bb.password')[0]
+		def repos = bBCodeManagmentService.getProjectRepoUrls(project)
+		repos.each { repo ->
+			def url = repo.url.replace("${bbUser}@", '')
+			codeManagmentService.importRepo(collection, outproject, repo.name, url, bbUser, bbPassword)			
+		}
 		return null;
 	}
 

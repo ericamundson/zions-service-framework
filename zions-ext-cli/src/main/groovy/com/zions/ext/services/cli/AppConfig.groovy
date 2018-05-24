@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-
+import org.springframework.context.annotation.Profile
 import com.zions.common.services.cli.action.CliAction
 
 @Configuration
-@ComponentScan(["com.zions.ext.services","com.zions.clm.services"])
+@Profile("default")
+@ComponentScan(["com.zions.ext.services"])
 public class AppConfig {
 	Map<String, CliAction> actions;
 	

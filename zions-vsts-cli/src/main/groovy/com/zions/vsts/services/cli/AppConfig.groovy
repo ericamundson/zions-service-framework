@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile
 
 @Configuration
 @Profile("default")
-@ComponentScan(["com.zions.vsts.services","com.zions.clm.services","com.zions.bb.services"])
+@ComponentScan(["com.zions.vsts.services"])
 public class AppConfig {
 	Map<String, CliAction> actions;
 	
