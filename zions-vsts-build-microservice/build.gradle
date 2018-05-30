@@ -1,7 +1,7 @@
 bootJar {
 	enabled = true
 	mainClassName = 'com.zions.vsts.services.build.BuildApplication'
-	baseName = 'zions-vsts-build'
+	baseName = 'zions-vsts-build-microservice'
 	version =  '0.1.0'
 }
 
