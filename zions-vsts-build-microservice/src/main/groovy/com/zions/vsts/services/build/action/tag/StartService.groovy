@@ -12,11 +12,9 @@ import groovy.json.JsonBuilder
 @Component
 class StartService implements CliAction {
 	ProcessTemplateService processTemplateService;
-	Map actionsMap;
 	
 	@Autowired
-	public StartService(Map actionsMap, ProcessTemplateService processTemplateService) {
-		this.actionsMap = actionsMap;
+	public StartService(ProcessTemplateService processTemplateService) {
 		this.processTemplateService = processTemplateService
 	}
 
