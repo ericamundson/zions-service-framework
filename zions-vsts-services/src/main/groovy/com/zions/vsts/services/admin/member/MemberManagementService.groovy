@@ -53,4 +53,26 @@ public class MemberManagementService {
 			)
 	}
 	
+	public def getMember(def collection, def signin) {
+		def req = [ 'filterByAncestorEntityIds': [], 
+			filterByEntityIds:[], 
+			identityTypes: ['user', 'group'], 
+			operationScopes: ['ims','source'],
+			properties: ['displayName', 'id', 'imageUrl', 'uniqueName', 'url', '_links'],
+			filterByAncestorEntityIds: [],
+			filterByEntityIds: [],
+			options: [MinResults:40, MaxResults: 40],
+			queryTypeHint: 'uid',
+			query: signin  ]
+		def body = new JsonBuilder( req ).toString()
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
+			query: ['api-version': '4.1'],
+			body: body,
+			headers: [Accept: 'application/json'],
+			)
+
+	}
+	
 }

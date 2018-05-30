@@ -1,7 +1,7 @@
 package com.zions.vsts.services.build.rest
 
 import com.zions.common.services.model.response.Status
-import com.zions.vsts.services.build.BuildService
+import com.zions.vsts.services.build.BuildManagementService
 
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod
 class BuildEndPoint {
 	
 	@Autowired
-	BuildService buildService
+	BuildManagementService buildManagementService
 	
 	@RequestMapping(value = "/tag", method = RequestMethod.POST)
 	public ResponseEntity tag(@RequestBody String json) {
 		JsonSlurper slurper = new JsonSlurper()
 		def buildData = slurper.parseText(json)
-		buildService.provideTag(buildData)
+		buildManagementService.provideTag(buildData)
 		return ResponseEntity.ok(HttpStatus.OK)
 	}
 

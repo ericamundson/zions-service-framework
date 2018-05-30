@@ -45,6 +45,7 @@ class CodeManagementService {
 		return result
 
 	}
+	
 	public def getRepo(String collection, def project, String repoName) {
 		def query = ['api-version':'4.1']
 		def repoNameE = URLEncoder.encode(repoName, 'UTF-8')
@@ -57,6 +58,28 @@ class CodeManagementService {
 		return result
 
 	}
+	public def getRepos(String collection, def project) {
+		def query = ['api-version':'4.1']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories",
+			query: query,
+			)
+		return result
+
+	}
+
+	public def listTopLevel(def collection, def project, def repo) {
+		def query = ['api-version':'4.1','scopePath':'/', 'recursionLevel':'OneLevel']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/items",
+			query: query,
+			)
+		return result
+
+	}
+
 
 	public def importRepo(String collection, String project, String repoName, String importUrl, String bbUser, String bbPassword) {
 		def projectData = projectManagementService.getProject(collection, project)
