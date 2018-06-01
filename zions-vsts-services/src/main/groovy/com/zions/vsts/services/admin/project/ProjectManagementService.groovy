@@ -15,14 +15,18 @@ class ProjectManagementService {
 		
 	}
 	
-	public def getProject(String collection, String name) {
+	public def getProject(String collection, String name, boolean noUrl = false) {
 		def query = ['api-version':'4.0']
+		def headers = [Accept: 'application/json']
+		if (noUrl) {
+			headers.Accept = 'application/json;excludeUrls=true'
+		}
 		def eproject = URLEncoder.encode(name, 'UTF-8')
 		eproject = eproject.replace('+', '%20')
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${eproject}",
-			headers: [Accept: 'application/json'],
+			headers: headers,
 			query: query
 			)
 		return result
