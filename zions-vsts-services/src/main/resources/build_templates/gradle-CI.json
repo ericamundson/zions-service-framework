@@ -1,181 +1,228 @@
 {
-	"options": [
-		{
-			"enabled": true,
-			"definition": {
-				"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
-			},
-			"inputs": {
-				"branchFilters": "[\"+refs/heads/*\"]",
-				"additionalFields": "{}"
-			}
-		},
-		{
-			"enabled": false,
-			"definition": {
-				"id": "a9db38f9-9fdc-478c-b0f9-464221e58316"
-			},
-			"inputs": {
-				"workItemType": "69",
-				"assignToRequestor": "true",
-				"additionalFields": "{}"
-			}
-		}
-	],
-	"variables": {
-		"system.debug": {
-			"value": "false",
-			"allowOverride": true
-		}
-	},
-	"retentionRules": [
-		{
-			"branches": [
-				"+refs/heads/*"
-			],
-			"artifacts": [],
-			"artifactTypesToDelete": [
-				"FilePath",
-				"SymbolStore"
-			],
-			"daysToKeep": 10,
-			"minimumToKeep": 1,
-			"deleteBuildRecord": true,
-			"deleteTestResults": true
-		}
-	],
-	"properties": {
-		
-	},
-	"tags": [],
-	"_links": {
-		"self": {
-			"href": "http://localhost:8080/tfs/DefaultCollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/5?revision=3"
-		},
-		"web": {
-			"href": "http://utmsdev0527:8080/tfs/_permalink/_build/index?collectionId=66f2d84a-3301-4b68-b2fc-19432702b3df&projectId=4f9d558a-5a3f-483e-9c9c-7b7f9532e925&definitionId=5"
-		},
-		"editor": {
-			"href": "http://utmsdev0527:8080/tfs/_permalink/_build/definitionEditor?collectionId=66f2d84a-3301-4b68-b2fc-19432702b3df&projectId=4f9d558a-5a3f-483e-9c9c-7b7f9532e925&definitionId=5"
-		}
-	},
-	"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
-	"comment": "rename",
-	"jobAuthorizationScope": 1,
-	"jobTimeoutInMinutes": 60,
-	"jobCancelTimeoutInMinutes": 5,
-	"process": {
-		"phases": [
-			{
-				"steps": [
-					{
-						"environment": {
-							
-						},
-						"enabled": true,
-						"continueOnError": false,
-						"alwaysRun": false,
-						"displayName": "gradlew build",
-						"timeoutInMinutes": 0,
-						"task": {
-							"id": "8d8eebd8-2b94-4c97-85af-839254cc6da4",
-							"versionSpec": "2.*",
-							"definitionType": "task"
-						},
-						"inputs": {
-							"wrapperScript": "gradlew",
-							"options": "",
-							"tasks": "build",
-							"cwd": "",
-							"publishJUnitResults": "true",
-							"testResultsFiles": "**/build/test-results/TEST-*.xml",
-							"testRunTitle": "",
-							"codeCoverageTool": "None",
-							"classFilesDirectories": "build/classes/main/",
-							"classFilter": "",
-							"failIfCoverageEmpty": "false",
-							"javaHomeSelection": "JDKVersion",
-							"jdkVersion": "default",
-							"jdkUserInputPath": "",
-							"jdkArchitecture": "x64",
-							"gradleOpts": "-Xmx1024m",
-							"sqAnalysisEnabled": "false",
-							"sqGradlePluginVersionChoice": "specify",
-							"sqGradlePluginVersion": "2.6.1",
-							"checkstyleAnalysisEnabled": "false",
-							"findbugsAnalysisEnabled": "false",
-							"pmdAnalysisEnabled": "false"
-						}
-					}
-				],
-				"name": "Phase 1",
-				"refName": "Phase_1",
-				"condition": "succeeded()",
-				"target": {
-					"executionOptions": {
-						"type": 0
-					},
-					"allowScriptsAuthAccessOption": false,
-					"type": 1
-				},
-				"jobAuthorizationScope": "projectCollection",
-				"jobCancelTimeoutInMinutes": 1
-			}
-		],
-		"type": 1
-	},
-	"repository": {
-		"properties": {
-			"cleanOptions": "0",
-			"labelSources": "0",
-			"labelSourcesFormat": "$(build.buildNumber)",
-			"reportBuildStatus": "true",
-			"gitLfsSupport": "false",
-			"skipSyncSource": "false",
-			"checkoutNestedSubmodules": "false",
-			"fetchDepth": "0"
-		},
-		"id": "d6925ccd-14b4-40a0-802d-8a9b5efcca18",
-		"type": "TfsGit",
-		"name": "rrm-to-rqm",
-		"url": "http://utmsdev0527:8080/tfs/DefaultCollection/Zions%20Tools%20Project/_git/rrm-to-rqm",
-		"defaultBranch": "refs/heads/master",
-		"clean": "false",
-		"checkoutSubmodules": false
-	},
-	"processParameters": {
-		
-	},
-	"quality": 1,
-	"authoredBy": {
-		"displayName": "Eric Amundson",
-		"url": "http://localhost:8080/tfs/DefaultCollection/_apis/Identities/3f50876c-2019-48b7-9835-f9d2488938b4",
-		"_links": {
-			"avatar": {
-				"href": "http://utmsdev0527:8080/tfs/DefaultCollection/_api/_common/identityImage?id=3f50876c-2019-48b7-9835-f9d2488938b4"
-			}
-		},
-		"id": "3f50876c-2019-48b7-9835-f9d2488938b4",
-		"uniqueName": "ZBC\\z091182",
-		"imageUrl": "http://utmsdev0527:8080/tfs/DefaultCollection/_api/_common/identityImage?id=3f50876c-2019-48b7-9835-f9d2488938b4"
-	},
-	"drafts": [],
-	"queue": {
-		"_links": {
-			"self": {
-				"href": "http://localhost:8080/tfs/DefaultCollection/_apis/build/Queues/4"
-			}
-		},
-		"id": 4,
-		"name": "Default",
-		"url": "http://localhost:8080/tfs/DefaultCollection/_apis/build/Queues/4",
-		"pool": {
-			"id": 1,
-			"name": "Default"
-		}
-	},
-	"id": 5,
-	"name": "gradle-CI",
-	"url": "http://localhost:8080/tfs/DefaultCollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/5?revision=3",
-	"uri": "vstfs:///Build/Definition/5",
-	"path": "\\","type":2,"queueStatus":0,"revision":3,"createdDate":"2018-05-29T13:47:29.580Z","project":{"id":"4f9d558a-5a3f-483e-9c9c-7b7f9532e925","name":"ZionsToolsProject","description":"Testmembersync","url":"http://localhost:8080/tfs/DefaultCollection/_apis/projects/4f9d558a-5a3f-483e-9c9c-7b7f9532e925","state":"wellFormed","revision":88,"visibility":0}}"\\","type":2,"queueStatus":0,"revision":3,"createdDate":"2018-05-29T13:47:29.580Z","project":{"id":"4f9d558a-5a3f-483e-9c9c-7b7f9532e925","name":"Zions Tools Project","description":"Test member sync","url":"http://localhost:8080/tfs/DefaultCollection/_apis/projects/4f9d558a-5a3f-483e-9c9c-7b7f9532e925","state":"wellFormed","revision":88,"visibility":0}}
+    "options": [
+        {
+            "enabled": true,
+            "definition": {
+                "id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+            },
+            "inputs": {
+                "branchFilters": "[\"+refs/heads/*\"]",
+                "additionalFields": "{}"
+            }
+        },
+        {
+            "enabled": false,
+            "definition": {
+                "id": "a9db38f9-9fdc-478c-b0f9-464221e58316"
+            },
+            "inputs": {
+                "workItemType": "69",
+                "assignToRequestor": "true",
+                "additionalFields": "{}"
+            }
+        }
+    ],
+    "variables": {
+        "system.debug": {
+            "value": "false",
+            "allowOverride": true
+        }
+    },
+    "retentionRules": [
+        {
+            "branches": [
+                "+refs/heads/*"
+            ],
+            "artifacts": [
+                
+            ],
+            "artifactTypesToDelete": [
+                "FilePath",
+                "SymbolStore"
+            ],
+            "daysToKeep": 10,
+            "minimumToKeep": 1,
+            "deleteBuildRecord": true,
+            "deleteTestResults": true
+        }
+    ],
+    "properties": {
+        
+    },
+    "tags": [
+        
+    ],
+    "_links": {
+        "self": {
+            "href": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/10?revision=1"
+        },
+        "web": {
+            "href": "http://utmsdev0527:8080/tfs/_permalink/_build/index?collectionId=66f2d84a-3301-4b68-b2fc-19432702b3df&projectId=4f9d558a-5a3f-483e-9c9c-7b7f9532e925&definitionId=10"
+        },
+        "editor": {
+            "href": "http://utmsdev0527:8080/tfs/_permalink/_build/definitionEditor?collectionId=66f2d84a-3301-4b68-b2fc-19432702b3df&projectId=4f9d558a-5a3f-483e-9c9c-7b7f9532e925&definitionId=10"
+        }
+    },
+    "buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+    "comment": "test",
+    "jobAuthorizationScope": "projectCollection",
+    "jobTimeoutInMinutes": 60,
+    "jobCancelTimeoutInMinutes": 5,
+    "process": {
+        "phases": [
+            {
+                "steps": [
+                    {
+                        "environment": {
+                            
+                        },
+                        "enabled": true,
+                        "continueOnError": false,
+                        "alwaysRun": false,
+                        "displayName": "gradlew build",
+                        "timeoutInMinutes": 0,
+                        "task": {
+                            "id": "8d8eebd8-2b94-4c97-85af-839254cc6da4",
+                            "versionSpec": "2.*",
+                            "definitionType": "task"
+                        },
+                        "inputs": {
+                            "wrapperScript": "$(Parameters.wrapperScript)",
+                            "options": "",
+                            "tasks": "$(Parameters.tasks)",
+                            "cwd": "",
+                            "publishJUnitResults": "true",
+                            "testResultsFiles": "**/build/test-results/TEST-*.xml",
+                            "testRunTitle": "",
+                            "codeCoverageTool": "None",
+                            "classFilesDirectories": "build/classes/main/",
+                            "classFilter": "",
+                            "failIfCoverageEmpty": "false",
+                            "javaHomeSelection": "JDKVersion",
+                            "jdkVersion": "default",
+                            "jdkUserInputPath": "",
+                            "jdkArchitecture": "x64",
+                            "gradleOpts": "-Xmx1024m",
+                            "sqAnalysisEnabled": "false",
+                            "sqGradlePluginVersionChoice": "specify",
+                            "sqGradlePluginVersion": "2.6.1",
+                            "checkstyleAnalysisEnabled": "false",
+                            "findbugsAnalysisEnabled": "false",
+                            "pmdAnalysisEnabled": "false"
+                        }
+                    }
+                ],
+                "name": "Phase 1",
+                "refName": "Phase_1",
+                "condition": "succeeded()",
+                "target": {
+                    "executionOptions": {
+                        "type": 0
+                    },
+                    "allowScriptsAuthAccessOption": false,
+                    "type": 1
+                },
+                "jobAuthorizationScope": "projectCollection",
+                "jobCancelTimeoutInMinutes": 1
+            }
+        ],
+        "type": 1
+    },
+    "repository": {
+        "properties": {
+            "cleanOptions": "0",
+            "labelSources": "0",
+            "labelSourcesFormat": "$(build.buildNumber)",
+            "reportBuildStatus": "true",
+            "gitLfsSupport": "false",
+            "skipSyncSource": "false",
+            "checkoutNestedSubmodules": "false",
+            "fetchDepth": "0"
+        },
+        "id": "609b8c74-0ef2-4c6b-8330-27640f0f38bf",
+        "type": "TfsGit",
+        "name": "udeploy-extensions",
+        "url": "http://utmsdev0527:8080/tfs/DefaultCollection/Zions%20Tools%20Project/_git/udeploy-extensions",
+        "defaultBranch": "refs/heads/master",
+        "clean": "false",
+        "checkoutSubmodules": false
+    },
+    "processParameters": {
+        "inputs": [
+            {
+                "aliases": [
+                    
+                ],
+                "options": {
+                    
+                },
+                "properties": {
+                    
+                },
+                "name": "wrapperScript",
+                "label": "Gradle wrapper",
+                "defaultValue": "gradlew",
+                "required": true,
+                "type": "filePath",
+                "helpMarkDown": "Relative path from the repository root to the Gradle Wrapper script.",
+                "visibleRule": "",
+                "groupName": ""
+            },
+            {
+                "aliases": [
+                    
+                ],
+                "options": {
+                    
+                },
+                "properties": {
+                    
+                },
+                "name": "tasks",
+                "label": "Tasks",
+                "defaultValue": "build",
+                "required": true,
+                "type": "string",
+                "helpMarkDown": "",
+                "visibleRule": "",
+                "groupName": ""
+            }
+        ]
+    },
+    "quality": "definition",
+    "drafts": [
+        
+    ],
+    "queue": {
+        "_links": {
+            "self": {
+                "href": "http://localhost:8080/tfs/defaultcollection/_apis/build/Queues/4"
+            }
+        },
+        "id": 4,
+        "name": "Default",
+        "url": "http://localhost:8080/tfs/defaultcollection/_apis/build/Queues/4",
+        "pool": {
+            "id": 1,
+            "name": "Default"
+        }
+    },
+    "id": 10,
+    "name": "udeploy-extensions-CI",
+    "url": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/10?revision=1",
+    "uri": "vstfs:///Build/Definition/10",
+    "path": "\\",
+    "type": "build",
+    "queueStatus": "enabled",
+    "revision": 1,
+    "createdDate": "2018-05-29T20:36:28.123Z",
+    "project": {
+        "id": "4f9d558a-5a3f-483e-9c9c-7b7f9532e925",
+        "name": "Zions Tools Project",
+        "description": "Test member sync",
+        "url": "http://localhost:8080/tfs/defaultcollection/_apis/projects/4f9d558a-5a3f-483e-9c9c-7b7f9532e925",
+        "state": "wellFormed",
+        "revision": 88,
+        "visibility": "private"
+    }
+}

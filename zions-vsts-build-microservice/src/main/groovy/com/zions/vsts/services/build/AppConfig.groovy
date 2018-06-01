@@ -11,10 +11,10 @@ import com.zions.common.services.cli.action.CliAction
 @Configuration
 @ComponentScan("com.zions.vsts.services")
 public class AppConfig {
-        @Bean
-        public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-            PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
-            propertySourcesPlaceholderConfigurer.setLocations(new ClassPathResource("application.properties"));//or application.yml
-            return propertySourcesPlaceholderConfigurer;
-        }
+//        @Bean
+//        public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+//            PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
+//            propertySourcesPlaceholderConfigurer.setLocations(new ClassPathResource("application.properties"));//or application.yml
+//            return propertySourcesPlaceholderConfigurer;
+//        }
 }
