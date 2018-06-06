@@ -1,0 +1,18 @@
+bootJar {
+	enabled = false
+}
+jar {
+	enabled = true
+	baseName = 'xld-ext'
+	
+}
+
+ dependencies {
+	 compile files('lib/joda-time-2.9.5.jar')
+	 compile files('lib/xl-base-2018.3.5.jar')
+	 compile files('lib/xl-core-2018.3.5.jar')
+	 compile files('lib/xl-license-2018.3.5.jar')
+	 compile files('lib/xl-license-api-2018.3.5.jar')
+	 compile files('lib/xl-license-web-2018.3.5.jar')
+	 compile files('lib/xl-repository-api-2018.3.5.jar')
+ }

@@ -22,7 +22,7 @@ class BuildEndPoint {
 	public ResponseEntity tag(@RequestBody String json) {
 		JsonSlurper slurper = new JsonSlurper()
 		def buildData = slurper.parseText(json)
-		buildManagementService.provideTag(buildData)
+		//buildManagementService.provideTag(buildData)
 		return ResponseEntity.ok(HttpStatus.OK)
 	}
 
