@@ -68,7 +68,7 @@
     ],
     "_links": {
         "self": {
-            "href": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/9?revision=3"
+            "href": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/9?revision=21"
         },
         "web": {
             "href": "http://utmsdev0527:8080/tfs/_permalink/_build/index?collectionId=66f2d84a-3301-4b68-b2fc-19432702b3df&projectId=4f9d558a-5a3f-483e-9c9c-7b7f9532e925&definitionId=9"
@@ -78,7 +78,7 @@
         }
     },
     "buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
-    "comment": "Ensure automated",
+    "comment": "Set buildType",
     "jobAuthorizationScope": "projectCollection",
     "jobTimeoutInMinutes": 60,
     "jobCancelTimeoutInMinutes": 5,
@@ -93,7 +93,7 @@
                         "enabled": true,
                         "continueOnError": false,
                         "alwaysRun": false,
-                        "displayName": "Tagging Start",
+                        "displayName": "Start Tagging",
                         "timeoutInMinutes": 0,
                         "condition": "succeeded()",
                         "task": {
@@ -103,7 +103,7 @@
                         },
                         "inputs": {
                             "OutputVariable": "Tag",
-                            "InitialVersionPrefix": "1.0.0",
+                            "InitialVersionPrefix": "7.0.0",
                             "MasterBranchQualifier": "dev",
                             "ReleaseBranchQualifier": "rel",
                             "TagFormat": "afterBuildId",
@@ -117,36 +117,19 @@
                         "enabled": true,
                         "continueOnError": false,
                         "alwaysRun": false,
-                        "displayName": "gradlew build",
+                        "displayName": "Run gradle",
                         "timeoutInMinutes": 0,
+                        "condition": "succeeded()",
                         "task": {
-                            "id": "8d8eebd8-2b94-4c97-85af-839254cc6da4",
-                            "versionSpec": "2.*",
+                            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
+                            "versionSpec": "1.*",
                             "definitionType": "task"
                         },
                         "inputs": {
-                            "wrapperScript": "$(Parameters.wrapperScript)",
-                            "options": "-Dversion=${Tag}",
-                            "tasks": "$(Parameters.tasks)",
-                            "cwd": "",
-                            "publishJUnitResults": "true",
-                            "testResultsFiles": "**/build/test-results/TEST-*.xml",
-                            "testRunTitle": "",
-                            "codeCoverageTool": "None",
-                            "classFilesDirectories": "build/classes/main/",
-                            "classFilter": "",
-                            "failIfCoverageEmpty": "false",
-                            "javaHomeSelection": "JDKVersion",
-                            "jdkVersion": "default",
-                            "jdkUserInputPath": "",
-                            "jdkArchitecture": "x64",
-                            "gradleOpts": "-Xmx1024m",
-                            "sqAnalysisEnabled": "false",
-                            "sqGradlePluginVersionChoice": "specify",
-                            "sqGradlePluginVersion": "2.6.1",
-                            "checkstyleAnalysisEnabled": "false",
-                            "findbugsAnalysisEnabled": "false",
-                            "pmdAnalysisEnabled": "false"
+                            "filename": "gradle",
+                            "arguments": "build -Pversion=$(Tag)  -PbuildType=release",
+                            "workingFolder": "",
+                            "failOnStandardError": "false"
                         }
                     },
                     {
@@ -189,7 +172,7 @@
                         },
                         "inputs": {
                             "OutputVariable": "Tag",
-                            "InitialVersionPrefix": "1.0.0",
+                            "InitialVersionPrefix": "7.0.0",
                             "MasterBranchQualifier": "dev",
                             "ReleaseBranchQualifier": "rel",
                             "TagFormat": "afterBuildId",
@@ -211,7 +194,7 @@
                             "definitionType": "task"
                         },
                         "inputs": {
-                            "PathtoPublish": "$(build.artifactstagingdirectory)",
+                            "PathtoPublish": "build/libs",
                             "ArtifactName": "drop",
                             "ArtifactType": "Container",
                             "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
@@ -256,46 +239,7 @@
         "checkoutSubmodules": false
     },
     "processParameters": {
-        "inputs": [
-            {
-                "aliases": [
-                    
-                ],
-                "options": {
-                    
-                },
-                "properties": {
-                    
-                },
-                "name": "wrapperScript",
-                "label": "Gradle wrapper",
-                "defaultValue": "gradlew",
-                "required": true,
-                "type": "filePath",
-                "helpMarkDown": "Relative path from the repository root to the Gradle Wrapper script.",
-                "visibleRule": "",
-                "groupName": ""
-            },
-            {
-                "aliases": [
-                    
-                ],
-                "options": {
-                    
-                },
-                "properties": {
-                    
-                },
-                "name": "tasks",
-                "label": "Tasks",
-                "defaultValue": "build",
-                "required": true,
-                "type": "string",
-                "helpMarkDown": "",
-                "visibleRule": "",
-                "groupName": ""
-            }
-        ]
+        
     },
     "quality": "definition",
     "authoredBy": {
@@ -329,13 +273,13 @@
     },
     "id": 9,
     "name": "readiness-Release",
-    "url": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/9?revision=3",
+    "url": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/9?revision=21",
     "uri": "vstfs:///Build/Definition/9",
     "path": "\\",
     "type": "build",
     "queueStatus": "enabled",
-    "revision": 3,
-    "createdDate": "2018-06-01T13:22:08.3Z",
+    "revision": 21,
+    "createdDate": "2018-06-06T14:12:54.84Z",
     "project": {
         "id": "4f9d558a-5a3f-483e-9c9c-7b7f9532e925",
         "name": "Zions Tools Project",
