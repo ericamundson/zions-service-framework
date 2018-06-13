@@ -16,18 +16,15 @@ import groovy.json.JsonSlurper
 
 
 @Component
-class ExportBuild implements CliAction {
+class ReviseRelease implements CliAction {
 	BuildManagementService buildManagementService
 	ProjectManagementService projectManagementService
-	CodeManagementService codeManagementService
 	
 	@Autowired
-	public ExportBuild(BuildManagementService buildService,
-		ProjectManagementService projectManagementService,
-		CodeManagementService codeManagementService) {
+	public ReviseRelease(BuildManagementService buildService,
+		ProjectManagementService projectManagementService) {
 		this.buildManagementService = buildService
 		this.projectManagementService = projectManagementService
-		this.codeManagementService = codeManagementService
 	}
 
 	@Override
@@ -37,20 +34,16 @@ class ExportBuild implements CliAction {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String project = data.getOptionValues('tfs.project')[0]
-		String buildName = data.getOptionValues('build.name')[0]
-		String fileName = data.getOptionValues('out.file.name')[0]
+		String repoList = data.getOptionValues('repo.list')[0]
+		String releaseLabel = data.getOptionValues('release.label')[0]
 		def projectData = projectManagementService.getProject(collection, project)
-		def build = buildManagementService.getBuild(collection, projectData, buildName)
-		File f = new File(fileName)
-		def o = f.newDataOutputStream()
-		o << new JsonBuilder(build).toPrettyString()
-		o.close()
+		def build = buildManagementService.reviseReleaseLabels(collection, projectData, repoList, releaseLabel)
 		return null
 	}
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'tfs.project', 'build.name', 'out.file.name']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'tfs.project', 'release.label', 'repo.list']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

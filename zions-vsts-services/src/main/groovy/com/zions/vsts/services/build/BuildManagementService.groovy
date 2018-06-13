@@ -58,18 +58,73 @@ public class BuildManagementService {
 		repos.value.each { repo ->
 			def buildType = detectBuildType(collection, projectData, repo)
 			if (buildType != BuildType.NONE) {
-				//ensureBuild(collection, projectData, repo, buildType, 'CI')
+				codeManagementService.ensureDeployManifest(collection, projectData, repo)
+				def bd = ensureBuild(collection, projectData, repo, buildType, 'CI')
 				ensureBuild(collection, projectData, repo, buildType, 'Release')
+				
 			}
 		}
 	}
+	
+	def reviseReleaseLabels(def collection, def projectData, String repoList, String releaseLabel) {
+		def repos = codeManagementService.getRepos(collection, projectData)
+		def repoNames = repoList.split(',')
+		if (repoNames.length > 0 && "${repoNames[0]}" == 'all' ) {
+			repos.value.each { repo ->
+				reviseReleaseLabel(collection, projectData, repo, releaseLabel)
+			}
+		} else {
+			repos.value.each { repo ->
+				if (repoNames.contains("${repo.name}")) {
+					reviseReleaseLabel(collection, projectData, repo, releaseLabel)
+				}
+			}
 
-	public def ensureBuild(def collection, def project, def repo, BuildType buildType, buildStage) {
+		}
+	}
+	def reviseReleaseLabel(def collection, def projectData, def repo, releaseLabel) {
+		def build = getBuild(collection, projectData, "${repo.name}-Release")
+		if (build == null) return null
+		build.process.phases.each { phase ->
+			phase.steps.each { step ->
+				if ("${step.task.id}" == '218eff04-a485-4087-b005-e1f04527654d') {
+					step.inputs.InitialVersionPrefix = releaseLabel
+				}
+			}
+		}
+		def body = new JsonBuilder(build).toPrettyString()
+		def result = genericRestClient.put(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_apis/build/definitions/${build.id}",
+			body: body,
+			headers: [Accept: 'application/json;api-version=4.1;excludeUrls=true'],
+			)
+
+	}
+	public def ensureBuild(def collection, def project, def repo, BuildType buildType, def buildStage) {
 		def build = getBuild(collection, project, repo, buildStage)
 		if (build.count == 0) {
 			String name = buildType.toString().toLowerCase()
-			createBuild(collection, project, repo, buildType, buildStage)
+			build = createBuild(collection, project, repo, buildType, buildStage)
+			if (build != null && "${buildStage}" == 'CI') {
+				branchPolicy(collection, project, repo, build, 'refs/heads/master')
+			}
 		}
+		return build
+	}
+	
+	def branchPolicy(def collection, def project, def repo, def ciBuild, def branch) {
+		def policy = [id: -2, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
+			settings:[buildDefinitionId: ciBuild.id, name: "${repo.name} validation", manualQueueOnly: false, queueOnSourceUpdateOnly:true,
+				scope:[[matchKind: 'Exact',refName: branch, repositoryId: repo.id]], validDuration: 720],
+			type: [id: "0609b952-1397-4640-95ec-e00a01b2c241"]]
+		def body = new JsonBuilder(policy).toPrettyString()
+		def result = genericRestClient.post(
+				requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/policy/Configurations",
+				body: body,
+				headers: [Accept: 'application/json;api-version=3.2;excludeUrls=true'],
+				)
 	}
 
 	public def createBuild(def collection, def project, def repo, BuildType buildType, String buildStage) {
@@ -163,6 +218,7 @@ public class BuildManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
 				query: query,
 				)
+		if (result == null || result.count == 0) return null
 		query = ['api-version':'4.1']
 		def result1 = genericRestClient.get(
 				contentType: ContentType.JSON,

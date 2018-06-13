@@ -38,6 +38,7 @@ public class CliApplication implements ApplicationRunner {
 					action.validate(args);
 					action.execute(args);
 				} catch (e) {
+					e.printStackTrace()
 					log.error(e)
 					System.exit(1);
 				}
