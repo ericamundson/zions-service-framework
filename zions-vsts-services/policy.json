@@ -1,0 +1,24 @@
+{
+    "id": -2,
+    "isBlocking": true,
+    "isDeleted": false,
+    "isEnabled": true,
+    "revision": 1,
+    "settings": {
+        "definitionId": 23,
+        "name": "udeploy-extensions validation",
+        "manualQueueOnly": false,
+        "queueOnSourceUpdateOnly": true,
+        "scope": [
+            {
+                "matchKind": "Exact",
+                "refName": "refs/heads/master",
+                "repositoryId": "609b8c74-0ef2-4c6b-8330-27640f0f38bf"
+            }
+        ],
+        "validDuration": 720
+    },
+    "type": {
+        "id": "0609b952-1397-4640-95ec-e00a01b2c241"
+    }
+}

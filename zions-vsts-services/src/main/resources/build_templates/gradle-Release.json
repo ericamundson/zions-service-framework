@@ -68,7 +68,7 @@
     ],
     "_links": {
         "self": {
-            "href": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/9?revision=21"
+            "href": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/9?revision=48"
         },
         "web": {
             "href": "http://utmsdev0527:8080/tfs/_permalink/_build/index?collectionId=66f2d84a-3301-4b68-b2fc-19432702b3df&projectId=4f9d558a-5a3f-483e-9c9c-7b7f9532e925&definitionId=9"
@@ -78,7 +78,7 @@
         }
     },
     "buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
-    "comment": "Set buildType",
+    "comment": "Final",
     "jobAuthorizationScope": "projectCollection",
     "jobTimeoutInMinutes": 60,
     "jobCancelTimeoutInMinutes": 5,
@@ -93,7 +93,7 @@
                         "enabled": true,
                         "continueOnError": false,
                         "alwaysRun": false,
-                        "displayName": "Start Tagging",
+                        "displayName": "Pending Tagging",
                         "timeoutInMinutes": 0,
                         "condition": "succeeded()",
                         "task": {
@@ -127,7 +127,7 @@
                         },
                         "inputs": {
                             "filename": "gradle",
-                            "arguments": "build -Pversion=$(Tag)  -PbuildType=release",
+                            "arguments": "clean build -Pversion=$(Tag)  -PbuildType=release ",
                             "workingFolder": "",
                             "failOnStandardError": "false"
                         }
@@ -139,20 +139,74 @@
                         "enabled": true,
                         "continueOnError": false,
                         "alwaysRun": false,
-                        "displayName": "Copy Files to: $(build.artifactstagingdirectory)",
+                        "displayName": "Copy Files to: build/libs",
                         "timeoutInMinutes": 0,
+                        "condition": "succeeded()",
                         "task": {
                             "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
                             "versionSpec": "2.*",
                             "definitionType": "task"
                         },
                         "inputs": {
-                            "SourceFolder": "$(system.defaultworkingdirectory)",
-                            "Contents": "**/*.jar",
-                            "TargetFolder": "$(build.artifactstagingdirectory)",
+                            "SourceFolder": "$(system.defaultworkingdirectory)/dar",
+                            "Contents": "**",
+                            "TargetFolder": "$(system.defaultworkingdirectory)/build/libs",
                             "CleanTargetFolder": "false",
                             "OverWrite": "false",
                             "flattenFolders": "false"
+                        }
+                    },
+                    {
+                        "environment": {
+                            
+                        },
+                        "enabled": true,
+                        "continueOnError": false,
+                        "alwaysRun": false,
+                        "displayName": "Replace tokens in deployit-manifest.xml",
+                        "timeoutInMinutes": 0,
+                        "condition": "succeeded()",
+                        "task": {
+                            "id": "a8515ec8-7254-4ffd-912c-86772e2b5962",
+                            "versionSpec": "2.*",
+                            "definitionType": "task"
+                        },
+                        "inputs": {
+                            "rootDirectory": "$(system.defaultworkingdirectory)/build/libs/",
+                            "targetFiles": "deployit-manifest.xml",
+                            "encoding": "auto",
+                            "writeBOM": "true",
+                            "actionOnMissing": "warn",
+                            "keepToken": "false",
+                            "tokenPrefix": "@",
+                            "tokenSuffix": "@",
+                            "emptyValue": "(empty)",
+                            "escapeChar": "",
+                            "charsToEscape": ""
+                        }
+                    },
+                    {
+                        "environment": {
+                            
+                        },
+                        "enabled": true,
+                        "continueOnError": false,
+                        "alwaysRun": false,
+                        "displayName": "Archive $(system.defaultworkingdirectory)/build/libs/",
+                        "timeoutInMinutes": 0,
+                        "condition": "succeeded()",
+                        "task": {
+                            "id": "d8b84976-e99a-4b86-b885-4849694435b0",
+                            "versionSpec": "2.*",
+                            "definitionType": "task"
+                        },
+                        "inputs": {
+                            "rootFolderOrFile": "$(system.defaultworkingdirectory)/build/libs/",
+                            "includeRootFolder": "false",
+                            "archiveType": "zip",
+                            "tarCompression": "gz",
+                            "archiveFile": "$(Build.ArtifactStagingDirectory)/Package.dar",
+                            "replaceExistingArchive": "true"
                         }
                     },
                     {
@@ -194,7 +248,7 @@
                             "definitionType": "task"
                         },
                         "inputs": {
-                            "PathtoPublish": "build/libs",
+                            "PathtoPublish": "$(Build.ArtifactStagingDirectory)",
                             "ArtifactName": "drop",
                             "ArtifactType": "Container",
                             "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
@@ -273,20 +327,20 @@
     },
     "id": 9,
     "name": "readiness-Release",
-    "url": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/9?revision=21",
+    "url": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/9?revision=48",
     "uri": "vstfs:///Build/Definition/9",
     "path": "\\",
     "type": "build",
     "queueStatus": "enabled",
-    "revision": 21,
-    "createdDate": "2018-06-06T14:12:54.84Z",
+    "revision": 48,
+    "createdDate": "2018-06-12T18:38:10.823Z",
     "project": {
         "id": "4f9d558a-5a3f-483e-9c9c-7b7f9532e925",
         "name": "Zions Tools Project",
         "description": "Test member sync",
         "url": "http://localhost:8080/tfs/defaultcollection/_apis/projects/4f9d558a-5a3f-483e-9c9c-7b7f9532e925",
         "state": "wellFormed",
-        "revision": 88,
+        "revision": 98,
         "visibility": "private"
     }
 }

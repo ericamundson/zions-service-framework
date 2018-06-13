@@ -22,14 +22,17 @@ class SyncProjectBuilds implements CliAction {
 
 	@Override
 	public def execute(ApplicationArguments data) {
-		String collection = data.getOptionValues('tfs.collection')[0]
+		String collection = ""
+		try {
+			collection = data.getOptionValues('tfs.collection')[0]
+		} catch (e) {}
 		String project = data.getOptionValues('tfs.project')[0]
 		return buildManagementService.ensureBuilds(collection, project)
 	}
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.collection', 'tfs.token',  'tfs.project']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'tfs.project']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

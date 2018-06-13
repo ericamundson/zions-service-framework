@@ -22,7 +22,10 @@ class AddMembers implements CliAction {
 
 	@Override
 	public def execute(ApplicationArguments data) {
-		String collection = data.getOptionValues('tfs.collection')[0]
+		String collection = ""
+		try {
+			collection = data.getOptionValues('tfs.collection')[0]
+		} catch (e) {}
 		String inFile = data.getOptionValues('member.file.name')[0]
 		File mFile = new File(inFile)
 		JsonSlurper s = new JsonSlurper()
@@ -36,7 +39,7 @@ class AddMembers implements CliAction {
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.collection', 'tfs.token',  'member.file.name']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'member.file.name']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

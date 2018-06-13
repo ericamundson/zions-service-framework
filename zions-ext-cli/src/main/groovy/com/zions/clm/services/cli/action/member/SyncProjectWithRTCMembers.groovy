@@ -24,7 +24,10 @@ class SyncProjectWithRTCMembers implements CliAction {
 
 	@Override
 	public def execute(ApplicationArguments data) {
-		String collection = data.getOptionValues('tfs.collection')[0]
+		String collection = ""
+		try {
+			collection = data.getOptionValues('tfs.collection')[0]
+		} catch (e) {}
 		String project = data.getOptionValues('clm.ccm.project')[0]
 		String outproject = data.getOptionValues('tfs.project')[0]
 		def memberData = ccmMemberManagmentService.getMemberData(project, outproject)
@@ -37,7 +40,7 @@ class SyncProjectWithRTCMembers implements CliAction {
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.collection', 'tfs.token',  'clm.url', 'clm.user', 'clm.password', 'clm.ccm.project', 'tfs.project']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'clm.url', 'clm.user', 'clm.password', 'clm.ccm.project', 'tfs.project']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

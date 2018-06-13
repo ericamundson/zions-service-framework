@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.cli.action.CliAction
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.release.ReleaseManagementService
+import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 
 
@@ -23,14 +24,29 @@ class SyncProjectReleases implements CliAction {
 
 	@Override
 	public def execute(ApplicationArguments data) {
-		String collection = data.getOptionValues('tfs.collection')[0]
+		String collection = ""
+		try {
+			collection = data.getOptionValues('tfs.collection')[0]
+		} catch (e) {}
 		String project = data.getOptionValues('tfs.project')[0]
-		return releaseManagementService.ensureReleases(collection, project)
+		String templateName = data.getOptionValues('template.name')[0]
+		def template = getResource(templateName)
+		return releaseManagementService.ensureReleases(collection, project, template)
+	}
+	
+	public def getResource(String name) {
+		def template = null
+		try {
+		def s = getClass().getResourceAsStream("/release_templates/${name}.json")
+		JsonSlurper js = new JsonSlurper()
+		template = js.parse(s)
+		} catch (e) {}
+		return template
 	}
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.collection', 'tfs.token',  'tfs.project']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'tfs.project', 'template.name']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

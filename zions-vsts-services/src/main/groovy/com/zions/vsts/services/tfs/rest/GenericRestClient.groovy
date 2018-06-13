@@ -58,7 +58,8 @@ class GenericRestClient {
 	}
 	
 	def get(Map input) {
-		HttpResponseDecorator resp = delegate.get(input)
+		Map oinput = checkBlankCollection(input)
+		HttpResponseDecorator resp = delegate.get(oinput)
 		JsonOutput t
 		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
 		if ("${out}" == 'null') return null
@@ -68,7 +69,8 @@ class GenericRestClient {
 	}
 	
 	def put(Map input) {
-		HttpResponseDecorator resp = delegate.put(input)
+		Map oinput = checkBlankCollection(input)
+		HttpResponseDecorator resp = delegate.put(oinput)
 		
 		if (resp.status != 200) {
 			return null;
@@ -81,14 +83,16 @@ class GenericRestClient {
 	}
 	
 	def delete(Map input) {
-		HttpResponseDecorator resp = delegate.delete(input)
+		Map oinput = checkBlankCollection(input)
+		HttpResponseDecorator resp = delegate.delete(oinput)
 		if (resp.status != 204) {
 			return null;
 		}
 	}
 	
 	def patch(Map input) {
-		HttpResponseDecorator resp = delegate.patch(input)
+		Map oinput = checkBlankCollection(input)
+		HttpResponseDecorator resp = delegate.patch(oinput)
 		
 		if (resp.status != 200) {
 			return null;
@@ -101,12 +105,24 @@ class GenericRestClient {
 	}
 
 	def post(Map input) {
-		HttpResponseDecorator resp = delegate.post(input)
+		Map oinput = checkBlankCollection(input)
+		HttpResponseDecorator resp = delegate.post(oinput)
 		JsonOutput t
 		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
 		if ("${out}" == 'null') return null
 		JsonSlurper sl = new JsonSlurper()
 		def oOut = sl.parseText(out)
 		return oOut;
+	}
+	
+	def checkBlankCollection(Map input) {
+		String uri = "${input.uri}"
+		String checkedUri = "${this.tfsUrl}//"
+		if (uri.startsWith(checkedUri) ) {
+		
+			uri = "${this.tfsUrl}/${uri.substring(checkedUri.length())}"
+			input.uri = uri
+		}
+		return input
 	}
 }
