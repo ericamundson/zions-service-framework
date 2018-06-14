@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
+import com.zions.vsts.services.endpoint.EndpointManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient;
 import groovy.json.JsonBuilder
 import groovyx.net.http.ContentType
@@ -22,30 +23,35 @@ public class ReleaseManagementService {
 	
 	@Autowired
 	private BuildManagementService buildManagementService
+	
+	@Autowired
+	private EndpointManagementService endpointManagementService
 
 	public ReleaseManagementService() {
 
 	}
 	
-	public def ensureReleases(def collection, def project, def template) {
+	public def ensureReleases(def collection, def project, def template, String xldEndpoint) {
 		def projectData = projectManagementService.getProject(collection, project, true)
 		def repos = codeManagementService.getRepos(collection, projectData)
 		repos.value.each { repo ->
-			ensureRelease(collection, projectData, repo,  template)
+			ensureRelease(collection, projectData, repo,  template, xldEndpoint)
 		}
 
 	}
 	
-	public def ensureRelease(collection, projectData, repo, template) {
+	public def ensureRelease(collection, projectData, repo, template, xldEndpoint) {
 		def release = getRelease(collection, projectData, repo.name)
 		if (release == null) {
-			release = createRelease(collection, projectData, repo, template)
+			release = createRelease(collection, projectData, repo, template, xldEndpoint)
 		}
 	}
 	
-	public def createRelease(collection, project, repo, template) {
+	public def createRelease(collection, project, repo, template, xldEndpoint) {
 		def buildDef = buildManagementService.getBuild(collection, project, "${repo.name}-Release")
 		if (buildDef == null) return null
+		def endpoint = endpointManagementService.getServiceEndpoint(collection, project.id, xldEndpoint)
+		if (endpoint == null) return null
 		template.id = -1
 		template.name = repo.name
 		template.description = "Release definition for ${repo.name}"
@@ -60,7 +66,8 @@ public class ReleaseManagementService {
 			env.deployPhases.each { phase ->
 				phase.workflowTasks.each { task ->
 					if ("${task.taskId}" == '589dce45-4881-4410-bcf0-1afbd0fc0f65') {
-						task.inputs.targetEnvironment = "Environment/${project.name}/${repo.name}/${env.name}"
+						task.inputs.connectedServiceName = endpoint.id
+						task.inputs.targetEnvironment = "Environments/${project.name}/${repo.name}/${env.name}"
 					}
 				}
 			}

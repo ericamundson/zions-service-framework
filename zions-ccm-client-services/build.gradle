@@ -1,0 +1,9 @@
+bootJar { enabled = false }
+jar {
+	enabled = true
+	baseName = 'zions-ccm-client-services'
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
