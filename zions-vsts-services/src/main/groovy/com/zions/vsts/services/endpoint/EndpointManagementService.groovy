@@ -16,6 +16,22 @@ public class EndpointManagementService {
 	public EndpointManagementService() {
 		
 	}
+	
+	public def getServiceEndpoint(String collection, String projectId, String name) {
+		def query = ['api-version': '4.1-preview.1', endpointNames:name]
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			requestContentType: 'application/json',
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectId}/_apis/serviceendpoint/endpoints",
+			query: query
+			)
+		def endpoint = null
+		if (result.count > 0) {
+			endpoint = result.value[0]
+		}
+		return endpoint
+	}
+	
 	public def createServiceEndpoint(String collection, String projectId, String repoUrl, String bbUser, String bbPassword) {
 		def epname = RandomStringUtils.random(5,true,false)
 		epname = epname.toLowerCase()
