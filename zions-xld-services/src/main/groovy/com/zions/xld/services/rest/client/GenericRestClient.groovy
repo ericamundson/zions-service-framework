@@ -19,20 +19,20 @@ class GenericRestClient {
 	
 	private String user;
 		
-	private String token
+	private String password
 
 	@Autowired
-	public GenericRestClient(@Value('${tfs.url}') String tfsUrl,
-		@Value('${tfs.user}') String user,
-		@Value('${tfs.token}') String token) {
+	public GenericRestClient(@Value('${xld.url}') String tfsUrl,
+		@Value('${xld.user}') String user,
+		@Value('${xld.password}') String password) {
 		this.xldUrl = tfsUrl
-		this.token = token;
+		this.password = password;
 		this.user = user;
 		delegate = new RESTClient(tfsUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		setProxy()
-		setCredentials(user, token);
+		setCredentials(user, password);
 
 	}
 	def setProxy() {
@@ -58,8 +58,7 @@ class GenericRestClient {
 	}
 	
 	def get(Map input) {
-		Map oinput = checkBlankCollection(input)
-		HttpResponseDecorator resp = delegate.get(oinput)
+		HttpResponseDecorator resp = delegate.get(input)
 		JsonOutput t
 		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
 		if ("${out}" == 'null') return null
@@ -69,8 +68,7 @@ class GenericRestClient {
 	}
 	
 	def put(Map input) {
-		Map oinput = checkBlankCollection(input)
-		HttpResponseDecorator resp = delegate.put(oinput)
+		HttpResponseDecorator resp = delegate.put(input)
 		
 		if (resp.status != 200) {
 			return null;
@@ -83,16 +81,14 @@ class GenericRestClient {
 	}
 	
 	def delete(Map input) {
-		Map oinput = checkBlankCollection(input)
-		HttpResponseDecorator resp = delegate.delete(oinput)
+		HttpResponseDecorator resp = delegate.delete(input)
 		if (resp.status != 204) {
 			return null;
 		}
 	}
 	
 	def patch(Map input) {
-		Map oinput = checkBlankCollection(input)
-		HttpResponseDecorator resp = delegate.patch(oinput)
+		HttpResponseDecorator resp = delegate.patch(input)
 		
 		if (resp.status != 200) {
 			return null;
@@ -105,8 +101,7 @@ class GenericRestClient {
 	}
 
 	def post(Map input) {
-		Map oinput = checkBlankCollection(input)
-		HttpResponseDecorator resp = delegate.post(oinput)
+		HttpResponseDecorator resp = delegate.post(input)
 		JsonOutput t
 		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
 		if ("${out}" == 'null') return null
@@ -115,14 +110,4 @@ class GenericRestClient {
 		return oOut;
 	}
 	
-	def checkBlankCollection(Map input) {
-		String uri = "${input.uri}"
-		String checkedUri = "${this.xldUrl}//"
-		if (uri.startsWith(checkedUri) ) {
-		
-			uri = "${this.xldUrl}/${uri.substring(checkedUri.length())}"
-			input.uri = uri
-		}
-		return input
-	}
 }
