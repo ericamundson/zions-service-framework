@@ -22,6 +22,7 @@ class CacheWorkitemAttachments implements CliAction {
 		String id = data.getOptionValues('workitem.id')[0]
 		int aid = Integer.parseInt(id)
 		def template = attachmentsManagementService.cacheWorkItemAttachments(aid)
+		attachmentsManagementService.rtcRepositoryClient.shutdownPlatform();
 		return null;
 	}
 

@@ -47,9 +47,12 @@ class InternalLicense extends License {
 		this.values.set(LicenseProperty.LICENSED_TO,"Zions Bank")
 		this.values.set(LicenseProperty.REPOSITORY_ID,"1.0.0.0")
 		this.values.set(LicenseProperty.MAX_NUMBER_OF_USERS, "500")
-		//this.values.set(LicenseProperty.MAX_NUMBER_OF_CIS, "500")
-		def plugins = getPlugins()
-		this.values.set(LicenseProperty.LICENSED_PLUGINS, plugins.join(','))
+		this.values.get(LicenseProperty.MAX_NUMBER_OF_CIS)
+		this.values.set(LicenseProperty.MAX_NUMBER_OF_CIS, 'overthere.Host=500')
+		this.values.set(LicenseProperty.MAX_NUMBER_OF_CIS, 'xl.Satellite=0')
+		initPlugins()
+		//this.values.set(LicenseProperty.LICENSED_PLUGINS, plugins)
+		this.values.set(LicenseProperty.SUPPORT_POLICY, '8x5')
 
 		Calendar i = Calendar.instance
 		i.add(Calendar.YEAR,1)
@@ -110,14 +113,13 @@ class InternalLicense extends License {
 		return false;
 	}
 
-	public def getPlugins() {
-		def plugins = []
+	public def initPlugins() {
 		try {
 			InputStream s = getClass().getResourceAsStream("/plugins.lst")
+			this.values.get(LicenseProperty.LICENSED_PLUGINS)
 			s.eachLine { line ->
-				plugins.add(line)
+				this.values.set(LicenseProperty.LICENSED_PLUGINS, line)
 			}
 		} catch (e) {}
-		return plugins
 	}
 }
