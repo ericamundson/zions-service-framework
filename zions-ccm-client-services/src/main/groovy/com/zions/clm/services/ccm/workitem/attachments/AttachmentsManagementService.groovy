@@ -3,8 +3,18 @@ package com.zions.clm.services.ccm.workitem.attachments;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
+import com.ibm.team.links.common.IReference
 import com.ibm.team.repository.client.ITeamRepository
+import com.ibm.team.workitem.client.IAuditableClient
+import com.ibm.team.workitem.client.IWorkItemClient
+import com.ibm.team.workitem.common.IWorkItemCommon
+import com.ibm.team.workitem.common.model.IAttachment
+import com.ibm.team.workitem.common.model.IAttachmentHandle
+import com.ibm.team.workitem.common.model.IWorkItem
+import com.ibm.team.workitem.common.model.IWorkItemReferences
+import com.ibm.team.workitem.common.model.WorkItemEndPoints
 import com.zions.clm.services.ccm.client.RtcRepositoryClient;
+import java.io.OutputStream;
 
 @Component
 public class AttachmentsManagementService {
@@ -20,7 +30,50 @@ public class AttachmentsManagementService {
 	}
 	
 	public def cacheWorkItemAttachments(int id) {
-		ITeamRepository repo = rtcRepositoryClient.getRepo()
+		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
+		IWorkItem workItem = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, null);
+		
+		IWorkItemCommon common = (IWorkItemCommon) teamRepository.getClientLibrary(IWorkItemCommon.class);
+		IWorkItemReferences workitemReferences = common.resolveWorkItemReferences(workItem, null);
+		List references = workitemReferences.getReferences(WorkItemEndPoints.ATTACHMENT);
+		for (IReference iReference : references) {
+			IAttachmentHandle attachHandle = (IAttachmentHandle) iReference.resolve();
+			IAuditableClient auditableClient = (IAuditableClient) teamRepository.getClientLibrary(IAuditableClient.class);
+			IAttachment attachment = (IAttachment) auditableClient.resolveAuditable((IAttachmentHandle) attachHandle,
+				IAttachment.DEFAULT_PROFILE, null);
+			saveAttachment(attachment, id);
+		}	
+		
+	}
+	
+	def saveAttachment(IAttachment attachment, int id) {
+		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		String 
+		try {
+			File cacheDir = new File(this.cacheLocation)
+			if (!cacheDir.exists()) {
+				cacheDir.mkdir();
+			}
+			
+			File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
+			if (!wiDir.exists()) {
+				wiDir.mkdir()
+			}
+			File save = new File("${this.cacheLocation}${File.separator}${id}${File.separator}${attachment.getName()}");
+			
+			OutputStream out = save.newDataOutputStream()
+			try {
+				teamRepository.contentManager().retrieveContent(attachment.getContent(), out, null);
+			} finally {
+				out.close();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
+	
 	}
 
 }
