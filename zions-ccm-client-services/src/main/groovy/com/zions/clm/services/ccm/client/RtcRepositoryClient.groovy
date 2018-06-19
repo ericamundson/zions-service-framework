@@ -31,7 +31,7 @@ public class RtcRepositoryClient implements Serializable {
 		if (!TeamPlatform.isStarted()) {
 			TeamPlatform.startup();
 		}
-		repo = TeamPlatform.getTeamRepositoryService().getUnmanagedRepository(uri);
+		repo = TeamPlatform.getTeamRepositoryService().getUnmanagedRepository("${uri}/ccm");
 		performLogin();
 	}
 	
