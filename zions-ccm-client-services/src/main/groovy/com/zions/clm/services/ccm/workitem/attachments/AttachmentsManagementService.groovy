@@ -49,7 +49,6 @@ public class AttachmentsManagementService {
 	
 	def saveAttachment(IAttachment attachment, int id) {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
-		String 
 		try {
 			File cacheDir = new File(this.cacheLocation)
 			if (!cacheDir.exists()) {
