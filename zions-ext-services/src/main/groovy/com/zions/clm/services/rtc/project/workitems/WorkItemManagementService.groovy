@@ -23,10 +23,10 @@ public class WorkItemManagementService {
 		def result = clmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'text/xml'] );
-		File out = new File('tools_wi.xml')
-		def o = out.newDataOutputStream()
-		o << new groovy.xml.StreamingMarkupBuilder().bindNode(result) as String
-		o.close()
+//		File out = new File('tools_wi.xml')
+//		def o = out.newDataOutputStream()
+//		o << new groovy.xml.StreamingMarkupBuilder().bindNode(result) as String
+//		o.close()
 		return result
 	}
 	
