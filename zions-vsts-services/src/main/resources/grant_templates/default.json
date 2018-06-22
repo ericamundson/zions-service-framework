@@ -1,0 +1,52 @@
+{
+	"updates": [
+		{
+			"PermissionId": 1,
+			"PermissionBit": 4,
+			"NamespaceId": "2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87",
+			"Token": "repoV2/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/2dd6eaf8-4e01-4b37-9867-df124dc21c2a/"
+		},
+		{
+			"PermissionId": 1,
+			"PermissionBit": 16384,
+			"NamespaceId": "2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87",
+			"Token": "repoV2/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/2dd6eaf8-4e01-4b37-9867-df124dc21c2a/"
+		},
+		{
+			"PermissionId": 1,
+			"PermissionBit": 16,
+			"NamespaceId": "2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87",
+			"Token": "repoV2/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/2dd6eaf8-4e01-4b37-9867-df124dc21c2a/"
+		},
+		{
+			"PermissionId": 1,
+			"PermissionBit": 32,
+			"NamespaceId": "2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87",
+			"Token": "repoV2/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/2dd6eaf8-4e01-4b37-9867-df124dc21c2a/"
+		},
+		{
+			"PermissionId": 1,
+			"PermissionBit": 2048,
+			"NamespaceId": "2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87",
+			"Token": "repoV2/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/2dd6eaf8-4e01-4b37-9867-df124dc21c2a/"
+		},
+		{
+			"PermissionId": 1,
+			"PermissionBit": 64,
+			"NamespaceId": "2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87",
+			"Token": "repoV2/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/2dd6eaf8-4e01-4b37-9867-df124dc21c2a/"
+		},
+		{
+			"PermissionId": 1,
+			"PermissionBit": 8192,
+			"NamespaceId": "2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87",
+			"Token": "repoV2/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/2dd6eaf8-4e01-4b37-9867-df124dc21c2a/"
+		},
+		{
+			"PermissionId": 1,
+			"PermissionBit": 4096,
+			"NamespaceId": "2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87",
+			"Token": "repoV2/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/2dd6eaf8-4e01-4b37-9867-df124dc21c2a/"
+		}
+	]
+}

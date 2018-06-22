@@ -1,0 +1,137 @@
+package com.zions.vsts.services.permissions
+
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+import com.zions.vsts.services.admin.member.MemberManagementService
+import com.zions.vsts.services.admin.project.ProjectManagementService
+import com.zions.vsts.services.code.CodeManagementService
+import com.zions.vsts.services.endpoint.EndpointManagementService
+import com.zions.vsts.services.tfs.rest.GenericRestClient
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+import groovyx.net.http.ContentType
+
+@Component
+class PermissionsManagementService {
+	@Autowired
+	private GenericRestClient genericRestClient
+	
+	@Autowired
+	private CodeManagementService codeManagementService
+	
+	@Autowired
+	private ProjectManagementService projectManagementService
+	
+	@Autowired
+	private MemberManagementService memberManagementService
+
+
+	public PermissionsManagementService() {
+		
+	}
+	
+	public def ensureTeamToRepo(String collection, String project, String repo, String teamName, String templateName) {
+		def permissionsTemplate = getResource(templateName)
+		def projectData = projectManagementService.getProject(collection, project)
+		def team = memberManagementService.getTeam(collection, projectData, teamName)
+		def repoData = codeManagementService.getRepo(collection, projectData, repo)
+		
+		//def perms = getRepoPermissions(collection, projectData, repoData, team )
+		if (!hasIdentity(collection, projectData, repoData, team)) {
+			def identity = addIdentityForPermissions(collection, projectData, repoData, team)
+			def perms = getRepoPermissions(collection, projectData, repoData, team )
+			createRepoPermission(collection, projectData, repoData, team, permissionsTemplate, identity)
+		}
+	}
+	
+	def addIdentityForPermissions(collection, projectData, repoData, team) {
+		def req = [ 'existingUsersJson': "[\"${team.localId}\"]",  'newUsersJson': "[]" ]
+		def body = new JsonBuilder( req ).toString()
+		def eproject = URLEncoder.encode(projectData.name, 'UTF-8')
+		eproject = eproject.replace('+', '%20')
+
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_api/_security/AddIdentityForPermissions",
+			query: ['__v': 5, repositoryId: "${repoData.id}"],
+			body: body,
+			headers: [Accept: 'application/json, text/javascript, */*; q=0.01',
+				Referer: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_admin/_versioncontrol?_a=security&repositoryId=${repoData.id}"],
+			)
+		return result
+	}
+	
+	def createRepoPermission(collection, projectData, repoData, team, permTemplate, identity) {
+		def updates = permTemplate.updates
+		updates.each { perm ->
+			perm.Token = "repoV2/${projectData.id}/${repoData.id}/"
+			//perm.NamespaceId = "${team.localId}"
+		}
+		def permData = [IsRemovingIdentity: false, 
+			TeamFoundationId: identity.AddedIdentity.TeamFoundationId, 
+			DescriptorIdentityType: 'Microsoft.TeamFoundation.Identity', 
+			DescriptorIdentifier: identity.AddedIdentity.DescriptorIdentifier,
+			PermissionSetId: '2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87',
+			PermissionSetToken: "repoV2/${projectData.id}/${repoData.id}/",
+			RefreshIdentities: false,
+			updates: updates,
+			TokenDisplayName: null]
+		def oupdates = new JsonBuilder( permData ).toString()
+		def updatePackage = [updatePackage: "${oupdates}"]
+		def body = new JsonBuilder( updatePackage ).toString()
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_api/_security/ManagePermissions",
+			query: ['__v': '5'],
+			body: body,
+			headers: [Accept: 'application/json, text/javascript, */*; q=0.01'],
+			)
+
+	}
+	
+	public boolean hasIdentity(collection, project, repo, team) {
+		def identities = getCurrentIdentities(collection, project, repo)
+		boolean hasId = false;
+		identities.identities.each { id -> 
+			if ("${team.displayName}" == "${id.DisplayName}") {
+				hasId = true
+				return
+			}
+		}
+		return hasId
+	}
+	
+	public def getCurrentIdentities(collection, project, repo) {
+		def query = [__v: 5, permissionSetId: '2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87', permissionSetToken: "repoV2/${project.id}/${repo.id}"]
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_api/_security/ReadExplicitIdentitiesJson",
+			query: query,
+			)
+		return result
+
+	}
+	
+	public def getRepoPermissions(String collection, def project, def repo, def team) {
+		if (team == null) return
+		def query = [__v: 5, tfid: team.localId, permissionSetId: '2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87', permissionSetToken: "repoV2/${project.id}/${repo.id}"]
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_api/_security/DisplayPermissions",
+			query: query,
+			)
+		return result
+
+	}
+	
+	public def getResource(String name) {
+		def template = null
+		try {
+		def s = getClass().getResourceAsStream("/grant_templates/${name}.json")
+		JsonSlurper js = new JsonSlurper()
+		template = js.parse(s)
+		} catch (e) {}
+		return template
+	}
+
+}
