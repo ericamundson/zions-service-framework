@@ -68,11 +68,42 @@ public class MemberManagementService {
 		def result = genericRestClient.post(
 			requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
-			query: ['api-version': '4.1'],
 			body: body,
-			headers: [Accept: 'application/json'],
+			headers: [Accept: 'application/json;api-version=4.1-preview.1;excludeUrls=true'],
 			)
-
+		return result
 	}
 	
+	def getTeam(collection, project, teamName) {
+		def teamData = queryForTeam(collection, project, teamName)
+		def team = null
+		teamData.results.each { result ->
+			result.identities.each { ids ->
+				if ("${ids.displayName}" == "[${project.name}]\\${teamName}") {
+					team = ids
+				}
+			}
+		}
+		return team
+	}
+
+	public def queryForTeam(def collection, def project, def team) {
+		def req = [ 'filterByAncestorEntityIds': [], 
+			filterByEntityIds:[], 
+			identityTypes: ['user', 'group'], 
+			operationScopes: ['ims','ad', 'wmd'],
+			properties: ['DisplayName', 'IsMru', 'ScopeName', 'SamAccountName', 'Active', 'SubjectDescriptor', 'Department', 'JobTitle', 'Mail', 'MailNickname', 'PhysicalDeliveryOfficeName'],
+			filterByAncestorEntityIds: [],
+			filterByEntityIds: [],
+			options: [MinResults:40, MaxResults: 40, constraints: [], ExtensionId: 'F12CA7AD-00EE-424F-B6D7-9123A60F424F', CollectionScopeName: "${collection}", ProjectScopeName: "${project.name}"],
+			query: team  ]
+		def body = new JsonBuilder( req ).toString()
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
+			body: body,
+			headers: [Accept: 'application/json;api-version=4.1-preview.1;excludeUrls=true'],
+			)
+		return result
+	}
 }
