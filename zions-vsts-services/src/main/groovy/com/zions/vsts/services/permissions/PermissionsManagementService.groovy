@@ -39,8 +39,19 @@ class PermissionsManagementService {
 		//def perms = getRepoPermissions(collection, projectData, repoData, team )
 		if (!hasIdentity(collection, projectData, repoData, team)) {
 			def identity = addIdentityForPermissions(collection, projectData, repoData, team)
-			def perms = getRepoPermissions(collection, projectData, repoData, team )
-			createRepoPermission(collection, projectData, repoData, team, permissionsTemplate, identity)
+			def perms = getRepoPermissions(collection, projectData, repoData, team.localId )
+			manageRepoPermission(collection, projectData, repoData, permissionsTemplate, perms)
+		}
+	}
+	
+	def updateBuilderPermissions(String collection, String project, String template) {
+		def permissionsTemplate = getResource(template)
+		def projectData = projectManagementService.getProject(collection, project)
+		def repos = codeManagementService.getRepos(collection, projectData)
+		repos.value.each { repoData ->
+			def builder = getRepoIdentity(collection, projectData, repoData, 'Project Collection Build Service (DefaultCollection)')
+			def perms = getRepoPermissions(collection, projectData, repoData, builder.TeamFoundationId )
+			manageRepoPermission(collection, projectData, repoData, permissionsTemplate, perms)
 		}
 	}
 	
@@ -61,20 +72,20 @@ class PermissionsManagementService {
 		return result
 	}
 	
-	def createRepoPermission(collection, projectData, repoData, team, permTemplate, identity) {
+	def manageRepoPermission(collection, projectData, repoData, permTemplate, perms) {
 		def updates = permTemplate.updates
 		updates.each { perm ->
 			perm.Token = "repoV2/${projectData.id}/${repoData.id}/"
 			//perm.NamespaceId = "${team.localId}"
 		}
 		def permData = [IsRemovingIdentity: false, 
-			TeamFoundationId: identity.AddedIdentity.TeamFoundationId, 
-			DescriptorIdentityType: 'Microsoft.TeamFoundation.Identity', 
-			DescriptorIdentifier: identity.AddedIdentity.DescriptorIdentifier,
+			TeamFoundationId: perms.currentTeamFoundationId, 
+			DescriptorIdentityType: perms.descriptorIdentityType, 
+			DescriptorIdentifier: perms.descriptorIdentifier,
 			PermissionSetId: '2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87',
 			PermissionSetToken: "repoV2/${projectData.id}/${repoData.id}/",
 			RefreshIdentities: false,
-			updates: updates,
+			Updates: updates,
 			TokenDisplayName: null]
 		def oupdates = new JsonBuilder( permData ).toString()
 		def updatePackage = [updatePackage: "${oupdates}"]
@@ -112,9 +123,22 @@ class PermissionsManagementService {
 
 	}
 	
-	public def getRepoPermissions(String collection, def project, def repo, def team) {
-		if (team == null) return
-		def query = [__v: 5, tfid: team.localId, permissionSetId: '2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87', permissionSetToken: "repoV2/${project.id}/${repo.id}"]
+	def getRepoIdentity(collection, project, repo, name) {
+		def identities = getCurrentIdentities(collection, project, repo)
+		def retVal = null;
+		identities.identities.each { id ->
+			if ("${name}" == "${id.DisplayName}") {
+				retVal = id
+				return
+			}
+		}
+		return retVal
+
+	}
+	
+	public def getRepoPermissions(String collection, def project, def repo, def tfid) {
+		if (tfid == null) return
+		def query = [__v: 5, tfid: tfid, permissionSetId: '2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87', permissionSetToken: "repoV2/${project.id}/${repo.id}"]
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_api/_security/DisplayPermissions",
