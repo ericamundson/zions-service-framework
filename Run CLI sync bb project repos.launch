@@ -8,7 +8,7 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="syncBBGitRepos --tfs.url=http://localhost:8080/tfs --tfs.collection=defaultcollection --tfs.user=z091182 --tfs.token=&quot;hdepqrjz7sv4eewmqg4o55tflqndwbsue7yocki5xl5p5sqh6jxq&quot; --bb.url=https://git.cs.zionsbank.com --bb.user=z091182 --bb.password=Booboo!15 --bb.project=&quot;Release Engineering&quot; --tfs.project=&quot;Zions Tools Project&quot; --tfs.team=&quot;Release Engineering Team&quot; --grant.template=default"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="syncBBGitRepos --tfs.url=http://localhost:8080/tfs --tfs.collection=defaultcollection --tfs.user=z091182 --tfs.token=&quot;hdepqrjz7sv4eewmqg4o55tflqndwbsue7yocki5xl5p5sqh6jxq&quot; --bb.url=https://git.cs.zionsbank.com --bb.user=z091182 --bb.password=Booboo!15 --bb.project=&quot;Release Engineering&quot; --tfs.project=&quot;Zions Tools Project&quot; --tfs.team=&quot;Release Engineering Team&quot; --grant.template=team"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=bb"/>
 </launchConfiguration>
