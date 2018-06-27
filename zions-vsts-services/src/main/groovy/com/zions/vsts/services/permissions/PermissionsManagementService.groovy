@@ -49,7 +49,7 @@ class PermissionsManagementService {
 		def projectData = projectManagementService.getProject(collection, project)
 		def repos = codeManagementService.getRepos(collection, projectData)
 		repos.value.each { repoData ->
-			def builder = getRepoIdentity(collection, projectData, repoData, 'Project Collection Build Service (DefaultCollection)')
+			def builder = getRepoIdentity(collection, projectData, repoData, "Project Collection Build Service (${collection})")
 			def perms = getRepoPermissions(collection, projectData, repoData, builder.TeamFoundationId )
 			manageRepoPermission(collection, projectData, repoData, permissionsTemplate, perms)
 		}

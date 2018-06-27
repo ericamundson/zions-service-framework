@@ -1,0 +1,15 @@
+bootJar {
+	enabled = true
+	mainClassName = 'com.zions.vsts.services.gateway.GatewayApplication'
+	baseName = 'zions-vsts-admin'
+	version =  '0.1.0'
+}
+
+dependencies {
+    compile 'org.springframework.cloud:spring-cloud-starter-zuul'
+    compile 'org.springframework.cloud:spring-cloud-starter-eureka'
+    compile 'org.springframework.cloud:spring-cloud-starter-ribbon'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+	compile project(':zions-vsts-services')
+	compile project(':zions-common')
+}
