@@ -77,4 +77,5 @@ dependencies {
     compile project(':zions-vsts-cli')
     compile project(':zions-vsts-services')
     compile project(':zions-vsts-build-microservice')
+    compile project(':zions-vsts-policy-microservice')
 }

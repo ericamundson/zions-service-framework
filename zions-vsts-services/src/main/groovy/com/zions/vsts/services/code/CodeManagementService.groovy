@@ -6,9 +6,11 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonBuilder
+import groovy.util.logging.Slf4j;
 import groovyx.net.http.ContentType
 
 @Component
+@Slf4j
 class CodeManagementService {
 	@Autowired
 	private GenericRestClient genericRestClient
@@ -63,19 +65,21 @@ class CodeManagementService {
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories",
-			query: query,
-			)
+			query: query
+		)
 		return result
 
 	}
 
 	public def listTopLevel(def collection, def project, def repo) {
-		def query = ['api-version':'4.1','scopePath':'/', 'recursionLevel':'OneLevel', latestProcessedChange:true, 'versionDescriptor.version': 'master','versionDescriptor.versionOptions':'firstParent']
+		//log.debug("CodeManagementService::listTopLevel -- collection: ${collection}, project: ${project.id}, repo: ${repo.id}")
+		def query = ['api-version':'4.0','scopePath':'/', 'recursionLevel':'OneLevel', latestProcessedChange:true, 'versionDescriptor.version':'master','versionDescriptor.versionOptions':'firstParent']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/items",
-			query: query,
-			)
+			query: query
+		)
+		//log.debug("CodeManagementService::listTopLevel -- Return result: "+result)
 		return result
 
 	}
@@ -96,7 +100,7 @@ class CodeManagementService {
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_apis/git/repositories/${repoNameE}/importRequests",
 			query: query,
 			body: body
-			)
+		)
 		//ensureDeployManifest(collection, projectData, repo)
 		return result
 

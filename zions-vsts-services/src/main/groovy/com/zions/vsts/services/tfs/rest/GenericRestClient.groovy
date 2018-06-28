@@ -4,6 +4,7 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient;
+import groovy.util.logging.Slf4j;
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
+@Slf4j
 class GenericRestClient {
 	private RESTClient delegate;
 	
@@ -58,11 +60,16 @@ class GenericRestClient {
 	}
 	
 	def get(Map input) {
+		//log.debug("GenericRestClient::get -- URI before checkBlankCollection: "+input.uri)
 		Map oinput = checkBlankCollection(input)
+		//log.debug("GenericRestClient::get -- URI after checkBlankCollection: "+oinput.uri)
 		HttpResponseDecorator resp = delegate.get(oinput)
 		JsonOutput t
 		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
-		if ("${out}" == 'null') return null
+		if ("${out}" == 'null') {
+			log.debug("GenericRestClient::get -- Returning NULL")
+			return null
+		}
 		JsonSlurper sl = new JsonSlurper()
 		def oOut = sl.parseText(out)
 		return oOut;
@@ -107,7 +114,10 @@ class GenericRestClient {
 	def post(Map input) {
 		Map oinput = checkBlankCollection(input)
 		HttpResponseDecorator resp = delegate.post(oinput)
-		JsonOutput t
+		//JsonOutput t
+		if (resp.status != 200) {
+			log.debug("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
+		}
 		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
 		if ("${out}" == 'null') return null
 		JsonSlurper sl = new JsonSlurper()
