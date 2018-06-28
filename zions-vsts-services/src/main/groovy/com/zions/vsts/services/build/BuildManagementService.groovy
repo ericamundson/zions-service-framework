@@ -196,7 +196,7 @@ public class BuildManagementService {
 				requestContentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
 				body: body,
-				headers: [Accept: 'application/json;api-version=4.0;excludeUrls=true'],
+				headers: [Accept: 'application/json;api-version=4.1;excludeUrls=true'],
 				)
 	}
 	
@@ -223,7 +223,7 @@ public class BuildManagementService {
 
 	public def getBuild(def collection, def project, def repo, def qualifier) {
 		log.debug("BuildManagementService::getBuild -- buildName = "+repo.name+"-"+qualifier)
-		def query = ['api-version':'4.0','name':"${repo.name}-${qualifier}"]
+		def query = ['api-version':'4.1','name':"${repo.name}-${qualifier}"]
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
