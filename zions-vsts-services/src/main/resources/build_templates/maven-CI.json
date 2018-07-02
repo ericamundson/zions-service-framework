@@ -1,0 +1,198 @@
+{
+	"options": [
+		{
+			"enabled": true,
+			"definition": {
+				"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+			},
+			"inputs": {
+				"branchFilters": "[\"+refs/heads/*\"]",
+				"additionalFields": "{}"
+			}
+		}, {
+			"enabled": false,
+			"definition": {
+				"id": "7c555368-ca64-4199-add6-9ebaf0b0137d"
+			},
+			"inputs": {
+				"parallel": "false",
+				"continueOnError": "true",
+				"additionalFields": "{}"
+			}
+		}, {
+			"enabled": false,
+			"definition": {
+				"id": "a9db38f9-9fdc-478c-b0f9-464221e58316"
+			},
+			"inputs": {
+				"workItemType": "1",
+				"assignToRequestor": "true",
+				"additionalFields": "{}"
+			}
+		}, {
+			"enabled": false,
+			"definition": {
+				"id": "57578776-4c22-4526-aeb0-86b6da17ee9c"
+			},
+			"inputs": {}
+		}
+	],
+	"variables": {
+		"system.debug": {
+			"value": "false",
+			"allowOverride": true
+		}
+	},
+	"retentionRules": [{
+			"branches": ["+refs/heads/*"],
+			"artifacts": [],
+			"artifactTypesToDelete": ["FilePath", "SymbolStore"],
+			"daysToKeep": 10,
+			"minimumToKeep": 1,
+			"deleteBuildRecord": true,
+			"deleteTestResults": true
+		}
+	],
+	"_links": {
+		"self": {
+			"href": "http://utmsdev0487:8080/tfs/DefaultCollection/23d8586b-4e63-48ed-b2db-8492a1077ea7/_apis/build/Definitions/1"
+		},
+		"web": {
+			"href": "http://utmsdev0487:8080/tfs/_permalink/_build/index?collectionId=67ad8109-9299-4cd2-9ef4-a4f4a6b25df0&projectId=23d8586b-4e63-48ed-b2db-8492a1077ea7&definitionId=1"
+		},
+		"editor": {
+			"href": "http://utmsdev0487:8080/tfs/_permalink/_build/definitionEditor?collectionId=67ad8109-9299-4cd2-9ef4-a4f4a6b25df0&projectId=23d8586b-4e63-48ed-b2db-8492a1077ea7&definitionId=1"
+		}
+	},
+    "buildNumberFormat": "",
+    "comment": "set buildType",
+	"jobAuthorizationScope": 1,
+	"jobTimeoutInMinutes": 60,
+	"jobCancelTimeoutInMinutes": 5,
+	"process": {
+		"phases": [{
+				"steps": [{
+						"environment": {},
+						"enabled": true,
+						"continueOnError": false,
+						"alwaysRun": false,
+						"displayName": "Maven pom.xml",
+						"timeoutInMinutes": 0,
+						"condition": "succeeded()",
+						"refName": "Maven1",
+						"task": {
+							"id": "ac4ee482-65da-4485-a532-7b085873e532",
+							"versionSpec": "1.*",
+							"definitionType": "task"
+						},
+						"inputs": {
+							"mavenPOMFile": "$(Parameters.mavenPOMFile)",
+							"goals": "package",
+							"options": "",
+							"publishJUnitResults": "true",
+							"testResultsFiles": "**/TEST-*.xml",
+							"testRunTitle": "",
+							"codeCoverageTool": "None",
+							"classFilter": "",
+							"classFilesDirectories": "",
+							"srcDirectories": "",
+							"failIfCoverageEmpty": "false",
+							"javaHomeSelection": "JDKVersion",
+							"jdkVersion": "default",
+							"jdkUserInputPath": "",
+							"jdkArchitecture": "x86",
+							"mavenVersionSelection": "Default",
+							"mavenPath": "",
+							"mavenSetM2Home": "false",
+							"mavenOpts": "-Xmx1024m",
+							"mavenFeedAuthenticate": "false",
+							"sqAnalysisEnabled": "false",
+							"sqConnectedServiceName": "",
+							"sqProjectName": "",
+							"sqProjectKey": "",
+							"sqProjectVersion": "",
+							"sqDbDetailsRequired": "false",
+							"sqDbUrl": "",
+							"sqDbUsername": "",
+							"sqDbPassword": "",
+							"sqAnalysisIncludeFullReport": "true",
+							"sqAnalysisBreakBuildIfQualityGateFailed": "false",
+							"checkstyleAnalysisEnabled": "false",
+							"pmdAnalysisEnabled": "false",
+							"findbugsAnalysisEnabled": "false"
+						}
+					}
+				],
+				"name": null,
+				"jobAuthorizationScope": 0
+			}
+		],
+		"type": 1
+	},
+	"repository": {
+		"properties": {
+			"cleanOptions": "0",
+			"labelSources": "0",
+			"labelSourcesFormat": "$(build.buildNumber)",
+			"reportBuildStatus": "true",
+			"gitLfsSupport": "false",
+			"skipSyncSource": "false",
+			"checkoutNestedSubmodules": "false",
+			"fetchDepth": "0"
+		},
+		"id": "32a44c11-5bd0-454f-b245-e7e18258e037",
+		"type": "TfsGit",
+		"name": "james-test",
+		"url": "http://utmsdev0487:8080/tfs/DefaultCollection/ReleaseEngineering/_git/james-test",
+		"defaultBranch": "refs/heads/master",
+		"clean": "false",
+		"checkoutSubmodules": false
+	},
+	"processParameters": {
+		"inputs": [{
+				"options": {},
+				"properties": {},
+				"name": "mavenPOMFile",
+				"label": "Maven POM file",
+				"defaultValue": "pom.xml",
+				"required": true,
+				"type": "filePath",
+				"helpMarkDown": ""
+			}
+		]
+	},
+	"quality": 1,
+	"authoredBy": {
+		"id": "89e57c98-8c9d-4743-87c4-c700115d8737",
+		"displayName": "James Mcnabb",
+		"uniqueName": "ZBC\\z091556",
+		"url": "http://utmsdev0487:8080/tfs/DefaultCollection/_apis/Identities/89e57c98-8c9d-4743-87c4-c700115d8737",
+		"imageUrl": "http://utmsdev0487:8080/tfs/DefaultCollection/_api/_common/identityImage?id=89e57c98-8c9d-4743-87c4-c700115d8737"
+	},
+	"queue": {
+		"id": 1,
+		"name": "Default",
+		"pool": {
+			"id": 1,
+			"name": "Default"
+		}
+	},
+	"id": 1,
+	"name": "james-test-CI",
+	"url": "http://utmsdev0487:8080/tfs/DefaultCollection/23d8586b-4e63-48ed-b2db-8492a1077ea7/_apis/build/Definitions/1",
+	"uri": "vstfs:///Build/Definition/1",
+	"path": "\\",
+	"type": 2,
+	"queueStatus": 0,
+	"revision": 6,
+	"createdDate": "2018-06-24T19:47:01.647Z",
+	"project": {
+		"id": "23d8586b-4e63-48ed-b2db-8492a1077ea7",
+		"name": "ReleaseEngineering",
+		"description": "Test project for the Release Engineering team",
+		"url": "http://utmsdev0487:8080/tfs/DefaultCollection/_apis/projects/23d8586b-4e63-48ed-b2db-8492a1077ea7",
+		"state": "wellFormed",
+		"revision": 12,
+		"visibility": 0
+	}
+}

@@ -81,7 +81,7 @@ public class PolicyManagementService {
 				requestContentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.name}/_apis/policy/configurations",
 				body: body,
-				headers: [Accept: 'application/json;api-version=4.0;excludeUrls=true']
+				headers: [Accept: 'application/json;api-version=4.1;excludeUrls=true']
 		)
 		return result
 	}

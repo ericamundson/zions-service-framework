@@ -39,9 +39,8 @@ public class BuildManagementService {
 		def topFiles = codeManagementService.listTopLevel(collection, project, repo)
 		def buildType = BuildType.NONE
 		if (topFiles != null) {
-			log.debug("BuildManagementService::detectBuildType -- topFiles NOT null")
+			log.debug("BuildManagementService::detectBuildType -- Found top-level. Looking for build properties file ...")
 			topFiles.value.each { file ->
-				log.debug("BuildManagementService::detectBuildType -- Looking for build properties file ...")
 				def path = file.path
 				if ("${path}".endsWith('build.gradle')) {
 					buildType = BuildType.GRADLE
@@ -67,7 +66,6 @@ public class BuildManagementService {
 				codeManagementService.ensureDeployManifest(collection, projectData, repo)
 				def bd = ensureBuild(collection, projectData, repo, buildType, 'CI')
 				ensureBuild(collection, projectData, repo, buildType, 'Release')
-				
 			}
 		}
 	}
@@ -76,14 +74,18 @@ public class BuildManagementService {
 		def buildType = detectBuildType(collection, projectData, repo)
 		log.debug("BuildManagementService::ensureBuildsForBranch -- Detected BuildType = ${buildType}")
 		def ciBd = null
+		def res = null
 		if (buildType != BuildType.NONE) {
 			log.debug("BuildManagementService::ensureBuildsForBranch -- Calling ensure CI Build ...")
 			ciBd = ensureBuild(collection, projectData, repo, buildType, 'CI')
+			if (ciBd != null) {
+				res = ciBd.value[0]
+			}
 			log.debug("BuildManagementService::ensureBuildsForBranch -- CI Build Done: "+ciBd)
 			def relBd = ensureBuild(collection, projectData, repo, buildType, 'Release')
 			log.debug("BuildManagementService::ensureBuildsForBranch -- ensure Release Done: "+relBd)
 		}
-		return ciBd.value[0]
+		return res
 	}
 	
 	def reviseReleaseLabels(def collection, def projectData, String repoList, String releaseLabel) {
@@ -148,8 +150,12 @@ public class BuildManagementService {
 	}
 
 	public def createBuild(def collection, def project, def repo, BuildType buildType, String buildStage) {
+		log.debug("BuildManagementService::createBuild -- Repo: ${repo.name}, Build type: ${buildType}, Build stage: ${buildStage}")
 		def bDef = getResource(buildType.toString().toLowerCase(), buildStage)
-		if (bDef == null) return null
+		if (bDef == null) {
+			log.debug("BuildManagementService::createBuild -- no template found for build type and stage")
+			return null
+		}
 		bDef.remove('authoredBy')
 		bDef.name = "${repo.name}-${buildStage}"
 		bDef.id = -1
@@ -181,10 +187,14 @@ public class BuildManagementService {
 		bDef.repository.url = "${repo.url}"
 		bDef.repository.defaultBranch = "${repo.defaultBranch}"
 		bDef.retentionSettings = getRetentionSettings(collection)
+		log.debug("BuildManagementService::createBuild -- Calling getQueue ...")
 		def queueData = getQueue(collection, project, 'Default')
+		log.debug("BuildManagementService::createBuild -- Checking queue count ...")
 		if (queueData.count > 0) {
+			log.debug("BuildManagementService::createBuild -- Found something in queue ...")
 			bDef.queue = queueData.value[0]
 		}
+		log.debug("BuildManagementService::createBuild -- Posting new build def to persist ...")
 		//def memberData = memberManagementService.getMember(collection, 'z091182')
 		def body = new JsonBuilder(bDef).toPrettyString()
 		
@@ -197,7 +207,7 @@ public class BuildManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
 				body: body,
 				headers: [Accept: 'application/json;api-version=4.1;excludeUrls=true'],
-				)
+			)
 	}
 	
 	public def getQueue(String collection, def project, String name) {
@@ -207,7 +217,7 @@ public class BuildManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/distributedtask/queues",
 				query: query,
 				headers: [Accept: 'application/json;api-version=4.1-preview.1;excludeUrls=true'],
-				)
+			)
 		return result
 
 	}
