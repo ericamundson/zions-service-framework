@@ -63,7 +63,10 @@ public class PolicyManagementService {
 		// get the CI build
 		def projectData = repoData.project
 		def ciBuild = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData)
-		log.debug("PolicyManagementService::ensureBuildPolicy -- ciBuild = "+ciBuild)
+		if (ciBuild == null) {
+			log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was returned. Unable to create the validation build policy!")
+			return null
+		}
 		def policy = [id: -2, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
 		    type: [id: "0609b952-1397-4640-95ec-e00a01b2c241"],
 		    settings:[buildDefinitionId: ciBuild.id, displayName: "${repoData.name} validation", manualQueueOnly: false, queueOnSourceUpdateOnly:true, validDuration: 720,
