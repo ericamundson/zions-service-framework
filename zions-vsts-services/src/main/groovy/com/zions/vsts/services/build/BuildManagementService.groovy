@@ -40,17 +40,22 @@ public class BuildManagementService {
 		def buildType = BuildType.NONE
 		if (topFiles != null) {
 			log.debug("BuildManagementService::detectBuildType -- Found top-level files ...")
-			topFiles.value.each { file ->
+			//topFiles.value.each { file ->
+			for (def file in topFiles.value) {
 				log.debug("BuildManagementService::detectBuildType -- Looking for build properties file ...")
 				def path = file.path
 				if ("${path}".endsWith('build.gradle')) {
 					buildType = BuildType.GRADLE
+					break
 				} else if ("${path}".endsWith('pom.xml')) {
 					buildType = BuildType.MAVEN
+					break
 				} else if ("${path}".endsWith('package.json')) {
 					buildType = BuildType.NODE
+					break
 				} else if ("${path}".endsWith('build.xml')) {
 					buildType = BuildType.ANT
+					break
 				}
 			}
 		}
