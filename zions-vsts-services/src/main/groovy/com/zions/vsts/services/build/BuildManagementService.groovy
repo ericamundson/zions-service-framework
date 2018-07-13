@@ -6,12 +6,14 @@ import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient;
+import groovy.util.logging.Slf4j
 import groovy.json.JsonBuilder
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 
 @Component
+@Slf4j
 public class BuildManagementService {
 
 	@Autowired
@@ -33,22 +35,31 @@ public class BuildManagementService {
 	}
 
 	public def detectBuildType(def collection, def project, def repo) {
+		log.debug("BuildManagementService::detectBuildType -- Calling codeManagementService.listTopLevel ...")
 		def topFiles = codeManagementService.listTopLevel(collection, project, repo)
 		def buildType = BuildType.NONE
 		if (topFiles != null) {
-			topFiles.value.each { file ->
+			log.debug("BuildManagementService::detectBuildType -- Found top-level files ...")
+			//topFiles.value.each { file ->
+			for (def file in topFiles.value) {
+				log.debug("BuildManagementService::detectBuildType -- Looking for build properties file ...")
 				def path = file.path
 				if ("${path}".endsWith('build.gradle')) {
 					buildType = BuildType.GRADLE
+					break
 				} else if ("${path}".endsWith('pom.xml')) {
 					buildType = BuildType.MAVEN
+					break
 				} else if ("${path}".endsWith('package.json')) {
 					buildType = BuildType.NODE
+					break
 				} else if ("${path}".endsWith('build.xml')) {
-					buildType = buildType.ANT
+					buildType = BuildType.ANT
+					break
 				}
 			}
 		}
+		log.debug("BuildManagementService::detectBuildType -- Returning buildType of "+buildType)
 		return buildType
 	}
 
@@ -64,6 +75,40 @@ public class BuildManagementService {
 				
 			}
 		}
+	}
+	
+	public def ensureBuildsForBranch(def collection, def projectData, def repo) {
+		def buildType = detectBuildType(collection, projectData, repo)
+		log.debug("BuildManagementService::ensureBuildsForBranch -- Detected BuildType = ${buildType}")
+		if (buildType == BuildType.NONE) {
+			return null
+		}
+		log.debug("BuildManagementService::ensureBuildsForBranch -- Calling get CI Build ...")
+		def ciBd = null
+		def build = getBuild(collection, projectData, repo, 'CI')
+		if (build.count == 0) {
+			build = createBuild(collection, projectData, repo, buildType, 'CI', true)
+			if (build == null ) {
+				log.error("BuildManagementService::ensureBuildsForBranch -- CI Build creation failed!")
+			}
+			ciBd = build
+		} else {
+			ciBd = build.value[0]
+		}
+		//ciBd = ensureBuild(collection, projectData, repo, buildType, 'CI')
+		log.debug("BuildManagementService::ensureBuildsForBranch -- CI Build Done: "+ciBd)
+		def relBd = null
+		def build1 = getBuild(collection, projectData, repo, 'Release')
+		if (build1.count == 0) {
+			relBd = createBuild(collection, projectData, repo, buildType, 'Release', true)
+			if (relBd == null ) {
+				log.error("BuildManagementService::ensureBuildsForBranch -- Release Build creation failed!")
+			}
+		}
+		//def relBd = ensureBuild(collection, projectData, repo, buildType, 'Release')
+		log.debug("BuildManagementService::ensureBuildsForBranch -- ensure Release Done: "+relBd)
+
+		return ciBd
 	}
 	
 	def reviseReleaseLabels(def collection, def projectData, String repoList, String releaseLabel) {
@@ -105,7 +150,7 @@ public class BuildManagementService {
 		def build = getBuild(collection, project, repo, buildStage)
 		if (build.count == 0) {
 			String name = buildType.toString().toLowerCase()
-			build = createBuild(collection, project, repo, buildType, buildStage)
+			build = createBuild(collection, project, repo, buildType, buildStage, false)
 			if (build != null && "${buildStage}" == 'CI') {
 				branchPolicy(collection, project, repo, build, 'refs/heads/master')
 			}
@@ -127,9 +172,21 @@ public class BuildManagementService {
 				)
 	}
 
-	public def createBuild(def collection, def project, def repo, BuildType buildType, String buildStage) {
-		def bDef = getResource(buildType.toString().toLowerCase(), buildStage)
-		if (bDef == null) return null
+	public def createBuild(def collection, def project, def repo, BuildType buildType, String buildStage, boolean useTfsTemplate) {
+		def bDef = null
+		if (useTfsTemplate) {
+			// Looking for template build definition with name like 'maven-CI-template', 'gradle-Release-template', 'ant-CI-template', etc.
+			String templateName = buildType.toString().toLowerCase()+"-"+buildStage+"-template"
+			log.debug("BuildManagementService::createBuild -- Using TFS template: "+templateName)
+			bDef = getBuild(collection, project, templateName)
+		} else {
+			log.debug("BuildManagementService::createBuild -- Using local resource file.  Build type: "+buildType.toString().toLowerCase()+", build stage: "+ buildStage)
+			bDef = getResource(buildType.toString().toLowerCase(), buildStage)
+		}
+		if (bDef == null) {
+			log.debug("BuildManagementService::createBuild -- Build definition template not found. Returning NULL ...")
+			return null
+		}
 		bDef.remove('authoredBy')
 		bDef.name = "${repo.name}-${buildStage}"
 		bDef.id = -1
@@ -202,6 +259,7 @@ public class BuildManagementService {
 	}
 
 	public def getBuild(def collection, def project, def repo, def qualifier) {
+		log.debug("BuildManagementService::getBuild -- buildName = "+repo.name+"-"+qualifier)
 		def query = ['api-version':'4.1','name':"${repo.name}-${qualifier}"]
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
@@ -212,13 +270,17 @@ public class BuildManagementService {
 	}
 	
 	public def getBuild(def collection, def project, String name) {
+		log.debug("BuildManagementService::getBuild -- name = " + name)
 		def query = ['api-version':'4.1','name':"${name}"]
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
 				query: query,
 				)
-		if (result == null || result.count == 0) return null
+		if (result == null || result.count == 0) {
+			log.debug("BuildManagementService::getBuild -- build " + name + " not found. Returning NULL ...")
+			return null
+		}
 		query = ['api-version':'4.1']
 		def result1 = genericRestClient.get(
 				contentType: ContentType.JSON,
