@@ -5,11 +5,21 @@ bootJar {
 	version =  '0.1.0'
 }
 
+//repositories {
+//	flatDir {
+//		dirs 'libs'
+//	}
+//
+//}
+
 dependencies {
-//    compile 'org.springframework.cloud:spring-cloud-starter-zuul'
-//    compile 'org.springframework.cloud:spring-cloud-starter-eureka'
+	
+	compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-gateway', version: '2.0.0.RELEASE'
+//	compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix', version: '2.0.0.RELEASE'
+//	compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-ribbon', version: '1.4.4.RELEASE'
+	
 //    compile 'org.springframework.cloud:spring-cloud-starter-ribbon'
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
+//    compile 'org.springframework.boot:spring-boot-starter-actuator'
 	compile project(':zions-vsts-services')
 	compile project(':zions-common')
 }

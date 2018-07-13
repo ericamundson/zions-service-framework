@@ -60,12 +60,12 @@ class GenericRestClient {
 	def get(Map input) {
 		Map oinput = checkBlankCollection(input)
 		HttpResponseDecorator resp = delegate.get(oinput)
-		JsonOutput t
-		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
-		if ("${out}" == 'null') return null
-		JsonSlurper sl = new JsonSlurper()
-		def oOut = sl.parseText(out)
-		return oOut;
+//		JsonOutput t
+//		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
+//		if ("${out}" == 'null') return null
+//		JsonSlurper sl = new JsonSlurper()
+//		def oOut = sl.parseText(out)
+		return resp.data;
 	}
 	
 	def put(Map input) {
