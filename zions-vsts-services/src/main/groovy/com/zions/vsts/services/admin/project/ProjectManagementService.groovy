@@ -37,7 +37,7 @@ class ProjectManagementService {
 		
 	}
 	
-	private def getTeam(String collection, String project, String team ) {
+	def getTeam(String collection, String project, String team ) {
 		def query = ['api-version':'4.0']
 		def eproject = URLEncoder.encode(project, 'UTF-8')
 		eproject = eproject.replace('+', '%20')
