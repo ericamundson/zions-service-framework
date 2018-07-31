@@ -115,6 +115,7 @@ class AreasManagementService {
 	
 	def assignToTeam(collection, project, team, areas) {
 		def teamData = projectManagementService.getTeam(collection, project.name, team)
+		if (teamData == null) return
 		def outAreas = []
 		areas.each { area ->
 			String value = "${area.id}".replace('/', '\\')

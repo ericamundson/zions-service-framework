@@ -22,18 +22,48 @@ public class ProcessTemplateService  {
 	
     public ProcessTemplateService() {
 	}
+	
+	def getWorkItems(String collection, String project) {
+		def aproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${aproject}/_apis/wit/workItemTypes",
+			headers: ['Content-Type': 'application/json']
+			)
+
+		return result;
+
+	}
 
 	public def getWorkitemTemplate(String collection, String project,  String workItemName) {
-		def aproject = URLEncoder.encode(project).replace('+', '%20')
-		def aworkItemName = URLEncoder.encode(workItemName).replace('+', '%20')
+		def aproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def aworkItemName = URLEncoder.encode(workItemName, 'utf-8').replace('+', '%20')
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${aproject}/_apis/wit/workItemTypes/${aworkItemName}",
-			headers: [Accept: 'application/json']
+			headers: ['Content-Type': 'application/json']
 			)
 
 		return result;
 	}
+	
+	def getWorkitemTemplateXML(String collection, String project,  String workItemName) {
+		def xml = new StringBuilder(), serr = new StringBuilder()
+		def proc = "witadmin exportwitd /collection:\"${genericRestClient.getTfsUrl()}/${collection}\" /p:\"${project}\" /n:\"${workItemName}\"".execute()
+		proc.waitForProcessOutput(xml, serr)
+		return xml
+	}
+	
+	def getField(String url) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: url,
+			query: ['$expand': 'all', 'api-version': '4.1'],
+			headers: ['Content-Type': 'application/json']
+			)
+		return result
+	}
+	
 	public def updateWorkitemTemplate(String collection, String project,  String workItemName, String body) {
 		def aproject = URLEncoder.encode(project).replace('+', '%20')
 		def aworkItemName = URLEncoder.encode(workItemName).replace('+', '%20')

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.codehaus.groovy.eclipse.groovyConsoleLaunchConfiguration">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-vsts-cli/src/main/groovy/com/zions/vsts/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="exportWIT --tfs.url=https://tfs.testqa.zionsbank.com --tfs.collection=DevelopmentCollection --tfs.user=z091182 --tfs.token=&quot;6nq4d2ewfo27n4k3phzgdl5hr76i3npgpfrzwsv5weudxwyncyea&quot; --tfs.project=&quot;WitSandbox&quot; --template.dir=d:\tfs_wit_templates --tfs.workitem.name=&quot;all&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-vsts-services}"/>
+</launchConfiguration>

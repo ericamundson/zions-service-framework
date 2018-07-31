@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.zions.clm.services.rest.ClmGenericRestClient;
+import groovy.xml.MarkupBuilder
 
 @Component
 public class WorkItemManagementService {
@@ -14,6 +15,7 @@ public class WorkItemManagementService {
 	public WorkItemManagementService() {
 		
 	}
+	
 	
 	public getWorkItemsForProject(String project) {
 		def query = "workitem/workItem[projectArea/name='${project}']/(id)"
