@@ -31,29 +31,30 @@ public class ReleaseManagementService {
 
 	}
 	
-	public def ensureReleases(def collection, def project, def template, String xldEndpoint) {
+	public def ensureReleases(def collection, def project, def template, String xldEndpoint, String folder) {
 		def projectData = projectManagementService.getProject(collection, project, true)
 		def repos = codeManagementService.getRepos(collection, projectData)
 		repos.value.each { repo ->
-			ensureRelease(collection, projectData, repo,  template, xldEndpoint)
+			ensureRelease(collection, projectData, repo,  template, xldEndpoint, folder)
 		}
 
 	}
 	
-	public def ensureRelease(collection, projectData, repo, template, xldEndpoint) {
+	public def ensureRelease(collection, projectData, repo, template, xldEndpoint, folder) {
 		def release = getRelease(collection, projectData, repo.name)
 		if (release == null) {
-			release = createRelease(collection, projectData, repo, template, xldEndpoint)
+			release = createRelease(collection, projectData, repo, template, xldEndpoint, folder)
 		}
 	}
 	
-	public def createRelease(collection, project, repo, template, xldEndpoint) {
+	public def createRelease(collection, project, repo, template, xldEndpoint, folder) {
 		def buildDef = buildManagementService.getBuild(collection, project, "${repo.name}-Release")
 		if (buildDef == null) return null
 		def endpoint = endpointManagementService.getServiceEndpoint(collection, project.id, xldEndpoint)
 		if (endpoint == null) return null
 		template.id = -1
 		template.name = repo.name
+		template.path = folder
 		template.description = "Release definition for ${repo.name}"
 		template.artifacts[0].alias = buildDef.name
 		template.artifacts[0].definitionReference.artifactSourceDefinitionUrl.id = buildDef._links.web.href
@@ -99,6 +100,26 @@ public class ReleaseManagementService {
 				)
 		query = ['api-version':'4.1', 'propertyFilters':'processParameters']
 		return result1
+	}
+
+	def ensureReleaseFolder(def collection, def project, String folder) {
+		//def projectData = projectManagementService.getProject(collection, project, true)
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def efolder = URLEncoder.encode(folder, 'utf-8')
+		efolder = efolder.replace('+', '%20')
+		
+		def folderObj = [createdBy: null, createdOn: null, lastChangedBy: null, lastChangedDate: null, path: "${folder}"]
+		
+		def body = new JsonBuilder(folderObj).toPrettyString()
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/Release/folders/${efolder}",
+			body: body,
+			headers: [accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
+			)
+		return result
+		
 	}
 
 }

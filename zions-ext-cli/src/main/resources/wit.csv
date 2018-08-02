@@ -1,0 +1,41 @@
+id| xs:integer| The system-generated id number for the work item (e.g. "123")
+resolutionDate| xs:time| The date and time when the work item was resolved, or null if the work item has not been resolved
+summary| xs:string| The one-line summary (or title) of the work item
+creationDate| xs:time| The date and time when the work item was created
+dueDate| xs:time| The date and time when the work item is scheduled for completion, or null if no due date has been specified
+description| xs:string| The multi-line description of the work item
+workflowSurrogate| xs:string| James: To Do
+tags| xs:string| The tags attached to the work item. In the case of multiple tags, this single string contains a comma-separated list of tags
+duration| xs:long| The estimate specified for the work item, indicated the estimated time to complete the work item. In the UI, this is called "Estimate" rather than duration.
+timeSpent| xs:long| How much time has actually been spent so far on the work item
+correctedEstimate| xs:long| The corrected estimate for the work item, in the case that the user has corrected the estimate
+dayModified| xs:date| The day on which the work item was last modified
+creator| com.ibm.team.repository.Contributor| The contributor who created the work item
+owner| com.ibm.team.repository.Contributor| The contributor who owns the work item
+category| com.ibm.team.workitem.Category| The category to which the work item is assigned. In the UI, this is called "Filed Against".
+comments| com.ibm.team.workitem.Comment, maxOccurs: unbounded)| A collection of zero or more comments appended to the work item
+customAttributes| com.ibm.team.repository.Attribute, maxOccurs: unbounded| A collection of zero or more "custom attributes" attached to the work item. These are user-defined attributes (as opposed to the built-in attributes elsewhere in this list|
+subscriptions| com.ibm.team.repository.Contributor, maxOccurs: unbounded| A collection of zero or more Contributors who are subscribed to the work item
+projectArea| com.ibm.team.process.ProjectArea| The project area to which the work item belongs
+resolver| com.ibm.team.workitem.Contributor| The Contributor who resolved the work item, or null if the work item has not been resolved
+approvals| com.ibm.team.workitem.Approvals, maxOccurs: unbounded| A collection of zero or more Approvals attached to the work item
+approvalDescriptors| com.ibm.team.workitem.ApprovalDescriptor, maxOccurs: unbounded| A collection of zero or more Approval Descriptors attached to the work item
+target| com.ibm.team.process.Iteration| The iteration that the work item is "Planned For"
+foundIn| com.ibm.workitem.Deliverable| The deliverable that the work item is "Found In"
+itemHistory| com.ibm.team.workitem.WorkItem, maxOccurs: unbounded| A collection of zero or more WorkItem elements, representing the entire history of the work item. Each state the work item has ever been in is reflected in this history list.
+teamArea| com.ibm.team.process.TeamArea| The team area to which the work item belongs
+state| com.ibm.team.workitem.State| The state of the work item (e.g. "Resolved", "In Progress", "New"| The states are user-defined as part of the project area process.
+resolution| com.ibm.team.workitem.Resolution| The resolution of the work item (e.g. "Duplicate", "Invalid", "Fixed"| The resolutions are user-defined as part of the project area process.
+type| com.ibm.team.workitem.WorkItemType| The type of the work item (e.g. "Defect", "Task", "Story"| The work item types are user-defined as part of the project area process.
+severity| com.ibm.team.workitem.Literal| The severity of the work item (e.g. "Critical", "Normal", "Blocker"| The work item severities are user-defined as part of the project area process.
+priority| com.ibm.team.workitem.Literal| The priority of the work item (e.g. "High", "Medium", "Low"| The work item priorities are user-defined as part of the project area process.
+parent| com.ibm.team.workitem.WorkItem| The parent work item of this work item, if one exists
+children| com.ibm.team.workitem.WorkItem, maxOccurs: unbounded| A collection of zero or more child work items
+blocks| com.ibm.team.workitem.WorkItem, maxOccurs: unbounded| A collection of zero or more work items which this work item blocks
+dependsOn| com.ibm.team.workitem.WorkItem, maxOccurs: unbounded| A collection of zero or more work items which block this work item
+duplicatedBy| com.ibm.team.workitem.WorkItem, maxOccurs: unbounded| A collection of zero or more work items which are closed as duplicates of this work item
+duplicateOf| com.ibm.team.workitem.WorkItem, maxOccurs: unbounded| A collection of zero or more work items which this work item is a duplicate of
+related| com.ibm.team.workitem.WorkItem, maxOccurs: unbounded| A collection of zero of more work items which this work item is related to
+timeSheetEntries| com.ibm.team.workitem.TimeSheetEntry, maxOccurs: unbounded| A collection of zero or more timesheet entries linked to the work item
+plannedStartDate| xs:time| The work item's planned start date as specified in the plan.
+plannedEndDate| xs:time| The work item's planned end date as specified in the plan.

@@ -42,8 +42,12 @@ class SyncBBGitRepos implements CliAction {
 		def repos = bBCodeManagmentService.getProjectRepoUrls(project)
 		repos.each { repo ->
 			def url = repo.url.replace("${bbUser}@", '')
-			codeManagmentService.importRepo(collection, outproject, repo.name, url, bbUser, bbPassword)	
+			codeManagmentService.importRepoCLI(collection, outproject, repo.name, url, bbUser, bbPassword)	
 			permissionsManagementService.ensureTeamToRepo(collection, outproject, repo.name, teamName, templateName)		
+		}
+		File git = new File('git')
+		if (git.exists()) {
+			git.deleteDir()
 		}
 		return null;
 	}

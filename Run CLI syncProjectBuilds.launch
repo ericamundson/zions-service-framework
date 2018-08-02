@@ -8,6 +8,7 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="syncProjectBuilds --tfs.url=https://tfs.testqa.zionsbank.com --tfs.collection=DevelopmentCollection  --tfs.user=z091182 --tfs.token=&quot;6nq4d2ewfo27n4k3phzgdl5hr76i3npgpfrzwsv5weudxwyncyea&quot; --tfs.project=&quot;ZionsTools&quot; --grant.template=builder"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="syncProjectBuilds --tfs.url=https://dtsdemo.visualstudio.com   --tfs.user=z091182 --tfs.token=&quot;k4h6tpwpvb4tjb657ooywf5corqlljhumr2327osjfsuoaujrz7q&quot; --tfs.project=&quot;Eric Zions&quot; --grant.template=builder --tfs.build.folder=&quot;\Zions Tools\ALMOps Team&quot; --tfs.team=&quot;ALMOps Team&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dproxy.Host=172.18.4.115 -Dproxy.Port=8080 -Dproxy.User=z091182 -Dproxy.Password=4878Middy"/>
 </launchConfiguration>

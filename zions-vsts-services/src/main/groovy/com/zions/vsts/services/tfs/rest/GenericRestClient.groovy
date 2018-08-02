@@ -130,6 +130,13 @@ class GenericRestClient {
 			uri = "${this.tfsUrl}/${uri.substring(checkedUri.length())}"
 			input.uri = uri
 		}
+		if (input.headers != null && input.headers.Referer != null) {
+			String refUri = input.headers.Referer
+			if (refUri.startsWith(checkedUri)) {
+				refUri = "${this.tfsUrl}/${refUri.substring(checkedUri.length())}"
+				input.headers.Referer = refUri
+			}
+		}
 		return input
 	}
 }
