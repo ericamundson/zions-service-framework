@@ -54,17 +54,20 @@
     ],
     "_links": {
         "self": {
-            "href": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/11?revision=3"
+            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_apis/build/Definitions/29?revision=5"
         },
         "web": {
-            "href": "http://utmsdev0527:8080/tfs/_permalink/_build/index?collectionId=66f2d84a-3301-4b68-b2fc-19432702b3df&projectId=4f9d558a-5a3f-483e-9c9c-7b7f9532e925&definitionId=11"
+            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_build/definition?definitionId=29"
         },
         "editor": {
-            "href": "http://utmsdev0527:8080/tfs/_permalink/_build/definitionEditor?collectionId=66f2d84a-3301-4b68-b2fc-19432702b3df&projectId=4f9d558a-5a3f-483e-9c9c-7b7f9532e925&definitionId=11"
+            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_build/designer?id=29&_a=edit-build-definition"
+        },
+        "badge": {
+            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_apis/build/status/29"
         }
     },
     "buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
-    "comment": "set buildType",
+    "comment": "good",
     "jobAuthorizationScope": "projectCollection",
     "jobTimeoutInMinutes": 60,
     "jobCancelTimeoutInMinutes": 5,
@@ -79,19 +82,37 @@
                         "enabled": true,
                         "continueOnError": false,
                         "alwaysRun": false,
-                        "displayName": "Run gradle",
+                        "displayName": "gradlew build",
                         "timeoutInMinutes": 0,
                         "condition": "succeeded()",
                         "task": {
-                            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-                            "versionSpec": "1.*",
+                            "id": "8d8eebd8-2b94-4c97-85af-839254cc6da4",
+                            "versionSpec": "2.*",
                             "definitionType": "task"
                         },
                         "inputs": {
-                            "filename": "gradle",
-                            "arguments": "build -PbuildType=ci",
-                            "workingFolder": "",
-                            "failOnStandardError": "true"
+                            "wrapperScript": "gradlew",
+                            "cwd": "",
+                            "options": "",
+                            "tasks": "build",
+                            "publishJUnitResults": "false",
+                            "testResultsFiles": "**/TEST-*.xml",
+                            "testRunTitle": "",
+                            "codeCoverageTool": "None",
+                            "classFilesDirectories": "build/classes/main/",
+                            "classFilter": "",
+                            "failIfCoverageEmpty": "false",
+                            "javaHomeSelection": "JDKVersion",
+                            "jdkVersion": "default",
+                            "jdkUserInputPath": "",
+                            "jdkArchitecture": "x64",
+                            "gradleOpts": "-Xmx1024m",
+                            "sqAnalysisEnabled": "false",
+                            "sqGradlePluginVersionChoice": "specify",
+                            "sqGradlePluginVersion": "2.6.1",
+                            "checkstyleAnalysisEnabled": "false",
+                            "findbugsAnalysisEnabled": "false",
+                            "pmdAnalysisEnabled": "false"
                         }
                     }
                 ],
@@ -99,6 +120,16 @@
                 "refName": "Phase_1",
                 "condition": "succeeded()",
                 "target": {
+                    "queue": {
+                        "_links": {
+                            "self": {
+                                "href": "https://dtsdemo.visualstudio.com/_apis/build/Queues/26"
+                            }
+                        },
+                        "id": 26,
+                        "url": "https://dtsdemo.visualstudio.com/_apis/build/Queues/26",
+                        "pool": null
+                    },
                     "executionOptions": {
                         "type": 0
                     },
@@ -122,10 +153,10 @@
             "checkoutNestedSubmodules": "false",
             "fetchDepth": "0"
         },
-        "id": "2dd2f3b5-90fa-483a-9d75-360d41b06417",
+        "id": "4f1f0b20-03eb-44b5-87d1-ff73b730cca1",
         "type": "TfsGit",
         "name": "readiness",
-        "url": "http://utmsdev0527:8080/tfs/DefaultCollection/Zions%20Tools%20Project/_git/readiness",
+        "url": "https://dtsdemo.visualstudio.com/Eric%20Zions/_git/readiness",
         "defaultBranch": "refs/heads/master",
         "clean": "false",
         "checkoutSubmodules": false
@@ -136,15 +167,16 @@
     "quality": "definition",
     "authoredBy": {
         "displayName": "Eric Amundson",
-        "url": "http://localhost:8080/tfs/defaultcollection/_apis/Identities/3f50876c-2019-48b7-9835-f9d2488938b4",
+        "url": "https://app.vssps.visualstudio.com/A4db32c7f-b967-4efc-82f8-be77953f96f1/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
         "_links": {
             "avatar": {
-                "href": "http://utmsdev0527:8080/tfs/DefaultCollection/_api/_common/identityImage?id=3f50876c-2019-48b7-9835-f9d2488938b4"
+                "href": "https://dtsdemo.visualstudio.com/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
             }
         },
-        "id": "3f50876c-2019-48b7-9835-f9d2488938b4",
-        "uniqueName": "ZBC\\z091182",
-        "imageUrl": "http://utmsdev0527:8080/tfs/DefaultCollection/_api/_common/identityImage?id=3f50876c-2019-48b7-9835-f9d2488938b4"
+        "id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+        "uniqueName": "eric.amundson2@zionsbancorp.com",
+        "imageUrl": "https://dtsdemo.visualstudio.com/_api/_common/identityImage?id=34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+        "descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
     },
     "drafts": [
         
@@ -152,33 +184,33 @@
     "queue": {
         "_links": {
             "self": {
-                "href": "http://localhost:8080/tfs/defaultcollection/_apis/build/Queues/4"
+                "href": "https://dtsdemo.visualstudio.com/_apis/build/Queues/26"
             }
         },
-        "id": 4,
-        "name": "Default",
-        "url": "http://localhost:8080/tfs/defaultcollection/_apis/build/Queues/4",
+        "id": 26,
+        "name": "Hosted",
+        "url": "https://dtsdemo.visualstudio.com/_apis/build/Queues/26",
         "pool": {
-            "id": 1,
-            "name": "Default"
+            "id": 2,
+            "name": "Hosted",
+            "isHosted": true
         }
     },
-    "id": 11,
+    "id": 29,
     "name": "readiness-CI",
-    "url": "http://localhost:8080/tfs/defaultcollection/4f9d558a-5a3f-483e-9c9c-7b7f9532e925/_apis/build/Definitions/11?revision=3",
-    "uri": "vstfs:///Build/Definition/11",
-    "path": "\\",
+    "url": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_apis/build/Definitions/29?revision=5",
+    "uri": "vstfs:///Build/Definition/29",
+    "path": "\\Zions Tools\\ALMOps Team",
     "type": "build",
     "queueStatus": "enabled",
-    "revision": 3,
-    "createdDate": "2018-06-06T14:11:58.443Z",
+    "revision": 5,
+    "createdDate": "2018-08-02T18:32:54.773Z",
     "project": {
-        "id": "4f9d558a-5a3f-483e-9c9c-7b7f9532e925",
-        "name": "Zions Tools Project",
-        "description": "Test member sync",
-        "url": "http://localhost:8080/tfs/defaultcollection/_apis/projects/4f9d558a-5a3f-483e-9c9c-7b7f9532e925",
+        "id": "cab15b20-2305-4632-b3b2-c8c9c2b9f30d",
+        "name": "Eric Zions",
+        "url": "https://dtsdemo.visualstudio.com/_apis/projects/cab15b20-2305-4632-b3b2-c8c9c2b9f30d",
         "state": "wellFormed",
-        "revision": 88,
+        "revision": 75,
         "visibility": "private"
     }
 }

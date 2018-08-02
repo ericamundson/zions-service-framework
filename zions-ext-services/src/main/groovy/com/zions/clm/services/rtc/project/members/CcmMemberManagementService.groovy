@@ -16,7 +16,7 @@ public class CcmMemberManagementService {
 	}
 	
 	public def getMemberData(String project, String tfsproject) {
-		def query = "foundation/projectArea[name='${project}']/(name|teamMembers/userId|teamMembers/archived|allTeamAreas/archived|allTeamAreas/name|allTeamAreas/teamMembers/userId|allTeamAreas/teamMembers/archived)"
+		def query = "foundation/projectArea[name='${project}']/(name|teamMembers/userId|teamMembers/emailAddress|teamMembers/archived|allTeamAreas/archived|allTeamAreas/name|allTeamAreas/teamMembers/userId|allTeamAreas/teamMembers/emailAddress|allTeamAreas/teamMembers/archived)"
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
 		String uri = this.clmGenericRestClient.clmUrl + "/ccm/rpt/repository/foundation?fields=" + encoded;
@@ -31,7 +31,7 @@ public class CcmMemberManagementService {
 		def defaultTeam = "${tfsproject} Team"
 		teams.projectArea.teamMembers.each { member ->
 			if ("${member.archived.text()}" == 'false') {
-				def id = member.userId.text()
+				def id = member.emailAddress.text()
 				if (!memberMap.containsKey(id)) {
 					memberMap[id] = [[project: tfsproject, team: defaultTeam]]
 				} else {
@@ -44,7 +44,7 @@ public class CcmMemberManagementService {
 				def team = teamArea.name.text()
 				teamArea.teamMembers.each { member ->
 					if ("${member.archived.text()}" == 'false') {
-						def id = member.userId.text()
+						def id = member.emailAddress.text()
 						if (!memberMap.containsKey(id)) {
 							memberMap[id] = [[project: tfsproject, team: team]]
 						} else {

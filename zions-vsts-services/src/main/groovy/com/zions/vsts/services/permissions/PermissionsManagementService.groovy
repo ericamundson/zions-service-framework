@@ -39,24 +39,30 @@ class PermissionsManagementService {
 		//def perms = getRepoPermissions(collection, projectData, repoData, team )
 		if (!hasIdentity(collection, projectData, repoData, team)) {
 			def identity = addIdentityForPermissions(collection, projectData, repoData, team)
-			def perms = getRepoPermissions(collection, projectData, repoData, team.localId )
+			def perms = getRepoPermissions(collection, projectData, repoData, team.id )
 			manageRepoPermission(collection, projectData, repoData, permissionsTemplate, perms)
 		}
 	}
 	
 	def updateBuilderPermissions(String collection, String project, String template) {
+		String cVal = collection
+		if (cVal.size() == 0) {
+			cVal = "${genericRestClient.tfsUrl}"
+			cVal = cVal.substring("https://".size())
+			cVal = cVal.substring(0, cVal.indexOf('.'))
+		}
 		def permissionsTemplate = getResource(template)
 		def projectData = projectManagementService.getProject(collection, project)
 		def repos = codeManagementService.getRepos(collection, projectData)
 		repos.value.each { repoData ->
-			def builder = getRepoIdentity(collection, projectData, repoData, "Project Collection Build Service (${collection})")
+			def builder = getRepoIdentity(collection, projectData, repoData, "Project Collection Build Service (${cVal})")
 			def perms = getRepoPermissions(collection, projectData, repoData, builder.TeamFoundationId )
 			manageRepoPermission(collection, projectData, repoData, permissionsTemplate, perms)
 		}
 	}
 	
 	def addIdentityForPermissions(collection, projectData, repoData, team) {
-		def req = [ 'existingUsersJson': "[\"${team.localId}\"]",  'newUsersJson': "[]" ]
+		def req = [ 'existingUsersJson': "[\"${team.id}\"]",  'newUsersJson': "[]" ]
 		def body = new JsonBuilder( req ).toString()
 		def eproject = URLEncoder.encode(projectData.name, 'UTF-8')
 		eproject = eproject.replace('+', '%20')
@@ -104,7 +110,7 @@ class PermissionsManagementService {
 		def identities = getCurrentIdentities(collection, project, repo)
 		boolean hasId = false;
 		identities.identities.each { id -> 
-			if ("${team.displayName}" == "${id.DisplayName}") {
+			if ("${team.name}" == "${id.FriendlyDisplayName}") {
 				hasId = true
 				return
 			}
@@ -127,7 +133,7 @@ class PermissionsManagementService {
 		def identities = getCurrentIdentities(collection, project, repo)
 		def retVal = null;
 		identities.identities.each { id ->
-			if ("${name}" == "${id.DisplayName}") {
+			if ("${name}".toLowerCase() == "${id.DisplayName}".toLowerCase()) {
 				retVal = id
 				return
 			}

@@ -2,8 +2,10 @@ package com.zions.vsts.services.code
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
+import com.zions.vsts.services.permissions.PermissionsManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j;
@@ -20,6 +22,12 @@ class CodeManagementService {
 	
 	@Autowired
 	private EndpointManagementService endpointManagementService
+	
+	@Autowired
+	private MemberManagementService memberManagementService
+	
+	@Autowired
+	private PermissionsManagementService permissionsManagementService
 
 	public CodeManagementService() {
 		
@@ -70,6 +78,25 @@ class CodeManagementService {
 		return result
 
 	}
+	
+	public def getRepos(String collection, def project, def team) {
+		def teamData = memberManagementService.getTeam(collection, project, team)
+		def repos = []
+		def query = ['api-version':'4.1']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories",
+			query: query
+		)
+		
+		result.value.each { repo -> 
+			if (permissionsManagementService.hasIdentity(collection, project, repo, teamData)) {
+				repos.add(repo)
+			}
+		}
+		return repos
+
+	}
 
 	public def listTopLevel(def collection, def project, def repo) {
 		//log.debug("CodeManagementService::listTopLevel -- collection: ${collection}, project: ${project.id}, repo: ${repo.id}")
@@ -105,6 +132,44 @@ class CodeManagementService {
 		return result
 
 	}
+	
+	def importRepoCLI(String collection, String project, String repoName, String importUrl, String bbUser, String bbPassword) {
+		def projectData = projectManagementService.getProject(collection, project)
+		def repo = ensureRepo(collection, projectData, repoName)
+		def ourl = getAuthUrl(importUrl, bbUser, bbPassword)
+		File gitDir = new File('git')
+		
+		if (!gitDir.exists())
+		{
+			gitDir.mkdir()
+		}
+		
+		def proc = "git clone ${ourl}".execute(null, gitDir)
+		proc.waitForProcessOutput(System.out, System.err)
+		File repoDir = new File(gitDir, repoName )
+		
+		proc = "git fetch".execute(null, repoDir)
+		proc.waitForProcessOutput(System.out, System.err)
+		proc = "git pull".execute(null, repoDir)
+		proc.waitForProcessOutput(System.out, System.err)
+
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def erepoName = URLEncoder.encode(repoName, 'utf-8')
+		erepoName = erepoName.replace('+', '%20')
+		def turl = getAuthUrl("${genericRestClient.tfsUrl}/${eproject}/_git/${erepoName}", genericRestClient.user, genericRestClient.token)
+		proc = "git remote set-url origin ${turl}".execute(null, repoDir)
+		proc.waitForProcessOutput(System.out, System.err)
+		proc = "git push".execute(null, repoDir)
+		proc.waitForProcessOutput(System.out, System.err)
+
+	}
+	
+	def getAuthUrl(def url, def userid, def password) {
+		String encodedPassword = URLEncoder.encode(password, 'utf-8')
+		url = "https://" + userid + ":" + encodedPassword + "@"+ url.substring("https://".length())
+	}
+	
 	
 	public def ensureDeployManifest(def collection, def project, def repo) {
 		def manifest = getDeployManifest(collection, project, repo)

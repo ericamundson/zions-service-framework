@@ -32,14 +32,17 @@ class SyncProjectBuilds implements CliAction {
 		} catch (e) {}
 		String project = data.getOptionValues('tfs.project')[0]
 		String template = data.getOptionValues('grant.template')[0]
-		buildManagementService.ensureBuilds(collection, project)
+		String folder = data.getOptionValues('tfs.build.folder')[0]
+		String team = data.getOptionValues('tfs.team')[0]
+		buildManagementService.ensureBuildFolder(collection, project, folder)
+		buildManagementService.ensureBuilds(collection, project, folder, team)
 		permissionsManagementService.updateBuilderPermissions(collection, project, template)
 		return null
 	}
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'tfs.project', 'grant.template']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'tfs.project', 'grant.template', 'tfs.build.folder', 'tfs.team']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

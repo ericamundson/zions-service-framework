@@ -42,7 +42,7 @@ public class MemberManagementService {
 	 * @return
 	 */
 	private def addToTeam(String collection, String id, def team) {
-		def req = [ 'aadGroups': "[]", 'exitingUsersJson': "[]", 'groupsToJoinJson': "[\"${team.id}\"]", 'newUsersJson': "[\"ZBC\\\\${id}\"]" ]
+		def req = [ 'aadGroups': "[]", 'exitingUsersJson': "[]", 'groupsToJoinJson': "[\"${team.id}\"]", 'newUsersJson': "[\"${id}\"]" ]
 		def body = new JsonBuilder( req ).toString()
 		def result = genericRestClient.post(
 			requestContentType: ContentType.JSON,
@@ -69,25 +69,33 @@ public class MemberManagementService {
 			requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
 			body: body,
-			headers: [Accept: 'application/json;api-version=4.1-preview.1;excludeUrls=true'],
+			headers: [Accept: 'application/json;api-version5.0-preview.1;excludeUrls=true'],
 			)
 		return result
 	}
 	
 	def getTeam(collection, project, teamName) {
-		def teamData = queryForTeam(collection, project, teamName)
-		def team = null
-		teamData.results.each { result ->
-			result.identities.each { ids ->
-				if ("${ids.displayName}" == "[${project.name}]\\${teamName}") {
-					team = ids
-				}
-			}
-		}
-		return team
+		def eteam = URLEncoder.encode(teamName, 'utf-8')
+		eteam = eteam.replace('+', '%20')
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${project.id}/teams/${eteam}",
+				query: ['api-version': '5.0-preview.2']
+				)
+		return result
+	}
+	
+	def getAllTeams(def collection, def project) {
+		
 	}
 
 	public def queryForTeam(def collection, def project, def team) {
+		String cVal = collection
+		if (cVal.size() == 0) {
+			cVal = "${genericRestClient.tfsUrl}"
+			cVal = cVal.substring("https://".size())
+			cVal = cVal.substring(0, cVal.indexOf('.'))
+		}
 		def req = [ 'filterByAncestorEntityIds': [], 
 			filterByEntityIds:[], 
 			identityTypes: ['user', 'group'], 
@@ -95,14 +103,14 @@ public class MemberManagementService {
 			properties: ['DisplayName', 'IsMru', 'ScopeName', 'SamAccountName', 'Active', 'SubjectDescriptor', 'Department', 'JobTitle', 'Mail', 'MailNickname', 'PhysicalDeliveryOfficeName'],
 			filterByAncestorEntityIds: [],
 			filterByEntityIds: [],
-			options: [MinResults:40, MaxResults: 40, constraints: [], ExtensionId: 'F12CA7AD-00EE-424F-B6D7-9123A60F424F', CollectionScopeName: "${collection}", ProjectScopeName: "${project.name}"],
+			options: [MinResults:40, MaxResults: 40, constraints: [], ExtensionId: 'F12CA7AD-00EE-424F-B6D7-9123A60F424F', CollectionScopeName: "${cVal}", ProjectScopeName: "${project.name}"],
 			query: team  ]
 		def body = new JsonBuilder( req ).toString()
 		def result = genericRestClient.post(
 			requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
 			body: body,
-			headers: [Accept: 'application/json;api-version=4.1-preview.1;excludeUrls=true'],
+			headers: [Accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
 			)
 		return result
 	}

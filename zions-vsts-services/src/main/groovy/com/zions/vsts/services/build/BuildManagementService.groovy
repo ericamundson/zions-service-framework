@@ -33,6 +33,24 @@ public class BuildManagementService {
 
 	public def provideTag(def buildData) {
 	}
+	
+	def ensureBuildFolder(def collection, def project, String folder) {
+		def projectData = projectManagementService.getProject(collection, project, true)
+		def efolder = URLEncoder.encode(folder, 'utf-8')
+		efolder = efolder.replace('+', '%20')
+		
+		def folderObj = [description: '', path: "\\${folder}"]
+		
+		def body = new JsonBuilder(folderObj).toPrettyString()
+		def result = genericRestClient.put(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}//_apis/build/folders/${efolder}",
+			body: body,
+			headers: [Accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
+			)
+		return result
+		
+	}
 
 	public def detectBuildType(def collection, def project, def repo) {
 		log.debug("BuildManagementService::detectBuildType -- Calling codeManagementService.listTopLevel ...")
@@ -63,15 +81,15 @@ public class BuildManagementService {
 		return buildType
 	}
 
-	public def ensureBuilds(def collection, def project) {
+	public def ensureBuilds(def collection, def project, def folder, def team) {
 		def projectData = projectManagementService.getProject(collection, project, true)
-		def repos = codeManagementService.getRepos(collection, projectData)
-		repos.value.each { repo ->
+		def repos = codeManagementService.getRepos(collection, projectData, team)
+		repos.each { repo ->
 			def buildType = detectBuildType(collection, projectData, repo)
 			if (buildType != BuildType.NONE) {
 				codeManagementService.ensureDeployManifest(collection, projectData, repo)
-				def bd = ensureBuild(collection, projectData, repo, buildType, 'CI')
-				ensureBuild(collection, projectData, repo, buildType, 'Release')
+				def bd = ensureBuild(collection, projectData, repo, buildType, 'CI', folder)
+				ensureBuild(collection, projectData, repo, buildType, 'Release', folder)
 				
 			}
 		}
@@ -146,11 +164,11 @@ public class BuildManagementService {
 			)
 
 	}
-	public def ensureBuild(def collection, def project, def repo, BuildType buildType, def buildStage) {
+	public def ensureBuild(def collection, def project, def repo, BuildType buildType, def buildStage, def folder) {
 		def build = getBuild(collection, project, repo, buildStage)
 		if (build.count == 0) {
 			String name = buildType.toString().toLowerCase()
-			build = createBuild(collection, project, repo, buildType, buildStage, false)
+			build = createBuild(collection, project, repo, buildType, buildStage, false, folder)
 			if (build != null && "${buildStage}" == 'CI') {
 				branchPolicy(collection, project, repo, build, 'refs/heads/master')
 			}
@@ -172,7 +190,7 @@ public class BuildManagementService {
 				)
 	}
 
-	public def createBuild(def collection, def project, def repo, BuildType buildType, String buildStage, boolean useTfsTemplate) {
+	public def createBuild(def collection, def project, def repo, BuildType buildType, String buildStage, boolean useTfsTemplate, def folder) {
 		def bDef = null
 		if (useTfsTemplate) {
 			// Looking for template build definition with name like 'maven-CI-template', 'gradle-Release-template', 'ant-CI-template', etc.
@@ -191,6 +209,7 @@ public class BuildManagementService {
 		bDef.name = "${repo.name}-${buildStage}"
 		bDef.id = -1
 		bDef.draftOf = null
+		bDef.path = "${folder}"
 		bDef.counters = [:]
 		bDef.comment = "${buildStage} build for ${repo.name}"
 		bDef.createdDate = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
@@ -218,9 +237,9 @@ public class BuildManagementService {
 		bDef.repository.url = "${repo.url}"
 		bDef.repository.defaultBranch = "${repo.defaultBranch}"
 		bDef.retentionSettings = getRetentionSettings(collection)
-		def queueData = getQueue(collection, project, 'Default')
-		if (queueData.count > 0) {
-			bDef.queue = queueData.value[0]
+		def queueData = getQueue(collection, project, 'Hosted')
+		if (queueData != null) {
+			bDef.queue = queueData
 		}
 		//def memberData = memberManagementService.getMember(collection, 'z091182')
 		def body = new JsonBuilder(bDef).toPrettyString()
@@ -245,7 +264,13 @@ public class BuildManagementService {
 				query: query,
 				headers: [Accept: 'application/json;api-version=4.1-preview.1;excludeUrls=true'],
 				)
-		return result
+		def theQueue = null
+		result.value.each { queue ->
+			if ("${name}" == "${queue.name}") {
+				theQueue = queue
+			}
+		}
+		return theQueue
 
 	}
 	
@@ -271,10 +296,11 @@ public class BuildManagementService {
 	
 	public def getBuild(def collection, def project, String name) {
 		log.debug("BuildManagementService::getBuild -- name = " + name)
-		def query = ['api-version':'4.1','name':"${name}"]
+		def query = ['name':"*${name}"]
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
+				headers: [accept: 'application/json;api-version=5.0-preview.6;excludeUrls=true'],
 				query: query,
 				)
 		if (result == null || result.count == 0) {

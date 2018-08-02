@@ -8,8 +8,8 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="setupTFSWorkitemAreas --tfs.url=http://localhost:8080/tfs/defaultcollection  --tfs.user=z091182 --tfs.token=&quot;hdepqrjz7sv4eewmqg4o55tflqndwbsue7yocki5xl5p5sqh6jxq&quot; --tfs.project=&quot;Zions Tools Project&quot; --clm.url=&quot;https://clm.cs.zionsbank.com&quot; --clm.user=z091182 --clm.password=4878Middy --ccm.projectArea=&quot;Zions Tools Project (Change Management)&quot; --tfs.root.area=&quot;Tools&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="setupTFSWorkitemAreas --tfs.url=https://dtsdemo.visualstudio.com  --tfs.user=z091182 --tfs.token=&quot;k4h6tpwpvb4tjb657ooywf5corqlljhumr2327osjfsuoaujrz7q&quot; --tfs.project=&quot;Eric Zions&quot; --clm.url=&quot;https://clm.cs.zionsbank.com&quot; --clm.user=z091182 --clm.password=4878Middy --ccm.projectArea=&quot;Zions Tools Project (Change Management)&quot; --tfs.root.area=&quot;Zions Tools&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=clm"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=clm -Dproxy.Host=172.18.4.115 -Dproxy.Port=8080 -Dproxy.User=z091182 -Dproxy.Password=4878Middy"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-service-framework/zions-vsts-cli}"/>
 </launchConfiguration>
