@@ -20,23 +20,64 @@ class ExportWIT implements CliAction {
 	}
 
 	public def execute(ApplicationArguments data) {
-		String collection = data.getOptionValues('tfs.collection')[0]
+		String collection = ""
+		try {
+			collection = data.getOptionValues('tfs.collection')[0]
+		} catch (e) {}
 		String project = data.getOptionValues('tfs.project')[0]
 		String workItemName = data.getOptionValues('tfs.workitem.name')[0]
 		if ("${workItemName}" == 'all') {
 			def wits = processTemplateService.getWorkItems(collection, project)
 			wits.value.each { wit -> 
 				
-				def xml = processTemplateService.getWorkitemTemplateXML(collection, project, "${wit.name}")
+				def witData = processTemplateService.getWorkitemTemplate(collection, project, "${wit.name}")
+				def writer = new StringWriter()
+				MarkupBuilder bXml = new MarkupBuilder(writer)
+				bXml.'witd:WITD'(application:'Work item type editor',
+					version: '1.0',
+					'xmlns:witd': 'http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef') {
+					WORKITEMTYPE(name: "${wit.name}") {
+						DESCRIPTION("general work item starter")
+						FIELDS {
+							witData.value.each { field ->
+								def fieldDetails = processTemplateService.getField(collection, project, field.referenceName)
+								if (fieldDetails != null) {
+									FIELD(name: "${field.name}", refname: "${field.referenceName}", type: "${fieldDetails.type}".trim(), dimension: 'reportable') {
+										HELPTEXT "${field.helpText}"
+										if (field.allowedValues.size() > 0) {
+											ALLOWEDVALUES(expanditems: true) {
+												field.allowedValues.each { value ->
+													LISTITEM(value: "${value}")
+												}
+											}
+										}
+									}
+								} else {
+									FIELD(name: "${field.name}", refname: "${field.referenceName}", type: "${field.referenceName}", dimension: 'reportable') {
+										HELPTEXT "${field.helpText}"
+										if (field.allowedValues.size() > 0) {
+											ALLOWEDVALUES(expanditems: true) {
+												field.allowedValues.each { value ->
+													LISTITEM(value: "${value}")
+												}
+											}
+										}
+									}
+								}
+							}
+					
+						}
+					}
+				}
 				def outFile = data.getOptionValues('template.dir')[0];
 				File oFile = new File("${outFile}/${wit.name}.xml");
 				def w = oFile.newWriter();
-				w << "${xml}"
+				w << writer.toString()
 				w.close();
 	
 			}
 		} else {
-			def xml = processTemplateService.getWorkitemTemplateXML(collection, project, workItemName)
+			def xml = processTemplateService.getWorkitemTemplate(collection, project, workItemName)
 			def outFile = data.getOptionValues('template.dir')[0];
 			File oFile = new File("${outFile}/${workItemName}.xml");
 			def w = oFile.newWriter();
@@ -47,7 +88,7 @@ class ExportWIT implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.collection', 'tfs.token', 'tfs.project', 'tfs.workitem.name','template.dir']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'tfs.workitem.name','template.dir']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
