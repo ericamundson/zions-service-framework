@@ -32,6 +32,32 @@ class ProjectManagementService {
 		return result
 
 	}
+	
+	def getProjectProperties(def collection, def project) {
+		def projectData = getProject(collection, project)
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/properties",
+			query: ['api-version': '5.0-preview.1' ]
+			)
+		return result
+	}
+	
+	def getProjectProperty(def collection, def project, def name) {
+		def projectData = getProject(collection, project)
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/properties",
+			query: ['api-version': '5.0-preview.1' ]
+			)
+		def val = null
+		result.value.each { item ->
+			if ("${item.name}" == "${name}") {
+				val = "${item.value}"
+			}
+		}
+		return val
+	}
 
 	public def ensureProject(String collection, String name) {
 		
