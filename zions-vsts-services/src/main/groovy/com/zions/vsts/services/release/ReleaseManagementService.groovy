@@ -2,6 +2,7 @@ package com.zions.vsts.services.release;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component
+import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
@@ -25,29 +26,33 @@ public class ReleaseManagementService {
 	private BuildManagementService buildManagementService
 	
 	@Autowired
+	private MemberManagementService memberManagementService
+
+	@Autowired
 	private EndpointManagementService endpointManagementService
 
 	public ReleaseManagementService() {
 
 	}
 	
-	public def ensureReleases(def collection, def project, def template, String xldEndpoint, String folder) {
+	public def ensureReleases(def collection, def project, def template, String xldEndpoint, String folder, def team) {
 		def projectData = projectManagementService.getProject(collection, project, true)
-		def repos = codeManagementService.getRepos(collection, projectData)
-		repos.value.each { repo ->
-			ensureRelease(collection, projectData, repo,  template, xldEndpoint, folder)
+		def repos = codeManagementService.getRepos(collection, projectData, team)
+		repos.each { repo ->
+			ensureRelease(collection, projectData, repo,  template, xldEndpoint, folder, team)
 		}
 
 	}
 	
-	public def ensureRelease(collection, projectData, repo, template, xldEndpoint, folder) {
+	public def ensureRelease(collection, projectData, repo, template, xldEndpoint, folder, team) {
 		def release = getRelease(collection, projectData, repo.name)
 		if (release == null) {
-			release = createRelease(collection, projectData, repo, template, xldEndpoint, folder)
+			release = createRelease(collection, projectData, repo, template, xldEndpoint, folder, team)
 		}
 	}
 	
-	public def createRelease(collection, project, repo, template, xldEndpoint, folder) {
+	public def createRelease(collection, project, repo, template, xldEndpoint, folder, team) {
+		def teamData = memberManagementService.getTeam(collection, project, team)
 		def buildDef = buildManagementService.getBuild(collection, project, "${repo.name}-Release")
 		if (buildDef == null) return null
 		def endpoint = endpointManagementService.getServiceEndpoint(collection, project.id, xldEndpoint)
@@ -72,12 +77,23 @@ public class ReleaseManagementService {
 					}
 				}
 			}
+			env.owner = teamData
+		}
+		def queueData = buildManagementService.getQueue(collection, project, "${buildManagementService.queue}")
+		if (queueData != null) {
+			template.environments.each { env ->
+				env.deployPhases.each { phase ->
+					phase.deploymentInput.queueId = queueData.id
+				}
+			}
+	
 		}
 		def body = new JsonBuilder(template).toPrettyString()
 		
+		def uri = genericRestClient.getTfsUrl().replace('visualstudio', 'vsrm.visualstudio')
 		def result = genericRestClient.post(
 			requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/release/definitions",
+			uri: "${uri}/${collection}/${project.id}/_apis/release/definitions",
 			body: body,
 			headers: [Accept: 'application/json;api-version=4.1-preview.3;excludeUrls=true'],
 			)
@@ -86,9 +102,10 @@ public class ReleaseManagementService {
 	
 	public def getRelease(def collection, def project, String name) {
 		def query = ['api-version':'4.1-preview.3','searchText':"${name}", isExactNameMatch: true]
+		def uri = genericRestClient.getTfsUrl().replace('visualstudio', 'vsrm.visualstudio')
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/release/definitions",
+				uri: "${uri}/${collection}/${project.id}/_apis/release/definitions",
 				query: query,
 				)
 		if (result == null || result.count == 0) return null
@@ -104,21 +121,32 @@ public class ReleaseManagementService {
 
 	def ensureReleaseFolder(def collection, def project, String folder) {
 		//def projectData = projectManagementService.getProject(collection, project, true)
+		def folders = folder.split('\\\\')
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def efolder = URLEncoder.encode(folder, 'utf-8')
-		efolder = efolder.replace('+', '%20')
+		int i = 0
+		String cFolder = ""
+		folders.each { folderName ->
+			if (i != 0) {
+				cFolder = "${cFolder}\\${folderName}"
+				def folderObj = [createdBy: null, createdOn: null, lastChangedBy: null, lastChangedDate: null, path: "${cFolder}"]
+				def efolder = URLEncoder.encode(cFolder, 'utf-8')
+				efolder = efolder.replace('+', '%20')
 		
-		def folderObj = [createdBy: null, createdOn: null, lastChangedBy: null, lastChangedDate: null, path: "${folder}"]
-		
-		def body = new JsonBuilder(folderObj).toPrettyString()
-		def result = genericRestClient.post(
-			requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/Release/folders/${efolder}",
-			body: body,
-			headers: [accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
-			)
-		return result
+				def body = new JsonBuilder(folderObj).toPrettyString()
+				def uri = genericRestClient.getTfsUrl().replace('visualstudio', 'vsrm.visualstudio')
+				def result = genericRestClient.post(
+					requestContentType: ContentType.JSON,
+					uri: "${uri}/${collection}/${eproject}/_apis/Release/folders/${efolder}",
+					body: body,
+					headers: [accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
+					)
+				if (result != null) {
+					def nfolder = result.toString()
+				}
+			} 
+			i++
+		}
 		
 	}
 

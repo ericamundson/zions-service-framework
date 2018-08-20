@@ -54,20 +54,19 @@
     ],
     "_links": {
         "self": {
-            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_apis/build/Definitions/29?revision=5"
+            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_apis/build/Definitions/83?revision=7"
         },
         "web": {
-            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_build/definition?definitionId=29"
+            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_build/definition?definitionId=83"
         },
         "editor": {
-            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_build/designer?id=29&_a=edit-build-definition"
+            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_build/designer?id=83&_a=edit-build-definition"
         },
         "badge": {
-            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_apis/build/status/29"
+            "href": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_apis/build/status/83"
         }
     },
     "buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
-    "comment": "good",
     "jobAuthorizationScope": "projectCollection",
     "jobTimeoutInMinutes": 60,
     "jobCancelTimeoutInMinutes": 5,
@@ -82,37 +81,19 @@
                         "enabled": true,
                         "continueOnError": false,
                         "alwaysRun": false,
-                        "displayName": "gradlew build",
+                        "displayName": "Run gradle",
                         "timeoutInMinutes": 0,
                         "condition": "succeeded()",
                         "task": {
-                            "id": "8d8eebd8-2b94-4c97-85af-839254cc6da4",
-                            "versionSpec": "2.*",
+                            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
+                            "versionSpec": "1.*",
                             "definitionType": "task"
                         },
                         "inputs": {
-                            "wrapperScript": "gradlew",
-                            "cwd": "",
-                            "options": "",
-                            "tasks": "build",
-                            "publishJUnitResults": "false",
-                            "testResultsFiles": "**/TEST-*.xml",
-                            "testRunTitle": "",
-                            "codeCoverageTool": "None",
-                            "classFilesDirectories": "build/classes/main/",
-                            "classFilter": "",
-                            "failIfCoverageEmpty": "false",
-                            "javaHomeSelection": "JDKVersion",
-                            "jdkVersion": "default",
-                            "jdkUserInputPath": "",
-                            "jdkArchitecture": "x64",
-                            "gradleOpts": "-Xmx1024m",
-                            "sqAnalysisEnabled": "false",
-                            "sqGradlePluginVersionChoice": "specify",
-                            "sqGradlePluginVersion": "2.6.1",
-                            "checkstyleAnalysisEnabled": "false",
-                            "findbugsAnalysisEnabled": "false",
-                            "pmdAnalysisEnabled": "false"
+                            "filename": "gradle",
+                            "arguments": "build -PbuildType=CI",
+                            "workingFolder": "",
+                            "failOnStandardError": "false"
                         }
                     }
                 ],
@@ -123,11 +104,11 @@
                     "queue": {
                         "_links": {
                             "self": {
-                                "href": "https://dtsdemo.visualstudio.com/_apis/build/Queues/26"
+                                "href": "https://dtsdemo.visualstudio.com/_apis/build/Queues/43"
                             }
                         },
-                        "id": 26,
-                        "url": "https://dtsdemo.visualstudio.com/_apis/build/Queues/26",
+                        "id": 43,
+                        "url": "https://dtsdemo.visualstudio.com/_apis/build/Queues/43",
                         "pool": null
                     },
                     "executionOptions": {
@@ -184,33 +165,32 @@
     "queue": {
         "_links": {
             "self": {
-                "href": "https://dtsdemo.visualstudio.com/_apis/build/Queues/26"
+                "href": "https://dtsdemo.visualstudio.com/_apis/build/Queues/43"
             }
         },
-        "id": 26,
-        "name": "Hosted",
-        "url": "https://dtsdemo.visualstudio.com/_apis/build/Queues/26",
+        "id": 43,
+        "name": "On-premises",
+        "url": "https://dtsdemo.visualstudio.com/_apis/build/Queues/43",
         "pool": {
-            "id": 2,
-            "name": "Hosted",
-            "isHosted": true
+            "id": 8,
+            "name": "On-premises"
         }
     },
-    "id": 29,
+    "id": 83,
     "name": "readiness-CI",
-    "url": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_apis/build/Definitions/29?revision=5",
-    "uri": "vstfs:///Build/Definition/29",
+    "url": "https://dtsdemo.visualstudio.com/cab15b20-2305-4632-b3b2-c8c9c2b9f30d/_apis/build/Definitions/83?revision=7",
+    "uri": "vstfs:///Build/Definition/83",
     "path": "\\Zions Tools\\ALMOps Team",
     "type": "build",
     "queueStatus": "enabled",
-    "revision": 5,
-    "createdDate": "2018-08-02T18:32:54.773Z",
+    "revision": 7,
+    "createdDate": "2018-08-07T20:39:18.137Z",
     "project": {
         "id": "cab15b20-2305-4632-b3b2-c8c9c2b9f30d",
         "name": "Eric Zions",
         "url": "https://dtsdemo.visualstudio.com/_apis/projects/cab15b20-2305-4632-b3b2-c8c9c2b9f30d",
         "state": "wellFormed",
-        "revision": 75,
+        "revision": 76,
         "visibility": "private"
     }
 }

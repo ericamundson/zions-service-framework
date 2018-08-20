@@ -9,6 +9,13 @@ import com.ibm.team.repository.client.ITeamRepository;
 import com.ibm.team.repository.client.TeamPlatform;
 import com.ibm.team.repository.common.TeamRepositoryException;
 
+/**
+ * @author z091182
+ *
+ * Client entry point for CLM tooling.
+ * o provides login
+ * o provides api service that accesses other service api interfaces.
+ */
 @Component
 public class RtcRepositoryClient implements Serializable {
 
@@ -35,6 +42,10 @@ public class RtcRepositoryClient implements Serializable {
 		performLogin();
 	}
 	
+	/**
+	 *  Login 
+	 * @throws TeamRepositoryException
+	 */
 	private void performLogin() throws TeamRepositoryException {
 		if (repo.loggedIn()) {
 			repo.logout();
@@ -46,6 +57,11 @@ public class RtcRepositoryClient implements Serializable {
 		repo.login(null);
 	}
 	
+	/**
+	 * Entry point to access all other service interfaces.
+	 * 
+	 * @return
+	 */
 	public ITeamRepository getTeamRepository() {
 		return repo;
 	}

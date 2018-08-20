@@ -202,7 +202,7 @@ class CodeManagementService {
 		def mContent = '''<?xml version="1.0" encoding="utf-8"?>
 <udm.DeploymentPackage application="@@PROJECT@@/@@REPO@@" version="@Tag@">
   <deployables />
-</udm.DeploymentPackage>"'''
+</udm.DeploymentPackage>'''
 		def outC = mContent.replace('@@PROJECT@@', project.name)
 		outC = outC.replace('@@REPO@@', repo.name)
 		def manifestData = [commits: [[changes:[[changeType: 1, item:[path:'/dar/deployit-manifest.xml'], newContent: [content: outC, contentType:0]]], comment: 'Added deployit-manifest.xml']],

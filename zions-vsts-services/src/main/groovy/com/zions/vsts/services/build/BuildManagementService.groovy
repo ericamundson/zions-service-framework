@@ -1,6 +1,7 @@
 package com.zions.vsts.services.build;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -15,6 +16,10 @@ import groovyx.net.http.ContentType
 @Component
 @Slf4j
 public class BuildManagementService {
+	
+	@Autowired
+	@Value('${tfs.build.queue}')
+	private String queue
 
 	@Autowired
 	private GenericRestClient genericRestClient
@@ -237,9 +242,12 @@ public class BuildManagementService {
 		bDef.repository.url = "${repo.url}"
 		bDef.repository.defaultBranch = "${repo.defaultBranch}"
 		bDef.retentionSettings = getRetentionSettings(collection)
-		def queueData = getQueue(collection, project, 'Hosted')
+		def queueData = getQueue(collection, project, "${this.queue}")
 		if (queueData != null) {
 			bDef.queue = queueData
+			bDef.process.phases.each { phase ->
+				phase.target.queue = queueData
+			}
 		}
 		//def memberData = memberManagementService.getMember(collection, 'z091182')
 		def body = new JsonBuilder(bDef).toPrettyString()

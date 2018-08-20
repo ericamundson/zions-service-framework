@@ -30,7 +30,7 @@ class ExportWIT implements CliAction {
 			def wits = processTemplateService.getWorkItems(collection, project)
 			wits.value.each { wit -> 
 				
-				def witData = processTemplateService.getWorkitemTemplate(collection, project, "${wit.name}")
+				def witData = processTemplateService.getWorkitemTemplateFields(collection, project, "${wit.name}")
 				def writer = new StringWriter()
 				MarkupBuilder bXml = new MarkupBuilder(writer)
 				bXml.'witd:WITD'(application:'Work item type editor',
