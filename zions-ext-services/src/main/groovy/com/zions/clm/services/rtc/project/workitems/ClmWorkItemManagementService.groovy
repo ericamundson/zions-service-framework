@@ -7,12 +7,12 @@ import com.zions.clm.services.rest.ClmGenericRestClient;
 import groovy.xml.MarkupBuilder
 
 @Component
-public class WorkItemManagementService {
+public class ClmWorkItemManagementService {
 
 	@Autowired
 	ClmGenericRestClient clmGenericRestClient
 	
-	public WorkItemManagementService() {
+	public ClmWorkItemManagementService() {
 		
 	}
 	

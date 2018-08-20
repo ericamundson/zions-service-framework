@@ -32,9 +32,10 @@ class SyncProjectReleases implements CliAction {
 		String templateName = data.getOptionValues('template.name')[0]
 		String xldEndpoint = data.getOptionValues('xld.endpoint')[0]
 		String folder = data.getOptionValues('tfs.release.folder')[0]
+		String team = data.getOptionValues('tfs.team')[0]
 		def template = getResource(templateName)
 		releaseManagementService.ensureReleaseFolder(collection, project, folder)
-		return releaseManagementService.ensureReleases(collection, project, template, xldEndpoint, folder)
+		return releaseManagementService.ensureReleases(collection, project, template, xldEndpoint, folder, team)
 	}
 	
 	public def getResource(String name) {
@@ -49,7 +50,7 @@ class SyncProjectReleases implements CliAction {
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'tfs.project', 'template.name', 'xld.endpoint', 'tfs.release.folder']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'tfs.project', 'template.name', 'xld.endpoint', 'tfs.release.folder', 'tfs.team']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

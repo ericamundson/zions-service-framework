@@ -1,6 +1,54 @@
 <witmapping>
+	<wit source="Default"  translateUnmappedFields="true">
+		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
+		<field source="owner" target="System.AssignedTo"/>
+		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
+		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
+		<field source="creationDate" target="System.CreatedDate"/>
+		<field source="workItemType" target="System.WorkItemType"/>
+		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
+		<field source="summary" target="System.Title"/>
+		<field source="description" target="System.Description"/>
+		<field source="internalState" target="System.State">
+			<value source="New" target="New"/>
+			<value source="In Progress" target="Active"/>
+			<value source="Implemented" target="Resolved"/>
+			<value source="Done" target="Closed"/>
+		</field>
+		<field source="modifiedBy" target="System.ChangedBy"/>
+		<field source="modified" target="System.ChangedDate"/>
+		<field source="creator" target="System.CreatedBy"/>
+		<field source="category" target="System.AreaPath" valuePrefix="\Zions Tools Project\Tools\"/>
+		<field source="internalTags" target="System.Tags"/>
+		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
+			<value source="Show Stopper" target="1"/>
+			<value source="Must Have" target="2"/>
+			<value source="Should Have" target="3"/>
+			<value source="Could Have" target="4"/>			
+			<value source="Unassigned" target="3"/>			
+		</field>
+		<field source="internalApprovals" target="Workitem.Task"/>
+		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
+		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints"/>
+		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
+		<excluded>
+			<field name="internalSequenceValue"/>
+			<field name="timeSpent"/>
+			<field name="internalSeverity"/>
+			<field name="foundIn"/>
+			<field name="dueDate"/>
+			<field name="duration"/>
+			<field name="correctedEstimate"/>
+			<field name="projectArea"/>
+			<field name="customAttributes"/>
+			<field name="archived"/>
+			<field name="internalSubscriptions"/>
+			<field name="internalApprovalDescriptors"/>
+		</excluded>
+		
+	</wit>
+	
 	<wit source="Story" target="User Story" translateUnmappedFields="true">
-		<field source="id" target="External.ID"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
 		<field source="owner" target="System.AssignedTo"/>
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
@@ -21,7 +69,7 @@
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath" valuePrefix="Zions Tools Project\Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
-		<field source="internalPriority" target="System.Tags">
+		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
 			<value source="Must Have" target="2"/>
 			<value source="Should Have" target="3"/>
@@ -29,7 +77,7 @@
 			<value source="Unassigned" target="3"/>			
 		</field>
 		<field source="internalApprovals" target="Workitem.Task"/>
-		<field source="internalComments" target="System.History"/>
+		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints"/>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
@@ -47,14 +95,57 @@
 			<field name="internalApprovalDescriptors"/>
 		</excluded>
 		
-		<newfields>
-			<field name="External ID" referenceName="External.ID" type="integer"> 
-				<helptext>This fields holds the related work item id from RTC</helptext>
-			</field>
-		</newfields>
+	</wit>
+	
+	<wit source="Defect" target="Bug" translateUnmappedFields="true">
+		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
+		<field source="owner" target="System.AssignedTo"/>
+		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
+		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
+		<field source="creationDate" target="System.CreatedDate"/>
+		<field source="workItemType" target="System.WorkItemType"/>
+		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
+		<field source="summary" target="System.Title"/>
+		<field source="description" target="System.Description"/>
+		<field source="internalState" target="System.State">
+			<value source="New" target="New"/>
+			<value source="In Progress" target="Active"/>
+			<value source="Implemented" target="Resolved"/>
+			<value source="Done" target="Closed"/>
+		</field>
+		<field source="modifiedBy" target="System.ChangedBy"/>
+		<field source="modified" target="System.ChangedDate"/>
+		<field source="creator" target="System.CreatedBy"/>
+		<field source="category" target="System.AreaPath" valuePrefix="Zions Tools Project\Tools\"/>
+		<field source="internalTags" target="System.Tags"/>
+		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
+			<value source="Show Stopper" target="1"/>
+			<value source="Must Have" target="2"/>
+			<value source="Should Have" target="3"/>
+			<value source="Could Have" target="4"/>			
+			<value source="Unassigned" target="3"/>			
+		</field>
+		<field source="internalApprovals" target="Workitem.Task"/>
+		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
+		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints"/>
+		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
+		<excluded>
+			<field name="internalSequenceValue"/>
+			<field name="timeSpent"/>
+			<field name="internalSeverity"/>
+			<field name="foundIn"/>
+			<field name="dueDate"/>
+			<field name="duration"/>
+			<field name="correctedEstimate"/>
+			<field name="projectArea"/>
+			<field name="customAttributes"/>
+			<field name="archived"/>
+			<field name="internalSubscriptions"/>
+			<field name="internalApprovalDescriptors"/>
+		</excluded>
+		
 	</wit>
 	<wit source="Initiative" target="Initiative" translateUnmappedFields="true">
-		<field source="id" target="External.ID"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
 		<field source="owner" target="System.AssignedTo"/>
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
@@ -75,7 +166,7 @@
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath" valuePrefix="\Eric Zions\Zions Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
-		<field source="internalPriority" target="System.Tags">
+		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
 			<value source="Must Have" target="2"/>
 			<value source="Should Have" target="3"/>
@@ -83,7 +174,7 @@
 			<value source="Unassigned" target="3"/>			
 		</field>
 		<field source="internalApprovals" target="Workitem.Task"/>
-		<field source="internalComments" target="System.History"/>
+		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints"/>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
@@ -101,10 +192,5 @@
 			<field name="internalApprovalDescriptors"/>
 		</excluded>
 		
-		<newfields>
-			<field name="External ID" referenceName="External.ID" type="integer"> 
-				<helptext>This fields holds the related work item id from RTC</helptext>
-			</field>
-		</newfields>
 	</wit>
 </witmapping>

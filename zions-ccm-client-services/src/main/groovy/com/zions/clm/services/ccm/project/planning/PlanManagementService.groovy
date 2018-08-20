@@ -12,6 +12,13 @@ import com.ibm.team.workitem.client.IWorkItemClient
 import com.ibm.team.workitem.common.model.ICategory
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 
+/**
+ * Provides behavior to access planning data from IBM RTC.
+ * o Get project categories so VSTS can duplicate to team areas.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class PlanManagementService {
 	
@@ -25,6 +32,11 @@ class PlanManagementService {
 	def getIterations(String project) {
 		
 	}
+	/**
+	 * Get the project area.
+	 * @param projectArea
+	 * @return
+	 */
 	private IProjectArea findProjectArea(def projectArea) {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IProcessItemService  service = (IProcessItemService) teamRepository.getClientLibrary(IProcessItemService.class);
@@ -38,6 +50,14 @@ class PlanManagementService {
 		return retVal
 	}
 
+	
+	/**
+	 * Get categories from project area.  Build data structure to pass to VSTS for team work areas.
+	 * 
+	 * @param tfsRootArea
+	 * @param project
+	 * @return
+	 */
 	def getCategories(String tfsRootArea, String project) {
 		IProjectArea projectArea = findProjectArea(project)
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()

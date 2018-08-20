@@ -57,22 +57,41 @@ public class MemberManagementService {
 		def req = [ 'filterByAncestorEntityIds': [], 
 			filterByEntityIds:[], 
 			identityTypes: ['user', 'group'], 
-			operationScopes: ['ims','source'],
+			operationScopes: ['ims'],
 			properties: ['displayName', 'id', 'imageUrl', 'uniqueName', 'url', '_links'],
-			filterByAncestorEntityIds: [],
-			filterByEntityIds: [],
 			options: [MinResults:40, MaxResults: 40],
-			queryTypeHint: 'uid',
+//			queryTypeHint: 'uid',
 			query: signin  ]
 		def body = new JsonBuilder( req ).toString()
 		def result = genericRestClient.post(
 			requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
 			body: body,
-			headers: [Accept: 'application/json;api-version5.0-preview.1;excludeUrls=true'],
+			headers: [accept: 'application/json;api-version5.0-preview.1;excludeUrls=true'],
 			)
 		return result
 	}
+	
+	public def getMemberAlt(def collection, def signin) {
+		def req = [ 'filterByAncestorEntityIds': [],
+			filterByEntityIds:[],
+			identityTypes: ['user', 'group'],
+			operationScopes: ['ims'],
+			properties: ["DisplayName", "IsMru", "ScopeName", "SamAccountName", "Active", "SubjectDescriptor", "Department", "JobTitle", "Mail", "MailNickname", "PhysicalDeliveryOfficeName", "SignInAddress", "Surname", "Guest", "TelephoneNumber", "Description"],
+			//: ['displayName', 'id', 'imageUrl', 'uniqueName', 'url', '_links'],
+			options: [MinResults:40, MaxResults: 40],
+//			queryTypeHint: 'uid',
+			query: signin  ]
+		def body = new JsonBuilder( req ).toString()
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
+			body: body,
+			headers: [accept: 'application/json;api-version5.0-preview.1;excludeUrls=true'],
+			)
+		return result
+	}
+
 	
 	def getTeam(collection, project, teamName) {
 		def eteam = URLEncoder.encode(teamName, 'utf-8')

@@ -22,9 +22,11 @@ spring:
 
 # TFS connection properties
 tfs:
-  url: http://utmsdev0487:8080/tfs
-  user: z091556
-  token: tqkjeiqplam3as6igdidjduljqz3z3vyqom6crrtszz7hhg7sika
+  url: https://dtsdemo.visualstudio.com
+  user: z091182
+  token: k4h6tpwpvb4tjb657ooywf5corqlljhumr2327osjfsuoaujrz7q
+  build:
+    queue: default
 
 # Specify port for Tomcat (default = 8080)
 server:
@@ -37,4 +39,20 @@ endpoints:
 #disable the automatic adding of the `X-Application-Context` HTTP header
 management:
   add-application-context-header: false
+  
+# type map placeholder
+type:
+  map:
+    resource:  dummy.json
+  
+name:
+  map:
+    resource:  namedummy.json
+    
+default:
+  wit:
+    name: Feature
+    
+cache:
+  location: .\cache
   

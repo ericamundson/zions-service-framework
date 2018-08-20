@@ -1,10 +1,10 @@
-package com.zions.clm.services.cli.action.wit
+package com.zions.clm.services.cli.action.work
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
-import com.zions.clm.services.rtc.project.workitems.WorkItemManagementService
+import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.work.maintenance.service.FixWorkItemIssuesService
 import com.zions.common.services.cli.action.CliAction
 
@@ -14,18 +14,18 @@ import groovy.json.JsonBuilder
 class CacheWorkitemAttachments implements CliAction {
 	AttachmentsManagementService attachmentsManagementService;
 	
-	WorkItemManagementService workItemManagementService
+	ClmWorkItemManagementService clmWorkItemManagementService
 	
 	@Autowired
 	public CacheWorkitemAttachments(AttachmentsManagementService attachmentsManagementService,
-		WorkItemManagementService workItemManagementService) {
+		ClmWorkItemManagementService workItemManagementService) {
 		this.attachmentsManagementService = attachmentsManagementService
-		this.workItemManagementService = workItemManagementService
+		this.clmWorkItemManagementService = workItemManagementService
 	}
 
 	public def execute(ApplicationArguments data) {
 		String project = data.getOptionValues('ccm.projectArea')[0]
-		def workItems = workItemManagementService.getWorkItemsForProject(project)
+		def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
 		while (true) {
 			workItems.workItem.each { workitem ->
 				int id = Integer.parseInt(workitem.id.text())
@@ -33,7 +33,7 @@ class CacheWorkitemAttachments implements CliAction {
 			}
 			def rel = workItems.@rel
 			if ("${rel}" != 'next') break
-			workItems = workItemManagementService.nextPage(workItems.@href)
+			workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 		}
 		attachmentsManagementService.rtcRepositoryClient.shutdownPlatform();
 		return null;
