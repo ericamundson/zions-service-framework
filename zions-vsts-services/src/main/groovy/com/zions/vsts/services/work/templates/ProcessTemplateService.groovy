@@ -242,7 +242,7 @@ public class ProcessTemplateService  {
 			def fieldMap = [source: "${field.@source}", target: "${field.@target}", outType: outType, valueMap: []]
 			if (field.value != null) {
 				field.value.each { value ->
-					fieldMap.valueMap.add([source: "${value.@source}", target: "${value.@target}")
+					fieldMap.valueMap.add([source: "${value.@source}", target: "${value.@target}"])
 				}
 			}
 			witMap.fieldMaps.add(fieldMap)
