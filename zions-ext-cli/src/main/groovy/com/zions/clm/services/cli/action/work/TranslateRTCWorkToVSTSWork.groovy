@@ -8,6 +8,7 @@ import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementServi
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
+import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
@@ -24,6 +25,8 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 	ClmWorkItemManagementService clmWorkItemManagementService
 	@Autowired
 	CcmWorkManagementService ccmWorkManagementService
+	@Autowired
+	MemberManagementService memberManagementService
 
 	public TranslateRTCWorkToVSTSWork() {
 	}
@@ -51,26 +54,53 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		def mapping = new XmlSlurper().parseText(mFile.text)
 		def ccmWits = loadCCMWITs(templateDir)
 		//Update TFS wit definitions.
-		if (!excludes['meta'] == null) {
+		if (excludes['meta'] != null) {
 			def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, ccmWits)
 		}
 		//translate work data.
-		def translateMapping = processTemplateService.getTranslateMapping(collection, project, mapping, ccmWits)
-		def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
-		while (true) {
-			def changeList = []
-			workItems.workItem.each { workitem ->
-				int id = Integer.parseInt(workitem.id.text())
-				def wiChanges = ccmWorkManagementService.getWIChanges(id, project, translateMapping)
-				changeList.add(wiChanges)
+		if (excludes['workdata'] != null) {
+			def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
+			def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
+			def memberMap = memberManagementService.getTeamMembersMap(collection, tfsProject, "${tfsProject} Team")
+			while (true) {
+				ccmWorkManagementService.resetNewId()
+				def changeList = []
+				workItems.workItem.each { workitem ->
+					int id = Integer.parseInt(workitem.id.text())
+					def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
+					changeList.add(wiChanges)
+				}
+				workManagementService.batchWIChanges(collection, tfsProject, changeList)
+				def rel = workItems.@rel
+				if ("${rel}" != 'next') break
+				workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 			}
-			workManagementService.batchWIChanges(collection, project, changeList)
-			def rel = workItems.@rel
-			if ("${rel}" != 'next') break
-			workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 		}
-		workManagementService.testBatchWICreate(collection, tfsProject)
+//		workManagementService.testBatchWICreate(collection, tfsProject)
 		//apply work links
+		if (excludes['worklinks'] != null) {
+			def linkMapping = processTemplateService.getLinkMapping(mapping)
+			def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
+			def memberMap = memberManagementService.getTeamMembersMap(collection, tfsProject, "${tfsProject} Team")
+			while (true) {
+				ccmWorkManagementService.resetNewId()
+				def changeList = []
+				workItems.workItem.each { workitem ->
+					int id = Integer.parseInt(workitem.id.text())
+					def wiChanges = ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping)
+					if (wiChanges != null) {
+						changeList.add(wiChanges)
+					}
+				}
+				if (changeList.size() > 0) {
+					workManagementService.batchWIChanges(collection, tfsProject, changeList)
+				}
+				def rel = workItems.@rel
+				if ("${rel}" != 'next') break
+				workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+			}
+		}
+
 		//extract attachments.
 		//apply attachments.
 		

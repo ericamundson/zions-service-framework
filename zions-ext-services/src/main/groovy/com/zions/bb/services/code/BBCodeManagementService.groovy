@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import com.zions.bb.services.rest.BBGenericRestClient
 import com.zions.clm.services.rest.ClmGenericRestClient
+import com.zions.common.services.rest.IGenericRestClient
 import groovyx.net.http.ContentType
 
 @Component
 class BBCodeManagementService {
 	@Autowired(required=false)
-	private BBGenericRestClient bBGenericRestClient;
+	private IGenericRestClient bBGenericRestClient;
 
 	public BBCodeManagementService() {
 		

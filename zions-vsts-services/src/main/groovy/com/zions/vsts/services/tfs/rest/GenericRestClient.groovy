@@ -1,5 +1,6 @@
 package com.zions.vsts.services.tfs.rest
 
+import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.HttpResponseDecorator
@@ -13,10 +14,9 @@ import org.springframework.stereotype.Component
 
 @Component
 @Slf4j
-class GenericRestClient {
+class GenericRestClient implements IGenericRestClient {
 	private RESTClient delegate;
-	
-	
+		
 	String tfsUrl;
 	
 	private String user;
@@ -37,6 +37,10 @@ class GenericRestClient {
 		setCredentials(user, token);
 
 	}
+	/* (non-Javadoc)
+	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#setProxy()
+	 */
+	@Override
 	def setProxy() {
 		String proxyHost = System.getProperty("proxy.Host")
 		if (proxyHost != null) {
@@ -53,12 +57,20 @@ class GenericRestClient {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#setCredentials(java.lang.String, java.lang.String)
+	 */
+	@Override
 	void setCredentials(String user, String token) {
 		String auth = "$user:$token".bytes.encodeBase64()
 		delegate.headers['Authorization'] = 'Basic ' + auth
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#get(java.util.Map)
+	 */
+	@Override
 	def get(Map input) {
 		//log.debug("GenericRestClient::get -- URI before checkBlankCollection: "+input.uri)
 		Map oinput = checkBlankCollection(input)
@@ -72,6 +84,10 @@ class GenericRestClient {
 		return resp.data;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#put(java.util.Map)
+	 */
+	@Override
 	def put(Map input) {
 		Map oinput = checkBlankCollection(input)
 		HttpResponseDecorator resp = delegate.put(oinput)
@@ -86,6 +102,10 @@ class GenericRestClient {
 		return oOut;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#delete(java.util.Map)
+	 */
+	@Override
 	def delete(Map input) {
 		Map oinput = checkBlankCollection(input)
 		HttpResponseDecorator resp = delegate.delete(oinput)
@@ -94,6 +114,10 @@ class GenericRestClient {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#patch(java.util.Map)
+	 */
+	@Override
 	def patch(Map input) {
 		Map oinput = checkBlankCollection(input)
 		HttpResponseDecorator resp = delegate.patch(oinput)
@@ -108,6 +132,10 @@ class GenericRestClient {
 		return oOut;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#post(java.util.Map)
+	 */
+	@Override
 	def post(Map input) {
 		Map oinput = checkBlankCollection(input)
 		HttpResponseDecorator resp = delegate.post(oinput)
@@ -122,6 +150,9 @@ class GenericRestClient {
 		return oOut;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#checkBlankCollection(java.util.Map)
+	 */
 	def checkBlankCollection(Map input) {
 		String uri = "${input.uri}"
 		String checkedUri = "${this.tfsUrl}//"

@@ -5,10 +5,11 @@
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
-		<field source="workItemType" target="System.WorkItemType"/>
 		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
 		<field source="summary" target="System.Title"/>
 		<field source="description" target="System.Description"/>
+		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
+		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="internalState" target="System.State">
 			<value source="New" target="New"/>
 			<value source="In Progress" target="Active"/>
@@ -29,21 +30,31 @@
 		</field>
 		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
-		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints"/>
+		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
+			<value source="0 pts" target="0"/>
+			<value source="1 pt" target="1"/>
+			<value source="2 pts" target="2"/>
+			<value source="3 pts" target="3"/>
+			<value source="5 pts" target="5"/>
+			<value source="8 pts" target="8"/>
+			<value source="13 pts" target="13"/>
+			<value source="20 pts" target="20"/>
+			<value source="40 pts" target="40"/>
+			<value source="100 pts" target="100"/>
+		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
 			<field name="internalSequenceValue"/>
-			<field name="timeSpent"/>
 			<field name="internalSeverity"/>
 			<field name="foundIn"/>
 			<field name="dueDate"/>
-			<field name="duration"/>
 			<field name="correctedEstimate"/>
 			<field name="projectArea"/>
 			<field name="customAttributes"/>
 			<field name="archived"/>
 			<field name="internalSubscriptions"/>
 			<field name="internalApprovalDescriptors"/>
+			<field name="workItemType"/>
 		</excluded>
 		
 	</wit>
@@ -54,7 +65,6 @@
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
-		<field source="workItemType" target="System.WorkItemType"/>
 		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
 		<field source="summary" target="System.Title"/>
 		<field source="description" target="System.Description"/>
@@ -69,6 +79,9 @@
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath" valuePrefix="Zions Tools Project\Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
+		<field source="" target="System.IterationPath">
+			<value source="any" target="Eric Zions/Backlog"/>
+		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
 			<value source="Must Have" target="2"/>
@@ -78,7 +91,18 @@
 		</field>
 		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
-		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints"/>
+		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
+			<value source="0 pts" target="0"/>
+			<value source="1 pt" target="1"/>
+			<value source="2 pts" target="2"/>
+			<value source="3 pts" target="3"/>
+			<value source="5 pts" target="5"/>
+			<value source="8 pts" target="8"/>
+			<value source="13 pts" target="13"/>
+			<value source="20 pts" target="20"/>
+			<value source="40 pts" target="40"/>
+			<value source="100 pts" target="100"/>
+		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
 			<field name="internalSequenceValue"/>
@@ -93,6 +117,7 @@
 			<field name="archived"/>
 			<field name="internalSubscriptions"/>
 			<field name="internalApprovalDescriptors"/>
+			<field name="workItemType"/>
 		</excluded>
 		
 	</wit>
@@ -103,21 +128,25 @@
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
-		<field source="workItemType" target="System.WorkItemType"/>
 		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
 		<field source="summary" target="System.Title"/>
 		<field source="description" target="System.Description"/>
+		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
+		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="internalState" target="System.State">
 			<value source="New" target="New"/>
 			<value source="In Progress" target="Active"/>
-			<value source="Implemented" target="Resolved"/>
-			<value source="Done" target="Closed"/>
+			<value source="Resolved" target="Resolved"/>
+			<value source="Verified" target="Closed"/>
 		</field>
 		<field source="modifiedBy" target="System.ChangedBy"/>
 		<field source="modified" target="System.ChangedDate"/>
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath" valuePrefix="Zions Tools Project\Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
+		<field source="" target="System.IterationPath">
+			<value source="any" target="Eric Zions/Backlog"/>
+		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
 			<value source="Must Have" target="2"/>
@@ -127,21 +156,34 @@
 		</field>
 		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
-		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints"/>
+		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
+			<value source="0 pts" target="0"/>
+			<value source="1 pt" target="1"/>
+			<value source="2 pts" target="2"/>
+			<value source="3 pts" target="3"/>
+			<value source="5 pts" target="5"/>
+			<value source="8 pts" target="8"/>
+			<value source="13 pts" target="13"/>
+			<value source="20 pts" target="20"/>
+			<value source="40 pts" target="40"/>
+			<value source="100 pts" target="100"/>
+		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
+		<field source="" target="System.IterationPath">
+			<value source="any" target="Eric Zions/Backlog"/>
+		</field>
 		<excluded>
 			<field name="internalSequenceValue"/>
-			<field name="timeSpent"/>
 			<field name="internalSeverity"/>
 			<field name="foundIn"/>
 			<field name="dueDate"/>
-			<field name="duration"/>
 			<field name="correctedEstimate"/>
 			<field name="projectArea"/>
 			<field name="customAttributes"/>
 			<field name="archived"/>
 			<field name="internalSubscriptions"/>
 			<field name="internalApprovalDescriptors"/>
+			<field name="workItemType"/>
 		</excluded>
 		
 	</wit>
@@ -151,7 +193,6 @@
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
-		<field source="workItemType" target="System.WorkItemType"/>
 		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
 		<field source="summary" target="System.Title"/>
 		<field source="description" target="System.Description"/>
@@ -166,6 +207,9 @@
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath" valuePrefix="\Eric Zions\Zions Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
+		<field source="" target="System.IterationPath">
+			<value source="any" target="Eric Zions/Backlog"/>
+		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
 			<value source="Must Have" target="2"/>
@@ -175,7 +219,18 @@
 		</field>
 		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
-		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints"/>
+		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
+			<value source="0 pts" target="0"/>
+			<value source="1 pt" target="1"/>
+			<value source="2 pts" target="2"/>
+			<value source="3 pts" target="3"/>
+			<value source="5 pts" target="5"/>
+			<value source="8 pts" target="8"/>
+			<value source="13 pts" target="13"/>
+			<value source="20 pts" target="20"/>
+			<value source="40 pts" target="40"/>
+			<value source="100 pts" target="100"/>
+		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
 			<field name="internalSequenceValue"/>
@@ -190,7 +245,16 @@
 			<field name="archived"/>
 			<field name="internalSubscriptions"/>
 			<field name="internalApprovalDescriptors"/>
+			<field name="workItemType"/>
 		</excluded>
 		
 	</wit>
+	<links>
+		<link source="child" target="System.LinkTypes.Hierarchy-Reverse"/>
+		<link source="successor" target="System.LinkTypes.Dependency"/>
+		<link source="duplicate" target="System.LinkTypes.Duplicate-Forward"/>
+		<link source="copied" target="System.LinkTypes.Related"/>
+		<link source="mentions" target="System.LinkTypes.Related"/>
+		<link source="resolves" target="System.LinkTypes.Related"/>
+	</links>
 </witmapping>

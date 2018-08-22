@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.zions.clm.services.rest.ClmGenericRestClient;
+import com.zions.common.services.rest.IGenericRestClient
 import groovy.xml.MarkupBuilder
 
 @Component
 public class ClmWorkItemManagementService {
 
 	@Autowired
-	ClmGenericRestClient clmGenericRestClient
+	IGenericRestClient clmGenericRestClient
 	
 	public ClmWorkItemManagementService() {
 		

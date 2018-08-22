@@ -4,16 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 
 @Component
 class WorkManagementService {
 	
 	@Autowired(required=true)
-	private GenericRestClient genericRestClient;
+	private IGenericRestClient genericRestClient;
 	
 	@Autowired(required=true)
 	private ProjectManagementService projectManagementService;
@@ -44,7 +46,28 @@ class WorkManagementService {
 	}
 	
 	def cacheResult(result) {
-		
+		result.value.each { resp ->
+			if ("${resp.code}" == '200') {
+				saveState(resp)
+			}
+		}
+	}
+	
+	def saveState(resp) {
+		File cacheDir = new File(this.cacheLocation)
+		if (!cacheDir.exists()) {
+			cacheDir.mkdir();
+		}
+		def bodyJ = new JsonSlurper().parseText(resp.body)
+		def id = bodyJ.fields.'External.id'
+		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
+		if (!wiDir.exists()) {
+			wiDir.mkdir()
+		}
+		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
+		def w  = cacheData.newDataOutputStream()
+		w << resp.body
+		w.close()
 	}
 	
 	def testBatchWICreate(def collection, def project) {

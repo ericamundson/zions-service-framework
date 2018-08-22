@@ -2,6 +2,8 @@ package com.zions.vsts.services.code
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
@@ -15,7 +17,7 @@ import groovyx.net.http.ContentType
 @Slf4j
 class CodeManagementService {
 	@Autowired
-	private GenericRestClient genericRestClient
+	private IGenericRestClient genericRestClient;
 	
 	@Autowired 
 	private ProjectManagementService projectManagementService
@@ -97,6 +99,7 @@ class CodeManagementService {
 		return repos
 
 	}
+	
 
 	public def listTopLevel(def collection, def project, def repo) {
 		//log.debug("CodeManagementService::listTopLevel -- collection: ${collection}, project: ${project.id}, repo: ${repo.id}")

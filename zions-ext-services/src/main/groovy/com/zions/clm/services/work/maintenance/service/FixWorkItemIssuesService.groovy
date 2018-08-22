@@ -12,13 +12,14 @@ import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service;
 
 import com.zions.clm.services.rest.ClmGenericRestClient
+import com.zions.common.services.rest.IGenericRestClient
 
 @Component
 public class FixWorkItemIssuesService  {
 
 
 	@Autowired(required=true)
-	private ClmGenericRestClient clmGenericRestClient;
+	private IGenericRestClient clmGenericRestClient;
 
 
 

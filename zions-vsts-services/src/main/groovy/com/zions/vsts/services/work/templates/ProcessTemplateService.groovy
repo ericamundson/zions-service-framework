@@ -1,4 +1,5 @@
 package com.zions.vsts.services.work.templates
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 
@@ -31,7 +32,7 @@ public class ProcessTemplateService  {
 	
 	
 	@Autowired(required=true)
-	private GenericRestClient genericRestClient;
+	private IGenericRestClient genericRestClient;
 	
 	@Autowired(required=true)
 	private ProjectManagementService projectManagementService;
@@ -214,6 +215,14 @@ public class ProcessTemplateService  {
 		
 	}
 	
+	def getLinkMapping(mapping) {
+		def linkMapping = [:]
+		mapping.links.link.each { link -> 
+			linkMapping["${link.source}"] = link
+		}
+		return linkMapping
+	}
+	
 	def getTranslateMapping(def collection, def project, def mapping, def ccmWits) {
 		def outType = queryForField(collection, project, 'stuff', true)
 		def defaultMapping = getDefaultMapping(mapping)
@@ -233,19 +242,23 @@ public class ProcessTemplateService  {
 				
 			}
 		}
+		return translateMapping
 	}
 	
 	def addMappedFields(witMap, mapping ) {
 		mapping.field.each { field ->
 			def vstsField = queryForField(null, null, "${field.@target}", false)
-			def outType = vstsField.type
-			def fieldMap = [source: "${field.@source}", target: "${field.@target}", outType: outType, valueMap: []]
-			if (field.value != null) {
-				field.value.each { value ->
-					fieldMap.valueMap.add([source: "${value.@source}", target: "${value.@target}"])
+			if (vstsField != null) {
+				def outType = vstsField.type
+				def fieldMap = [source: "${field.@source}", target: "${field.@target}", outType: outType, valueMap: []]
+				if (field.value != null) {
+					field.value.each { value ->
+						fieldMap.valueMap.add([source: "${value.@source}", target: "${value.@target}"])
+					}
 				}
+				witMap.fieldMaps.add(fieldMap)
+			
 			}
-			witMap.fieldMaps.add(fieldMap)
 		}
 		return witMap
 		
@@ -254,12 +267,15 @@ public class ProcessTemplateService  {
 	def addUnmappedFields(witMap, wit, mapping) {
 		wit.WORKITEMTYPE.FIELDS.FIELD.each { field ->
 			if (requiresField(field, mapping)) {
-				def vstsField = queryForField(null, null, "External.${field.@refName}", false)
-				def outType = vstsField.type
-				def fieldMap = [source: "${field.@refName}", target: "External.${field.@refName}", outType: outType, valueMap: []]
-				witMap.fieldMaps.add(fieldMap)
+				def vstsField = queryForField(null, null, "External.${field.@refname}", false)
+				if (vstsField != null) {
+					def outType = vstsField.type
+					def fieldMap = [source: "${field.@refname}", target: "External.${field.@refname}", outType: outType, valueMap: []]
+					witMap.fieldMaps.add(fieldMap)
+				}
 			}
 		}
+		return witMap
 	}
 	
 	def setFieldChanges(witChanges, wit, witMapping) {

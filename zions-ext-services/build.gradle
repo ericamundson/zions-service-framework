@@ -5,6 +5,6 @@ jar {
 	enabled = true
 }
 
-//dependencies {
-//	compile project(':zions-common')
-//}
+dependencies {
+	compile project(':zions-common')
+}

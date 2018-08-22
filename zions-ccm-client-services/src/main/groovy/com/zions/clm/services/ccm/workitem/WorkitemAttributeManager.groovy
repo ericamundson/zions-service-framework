@@ -13,8 +13,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
+import org.eclipse.core.runtime.IProgressMonitor
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import com.ibm.team.build.common.model.IBuildDefinition;
 import com.ibm.team.build.common.model.IBuildResult;
@@ -43,6 +44,7 @@ import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.common.UUID;
 import com.ibm.team.scm.common.IComponent;
 import com.ibm.team.workitem.client.IWorkItemClient
+import com.ibm.team.workitem.common.IWorkItemCommon
 import com.ibm.team.workitem.common.internal.attributeValueProviders.SecurityContextProvider;
 import com.ibm.team.workitem.common.model.AttributeTypes;
 import com.ibm.team.workitem.common.model.IApproval;
@@ -74,7 +76,9 @@ import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.helper.DevelopmentLineHelper
 import com.zions.clm.services.ccm.utils.ProcessAreaUtil
+import com.zions.clm.services.ccm.utils.ReferenceUtil
 import com.zions.clm.services.ccm.utils.SimpleDateFormatUtil
+import com.zions.clm.services.ccm.utils.WorkItemUtil
 
 /**
  */
@@ -82,6 +86,10 @@ import com.zions.clm.services.ccm.utils.SimpleDateFormatUtil
 public class WorkitemAttributeManager  {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
+	
+	@Autowired
+	@Value('${vsts.area.prefix}')
+	String areaPrefix
 
 	// Switch to export like RTC would do it
 	public static final String SWITCH_RTC_ECLIPSE_EXPORT = "asrtceclipse";
@@ -92,7 +100,7 @@ public class WorkitemAttributeManager  {
 	// The default separator for lists such as tags
 	public static final String SEPERATOR_COMMA = ", ";
 	// If there is no value export this
-	public static final String CONSTANT_NO_VALUE = "";
+	public static final String CONSTANT_NO_VALUE = null;
 	// Parameter for the export file name
 	private static final String PARAMETER_EXPORT_FILE = "exportFile";
 	private static final String PARAMETER_EXPORT_FILE_EXAMPLE = "\"C:\\temp\\export.csv\"";
@@ -131,7 +139,7 @@ public class WorkitemAttributeManager  {
 	// The output file
 	private File fOutputFile = null;
 	// The pattern to export time stamps
-	private String fSimpleDateTimeFormatPattern='MMM D YYYY HH MM A';
+	private String fSimpleDateTimeFormatPattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 	// Suppress Attribute Not found Exception
 	private boolean fSuppressAttributeErrors = false;
 	
@@ -165,7 +173,7 @@ public class WorkitemAttributeManager  {
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
-	private String getStringRepresentation(IWorkItem workItem, IProjectAreaHandle pah,
+	String getStringRepresentation(IWorkItem workItem, IProjectAreaHandle pah,
 			String attributeID) throws TeamRepositoryException {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
@@ -174,9 +182,9 @@ public class WorkitemAttributeManager  {
 		if (attribute == null) {
 			// If I don't get an attribute, this is a link or it is not
 			// supported
-//			if (ReferenceUtil.isLinkType(attributeID)) {
-//				return calculateLinkAsString(workItem, attributeID);
-//			}
+			if (ReferenceUtil.isLinkType(attributeID)) {
+				return calculateLinkAsString(workItem, attributeID);
+			}
 //			if (attributeID
 //					.trim()
 //					.toLowerCase()
@@ -345,9 +353,7 @@ public class WorkitemAttributeManager  {
 			}
 
 			// In case we forgot something or a new type gets implemented
-			throw new Exception(
-					"AttributeType not yet supported: " + attribType + " ID "
-							+ attribute.getIdentifier());
+			return null
 		}
 	}
 
@@ -398,38 +404,36 @@ public class WorkitemAttributeManager  {
 	
 	private String calculateLinkAsString(IWorkItem workItem, String linkTypeID)
 			throws TeamRepositoryException {
-//		String linkType = ReferenceUtil.getReferenceType(linkTypeID);
-//		if (linkType == null) {
-//			throw new Exception(
-//					"Linktype not yet supported: ID " + linkTypeID);
-//		}
-//		IEndPointDescriptor endpoint = ReferenceUtil
-//				.getReferenceEndpointDescriptor(linkTypeID);
-//		IWorkItemReferences wiReferences = getWorkItemCommon()
-//				.resolveWorkItemReferences(workItem, getMonitor());
-//		List<String> referenceRepresentations = new ArrayList<String>();
-//		List<IReference> references = wiReferences.getReferences(endpoint);
-//		for (IReference aReference : references) {
-//
-//			if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_WORK_ITEM)) {
-//				// get the reference and calculate the value.
-//				if (aReference.isItemReference()) {
-//					IItemHandle referencedItem = ((IItemReference) aReference)
-//							.getReferencedItem();
-//					if (referencedItem instanceof IWorkItemHandle) {
-//						IWorkItem item = WorkItemUtil.resolveWorkItem(
-//								(IWorkItemHandle) referencedItem,
-//								IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
-//								getMonitor());
-//						referenceRepresentations.add(PREFIX_EXISTINGWORKITEM
-//								+ Integer.toString(item.getId()));
-//					}
-//				} else {
-//					throw new WorkItemCommandLineException(
-//							"Unexpected reference type ItemReference expected: "
-//									+ linkTypeID);
-//				}
-//			} else if (linkType
+		String linkType = ReferenceUtil.getReferenceType(linkTypeID);
+		if (linkType == null) {
+			return null
+		}
+		IEndPointDescriptor endpoint = ReferenceUtil
+				.getReferenceEndpointDescriptor(linkTypeID);
+		IWorkItemReferences wiReferences = getWorkItemCommon()
+				.resolveWorkItemReferences(workItem, getMonitor());
+		List<String> referenceRepresentations = new ArrayList<String>();
+		List<IReference> references = wiReferences.getReferences(endpoint);
+		for (IReference aReference : references) {
+
+			if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_WORK_ITEM)) {
+				// get the reference and calculate the value.
+				if (aReference.isItemReference()) {
+					IItemHandle referencedItem = ((IItemReference) aReference)
+							.getReferencedItem();
+					if (referencedItem instanceof IWorkItemHandle) {
+						IWorkItem item = WorkItemUtil.resolveWorkItem(
+								(IWorkItemHandle) referencedItem,
+								IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
+								getMonitor());
+						referenceRepresentations.add(Integer.toString(item.getId()));
+						
+					}
+				} else {
+					return null
+				}
+			} 
+//			else if (linkType
 //					.equals(ReferenceUtil.CATEGORY_LINKTYPE_CLM_WORKITEM)) {
 //				referenceRepresentations.add(getURIReferenceAsString(
 //						aReference, linkTypeID));
@@ -440,9 +444,8 @@ public class WorkitemAttributeManager  {
 //				referenceRepresentations.add(getItemReferenceAsString(
 //						aReference, linkTypeID));
 //			}
-//		}
-//		return calculateStringListAsString(referenceRepresentations);
-		return ""
+		}
+		return referenceRepresentations.join(',');
 	}
 
 	/**
@@ -529,7 +532,7 @@ public class WorkitemAttributeManager  {
 				getMonitor());
 		String stateName = wfInfo.getStateName(state);
 		if (stateName == null) {
-			return "";
+			return null;
 		}
 		return stateName;
 	}
@@ -583,10 +586,11 @@ public class WorkitemAttributeManager  {
 	private String getAccessContextFromUUID(UUID uuid)
 			throws TeamRepositoryException {
 		if (uuid != null && IContext.PUBLIC.equals(uuid)) {
-			return AccessContextUtil.PUBLIC_ACCESS;
+			return 'Public Access';
 		}
-		Object context = AccessContextUtil.getAccessContextFromUUID(uuid,
-				getTeamRepository(), getAuditableCommon(), getMonitor());
+//		Object context = AccessContextUtil.getAccessContextFromUUID(uuid,
+//				getTeamRepository(), getAuditableCommon(), getMonitor());
+		def context = null
 		if (context == null) {
 			return CONSTANT_NO_VALUE;
 		}
@@ -625,7 +629,7 @@ public class WorkitemAttributeManager  {
 			commentText.add(i + ". " + getCommentAsString(aComment));
 			i++;
 		}
-		return StringUtil.listToString(commentText, SEPERATOR_NEWLINE);
+		return commentText.join(SEPERATOR_NEWLINE);
 	}
 
 	/**
@@ -641,7 +645,7 @@ public class WorkitemAttributeManager  {
 		String creationDate = calculateTimestampAsString(aComment
 				.getCreationDate());
 		return creator + " - " + creationDate + SEPERATOR_NEWLINE
-				+ aComment.getHTMLContent().getPlainText();
+				+ aComment.getHTMLContent().getXMLText();
 	}
 
 	/**
@@ -670,7 +674,7 @@ public class WorkitemAttributeManager  {
 			resultList.add(getApprovalAsString(approvalDescriptor,
 					approvalmap.get(approvalDescriptor)));
 		}
-		return StringUtil.listToString(resultList, SEPERATOR_NEWLINE);
+		return resultList.join(SEPERATOR_NEWLINE);
 	}
 
 	/**
@@ -733,7 +737,7 @@ public class WorkitemAttributeManager  {
 			resultList.add(calculateEnumerationLiteralAsString(object,
 					attribute));
 		}
-		return StringUtil.listToString(resultList, SEPERATOR_NEWLINE);
+		return resultList.join(SEPERATOR_NEWLINE);
 	}
 
 	/**
@@ -951,7 +955,11 @@ public class WorkitemAttributeManager  {
 		IContributor contributor = (IContributor) rtcRepositoryClient.getRepo()
 				.itemManager().fetchCompleteItem((IContributorHandle) value,
 						IItemManager.DEFAULT, rtcRepositoryClient.getMonitor());
-		return contributor.getUserId();
+		return contributor.getEmailAddress();
+	}
+	
+	IProgressMonitor getMonitor() {
+		return rtcRepositoryClient.getMonitor()
 	}
 
 	/**
@@ -999,8 +1007,9 @@ public class WorkitemAttributeManager  {
 			throws TeamRepositoryException {
 		if (value != null) {
 			if (value instanceof ICategoryHandle) {
-				return getWorkItemCommon().resolveHierarchicalName(
+				String category = getWorkItemCommon().resolveHierarchicalName(
 						(ICategoryHandle) value, rtcRepositoryClient.getMonitor());
+				return "${this.areaPrefix}${category}"
 			}
 			throw new Exception(
 					"Convert Category - Incompatible Type Exception: "
@@ -1008,6 +1017,11 @@ public class WorkitemAttributeManager  {
 		}
 		return CONSTANT_NO_VALUE;
 	}
+	
+	IWorkItemCommon getWorkItemCommon() {
+		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		return teamRepository.getClientLibrary(IWorkItemCommon.class)
+	} 
 
 	/**
 	 * Compute the string representation for a delivery/release
@@ -1116,7 +1130,7 @@ public class WorkitemAttributeManager  {
 				resultList.add(calculateString(object));
 			}
 		}
-		return StringUtil.listToString(resultList, SEPERATOR_NEWLINE);
+		return resultList.join(SEPERATOR_NEWLINE);
 	}
 
 	/**
@@ -1136,7 +1150,7 @@ public class WorkitemAttributeManager  {
 				resultList.add(calculateString(object));
 			}
 		}
-		return StringUtil.listToString(resultList, SEPERATOR_COMMA);
+		return resultList.join(',');
 	}
 
 	/**
@@ -1158,7 +1172,7 @@ public class WorkitemAttributeManager  {
 				resultList.add(calculateItemAsString(object));
 			}
 		}
-		return StringUtil.listToString(resultList, SEPERATOR_NEWLINE);
+		return resultList.join(SEPERATOR_NEWLINE);
 	}
 
 	/**
@@ -1180,7 +1194,7 @@ public class WorkitemAttributeManager  {
 				resultList.add(calculateWorkItemAsString(object));
 			}
 		}
-		return StringUtil.listToString(resultList, SEPERATOR_NEWLINE);
+		return resultList.join(SEPERATOR_NEWLINE);
 	}
 
 	/**
@@ -1203,7 +1217,7 @@ public class WorkitemAttributeManager  {
 				resultList.add(calculateProcessAreaAsString(object, asItem));
 			}
 		}
-		return StringUtil.listToString(resultList, SEPERATOR_NEWLINE);
+		return resultList.join(SEPERATOR_NEWLINE);
 	}
 
 	/**
@@ -1226,7 +1240,7 @@ public class WorkitemAttributeManager  {
 				resultList.add(calculateContributorAsString(object));
 			}
 		}
-		return StringUtil.listToString(resultList, seperator);
+		return resultList.join(seperator);
 	}
 
 	/**

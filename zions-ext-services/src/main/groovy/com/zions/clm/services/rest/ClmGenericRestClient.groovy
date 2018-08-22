@@ -1,5 +1,6 @@
 package com.zions.clm.services.rest;
 
+import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonBuilder
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
@@ -53,7 +54,7 @@ import org.springframework.stereotype.Component
 @SuppressWarnings("deprecation")
 //@Slf4j
 @Component
-public class ClmGenericRestClient {
+public class ClmGenericRestClient implements IGenericRestClient {
 	private RESTClient delegate;
 	
 	String userid = "";
@@ -164,6 +165,11 @@ public class ClmGenericRestClient {
 		JsonOutput t
 		def out = resp.data;
 		return out;
+	}
+
+	public void setCredentials(String user, String token) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 
