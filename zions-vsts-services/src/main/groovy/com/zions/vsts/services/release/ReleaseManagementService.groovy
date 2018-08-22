@@ -2,6 +2,8 @@ package com.zions.vsts.services.release;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component
+
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.build.BuildManagementService
@@ -14,7 +16,7 @@ import groovyx.net.http.ContentType
 @Component
 public class ReleaseManagementService {
 	@Autowired
-	private GenericRestClient genericRestClient
+	private IGenericRestClient genericRestClient;
 	
 	@Autowired
 	private ProjectManagementService projectManagementService

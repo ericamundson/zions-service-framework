@@ -4,14 +4,19 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient;
+
+import java.util.Map
+
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+import com.zions.common.services.rest.IGenericRestClient
+
 @Component
-class BBGenericRestClient {
+class BBGenericRestClient implements IGenericRestClient {
 	private RESTClient delegate;
 	
 	
@@ -111,4 +116,5 @@ class BBGenericRestClient {
 		def oOut = sl.parseText(out)
 		return oOut;
 	}
+
 }

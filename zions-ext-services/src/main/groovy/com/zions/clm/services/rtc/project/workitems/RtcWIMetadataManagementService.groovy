@@ -3,7 +3,7 @@ package com.zions.clm.services.rtc.project.workitems
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import com.zions.clm.services.rest.ClmGenericRestClient
-
+import com.zions.common.services.rest.IGenericRestClient
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
 import groovy.xml.XmlUtil
@@ -12,7 +12,7 @@ import groovy.xml.XmlUtil
 @Slf4j
 class RtcWIMetadataManagementService {
 	@Autowired
-	ClmGenericRestClient clmGenericRestClient
+	IGenericRestClient clmGenericRestClient
 
 	public RtcWIMetadataManagementService() {
 		

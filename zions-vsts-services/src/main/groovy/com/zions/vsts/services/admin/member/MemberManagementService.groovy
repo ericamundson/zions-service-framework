@@ -2,6 +2,7 @@ package com.zions.vsts.services.admin.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient;
 import groovy.json.JsonBuilder
@@ -10,7 +11,7 @@ import groovyx.net.http.ContentType
 @Component
 public class MemberManagementService {
 	@Autowired(required=true)
-	private GenericRestClient genericRestClient;
+	private IGenericRestClient genericRestClient;
 	
 	@Autowired(required=true)
 	private ProjectManagementService projectManagementService
@@ -70,6 +71,23 @@ public class MemberManagementService {
 			headers: [accept: 'application/json;api-version5.0-preview.1;excludeUrls=true'],
 			)
 		return result
+	}
+	
+	def getTeamMembersMap(collection, project, teamName) {
+		def projectData = projectManagementService.getProject(collection, project)
+		def teamData = getTeam(collection, projectData, teamName)
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/teams/${teamData.id}/members",
+				query: ['api-version': '5.0-preview.2']
+				)
+		def retVal = [:]
+		result.value.each { ridentity ->
+			def identity = ridentity.identity
+			String uid = "${identity.uniqueName}"
+			retVal[uid.toLowerCase()] = identity
+		}
+		return retVal
 	}
 	
 	public def getMemberAlt(def collection, def signin) {

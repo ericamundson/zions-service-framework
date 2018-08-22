@@ -3,6 +3,8 @@ package com.zions.vsts.services.build;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
+
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
@@ -22,7 +24,7 @@ public class BuildManagementService {
 	private String queue
 
 	@Autowired
-	private GenericRestClient genericRestClient
+	private IGenericRestClient genericRestClient;
 
 	@Autowired
 	private CodeManagementService codeManagementService

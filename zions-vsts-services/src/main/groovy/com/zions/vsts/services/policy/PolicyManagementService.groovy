@@ -8,6 +8,7 @@ import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 
 import com.zions.vsts.services.tfs.rest.GenericRestClient
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.build.BuildManagementService
 
 /**
@@ -20,7 +21,7 @@ import com.zions.vsts.services.build.BuildManagementService
 public class PolicyManagementService {
 
 	@Autowired
-	private GenericRestClient genericRestClient
+	private IGenericRestClient genericRestClient;
 
 	@Autowired
 	BuildManagementService buildManagementService

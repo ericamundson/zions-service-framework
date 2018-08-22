@@ -137,8 +137,9 @@ public class SimpleDateFormatUtil {
 		long minutesleft = milliseconds - TimeUnit.HOURS.toMillis(hours);
 		long minutes = TimeUnit.MILLISECONDS.toDays(minutesleft);
 		// String result =(days>0)?days + " days ":"";
-		String result = (hours > 0) ? hours + " " + DURATION_HOURS + " " : "";
-		result += (minutes > 0) ? minutes + " " + DURATION_MINUTES : "";
+		String result = (hours > 0) ? "${hours}" : "";
+		result += (minutes > 0) ? ".${minutes/60}" : "";
+		if (result.trim().equals("")) return null
 		return result.trim();
 	}
 }

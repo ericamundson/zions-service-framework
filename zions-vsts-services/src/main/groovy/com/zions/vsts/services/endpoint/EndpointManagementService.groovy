@@ -4,6 +4,7 @@ import org.apache.commons.lang.RandomStringUtils
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.tfs.rest.GenericRestClient;
 import groovy.json.JsonBuilder
 import groovyx.net.http.ContentType
@@ -11,7 +12,7 @@ import groovyx.net.http.ContentType
 @Component
 public class EndpointManagementService {
 	@Autowired
-	private GenericRestClient genericRestClient
+	private IGenericRestClient genericRestClient;
 	
 	public EndpointManagementService() {
 		

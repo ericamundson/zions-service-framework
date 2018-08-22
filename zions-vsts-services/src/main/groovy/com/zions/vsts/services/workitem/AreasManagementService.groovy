@@ -2,6 +2,8 @@ package com.zions.vsts.services.workitem
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonBuilder
@@ -11,7 +13,7 @@ import groovyx.net.http.ContentType
 @Component
 class AreasManagementService {
 	@Autowired
-	private GenericRestClient genericRestClient
+	private IGenericRestClient genericRestClient;
 	
 	@Autowired
 	private ProjectManagementService projectManagementService

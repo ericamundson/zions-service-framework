@@ -101,7 +101,7 @@ public class DevelopmentLineHelper {
 	 * 
 	 * @throws TeamRepositoryException
 	 */
-	public IIteration findIteration(IProjectAreaHandle iProjectAreaHandle,
+	IIteration findIteration(IProjectAreaHandle iProjectAreaHandle,
 			List<String> path, Mode comparemode) throws TeamRepositoryException {
 		fAuditableClient = (IAuditableClient) fTeamRepository
 				.getClientLibrary(IAuditableClient.class);
@@ -127,7 +127,7 @@ public class DevelopmentLineHelper {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private IIteration findIteration(IIterationHandle[] iterations,
+	IIteration findIteration(IIterationHandle[] iterations,
 			List<String> path, int level, Mode comparemode)
 			throws TeamRepositoryException {
 		String lookFor = path.get(level);

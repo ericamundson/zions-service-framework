@@ -3,13 +3,14 @@ package com.zions.vsts.services.admin.project
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovyx.net.http.ContentType
 
 @Component
 class ProjectManagementService {
 	@Autowired(required=true)
-	private GenericRestClient genericRestClient;
+	private IGenericRestClient genericRestClient;
 
 	public ProjectManagementService() {
 		

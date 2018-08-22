@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import com.zions.clm.services.rest.ClmGenericRestClient
+import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonBuilder
 
 @Component
 public class CcmMemberManagementService {
 	@Autowired(required=true)
-	private ClmGenericRestClient clmGenericRestClient;
+	private IGenericRestClient clmGenericRestClient;
 	
 	public CcmMemberManagementService() {
 		
