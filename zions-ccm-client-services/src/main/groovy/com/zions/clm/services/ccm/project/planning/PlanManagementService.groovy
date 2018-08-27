@@ -3,6 +3,10 @@ package com.zions.clm.services.ccm.project.planning
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import com.ibm.team.process.client.IProcessItemService
+import com.ibm.team.process.common.IDevelopmentLine
+import com.ibm.team.process.common.IDevelopmentLineHandle
+import com.ibm.team.process.common.IIteration
+import com.ibm.team.process.common.IIterationHandle
 import com.ibm.team.process.common.IProjectArea
 import com.ibm.team.process.common.ITeamArea
 import com.ibm.team.process.common.ITeamAreaHandle
@@ -11,6 +15,7 @@ import com.ibm.team.repository.client.internal.ItemManager
 import com.ibm.team.workitem.client.IWorkItemClient
 import com.ibm.team.workitem.common.model.ICategory
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
+import com.zions.clm.services.ccm.helper.DevelopmentLineHelper
 
 /**
  * Provides behavior to access planning data from IBM RTC.
@@ -50,6 +55,61 @@ class PlanManagementService {
 		return retVal
 	}
 
+	def getIterations(String tfsRootArea, String project) {
+		IProjectArea projectArea = findProjectArea(project)
+		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
+		DevelopmentLineHelper dhelper = new DevelopmentLineHelper(teamRepository, rtcRepositoryClient.getMonitor())
+		IDevelopmentLineHandle[] devLines = projectArea.getDevelopmentLines();
+		def iterationData = ['iterations': [], 'teams': [:]]
+		devLines.each { dh ->
+			IDevelopmentLine dl = dhelper.resolveDevelopmentLine(dh)
+			if (!dl.isArchived()) {
+				String label = dl.getLabel()
+				
+				Date sd = dl.getStartDate()
+				Long sds = null 
+				if (sd != null) {
+					sds = sd.time
+				}
+				Date ed = dl.getEndDate()
+				Long eds = null 
+				if (ed != null) {
+					eds = ed.time
+				}
+				def iteration = [name: "${dl.getLabel()}", 'id': "${dl.getLabel()}", startDate: sds, endDate:eds, children: []]
+				IIterationHandle[] ith = dl.getIterations()
+				iteration = processChildren(dhelper, ith, iteration)
+				iterationData.iterations.add(iteration)
+			}
+		}
+		return iterationData
+	}
+	
+	def processChildren(DevelopmentLineHelper dhelper, IIterationHandle[] iths, iteration) {
+		iths.each { IIterationHandle ith ->
+			IIteration it = dhelper.resolveIteration(ith)
+			if (!it.isArchived()) {
+				String fullPath = "${iteration.id}/${it.getLabel()}"
+				Date sd = it.getStartDate()
+				Long sds = null 
+				if (sd != null) {
+					sds = sd.time
+				}
+				Date ed = it.getEndDate()
+				Long eds = null 
+				if (ed != null) {
+					eds = ed.time
+				}
+				def citeration = [name: "${it.getLabel()}", 'id': "${fullPath}", startDate: sds, endDate: eds, children: []]
+				IIterationHandle[] its = it.getChildren()
+				
+				citeration = processChildren(dhelper,its, citeration)
+				iteration.children.add(citeration)
+			}
+		}
+		return iteration
+	}
 	
 	/**
 	 * Get categories from project area.  Build data structure to pass to VSTS for team work areas.

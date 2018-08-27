@@ -218,7 +218,7 @@ public class ProcessTemplateService  {
 	def getLinkMapping(mapping) {
 		def linkMapping = [:]
 		mapping.links.link.each { link -> 
-			linkMapping["${link.source}"] = link
+			linkMapping["${link.@source}"] = link
 		}
 		return linkMapping
 	}

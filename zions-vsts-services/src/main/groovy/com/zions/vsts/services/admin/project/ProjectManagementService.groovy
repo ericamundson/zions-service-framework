@@ -7,6 +7,12 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovyx.net.http.ContentType
 
+/**
+ * Provides behaviors to manipulate and access project related objects.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class ProjectManagementService {
 	@Autowired(required=true)
@@ -16,6 +22,16 @@ class ProjectManagementService {
 		
 	}
 	
+	/**
+	 * Get the VSTS project information.
+	 *  o UUID
+	 *  o URL
+	 *  o etc.
+	 *  
+	 * @param collection
+	 * @param name
+	 * @return
+	 */
 	public def getProject(String collection, String name, boolean noUrl = false) {
 		def query = ['api-version':'4.0']
 		def headers = [Accept: 'application/json']
