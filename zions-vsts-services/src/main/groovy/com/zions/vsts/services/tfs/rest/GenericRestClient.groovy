@@ -7,8 +7,6 @@ import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient;
 import groovy.util.logging.Slf4j;
 
-import static org.junit.Assert.doubleIsDifferent
-
 import java.util.Map
 import org.apache.http.Header
 import org.apache.http.auth.AuthScope
