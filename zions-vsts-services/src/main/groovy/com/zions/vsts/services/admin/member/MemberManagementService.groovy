@@ -8,18 +8,40 @@ import com.zions.vsts.services.tfs.rest.GenericRestClient;
 import groovy.json.JsonBuilder
 import groovyx.net.http.ContentType
 
+/**
+ * Provides behaviors to manage users on a VSTS project.  Adding users to projects and teams.
+ * @author z091182
+ *
+ */
 @Component
 public class MemberManagementService {
+	/**
+	 * Main interface to handle requests to VSTS collection.
+	 */
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
 	
+	/**
+	 * Access to project related behaviors
+	 */
 	@Autowired(required=true)
 	private ProjectManagementService projectManagementService
 
+	/**
+	 * Default constructor
+	 */
 	public MemberManagementService() {
 		
 	}
 	
+	/**
+	 * Adds members/user to team.
+	 * 
+	 * @param collection
+	 * @param id
+	 * @param teams
+	 * @return
+	 */
 	public def addMember(String collection, String id,  def teams) {
 		teams.each { team ->
 			try {
@@ -54,6 +76,13 @@ public class MemberManagementService {
 			)
 	}
 	
+	/**
+	 * Get member from VSTS
+	 * 
+	 * @param collection
+	 * @param signin
+	 * @return
+	 */
 	public def getMember(def collection, def signin) {
 		def req = [ 'filterByAncestorEntityIds': [], 
 			filterByEntityIds:[], 
@@ -73,6 +102,14 @@ public class MemberManagementService {
 		return result
 	}
 	
+	/**
+	 * Return a Map of team members with key being the uniqueName of member.
+	 * 
+	 * @param collection
+	 * @param project
+	 * @param teamName
+	 * @return
+	 */
 	def getTeamMembersMap(collection, project, teamName) {
 		def projectData = projectManagementService.getProject(collection, project)
 		def teamData = getTeam(collection, projectData, teamName)
@@ -126,6 +163,14 @@ public class MemberManagementService {
 		
 	}
 
+	/**
+	 * Query for a specific team from VSTS using IdentityPicker interaction.
+	 * 
+	 * @param collection
+	 * @param project
+	 * @param team
+	 * @return
+	 */
 	public def queryForTeam(def collection, def project, def team) {
 		String cVal = collection
 		if (cVal.size() == 0) {

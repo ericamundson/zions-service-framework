@@ -16,6 +16,11 @@ import com.ibm.team.workitem.common.model.WorkItemEndPoints
 import com.zions.clm.services.ccm.client.RtcRepositoryClient;
 import java.io.OutputStream;
 
+/**
+ * Provides behavior to cache RTC work item attachments
+ * @author z091182
+ *
+ */
 @Component
 public class AttachmentsManagementService {
 	
@@ -24,11 +29,21 @@ public class AttachmentsManagementService {
 	
 	String cacheLocation
 	
+	/**
+	 * Spring constructor that auto wires the cache location.
+	 * @param cacheLocation
+	 */
 	@Autowired
 	public AttachmentsManagementService(@Value('${cache.location}') String cacheLocation) {
 		this.cacheLocation = cacheLocation
 	}
 	
+	/**
+	 * Main interface method to cache RTC work item attachments.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public def cacheWorkItemAttachments(int id) {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
@@ -59,7 +74,11 @@ public class AttachmentsManagementService {
 			if (!wiDir.exists()) {
 				wiDir.mkdir()
 			}
-			File save = new File("${this.cacheLocation}${File.separator}${id}${File.separator}${attachment.getName()}");
+			File attachmentDir = new File("${this.cacheLocation}${File.separator}${id}${File.separator}attachments")
+			if (!attachmentDir.exists()) {
+				attachmentDir.mkdir()
+			}
+			File save = new File("${this.cacheLocation}${File.separator}${id}${File.separator}attachments${File.separator}${attachment.getName()}");
 			
 			OutputStream out = save.newDataOutputStream()
 			try {

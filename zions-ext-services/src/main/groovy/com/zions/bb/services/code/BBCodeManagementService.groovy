@@ -7,6 +7,13 @@ import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
 import groovyx.net.http.ContentType
 
+/**
+ * This class provides behaviors to enable framework interaction with Atlassian Bitbucket 
+ * for importing project repos from Bitbucket to VSTS.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class BBCodeManagementService {
 	@Autowired(required=false)
@@ -16,6 +23,12 @@ class BBCodeManagementService {
 		
 	}
 	
+	/**
+	 * Get project key for project name.
+	 * 
+	 * @param name
+	 * @return
+	 */
 	def getKey(String name) {
 		ContentType t = null
 		def ename = URLEncoder.encode(name, 'UTF-8')
@@ -34,6 +47,12 @@ class BBCodeManagementService {
 		return key
 	}
 
+	/**
+	 * Get the GIT url for all of a project's repos.
+	 * 
+	 * @param project
+	 * @return
+	 */
 	public def getProjectRepoUrls(String project) {
 		def urls = []
 		def key = getKey(project)

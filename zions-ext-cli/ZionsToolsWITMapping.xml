@@ -16,11 +16,13 @@
 			<value source="Implemented" target="Resolved"/>
 			<value source="Done" target="Closed"/>
 		</field>
+		<!-- 
 		<field source="modifiedBy" target="System.ChangedBy"/>
-		<field source="modified" target="System.ChangedDate"/>
+		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath" valuePrefix="\Zions Tools Project\Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
+		<field source="target" target="System.IterationPath"/>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
 			<value source="Must Have" target="2"/>
@@ -46,7 +48,6 @@
 		<excluded>
 			<field name="internalSequenceValue"/>
 			<field name="internalSeverity"/>
-			<field name="foundIn"/>
 			<field name="dueDate"/>
 			<field name="correctedEstimate"/>
 			<field name="projectArea"/>
@@ -74,14 +75,13 @@
 			<value source="Implemented" target="Resolved"/>
 			<value source="Done" target="Closed"/>
 		</field>
+		<!-- 
 		<field source="modifiedBy" target="System.ChangedBy"/>
-		<field source="modified" target="System.ChangedDate"/>
+		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath" valuePrefix="Zions Tools Project\Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
-		<field source="" target="System.IterationPath">
-			<value source="any" target="Eric Zions/Backlog"/>
-		</field>
+		<field source="target" target="System.IterationPath"/>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
 			<value source="Must Have" target="2"/>
@@ -108,7 +108,6 @@
 			<field name="internalSequenceValue"/>
 			<field name="timeSpent"/>
 			<field name="internalSeverity"/>
-			<field name="foundIn"/>
 			<field name="dueDate"/>
 			<field name="duration"/>
 			<field name="correctedEstimate"/>
@@ -139,14 +138,13 @@
 			<value source="Resolved" target="Resolved"/>
 			<value source="Verified" target="Closed"/>
 		</field>
+		<!-- 
 		<field source="modifiedBy" target="System.ChangedBy"/>
-		<field source="modified" target="System.ChangedDate"/>
+		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath" valuePrefix="Zions Tools Project\Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
-		<field source="" target="System.IterationPath">
-			<value source="any" target="Eric Zions/Backlog"/>
-		</field>
+		<field source="target" target="System.IterationPath"/>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
 			<value source="Must Have" target="2"/>
@@ -169,13 +167,9 @@
 			<value source="100 pts" target="100"/>
 		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
-		<field source="" target="System.IterationPath">
-			<value source="any" target="Eric Zions/Backlog"/>
-		</field>
 		<excluded>
 			<field name="internalSequenceValue"/>
 			<field name="internalSeverity"/>
-			<field name="foundIn"/>
 			<field name="dueDate"/>
 			<field name="correctedEstimate"/>
 			<field name="projectArea"/>
@@ -202,14 +196,13 @@
 			<value source="Implemented" target="Resolved"/>
 			<value source="Done" target="Closed"/>
 		</field>
+		<!-- 
 		<field source="modifiedBy" target="System.ChangedBy"/>
-		<field source="modified" target="System.ChangedDate"/>
+		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath" valuePrefix="\Eric Zions\Zions Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
-		<field source="" target="System.IterationPath">
-			<value source="any" target="Eric Zions/Backlog"/>
-		</field>
+		<field source="target" target="System.IterationPath"/>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
 			<value source="Must Have" target="2"/>
@@ -236,7 +229,6 @@
 			<field name="internalSequenceValue"/>
 			<field name="timeSpent"/>
 			<field name="internalSeverity"/>
-			<field name="foundIn"/>
 			<field name="dueDate"/>
 			<field name="duration"/>
 			<field name="correctedEstimate"/>
@@ -250,9 +242,10 @@
 		
 	</wit>
 	<links>
-		<link source="child" target="System.LinkTypes.Hierarchy-Reverse"/>
+		<link source="parent" target="System.LinkTypes.Hierarchy-Reverse"/>
+		<!--  <link source="child" target="System.LinkTypes.Hierarchy-Reverse"/>-->
 		<link source="successor" target="System.LinkTypes.Dependency"/>
-		<link source="duplicate" target="System.LinkTypes.Duplicate-Forward"/>
+		<link source="duplicate" target="System.LinkTypes.Duplicate-Reverse"/>
 		<link source="copied" target="System.LinkTypes.Related"/>
 		<link source="mentions" target="System.LinkTypes.Related"/>
 		<link source="resolves" target="System.LinkTypes.Related"/>

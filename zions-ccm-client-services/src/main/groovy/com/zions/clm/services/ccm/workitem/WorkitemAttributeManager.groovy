@@ -90,6 +90,10 @@ public class WorkitemAttributeManager  {
 	@Autowired
 	@Value('${vsts.area.prefix}')
 	String areaPrefix
+	
+	@Autowired
+	@Value('${tfs.project}')
+	String tfsProject
 
 	// Switch to export like RTC would do it
 	public static final String SWITCH_RTC_ECLIPSE_EXPORT = "asrtceclipse";
@@ -309,7 +313,13 @@ public class WorkitemAttributeManager  {
 			}
 			if (attribType.equals(AttributeTypes.ITERATION)) {
 				// Iterations - Planned For and other such attributes
-				return calculateIterationAsString(value);
+				String iterationPath = calculateIterationAsString(value)
+				if (iterationPath == null) {
+					return null
+				}
+				iterationPath = "${tfsProject}/${iterationPath}"
+				iterationPath = iterationPath.replace('/', '\\')
+				return iterationPath;
 			}
 			if (attribType.equals(AttributeTypes.CONTRIBUTOR)) {
 				// Contributors - user ID's
@@ -430,7 +440,7 @@ public class WorkitemAttributeManager  {
 						
 					}
 				} else {
-					return null
+					return ""
 				}
 			} 
 //			else if (linkType

@@ -6,6 +6,9 @@ import groovy.json.JsonSlurper
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient;
 import groovy.util.logging.Slf4j;
+
+import java.util.Map
+import org.apache.http.Header
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
 import org.springframework.beans.factory.annotation.Autowired
@@ -170,4 +173,33 @@ class GenericRestClient implements IGenericRestClient {
 		}
 		return input
 	}
+
+	public Object rateLimitPost(Map input) {
+		Map oinput = checkBlankCollection(input)
+		Map retryCopy = deepcopy(oinput)
+		HttpResponseDecorator resp = delegate.post(oinput)
+		
+		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
+		if (resp.status == 200 && dHeader != null) {
+			System.sleep(300000)			
+		}
+		//JsonOutput t
+		if (resp.status != 200) {
+			log.debug("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
+		}
+		if (resp.status == 429) { // Rate limit handling: Sleep, then perform retry
+			System.sleep(300000)
+			resp = delegate.post(retryCopy)
+		}
+		return resp.data;
+	}
+	
+	def deepcopy(orig) {
+		def bos = new ByteArrayOutputStream()
+		def oos = new ObjectOutputStream(bos)
+		oos.writeObject(orig); oos.flush()
+		def bin = new ByteArrayInputStream(bos.toByteArray())
+		def ois = new ObjectInputStream(bin)
+		return ois.readObject()
+   }
 }

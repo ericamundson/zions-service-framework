@@ -67,14 +67,23 @@ class CcmWorkManagementService {
 		return generateWIData(workItem, id, project, outType, wiMap, memberMap)
 	}
 	
+	/**
+	 * Returns link changes from RTC that is in object usable for VSTS work item update request.
+	 * 
+	 * @param id
+	 * @param project
+	 * @param linkMapping
+	 * @return
+	 */
 	def getWILinkChanges(id, project, linkMapping) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
 		IWorkItem workItem = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, null);
 		def cacheWI = getCacheWI(id)
 		if (cacheWI != null) {
 			def cid = cacheWI.id
-			def wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
 			linkMapping.each { key, linkMap ->
@@ -89,6 +98,16 @@ class CcmWorkManagementService {
 		return null
 	}
 	
+	/**
+	 * Generates work item link changes.
+	 * 
+	 * @param wiData
+	 * @param linkIds
+	 * @param key
+	 * @param linkMap
+	 * @param cacheWI
+	 * @return
+	 */
 	def generateLinkChanges(def wiData, String linkIds, key, linkMap, cacheWI) {
 		def linksList = linkIds.split(',')
 		linksList.each { id -> 
@@ -96,7 +115,7 @@ class CcmWorkManagementService {
 			if (linkWI != null) {
 				def linkId = linkWI.id
 				if (!linkExists(cacheWI, linkMap.target, linkId)) {
-					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap.target}", url: "${tfsUrl}/_apis/wit/workItems/${linkId}", attributes:[comment: "${link.source} of ${linkId}"]]]
+					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap.@target}", url: "${tfsUrl}/_apis/wit/workItems/${linkId}", attributes:[comment: "${linkMap.@source} of ${linkId}"]]]
 					wiData.body.add(change)
 				}
 			}
@@ -104,6 +123,14 @@ class CcmWorkManagementService {
 		return wiData
 	}
 	
+	/**
+	 * Check work item cache to see if link exists on work item.
+	 * 
+	 * @param cacheWI
+	 * @param targetName
+	 * @param linkId
+	 * @return
+	 */
 	boolean linkExists(cacheWI, targetName, linkId) {
 		def link = cacheWI.relations.find { rel ->
 			"${rel.rel}" == "${targetName}" && "${tfsUrl}/_apis/wit/workItems/${linkId}" == "${rel.url}"
@@ -111,6 +138,17 @@ class CcmWorkManagementService {
 		return link != null
 	}
 
+	/**
+	 * Generate work item VSTS change request from RTC datat.
+	 * 
+	 * @param workItem
+	 * @param id
+	 * @param project
+	 * @param type
+	 * @param wiMap
+	 * @param memberMap
+	 * @return
+	 */
 	def generateWIData(workItem, id, project, type, wiMap, memberMap) {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
@@ -118,7 +156,7 @@ class CcmWorkManagementService {
 		def cacheWI = getCacheWI(id)
 		if (cacheWI != null) {
 			def cid = cacheWI.id
-			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+			wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
 		} else {
@@ -133,9 +171,21 @@ class CcmWorkManagementService {
 			}
 			
 		}
+		if (wiData.body.size() == 1) {
+			return null
+		}
 		return wiData
 	}
 		
+	/**
+	 * Get field specific change data.
+	 * 
+	 * @param workItem
+	 * @param fieldMap
+	 * @param cacheWI
+	 * @param memberMap
+	 * @return
+	 */
 	def getFieldData(IWorkItem workItem, def fieldMap, def cacheWI, memberMap) {
 		String attributId = "${fieldMap.source}"
 		String fValue = ""
@@ -149,34 +199,36 @@ class CcmWorkManagementService {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)		
 		IAttribute attribute = workItemClient.findAttribute(workItem.getProjectArea(), attributId, null);
-		String attribType = attribute.getAttributeType()
-		if (attribType.equals(AttributeTypes.CONTRIBUTOR) && memberMap[fValue.toLowerCase()] == null) {
-			return null
-		} else if (attribType.equals(AttributeTypes.CONTRIBUTOR) && memberMap[fValue.toLowerCase()] != null) {
-			fValue = "${memberMap[fValue.toLowerCase()].uniqueName}"
+		if (attribute != null) {
+			String attribType = attribute.getAttributeType()
+			if (attribType.equals(AttributeTypes.CONTRIBUTOR) && memberMap[fValue.toLowerCase()] == null) {
+				return null
+			} else if (attribType.equals(AttributeTypes.CONTRIBUTOR) && memberMap[fValue.toLowerCase()] != null) {
+				fValue = "${memberMap[fValue.toLowerCase()].uniqueName}"
+			}
 		}
 		String cValue = ""
 		if (cacheWI != null) {
 			cValue = "${cacheWI.fields["${fieldMap.target}"]}"
-			if ("${fValue}" != "${cValue}") {
-				def val = "${fValue}"
-				if (fieldMap.valueMap.size() > 0) {
-					
-					fieldMap.valueMap.each { aval ->
-						if ("${val}" == "${aval.source}") {
-							val = "${aval.target}"
-							return
-						}
+			def val = "${fValue}"
+			if (fieldMap.valueMap.size() > 0) {
+				
+				fieldMap.valueMap.each { aval ->
+					if ("${val}" == "${aval.source}") {
+						val = "${aval.target}"
+						return
 					}
 				}
-				if ("${fieldMap.outType}" == 'integer') {
-					val = Integer.parseInt(val)
-				} else if ("${fieldMap.outType}" == 'double') {
-					val = Double.parseDouble(val)
-				} else if ("${fieldMap.outType}" == 'boolean') {
-					val = Boolean.parseBoolean(val)
-				}
-				return [op:'replace', path: "/fields/${fieldMap.target}", value: val]
+			}
+			if ("${fieldMap.outType}" == 'integer') {
+				val = Integer.parseInt(val)
+			} else if ("${fieldMap.outType}" == 'double') {
+				val = Double.parseDouble(val)
+			} else if ("${fieldMap.outType}" == 'boolean') {
+				val = Boolean.parseBoolean(val)
+			}
+			if ("${val}" != "${cValue}") {
+				return [op:'add', path: "/fields/${fieldMap.target}", value: val]
 			} else {
 				return null
 			}
@@ -202,6 +254,12 @@ class CcmWorkManagementService {
 		
 	}
 	
+	/**
+	 * Check cache for work item state.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	def getCacheWI(id) {
 		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
 		if (cacheData.exists()) {

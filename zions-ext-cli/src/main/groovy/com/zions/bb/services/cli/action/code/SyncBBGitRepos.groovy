@@ -12,6 +12,13 @@ import com.zions.vsts.services.permissions.PermissionsManagementService
 import groovy.json.JsonSlurper
 
 
+/**
+ * Command line class to import GIT repos from Bitbucket project to VSTS project and apply grants for access to
+ * repos to specific team.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class SyncBBGitRepos implements CliAction {
 	CodeManagementService codeManagmentService
@@ -26,7 +33,11 @@ class SyncBBGitRepos implements CliAction {
 		this.bBCodeManagmentService = bBCodeManagmentService;
 		this.permissionsManagementService = permissionsManagementService
 	}
-
+	/**
+	 *  Execute command line.
+	 *  
+	 * @see com.zions.common.services.cli.action.CliAction#execute(org.springframework.boot.ApplicationArguments)
+	 */
 	@Override
 	public def execute(ApplicationArguments data) {
 		String collection = ""
@@ -52,7 +63,10 @@ class SyncBBGitRepos implements CliAction {
 		return null;
 	}
 
-	@Override
+	
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.cli.action.CliAction#validate(org.springframework.boot.ApplicationArguments)
+	 */
 	public Object validate(ApplicationArguments args) throws Exception {
 		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'bb.url', 'bb.user', 'bb.password', 'bb.project', 'tfs.project', 'tfs.team', 'grant.template']
 		required.each { name ->

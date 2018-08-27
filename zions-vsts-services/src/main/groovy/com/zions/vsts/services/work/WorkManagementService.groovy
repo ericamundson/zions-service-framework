@@ -34,7 +34,7 @@ class WorkManagementService {
 		//		def w = s.newDataOutputStream()
 		//		w << body
 		//		w.close()
-		def result = genericRestClient.post(
+		def result = genericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/\$batch",
 			body: body,

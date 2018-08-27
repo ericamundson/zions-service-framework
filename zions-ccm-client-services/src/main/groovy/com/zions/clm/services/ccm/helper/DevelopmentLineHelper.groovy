@@ -256,16 +256,17 @@ public class DevelopmentLineHelper {
 	public String getIterationAsFullPath(IIterationHandle handle, Mode mode)
 			throws TeamRepositoryException {
 		IIteration iteration = resolveIteration(handle);
+		if (iteration.isArchived()) {
+			return null
+		}
 		String fullPath = getIterationAsString(iteration, mode);
 		IIterationHandle parent = iteration.getParent();
 		if (parent == null) {
 			IDevelopmentLineHandle devLineHandle = iteration
 					.getDevelopmentLine();
-			return getDevelopmentLineAsString(devLineHandle, mode)
-					+ '/' + fullPath;
+			return "${getDevelopmentLineAsString(devLineHandle, mode)}/${fullPath}"
 		} else {
-			return getIterationAsFullPath(parent, mode)
-					+ '/' + fullPath;
+			return "${getIterationAsFullPath(parent, mode)}/${fullPath}"
 		}
 	}
 }

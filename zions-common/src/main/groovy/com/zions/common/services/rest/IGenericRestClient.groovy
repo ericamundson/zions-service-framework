@@ -17,5 +17,6 @@ public interface IGenericRestClient {
 
 	def post(Map input);
 
-
+	def rateLimitPost(Map input);
+	
 }

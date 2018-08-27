@@ -117,4 +117,10 @@ class BBGenericRestClient implements IGenericRestClient {
 		return oOut;
 	}
 
+	@Override
+	public Object rateLimitPost(Map input) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

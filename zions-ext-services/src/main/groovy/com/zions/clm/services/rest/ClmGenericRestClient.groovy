@@ -171,6 +171,11 @@ public class ClmGenericRestClient implements IGenericRestClient {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public Object rateLimitPost(Map input) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 
 
