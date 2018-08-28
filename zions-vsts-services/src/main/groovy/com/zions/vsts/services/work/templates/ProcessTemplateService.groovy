@@ -49,6 +49,10 @@ public class ProcessTemplateService  {
 	@Value('${default.wit.name}')
 	private String defaultWITName
 	
+	@Autowired
+	@Value('${external.name}')
+	private String externalName
+	
 	private def fields = null
 	
 	private def typeMap = [:]
@@ -267,10 +271,10 @@ public class ProcessTemplateService  {
 	def addUnmappedFields(witMap, wit, mapping) {
 		wit.WORKITEMTYPE.FIELDS.FIELD.each { field ->
 			if (requiresField(field, mapping)) {
-				def vstsField = queryForField(null, null, "External.${field.@refname}", false)
+				def vstsField = queryForField(null, null, "${externalName}.${field.@refname}", false)
 				if (vstsField != null) {
 					def outType = vstsField.type
-					def fieldMap = [source: "${field.@refname}", target: "External.${field.@refname}", outType: outType, valueMap: []]
+					def fieldMap = [source: "${field.@refname}", target: "${externalName}.${field.@refname}", outType: outType, valueMap: []]
 					witMap.fieldMaps.add(fieldMap)
 				}
 			}
@@ -286,7 +290,7 @@ public class ProcessTemplateService  {
 				if (typeMap[key] != null) {
 					type = typeMap[key]
 				}
-				def refName = "External.${field.@refname}"
+				def refName = "${externalName}.${field.@refname}"
 				def name = "${field.@name}"
 				if (nameMap[name] != null) {
 					name = nameMap[name]
@@ -390,17 +394,17 @@ public class ProcessTemplateService  {
 	def ensureWitFieldLayout(collection, project, wit, field) {
 		def layout = getWITLayout(collection, project, wit)
 		def externalPage = layout.pages.find { page ->
-			"${page.label}" == 'External'
+			"${page.label}" == "${externalName}"
 		}
 		def externalGroup = null
 		if (externalPage == null) {
-			externalPage = createWITPage(collection, project, wit, 'External')
-			externalGroup = createWITGroup(collection, project, wit, externalPage, 'External Fields')
+			externalPage = createWITPage(collection, project, wit, "${externalName}")
+			externalGroup = createWITGroup(collection, project, wit, externalPage, "${externalName} Fields")
 		} else {
 			externalGroup = externalPage.sections.find { page ->
 				"${page.id}" == 'Section1'
 			}.groups.find { group ->
-				"${group.label}" == 'External Fields'
+				"${group.label}" == "${externalName} Fields"
 			}
 		}
 		
