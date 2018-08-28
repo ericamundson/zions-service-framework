@@ -11,6 +11,12 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 
+/**
+ * Manages VSTS interaction to create/update work items.
+ * o submits batch create/update requests
+ * @author z091182
+ *
+ */
 @Component
 class WorkManagementService {
 	
@@ -23,11 +29,21 @@ class WorkManagementService {
 	@Autowired(required=true)
 	@Value('${cache.location}')
 	private String cacheLocation
+	
+	@Value('${id.tracking.field}')
+	private String idTrackingField
 
 	public WorkManagementService() {
 		
 	}
 	
+	/**
+	 * Submit batch of work item changes to TFS/VSTS.
+	 * @param collection
+	 * @param project
+	 * @param witData - batch of work item changes
+	 * @return
+	 */
 	def batchWIChanges(def collection, def project, def witData) {
 		def body = new JsonBuilder(witData).toPrettyString()
 		//		File s = new File('defaultwit.json')
@@ -59,7 +75,7 @@ class WorkManagementService {
 			cacheDir.mkdir();
 		}
 		def bodyJ = new JsonSlurper().parseText(resp.body)
-		def id = bodyJ.fields.'External.id'
+		def id = bodyJ.fields."${idTrackingField}"
 		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
 		if (!wiDir.exists()) {
 			wiDir.mkdir()

@@ -112,7 +112,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		//extract attachments.
 		//apply attachments.
 		
-		
+		ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
 	
 	def loadCCMWITs(def ccmTemplateDir) {
