@@ -25,7 +25,7 @@ class AreasManagementService {
 	def processAreasData(def collection, def project, def areas, def parent, def currentAreas) {
 		areas.each { area -> 
 			
-			ensureArea(collection, project, area, parent, currentAreas)
+			currentAreas = ensureArea(collection, project, area, parent, currentAreas)
 			processAreasData(collection, project, area.children, area, currentAreas)
 		}
 	}
@@ -60,8 +60,9 @@ class AreasManagementService {
 		if (relatedArea == null) {
 			def relatedParent = getRelated(parent, currentAreas)
 			createArea(collection, project, area, relatedParent)
+			currentAreas = getAreaData(collection, project.name)
 		}
-		
+		return currentAreas
 	}
 	
 	def getAreaData(def collection, def project) {

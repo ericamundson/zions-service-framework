@@ -39,6 +39,7 @@ class SetupTFSWorkitemIterations implements CliAction {
 		def iterationData = planManagementService.getIterations(tfsRootArea, projectArea)
 		def tfsIterationData = iterationManagementService.getIterationData(collection, project)
 		iterationManagementService.processIterationData(collection, theProject, iterationData.iterations, null, tfsIterationData)
+		iterationManagementService.ensureTeamsIterations(collection, theProject, tfsIterationData, iterationData.iterations)
 		//areasManagementService.assignTeamAreas(collection, theProject, areaData.teams)
 		return null;
 	}

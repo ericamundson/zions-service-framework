@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
+import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.vsts.services.admin.member.MemberManagementService
+import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
@@ -33,6 +35,10 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 	CcmWorkManagementService ccmWorkManagementService
 	@Autowired
 	MemberManagementService memberManagementService
+	@Autowired
+	AttachmentsManagementService attachmentsManagementService
+	@Autowired
+	FileManagementService fileManagementService
 
 	public TranslateRTCWorkToVSTSWork() {
 	}
@@ -63,23 +69,42 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		if (excludes['meta'] == null) {
 			def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, ccmWits)
 		}
+		//refresh.
+		if (excludes['refresh'] == null) {
+			def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
+			while (true) {
+				def changeList = []
+				workItems.workItem.each { workitem ->
+					int id = Integer.parseInt(workitem.id.text())
+					changeList.add(id)
+				}
+				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
+				def rel = workItems.@rel
+				if ("${rel}" != 'next') break
+				workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+			}
+		}
 		//translate work data.
 		if (excludes['workdata'] == null) {
 			def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
 			def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
-			def memberMap = memberManagementService.getTeamMembersMap(collection, tfsProject, "${tfsProject} Team")
+			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			while (true) {
 				ccmWorkManagementService.resetNewId()
 				def changeList = []
+				def idMap = [:]
+				int count = 0
 				workItems.workItem.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
 					def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
 					if (wiChanges != null) {
+						idMap[count] = "${id}"
 						changeList.add(wiChanges)
+						count++
 					}
 				}
 				if (changeList.size() > 0) {
-					workManagementService.batchWIChanges(collection, tfsProject, changeList)
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 				}
 				def rel = workItems.@rel
 				if ("${rel}" != 'next') break
@@ -93,15 +118,19 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 			def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
 			while (true) {
 				def changeList = []
+				def idMap = [:]
+				int count = 0
 				workItems.workItem.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
 					def wiChanges = ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping)
 					if (wiChanges != null) {
+						idMap[count] = "${id}"
 						changeList.add(wiChanges)
+						count++
 					}
 				}
 				if (changeList.size() > 0) {
-					workManagementService.batchWIChanges(collection, tfsProject, changeList)
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 				}
 				def rel = workItems.@rel
 				if ("${rel}" != 'next') break
@@ -109,9 +138,33 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 			}
 		}
 
-		//extract attachments.
-		//apply attachments.
-		
+		//extract & apply attachments.
+		if (excludes['attachments'] == null) {
+			def linkMapping = processTemplateService.getLinkMapping(mapping)
+			def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
+			while (true) {
+				def changeList = []
+				def idMap = [:]
+				int count = 0
+				workItems.workItem.each { workitem ->
+					int id = Integer.parseInt(workitem.id.text())
+					def files = attachmentsManagementService.cacheWorkItemAttachments(id)
+					def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+					if (wiChanges != null) {
+						idMap[count] = "${id}"
+						changeList.add(wiChanges)
+						count++
+					}
+				}
+				if (changeList.size() > 0) {
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+				}
+				def rel = workItems.@rel
+				if ("${rel}" != 'next') break
+				workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+			}
+		}
+
 		ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
 	

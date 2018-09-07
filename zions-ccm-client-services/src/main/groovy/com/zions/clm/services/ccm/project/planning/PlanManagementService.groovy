@@ -10,12 +10,14 @@ import com.ibm.team.process.common.IIterationHandle
 import com.ibm.team.process.common.IProjectArea
 import com.ibm.team.process.common.ITeamArea
 import com.ibm.team.process.common.ITeamAreaHandle
+import com.ibm.team.process.common.ITeamData
 import com.ibm.team.repository.client.ITeamRepository
 import com.ibm.team.repository.client.internal.ItemManager
 import com.ibm.team.workitem.client.IWorkItemClient
 import com.ibm.team.workitem.common.model.ICategory
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.helper.DevelopmentLineHelper
+import com.zions.clm.services.ccm.utils.ProcessAreaUtil
 
 /**
  * Provides behavior to access planning data from IBM RTC.
@@ -58,12 +60,14 @@ class PlanManagementService {
 	def getIterations(String tfsRootArea, String project) {
 		IProjectArea projectArea = findProjectArea(project)
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
 		DevelopmentLineHelper dhelper = new DevelopmentLineHelper(teamRepository, rtcRepositoryClient.getMonitor())
 		IDevelopmentLineHandle[] devLines = projectArea.getDevelopmentLines();
 		def iterationData = ['iterations': [], 'teams': [:]]
 		devLines.each { dh ->
 			IDevelopmentLine dl = dhelper.resolveDevelopmentLine(dh)
+			
 			if (!dl.isArchived()) {
 				String label = dl.getLabel()
 				
@@ -127,6 +131,9 @@ class PlanManagementService {
 		for (ICategory iCategory : categories) {
 			if (!iCategory.archived) {
 				def id = convertId(iCategory.categoryId.getSubtreePattern(), tfsRootArea)
+				if ("${id}" == "") {
+					id = 'root'
+				}
 				def cat = ['name': iCategory.name, 'id': id, 'children': []]
 				def parent = getParent(categoryData.areas, iCategory, tfsRootArea)
 				if (parent != null) {

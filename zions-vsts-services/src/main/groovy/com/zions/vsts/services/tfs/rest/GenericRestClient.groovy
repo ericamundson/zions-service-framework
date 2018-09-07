@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component
 @Component
 @Slf4j
 class GenericRestClient implements IGenericRestClient {
-	private RESTClient delegate;
+	RESTClient delegate;
 		
 	String tfsUrl;
 	

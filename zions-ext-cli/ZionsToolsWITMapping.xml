@@ -1,12 +1,16 @@
 <witmapping>
 	<wit source="Default"  translateUnmappedFields="true">
+		<field source="historyHandler" target="External.History"/>
+		<field source="commentsHandler" target="External.Comments"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
+		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
+		<field source="resolver" target="Microsoft.VSTS.Common.ClosedBy"/>
 		<field source="owner" target="System.AssignedTo"/>
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
 		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
-		<field source="summary" target="System.Title"/>
+		<field source="summaryHandlerHandler" target="System.Title"/>
 		<field source="description" target="System.Description"/>
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
@@ -31,7 +35,6 @@
 			<value source="Unassigned" target="3"/>			
 		</field>
 		<field source="internalApprovals" target="Workitem.Task"/>
-		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -46,6 +49,13 @@
 		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
+			<field name="internalStateTransitions"/>
+			<field name="contextId"/>
+			<field name="foundIn"/>
+			<field name="restrictedAccess"/>
+			<field name="stateTransistions"/>
+			<field name="modified"/>
+			<field name="modifiedBy"/>
 			<field name="internalSequenceValue"/>
 			<field name="internalSeverity"/>
 			<field name="dueDate"/>
@@ -57,17 +67,24 @@
 			<field name="internalApprovalDescriptors"/>
 			<field name="workItemType"/>
 		</excluded>
-		
+		<newfields>
+			<field name="External History" refname="External.History" type="html" page="External" section="Section3" group="External History"/>
+			<field name="External Comments" refname="External.Comments" type="html" page="External" section="Section2" group="External Comments"/>
+		</newfields>
 	</wit>
 	
 	<wit source="Story" target="User Story" translateUnmappedFields="true">
-		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
+		<field source="historyHandler" target="External.History"/>
+		<field source="commentsHandler" target="External.Comments"/>
+		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
+		<field source="resolver" target="Microsoft.VSTS.Common.ClosedBy"/>
+		<field source="implementedDateHandler" target="Microsoft.VSTS.Common.ResolvedDate"/>
 		<field source="owner" target="System.AssignedTo"/>
-		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
+		<field source="implementedByHandler" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
 		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
-		<field source="summary" target="System.Title"/>
+		<field source="summaryHandler" target="System.Title"/>
 		<field source="description" target="System.Description"/>
 		<field source="internalState" target="System.State">
 			<value source="New" target="New"/>
@@ -90,7 +107,6 @@
 			<value source="Unassigned" target="3"/>			
 		</field>
 		<field source="internalApprovals" target="Workitem.Task"/>
-		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -105,6 +121,13 @@
 		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
+			<field name="internalStateTransitions"/>
+			<field name="contextId"/>
+			<field name="foundIn"/>
+			<field name="restrictedAccess"/>
+			<field name="stateTransistions"/>
+			<field name="modified"/>
+			<field name="modifiedBy"/>
 			<field name="internalSequenceValue"/>
 			<field name="timeSpent"/>
 			<field name="internalSeverity"/>
@@ -118,18 +141,26 @@
 			<field name="internalApprovalDescriptors"/>
 			<field name="workItemType"/>
 		</excluded>
+		<newfields>
+			<field name="External History" refname="External.History" type="html" page="External" section="Section3" group="External History"/>
+			<field name="External Comments" refname="External.Comments" type="html" page="External" section="Section2" group="External Comments"/>
+		</newfields>
 		
 	</wit>
 	
 	<wit source="Defect" target="Bug" translateUnmappedFields="true">
+		<field source="historyHandler" target="External.History"/>
+		<field source="commentsHandler" target="External.Comments"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
+		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
+		<field source="resolver" target="Microsoft.VSTS.Common.ClosedBy"/>
 		<field source="owner" target="System.AssignedTo"/>
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
 		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
-		<field source="summary" target="System.Title"/>
-		<field source="description" target="System.Description"/>
+		<field source="summaryHandler" target="System.Title"/>
+		<field source="description" target="Microsoft.VSTS.TCM.ReproSteps"/>
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="internalState" target="System.State">
@@ -153,7 +184,6 @@
 			<value source="Unassigned" target="3"/>			
 		</field>
 		<field source="internalApprovals" target="Workitem.Task"/>
-		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -168,6 +198,13 @@
 		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
+			<field name="internalStateTransitions"/>
+			<field name="contextId"/>
+			<field name="foundIn"/>
+			<field name="restrictedAccess"/>
+			<field name="stateTransistions"/>
+			<field name="modified"/>
+			<field name="modifiedBy"/>
 			<field name="internalSequenceValue"/>
 			<field name="internalSeverity"/>
 			<field name="dueDate"/>
@@ -180,15 +217,23 @@
 			<field name="workItemType"/>
 		</excluded>
 		
+		<newfields>
+			<field name="External History" refname="External.History" type="html" page="External" section="Section3" group="External History"/>
+			<field name="External Comments" refname="External.Comments" type="html" page="External" section="Section2" group="External Comments"/>
+		</newfields>
 	</wit>
 	<wit source="Initiative" target="Initiative" translateUnmappedFields="true">
+		<field source="historyHandler" target="External.History"/>
+		<field source="commentsHandler" target="External.Comments"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
+		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
+		<field source="resolver" target="Microsoft.VSTS.Common.ClosedBy"/>
 		<field source="owner" target="System.AssignedTo"/>
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
 		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
-		<field source="summary" target="System.Title"/>
+		<field source="summaryHandler" target="System.Title"/>
 		<field source="description" target="System.Description"/>
 		<field source="internalState" target="System.State">
 			<value source="New" target="New"/>
@@ -211,7 +256,6 @@
 			<value source="Unassigned" target="3"/>			
 		</field>
 		<field source="internalApprovals" target="Workitem.Task"/>
-		<field source="internalComments" target="Microsoft.VSTS.CMMI.Comments"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -226,6 +270,13 @@
 		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
+			<field name="internalStateTransitions"/>
+			<field name="contextId"/>
+			<field name="foundIn"/>
+			<field name="restrictedAccess"/>
+			<field name="stateTransistions"/>
+			<field name="modified"/>
+			<field name="modifiedBy"/>
 			<field name="internalSequenceValue"/>
 			<field name="timeSpent"/>
 			<field name="internalSeverity"/>
@@ -239,6 +290,10 @@
 			<field name="internalApprovalDescriptors"/>
 			<field name="workItemType"/>
 		</excluded>
+		<newfields>
+			<field name="External History" refname="External.History" type="html" page="External" section="Section3" group="External History"/>
+			<field name="External Comments" refname="External.Comments" type="html" page="External" section="Section2" group="External Comments"/>
+		</newfields>
 		
 	</wit>
 	<links>

@@ -1,3 +1,5 @@
 {"namemaps":[{"source":"Id", "target":"External Id"},
-{"source":"Task Type", "target":"External Task Type"}
+{"source":"Task Type", "target":"External Task Type"},
+{"source":"Found In", "target":"External Found In"},
+{"source":"PMR", "target":"External PMR"}
 ]}

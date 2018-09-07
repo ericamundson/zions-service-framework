@@ -254,7 +254,7 @@ public class ProcessTemplateService  {
 			def vstsField = queryForField(null, null, "${field.@target}", false)
 			if (vstsField != null) {
 				def outType = vstsField.type
-				def fieldMap = [source: "${field.@source}", target: "${field.@target}", outType: outType, valueMap: []]
+				def fieldMap = [source: "${field.@source}", target: "${field.@target}", outName: "${vstsField.name}", outType: outType, valueMap: []]
 				if (field.value != null) {
 					field.value.each { value ->
 						fieldMap.valueMap.add([source: "${value.@source}", target: "${value.@target}"])
@@ -274,7 +274,11 @@ public class ProcessTemplateService  {
 				def vstsField = queryForField(null, null, "${externalName}.${field.@refname}", false)
 				if (vstsField != null) {
 					def outType = vstsField.type
-					def fieldMap = [source: "${field.@refname}", target: "${externalName}.${field.@refname}", outType: outType, valueMap: []]
+					def outName = "${field.@name}"
+					if (nameMap[outName] != null) {
+						outName = nameMap[outName]
+					}
+					def fieldMap = [source: "${field.@refname}", target: "${externalName}.${field.@refname}", outName: outName, outType: outType, valueMap: []]
 					witMap.fieldMaps.add(fieldMap)
 				}
 			}
@@ -295,7 +299,11 @@ public class ProcessTemplateService  {
 				if (nameMap[name] != null) {
 					name = nameMap[name]
 				}
-				def cField = [name:name, refName:refName, type:type, helpText: field.HELPTEXT.text(),suggestedValues:[]]
+				def groupName = "${externalName}"
+				if ("${type}" == 'html') {
+					groupName = "${name}"
+				}
+				def cField = [name:name, refName:refName, type:type, helpText: field.HELPTEXT.text(), page: "${externalName}", section: 'Section1', group: "${groupName} Fields",suggestedValues:[]]
 				if (field.ALLOWEDVALUES != null) {
 					field.ALLOWEDVALUES.LISTITEM.each { item ->
 						cField.suggestedValues.add("${item.@value}")
@@ -303,6 +311,10 @@ public class ProcessTemplateService  {
 				}
 				witChanges.ensureFields.add(cField)
 			}
+		}
+		witMapping.newfields.field.each { field ->
+			def cField = [name:"${field.@name}", refName:"${field.@refname}", type:"${field.@type}", helpText: "Imported ${field.@name}", page: "${field.@page}", section: "${field.@section}", group: "${field.@group}",suggestedValues:[]]
+			witChanges.ensureFields.add(cField)
 		}
 		return witChanges
 	}
@@ -369,6 +381,7 @@ public class ProcessTemplateService  {
 	}
 	
 	def ensureWitField(collection, project, wit, witFieldChange) {
+		String refName = "${witFieldChange.refName}"
 		def field = queryForField(collection, project, witFieldChange.refName)
 		if (field == null) {
 			def pickList = null
@@ -386,33 +399,36 @@ public class ProcessTemplateService  {
 			witField = addWITField(collection, project, wit.referenceName, field.referenceName)
 		}
 		if (witField != null) {
-			def layout = ensureWitFieldLayout(collection, project, wit, field)
+			def layout = ensureWitFieldLayout(collection, project, wit, field, witFieldChange)
 		}
 		
 	}
 	
-	def ensureWitFieldLayout(collection, project, wit, field) {
+	def ensureWitFieldLayout(collection, project, wit, field, witFieldChange) {
 		def layout = getWITLayout(collection, project, wit)
 		def externalPage = layout.pages.find { page ->
-			"${page.label}" == "${externalName}"
+			"${page.label}" == "${witFieldChange.page}"
 		}
-		def externalGroup = null
 		if (externalPage == null) {
-			externalPage = createWITPage(collection, project, wit, "${externalName}")
-			externalGroup = createWITGroup(collection, project, wit, externalPage, "${externalName} Fields")
-		} else {
-			externalGroup = externalPage.sections.find { page ->
-				"${page.id}" == 'Section1'
+			externalPage = createWITPage(collection, project, wit, "${witFieldChange.page}")
+		}
+		def externalGroup = externalPage.sections.find { section ->
+				"${section.id}" == "${witFieldChange.section}"
 			}.groups.find { group ->
-				"${group.label}" == "${externalName} Fields"
+				"${group.label}" == "${witFieldChange.group}"
 			}
-		}
-		
-		def control = externalGroup.controls.find { control ->
-			"${control.id}" == "${field.referenceName}"
-		}
-		if (control == null) {
-			addExternalControl(collection, project, wit, externalGroup, field)
+		if ("${witFieldChange.type}" == 'html' && externalGroup == null) {
+			this.addGroupWithControl(collection, project, wit, externalPage, field, "${witFieldChange.section}")
+		} else if ("${witFieldChange.type}" != 'html') {
+			if (externalGroup == null) {
+				externalGroup = createWITGroup(collection, project, wit, externalPage, witFieldChange.group, witFieldChange.section)
+			}
+			def control = externalGroup.controls.find { control ->
+				"${control.id}" == "${field.referenceName}"
+			}
+			if (control == null) {
+				addExternalControl(collection, project, wit, externalGroup, field)
+			}
 		}
 	}
 	
@@ -437,16 +453,41 @@ public class ProcessTemplateService  {
 			)
 		return result
 
-	}	
-	
-	def createWITGroup(collection, project, wit, externalPage, name) {
+	}
+		
+	def addGroupWithControl(collection, project, wit, externalPage, field, section)
+	{
+		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
+		//def controlData = [contribution: null, controls:[], height:null, id:null, inherited:null, isContribution:false, label:groupName, order:null, overridden:null, visible:true]
+		def groupData = [id: null, label: field.name, order: null, overridden: null, inherited: null, visible: true, contribution: null, controls: [], isContribution: false]
+		def controlData = [order:null, label:field.name, id: field.referenceName, readOnly: false, visible:true, isContribution: false, controlType:null, metadata:null, inherited:null, overridden:null, watermark:null, height:null]
+		groupData.controls.add(controlData)
+		def body = new JsonBuilder(groupData).toPrettyString()
+		
+		//def pName = URLEncoder.encode(this.processName, 'utf-8').replace('+', '%20')
+		
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes/${wit.referenceName}/layout/pages/${externalPage.id}/sections/${section}/groups",
+			body: body,
+			headers: [accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'
+				//referer: "${genericRestClient.getTfsUrl()}/_admin/_process?process-name=${pName}&type-id=${wit.referenceName}&_a=layout"
+				]
+			//query: ['api-version': '5.0-preview.1']
+			
+			)
+		return result
+
+	}
+
+	def createWITGroup(collection, project, wit, externalPage, name, section = 'Section1') {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
 		def groupData = [id: null, label: name, order: null, overridden: null, inherited: null, visible: true, contribution: null, controls: [], isContribution: false]
 		def body = new JsonBuilder(groupData).toPrettyString()
 
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes/${wit.referenceName}/layout/pages/${externalPage.id}/sections/Section1/groups",
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes/${wit.referenceName}/layout/pages/${externalPage.id}/sections/${section}/groups",
 			headers: [accept: 'application/json'],
 			query: ['api-version': '5.0-preview.1'],
 			body: body
@@ -559,9 +600,10 @@ public class ProcessTemplateService  {
 					}
 				}
 			}
-			witTemp = updateWIT(collection, project, witTemp)
-			
-		} else if ("${witTemp.customization}" == 'system')
+			if (witTemp != null) {
+				witTemp = updateWIT(collection, project, witTemp)
+			}
+		} else if ("${witTemp.customization}" == 'system' && witTemp != null)
 		{
 			witTemp = updateWIT(collection, project, witTemp)			
 		}

@@ -6,4 +6,6 @@ jar {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile project(':zions-common')
+	compile project(':zions-ext-services')
 }
