@@ -36,7 +36,7 @@ public class PolicyEndPoint {
 		JsonSlurper slurper = new JsonSlurper()
 		def eventData = slurper.parseText(json)
 		def changeSet = eventData.resource
-		def collection = getCollection(eventData.resourceContainers)
+		def collection = getCollectionName(eventData.resourceContainers)
 		changeSet.refUpdates.each { update ->
 			if ("${update.name}".startsWith("refs/heads/master") || 
 				"${update.name}".startsWith("refs/heads/release") ||
@@ -50,10 +50,20 @@ public class PolicyEndPoint {
 		return ResponseEntity.ok(HttpStatus.OK)
 	}
 
-    private def getCollection(def containerData) {
-    	def serverUrl = containerData.server.baseUrl
-    	def collectionUrl = containerData.collection.baseUrl
-    	def collection = collectionUrl.substring(serverUrl.length(), collectionUrl.length()-1)
-    	return collection
+    private def getCollectionName(def containerData) {
+    	try {
+	    	def serverUrl = containerData.server.baseUrl
+	    	def baseUrl = containerData.server.baseUrl
+	    	def collectionUrl = containerData.collection.baseUrl
+	    	def collectionName = collectionUrl.substring(serverUrl.length(), collectionUrl.length()-1)
+    	} catch (Exception) {
+    		// collection name is not available for VSTS
+    		return ""
+    	}
+    	return collectionName
+    }
+    private def getCollectionId(def containerData) {
+    	def collectionId = containerData.collection.id
+    	return collectionId
     }
  }

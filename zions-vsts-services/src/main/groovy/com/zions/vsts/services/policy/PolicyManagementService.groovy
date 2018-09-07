@@ -7,7 +7,6 @@ import groovy.json.JsonBuilder;
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 
-import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.build.BuildManagementService
 
@@ -83,7 +82,7 @@ public class PolicyManagementService {
 		log.debug("PolicyManagementService::createPolicy -- Request body = "+body)
 		def result = genericRestClient.post(
 				requestContentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.name}/_apis/policy/configurations",
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_apis/policy/configurations",
 				body: body,
 				headers: [Accept: 'application/json;api-version=4.1;excludeUrls=true']
 		)

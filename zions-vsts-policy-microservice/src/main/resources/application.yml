@@ -21,10 +21,22 @@ spring:
     enabled: false
 
 # TFS connection properties
+# test
+#tfs:
+#  url: http://utmsdev0487:8080/tfs
+#  user: z091556
+#  token: tqkjeiqplam3as6igdidjduljqz3z3vyqom6crrtszz7hhg7sika
+
+# on prem
+#tfs:
+#  url: https://tfs.testqa.zionsbank.com
+#  user: z091556
+#  token: o5nxn5isv2tlekt4hdhezxodtslfs6mqi3e2hqoo25sd2zgd7d3a
+
 tfs:
-  url: https://dtsdemo.visualstudio.com
-  user: z091182
-  token: k4h6tpwpvb4tjb657ooywf5corqlljhumr2327osjfsuoaujrz7q
+  url: https://eto-dev.visualstudio.com
+  user: z091556
+  token: emjfvuveeugbljidpareidxmya5zdvugt3gqp5ptidakh52ekq3q
   build:
     queue: default
 
