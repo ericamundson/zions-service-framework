@@ -7,7 +7,10 @@
  *******************************************************************************/
 package com.zions.clm.services.ccm.utils;
 
+import java.util.Arrays
 import java.util.HashMap;
+import java.util.HashSet
+import java.util.Set
 
 import com.ibm.team.build.internal.common.links.BuildLinkTypes;
 import com.ibm.team.links.common.registry.IEndPointDescriptor;
@@ -66,6 +69,41 @@ public class ReferenceUtil {
 	public static final String LINKTYPE_AFFECTED_BY_DEFECT = "affected_by_defect";
 	public static final String LINKTYPE_RELATED_CHANGE_MANAGEMENT = "related_change_management";
 	public static final String LINKTYPE_TRACKS_WORK_ITEM = "tracks_workitem";
+	
+	public static final def ALL_LINK_TYPES = [
+		LINKTYPE_PARENT,
+		LINKTYPE_CHILD,
+		LINKTYPE_BLOCKS_WORKITEM,
+		LINKTYPE_COPIED_FROM_WORKITEM,
+		LINKTYPE_COPIED_WORKITEM,
+		LINKTYPE_DEPENDS_ON_WORKITEM,
+		LINKTYPE_DUPLICATE_OF_WORKITEM,
+		LINKTYPE_DUPLICATE_WORKITEM,
+		LINKTYPE_MENTIONS_WORKITEM,
+		LINKTYPE_PREDECESSOR_WORKITEM,
+		LINKTYPE_RELATED_WORKITEM,
+		LINKTYPE_RESOLVED_BY_WORKITEM,
+		LINKTYPE_RESOLVES_WORKITEM,
+		LINKTYPE_SUCCESSOR_WORKITEM,
+		LINKTYPE_REPORTED_AGAINST_BUILDRESULT,
+		LINKTYPE_INCLUDEDINBUILD,
+		LINKTYPE_RELATED_ARTIFACT,
+		LINKTYPE_AFFECTS_EXECUTION_RESULT,
+		LINKTYPE_IMPLEMENTS_REQUIREMENT,
+		LINKTYPE_RELATED_TEST_EXECUTION_RECORD,
+		LINKTYPE_AFFECTS_REQUIREMENT,
+		LINKTYPE_RELATED_TEST_CASE,
+		LINKTYPE_RELATED_TEST_PLAN,
+		LINKTYPE_TESTED_BY_TEST_CASE,
+		LINKTYPE_TRACKS_CHANGES,
+		LINKTYPE_TRACKS_REQUIREMENT,
+		LINKTYPE_BLOCKS_TEST_EXECUTION,
+		LINKTYPE_AFFECTS_PLAN_ITEM,
+		LINKTYPE_AFFECTED_BY_DEFECT,
+		LINKTYPE_RELATED_CHANGE_MANAGEMENT,
+		LINKTYPE_TRACKS_WORK_ITEM,
+	];
+	
 	// SCM change set link, can only be set by the SCM component
 	// public static final String LINKTYPE_CHANGESET = "scm_changeset";
 	// Designmanager

@@ -1,5 +1,7 @@
 package com.zions.clm.services.ccm.workitem
 
+import java.util.Map
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -9,6 +11,8 @@ import com.ibm.team.workitem.common.model.AttributeTypes
 import com.ibm.team.workitem.common.model.IAttribute
 import com.ibm.team.workitem.common.model.IWorkItem
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
+import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.work.handler.IWorkitemFieldHandler
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 
@@ -21,6 +25,9 @@ import groovy.util.logging.Slf4j
 @Component
 @Slf4j
 class CcmWorkManagementService {
+	
+	@Autowired
+	private Map<String, IWorkitemFieldHandler> fieldMap;
 	
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
@@ -165,9 +172,17 @@ class CcmWorkManagementService {
 			wiData.body.add(idData)
 		}
 		wiMap.fieldMaps.each { fieldMap -> 
-			def fieldData = getFieldData(workItem, fieldMap, cacheWI, memberMap)
+			def fieldData = getFieldData(workItem, fieldMap, cacheWI, memberMap, wiMap)
 			if (fieldData != null) {
-				wiData.body.add(fieldData)
+				if (fieldData.value != null) {
+					wiData.body.add(fieldData)
+				} else {
+					fieldData.each { fData ->
+						if (fData.value != null) {
+							wiData.body.add(fData)
+						}
+					}
+				}
 			}
 			
 		}
@@ -186,13 +201,17 @@ class CcmWorkManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	def getFieldData(IWorkItem workItem, def fieldMap, def cacheWI, memberMap) {
+	def getFieldData(IWorkItem workItem, def fieldMap, def cacheWI, memberMap, wiMap) {
 		String attributId = "${fieldMap.source}"
 		String fValue = ""
 		if (attributId.trim().equals("")) {
 			fValue = "any"
 		} else {
 			fValue = workitemAttributeManager.getStringRepresentation(workItem, workItem.getProjectArea(), attributId)
+			if (fValue == null && this.fieldMap["${attributId}"] != null) {
+				def data = [workItem: workItem, memberMap: memberMap, fieldMap: fieldMap, cacheWI: cacheWI, wiMap: wiMap]
+				return this.fieldMap["${attributId}"].execute(data)
+			}
 			if (fValue == null) return null
 		}
 		

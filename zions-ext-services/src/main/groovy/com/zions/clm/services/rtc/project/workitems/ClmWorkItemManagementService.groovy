@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.zions.clm.services.rest.ClmGenericRestClient;
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.xml.MarkupBuilder
+import groovyx.net.http.ContentType
 
 @Component
 public class ClmWorkItemManagementService {
@@ -17,8 +18,20 @@ public class ClmWorkItemManagementService {
 		
 	}
 	
+	def getWorkItemHistory(int id) {
+		
+		def uri = "${this.clmGenericRestClient.clmUrl}/ccm/service/com.ibm.team.workitem.common.internal.rest.IWorkItemRestService/workItemDTO2"
+		def query = [id: id, includeAttributes: false, includeLinks: false, includeApprovals: false, includeHistory: true, includeLinkHistory: true]
+		def result = clmGenericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: uri,
+			query: query,
+			headers: [accept: 'text/json', 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'] );
+		return result
+	}
 	
-	public getWorkItemsForProject(String project) {
+	
+	public def getWorkItemsForProject(String project) {
 		def query = "workitem/workItem[projectArea/name='${project}']/(id)"
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')

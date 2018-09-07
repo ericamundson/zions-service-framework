@@ -32,7 +32,10 @@ class SetupTFSWorkitemAreas implements CliAction {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String projectArea = data.getOptionValues('ccm.projectArea')[0]
-		String tfsRootArea = data.getOptionValues('tfs.root.area')[0]
+		String tfsRootArea = ""
+		try {
+			tfsRootArea = data.getOptionValues('tfs.root.area')[0]
+		} catch (err) {}
 		String project = data.getOptionValues('tfs.project')[0]
 		def theProject = projectManagementService.getProject(collection, project)
 		def areaData = planManagementService.getCategories(tfsRootArea, projectArea)
@@ -43,7 +46,7 @@ class SetupTFSWorkitemAreas implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.password', 'ccm.projectArea', 'tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'tfs.root.area' ]
+		def required = ['clm.url', 'clm.user', 'clm.password', 'ccm.projectArea', 'tfs.url', 'tfs.user', 'tfs.token', 'tfs.project' ]
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

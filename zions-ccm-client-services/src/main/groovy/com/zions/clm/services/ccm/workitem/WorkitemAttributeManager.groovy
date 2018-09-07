@@ -1,5 +1,6 @@
 package com.zions.clm.services.ccm.workitem;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -443,17 +444,17 @@ public class WorkitemAttributeManager  {
 					return ""
 				}
 			} 
-//			else if (linkType
-//					.equals(ReferenceUtil.CATEGORY_LINKTYPE_CLM_WORKITEM)) {
-//				referenceRepresentations.add(getURIReferenceAsString(
-//						aReference, linkTypeID));
-//			} else if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_CLM_URI)) {
-//				referenceRepresentations.add(getURIReferenceAsString(
-//						aReference, linkTypeID));
-//			} else if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_BULD)) {
-//				referenceRepresentations.add(getItemReferenceAsString(
-//						aReference, linkTypeID));
-//			}
+			else if (linkType
+					.equals(ReferenceUtil.CATEGORY_LINKTYPE_CLM_WORKITEM)) {
+				referenceRepresentations.add(getURIReferenceAsString(
+						aReference, linkTypeID));
+			} else if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_CLM_URI)) {
+				referenceRepresentations.add(getURIReferenceAsString(
+						aReference, linkTypeID));
+			} else if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_BULD)) {
+				referenceRepresentations.add(getItemReferenceAsString(
+						aReference, linkTypeID));
+			}
 		}
 		return referenceRepresentations.join(',');
 	}
@@ -632,14 +633,12 @@ public class WorkitemAttributeManager  {
 		IComment[] theComments = comments.getContents();
 		List<String> commentText = new ArrayList<String>(theComments.length);
 		int i = 1;
+		def ls = System.getProperty("line.separator")
 		for (IComment aComment : theComments) {
-			if (i > 1) {
-				commentText.add("\r");
-			}
-			commentText.add(i + ". " + getCommentAsString(aComment));
+			commentText.add("${i}. ${getCommentAsString(aComment)}${ls}");
 			i++;
 		}
-		return commentText.join(SEPERATOR_NEWLINE);
+		return commentText.join(ls);
 	}
 
 	/**
@@ -651,11 +650,11 @@ public class WorkitemAttributeManager  {
 	 */
 	private String getCommentAsString(IComment aComment)
 			throws TeamRepositoryException {
+		def ls = System.getProperty("line.separator")
 		String creator = calculateContributorAsString(aComment.getCreator());
 		String creationDate = calculateTimestampAsString(aComment
 				.getCreationDate());
-		return creator + " - " + creationDate + SEPERATOR_NEWLINE
-				+ aComment.getHTMLContent().getXMLText();
+		return "${creator} - ${creationDate}${ls}${aComment.getHTMLContent().getPlainText()}";
 	}
 
 	/**
@@ -706,7 +705,7 @@ public class WorkitemAttributeManager  {
 	private String getApprovalAsString(IApprovalDescriptor approvalDescriptor,
 			Collection<IApproval> approvals) {
 		String approvalAsText = "";
-		approvalAsText += approvalDescriptor.getName() + ": ";
+		approvalAsText = "${approvalAsText}${approvalDescriptor.getName()}: ";
 		// colon as separator
 		IApprovalState approvalOverAllState = WorkItemApprovals
 				.getState(approvalDescriptor.getCumulativeStateIdentifier());
@@ -720,8 +719,7 @@ public class WorkitemAttributeManager  {
 				approvalStateCount++;
 			}
 		}
-		approvalAsText += " (" + approvalStateCount + " of " + approverCount
-				+ ")";
+		approvalAsText = "${approvalAsText} ${approvalStateCount} of ${approverCount})";
 		return approvalAsText;
 	}
 
@@ -821,8 +819,8 @@ public class WorkitemAttributeManager  {
 		}
 		if (item instanceof ICategory) {
 			if (!isRTCEclipseExport()) {
-				prefix = WorkItemUpdateHelper.TYPE_CATEGORY
-						+ WorkItemUpdateHelper.ITEMTYPE_SEPARATOR;
+				//WorkItemUpdateHelper t
+				prefix = "${WorkItemUpdateHelper.TYPE_CATEGORY}${WorkItemUpdateHelper.ITEMTYPE_SEPARATOR}";
 			}
 			return prefix + calculateCategoryAsString(value);
 		}
@@ -1017,8 +1015,18 @@ public class WorkitemAttributeManager  {
 			throws TeamRepositoryException {
 		if (value != null) {
 			if (value instanceof ICategoryHandle) {
+				ICategory cat = rtcRepositoryClient.getRepo()
+						.itemManager().fetchCompleteItem(
+								(ICategoryHandle) value,
+								IItemManager.DEFAULT, rtcRepositoryClient.getMonitor())
+				if (cat.isArchived()) {
+					return null
+				}
 				String category = getWorkItemCommon().resolveHierarchicalName(
 						(ICategoryHandle) value, rtcRepositoryClient.getMonitor());
+				if (category.endsWith('Unassigned')) {
+					return null
+				}
 				return "${this.areaPrefix}${category}"
 			}
 			throw new Exception(
@@ -1159,6 +1167,9 @@ public class WorkitemAttributeManager  {
 			for (Object object : items) {
 				resultList.add(calculateString(object));
 			}
+		}
+		if (resultList.size() == 0) {
+			return null
 		}
 		return resultList.join(',');
 	}

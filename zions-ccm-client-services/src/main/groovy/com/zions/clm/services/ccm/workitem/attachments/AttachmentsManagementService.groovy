@@ -52,14 +52,18 @@ public class AttachmentsManagementService {
 		IWorkItemCommon common = (IWorkItemCommon) teamRepository.getClientLibrary(IWorkItemCommon.class);
 		IWorkItemReferences workitemReferences = common.resolveWorkItemReferences(workItem, null);
 		List references = workitemReferences.getReferences(WorkItemEndPoints.ATTACHMENT);
+		def files = []
 		for (IReference iReference : references) {
 			IAttachmentHandle attachHandle = (IAttachmentHandle) iReference.resolve();
 			IAuditableClient auditableClient = (IAuditableClient) teamRepository.getClientLibrary(IAuditableClient.class);
 			IAttachment attachment = (IAttachment) auditableClient.resolveAuditable((IAttachmentHandle) attachHandle,
 				IAttachment.DEFAULT_PROFILE, null);
-			saveAttachment(attachment, id);
+			def file = saveAttachment(attachment, id);
+			if (file != null) {
+				files.add(file)
+			}
 		}	
-		
+		return files
 	}
 	
 	def saveAttachment(IAttachment attachment, int id) {
@@ -86,6 +90,7 @@ public class AttachmentsManagementService {
 			} finally {
 				out.close();
 			}
+			return save
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 		} catch (IOException e) {

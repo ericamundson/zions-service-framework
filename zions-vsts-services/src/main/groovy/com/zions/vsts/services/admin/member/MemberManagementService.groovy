@@ -127,6 +127,35 @@ public class MemberManagementService {
 		return retVal
 	}
 	
+	/**
+	 * Return a Map of team members with key being the uniqueName of member.
+	 *
+	 * @param collection
+	 * @param project
+	 * @param teamName
+	 * @return
+	 */
+	def getProjectMembersMap(collection, project) {
+		def projectData = projectManagementService.getProject(collection, project)
+		def teams = getAllTeams(collection, projectData)
+		def retVal = [:]
+		teams.value.each { teamData -> 
+			def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/teams/${teamData.id}/members",
+					query: ['api-version': '5.0-preview.2']
+					)
+			result.value.each { ridentity ->
+				def identity = ridentity.identity
+				String uid = "${identity.uniqueName}"
+				if (retVal[uid.toLowerCase()] == null) {
+					retVal[uid.toLowerCase()] = identity
+				}
+			}
+		}
+		return retVal
+	}
+
 	public def getMemberAlt(def collection, def signin) {
 		def req = [ 'filterByAncestorEntityIds': [],
 			filterByEntityIds:[],
@@ -160,7 +189,13 @@ public class MemberManagementService {
 	}
 	
 	def getAllTeams(def collection, def project) {
-		
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${project.id}/teams",
+				query: ['api-version': '5.0-preview.2']
+				)
+		return result
+
 	}
 
 	/**

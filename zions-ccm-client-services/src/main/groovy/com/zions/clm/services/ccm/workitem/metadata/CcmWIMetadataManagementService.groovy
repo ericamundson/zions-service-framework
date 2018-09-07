@@ -2,6 +2,8 @@ package com.zions.clm.services.ccm.workitem.metadata
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+
+import com.ibm.team.links.common.internal.ReferenceUtils
 import com.ibm.team.process.client.IProcessItemService
 import com.ibm.team.process.common.IProjectArea
 import com.ibm.team.repository.client.IItemManager
@@ -17,8 +19,9 @@ import com.ibm.team.workitem.common.model.IAttributeHandle
 import com.ibm.team.workitem.common.model.IEnumeration
 import com.ibm.team.workitem.common.model.ILiteral
 import com.ibm.team.workitem.common.model.IWorkItemType
+import com.ibm.team.workitem.common.model.WorkItemLinkTypes
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
-
+import com.zions.clm.services.ccm.utils.ReferenceUtil
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
 
@@ -27,7 +30,8 @@ import groovy.xml.MarkupBuilder
 class CcmWIMetadataManagementService {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
-	
+		
+	def jsonMetaData = [:]
 
 	public CcmWIMetadataManagementService() {
 		
@@ -45,7 +49,58 @@ class CcmWIMetadataManagementService {
 		}
 		return retVal
 	}
+	
+	def extractWorkitemMetadataJson(IProjectArea pArea) {
+		if (jsonMetaData.size() != 0) return jsonMetaData
+		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
+		IWorkItemCommon common = (IWorkItemCommon) teamRepository.getClientLibrary(IWorkItemCommon.class);
+		List<IWorkItemType> wits = common.findWorkItemTypes(pArea, null)
+		
+		
+		wits.each { IWorkItemType wit ->
+			
+			String witId = "${wit.identifier}"
+			jsonMetaData[witId.toLowerCase()] = getAttributes(wit, pArea)
+		}
+		return jsonMetaData
+	}
 
+	def getAttributes(IWorkItemType wit, pArea) {
+		def attrs = [:]
+		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
+		IWorkItemCommon common = (IWorkItemCommon) teamRepository.getClientLibrary(IWorkItemCommon.class);
+        List<IAttributeHandle> builtInAttributeHandles = workItemClient 
+                .findBuiltInAttributes(pArea, null); 
+        IFetchResult builtIn = teamRepository.itemManager() 
+                .fetchCompleteItemsPermissionAware(builtInAttributeHandles, 
+                        IItemManager.REFRESH, null); 
+
+		List<IAttribute> bAttrs = builtIn.getRetrievedItems()
+		bAttrs.each { IAttribute attr ->
+			def attrData = [id: attr.identifier, displayName: attr.displayName]
+			attrs[attr.displayName] = attrData
+		}
+        List<IAttributeHandle> custAttributeHandles = wit 
+                .getCustomAttributes();
+         
+        IFetchResult custom = teamRepository.itemManager() 
+                .fetchCompleteItemsPermissionAware(custAttributeHandles, 
+                        IItemManager.REFRESH, null); 
+		List<IAttribute> cAttrs = custom.getRetrievedItems()
+		cAttrs.each { IAttribute attr ->
+			def attrData = [id: attr.identifier, displayName: attr.displayName]
+			attrs[attr.displayName] = attrData
+		}
+		
+		ReferenceUtil.ALL_LINK_TYPES.each { link ->
+			def attrData = [id: link, displayName: link]
+			attrs[link] = link
+		}
+		return attrs
+	}
+	
 	def extractWorkitemMetadata(def projectArea, def templateDir) {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)

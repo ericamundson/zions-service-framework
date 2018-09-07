@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
@@ -17,6 +18,9 @@ class IterationManagementService {
 	
 	@Autowired
 	private ProjectManagementService projectManagementService;
+	
+	@Autowired
+	private MemberManagementService memberManagementService;
 
 	public IterationManagementService() {}
 	
@@ -27,6 +31,46 @@ class IterationManagementService {
 		}
 	}
 	
+
+	/**
+	 * Adds iterations to teams.
+	 * 
+	 * TODO:  This needs to be fixed so teams match root related to RTC developmentline.
+	 * 
+	 * @param collection
+	 * @param project
+	 * @param currentIterations
+	 * @param iterations
+	 * @return
+	 */
+	def ensureTeamsIterations(collection, project, currentIterations, iterations)
+	{
+		def teams = memberManagementService.getAllTeams(collection, project)
+		def teamIterationInput = [rootIterationId: null, selectedIterations: []]
+		iterations.each { iteration ->
+			def root = getRelated(iteration, currentIterations)
+			teamIterationInput.rootIterationId = "${root.id}"
+			root.children.each { child ->
+				teamIterationInput.selectedIterations.add("${child.id}")
+			}
+		}
+		teams.value.each { teamData ->
+			setTeamIterations(collection, project, teamData, teamIterationInput)
+		}
+	}
+	def setTeamIterations(collection, project, teamData, teamIterationInput) {
+		def teamDataBody = new JsonBuilder(teamIterationInput).toPrettyString()
+		def save = [saveData: "${teamDataBody}"]
+		def body = new JsonBuilder(save).toPrettyString()
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/${teamData.id}/_admin/_Iterations/UpdateIterationsData",
+			query: ['__v': 5, useApiUrl: true, teamId: "${teamData.id}"],
+			body: body,
+			headers: [Accept: 'application/json, text/javascript, */*; q=0.01'],
+			)
+		return result
+	}
 	def ensureIteration(collection, project, iteration, parent, currentIterations) {
 		def relatedArea = getRelated(iteration, currentIterations)
 		if (relatedArea == null) {
