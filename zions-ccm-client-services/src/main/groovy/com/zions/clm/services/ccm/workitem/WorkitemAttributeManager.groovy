@@ -1,6 +1,5 @@
 package com.zions.clm.services.ccm.workitem;
 
-import static org.junit.Assert.doubleIsDifferent
 
 import java.io.File;
 import java.io.FileNotFoundException;
