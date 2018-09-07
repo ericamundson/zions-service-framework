@@ -55,9 +55,9 @@ class SummaryHandler implements IWorkitemFieldHandler {
 		String sId = "${wi.id}"
 		
 		if (sLength > SIZE) {
-			sLength = SIZE-1
+			sLength = SIZE
+			summary = summary.substring(0, SIZE-1)
 		}
-		summary = summary.substring(0, sLength)
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: summary]
 		if (wiCache != null) {
 			def cVal = wiCache.fields."${fieldMap.target}"

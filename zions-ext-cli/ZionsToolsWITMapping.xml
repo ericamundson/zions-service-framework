@@ -10,7 +10,7 @@
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
 		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
-		<field source="summaryHandlerHandler" target="System.Title"/>
+		<field source="summaryHandler" target="System.Title"/>
 		<field source="description" target="System.Description"/>
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
