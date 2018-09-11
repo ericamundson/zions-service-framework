@@ -33,20 +33,24 @@ public class PolicyEndPoint {
     @RequestMapping(value = "/", method = RequestMethod.POST)
 	public ResponseEntity newBranchCreated(@RequestBody String json) {
 		//log.info("In PolicyEndPoint - json:\n"+json)
-		JsonSlurper slurper = new JsonSlurper()
-		def eventData = slurper.parseText(json)
-		def changeSet = eventData.resource
-		def collection = getCollectionName(eventData.resourceContainers)
-		changeSet.refUpdates.each { update ->
-			if ("${update.name}".startsWith("refs/heads/master") || 
-				"${update.name}".startsWith("refs/heads/release") ||
-				"${update.name}".toLowerCase().startsWith("refs/heads/feature/ifb")) {
-				if ("${update.oldObjectId}" == "0000000000000000000000000000000000000000") {
-					policyManagementService.handleNewBranch(changeSet, collection, update.name)
+		try {
+			JsonSlurper slurper = new JsonSlurper()
+			def eventData = slurper.parseText(json)
+			def changeSet = eventData.resource
+			def collection = getCollectionName(eventData.resourceContainers)
+			changeSet.refUpdates.each { update ->
+				if ("${update.name}".startsWith("refs/heads/master") || 
+					"${update.name}".startsWith("refs/heads/release") ||
+					"${update.name}".toLowerCase().startsWith("refs/heads/feature/ifb")) {
+					if ("${update.oldObjectId}" == "0000000000000000000000000000000000000000") {
+						policyManagementService.handleNewBranch(changeSet, collection, update.name)
+					}
 				}
 			}
+		} catch (err) {
+			log.error("Error:  ${err.message}")
+			return ResponseEntity.unprocessableEntity()
 		}
-		
 		return ResponseEntity.ok(HttpStatus.OK)
 	}
 
