@@ -32,7 +32,7 @@ public class PolicyEndPoint {
      */
     @RequestMapping(value = "/", method = RequestMethod.POST)
 	public ResponseEntity newBranchCreated(@RequestBody String json) {
-		//log.info("In PolicyEndPoint - json:\n"+json)
+		log.info("In PolicyEndPoint - json:\n"+json)
 		try {
 			JsonSlurper slurper = new JsonSlurper()
 			def eventData = slurper.parseText(json)
@@ -49,7 +49,7 @@ public class PolicyEndPoint {
 			}
 		} catch (err) {
 			log.error("Error:  ${err.message}")
-			return ResponseEntity.unprocessableEntity()
+			return new ResponseEntity<Object>("${err.message}", HttpStatus.UNPROCESSABLE_ENTITY)
 		}
 		return ResponseEntity.ok(HttpStatus.OK)
 	}
