@@ -91,7 +91,11 @@ class WorkManagementService {
 			query: ['api-version': '4.1']
 			
 			)
-		cacheResult(result, idMap)
+		if (result != null) {
+			cacheResult(result, idMap)
+		} else {
+			log.error("Batch request failed!")
+		}
 	}
 	
 	def cacheResult(result, idMap) {
