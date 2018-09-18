@@ -79,7 +79,9 @@ class PlanManagementService {
 				Date ed = dl.getEndDate()
 				Long eds = null 
 				if (ed != null) {
-					eds = ed.time
+					Calendar cal = Calendar.instance(ed)
+					cal = cal.add(Calendar.DATE, -1)
+					eds = cal.time
 				}
 				def iteration = [name: "${dl.getLabel()}", 'id': "${dl.getLabel()}", startDate: sds, endDate:eds, children: []]
 				IIterationHandle[] ith = dl.getIterations()
@@ -103,7 +105,9 @@ class PlanManagementService {
 				Date ed = it.getEndDate()
 				Long eds = null 
 				if (ed != null) {
-					eds = ed.time
+					Calendar cal = Calendar.instance(ed)
+					cal = cal.add(Calendar.DATE, -1)
+					eds = cal.time
 				}
 				def citeration = [name: "${it.getLabel()}", 'id': "${fullPath}", startDate: sds, endDate: eds, children: []]
 				IIterationHandle[] its = it.getChildren()

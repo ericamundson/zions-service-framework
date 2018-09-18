@@ -43,6 +43,7 @@ public class CcmMemberManagementService {
 		teams.projectArea.allTeamAreas.each { teamArea ->
 			if ("${teamArea.archived.text()}" == 'false') {
 				def team = teamArea.name.text()
+				team = team.replace(' ', '')
 				teamArea.teamMembers.each { member ->
 					if ("${member.archived.text()}" == 'false') {
 						def id = member.emailAddress.text()
