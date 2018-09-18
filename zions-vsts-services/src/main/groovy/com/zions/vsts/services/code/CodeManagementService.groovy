@@ -136,10 +136,30 @@ class CodeManagementService {
 
 	}
 	
-	def importRepoCLI(String collection, String project, String repoName, String importUrl, String bbUser, String bbPassword) {
+	def importRepoDir(String collection, String project, String repoName, File repoDir, String inUser, String inPassword) {
 		def projectData = projectManagementService.getProject(collection, project)
 		def repo = ensureRepo(collection, projectData, repoName)
-		def ourl = getAuthUrl(importUrl, bbUser, bbPassword)
+//		File gitDir = new File(repoDir, '.git')
+//		if (!gitDir.exists()) {
+//			
+//		}
+		
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def erepoName = URLEncoder.encode(repoName, 'utf-8')
+		erepoName = erepoName.replace('+', '%20')
+		def turl = getAuthUrl("${genericRestClient.tfsUrl}/${eproject}/_git/${erepoName}", genericRestClient.user, genericRestClient.token)
+		def proc = "git remote set-url origin ${turl}".execute(null, repoDir)
+		proc.waitForProcessOutput(System.out, System.err)
+		proc = "git push".execute(null, repoDir)
+		proc.waitForProcessOutput(System.out, System.err)
+
+	}
+	
+	def importRepoCLI(String collection, String project, String repoName, String importUrl, String inUser, String inPassword) {
+		def projectData = projectManagementService.getProject(collection, project)
+		def repo = ensureRepo(collection, projectData, repoName)
+		def ourl = getAuthUrl(importUrl, inUser, inPassword)
 		File gitDir = new File('git')
 		
 		if (!gitDir.exists())
