@@ -34,6 +34,7 @@ class SetupTFSWorkitemIterations implements CliAction {
 		} catch (e) {}
 		String projectArea = data.getOptionValues('ccm.projectArea')[0]
 		String tfsRootArea = data.getOptionValues('tfs.root.area')[0]
+		//String clmRootArea = data.getOptionValues('clm.root.area')[0]
 		String project = data.getOptionValues('tfs.project')[0]
 		def theProject = projectManagementService.getProject(collection, project)
 		def iterationData = planManagementService.getIterations(tfsRootArea, projectArea)

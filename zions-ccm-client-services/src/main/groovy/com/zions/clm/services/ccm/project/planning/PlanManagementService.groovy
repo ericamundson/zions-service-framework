@@ -1,5 +1,7 @@
 package com.zions.clm.services.ccm.project.planning
 
+import java.util.TimeZone
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import com.ibm.team.process.client.IProcessItemService
@@ -105,9 +107,7 @@ class PlanManagementService {
 				Date ed = it.getEndDate()
 				Long eds = null 
 				if (ed != null) {
-					Calendar cal = Calendar.instance(ed)
-					cal = cal.add(Calendar.DATE, -1)
-					eds = cal.time
+					eds = ed.time
 				}
 				def citeration = [name: "${it.getLabel()}", 'id': "${fullPath}", startDate: sds, endDate: eds, children: []]
 				IIterationHandle[] its = it.getChildren()

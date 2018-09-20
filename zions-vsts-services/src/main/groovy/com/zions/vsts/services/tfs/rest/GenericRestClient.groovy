@@ -193,7 +193,9 @@ class GenericRestClient implements IGenericRestClient {
 		}
 		//JsonOutput t
 		if (resp.status != 200) {
-			log.debug("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
+			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
+			System.sleep(300000)
+			resp = delegate.post(retryCopy)
 		}
 		if (resp.status == 429) { // Rate limit handling: Sleep, then perform retry
 			System.sleep(300000)
