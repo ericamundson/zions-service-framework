@@ -47,7 +47,7 @@ public class CliApplication implements ApplicationRunner {
 				System.exit(1);
 			}
 		} else {
-			log.errorEnabled('No command specified to arguments');
+			log.error('No command specified to arguments');
 			System.exit(1);
 		}
 	}

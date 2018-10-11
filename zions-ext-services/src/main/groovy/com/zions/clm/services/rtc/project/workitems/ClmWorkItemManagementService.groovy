@@ -31,8 +31,8 @@ public class ClmWorkItemManagementService {
 	}
 	
 	
-	public def getWorkItemsForProject(String project) {
-		def query = "workitem/workItem[projectArea/name='${project}']/(id)"
+	public def getWorkItemsViaQuery(String query) {
+		//def query = "workitem/workItem[projectArea/name='${project}']/(id)"
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
 		String uri = this.clmGenericRestClient.clmUrl + "/ccm/rpt/repository/workitem?fields=" + encoded;
