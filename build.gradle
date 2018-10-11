@@ -37,6 +37,7 @@ allprojects {
     targetCompatibility = 1.8
 
     repositories {
+		mavenCentral()
         mavenLocal()
         maven {
             name 'ZionsNexusPublicSnapshots'
