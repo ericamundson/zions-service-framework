@@ -38,6 +38,10 @@ allprojects {
 
     repositories {
 		mavenCentral()
+        maven {
+            name 'mvnrepository'
+            url "https://mvnrepository.com/artifact/"
+        }   
         mavenLocal()
         maven {
             name 'ZionsNexusPublicSnapshots'
