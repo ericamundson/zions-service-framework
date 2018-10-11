@@ -3,6 +3,7 @@ buildscript {
         springBootVersion = '2.0.0.RELEASE'
     }
     repositories {
+		mavenCentral()
         maven {
             name 'ZionsNexusPublicSnapshots'
             url "${nexusUrl}/repository/public-snapshots/"
