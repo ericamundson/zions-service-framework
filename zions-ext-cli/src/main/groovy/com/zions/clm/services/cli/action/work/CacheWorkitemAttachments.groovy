@@ -25,7 +25,7 @@ class CacheWorkitemAttachments implements CliAction {
 
 	public def execute(ApplicationArguments data) {
 		String project = data.getOptionValues('ccm.projectArea')[0]
-		def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
+		def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(project)
 		while (true) {
 			workItems.workItem.each { workitem ->
 				int id = Integer.parseInt(workitem.id.text())

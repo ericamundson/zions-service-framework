@@ -1,5 +1,7 @@
 package com.zions.clm.services.cli.action.work
 
+import java.util.Map
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
@@ -23,6 +25,8 @@ import groovy.json.JsonBuilder
  */
 @Component
 class TranslateRTCWorkToVSTSWork implements CliAction {
+	@Autowired
+	private Map<String, IWorkitemFilter> filterMap;
 	@Autowired
 	CcmWIMetadataManagementService ccmWIMetadataManagementService;
 	@Autowired
@@ -56,13 +60,15 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		String project = data.getOptionValues('clm.projectArea')[0]
 		String templateDir = data.getOptionValues('ccm.template.dir')[0]
 		String mappingFile = data.getOptionValues('wit.mapping.file')[0]
+		String wiQuery = data.getOptionValues('wi.query')[0]
+		String wiFilter = data.getOptionValues('wi.filter')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
 		File mFile = new File(mappingFile)
-		
+
 		def mapping = new XmlSlurper().parseText(mFile.text)
 		def ccmWits = loadCCMWITs(templateDir)
 		//Update TFS wit definitions.
@@ -71,30 +77,32 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		}
 		//refresh.
 		if (excludes['refresh'] == null) {
-			def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
+			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
-				workItems.workItem.each { workitem ->
+				def filtered = filtered(workItems, wiFilter)
+				filtered.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
 					changeList.add(id)
 				}
 				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
 				def rel = workItems.@rel
 				if ("${rel}" != 'next') break
-				workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 			}
 		}
 		//translate work data.
 		if (excludes['workdata'] == null) {
 			def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
-			def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
+			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			while (true) {
 				ccmWorkManagementService.resetNewId()
 				def changeList = []
 				def idMap = [:]
 				int count = 0
-				workItems.workItem.each { workitem ->
+				def filtered = filtered(workItems, wiFilter)
+				filtered.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
 					def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
 					if (wiChanges != null) {
@@ -108,19 +116,20 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				}
 				def rel = workItems.@rel
 				if ("${rel}" != 'next') break
-				workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 			}
 		}
-//		workManagementService.testBatchWICreate(collection, tfsProject)
+		//		workManagementService.testBatchWICreate(collection, tfsProject)
 		//apply work links
 		if (excludes['worklinks'] == null) {
 			def linkMapping = processTemplateService.getLinkMapping(mapping)
-			def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
+			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
 				def idMap = [:]
 				int count = 0
-				workItems.workItem.each { workitem ->
+				def filtered = filtered(workItems, wiFilter)
+				filtered.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
 					def wiChanges = ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping)
 					if (wiChanges != null) {
@@ -134,19 +143,20 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				}
 				def rel = workItems.@rel
 				if ("${rel}" != 'next') break
-				workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 			}
 		}
 
 		//extract & apply attachments.
 		if (excludes['attachments'] == null) {
 			def linkMapping = processTemplateService.getLinkMapping(mapping)
-			def workItems = clmWorkItemManagementService.getWorkItemsForProject(project)
+			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
 				def idMap = [:]
 				int count = 0
-				workItems.workItem.each { workitem ->
+				def filtered = filtered(workItems, wiFilter)
+				filtered.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
 					def files = attachmentsManagementService.cacheWorkItemAttachments(id)
 					def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
@@ -161,13 +171,22 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				}
 				def rel = workItems.@rel
 				if ("${rel}" != 'next') break
-				workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 			}
 		}
 
 		ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
-	
+
+	def filtered(def workItems, String filter) {
+		if (this.filterMap[filter] != null) {
+			return this.filterMap[filter].filter(workItems)
+		}
+		return workItems.workItem.findAll { wi ->
+			true
+		}
+	}
+
 	def loadCCMWITs(def ccmTemplateDir) {
 		def wits = []
 		File tDir = new File(ccmTemplateDir)
@@ -181,7 +200,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.password', 'clm.projectArea', 'ccm.template.dir', 'tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'wit.mapping.file' ]
+		def required = ['clm.url', 'clm.user', 'clm.password', 'clm.projectArea', 'ccm.template.dir', 'tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'wit.mapping.file', 'wi.query', 'wi.filter']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
@@ -189,7 +208,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		}
 		return true
 	}
-	
+
 
 
 }

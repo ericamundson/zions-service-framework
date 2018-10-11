@@ -230,10 +230,13 @@ class CcmWorkManagementService {
 		if (cacheWI != null) {
 			cValue = "${cacheWI.fields["${fieldMap.target}"]}"
 			def val = "${fValue}"
+			if (fieldMap.defaultMap != null) {
+				val = fieldMap.defaultMap.target
+			}
 			if (fieldMap.valueMap.size() > 0) {
 				
 				fieldMap.valueMap.each { aval ->
-					if ("${val}" == "${aval.source}") {
+					if ("${fValue}" == "${aval.source}") {
 						val = "${aval.target}"
 						return
 					}
@@ -253,10 +256,13 @@ class CcmWorkManagementService {
 			}
 		}
 		def val = "${fValue}"
+		if (fieldMap.defaultMap != null) {
+			val = fieldMap.defaultMap.target
+		}
 		if (fieldMap.valueMap.size() > 0) {
 			
 			fieldMap.valueMap.each { aval ->
-				if ("${val}" == "${aval.source}") {
+				if ("${fValue}" == "${aval.source}") {
 					val = "${aval.target}"
 					return
 				}

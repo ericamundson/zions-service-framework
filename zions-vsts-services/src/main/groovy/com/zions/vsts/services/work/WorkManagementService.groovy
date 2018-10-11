@@ -41,16 +41,22 @@ class WorkManagementService {
 	
 	def refreshCache(def collection, def project, def cacheIds) {
 		def vstsIds = []
+		def idMap = [:]
+		int count = 0
 		cacheIds.each { id -> 
 			def wi = getCacheWI(id)
 			if (wi != null) {
 				String vstsId = "${wi.id}"
 				vstsIds.add(vstsId)
+				idMap[count] = id
+				count++
 			}
 		}
 		def vstsWIs = getListedWorkitems(collection, project, vstsIds)
+		count = 0
 		vstsWIs.each { wi -> 
-			saveState(wi)
+			saveState(wi, idMap[count])
+			count++
 		}
 	}
 	
@@ -103,7 +109,7 @@ class WorkManagementService {
 		result.value.each { resp ->
 			if ("${resp.code}" == '200') {
 				def wi = new JsonSlurper().parseText(resp.body)
-				saveState(wi)
+				saveState(wi, idMap[count])
 			} else {
 				def issue = new JsonSlurper().parseText(resp.body)
 				log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
@@ -112,12 +118,11 @@ class WorkManagementService {
 		}
 	}
 	
-	def saveState(wi) {
+	def saveState(wi, id) {
 		File cacheDir = new File(this.cacheLocation)
 		if (!cacheDir.exists()) {
 			cacheDir.mkdir();
 		}
-		def id = wi.fields."${idTrackingField}"
 		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
 		if (!wiDir.exists()) {
 			wiDir.mkdir()

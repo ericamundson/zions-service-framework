@@ -204,15 +204,17 @@ public class ProcessTemplateService  {
 		def defaultMapping = getDefaultMapping(mapping)
 		ccmWits.each { wit ->
 //			def mapping = getWITMapping(mapping, wit)
-			if (!hasMapping(mapping, wit)) {
-				def witChanges = [ensureType: "${wit.WORKITEMTYPE.@name}", ensureFields: []]
-				witChanges = setFieldChanges(witChanges, wit, defaultMapping)
-				changes.add(witChanges)
-			} else {
-				def witMapping = getWITMapping(mapping, wit)
-				def witChanges = [ensureType: "${witMapping.@target}", ensureFields: []]
-				witChanges = setFieldChanges(witChanges, wit, witMapping)
-				changes.add(witChanges)
+			if (!isExcluded(mapping, wit)) {
+				if (!hasMapping(mapping, wit)) {
+					def witChanges = [ensureType: "${wit.WORKITEMTYPE.@name}", ensureFields: []]
+					witChanges = setFieldChanges(witChanges, wit, defaultMapping)
+					changes.add(witChanges)
+				} else {
+					def witMapping = getWITMapping(mapping, wit)
+					def witChanges = [ensureType: "${witMapping.@target}", ensureFields: []]
+					witChanges = setFieldChanges(witChanges, wit, witMapping)
+					changes.add(witChanges)
+				}
 			}
 		}
 		return changes
@@ -232,21 +234,30 @@ public class ProcessTemplateService  {
 		def defaultMapping = getDefaultMapping(mapping)
 		def translateMapping = [:]
 		ccmWits.each { wit ->
-			if (!hasMapping(mapping, wit)) {
-				def witMap = [source: "${wit.WORKITEMTYPE.@name}", target: "${wit.WORKITEMTYPE.@name}", fieldMaps: []]
-				witMap = addMappedFields(witMap, defaultMapping)
-				witMap = addUnmappedFields(witMap, wit, defaultMapping)
-				translateMapping["${wit.WORKITEMTYPE.@name}"] = witMap
-			} else {
-				def witMapping = getWITMapping(mapping, wit)
-				def witMap = [source: "${witMapping.@source}", target: "${witMapping.@target}", fieldMaps: []]
-				witMap = addMappedFields(witMap, witMapping)
-				witMap = addUnmappedFields(witMap, wit, witMapping)
-				translateMapping["${witMapping.@source}"] = witMap
-				
+			if (!isExcluded(mapping, wit)) {
+				if (!hasMapping(mapping, wit)) {
+					def witMap = [source: "${wit.WORKITEMTYPE.@name}", target: "${wit.WORKITEMTYPE.@name}", fieldMaps: [], defaultMap: null]
+					witMap = addMappedFields(witMap, defaultMapping)
+					witMap = addUnmappedFields(witMap, wit, defaultMapping)
+					translateMapping["${wit.WORKITEMTYPE.@name}"] = witMap
+				} else {
+					def witMapping = getWITMapping(mapping, wit)
+					def witMap = [source: "${witMapping.@source}", target: "${witMapping.@target}", fieldMaps: [], defaultMap: null]
+					witMap = addMappedFields(witMap, witMapping)
+					witMap = addUnmappedFields(witMap, wit, witMapping)
+					translateMapping["${witMapping.@source}"] = witMap
+				}
 			}
 		}
 		return translateMapping
+	}
+	
+	boolean isExcluded(mapping, wit) {
+		if (mapping.exclude == null) return false
+		def excluded = mapping.exclude.wit.findAll { awit ->
+			"${awit.@name}" == "${wit.WORKITEMTYPE.@name}"
+		}
+		return excluded.size() != 0
 	}
 	
 	def addMappedFields(witMap, mapping ) {
@@ -254,11 +265,14 @@ public class ProcessTemplateService  {
 			def vstsField = queryForField(null, null, "${field.@target}", false)
 			if (vstsField != null) {
 				def outType = vstsField.type
-				def fieldMap = [source: "${field.@source}", target: "${field.@target}", outName: "${vstsField.name}", outType: outType, valueMap: []]
+				def fieldMap = [source: "${field.@source}", target: "${field.@target}", outName: "${vstsField.name}", outType: outType, valueMap: [], defaultMap: null]
 				if (field.value != null) {
 					field.value.each { value ->
 						fieldMap.valueMap.add([source: "${value.@source}", target: "${value.@target}"])
 					}
+				}
+				field.defaultvalue.each { dV ->
+					fieldMap.defaultMap = [target:"${field.defaultvalue.@target}"]					
 				}
 				witMap.fieldMaps.add(fieldMap)
 			
@@ -321,6 +335,9 @@ public class ProcessTemplateService  {
 	
 	boolean requiresField(field, witMapping) {
 		boolean reqField = true
+		if ("${witMapping.@translateUnmappedFields}" == 'false') {
+			return false;
+		}
 		witMapping.field.each { witField ->
 			if ("${witField.@source}" == "${field.@refname}") {
 				reqField = false
