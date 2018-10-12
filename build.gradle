@@ -3,6 +3,9 @@ buildscript {
         springBootVersion = '2.0.0.RELEASE'
     }
     repositories {
+		if ("${queue}" == 'Hosted') {
+			mavenCentral()
+		}
         maven {
             name 'ZionsNexusPublicSnapshots'
             url "${nexusUrl}/repository/public-snapshots/"
@@ -31,16 +34,18 @@ allprojects {
         enabled = false
     }
     group = 'com.zionsbancorp.scm'
-    version = '1.0.0-SNAPSHOT'
+    //version = '1.0.0-SNAPSHOT'
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
     repositories {
-//		mavenCentral()
-//        maven {
-//            name 'spring'
-//            url "http://repo.spring.io/plugins-release/"
-//        }   
+		if ("${queue}" == 'Hosted') {
+			mavenCentral()
+	        maven {
+	            name 'spring'
+	            url "http://repo.spring.io/plugins-release/"
+	        } 
+		}  
         mavenLocal()
         maven {
             name 'ZionsNexusPublicSnapshots'
