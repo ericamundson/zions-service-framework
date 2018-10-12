@@ -39,6 +39,8 @@ tfs:
   token: emjfvuveeugbljidpareidxmya5zdvugt3gqp5ptidakh52ekq3q
   build:
     queue: default
+  	use:
+  		template: true
 
 # Specify port for Tomcat (default = 8080)
 server:
