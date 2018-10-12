@@ -3,7 +3,6 @@ buildscript {
         springBootVersion = '2.0.0.RELEASE'
     }
     repositories {
-		mavenCentral()
         maven {
             name 'ZionsNexusPublicSnapshots'
             url "${nexusUrl}/repository/public-snapshots/"
@@ -37,11 +36,11 @@ allprojects {
     targetCompatibility = 1.8
 
     repositories {
-		mavenCentral()
-        maven {
-            name 'spring'
-            url "http://repo.spring.io/plugins-release/"
-        }   
+//		mavenCentral()
+//        maven {
+//            name 'spring'
+//            url "http://repo.spring.io/plugins-release/"
+//        }   
         mavenLocal()
         maven {
             name 'ZionsNexusPublicSnapshots'

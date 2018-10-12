@@ -20,6 +20,10 @@ import groovyx.net.http.ContentType
 public class BuildManagementService {
 	
 	@Autowired
+	@Value('${tfs.build.use.template}')
+	private boolean useTfsTemplate
+	
+	@Autowired
 	@Value('${tfs.build.queue}')
 	private String queue
 
@@ -112,7 +116,7 @@ public class BuildManagementService {
 		def ciBd = null
 		def build = getBuild(collection, projectData, repo, 'CI')
 		if (build.count == 0) {
-			build = createBuild(collection, projectData, repo, buildType, 'CI', true)
+			build = createBuild(collection, projectData, repo, buildType, 'CI')
 			if (build == null ) {
 				log.error("BuildManagementService::ensureBuildsForBranch -- CI Build creation failed!")
 			}
@@ -125,7 +129,7 @@ public class BuildManagementService {
 		def relBd = null
 		def build1 = getBuild(collection, projectData, repo, 'Release')
 		if (build1.count == 0) {
-			relBd = createBuild(collection, projectData, repo, buildType, 'Release', true)
+			relBd = createBuild(collection, projectData, repo, buildType, 'Release')
 			if (relBd == null ) {
 				log.error("BuildManagementService::ensureBuildsForBranch -- Release Build creation failed!")
 			}
@@ -175,7 +179,7 @@ public class BuildManagementService {
 		def build = getBuild(collection, project, repo, buildStage)
 		if (build.count == 0) {
 			String name = buildType.toString().toLowerCase()
-			build = createBuild(collection, project, repo, buildType, buildStage, false, folder)
+			build = createBuild(collection, project, repo, buildType, buildStage, folder)
 			if (build != null && "${buildStage}" == 'CI') {
 				branchPolicy(collection, project, repo, build, 'refs/heads/master')
 			}
@@ -197,9 +201,9 @@ public class BuildManagementService {
 				)
 	}
 
-	public def createBuild(def collection, def project, def repo, BuildType buildType, String buildStage, boolean useTfsTemplate, def folder) {
+	public def createBuild(def collection, def project, def repo, BuildType buildType, String buildStage, def folder) {
 		def bDef = null
-		if (useTfsTemplate) {
+		if (this.useTfsTemplate) {
 			// Looking for template build definition with name like 'maven-CI-template', 'gradle-Release-template', 'ant-CI-template', etc.
 			String templateName = buildType.toString().toLowerCase()+"-"+buildStage+"-template"
 			log.debug("BuildManagementService::createBuild -- Using TFS template: "+templateName)
