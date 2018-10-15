@@ -207,7 +207,7 @@ public class BuildManagementService {
 			// Looking for template build definition with name like 'maven-CI-template', 'gradle-Release-template', 'ant-CI-template', etc.
 			String templateName = buildType.toString().toLowerCase()+"-"+buildStage+"-template"
 			log.debug("BuildManagementService::createBuild -- Using TFS template: "+templateName)
-			bDef = getBuild(collection, project, templateName)
+			bDef = getTemplate(collection, project, templateName)
 		} else {
 			log.debug("BuildManagementService::createBuild -- Using local resource file.  Build type: "+buildType.toString().toLowerCase()+", build stage: "+ buildStage)
 			bDef = getResource(buildType.toString().toLowerCase(), buildStage)
@@ -308,6 +308,25 @@ public class BuildManagementService {
 		return result
 	}
 	
+	public def getTemplate(def collection, def project, def name) {
+		log.debug("BuildManagementService::getTemplate -- templateName = "+repo.name+"-"+qualifier)
+		def query = ['api-version':'4.1']
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/templates",
+				query: query,
+				)
+		if (result.value != null) {
+			def bt = result.value.find { buildTemplate ->
+				"${buildTemplate.name}" == "${name}" 
+			}
+			if (bt != null) {
+				return bt.template
+			}
+		}
+		return null
+	}
+
 	public def getBuild(def collection, def project, String name) {
 		log.debug("BuildManagementService::getBuild -- name = " + name)
 		def query = ['name':"*${name}"]

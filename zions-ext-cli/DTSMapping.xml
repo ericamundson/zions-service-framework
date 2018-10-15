@@ -31,13 +31,13 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="DTS\ALMOps\AzureDevOps"/>
+			<defaultvalue target="DTSTest\ALMOps\AzureDevOps"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="DTS"/>
-			<value source="DTS\Rational Admin\Sprint - 25" target="DTS\Sprint25"/>
-			<value source="DTS\Rational Admin\Sprint - 26" target="DTS\Sprint26"/>
+			<defaultvalue target="DTSTest"/>
+			<value source="DTSTest\Rational Admin\Sprint - 25" target="DTSTest\Sprint25"/>
+			<value source="DTSTest\Rational Admin\Sprint - 26" target="DTSTest\Sprint26"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -46,7 +46,6 @@
 			<value source="Could Have" target="4"/>			
 			<value source="Unassigned" target="3"/>			
 		</field>
-		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -62,6 +61,7 @@
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
 			<field name="summary"/>
+			<field name="internalApprovals"/>
 			<field name="internalComments"/>
 			<field name="internalStateTransitions"/>
 			<field name="contextId"/>
@@ -86,6 +86,7 @@
 	</wit>
 	
 	<wit source="Story" target="User Story" translateUnmappedFields="false">
+		<field source="approvalsHandler" target="Custom.Approvals"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
 		<field source="resolver" target="Microsoft.VSTS.Common.ClosedBy"/>
 		<field source="implementedDateHandler" target="Microsoft.VSTS.Common.ResolvedDate"/>
@@ -107,13 +108,13 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="DTS\ALMOps\AzureDevOps"/>
+			<defaultvalue target="DTSTest\ALMOps\AzureDevOps"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="DTS"/>
-			<value source="DTS\Rational Admin\Sprint - 25" target="DTS\Sprint25"/>
-			<value source="DTS\Rational Admin\Sprint - 26" target="DTS\Sprint26"/>
+			<defaultvalue target="DTSTest"/>
+			<value source="DTSTest\Rational Admin\Sprint - 25" target="DTSTest\Sprint25"/>
+			<value source="DTSTest\Rational Admin\Sprint - 26" target="DTSTest\Sprint26"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -122,7 +123,6 @@
 			<value source="Could Have" target="4"/>			
 			<value source="Unassigned" target="3"/>			
 		</field>
-		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -137,6 +137,7 @@
 		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
+			<field name="internalApprovals"/>
 			<field name="summary"/>
 			<field name="internalComments"/>
 			<field name="internalStateTransitions"/>
@@ -189,13 +190,13 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="DTS\ALMOps\AzureDevOps"/>
+			<defaultvalue target="DTSTest\ALMOps\AzureDevOps"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="DTS"/>
-			<value source="DTS\Rational Admin\Sprint - 25" target="DTS\Sprint25"/>
-			<value source="DTS\Rational Admin\Sprint - 26" target="DTS\Sprint26"/>
+			<defaultvalue target="DTSTest"/>
+			<value source="DTSTest\Rational Admin\Sprint - 25" target="DTSTest\Sprint25"/>
+			<value source="DTSTest\Rational Admin\Sprint - 26" target="DTSTest\Sprint26"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -204,7 +205,6 @@
 			<value source="Could Have" target="4"/>			
 			<value source="Unassigned" target="3"/>			
 		</field>
-		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -220,6 +220,7 @@
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
 			<field name="summary"/>
+			<field name="internalApprovals"/>
 			<field name="internalComments"/>
 			<field name="internalStateTransitions"/>
 			<field name="contextId"/>
@@ -265,13 +266,13 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="DTS\ALMOps\AzureDevOps"/>
+			<defaultvalue target="DTSTest\ALMOps\AzureDevOps"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="DTS"/>
-			<value source="DTS\Rational Admin\Sprint - 25" target="DTS\Sprint25"/>
-			<value source="DTS\Rational Admin\Sprint - 26" target="DTS\Sprint26"/>
+			<defaultvalue target="DTSTest"/>
+			<value source="DTSTest\Rational Admin\Sprint - 25" target="DTSTest\Sprint25"/>
+			<value source="DTSTest\Rational Admin\Sprint - 26" target="DTSTest\Sprint26"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -280,7 +281,6 @@
 			<value source="Could Have" target="4"/>			
 			<value source="Unassigned" target="3"/>			
 		</field>
-		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -296,6 +296,7 @@
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
 			<field name="summary"/>
+			<field name="internalApprovals"/>
 			<field name="internalComments"/>
 			<field name="internalStateTransitions"/>
 			<field name="contextId"/>
