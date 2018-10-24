@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:testcase xmlns:p="http://jazz.net/xmlns/alm/qm/v0.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jazz.net/xmlns/alm/qm/v0.1/ qm.xsd ">
+  <p:projectArea href="http://tempuri.org"/>
+  <identifier/>
+  <team-area/>
+  <p:stylesheet href="http://tempuri.org"/>
+  <p:snapshot>
+    <title/>
+    <description/>
+    <updated/>
+    <p:revision>0</p:revision>
+  </p:snapshot>
+  <p:com.ibm.rqm.planning.editor.section.testCaseDesign/>
+  <p:webId>0</p:webId>
+  <p:alias>p:alias</p:alias>
+  <title/>
+  <description/>
+  <p:creationDate>2001-12-31T12:00:00</p:creationDate>
+  <updated/>
+  <state/>
+  <creator/>
+  <owner/>
+  <p:locked>true</p:locked>
+  <p:weight>0</p:weight>
+  <p:priority/>
+  <p:estimate>0</p:estimate>
+  <p:trigger>p:trigger</p:trigger>
+  <p:activity>p:activity</p:activity>
+  <p:suspect>true</p:suspect>
+  <p:approvals>
+    <p:approvalDescriptor>
+      <p:approvalType>p:approvalType</p:approvalType>
+    </p:approvalDescriptor>
+    <p:approvalComment>
+      <creator/>
+      <p:commentDate>2001-12-31T12:00:00</p:commentDate>
+      <p:comment/>
+    </p:approvalComment>
+  </p:approvals>
+  <p:risk>
+    <p:id>0</p:id>
+    <p:riskLevel>0</p:riskLevel>
+    <p:factors/>
+    <p:commnunityAssessment/>
+  </p:risk>
+  <p:category/>
+  <p:variables>
+    <p:variable>
+      <p:executionvariable href="http://tempuri.org"/>
+      <p:name>p:name</p:name>
+    </p:variable>
+  </p:variables>
+  <p:testscript href="http://tempuri.org"/>
+  <p:testcaserecordselection>
+    <p:executionscript href="http://tempuri.org"/>
+    <p:recordselectioncriteria>
+      <p:columnName>p:columnName</p:columnName>
+      <p:value>p:value</p:value>
+    </p:recordselectioncriteria>
+  </p:testcaserecordselection>
+  <p:remotescript href="http://tempuri.org"/>
+  <p:template href="http://tempuri.org"/>
+  <p:requirement href="http://tempuri.org"/>
+  <p:workitem href="http://tempuri.org"/>
+  <p:relatedChangeRequest href="http://tempuri.org"/>
+  <p:attachment href="http://tempuri.org"/>
+  <p:copiedFrom href="http://tempuri.org"/>
+  <p:copiedRoot href="http://tempuri.org"/>
+  <p:customAttributes>
+    <p:customAttribute type="">
+      <p:identifier>p:identifier</p:identifier>
+      <p:name>p:name</p:name>
+      <p:value>p:value</p:value>
+    </p:customAttribute>
+  </p:customAttributes>
+  <p:esignatures>
+    <p:esignature>
+      <p:esigcontributor/>
+      <p:esigaction>p:esigaction</p:esigaction>
+      <p:esigtime>2001-12-31T12:00:00</p:esigtime>
+      <p:esigreason>p:esigreason</p:esigreason>
+      <p:esigcomment>p:esigcomment</p:esigcomment>
+    </p:esignature>
+  </p:esignatures>
+  <p:markerAny>p:markerAny</p:markerAny>
+</p:testcase>

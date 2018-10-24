@@ -57,19 +57,18 @@ import org.springframework.stereotype.Component
 public class QmGenericRestClient implements IGenericRestClient {
 	private RESTClient delegate;
 	
-	@Autowired
-	@Value('${clm.userid}')
-	String userid = "";
+	String userid;
 	
-	@Autowired
-	@Value('${clm.password}')
-	String password = "";
+	String password;
 	
-	@Autowired
-	@Value('${clm.url}')
-	public String qmUrl = "";
+	public String qmUrl;
 	
-	public QmGenericRestClient() {
+	public QmGenericRestClient( @Value('${clm.url}') String qmUrl,
+		@Value('${clm.user}') String user,
+		@Value('${clm.password}') String password) {
+		this.userid = user
+		this.password = password
+		this.qmUrl = qmUrl
 		delegate = new RESTClient(qmUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
