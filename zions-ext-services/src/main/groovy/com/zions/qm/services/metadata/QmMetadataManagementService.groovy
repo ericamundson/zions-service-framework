@@ -9,13 +9,21 @@ import org.springframework.stereotype.Component
 
 import com.zions.qm.services.project.QmProjectManagementService
 
+/**
+ * Handles generating xml representation of QM project meta-data.  
+ * o Incorporates project area configuration to define output fields of various test types.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 @Slf4j
 class QmMetadataManagementService {
 
-	String[] metaTypes = ['testplan', 'testsuite', 'testcase', 'testscript']
-	def typeMap = ['testplan': 'TEST_PLAN', 'testsuite': 'TEST_SUITE', 'testcase': 'TEST_CASE', 'testscript': 'TEST_SCRIPT']
-
+	def xsdTypes = ['TestPlan':'testplan', 'TestSuite':'testsuite', 'TestCase':'testcase', 'TestScript':'testscript', 'TestCaseExecutionRecord':'executionworkitem', 'TestSuiteExecutionRecord':'suiteexecutionrecord', 'TestCaseExecutionResult':'executionresult', 'TestSuiteExecutionResult':'testsuitelog']
+	def customAttributeMapType = ['TestPlan': 'TEST_PLAN', 'TestSuite': 'TEST_SUITE', 'TestCase': 'TEST_CASE', 'TestScript': 'TEST_SCRIPT', 'TestCaseExecutionRecord':'TESTCASE_EXECUTIONRECORD', 'TestSuiteExecutionRecord':'TESTSUITE_EXECUTIONRECORD', 'TestCaseExecutionResult':'TESTCASE_EXECUTIONRESULT','TestSuiteExecutionResult':'TESTSUITE_EXECUTIONRESULT']
+	//def categoriesMapType = ['testplan': 'TestPlan', 'testsuite': 'TestSuite', 'testcase': 'TestCase', 'testscript': 'TestScript']
+	
 	@Autowired
 	QmGenericRestClient qmGenericRestClient
 
@@ -25,35 +33,60 @@ class QmMetadataManagementService {
 	public QmMetadataManagementService() {
 	}
 
+	/**
+	 * Entry point method to generate meta-data xml.
+	 * 
+	 * @param projectArea
+	 * @param templateDir
+	 * @return
+	 */
 	def extractQmMetadata(String projectArea, File templateDir) {
 		def schema = getQMSchema();
-		metaTypes.each { type ->
+		xsdTypes.each { key, type ->
 			def tSchema = findSchema(schema, type)
-			String xml = generateMetaData(projectArea,type, schema, tSchema, templateDir)
-			File oFile = new File(templateDir, "${type}.xml");
+			String xml = generateMetaData(projectArea,key, schema, tSchema, templateDir)
+			File oFile = new File(templateDir, "${key}.xml");
 			def w = oFile.newWriter();
 			w << "${xml}"
 			w.close();
 		}
 	}
 
-	String generateMetaData(String projectArea, String type, def schema, def tSchema, File templateDir) {
+	/**
+	 * @param projectArea - Project area name
+	 * @param key - key index to xml element name.
+	 * @param schema
+	 * @param tSchema
+	 * @param templateDir
+	 * @return
+	 */
+	String generateMetaData(String projectArea, String key, def schema, def tSchema, File templateDir) {
+		def type = this.xsdTypes[key]
 		def writer = new StringWriter()
 		MarkupBuilder bXml = new MarkupBuilder(writer)
 		bXml.'witd:WITD'(application:'Work item type editor',
 		version: '1.0',
 		'xmlns:witd': 'http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef') {
-			WORKITEMTYPE(name: "${type}") {
+			WORKITEMTYPE(name: "${key}") {
 				DESCRIPTION("general work item starter")
 				FIELDS {
-					generateComplexFields(projectArea, type, schema, tSchema.complexType, bXml)
+					generateComplexFields(projectArea, key, schema, tSchema.complexType, bXml)
 				}
 			}
 		}
 		return writer.toString()
 	}
 
-	def generateComplexFields(String projectArea, String type, def schema, def complexType, MarkupBuilder bXml) {
+	/**
+	 * @param projectArea
+	 * @param key
+	 * @param schema
+	 * @param complexType
+	 * @param bXml
+	 * @return
+	 */
+	def generateComplexFields(String projectArea, String key, def schema, def complexType, MarkupBuilder bXml) {
+		String type = this.xsdTypes[key]
 		String extName = "${complexType.complexContent.extension.@base}".toString();
 		def parentType = []
 		if (extName.length() > 0) {
@@ -62,7 +95,7 @@ class QmMetadataManagementService {
 			}
 
 			if (parentType.size() > 0) {
-				generateComplexFields(projectArea, type, schema, parentType[0], bXml)
+				generateComplexFields(projectArea, key, schema, parentType[0], bXml)
 			}
 		}
 		complexType.complexContent.extension.sequence.element.each { field ->
@@ -74,7 +107,7 @@ class QmMetadataManagementService {
 			}
 			if (aref.length()>0) {
 				if ("${field.@ref}" == 'customAttributes') {
-					generateCustomFields(projectArea, type, bXml)
+					generateCustomFields(projectArea, key, bXml)
 				} else {
 					bXml.FIELD(name: field.@ref, refname: field.@ref, type: field.@ref) {
 					}
@@ -86,12 +119,15 @@ class QmMetadataManagementService {
 			}
 		}
 	}
-
-	def generateAddedFields(def schema, def tSchema, MarkupBuilder bXml) {
-	}
 	
-	def generateCategoryFields(String projectArea, def type, MarkupBuilder bXml) {
-		def cats = this.getCategories(type, projectArea)
+	/**
+	 * @param projectArea
+	 * @param key
+	 * @param bXml
+	 * @return
+	 */
+	def generateCategoryFields(String projectArea, def key, MarkupBuilder bXml) {
+		def cats = this.getCategories(key, projectArea)
 		cats.'soapenv:Body'.response.returnValue.values.each { cat ->
 			if (!cat.archived) {
 				bXml.FIELD(name: cat.name, refname: cat.itemId, type: 'string') {
@@ -108,8 +144,14 @@ class QmMetadataManagementService {
 		
 	}
 	
-	def generateCustomFields(String projectArea, def type, MarkupBuilder bXml) {
-		String mType = this.typeMap[type]
+	/**
+	 * @param projectArea
+	 * @param key
+	 * @param bXml
+	 * @return
+	 */
+	def generateCustomFields(String projectArea, def key, MarkupBuilder bXml) {
+		String mType = this.customAttributeMapType[key]
 		def attrs = this.getCustomAttributes(mType, projectArea)
 		attrs.'soapenv:Body'.response.returnValue.values.each { attr ->
 			if (!attr.archived) {
@@ -119,11 +161,19 @@ class QmMetadataManagementService {
 		}
 	}
 
+	/**
+	 * @param schema
+	 * @param type
+	 * @return
+	 */
 	def findSchema(schema, type) {
 		def typeSchemas = schema.'**'.findAll { node ->
 			//println "${node.parent().@minOccurs}"
 			String minOccurs = node.parent().@minOccurs
-			node.name() == 'complexType' && "${node.parent().@name}" == "${type}" && node.parent().name() == 'element' && minOccurs.length()==0
+			def cTypeChild = node.children().findAll { child ->
+				child.name() == 'complexContent'
+			}
+			cTypeChild.size() > 0 && node.name() == 'complexType' && "${node.parent().@name}" == "${type}" && node.parent().name() == 'element' && minOccurs.length()==0
 		}
 		if (typeSchemas.size() > 0) {
 			return typeSchemas[0].parent()
@@ -131,6 +181,9 @@ class QmMetadataManagementService {
 		return null;
 	}
 
+	/**
+	 * @return
+	 */
 	def getQMSchema() {
 		String uri = "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.integration.service.IIntegrationService/schema/qm.xsd"
 		def result = qmGenericRestClient.get(
@@ -140,6 +193,11 @@ class QmMetadataManagementService {
 		return result
 	}
 	
+	/**
+	 * @param mType
+	 * @param projectArea
+	 * @return
+	 */
 	def getCustomAttributes(String mType, String projectArea) {
 		def projectInfo = qmProjectManagementSerivce.getProject(projectArea)
 		String url = "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService/customAttributesDTO"
@@ -152,13 +210,20 @@ class QmMetadataManagementService {
 		return attribs
 
 	}
-	def getCategories(String mType, String projectArea) {
+	
+	/**
+	 * @param mType
+	 * @param projectArea
+	 * @return
+	 */
+	def getCategories(String type, String projectArea) {
+		//String cType = this.categoriesMapType[type]
 		def projectInfo = qmProjectManagementSerivce.getProject(projectArea)
 		String url = "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.planning.common.service.rest.ICategoryTypeRestService/categoryTypesDTO"
 		def cats = qmGenericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: url,
-			query: [itemType:mType, resolveCategories:true,isNotPurged: true, processAreaUUID: projectInfo.itemId, includeGlobal: false],
+			query: [itemType:type, resolveCategories:true,isNotPurged: true, processAreaUUID: projectInfo.itemId, includeGlobal: false],
 			headers: [accept: 'text/json']
 		)
 		return cats
