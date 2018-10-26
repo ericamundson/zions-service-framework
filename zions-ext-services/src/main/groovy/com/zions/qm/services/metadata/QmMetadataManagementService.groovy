@@ -20,10 +20,10 @@ import com.zions.qm.services.project.QmProjectManagementService
 @Slf4j
 class QmMetadataManagementService {
 
-	def xsdTypes = ['TestPlan':'testplan', 'TestSuite':'testsuite', 'TestCase':'testcase', 'TestScript':'testscript', 'TestCaseExecutionRecord':'executionworkitem', 'TestSuiteExecutionRecord':'suiteexecutionrecord', 'TestCaseExecutionResult':'executionresult', 'TestSuiteExecutionResult':'testsuitelog']
-	def customAttributeMapType = ['TestPlan': 'TEST_PLAN', 'TestSuite': 'TEST_SUITE', 'TestCase': 'TEST_CASE', 'TestScript': 'TEST_SCRIPT', 'TestCaseExecutionRecord':'TESTCASE_EXECUTIONRECORD', 'TestSuiteExecutionRecord':'TESTSUITE_EXECUTIONRECORD', 'TestCaseExecutionResult':'TESTCASE_EXECUTIONRESULT','TestSuiteExecutionResult':'TESTSUITE_EXECUTIONRESULT']
+	def xsdTypes = ['TestPlan':'testplan', 'TestSuite':'testsuite', 'TestCase':'testcase', 'TestScript':'testscript', 'TestCaseExecutionRecord':'executionworkitem', 'TestSuiteExecutionRecord':'suiteexecutionrecord', 'TestCaseExecutionResult':'executionresult', 'TestSuiteExecutionResult':'testsuitelog','Step':'step']
+	def customAttributeMapType = ['TestPlan': 'TEST_PLAN', 'TestSuite': 'TEST_SUITE', 'TestCase': 'TEST_CASE', 'TestScript': 'TEST_SCRIPT', 'TestCaseExecutionRecord':'TESTCASE_EXECUTIONRECORD', 'TestSuiteExecutionRecord':'TESTSUITE_EXECUTIONRECORD', 'TestCaseExecutionResult':'TESTCASE_EXECUTIONRESULT','TestSuiteExecutionResult':'TESTSUITE_EXECUTIONRESULT','Step':'MANUAL_STEP']
 	//def categoriesMapType = ['testplan': 'TestPlan', 'testsuite': 'TestSuite', 'testcase': 'TestCase', 'testscript': 'TestScript']
-	
+	def schemaMap = [:]
 	@Autowired
 	QmGenericRestClient qmGenericRestClient
 
@@ -76,6 +76,15 @@ class QmMetadataManagementService {
 		}
 		return writer.toString()
 	}
+	
+	String stripNS(String name) {
+		String[] parts = name.split(':')
+		if (parts.size()>1) {
+			return parts[1]
+		}
+		return parts[0]
+	}
+
 
 	/**
 	 * @param projectArea
@@ -98,18 +107,29 @@ class QmMetadataManagementService {
 				generateComplexFields(projectArea, key, schema, parentType[0], bXml)
 			}
 		}
+		
 		complexType.complexContent.extension.sequence.element.each { field ->
 			String atype = field.@type
 			String aref = field.@ref
-			if (atype.length() > 0) {
-				bXml.FIELD(name: field.@name, refname: field.@name, type: field.@type) {
+			if (atype.length() > 0 && inTemplate(field, key, projectArea)) {
+				atype = stripNS(atype)
+				String name = stripNS("${field.@name}")
+				bXml.FIELD(name: name, refname: name, type: atype) {
 				}
 			}
 			if (aref.length()>0) {
 				if ("${field.@ref}" == 'customAttributes') {
 					generateCustomFields(projectArea, key, bXml)
 				} else {
-					bXml.FIELD(name: field.@ref, refname: field.@ref, type: field.@ref) {
+					String fType = "${field.@ref}"
+					String reftype = determineType(schema, fType)
+					String cardinality = determineCardinality(schema,fType)
+					if (reftype == null) {
+						reftype = field.ref
+					}
+					reftype = stripNS(reftype)
+					String name = stripNS("${field.@ref}")
+					bXml.FIELD(name: name, refname: name, type: reftype) {
 					}
 				}
 			}
@@ -118,6 +138,10 @@ class QmMetadataManagementService {
 				generateCategoryFields(projectArea, type, bXml)
 			}
 		}
+	}
+	
+	boolean inTemplate(def field, String key, String projectArea) {
+		return true
 	}
 	
 	/**
@@ -190,6 +214,7 @@ class QmMetadataManagementService {
 				uri: uri,
 				query: [abbreviate: false],
 				headers: [Accept: 'text/xml'] );
+		schemaMap['qm'] = result
 		return result
 	}
 	
@@ -228,5 +253,68 @@ class QmMetadataManagementService {
 		)
 		return cats
 
+	}
+	
+	String determineType(def schema, String typeName) {
+		String[] typeParts = typeName.split(':')
+		String name = ""
+		String schemaElement = ""
+		if (typeParts.length == 1) {
+			schemaElement = 'qm'
+			name = typeParts[0]
+		} else {
+			schemaElement = typeParts[0]
+			name = typeParts[1]
+		}
+ 
+		if (schemaElement == 'xs') {
+			return name
+		}
+		def mSchema = loadSchema(schema, schemaElement)
+		def element = mSchema.depthFirst().find { node -> 
+			node.@name == name			
+		}
+		if (element != null) {
+			String atype = "${element.@type}"
+			if (atype.length()>0) {
+				return atype
+			}
+			def cType = element.depthFirst().find { child ->
+				child.name() == 'complexType'
+			}
+			if (cType != null) {
+				def attr = cType.depthFirst().find { ct ->
+					ct.name() == 'attribute'
+				}
+				if (attr != null) {
+					String attrType = "${attr.@type}"
+					if (attrType.length()>0) {
+						return attrType
+					}
+					String attrRef = "${attr.@ref}"
+					
+					return determineType(mSchema, attrRef)
+				}
+				return 'string'
+			}
+		}
+		return null
+	}
+	
+	String determineCardinality(def schema, String fType) {
+		
+	}
+	
+	def loadSchema(schema, String schemaElement) {
+		if (schemaMap[schemaElement] != null) {
+			return schemaMap[schemaElement]
+		}
+		def mschema = qmGenericRestClient.get(
+				uri: "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.integration.service.IIntegrationService/schema/${schemaElement}.xsd",
+				query: [abbreviate: false],
+				headers: [Accept: 'text/xml'] );
+		
+		schemaMap[schemaElement] = mschema
+		return mschema
 	}
 }
