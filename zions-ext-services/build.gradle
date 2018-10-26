@@ -7,4 +7,5 @@ jar {
 
 dependencies {
 	compile project(':zions-common')
+    compile 'org.apache.tika:tika:1.18'
 }
