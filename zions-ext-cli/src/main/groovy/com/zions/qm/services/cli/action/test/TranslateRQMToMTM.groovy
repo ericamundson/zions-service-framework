@@ -1,4 +1,4 @@
-package com.zions.clm.services.cli.action.work
+package com.zions.qm.services.cli.action.test
 
 import java.util.Map
 
@@ -7,11 +7,12 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
-import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
+import com.zions.qm.services.metadata.QmMetadataManagementService
+import com.zions.qm.services.test.ClmTestManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
@@ -25,19 +26,17 @@ import groovy.json.JsonBuilder
  *
  */
 @Component
-class TranslateRTCWorkToVSTSWork implements CliAction {
+class TranslateRQMToMTM implements CliAction {
 	@Autowired
 	private Map<String, IFilter> filterMap;
 	@Autowired
-	CcmWIMetadataManagementService ccmWIMetadataManagementService;
+	QmMetadataManagementService qmMetadataManagementService;
 	@Autowired
 	ProcessTemplateService processTemplateService;
 	@Autowired
 	WorkManagementService workManagementService;
 	@Autowired
-	ClmWorkItemManagementService clmWorkItemManagementService
-	@Autowired
-	CcmWorkManagementService ccmWorkManagementService
+	ClmTestManagementService clmTestManagementService
 	@Autowired
 	MemberManagementService memberManagementService
 	@Autowired
@@ -45,7 +44,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 	@Autowired
 	FileManagementService fileManagementService
 
-	public TranslateRTCWorkToVSTSWork() {
+	public TranslateRQMToMTM() {
 	}
 
 	public def execute(ApplicationArguments data) {
@@ -59,10 +58,10 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 			}
 		} catch (e) {}
 		String project = data.getOptionValues('clm.projectArea')[0]
-		String templateDir = data.getOptionValues('ccm.template.dir')[0]
-		String mappingFile = data.getOptionValues('wit.mapping.file')[0]
-		String wiQuery = data.getOptionValues('wi.query')[0]
-		String wiFilter = data.getOptionValues('wi.filter')[0]
+		String templateDir = data.getOptionValues('qm.template.dir')[0]
+		String mappingFile = data.getOptionValues('test.mapping.file')[0]
+		String wiQuery = data.getOptionValues('qm.query')[0]
+		String wiFilter = data.getOptionValues('qm.filter')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -71,41 +70,41 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		File mFile = new File(mappingFile)
 
 		def mapping = new XmlSlurper().parseText(mFile.text)
-		def ccmWits = loadCCMWITs(templateDir)
+		def testTypes = loadTestTypes(templateDir)
 		//Update TFS wit definitions.
 		if (excludes['meta'] == null) {
-			def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, ccmWits)
+			def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
 		//refresh.
 		if (excludes['refresh'] == null) {
-			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
+			def testItems = clmTestManagementService.getTestItemsViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
-				def filtered = filtered(workItems, wiFilter)
+				def filtered = filtered(testItems, wiFilter)
 				filtered.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
 					changeList.add(id)
 				}
 				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
-				def rel = workItems.@rel
+				def rel = testItems.@rel
 				if ("${rel}" != 'next') break
-					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+					testItems = clmTestManagementService.nextPage(testItems.@href)
 			}
 		}
 		//translate work data.
-		if (excludes['workdata'] == null) {
-			def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
-			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
+		if (excludes['data'] == null) {
+			def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, testTypes)
+			def testItems = clmTestManagementService.getTestItemsViaQuery(wiQuery)
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			while (true) {
-				ccmWorkManagementService.resetNewId()
+				//TODO: ccmWorkManagementService.resetNewId()
 				def changeList = []
 				def idMap = [:]
 				int count = 0
-				def filtered = filtered(workItems, wiFilter)
+				def filtered = filtered(testItems, wiFilter)
 				filtered.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
-					def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
+					// TODO: def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
 					if (wiChanges != null) {
 						idMap[count] = "${id}"
 						changeList.add(wiChanges)
@@ -115,21 +114,21 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				if (changeList.size() > 0) {
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 				}
-				def rel = workItems.@rel
+				def rel = testItems.@rel
 				if ("${rel}" != 'next') break
-					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+					testItems = clmTestManagementService.nextPage(testItems.@href)
 			}
 		}
 		//		workManagementService.testBatchWICreate(collection, tfsProject)
 		//apply work links
-		if (excludes['worklinks'] == null) {
+		if (excludes['links'] == null) {
 			def linkMapping = processTemplateService.getLinkMapping(mapping)
-			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
+			def testItems = clmTestManagementService.getTestItemsViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
 				def idMap = [:]
 				int count = 0
-				def filtered = filtered(workItems, wiFilter)
+				def filtered = filtered(testItems, wiFilter)
 				filtered.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
 					def wiChanges = ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping)
@@ -142,9 +141,9 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				if (changeList.size() > 0) {
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 				}
-				def rel = workItems.@rel
+				def rel = testItems.@rel
 				if ("${rel}" != 'next') break
-					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+					testItems = clmTestManagementService.nextPage(testItems.@href)
 			}
 		}
 
@@ -188,20 +187,20 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		}
 	}
 
-	def loadCCMWITs(def ccmTemplateDir) {
-		def wits = []
-		File tDir = new File(ccmTemplateDir)
+	def loadTestTypes(def templateDir) {
+		def testTypes = []
+		File tDir = new File(templateDir)
 		if (tDir.exists() || tDir.isDirectory()) {
 			tDir.eachFile { file ->
-				def witData = new XmlSlurper().parse(file)
-				wits.add(witData)
+				def ttData = new XmlSlurper().parse(file)
+				testTypes.add(ttData)
 			}
 		}
-		return wits
+		return testTypes
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.password', 'clm.projectArea', 'ccm.template.dir', 'tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'wit.mapping.file', 'wi.query', 'wi.filter']
+		def required = ['clm.url', 'clm.user', 'clm.password', 'clm.projectArea', 'qm.template.dir', 'tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'test.mapping.file', 'qm.query', 'qm.filter']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
