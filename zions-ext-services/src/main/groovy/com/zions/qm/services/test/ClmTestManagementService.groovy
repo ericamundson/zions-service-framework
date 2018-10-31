@@ -20,7 +20,7 @@ class ClmTestManagementService {
 	}
 
 	public def nextPage(url) {
-		def result = clmGenericRestClient.get(
+		def result = qmGenericRestClient.get(
 			uri: url,
 			headers: [Accept: 'text/xml'] );
 		return result

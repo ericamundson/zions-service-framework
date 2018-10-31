@@ -20,7 +20,7 @@ import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
 
 /**
- * Provides command line interaction to synchronize RTC work items with VSTS.
+ * Provides command line interaction to synchronize RQM test planning with VSTS.
  * 
  * @author z091182
  *
@@ -39,8 +39,8 @@ class TranslateRQMToMTM implements CliAction {
 	ClmTestManagementService clmTestManagementService
 	@Autowired
 	MemberManagementService memberManagementService
-	@Autowired
-	AttachmentsManagementService attachmentsManagementService
+//	@Autowired
+//	AttachmentsManagementService attachmentsManagementService
 	@Autowired
 	FileManagementService fileManagementService
 
@@ -105,11 +105,11 @@ class TranslateRQMToMTM implements CliAction {
 				filtered.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
 					// TODO: def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
-					if (wiChanges != null) {
-						idMap[count] = "${id}"
-						changeList.add(wiChanges)
-						count++
-					}
+//					if (wiChanges != null) {
+//						idMap[count] = "${id}"
+//						changeList.add(wiChanges)
+//						count++
+//					}
 				}
 				if (changeList.size() > 0) {
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
@@ -131,12 +131,12 @@ class TranslateRQMToMTM implements CliAction {
 				def filtered = filtered(testItems, wiFilter)
 				filtered.each { workitem ->
 					int id = Integer.parseInt(workitem.id.text())
-					def wiChanges = ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping)
-					if (wiChanges != null) {
-						idMap[count] = "${id}"
-						changeList.add(wiChanges)
-						count++
-					}
+//					def wiChanges = ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping)
+//					if (wiChanges != null) {
+//						idMap[count] = "${id}"
+//						changeList.add(wiChanges)
+//						count++
+//					}
 				}
 				if (changeList.size() > 0) {
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
@@ -148,34 +148,34 @@ class TranslateRQMToMTM implements CliAction {
 		}
 
 		//extract & apply attachments.
-		if (excludes['attachments'] == null) {
-			def linkMapping = processTemplateService.getLinkMapping(mapping)
-			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
-			while (true) {
-				def changeList = []
-				def idMap = [:]
-				int count = 0
-				def filtered = filtered(workItems, wiFilter)
-				filtered.each { workitem ->
-					int id = Integer.parseInt(workitem.id.text())
-					def files = attachmentsManagementService.cacheWorkItemAttachments(id)
-					def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-					if (wiChanges != null) {
-						idMap[count] = "${id}"
-						changeList.add(wiChanges)
-						count++
-					}
-				}
-				if (changeList.size() > 0) {
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-				}
-				def rel = workItems.@rel
-				if ("${rel}" != 'next') break
-					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
-			}
-		}
+//		if (excludes['attachments'] == null) {
+//			def linkMapping = processTemplateService.getLinkMapping(mapping)
+//			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
+//			while (true) {
+//				def changeList = []
+//				def idMap = [:]
+//				int count = 0
+//				def filtered = filtered(workItems, wiFilter)
+//				filtered.each { workitem ->
+//					int id = Integer.parseInt(workitem.id.text())
+//					def files = attachmentsManagementService.cacheWorkItemAttachments(id)
+//					def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+//					if (wiChanges != null) {
+//						idMap[count] = "${id}"
+//						changeList.add(wiChanges)
+//						count++
+//					}
+//				}
+//				if (changeList.size() > 0) {
+//					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+//				}
+//				def rel = workItems.@rel
+//				if ("${rel}" != 'next') break
+//					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+//			}
+//		}
 
-		ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
+		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
 
 	def filtered(def workItems, String filter) {

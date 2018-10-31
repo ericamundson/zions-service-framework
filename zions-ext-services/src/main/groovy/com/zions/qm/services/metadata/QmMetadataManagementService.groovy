@@ -29,7 +29,7 @@ class QmMetadataManagementService {
 
 	@Autowired
 	QmProjectManagementService  qmProjectManagementSerivce
-	
+
 	public QmMetadataManagementService() {
 	}
 
@@ -76,7 +76,7 @@ class QmMetadataManagementService {
 		}
 		return writer.toString()
 	}
-	
+
 	String stripNS(String name) {
 		String[] parts = name.split(':')
 		if (parts.size()>1) {
@@ -107,7 +107,7 @@ class QmMetadataManagementService {
 				generateComplexFields(projectArea, key, schema, parentType[0], bXml)
 			}
 		}
-		
+
 		complexType.complexContent.extension.sequence.element.each { field ->
 			String atype = field.@type
 			String aref = field.@ref
@@ -136,14 +136,49 @@ class QmMetadataManagementService {
 			String aname = field.@name
 			if ("${aname}" == 'category') {
 				generateCategoryFields(projectArea, type, bXml)
+			} else if (aname.length()>0 && atype.length()==0) {
+				
 			}
 		}
+		complexType.sequence.element.each { field ->
+			String atype = field.@type
+			String aref = field.@ref
+			if (atype.length() > 0 && inTemplate(field, key, projectArea)) {
+				atype = stripNS(atype)
+				String name = stripNS("${field.@name}")
+				bXml.FIELD(name: name, refname: name, type: atype) {
+				}
+			}
+			if (aref.length()>0) {
+				if ("${field.@ref}" == 'customAttributes') {
+					generateCustomFields(projectArea, key, bXml)
+				} else {
+					String fType = "${field.@ref}"
+					String reftype = determineType(schema, fType)
+					String cardinality = determineCardinality(schema,fType)
+					if (reftype == null) {
+						reftype = field.ref
+					}
+					reftype = stripNS(reftype)
+					String name = stripNS("${field.@ref}")
+					bXml.FIELD(name: name, refname: name, type: reftype) {
+					}
+				}
+			}
+			String aname = field.@name
+			if ("${aname}" == 'category') {
+				generateCategoryFields(projectArea, type, bXml)
+			} else {
+				
+			}
+			
+		}
 	}
-	
+
 	boolean inTemplate(def field, String key, String projectArea) {
 		return true
 	}
-	
+
 	/**
 	 * @param projectArea
 	 * @param key
@@ -165,9 +200,9 @@ class QmMetadataManagementService {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * @param projectArea
 	 * @param key
@@ -217,7 +252,7 @@ class QmMetadataManagementService {
 		schemaMap['qm'] = result
 		return result
 	}
-	
+
 	/**
 	 * @param mType
 	 * @param projectArea
@@ -227,15 +262,15 @@ class QmMetadataManagementService {
 		def projectInfo = qmProjectManagementSerivce.getProject(projectArea)
 		String url = "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService/customAttributesDTO"
 		def attribs = qmGenericRestClient.get(
-			contentType: ContentType.JSON,
-			uri: url,
-			query: [scope:mType, resolveValues:false,isNotPurged: true, processAreaUUID: projectInfo.itemId],
-			headers: [accept: 'text/json']
-		)
+				contentType: ContentType.JSON,
+				uri: url,
+				query: [scope:mType, resolveValues:false,isNotPurged: true, processAreaUUID: projectInfo.itemId],
+				headers: [accept: 'text/json']
+				)
 		return attribs
 
 	}
-	
+
 	/**
 	 * @param mType
 	 * @param projectArea
@@ -246,15 +281,15 @@ class QmMetadataManagementService {
 		def projectInfo = qmProjectManagementSerivce.getProject(projectArea)
 		String url = "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.planning.common.service.rest.ICategoryTypeRestService/categoryTypesDTO"
 		def cats = qmGenericRestClient.get(
-			contentType: ContentType.JSON,
-			uri: url,
-			query: [itemType:type, resolveCategories:true,isNotPurged: true, processAreaUUID: projectInfo.itemId, includeGlobal: false],
-			headers: [accept: 'text/json']
-		)
+				contentType: ContentType.JSON,
+				uri: url,
+				query: [itemType:type, resolveCategories:true,isNotPurged: true, processAreaUUID: projectInfo.itemId, includeGlobal: false],
+				headers: [accept: 'text/json']
+				)
 		return cats
 
 	}
-	
+
 	String determineType(def schema, String typeName) {
 		String[] typeParts = typeName.split(':')
 		String name = ""
@@ -266,45 +301,49 @@ class QmMetadataManagementService {
 			schemaElement = typeParts[0]
 			name = typeParts[1]
 		}
- 
+
 		if (schemaElement == 'xs') {
 			return name
 		}
 		def mSchema = loadSchema(schema, schemaElement)
-		def element = mSchema.depthFirst().find { node -> 
-			node.@name == name			
-		}
-		if (element != null) {
-			String atype = "${element.@type}"
-			if (atype.length()>0) {
-				return atype
+		if (mSchema != null) {
+			def element = mSchema.depthFirst().find { node ->
+				node.@name == name
 			}
-			def cType = element.depthFirst().find { child ->
-				child.name() == 'complexType'
-			}
-			if (cType != null) {
-				def attr = cType.depthFirst().find { ct ->
-					ct.name() == 'attribute'
+			if (element != null) {
+				String atype = "${element.@type}"
+				if (atype.length()>0) {
+					return atype
 				}
-				if (attr != null) {
-					String attrType = "${attr.@type}"
-					if (attrType.length()>0) {
-						return attrType
+				def cType = element.depthFirst().find { child ->
+					child.name() == 'complexType'
+				}
+				if (cType != null) {
+					def attr = cType.depthFirst().find { ct ->
+						ct.name() == 'attribute'
 					}
-					String attrRef = "${attr.@ref}"
-					
-					return determineType(mSchema, attrRef)
+					if (attr != null) {
+						String attrType = "${attr.@type}"
+						if (attrType.length()>0) {
+							return attrType
+						}
+						String attrRef = "${attr.@ref}"
+
+						return determineType(mSchema, attrRef)
+					}
+					return 'string'
 				}
-				return 'string'
 			}
+		} else {
+			return 'string'
 		}
 		return null
 	}
-	
+
 	String determineCardinality(def schema, String fType) {
-		
+
 	}
-	
+
 	def loadSchema(schema, String schemaElement) {
 		if (schemaMap[schemaElement] != null) {
 			return schemaMap[schemaElement]
@@ -313,7 +352,7 @@ class QmMetadataManagementService {
 				uri: "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.integration.service.IIntegrationService/schema/${schemaElement}.xsd",
 				query: [abbreviate: false],
 				headers: [Accept: 'text/xml'] );
-		
+
 		schemaMap[schemaElement] = mschema
 		return mschema
 	}
