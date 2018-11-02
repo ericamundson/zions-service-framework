@@ -33,6 +33,13 @@ class GenericRestClient implements IGenericRestClient {
 	private String user;
 		
 	private String token
+	
+	/**
+	 * For unit testing
+	 */
+	public GenericRestClient(RESTClient client) {
+		delegate = client
+	}
 
 	@Autowired
 	public GenericRestClient(@Value('${tfs.url}') String tfsUrl,
@@ -192,7 +199,7 @@ class GenericRestClient implements IGenericRestClient {
 			System.sleep(300000)			
 		}
 		//JsonOutput t
-		if (resp.status != 200) {
+		if (resp.status != 200 & resp.status != 201) {
 			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
 			System.sleep(300000)
 			resp = delegate.post(retryCopy)

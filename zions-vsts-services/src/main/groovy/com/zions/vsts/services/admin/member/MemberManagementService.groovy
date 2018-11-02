@@ -42,12 +42,12 @@ public class MemberManagementService {
 	 * @param teams
 	 * @return
 	 */
-	public def addMember(String collection, String id,  def teams) {
+	public def addMemberToTeams(String collection, String email,  def teams) {
 		teams.each { team ->
 			try {
 				def tTeam = projectManagementService.ensureTeam(collection, team.project, team.team)
 				if (tTeam != null) {
-					addToTeam(collection, id, tTeam)
+					addToTeam(collection, email, tTeam)
 				}
 				
 			} catch (e) {}
@@ -64,8 +64,9 @@ public class MemberManagementService {
 	 * @param team
 	 * @return
 	 */
-	private def addToTeam(String collection, String id, def team) {
-		def req = [ 'aadGroups': "[]", 'exitingUsersJson': "[]", 'groupsToJoinJson': "[\"${team.id}\"]", 'newUsersJson': "[\"${id}\"]" ]
+	private def addToTeam(String collection, String email, def team) {
+		//ensureEntitlement(collection, email)
+		def req = [ 'aadGroups': "[]", 'exitingUsersJson': "[]", 'groupsToJoinJson': "[\"${team.id}\"]", 'newUsersJson': "[\"${email}\"]" ]
 		def body = new JsonBuilder( req ).toString()
 		def result = genericRestClient.post(
 			requestContentType: ContentType.JSON,
@@ -74,6 +75,17 @@ public class MemberManagementService {
 			body: body,
 			headers: [Accept: 'application/json'],
 			)
+	}
+	
+	private def ensureEntitlement(String collection, String id) {
+		def entitlement = getEntitlements(collection, id)
+		if (entitlement == null) {
+			createEntitlement(collection, id)
+		}
+	}
+	
+	def getEntitlement(String collection, String email) {
+		
 	}
 	
 	/**

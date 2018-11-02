@@ -31,16 +31,42 @@ class SyncProjectWithRTCMembers implements CliAction {
 		String project = data.getOptionValues('clm.ccm.project')[0]
 		String outproject = data.getOptionValues('tfs.project')[0]
 		def memberData = ccmMemberManagmentService.getMemberData(project, outproject)
+		def nameMapFileName = data.getOptionValues('namemap.json.file')[0]
+		JsonSlurper js = new JsonSlurper()
+		def map = js.parse(new File(nameMapFileName))
+		memberData = rebuildMemberData(memberData, map)
 		memberData.members.each { member ->
-			def teams = memberManagmentService.addMember(collection, member.id, member.teams)
+			def teams = memberManagmentService.addMemberToTeams(collection, member.id, member.teams)
 			
 		}
 		return null;
 	}
+	
+	def rebuildMemberData(def memberData, map) {
+		def nMemberData = [members: []]
+		memberData.members.each { member ->
+			def nMember = [id: member.id, teams: []]
+			member.teams.each { team ->
+				map.namemaps.each { amap ->
+					if ("${amap.source}" == "${team.team}") {
+						String nValue = "${amap.target}"
+						def fTeam = nMember.teams.find { iTeam ->
+							"${iTeam.team}" == "${nValue}"
+						}
+						if (fTeam == null) {
+							nMember.teams.add([project:team.project, team: nValue])
+						}
+					}
+				}
+			}
+			nMemberData.members.add(nMember)
+		}
+		return nMemberData
+	}
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'clm.url', 'clm.user', 'clm.password', 'clm.ccm.project', 'tfs.project']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'clm.url', 'clm.user', 'clm.password', 'clm.ccm.project', 'tfs.project', 'namemap.json.file']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
