@@ -24,10 +24,7 @@ class WorkManagementService {
 	
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
-	
-	@Autowired(required=true)
-	private ProjectManagementService projectManagementService;
-	
+		
 	@Autowired(required=true)
 	@Value('${cache.location}')
 	private String cacheLocation
@@ -150,29 +147,5 @@ class WorkManagementService {
 	}
 
 	
-	def testBatchWICreate(def collection, def project) {
-		def projectData = projectManagementService.getProject(collection, project)
-		def wiBatch = [ 
-			]
-		
-		def request1 = [method:'PATCH', uri: "/${projectData.id}/_apis/wit/workitems/\$Task?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-		def rBody1 = [op:'add', path: '/fields/System.Title', from: null, value:'This is a test']
-		request1.body.add(rBody1)
-		wiBatch.add(request1)
-		def body = new JsonBuilder(wiBatch).toPrettyString()
-		//		File s = new File('defaultwit.json')
-		//		def w = s.newDataOutputStream()
-		//		w << body
-		//		w.close()
-		def result = genericRestClient.post(
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/\$batch",
-			body: body,
-			headers: [accept: 'application/json'],
-			query: ['api-version': '4.1']
-			
-			)
-
-	}
 
 }

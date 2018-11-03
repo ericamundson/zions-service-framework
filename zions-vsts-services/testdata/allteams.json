@@ -1,0 +1,50 @@
+{
+	"value": [
+		{
+			"id": "43361bc8-2ba0-4d01-bd9f-48f1d59b8886",
+			"name": "D3_Migrations",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d/teams/43361bc8-2ba0-4d01-bd9f-48f1d59b8886",
+			"description": "",
+			"identityUrl": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/43361bc8-2ba0-4d01-bd9f-48f1d59b8886",
+			"projectName": "DigitalBanking",
+			"projectId": "76e58233-44a1-4241-8d2c-09db3fbca66d"
+		},
+		{
+			"id": "c678ebee-2fdd-46b9-a4f0-3e431fdeaf91",
+			"name": "MB",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d/teams/c678ebee-2fdd-46b9-a4f0-3e431fdeaf91",
+			"description": "",
+			"identityUrl": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/c678ebee-2fdd-46b9-a4f0-3e431fdeaf91",
+			"projectName": "DigitalBanking",
+			"projectId": "76e58233-44a1-4241-8d2c-09db3fbca66d"
+		},
+		{
+			"id": "9c96508a-bdf7-4b46-8a0e-f2136b5a9a9d",
+			"name": "DigitalBanking Team",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d/teams/9c96508a-bdf7-4b46-8a0e-f2136b5a9a9d",
+			"description": "The default project team.",
+			"identityUrl": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/9c96508a-bdf7-4b46-8a0e-f2136b5a9a9d",
+			"projectName": "DigitalBanking",
+			"projectId": "76e58233-44a1-4241-8d2c-09db3fbca66d"
+		},
+		{
+			"id": "7e430cae-7af6-4829-9ca7-219780ed7712",
+			"name": "OB",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d/teams/7e430cae-7af6-4829-9ca7-219780ed7712",
+			"description": "",
+			"identityUrl": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/7e430cae-7af6-4829-9ca7-219780ed7712",
+			"projectName": "DigitalBanking",
+			"projectId": "76e58233-44a1-4241-8d2c-09db3fbca66d"
+		},
+		{
+			"id": "b21c448e-4103-4769-8304-7676e98b3f5a",
+			"name": "D3_Integ",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d/teams/b21c448e-4103-4769-8304-7676e98b3f5a",
+			"description": "",
+			"identityUrl": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b21c448e-4103-4769-8304-7676e98b3f5a",
+			"projectName": "DigitalBanking",
+			"projectId": "76e58233-44a1-4241-8d2c-09db3fbca66d"
+		}
+	],
+	"count": 5
+}

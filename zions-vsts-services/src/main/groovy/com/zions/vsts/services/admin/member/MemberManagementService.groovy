@@ -77,16 +77,6 @@ public class MemberManagementService {
 			)
 	}
 	
-	private def ensureEntitlement(String collection, String id) {
-		def entitlement = getEntitlements(collection, id)
-		if (entitlement == null) {
-			createEntitlement(collection, id)
-		}
-	}
-	
-	def getEntitlement(String collection, String email) {
-		
-	}
 	
 	/**
 	 * Get member from VSTS
@@ -95,24 +85,24 @@ public class MemberManagementService {
 	 * @param signin
 	 * @return
 	 */
-	public def getMember(def collection, def signin) {
-		def req = [ 'filterByAncestorEntityIds': [], 
-			filterByEntityIds:[], 
-			identityTypes: ['user', 'group'], 
-			operationScopes: ['ims'],
-			properties: ['displayName', 'id', 'imageUrl', 'uniqueName', 'url', '_links'],
-			options: [MinResults:40, MaxResults: 40],
-//			queryTypeHint: 'uid',
-			query: signin  ]
-		def body = new JsonBuilder( req ).toString()
-		def result = genericRestClient.post(
-			requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
-			body: body,
-			headers: [accept: 'application/json;api-version5.0-preview.1;excludeUrls=true'],
-			)
-		return result
-	}
+//	public def getMember(def collection, def signin) {
+//		def req = [ 'filterByAncestorEntityIds': [], 
+//			filterByEntityIds:[], 
+//			identityTypes: ['user', 'group'], 
+//			operationScopes: ['ims'],
+//			properties: ['displayName', 'id', 'imageUrl', 'uniqueName', 'url', '_links'],
+//			options: [MinResults:40, MaxResults: 40],
+////			queryTypeHint: 'uid',
+//			query: signin  ]
+//		def body = new JsonBuilder( req ).toString()
+//		def result = genericRestClient.post(
+//			requestContentType: ContentType.JSON,
+//			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
+//			body: body,
+//			headers: [accept: 'application/json;api-version5.0-preview.1;excludeUrls=true'],
+//			)
+//		return result
+//	}
 	
 	/**
 	 * Return a Map of team members with key being the uniqueName of member.
@@ -122,22 +112,22 @@ public class MemberManagementService {
 	 * @param teamName
 	 * @return
 	 */
-	def getTeamMembersMap(collection, project, teamName) {
-		def projectData = projectManagementService.getProject(collection, project)
-		def teamData = getTeam(collection, projectData, teamName)
-		def result = genericRestClient.get(
-				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/teams/${teamData.id}/members",
-				query: ['api-version': '5.0-preview.2']
-				)
-		def retVal = [:]
-		result.value.each { ridentity ->
-			def identity = ridentity.identity
-			String uid = "${identity.uniqueName}"
-			retVal[uid.toLowerCase()] = identity
-		}
-		return retVal
-	}
+//	def getTeamMembersMap(collection, project, teamName) {
+//		def projectData = projectManagementService.getProject(collection, project)
+//		def teamData = getTeam(collection, projectData, teamName)
+//		def result = genericRestClient.get(
+//				contentType: ContentType.JSON,
+//				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/teams/${teamData.id}/members",
+//				query: ['api-version': '5.0-preview.2']
+//				)
+//		def retVal = [:]
+//		result.value.each { ridentity ->
+//			def identity = ridentity.identity
+//			String uid = "${identity.uniqueName}"
+//			retVal[uid.toLowerCase()] = identity
+//		}
+//		return retVal
+//	}
 	
 	/**
 	 * Return a Map of team members with key being the uniqueName of member.
@@ -168,25 +158,25 @@ public class MemberManagementService {
 		return retVal
 	}
 
-	public def getMemberAlt(def collection, def signin) {
-		def req = [ 'filterByAncestorEntityIds': [],
-			filterByEntityIds:[],
-			identityTypes: ['user', 'group'],
-			operationScopes: ['ims'],
-			properties: ["DisplayName", "IsMru", "ScopeName", "SamAccountName", "Active", "SubjectDescriptor", "Department", "JobTitle", "Mail", "MailNickname", "PhysicalDeliveryOfficeName", "SignInAddress", "Surname", "Guest", "TelephoneNumber", "Description"],
-			//: ['displayName', 'id', 'imageUrl', 'uniqueName', 'url', '_links'],
-			options: [MinResults:40, MaxResults: 40],
-//			queryTypeHint: 'uid',
-			query: signin  ]
-		def body = new JsonBuilder( req ).toString()
-		def result = genericRestClient.post(
-			requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
-			body: body,
-			headers: [accept: 'application/json;api-version5.0-preview.1;excludeUrls=true'],
-			)
-		return result
-	}
+//	public def getMemberAlt(def collection, def signin) {
+//		def req = [ 'filterByAncestorEntityIds': [],
+//			filterByEntityIds:[],
+//			identityTypes: ['user', 'group'],
+//			operationScopes: ['ims'],
+//			properties: ["DisplayName", "IsMru", "ScopeName", "SamAccountName", "Active", "SubjectDescriptor", "Department", "JobTitle", "Mail", "MailNickname", "PhysicalDeliveryOfficeName", "SignInAddress", "Surname", "Guest", "TelephoneNumber", "Description"],
+//			//: ['displayName', 'id', 'imageUrl', 'uniqueName', 'url', '_links'],
+//			options: [MinResults:40, MaxResults: 40],
+////			queryTypeHint: 'uid',
+//			query: signin  ]
+//		def body = new JsonBuilder( req ).toString()
+//		def result = genericRestClient.post(
+//			requestContentType: ContentType.JSON,
+//			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
+//			body: body,
+//			headers: [accept: 'application/json;api-version5.0-preview.1;excludeUrls=true'],
+//			)
+//		return result
+//	}
 
 	
 	def getTeam(collection, project, teamName) {
