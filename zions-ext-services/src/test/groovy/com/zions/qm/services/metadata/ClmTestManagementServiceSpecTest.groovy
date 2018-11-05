@@ -18,6 +18,7 @@ import spock.mock.DetachedMockFactory
 @ContextConfiguration(classes=[ClmTestManagementServiceSpecTestConfig])
 class ClmTestManagementServiceSpecTest extends Specification {
 	
+	
 	@Autowired
 	IGenericRestClient qmGenericRestClient
 	
