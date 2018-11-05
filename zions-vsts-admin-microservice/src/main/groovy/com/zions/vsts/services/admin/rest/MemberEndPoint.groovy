@@ -27,7 +27,7 @@ class MemberEndPoint {
 			member.projects.each { project ->
 				projects.add(project)
 			}
-			memberManagementService.addMember(member.id, member.role, projects)(buildData)
+			memberManagementService.addMemberToTeams(member.id, member.role, projects)(buildData)
 		}
 		return ResponseEntity.ok(HttpStatus.OK)
 	}

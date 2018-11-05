@@ -1,0 +1,48 @@
+{
+	"count": 5,
+	"value": [
+		{
+			"id": "5e914a50-f557-4036-87cb-74fb7d3b8cab",
+			"name": "Dev Sandbox",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/5e914a50-f557-4036-87cb-74fb7d3b8cab",
+			"state": "wellFormed",
+			"revision": 54,
+			"visibility": "private"
+		},
+		{
+			"id": "6854be78-34fa-41c3-9ec0-a2ebde8d9999",
+			"name": "ReleaseEngineering",
+			"description": "Release Engineering demo project",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/6854be78-34fa-41c3-9ec0-a2ebde8d9999",
+			"state": "wellFormed",
+			"revision": 66,
+			"visibility": "private"
+		},
+		{
+			"id": "76e58233-44a1-4241-8d2c-09db3fbca66d",
+			"name": "DigitalBanking",
+			"description": "DigitalBanking is a multi-team project consisting of Online Banking, Mobile Banking and D3 ",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d",
+			"state": "wellFormed",
+			"revision": 81,
+			"visibility": "private"
+		},
+		{
+			"id": "42284152-dc62-45fb-af24-476cdab89db5",
+			"name": "ZionsTools",
+			"description": "Transition test of RTC 'Zions Tools' project",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/42284152-dc62-45fb-af24-476cdab89db5",
+			"state": "wellFormed",
+			"revision": 45,
+			"visibility": "private"
+		},
+		{
+			"id": "005e35fc-c748-4c6b-9e97-1dd4bca43444",
+			"name": "DTSTest",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/005e35fc-c748-4c6b-9e97-1dd4bca43444",
+			"state": "wellFormed",
+			"revision": 64,
+			"visibility": "private"
+		}
+	]
+}

@@ -11,6 +11,7 @@ import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementServi
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.query.IFilter
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
@@ -26,7 +27,7 @@ import groovy.json.JsonBuilder
 @Component
 class TranslateRTCWorkToVSTSWork implements CliAction {
 	@Autowired
-	private Map<String, IWorkitemFilter> filterMap;
+	private Map<String, IFilter> filterMap;
 	@Autowired
 	CcmWIMetadataManagementService ccmWIMetadataManagementService;
 	@Autowired

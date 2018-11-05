@@ -27,7 +27,7 @@ class ProjectManagementService {
 	 *  o UUID
 	 *  o URL
 	 *  o etc.
-	 *  
+	 * @see <a href="file:../testdata/project.json">return data</a>
 	 * @param collection
 	 * @param name
 	 * @return
@@ -52,6 +52,7 @@ class ProjectManagementService {
 	
 	def getProjectProperties(def collection, def project) {
 		def projectData = getProject(collection, project)
+		if (projectData == null) return null
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/properties",
@@ -62,6 +63,7 @@ class ProjectManagementService {
 	
 	def getProjectProperty(def collection, def project, def name) {
 		def projectData = getProject(collection, project)
+		if (projectData == null) return null
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/properties",
@@ -114,37 +116,37 @@ class ProjectManagementService {
 		return team
 	}
 	
-	public def getAllProjects(String collection) {
-		def query = ['api-version':'4.0']
-		def result = genericRestClient.get(
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects",
-			headers: [Accept: 'application/json'],
-			query: query
-			)
-		return result
-
-	}
-	
-	public def getAllTeams(String collection) {
-		def projects = getAllProjects(collection)
-		def teams = [:]
-		def query = ['api-version':'4.0']
-		projects.value.each { project ->
-			def id = project.id
-			def result = genericRestClient.get(
-				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${id}/teams",
-				headers: [Accept: 'application/json'],
-				query: query
-				)
-			result.value.each { team ->
-				teams["${project.name}:${team.name}"] = team
-				
-			}
-			
-		}
-		return teams
-	}
+//	public def getAllProjects(String collection) {
+//		def query = ['api-version':'4.0']
+//		def result = genericRestClient.get(
+//			contentType: ContentType.JSON,
+//			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects",
+//			headers: [Accept: 'application/json'],
+//			query: query
+//			)
+//		return result
+//
+//	}
+//	
+//	public def getAllTeams(String collection) {
+//		def projects = getAllProjects(collection)
+//		def teams = [:]
+//		def query = ['api-version':'4.0']
+//		projects.value.each { project ->
+//			def id = project.id
+//			def result = genericRestClient.get(
+//				contentType: ContentType.JSON,
+//				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${id}/teams",
+//				headers: [Accept: 'application/json'],
+//				query: query
+//				)
+//			result.value.each { team ->
+//				teams["${project.name}:${team.name}"] = team
+//				
+//			}
+//			
+//		}
+//		return teams
+//	}
 
 }

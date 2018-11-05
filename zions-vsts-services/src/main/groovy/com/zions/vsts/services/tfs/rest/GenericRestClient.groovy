@@ -33,6 +33,13 @@ class GenericRestClient implements IGenericRestClient {
 	private String user;
 		
 	private String token
+	
+	/**
+	 * For unit testing
+	 */
+	public GenericRestClient(RESTClient client) {
+		delegate = client
+	}
 
 	@Autowired
 	public GenericRestClient(@Value('${tfs.url}') String tfsUrl,
@@ -106,11 +113,7 @@ class GenericRestClient implements IGenericRestClient {
 		if (resp.status != 200) {
 			return null;
 		}
-		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
-		if ("${out}" == 'null') return null
-		JsonSlurper sl = new JsonSlurper()
-		def oOut = sl.parseText(out)
-		return oOut;
+		return resp.data;
 	}
 	
 	/* (non-Javadoc)
@@ -123,6 +126,7 @@ class GenericRestClient implements IGenericRestClient {
 		if (resp.status != 204) {
 			return null;
 		}
+		return resp.data
 	}
 	
 	/* (non-Javadoc)
@@ -136,11 +140,7 @@ class GenericRestClient implements IGenericRestClient {
 		if (resp.status != 200) {
 			return null;
 		}
-		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
-		if ("${out}" == 'null') return null
-		JsonSlurper sl = new JsonSlurper()
-		def oOut = sl.parseText(out)
-		return oOut;
+		return resp.data;
 	}
 
 	/* (non-Javadoc)
@@ -154,11 +154,7 @@ class GenericRestClient implements IGenericRestClient {
 		if (resp.status != 200) {
 			log.debug("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
 		}
-		def out = JsonOutput.prettyPrint(JsonOutput.toJson(resp.data))
-		if ("${out}" == 'null') return null
-		JsonSlurper sl = new JsonSlurper()
-		def oOut = sl.parseText(out)
-		return oOut;
+		return resp.data;
 	}
 	
 	/* (non-Javadoc)
@@ -192,12 +188,8 @@ class GenericRestClient implements IGenericRestClient {
 			System.sleep(300000)			
 		}
 		//JsonOutput t
-		if (resp.status != 200) {
+		if (resp.status != 200 && resp.status != 201) {
 			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
-			System.sleep(300000)
-			resp = delegate.post(retryCopy)
-		}
-		if (resp.status == 429) { // Rate limit handling: Sleep, then perform retry
 			System.sleep(300000)
 			resp = delegate.post(retryCopy)
 		}

@@ -77,12 +77,14 @@ allprojects {
     
         testCompile(
                 'org.springframework.boot:spring-boot-starter-test',
+				'org.springframework:spring-mock:2.0.8',
                 'junit:junit:4.12',
                 'cglib:cglib-nodep:3.1',
                 'org.objenesis:objenesis:2.4',
                 'org.codehaus.groovy:groovy-all:2.4.13',
-                'org.spockframework:spock-core:1.0-groovy-2.4'
-        )
+                'org.spockframework:spock-core:1.2-groovy-2.4',
+				'org.spockframework:spock-spring:1.2-groovy-2.4'        
+				)
     }
 }
 

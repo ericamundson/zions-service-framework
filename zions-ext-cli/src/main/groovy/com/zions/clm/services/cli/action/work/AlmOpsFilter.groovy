@@ -2,8 +2,10 @@ package com.zions.clm.services.cli.action.work
 
 import org.springframework.stereotype.Component
 
+import com.zions.common.services.query.IFilter
+
 @Component
-class AlmOpsFilter implements IWorkitemFilter {
+class AlmOpsFilter implements IFilter {
 
 	public def filter(def workItems) {
 		List<String> excluded = ["Change Request", "Spike", "Issue", "Track Build Item", "Retrospective"]

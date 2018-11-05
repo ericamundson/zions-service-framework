@@ -2,7 +2,7 @@ bootJar {
 	enabled = true
 	mainClassName = 'com.zions.vsts.services.gateway.GatewayApplication'
 	baseName = 'zions-vsts-gateway'
-	version =  '0.1.0'
+	version =  "${version}"
 }
 
 //repositories {

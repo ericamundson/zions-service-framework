@@ -31,7 +31,7 @@ class AddMembers implements CliAction {
 		JsonSlurper s = new JsonSlurper()
 		def memberData = s.parseText(mFile.text)
 		memberData.members.each { member ->
-			def teams = memberManagmentService.addMember(collection, member.id, member.teams)
+			def teams = memberManagmentService.addMemberToTeams(collection, member.id, member.teams)
 			
 		}
 		return null;
