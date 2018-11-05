@@ -77,7 +77,7 @@ class TranslateRQMToMTM implements CliAction {
 		}
 		//refresh.
 		if (excludes['refresh'] == null) {
-			def testItems = clmTestManagementService.getTestItemsViaQuery(wiQuery)
+			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
 				def filtered = filtered(testItems, wiFilter)
@@ -94,7 +94,7 @@ class TranslateRQMToMTM implements CliAction {
 		//translate work data.
 		if (excludes['data'] == null) {
 			def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, testTypes)
-			def testItems = clmTestManagementService.getTestItemsViaQuery(wiQuery)
+			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery)
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			while (true) {
 				//TODO: ccmWorkManagementService.resetNewId()
@@ -123,7 +123,7 @@ class TranslateRQMToMTM implements CliAction {
 		//apply work links
 		if (excludes['links'] == null) {
 			def linkMapping = processTemplateService.getLinkMapping(mapping)
-			def testItems = clmTestManagementService.getTestItemsViaQuery(wiQuery)
+			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
 				def idMap = [:]

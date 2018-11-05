@@ -27,7 +27,7 @@ class ProjectManagementService {
 	 *  o UUID
 	 *  o URL
 	 *  o etc.
-	 *  
+	 * @see <a href="file:../testdata/project.json">return data</a>
 	 * @param collection
 	 * @param name
 	 * @return

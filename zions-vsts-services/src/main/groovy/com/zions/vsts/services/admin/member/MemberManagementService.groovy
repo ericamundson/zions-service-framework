@@ -208,29 +208,30 @@ public class MemberManagementService {
 	 * @param team
 	 * @return
 	 */
-	public def queryForTeam(def collection, def project, def team) {
-		String cVal = collection
-		if (cVal.size() == 0) {
-			cVal = "${genericRestClient.tfsUrl}"
-			cVal = cVal.substring("https://".size())
-			cVal = cVal.substring(0, cVal.indexOf('.'))
-		}
-		def req = [ 'filterByAncestorEntityIds': [], 
-			filterByEntityIds:[], 
-			identityTypes: ['user', 'group'], 
-			operationScopes: ['ims','ad', 'wmd'],
-			properties: ['DisplayName', 'IsMru', 'ScopeName', 'SamAccountName', 'Active', 'SubjectDescriptor', 'Department', 'JobTitle', 'Mail', 'MailNickname', 'PhysicalDeliveryOfficeName'],
-			filterByAncestorEntityIds: [],
-			filterByEntityIds: [],
-			options: [MinResults:40, MaxResults: 40, constraints: [], ExtensionId: 'F12CA7AD-00EE-424F-B6D7-9123A60F424F', CollectionScopeName: "${cVal}", ProjectScopeName: "${project.name}"],
-			query: team  ]
-		def body = new JsonBuilder( req ).toString()
-		def result = genericRestClient.post(
-			requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
-			body: body,
-			headers: [Accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
-			)
-		return result
-	}
+	//Not used
+//	public def queryForTeam(def collection, def project, def team) {
+//		String cVal = collection
+//		if (cVal.size() == 0) {
+//			cVal = "${genericRestClient.tfsUrl}"
+//			cVal = cVal.substring("https://".size())
+//			cVal = cVal.substring(0, cVal.indexOf('.'))
+//		}
+//		def req = [ 'filterByAncestorEntityIds': [], 
+//			filterByEntityIds:[], 
+//			identityTypes: ['user', 'group'], 
+//			operationScopes: ['ims','ad', 'wmd'],
+//			properties: ['DisplayName', 'IsMru', 'ScopeName', 'SamAccountName', 'Active', 'SubjectDescriptor', 'Department', 'JobTitle', 'Mail', 'MailNickname', 'PhysicalDeliveryOfficeName'],
+//			filterByAncestorEntityIds: [],
+//			filterByEntityIds: [],
+//			options: [MinResults:40, MaxResults: 40, constraints: [], ExtensionId: 'F12CA7AD-00EE-424F-B6D7-9123A60F424F', CollectionScopeName: "${cVal}", ProjectScopeName: "${project.name}"],
+//			query: team  ]
+//		def body = new JsonBuilder( req ).toString()
+//		def result = genericRestClient.post(
+//			requestContentType: ContentType.JSON,
+//			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/IdentityPicker/Identities",
+//			body: body,
+//			headers: [Accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
+//			)
+//		return result
+//	}
 }

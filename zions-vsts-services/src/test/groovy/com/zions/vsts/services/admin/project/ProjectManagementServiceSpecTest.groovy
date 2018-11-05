@@ -27,7 +27,7 @@ class ProjectManagementServiceSpecTest extends Specification {
 	def 'getProject call with project result'() {
 		given: 'stub azure devops project request'
 		// get stub data from testdata folder
-		String json = new File('testdata/project.json').text
+		String json = this.getClass().getResource('/testdata/project.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
 		1 * genericRestClient.get(_) >> out
@@ -56,7 +56,7 @@ class ProjectManagementServiceSpecTest extends Specification {
 		
 		and: 'stub azure devops project properties request'
 		//get stub data
-		String json = new File('testdata/projectproperties.json').text
+		String json = this.getClass().getResource('/testdata/projectproperties.json').text
 		JsonSlurper js = new JsonSlurper()
 		def result = js.parseText(json)
 		1 * genericRestClient.get(_) >> result
@@ -74,7 +74,7 @@ class ProjectManagementServiceSpecTest extends Specification {
 		
 		and: 'stub azure devops project properties request'
 		//get stub data
-		String json = new File('testdata/projectproperties.json').text
+		String json = this.getClass().getResource('/testdata/projectproperties.json').text
 		JsonSlurper js = new JsonSlurper()
 		def result = js.parseText(json)
 		1 * genericRestClient.get(_) >> result
@@ -92,7 +92,7 @@ class ProjectManagementServiceSpecTest extends Specification {
 		
 		and: 'stub azure devops project properties request'
 		//get stub data
-		String json = new File('testdata/projectproperties.json').text
+		String json = this.getClass().getResource('/testdata/projectproperties.json').text
 		JsonSlurper js = new JsonSlurper()
 		def result = js.parseText(json)
 		1 * genericRestClient.get(_) >> result
@@ -107,7 +107,7 @@ class ProjectManagementServiceSpecTest extends Specification {
 	def 'getTeam with real data result'() {
 		given: 'stub azure devops team request'
 		//get stub data
-		String teamjson = new File('testdata/projectteam.json').text
+		String teamjson = this.getClass().getResource('/testdata/projectteam.json').text
 		JsonSlurper js = new JsonSlurper()
 		def teamresult = js.parseText(teamjson)
 		1 * genericRestClient.get(_) >> teamresult
@@ -125,7 +125,7 @@ class ProjectManagementServiceSpecTest extends Specification {
 		1 * genericRestClient.get(_) >> null
 		
 		and: 'stub request to create new team'
-		String teamjson = new File('testdata/projectteam.json').text
+		String teamjson = this.getClass().getResource('/testdata/projectteam.json').text
 		JsonSlurper js = new JsonSlurper()
 		def teamresult = js.parseText(teamjson)
 		1 * genericRestClient.post(_) >> teamresult
@@ -140,7 +140,7 @@ class ProjectManagementServiceSpecTest extends Specification {
 	def 'ensureTeam test with good return'() {
 		given: 'stub azure devops team request and return a team'
 		//get stub data
-		String teamjson = new File('testdata/projectteam.json').text
+		String teamjson = this.getClass().getResource('/testdata/projectteam.json').text
 		JsonSlurper js = new JsonSlurper()
 		def teamresult = js.parseText(teamjson)
 		1 * genericRestClient.get(_) >> teamresult

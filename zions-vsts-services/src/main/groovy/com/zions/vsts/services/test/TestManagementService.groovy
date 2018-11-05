@@ -51,4 +51,8 @@ public class TestManagementService {
 		return result;
 
 	}
+	
+	def ensureTestPlan(String collection, String project, def planData) {
+		
+	}
 }
