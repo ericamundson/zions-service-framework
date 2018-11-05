@@ -1,67 +1,34 @@
 <witmapping>
-	<exclude>
-		<wit name="Change Request"/>
-		<wit name="Spike"/>
-		<wit name="Issue"/>
-		<wit name="Track Build Item"/>
-		<wit name="Retrospective"/>
-	</exclude>
-	<wit source="Default"  translateUnmappedFields="false">
-		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
-		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
-		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
-		<field source="resolver" target="Microsoft.VSTS.Common.ClosedBy"/>
-		<field source="owner" target="System.AssignedTo"/>
-		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
-		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
-		<field source="creationDate" target="System.CreatedDate"/>
-		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
-		<field source="summaryHandler" target="System.Title"/>
-		<field source="description" target="System.Description"/>
-		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
-		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
-		<field source="internalState" target="System.State">
-			<value source="New" target="New"/>
-			<value source="In Progress" target="Active"/>
-			<value source="Implemented" target="Resolved"/>
-			<value source="Done" target="Closed"/>
-		</field>
-		<!-- 
-		<field source="modifiedBy" target="System.ChangedBy"/>
-		<field source="modified" target="System.ChangedDate"/> -->
-		<field source="creator" target="System.CreatedBy"/>
-		<field source="category" target="System.AreaPath">
-			<defaultvalue target="DTSTest\ALMOps\AzureDevOps"/>
-		</field>
-		<field source="internalTags" target="System.Tags"/>
-		<field source="target" target="System.IterationPath">
-			<defaultvalue target="DTSTest"/>
-			<value source="DTSTest\Rational Admin\Sprint - 25" target="DTSTest\Sprint25"/>
-			<value source="DTSTest\Rational Admin\Sprint - 26" target="DTSTest\Sprint26"/>
-		</field>
-		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<value source="Show Stopper" target="1"/>
-			<value source="Must Have" target="2"/>
-			<value source="Should Have" target="3"/>
-			<value source="Could Have" target="4"/>			
-			<value source="Unassigned" target="3"/>			
-		</field>
-		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
-			<value source="0 pts" target="0"/>
-			<value source="1 pt" target="1"/>
-			<value source="2 pts" target="2"/>
-			<value source="3 pts" target="3"/>
-			<value source="5 pts" target="5"/>
-			<value source="8 pts" target="8"/>
-			<value source="13 pts" target="13"/>
-			<value source="20 pts" target="20"/>
-			<value source="40 pts" target="40"/>
-			<value source="100 pts" target="100"/>
-		</field>
-		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
-		<excluded>
-		</excluded>
-		<newfields>
-		</newfields>
+	<wit source="TestPlan"  target="TestPlan" translateUnmappedFields="false">
+		<field source="nameHandler" target="name"/>
+		<field source="startDateHandler" target="startDate"/>
+		<field source="endDateHandler" target="endDate"/>
+		<field source="descriptionHandler" target="description"/>
+		<field source="ownerHandler" target="owner"/>
+		<field source="stateHandler" target="state"/>
+		<field source="areaPathHandler" target="areaPath"/>
+		<field source="iterationHandler" target="iteration"/>
+		<reference source='handleTestSuite' target="TestSuite"/>
+	</wit>
+	<wit source="TestSuite"  target="TestSuite" translateUnmappedFields="false">
+		<field source="nameHandler" target="name"/>
+		<field source="startDateHandler" target="startDate"/>
+		<field source="endDateHandler" target="endDate"/>
+		<field source="descriptionHandler" target="description"/>
+		<field source="ownerHandler" target="owner"/>
+		<field source="stateHandler" target="state"/>
+		<field source="areaPathHandler" target="areaPath"/>
+		<field source="iterationHandler" target="iteration"/>
+		<reference source='handleTestCaseToTestfScript' target="TestCase"/>
+	</wit>
+	<wit source="TestScript"  target="TestCase" translateUnmappedFields="false">
+		<field source="testCaseHandler" target="name"/>
+		<field source="startDateHandler" target="startDate"/>
+		<field source="endDateHandler" target="endDate"/>
+		<field source="testCaseDescriptionHandler" target="description"/>
+		<field source="ownerHandler" target="owner"/>
+		<field source="stateHandler" target="state"/>
+		<field source="areaPathHandler" target="areaPath"/>
+		<field source="iterationHandler" target="iteration"/>
 	</wit>
 </witmapping>
