@@ -1,5 +1,5 @@
 package com.zions.common.services.work.handler
 
-interface IWorkitemFieldHandler {
+interface IFieldHandler {
 	def execute(def data);
 }

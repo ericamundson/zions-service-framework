@@ -12,13 +12,13 @@ import com.ibm.team.scm.common.IChangeSet
 import com.ibm.team.workitem.common.model.IWorkItem
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.workitem.WorkitemAttributeManager
-import com.zions.common.services.work.handler.IWorkitemFieldHandler
+import com.zions.common.services.work.handler.IFieldHandler
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class RemainingWorkHandler implements IWorkitemFieldHandler {
+class RemainingWorkHandler implements IFieldHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired
