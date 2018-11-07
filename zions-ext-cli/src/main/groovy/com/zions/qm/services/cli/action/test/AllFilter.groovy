@@ -7,8 +7,8 @@ import com.zions.common.services.query.IFilter
 @Component
 class AllFilter implements IFilter {
 
-	public def filter(def workItems) {
-		return workItems.workItem.findAll { wi ->
+	public def filter(def items) {
+		return items.entry.findAll { wi ->
 			true
 		}
 	}

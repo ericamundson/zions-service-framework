@@ -1,37 +1,41 @@
 {
-  "count": 8,
-  "value": [
-    {
-      "name": "System.CurrentProcessTemplateId",
-      "value": "2dc3221a-2d39-4138-a4e1-fc4d20d8912d"
-    },
-    {
-      "name": "System.OriginalProcessTemplateId",
-      "value": "2dc3221a-2d39-4138-a4e1-fc4d20d8912d"
-    },
-    {
-      "name": "System.ProcessTemplateType",
-      "value": "adcc42ab-9882-485e-a3ed-7678f01f66bc"
-    },
-    {
-      "name": "System.Process Template",
-      "value": "Agile"
-    },
-    {
-      "name": "System.Microsoft.TeamFoundation.Team.Default",
-      "value": "9b7ae5b9-826f-4353-99d6-daaa5cd94ec6"
-    },
-    {
-      "name": "System.SourceControlCapabilityFlags",
-      "value": "2"
-    },
-    {
-      "name": "System.SourceControlGitEnabled",
-      "value": "True"
-    },
-    {
-      "name": "System.SourceControlGitPermissionsInitialized",
-      "value": "True"
-    }
-  ]
+	"count": 9,
+	"value": [
+		{
+			"name": "System.CurrentProcessTemplateId",
+			"value": "339c195b-294c-4367-980b-870119d48b93"
+		},
+		{
+			"name": "System.OriginalProcessTemplateId",
+			"value": "339c195b-294c-4367-980b-870119d48b93"
+		},
+		{
+			"name": "System.ProcessTemplateType",
+			"value": "b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1"
+		},
+		{
+			"name": "System.MSPROJ",
+			"value": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<MSProject>\r\n  <Mappings>\r\n    <!-- MS Project calculation engine because of the order of the following mapped fields.\r\n         To make sure the right calculation result, the following fields must appear in \r\n         this mapping file in the order respectively:\r\n            Resource Name, Start Date, Finish Date, Completed Work, Remaining Work -->\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"System.AreaPath\" ProjectField=\"pjTaskOutlineCode9\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"System.AssignedTo\" ProjectField=\"pjTaskResourceNames\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"System.Id\" ProjectField=\"pjTaskText10\" ProjectName=\"Work Item ID\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"System.IterationPath\" ProjectField=\"pjTaskOutlineCode10\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"System.Reason\" ProjectField=\"pjTaskText14\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"System.Rev\" ProjectField=\"pjTaskText23\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"System.State\" ProjectField=\"pjTaskText13\" ProjectName=\"State\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"System.Title\" ProjectField=\"pjTaskName\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"System.WorkItemType\" ProjectField=\"pjTaskText24\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"Microsoft.VSTS.Common.Priority\" ProjectField=\"pjTaskText19\" ProjectName=\"Work Item Priority\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"Microsoft.VSTS.Common.StackRank\" ProjectField=\"pjTaskNumber1\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"Microsoft.VSTS.Scheduling.StartDate\" ProjectField=\"pjTaskStart\" PublishOnly=\"true\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"Microsoft.VSTS.Scheduling.FinishDate\" ProjectField=\"pjTaskFinish\" PublishOnly=\"true\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"Microsoft.VSTS.Scheduling.OriginalEstimate\" ProjectField=\"pjTaskBaselineWork\" ProjectUnits=\"pjHour\" IfSummaryRefreshOnly=\"true\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"Microsoft.VSTS.Scheduling.CompletedWork\" ProjectField=\"pjTaskActualWork\" ProjectUnits=\"pjHour\" IfSummaryRefreshOnly=\"true\" />\r\n    <Mapping WorkItemTrackingFieldReferenceName=\"Microsoft.VSTS.Scheduling.RemainingWork\" ProjectField=\"pjTaskRemainingWork\" ProjectUnits=\"pjHour\" IfSummaryRefreshOnly=\"true\" />\r\n    <LinksField ProjectField=\"pjTaskText26\" />\r\n    <SyncField ProjectField=\"pjTaskText25\" />\r\n  </Mappings>\r\n</MSProject>"
+		},
+		{
+			"name": "System.Process Template",
+			"value": "Agile"
+		},
+		{
+			"name": "System.Microsoft.TeamFoundation.Team.Default",
+			"value": "9c96508a-bdf7-4b46-8a0e-f2136b5a9a9d"
+		},
+		{
+			"name": "System.SourceControlCapabilityFlags",
+			"value": "2"
+		},
+		{
+			"name": "System.SourceControlGitEnabled",
+			"value": "True"
+		},
+		{
+			"name": "System.SourceControlGitPermissionsInitialized",
+			"value": "True"
+		}
+	]
 }

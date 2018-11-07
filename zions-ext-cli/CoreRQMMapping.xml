@@ -1,20 +1,22 @@
 <witmapping>
 	<wit source="TestPlan"  target="TestPlan" translateUnmappedFields="false">
-		<field source="nameHandler" target="name"/>
-		<field source="startDateHandler" target="startDate"/>
-		<field source="endDateHandler" target="endDate"/>
-		<field source="descriptionHandler" target="description"/>
-		<field source="ownerHandler" target="owner"/>
-		<field source="stateHandler" target="state"/>
-		<field source="areaPathHandler" target="areaPath"/>
-		<field source="iterationHandler" target="iteration"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="startDateHandler" target="Microsoft.VSTS.Scheduling.StartDate"/>
+		<field source="endDateHandler" target="Microsoft.VSTS.Scheduling.EndDate"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="areaPathHandler" target="System.AreaPath">
+			<defaultvalue target="DigitalBanking"/>
+		</field>
+		<field source="iterationHandler" target="System.Iteration"/>
 		<reference source='handleTestSuite' target="TestSuite"/>
 	</wit>
 	<wit source="TestSuite"  target="TestSuite" translateUnmappedFields="false">
-		<field source="nameHandler" target="name"/>
+		<field source="nameHandler" target="System.Title"/>
 		<field source="startDateHandler" target="startDate"/>
 		<field source="endDateHandler" target="endDate"/>
-		<field source="descriptionHandler" target="description"/>
+		<field source="descriptionHandler" target="System.Description"/>
 		<field source="ownerHandler" target="owner"/>
 		<field source="stateHandler" target="state"/>
 		<field source="areaPathHandler" target="areaPath"/>
@@ -22,13 +24,14 @@
 		<reference source='handleTestCaseToTestfScript' target="TestCase"/>
 	</wit>
 	<wit source="TestScript"  target="TestCase" translateUnmappedFields="false">
-		<field source="testCaseHandler" target="name"/>
+		<field source="testCaseHandler" target="System.Title"/>
 		<field source="startDateHandler" target="startDate"/>
 		<field source="endDateHandler" target="endDate"/>
-		<field source="testCaseDescriptionHandler" target="description"/>
-		<field source="ownerHandler" target="owner"/>
-		<field source="stateHandler" target="state"/>
-		<field source="areaPathHandler" target="areaPath"/>
+		<field source="testCaseDescriptionHandler" target="System.Description"/>
+		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>
 		<field source="iterationHandler" target="iteration"/>
+		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
 	</wit>
 </witmapping>

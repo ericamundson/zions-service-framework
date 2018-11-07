@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.stereotype.Component
 import org.springframework.test.context.BootstrapWith
@@ -96,6 +97,7 @@ class WorkManagementServiceSpecTest extends Specification {
 }
 
 @TestConfiguration
+@Profile("test")
 @PropertySource("classpath:test.properties")
 class WorkManagementServiceConfig {
 	def mockFactory = new DetachedMockFactory()

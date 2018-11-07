@@ -2,14 +2,13 @@ package com.zions.qm.services.project
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-
-import com.zions.qm.services.rest.QmGenericRestClient
+import com.zions.common.services.rest.IGenericRestClient
 import groovyx.net.http.ContentType
 
 @Component
 class QmProjectManagementService {
 	@Autowired
-	QmGenericRestClient qmGenericRestClient
+	IGenericRestClient qmGenericRestClient
 
 	public QmProjectManagementService() {
 		

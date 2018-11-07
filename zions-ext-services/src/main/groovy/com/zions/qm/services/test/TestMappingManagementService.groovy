@@ -5,20 +5,20 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class TestMappingManagerService {
+class TestMappingManagementService {
 	@Autowired
-	@Value('test.mapping.file')
+	@Value('${test.mapping.file}')
 	String testMappingFileName
 	
-	def mappingData = []
+	def mappingDataInfo = []
 	
-	public TestMappingManagerService() {
+	public TestMappingManagementService() {
 		
 	}
 	
 	def getMappingData() {
-		if (mappingData.size() > 0) {
-			return mappingData
+		if (mappingDataInfo.size() > 0) {
+			return mappingDataInfo
 		}
 		def xmlMappingData = new XmlSlurper().parse(new File(testMappingFileName))
 		xmlMappingData.wit.each { tType ->
@@ -34,8 +34,8 @@ class TestMappingManagerService {
 				}
 				map.fields.add(ofield)
 			}
-			mappingData.add(map)
+			this.mappingDataInfo.add(map)
 		}
-		return mappingData
+		return mappingDataInfo
 	}
 }
