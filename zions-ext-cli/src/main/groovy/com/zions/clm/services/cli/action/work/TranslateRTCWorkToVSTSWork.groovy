@@ -201,7 +201,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.password', 'clm.projectArea', 'ccm.template.dir', 'tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'wit.mapping.file', 'wi.query', 'wi.filter']
+		def required = ['clm.url', 'clm.user', 'clm.projectArea', 'ccm.template.dir', 'tfs.url', 'tfs.user', 'tfs.project', 'wit.mapping.file', 'wi.query', 'wi.filter']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

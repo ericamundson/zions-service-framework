@@ -10,7 +10,6 @@
 			<defaultvalue target="DigitalBanking"/>
 		</field>
 		<field source="iterationHandler" target="System.Iteration"/>
-		<reference source='handleTestSuite' target="TestSuite"/>
 	</wit>
 	<wit source="TestSuite"  target="TestSuite" translateUnmappedFields="false">
 		<field source="nameHandler" target="System.Title"/>
@@ -21,9 +20,8 @@
 		<field source="stateHandler" target="state"/>
 		<field source="areaPathHandler" target="areaPath"/>
 		<field source="iterationHandler" target="iteration"/>
-		<reference source='handleTestCaseToTestfScript' target="TestCase"/>
 	</wit>
-	<wit source="TestScript"  target="TestCase" translateUnmappedFields="false">
+	<wit source="TestCase"  target="TestCase" translateUnmappedFields="false">
 		<field source="testCaseHandler" target="System.Title"/>
 		<field source="startDateHandler" target="startDate"/>
 		<field source="endDateHandler" target="endDate"/>

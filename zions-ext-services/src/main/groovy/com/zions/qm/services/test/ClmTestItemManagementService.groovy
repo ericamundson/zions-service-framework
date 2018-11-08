@@ -86,7 +86,24 @@ public class ClmTestItemManagementService {
 		String fValue = ""
 		if (this.fieldMap["${handlerName}"] != null) {
 			def data = [itemData: qmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map]
-			return this.fieldMap["${handlerName}"].execute(data)
+			def fieldData = this.fieldMap["${handlerName}"].execute(data)
+			if (fieldData != null) {
+				def val = fieldData.'value'
+				if (fieldMap.defaultMap != null) {
+					val = fieldMap.defaultMap.target
+				}
+				if (fieldMap.valueMap.size() > 0) {
+					
+					fieldMap.valueMap.each { aval ->
+						if ("${fValue}" == "${aval.source}") {
+							val = "${aval.target}"
+							return
+						}
+					}
+				}
+				fieldData.'value' = val
+			}
+			return fieldData
 		}
 		return null
 	}

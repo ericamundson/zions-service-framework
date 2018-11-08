@@ -38,6 +38,18 @@ class ClmTestManagementServiceSpecTest extends Specification {
 		then: "validate test item"
 		"${testcaseData.webId.text()}" == '22657'
 	}
+	
+	def 'getTestPlansViaQuery success flow.'() {
+		given: "A stub of RQM get test item request"
+		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testplansquery.xml').text)
+		1 * qmGenericRestClient.get(_) >> testplansInfo
+
+		when: 'calling of method under test (getTestPlansViaQuery)'
+		def testPlans = underTest.getTestPlansViaQuery('', 'DigitalBanking')
+		
+		then: 'validate list of plans'
+		testPlans.entry.size() > 0
+	}
 
 }
 

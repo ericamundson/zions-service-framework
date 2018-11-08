@@ -108,11 +108,11 @@ class TranslateRQMToMTM implements CliAction {
 				int count = 0
 				def filtered = filtered(testItems, wiFilter)
 				filtered.each { testItem ->
-					def fullItem = clmTestManagementService.getTestItem(testItem.id.text())
-					// Uncomment to build test Data:  String itemXml = XmlUtil.serialize(fullItem)
-					int id = Integer.parseInt(fullItem.webId.text())
+					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
+					String itemXml = XmlUtil.serialize(testplan)
+					int id = Integer.parseInt(testplan.webId.text())
 					
-					fullItem.testcase.each { testcaseRef ->
+					testplan.testcase.each { testcaseRef ->
 						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 						String tcXml = XmlUtil.serialize(testcase)
 						int aid = Integer.parseInt(testcase.webId.text())
@@ -220,7 +220,7 @@ class TranslateRQMToMTM implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.password', 'clm.projectArea', 'qm.template.dir', 'tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'test.mapping.file', 'qm.query', 'qm.filter']
+		def required = ['clm.url', 'clm.user', 'clm.projectArea', 'qm.template.dir', 'tfs.url', 'tfs.user', 'tfs.project', 'test.mapping.file', 'qm.query', 'qm.filter']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
