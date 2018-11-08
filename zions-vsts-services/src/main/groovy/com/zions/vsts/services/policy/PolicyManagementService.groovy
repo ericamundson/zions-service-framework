@@ -9,6 +9,7 @@ import groovyx.net.http.ContentType
 
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.build.BuildManagementService
+import com.zions.vsts.services.notification.NotificationService
 
 /**
  * 
@@ -24,6 +25,9 @@ public class PolicyManagementService {
 
 	@Autowired
 	BuildManagementService buildManagementService
+	
+	@Autowired
+	NotificationService notificationService
 
 	public PolicyManagementService() {
 	}
@@ -62,19 +66,26 @@ public class PolicyManagementService {
 		
 		// get the CI build
 		def projectData = repoData.project
-		def ciBuild = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData)
-		if (ciBuild == null) {
+		// result is a JSON object
+		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData)
+		int ciBuildId = result.ciBuildId
+		if (ciBuildId == -1) {
 			log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was returned. Unable to create the validation build policy!")
 			return null
 		}
 		def policy = [id: -2, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
 		    type: [id: "0609b952-1397-4640-95ec-e00a01b2c241"],
-		    settings:[buildDefinitionId: ciBuild.id, displayName: "${repoData.name} validation", manualQueueOnly: false, queueOnSourceUpdateOnly:true, validDuration: 720,
+		    settings:[buildDefinitionId: ciBuildId, displayName: "${repoData.name} validation", manualQueueOnly: false, queueOnSourceUpdateOnly:true, validDuration: 720,
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
 		def res = createPolicy(collection, projectData, policy)
 		log.debug("PolicyManagementService::ensureBuildPolicy -- result = "+res)
+		// send email if builds were created
+		if (result.ciBuildName != "" || result.releaseBuildName != "") {
+			// send notification of new builds created
+			notificationService.sendBuildCreatedNotification("${repoData.name}", result.ciBuildName, result.releaseBuildName)
+		}
 	}
 	
 	private def createPolicy(def collection, def projectData, def policy) {

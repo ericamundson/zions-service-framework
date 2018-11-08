@@ -21,26 +21,23 @@ spring:
     enabled: false
 
 # TFS connection properties
-# test
-#tfs:
-#  url: http://utmsdev0487:8080/tfs
-#  user: z091556
-#  token: tqkjeiqplam3as6igdidjduljqz3z3vyqom6crrtszz7hhg7sika
-
-# on prem
-#tfs:
-#  url: https://tfs.testqa.zionsbank.com
-#  user: z091556
-#  token: o5nxn5isv2tlekt4hdhezxodtslfs6mqi3e2hqoo25sd2zgd7d3a
-
 tfs:
+# test
   url: https://eto-dev.visualstudio.com
   user: z091556
   token: emjfvuveeugbljidpareidxmya5zdvugt3gqp5ptidakh52ekq3q
+# prod
+#  url: https://zionseto.visualstudio.com
+#  user: svc-cloud-vsbuildagent@zionsbancorporation.onmicrosoft.com
+#  token: i7lgdocpaar45qlx3wbmr5bfros6j6jhuxbjc7b5twucufn2w43a
   build:
     queue: default
-  	use:
-  		template: true
+    use:
+      template: true
+    generic:
+      name: generic
+    properties:
+      file: dts-re-build.properties
 
 # Specify port for Tomcat (default = 8080)
 server:
@@ -53,7 +50,23 @@ endpoints:
 #disable the automatic adding of the `X-Application-Context` HTTP header
 management:
   add-application-context-header: false
-  
+
+# spring mail properties
+spring:
+  mail:
+    host:  outboundrelay.cs.zionsbank.com
+    port:  25
+    properties:
+      mail:
+        smtp:
+          connectiontimeout:  5000
+          timeout:  5000
+          writetimeout:  5000
+
+email:
+  recipient:
+    address: SCMTeam@zionsbancorp.com
+
 # type map placeholder
 type:
   map:
@@ -72,4 +85,9 @@ default:
     
 cache:
   location: .\cache
+  
+id:
+  tracking:
+    field: dummy
+
   

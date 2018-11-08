@@ -24,8 +24,16 @@ public class BuildManagementService {
 	private boolean useTfsTemplate
 	
 	@Autowired
+	@Value('${tfs.build.generic.name}')
+	private String genericTemplateName
+	
+	@Autowired
 	@Value('${tfs.build.queue}')
 	private String queue
+
+	@Autowired
+	@Value('${tfs.build.properties.file}')
+	private String buildPropsFileName
 
 	@Autowired
 	private IGenericRestClient genericRestClient;
@@ -47,8 +55,13 @@ public class BuildManagementService {
 	
 	def ensureBuildFolder(def collection, def project, String folder) {
 		def projectData = projectManagementService.getProject(collection, project, true)
+		return createBuildFolder(collection, projectData, folder)
+	}
+
+	def createBuildFolder(def collection, def projectData, String folder) {
 		def efolder = URLEncoder.encode(folder, 'utf-8')
 		efolder = efolder.replace('+', '%20')
+		log.debug("BuildManagementService::createBuildFolder -- Folder name = ${efolder}")
 		
 		def folderObj = [description: '', path: "\\${folder}"]
 		
@@ -60,7 +73,6 @@ public class BuildManagementService {
 			headers: [Accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
 			)
 		return result
-		
 	}
 
 	public def detectBuildType(def collection, def project, def repo) {
@@ -71,7 +83,6 @@ public class BuildManagementService {
 			log.debug("BuildManagementService::detectBuildType -- Found top-level files ...")
 			//topFiles.value.each { file ->
 			for (def file in topFiles.value) {
-				log.debug("BuildManagementService::detectBuildType -- Looking for build properties file ...")
 				def path = file.path
 				if ("${path}".endsWith('build.gradle')) {
 					buildType = BuildType.GRADLE
@@ -107,39 +118,106 @@ public class BuildManagementService {
 	}
 	
 	public def ensureBuildsForBranch(def collection, def projectData, def repo) {
-		def buildType = detectBuildType(collection, projectData, repo)
-		log.debug("BuildManagementService::ensureBuildsForBranch -- Detected BuildType = ${buildType}")
-		if (buildType == BuildType.NONE) {
-			return null
-		}
-		log.debug("BuildManagementService::ensureBuildsForBranch -- Calling get CI Build ...")
-		def ciBd = null
-		def build = getBuild(collection, projectData, repo, 'CI')
+		def buildTemplate = null
+		boolean buildFolderCreated = false
+		log.debug("BuildManagementService::ensureBuildsForBranch -- Look for existing CI Build ...")
+		Integer ciBldId = -1
+		def ciBldName = ""
+		def buildFolderName = ""
+		def build = getBuild(collection, projectData, repo, 'ci')
 		if (build.count == 0) {
-			build = createBuild(collection, projectData, repo, buildType, 'CI')
-			if (build == null ) {
-				log.error("BuildManagementService::ensureBuildsForBranch -- CI Build creation failed!")
+			buildTemplate = getBuildTemplate(collection, projectData, repo, 'ci')
+			if (buildTemplate == null) {
+				log.error("BuildManagementService::ensureBuildsForBranch -- CI build template not found.")
+				//return null
+			} else {
+				log.debug("BuildManagementService::ensureBuildsForBranch -- Found Build Template")
+	
+				// make sure build folder is available for the repo
+				createBuildFolder(collection, projectData, "${repo.name}")
+				buildFolderCreated = true
+				buildFolderName = "${repo.name}"
+				log.debug("BuildManagementService::ensureBuildsForBranch -- Build folder created for ${repo.name}")
+				def ciBuild = createBuildFromTemplate(collection, projectData, repo, buildTemplate, 'ci', "${repo.name}")
+				if (ciBuild == null ) {
+					log.error("BuildManagementService::ensureBuildsForBranch -- CI Build creation failed!")
+				} else {
+					ciBldId = Integer.parseInt("${ciBuild.id}")
+					ciBldName = "${ciBuild.name}"
+					log.debug("BuildManagementService::ensureBuildsForBranch -- CI Build created: "+ciBldName)
+				}
 			}
-			ciBd = build
 		} else {
-			ciBd = build.value[0]
+			log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing CI Build. Setting Id for return to "+build.value[0].id)
+			ciBldId = build.value[0].id
+			//ciBldName = "${build.name}"
+			// assume if build was found that folder is already created
+			buildFolderCreated = true
 		}
-		//ciBd = ensureBuild(collection, projectData, repo, buildType, 'CI')
-		log.debug("BuildManagementService::ensureBuildsForBranch -- CI Build Done: "+ciBd)
-		def relBd = null
-		def build1 = getBuild(collection, projectData, repo, 'Release')
+		def relBldName = ""
+		def build1 = getBuild(collection, projectData, repo, 'release')
 		if (build1.count == 0) {
-			relBd = createBuild(collection, projectData, repo, buildType, 'Release')
-			if (relBd == null ) {
-				log.error("BuildManagementService::ensureBuildsForBranch -- Release Build creation failed!")
+			buildTemplate = getBuildTemplate(collection, projectData, repo, 'release')
+			if (buildTemplate == null) {
+				log.error("BuildManagementService::ensureBuildsForBranch -- Release build template not found.")
+				// Not returning null here and stopping since the CI build was created so let's go ahead and create the build validation policy
+				//return null
+			} else {
+				// make sure build folder is available for the repo
+				if (!buildFolderCreated) {
+					createBuildFolder(collection, projectData, folder)
+				}
+				def relBd = createBuildFromTemplate(collection, projectData, repo, buildTemplate, 'release', "${repo.name}")
+				if (relBd == null ) {
+					log.error("BuildManagementService::ensureBuildsForBranch -- Release Build creation failed!")
+				} else {
+					relBldName = "${relBd.name}"
+					log.debug("BuildManagementService::ensureBuildsForBranch -- Release build created: "+relBldName)
+				}
 			}
 		}
-		//def relBd = ensureBuild(collection, projectData, repo, buildType, 'Release')
-		log.debug("BuildManagementService::ensureBuildsForBranch -- ensure Release Done: "+relBd)
+		def returnObject = [folderName: buildFolderName,
+							ciBuildId: ciBldId,
+							ciBuildName: ciBldName,
+							releaseBuildName: relBldName]
 
-		return ciBd
+		return returnObject
 	}
 	
+	public def getBuildTemplate(def collection, def project, def repo, String buildStage) {
+		log.debug("BuildManagementService::getBuildTemplate -- Looking for custom build properties ...")
+		String templateName = "";
+		def buildPropertiesFile = codeManagementService.getBuildPropertiesFile(collection, project, repo, buildPropsFileName)
+		if (buildPropertiesFile != null) {
+			// read file for template name
+			String fileContent = buildPropertiesFile.toString()
+			if (fileContent.contains('build-template=')) {
+				templateName = fileContent.substring("build-template=".length())+"-"+buildStage;
+			}
+			log.debug("BuildManagementService::getBuildTemplate -- Specified templateName = ${templateName}")
+		} else {
+			log.debug("BuildManagementService::getBuildTemplate -- No build properties file found; detecting build type ...")
+			def buildType = detectBuildType(collection, project, repo)
+			log.debug("BuildManagementService::getBuildTemplate -- Detected BuildType = ${buildType}")
+			if (buildType == BuildType.NONE) {
+				return null
+			}
+			// Looking for template build definition with name like 'template-maven-ci', 'template-gradle-release', 'template-ant-ci', etc.
+			templateName = "template-"+buildType.toString().toLowerCase()+"-"+buildStage
+		}
+		log.debug("BuildManagementService::getBuildTemplate -- Using ADO template: "+templateName)
+		//def bDef = getBuild(collection, project, templateName)
+		def bDef = getTemplate(collection, project, templateName)
+		if (bDef == null) {
+			log.debug("BuildManagementService::getBuildTemplate -- Build template "+templateName+" not found. Using generic template.")
+			bDef = getTemplate(collection, project, "template-"+this.genericTemplateName+"-"+buildStage)
+		}
+		if (bDef == null) {
+			log.debug("BuildManagementService::getBuildTemplate -- No usable build definition template was found. No build will be created.")
+		}
+		return bDef
+	}
+
 	def reviseReleaseLabels(def collection, def projectData, String repoList, String releaseLabel) {
 		def repos = codeManagementService.getRepos(collection, projectData)
 		def repoNames = repoList.split(',')
@@ -201,21 +279,35 @@ public class BuildManagementService {
 				)
 	}
 
+	public def createBuildFromTemplate(def collection, def project, def repo, def buildTemplate, String buildStage, def folder) {
+		return createBuildDefinition(collection, project, repo, buildTemplate, buildStage, folder);
+	}
+
 	public def createBuild(def collection, def project, def repo, BuildType buildType, String buildStage, def folder) {
 		def bDef = null
 		if (this.useTfsTemplate) {
-			// Looking for template build definition with name like 'maven-CI-template', 'gradle-Release-template', 'ant-CI-template', etc.
-			String templateName = buildType.toString().toLowerCase()+"-"+buildStage+"-template"
+			// Looking for template build definition with name like 'template-maven-ci', 'template-gradle-release', 'template-ant-ci', etc.
+			String templateName = "template-"+buildStage+"-"+buildType.toString().toLowerCase()
 			log.debug("BuildManagementService::createBuild -- Using TFS template: "+templateName)
+			//bDef = getBuild(collection, project, templateName)
 			bDef = getTemplate(collection, project, templateName)
+			if (bDef == null) {
+				log.debug("BuildManagementService::createBuild -- Build template for "+buildType.toString().toLowerCase()+", build stage: "+ buildStage+" not found. Using generic template.")
+				bDef = getTemplate(collection, project, "template-"+buildStage+"-"+this.genericTemplateName)
+			}
 		} else {
 			log.debug("BuildManagementService::createBuild -- Using local resource file.  Build type: "+buildType.toString().toLowerCase()+", build stage: "+ buildStage)
 			bDef = getResource(buildType.toString().toLowerCase(), buildStage)
 		}
 		if (bDef == null) {
-			log.debug("BuildManagementService::createBuild -- Build definition template not found. Returning NULL ...")
+			log.debug("BuildManagementService::createBuild -- No usable build definition template was found. No build will be created.")
 			return null
 		}
+		return createBuildDefinition(collection, project, repo, bDef, buildStage, folder);
+	}
+	
+	def createBuildDefinition(def collection, def project, def repo, def bDef, String buildStage, def folder) {
+		// set all the necessary properties and post the request
 		bDef.remove('authoredBy')
 		bDef.name = "${repo.name}-${buildStage}"
 		bDef.id = -1
@@ -268,6 +360,7 @@ public class BuildManagementService {
 				body: body,
 				headers: [Accept: 'application/json;api-version=4.1;excludeUrls=true'],
 				)
+		return result
 	}
 	
 	public def getQueue(String collection, def project, String name) {
@@ -307,9 +400,9 @@ public class BuildManagementService {
 				)
 		return result
 	}
-	
+
 	public def getTemplate(def collection, def project, def name) {
-		log.debug("BuildManagementService::getTemplate -- templateName = "+repo.name+"-"+qualifier)
+		log.debug("BuildManagementService::getTemplate -- templateName = "+name)
 		def query = ['api-version':'4.1']
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
