@@ -10,10 +10,4 @@ import org.springframework.core.io.ClassPathResource
 @Configuration
 @ComponentScan("com.zions.vsts.services")
 public class AppConfig {
-//        @Bean
-//        public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-//            PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
-//            propertySourcesPlaceholderConfigurer.setLocations(new ClassPathResource("application.yml"));
-//            return propertySourcesPlaceholderConfigurer;
-//        }
 }
