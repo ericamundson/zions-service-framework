@@ -32,17 +32,20 @@ public class PolicyEndPoint {
      */
     @RequestMapping(value = "/", method = RequestMethod.POST)
 	public ResponseEntity newBranchCreated(@RequestBody String json) {
-		log.info("In PolicyEndPoint - json:\n"+json)
+		//log.debug("In PolicyEndPoint - json:\n"+json)
 		try {
 			JsonSlurper slurper = new JsonSlurper()
 			def eventData = slurper.parseText(json)
-			def changeSet = eventData.resource
-			def collection = getCollectionName(eventData.resourceContainers)
+			def changeSet = eventData.resource;
 			changeSet.refUpdates.each { update ->
+				// only protect certain branch types
 				if ("${update.name}".startsWith("refs/heads/master") || 
 					"${update.name}".startsWith("refs/heads/release") ||
 					"${update.name}".toLowerCase().startsWith("refs/heads/feature/ifb")) {
+					// only when branch is new
 					if ("${update.oldObjectId}" == "0000000000000000000000000000000000000000") {
+						log.debug("In PolicyEndPoint - changes:\n"+changeSet)
+						def collection = getCollectionName(eventData.resourceContainers);
 						policyManagementService.handleNewBranch(changeSet, collection, update.name)
 					}
 				}
@@ -55,14 +58,14 @@ public class PolicyEndPoint {
 	}
 
     private def getCollectionName(def containerData) {
+		def collectionName = ""
     	try {
 	    	def serverUrl = containerData.server.baseUrl
-	    	def baseUrl = containerData.server.baseUrl
 	    	def collectionUrl = containerData.collection.baseUrl
-	    	def collectionName = collectionUrl.substring(serverUrl.length(), collectionUrl.length()-1)
-    	} catch (Exception) {
+	    	collectionName = collectionUrl.substring(serverUrl.length(), collectionUrl.length()-1)
+    	} catch (err) {
     		// collection name is not available for VSTS
-    		return ""
+    		log.info("In PolicyEndPoint::getCollectionName - Caught error: ${err.message}")
     	}
     	return collectionName
     }
