@@ -1,12 +1,11 @@
 package com.zions.qm.services.metadata
 
-import com.zions.qm.services.rest.QmGenericRestClient
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
 import groovyx.net.http.ContentType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.qm.services.project.QmProjectManagementService
 
 /**
@@ -16,16 +15,17 @@ import com.zions.qm.services.project.QmProjectManagementService
  * @author z091182
  *
  */
-@Component
 @Slf4j
+@Component
 class QmMetadataManagementService {
 
 	def xsdTypes = ['TestPlan':'testplan', 'TestSuite':'testsuite', 'TestCase':'testcase', 'TestScript':'testscript', 'TestCaseExecutionRecord':'executionworkitem', 'TestSuiteExecutionRecord':'suiteexecutionrecord', 'TestCaseExecutionResult':'executionresult', 'TestSuiteExecutionResult':'testsuitelog','Step':'step']
 	def customAttributeMapType = ['TestPlan': 'TEST_PLAN', 'TestSuite': 'TEST_SUITE', 'TestCase': 'TEST_CASE', 'TestScript': 'TEST_SCRIPT', 'TestCaseExecutionRecord':'TESTCASE_EXECUTIONRECORD', 'TestSuiteExecutionRecord':'TESTSUITE_EXECUTIONRECORD', 'TestCaseExecutionResult':'TESTCASE_EXECUTIONRESULT','TestSuiteExecutionResult':'TESTSUITE_EXECUTIONRESULT','Step':'MANUAL_STEP']
 	//def categoriesMapType = ['testplan': 'TestPlan', 'testsuite': 'TestSuite', 'testcase': 'TestCase', 'testscript': 'TestScript']
 	def schemaMap = [:]
-	@Autowired
-	QmGenericRestClient qmGenericRestClient
+	
+	@Autowired(required=true)
+	IGenericRestClient qmGenericRestClient
 
 	@Autowired
 	QmProjectManagementService  qmProjectManagementSerivce

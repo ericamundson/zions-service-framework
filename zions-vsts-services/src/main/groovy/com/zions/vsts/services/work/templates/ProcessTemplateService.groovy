@@ -64,6 +64,7 @@ public class ProcessTemplateService  {
 	
 	public def getTypeMapResource(fileName) {
 		def data = null
+		if (typeMap.size() > 0) return typeMap
 		try {
 			def s = getClass().getResourceAsStream("/${fileName}")
 			JsonSlurper js = new JsonSlurper()
@@ -77,6 +78,7 @@ public class ProcessTemplateService  {
 
 	public def getNameMapResource(fileName) {
 		def data = null
+		if (nameMap.size()>0) return nameMap
 		try {
 			def s = getClass().getResourceAsStream("/${fileName}")
 			JsonSlurper js = new JsonSlurper()
@@ -88,7 +90,7 @@ public class ProcessTemplateService  {
 		return nameMap
 	}
 
-	def getWorkItems(String collection, String project, expand = 'none', projectProperty = 'System.ProcessTemplateType') {
+	def getWorkItemTypes(String collection, String project, expand = 'none', projectProperty = 'System.ProcessTemplateType') {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, projectProperty)
 		def aproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def result = genericRestClient.get(
@@ -102,7 +104,7 @@ public class ProcessTemplateService  {
 
 	}
 	
-	def getWorkItem(String collection, String project, def refName, expand = 'none', projectProperty = 'System.ProcessTemplateType') {
+	def getWorkItemType(String collection, String project, def refName, expand = 'none', projectProperty = 'System.ProcessTemplateType') {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, projectProperty)
 		def aproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def result = genericRestClient.get(
@@ -599,7 +601,7 @@ public class ProcessTemplateService  {
 	}
 	
 	def getWIT(collection, project, name) {
-		def workItems = getWorkItems(collection, project, 'none')
+		def workItems = getWorkItemTypes(collection, project, 'none')
 		def witTemp = null
 		workItems.value.each { wit ->
 			if ("${name}" == "${wit.name}") {
@@ -608,7 +610,7 @@ public class ProcessTemplateService  {
 			}
 		}
 		if (witTemp == null) {
-			workItems = getWorkItems(collection, project, 'none', 'System.CurrentProcessTemplateId')
+			workItems = getWorkItemTypes(collection, project, 'none', 'System.CurrentProcessTemplateId')
 			if (workItems != null) {
 				workItems.value.each { wit ->
 					if ("${name}" == "${wit.name}") {
@@ -625,9 +627,9 @@ public class ProcessTemplateService  {
 			witTemp = updateWIT(collection, project, witTemp)			
 		}
 		if (witTemp != null) {
-			def outWit = getWorkItem(collection, project, witTemp.referenceName, '5')
+			def outWit = getWorkItemType(collection, project, witTemp.referenceName, '5')
 			if (outWit == null) {
-				outWit = getWorkItem(collection, project, witTemp.referenceName, '5', 'System.CurrentProcessTemplateId')
+				outWit = getWorkItemType(collection, project, witTemp.referenceName, '5', 'System.CurrentProcessTemplateId')
 			}
 			return outWit
 		}

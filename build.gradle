@@ -30,6 +30,10 @@ allprojects {
         apply plugin: 'codenarc'
     }
     
+	test {
+		//String activeProfile =  System.properties['spring.profiles.active']
+		systemProperty "spring.profiles.active", 'test'
+	}
     bootJar {
         enabled = false
     }

@@ -11,13 +11,16 @@ import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
-import com.zions.qm.services.metadata.QmMetadataManagementService
+import com.zions.qm.services.test.ClmTestItemManagementService
 import com.zions.qm.services.test.ClmTestManagementService
+import com.zions.qm.services.metadata.QmMetadataManagementService
+import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
+import groovy.xml.XmlUtil
 
 /**
  * Provides command line interaction to synchronize RQM test planning with VSTS.
@@ -32,11 +35,13 @@ class TranslateRQMToMTM implements CliAction {
 	@Autowired
 	QmMetadataManagementService qmMetadataManagementService;
 	@Autowired
-	ProcessTemplateService processTemplateService;
+	TestMappingManagementService testMappingManagementService;
 	@Autowired
 	WorkManagementService workManagementService;
 	@Autowired
 	ClmTestManagementService clmTestManagementService
+	@Autowired
+	ClmTestItemManagementService clmTestItemManagementService
 	@Autowired
 	MemberManagementService memberManagementService
 //	@Autowired
@@ -73,7 +78,7 @@ class TranslateRQMToMTM implements CliAction {
 		def testTypes = loadTestTypes(templateDir)
 		//Update TFS wit definitions.
 		if (excludes['meta'] == null) {
-			def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
+			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
 		//refresh.
 		if (excludes['refresh'] == null) {
@@ -93,8 +98,8 @@ class TranslateRQMToMTM implements CliAction {
 		}
 		//translate work data.
 		if (excludes['data'] == null) {
-			def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, testTypes)
-			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery)
+			def mappingData = testMappingManagementService.mappingData
+			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery, project)
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			while (true) {
 				//TODO: ccmWorkManagementService.resetNewId()
@@ -102,8 +107,28 @@ class TranslateRQMToMTM implements CliAction {
 				def idMap = [:]
 				int count = 0
 				def filtered = filtered(testItems, wiFilter)
-				filtered.each { workitem ->
-					int id = Integer.parseInt(workitem.id.text())
+				filtered.each { testItem ->
+					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
+					String itemXml = XmlUtil.serialize(testplan)
+					int id = Integer.parseInt(testplan.webId.text())
+					testplan.testsuite.each { testsuiteRef ->
+						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+						String tsXml = XmlUtil.serialize(testsuite)
+						int tsid = Integer.parseInt(testsuite.webId.text())
+					}
+					testplan.testcase.each { testcaseRef ->
+						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+						String tcXml = XmlUtil.serialize(testcase)
+						int aid = Integer.parseInt(testcase.webId.text())
+						
+						testcase.testscript.each { testScriptRef ->
+							String tsrXml = XmlUtil.serialize(testScriptRef)
+							def testscript = clmTestManagementService.getTestItem("${testScriptRef.@href}")
+							String tsXml = XmlUtil.serialize(testscript)
+							int tsid = Integer.parseInt(testscript.webId.text())
+						}
+						
+					}
 					// TODO: def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
 //					if (wiChanges != null) {
 //						idMap[count] = "${id}"
@@ -122,7 +147,7 @@ class TranslateRQMToMTM implements CliAction {
 		//		workManagementService.testBatchWICreate(collection, tfsProject)
 		//apply work links
 		if (excludes['links'] == null) {
-			def linkMapping = processTemplateService.getLinkMapping(mapping)
+			//def linkMapping = processTemplateService.getLinkMapping(mapping)
 			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
@@ -178,11 +203,11 @@ class TranslateRQMToMTM implements CliAction {
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
 
-	def filtered(def workItems, String filter) {
+	def filtered(def items, String filter) {
 		if (this.filterMap[filter] != null) {
-			return this.filterMap[filter].filter(workItems)
+			return this.filterMap[filter].filter(items)
 		}
-		return workItems.workItem.findAll { wi ->
+		return items.entry.findAll { ti ->
 			true
 		}
 	}
@@ -200,7 +225,7 @@ class TranslateRQMToMTM implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.password', 'clm.projectArea', 'qm.template.dir', 'tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'test.mapping.file', 'qm.query', 'qm.filter']
+		def required = ['clm.url', 'clm.user', 'clm.projectArea', 'qm.template.dir', 'tfs.url', 'tfs.user', 'tfs.project', 'test.mapping.file', 'qm.query', 'qm.filter']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

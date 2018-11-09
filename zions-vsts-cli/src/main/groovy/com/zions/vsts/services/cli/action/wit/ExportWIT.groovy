@@ -27,7 +27,7 @@ class ExportWIT implements CliAction {
 		String project = data.getOptionValues('tfs.project')[0]
 		String workItemName = data.getOptionValues('tfs.workitem.name')[0]
 		if ("${workItemName}" == 'all') {
-			def wits = processTemplateService.getWorkItems(collection, project)
+			def wits = processTemplateService.getWorkItemTypes(collection, project)
 			wits.value.each { wit -> 
 				
 				def witData = processTemplateService.getWorkitemTemplateFields(collection, project, "${wit.name}")

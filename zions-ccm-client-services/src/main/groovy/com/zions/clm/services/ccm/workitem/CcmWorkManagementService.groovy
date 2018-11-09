@@ -12,7 +12,7 @@ import com.ibm.team.workitem.common.model.IAttribute
 import com.ibm.team.workitem.common.model.IWorkItem
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.common.services.cli.action.CliAction
-import com.zions.common.services.work.handler.IWorkitemFieldHandler
+import com.zions.common.services.work.handler.IFieldHandler
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 
@@ -27,7 +27,7 @@ import groovy.util.logging.Slf4j
 class CcmWorkManagementService {
 	
 	@Autowired
-	private Map<String, IWorkitemFieldHandler> fieldMap;
+	private Map<String, IFieldHandler> fieldMap;
 	
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient

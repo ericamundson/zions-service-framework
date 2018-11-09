@@ -19,7 +19,7 @@ import com.zions.clm.services.ccm.utils.ProcessAreaUtil
 import com.zions.clm.services.ccm.workitem.WorkitemAttributeManager
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
-import com.zions.common.services.work.handler.IWorkitemFieldHandler
+import com.zions.common.services.work.handler.IFieldHandler
 import groovy.json.StringEscapeUtils
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Slf4j
-class HistoryHandler implements IWorkitemFieldHandler {
+class HistoryHandler implements IFieldHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

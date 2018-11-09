@@ -6,6 +6,7 @@ import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
@@ -65,7 +66,7 @@ class ProjectManagementServiceSpecTest extends Specification {
 		def r = underTest.getProjectProperties("", 'project')
 		
 		then:
-		"${r.count}" == '8'
+		"${r.count}" == '9'
 	}
 	
 	def 'getProjectProperty with real data result and return value'() {
@@ -83,7 +84,7 @@ class ProjectManagementServiceSpecTest extends Specification {
 		String value = underTest.getProjectProperty("", 'project', 'System.CurrentProcessTemplateId')
 		
 		then:
-		"${value}" == '2dc3221a-2d39-4138-a4e1-fc4d20d8912d'
+		"${value}" == '339c195b-294c-4367-980b-870119d48b93'
 	}
 		
 	def 'getProjectProperty with real data result'() {
@@ -157,6 +158,7 @@ class ProjectManagementServiceSpecTest extends Specification {
 }
 
 @TestConfiguration
+@Profile("test")
 @PropertySource("classpath:test.properties")
 class ProjectManagementServiceTestConfig {
 	def mockFactory = new DetachedMockFactory()

@@ -1,0 +1,45 @@
+<witmapping>
+	<wit source="testplan"  target="TestPlan" translateUnmappedFields="false">
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="stateHandler" target="System.State">
+			<defaultvalue target="Active"/>
+		</field>
+		<field source="blankHandler" target="System.AreaPath">
+			<defaultvalue target="DigitalBanking\OB_QM"/>
+		</field>
+		<field source="blankHandler" target="System.Iteration">
+			<defaultvalue target="DigitalBanking"/>		
+		</field>
+	</wit>
+	<wit source="testsuite"  target="TestSuite" translateUnmappedFields="false">
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="stateHandler" target="System.State">
+			<defaultvalue target="In Planning"/>
+		</field>
+		<field source="blankHandler" target="System.AreaPath">
+			<defaultvalue target="DigitalBanking\OB_QM"/>
+		</field>
+		<field source="blankHandler" target="System.Iteration">
+			<defaultvalue target="DigitalBanking"/>		
+		</field>
+	</wit>
+	<wit source="testcase"  target="TestCase" translateUnmappedFields="false">
+		<field source="testCaseNameHandler" target="System.Title"/>
+		<field source="testCaseDescriptionHandler" target="System.Description"/>
+		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="stateHandler" target="System.State">
+			<defaultvalue target="Design"/>
+		</field>
+		<field source="areaPathHandler" target="System.AreaPath"/>
+		<field source="blankHandler" target="System.AreaPath">
+			<defaultvalue target="DigitalBanking\OB_QM"/>
+		</field>
+		<field source="blankHandler" target="System.Iteration">
+			<defaultvalue target="DigitalBanking"/>		
+		</field>
+	</wit>
+</witmapping>

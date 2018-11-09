@@ -26,7 +26,7 @@ import com.zions.clm.services.ccm.utils.ProcessAreaUtil
 import com.zions.clm.services.ccm.workitem.WorkitemAttributeManager
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
-import com.zions.common.services.work.handler.IWorkitemFieldHandler
+import com.zions.common.services.work.handler.IFieldHandler
 import groovy.json.JsonBuilder
 //import groovy.json.StringEscapeUtils
 import groovy.util.logging.Slf4j
@@ -41,7 +41,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 @Component
 @Slf4j
-class ApprovalsHandler implements IWorkitemFieldHandler {
+class ApprovalsHandler implements IFieldHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired
