@@ -24,7 +24,7 @@ class TestMappingManagementService {
 		xmlMappingData.wit.each { tType ->
 			def map = [source: tType.@source, target: tType.@target, fields: []]
 			tType.field.each { field ->
-				def ofield = [handler: field.@source, target: field.@target, defaultValue: '', values:[]]
+				def ofield = [source: field.@source, target: field.@target, defaultValue: '', values:[]]
 				field.'value'.each { aValue ->
 					def oValue = [source: aValue.@source, target: aValue.@target]
 					ofield.values.add(oValue) 

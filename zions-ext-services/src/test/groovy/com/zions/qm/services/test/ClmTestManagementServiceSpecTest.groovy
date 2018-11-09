@@ -1,4 +1,4 @@
-package com.zions.qm.services.metadata
+package com.zions.qm.services.test
 
 import static org.junit.Assert.*
 
@@ -51,6 +51,17 @@ class ClmTestManagementServiceSpecTest extends Specification {
 		testPlans.entry.size() > 0
 	}
 
+	def 'getNextPage success flow.'() {
+		given: "A stub of RQM get test item request"
+		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/nextpage.xml').text)
+		1 * qmGenericRestClient.get(_) >> testplansInfo
+
+		when: 'calling of method under test (getNextPage)'
+		def testPlans = underTest.nextPage('https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan?token=_TJVcwOKdEeirC8bfvJTPjw&amp;page=1')
+		
+		then: 'validate list of plans'
+		testPlans.entry.size() > 0
+	}
 }
 
 @TestConfiguration

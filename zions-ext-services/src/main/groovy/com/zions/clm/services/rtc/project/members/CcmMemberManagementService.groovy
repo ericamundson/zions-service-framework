@@ -1,6 +1,7 @@
 package com.zions.clm.services.rtc.project.members
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 import com.zions.clm.services.rest.ClmGenericRestClient
@@ -12,6 +13,11 @@ public class CcmMemberManagementService {
 	@Autowired(required=true)
 	private IGenericRestClient clmGenericRestClient;
 	
+	@Autowired
+	@Value('${clm.context}')
+	String clmContext
+
+	
 	public CcmMemberManagementService() {
 		
 	}
@@ -20,7 +26,7 @@ public class CcmMemberManagementService {
 		def query = "foundation/projectArea[name='${project}']/(name|teamMembers/userId|teamMembers/emailAddress|teamMembers/archived|allTeamAreas/archived|allTeamAreas/name|allTeamAreas/teamMembers/userId|allTeamAreas/teamMembers/emailAddress|allTeamAreas/teamMembers/archived)"
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
-		String uri = this.clmGenericRestClient.clmUrl + "/ccm/rpt/repository/foundation?fields=" + encoded;
+		String uri = this.clmGenericRestClient.clmUrl + "/${clmContext}/rpt/repository/foundation?fields=" + encoded;
 		def result = clmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'text/xml'] );

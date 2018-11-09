@@ -11,9 +11,9 @@ import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
-import com.zions.qm.services.metadata.QmMetadataManagementService
 import com.zions.qm.services.test.ClmTestItemManagementService
 import com.zions.qm.services.test.ClmTestManagementService
+import com.zions.qm.services.metadata.QmMetadataManagementService
 import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.work.FileManagementService
@@ -111,11 +111,16 @@ class TranslateRQMToMTM implements CliAction {
 					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
 					String itemXml = XmlUtil.serialize(testplan)
 					int id = Integer.parseInt(testplan.webId.text())
-					
+					testplan.testsuite.each { testsuiteRef ->
+						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+						String tsXml = XmlUtil.serialize(testsuite)
+						int tsid = Integer.parseInt(testsuite.webId.text())
+					}
 					testplan.testcase.each { testcaseRef ->
 						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 						String tcXml = XmlUtil.serialize(testcase)
 						int aid = Integer.parseInt(testcase.webId.text())
+						
 						testcase.testscript.each { testScriptRef ->
 							String tsrXml = XmlUtil.serialize(testScriptRef)
 							def testscript = clmTestManagementService.getTestItem("${testScriptRef.@href}")

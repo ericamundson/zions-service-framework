@@ -7,6 +7,12 @@ import org.springframework.stereotype.Component;
 import com.zions.common.services.work.handler.IFieldHandler
 import groovy.json.JsonSlurper
 
+/**
+ * Class responsible for processing RQM test planning data to generate Azure Devops test data.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 public class ClmTestItemManagementService {
 	
@@ -35,6 +41,14 @@ public class ClmTestItemManagementService {
 		
 	}
 	
+	/**
+	 * Main entry point for generating requests
+	 * 
+	 * @param project
+	 * @param qmItemData
+	 * @param memberMap
+	 * @return
+	 */
 	def getChanges(String project, def qmItemData, def memberMap) {
 		def map = getTestMap(qmItemData)
 		def outItem = []
@@ -81,7 +95,7 @@ public class ClmTestItemManagementService {
 
 	}
 	
-	def getFieldData(qmItemData, field, memberMap, cacheWI, map) {
+	def getFieldData(def qmItemData, def field, def memberMap, def cacheWI, def map) {
 		String handlerName = "${fieldMap.source}"
 		String fValue = ""
 		if (this.fieldMap["${handlerName}"] != null) {
@@ -109,8 +123,8 @@ public class ClmTestItemManagementService {
 	}
 
 	String getTestMap(qmItemData) {
-		String type = qmItemData.name()
-		def map = testMappingManagementService.mappingData.each { amap -> 
+		String type = "${qmItemData.name()}"
+		def map = testMappingManagementService.mappingData.find { amap -> 
 			"${amap.source}" == "${type}"
 		}
 		return map

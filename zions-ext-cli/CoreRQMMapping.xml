@@ -5,7 +5,8 @@
 		<field source="endDateHandler" target="Microsoft.VSTS.Scheduling.EndDate"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="ownerHandler" target="System.AssignedTo"/>
-		<field source="stateHandler" target="System.State"/>
+		<field source="stateHandler" target="System.State">
+		</field>
 		<field source="areaPathHandler" target="System.AreaPath">
 			<defaultvalue target="DigitalBanking"/>
 		</field>
@@ -13,11 +14,11 @@
 	</wit>
 	<wit source="TestSuite"  target="TestSuite" translateUnmappedFields="false">
 		<field source="nameHandler" target="System.Title"/>
-		<field source="startDateHandler" target="startDate"/>
-		<field source="endDateHandler" target="endDate"/>
+		<field source="startDateHandler" target="Microsoft.VSTS.Scheduling.StartDate"/>
+		<field source="endDateHandler" target="Microsoft.VSTS.Scheduling.EndDate"/>
 		<field source="descriptionHandler" target="System.Description"/>
-		<field source="ownerHandler" target="owner"/>
-		<field source="stateHandler" target="state"/>
+		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="stateHandler" target="System.State"/>
 		<field source="areaPathHandler" target="areaPath"/>
 		<field source="iterationHandler" target="iteration"/>
 	</wit>
