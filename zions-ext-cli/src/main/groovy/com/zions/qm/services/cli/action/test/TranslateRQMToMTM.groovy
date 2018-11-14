@@ -111,21 +111,45 @@ class TranslateRQMToMTM implements CliAction {
 					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
 					String itemXml = XmlUtil.serialize(testplan)
 					int id = Integer.parseInt(testplan.webId.text())
+					def changes = clmTestItemManagementService.getChanges(tfsProject, testplan, memberMap)
+					changes.each { key, val ->
+						idMap[count] = "${id}-${key}"
+						changeList.add(val)
+						count++
+					}
 					testplan.testsuite.each { testsuiteRef ->
 						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
 						String tsXml = XmlUtil.serialize(testsuite)
 						int tsid = Integer.parseInt(testsuite.webId.text())
+						def tschanges = clmTestItemManagementService.getChanges(tfsProject, testsuite, memberMap)
+						tschanges.each { key, val ->
+							idMap[count] = "${tsid}-${key}"
+							changeList.add(val)
+							count++
+						}
 					}
 					testplan.testcase.each { testcaseRef ->
 						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 						String tcXml = XmlUtil.serialize(testcase)
 						int aid = Integer.parseInt(testcase.webId.text())
-						
+						def tcchanges = clmTestItemManagementService.getChanges(tfsProject, testcase, memberMap)
+						tcchanges.each { key, val ->
+							idMap[count] = "${aid}-${key}"
+							changeList.add(val)
+							count++
+						}
+
 						testcase.testscript.each { testScriptRef ->
 							String tsrXml = XmlUtil.serialize(testScriptRef)
 							def testscript = clmTestManagementService.getTestItem("${testScriptRef.@href}")
 							String tsXml = XmlUtil.serialize(testscript)
 							int tsid = Integer.parseInt(testscript.webId.text())
+							def tschanges = clmTestItemManagementService.getChanges(tfsProject, testcase, memberMap)
+							tschanges.each { key, val ->
+								idMap[count] = "${tsid}-${key}"
+								changeList.add(val)
+								count++
+							}
 						}
 						
 					}

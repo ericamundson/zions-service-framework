@@ -21,27 +21,30 @@ import com.zions.clm.services.ccm.utils.ProcessAreaUtil
 import com.zions.clm.services.ccm.workitem.WorkitemAttributeManager
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.work.handler.IFieldHandler
 import groovy.json.StringEscapeUtils
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
 import groovy.xml.XmlUtil
+import groovyx.net.http.ContentType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
 @Slf4j
-class SummaryHandler implements IFieldHandler {
+class CommentsIntoHistoryHandler implements IFieldHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired
 	WorkitemAttributeManager workitemAttributeManager
-
-	def jsonMetaData = null
 	
-	static int SIZE = 255
+	@Autowired
+	IGenericRestClient genericRestClient
+	
+	def jsonMetaData = null
 
-	public SummaryHandler() {}
+	public CommentsIntoHistoryHandler() {}
 
 
 	@Override
@@ -50,22 +53,38 @@ class SummaryHandler implements IFieldHandler {
 		def fieldMap = data.fieldMap
 		def wiCache = data.cacheWI
 		def memberMap = data.memberMap
-		String summary = wi.getHTMLSummary().plainText
-		int sLength = summary.length()
-		String sId = "${wi.id}"
-		
-		if (sLength > SIZE) {
-			sLength = SIZE
-			summary = summary.substring(0, SIZE-1)
-		}
-		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: summary]
+		IComment[] comments = wi.getComments().getContents()
+		def retVal = null
 		if (wiCache != null) {
-			def cVal = wiCache.fields["${fieldMap.target}"]
-			if ("${cVal}" == "${retVal.value}") {
+			String modified = wiCache.fields['System.ChangedDate']
+			Date modDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", modified)
+			String outHTML = formatAllToHTMLOut(comments, modDate)
+			if (outHTML == null) {
 				return null
 			}
+			retVal = [op:'add', path:"/fields/${fieldMap.target}", value: outHTML]
+		} else {
+			String outHTML = formatAllToHTMLOut(comments, null)
+			if (outHTML == null) {
+				return null
+			}
+			retVal = [op:'add', path:"/fields/${fieldMap.target}", value: outHTML]
+
 		}
+			
 		return retVal;
+	}
+	
+	def getVSTSHistory(def wiCache) {
+		String url = "${wiCache.'_links'.workItemHistory.href}"
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: url,
+			headers: ['Content-Type': 'application/json']
+			)
+
+		return result;
 	}
 	
 	private String getContributorAsString(Object value) {
@@ -83,28 +102,49 @@ class SummaryHandler implements IFieldHandler {
 		return contributor.name;
 	}
 
-	def formatToHTMLOut(IComment[] comments) {
+	def formatToHTMLOut(IComment comment) {
+		def writer = new StringWriter()
+		MarkupBuilder bHtml = new MarkupBuilder(writer)
+		bHtml.div(style:'border:2px solid black') {
+			div {
+				String contributor = getContributorAsString(comment.creator)
+				String dateStr = comment.creationDate.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+				strong("${contributor}:")
+				bold("${dateStr}")
+			}
+			String htmlContent = comment.getHTMLContent()
+			div { mkp.yieldUnescaped htmlContent }
+		}
+		return writer.toString()
+	}
+
+	def formatAllToHTMLOut(IComment[] comments, Date modified) {
 		def writer = new StringWriter()
 		MarkupBuilder bHtml = new MarkupBuilder(writer)
 		List commentList = []
 		comments.each { change ->
 			commentList.add(change)
 		}
+		int count = 0
 		commentList.reverseEach { IComment comment ->
-			bHtml.div(style:'border:2px solid black') {
-				div {
-					String contributor = getContributorAsString(comment.creator)
-					String dateStr = comment.creationDate.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-					strong("${contributor}:")
-					bold("${dateStr}")
+			Date commentDate = comment.creationDate
+			if (modified == null || commentDate.time > modified.time) {
+				bHtml.div(style:'border:2px solid black') {
+					div {
+						String contributor = getContributorAsString(comment.creator)
+						String dateStr = commentDate.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+						strong("${contributor}:")
+						bold("${dateStr}")
+					}
+					String htmlContent = comment.getHTMLContent()
+					div { mkp.yieldUnescaped htmlContent }
 				}
-				String htmlContent = comment.getHTMLContent()
-				div { mkp.yieldUnescaped htmlContent }
+				count++
 			}
 		}
+		if (count == 0) return null
 		return writer.toString()
 	}
-
 
 
 }

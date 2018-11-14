@@ -65,7 +65,7 @@ public class MemberManagementService {
 	 * @return
 	 */
 	private def addToTeam(String collection, String email, def team) {
-		//ensureEntitlement(collection, email)
+		def currentEntitlement = getEntitlement(collection, email)
 		def req = [ 'aadGroups': "[]", 'exitingUsersJson': "[]", 'groupsToJoinJson': "[\"${team.id}\"]", 'newUsersJson': "[\"${email}\"]" ]
 		def body = new JsonBuilder( req ).toString()
 		def result = genericRestClient.post(
@@ -75,6 +75,46 @@ public class MemberManagementService {
 			body: body,
 			headers: [Accept: 'application/json'],
 			)
+		if (currentEntitlement == null) {
+			currentEntitlement = getEntitlement(collection, email)
+			if (currentEntitlement != null) {
+				updateToStakeholderEntitlement(collection, currentEntitlement.id)
+			}
+		}
+	}
+	
+	private def updateToStakeholderEntitlement(String collection, String id) {
+		def body = [[from:'', op:'replace', path: '/accesslevel', value: [accountLicenseType:'stakeholder', licensingSource: 'account']]]
+		String eUrl = "${genericRestClient.getTfsUrl()}".replace('https://dev.', 'https://vsaex.dev.')
+		def result = genericRestClient.patch(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			body: body,
+			uri: "${eUrl}/${collection}/_apis/userentitlements/${id}",
+			query: ['api-version': '5.0-preview.2']
+			)
+	}
+	
+	private def getEntitlement(String collection, String email) {
+		def retEntitlement = null
+		int skip = 0
+		String eUrl = "${genericRestClient.getTfsUrl()}".replace('https://dev.', 'https://vsaex.dev.')
+		while (true) {
+			def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${eUrl}/${collection}/_apis/userentitlements",
+				query: ['api-version': '5.0-preview.2', skip: skip]
+				)
+			retEntitlement = result.'members'.find { entitlement ->
+				String aemail = "${entitlement.user.mailAddress}"
+				String cemail = "${email}"
+				aemail.toLowerCase() == cemail.toLowerCase()
+			}
+			if (retEntitlement != null) break
+			if (result.members.size() < 100) break
+			skip = skip + 100
+		}
+		return retEntitlement
 	}
 	
 	

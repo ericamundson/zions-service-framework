@@ -63,7 +63,7 @@ class ImplementedByHandler implements IFieldHandler {
 			state = determineState(workItemPrevious)
 	    }
 		if (wiCache != null) {
-			def cVal = wiCache.fields."${fieldMap.target}"
+			def cVal = wiCache.fields["${fieldMap.target}"]
 			def nVal = null
 			if (retVal != null) {
 				nVal = retVal.value

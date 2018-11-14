@@ -88,7 +88,7 @@ class ApprovalsHandler implements IFieldHandler {
 		String htmlEscape = StringEscapeUtils.escapeHtml(jStr)
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: htmlEscape]
 		if (wiCache != null) {
-			def cVal = wiCache.fields."${fieldMap.target}"
+			def cVal = wiCache.fields["${fieldMap.target}"]
 			if ("${cVal}" == "${retVal.value}") {
 				return null
 			}

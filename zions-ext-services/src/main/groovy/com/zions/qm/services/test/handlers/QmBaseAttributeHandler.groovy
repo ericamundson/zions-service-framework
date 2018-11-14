@@ -14,7 +14,10 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 		
 		String name = getQmFieldName()
 		String aValue = itemData."${name}".text()
-		aValue = formatValue(aValue)
+		aValue = formatValue(aValue, itemData)
+		if (aValue == null) {
+			return null
+		}
 
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: aValue]
 		if (wiCache != null) {
@@ -28,6 +31,6 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 	
 	abstract String getQmFieldName()
 	
-	abstract String formatValue(String val)
+	abstract String formatValue(String val, def itemData)
 
 }

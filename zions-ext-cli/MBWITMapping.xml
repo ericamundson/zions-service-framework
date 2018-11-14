@@ -3,6 +3,7 @@
 		<wit name="Track Build Item"/>
 	</exclude>
 	<wit source="Default"  translateUnmappedFields="false">
+		<field source="commentsIntoHistoryHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
@@ -87,6 +88,7 @@
 	</wit>
 	
 	<wit source="Story" target="User Story" translateUnmappedFields="false">
+		<field source="commentsIntoHistoryHandler" target="System.History"/>
 		<field source="approvalsHandler" target="Custom.Approvals"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
 		<field source="resolver" target="Microsoft.VSTS.Common.ClosedBy"/>
@@ -95,7 +97,11 @@
 		<field source="implementedByHandler" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
-		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
+		<!--  
+		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason">
+			<defaultvalue target='Code complete and unit tests pass'/>
+		</field>
+		-->
 		<field source="summaryHandler" target="System.Title"/>
 		<field source="description" target="System.Description"/>
 		<field source="internalState" target="System.State">
@@ -143,6 +149,7 @@
 		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
+			<field name="internalResolution"/>
 			<field name="internalApprovals"/>
 			<field name="summary"/>
 			<field name="internalComments"/>
@@ -172,6 +179,7 @@
 	</wit>
 	
 	<wit source="Defect" target="Bug" translateUnmappedFields="false">
+		<field source="commentsIntoHistoryHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
@@ -256,6 +264,7 @@
 		</newfields>
 	</wit>
 	<wit source="Task" target="Task" translateUnmappedFields="false">
+		<field source="commentsIntoHistoryHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>

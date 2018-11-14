@@ -5,9 +5,26 @@
 		<field source="ownerHandler" target="System.AssignedTo"/>
 		<field source="stateHandler" target="System.State">
 			<defaultvalue target="Active"/>
+			<value source='Closed' target="Inactive"/>
 		</field>
 		<field source="blankHandler" target="System.AreaPath">
-			<defaultvalue target="DigitalBanking\OB_QM"/>
+			<defaultvalue target="DigitalBanking\OB"/>
+		</field>
+		<field source="blankHandler" target="System.Iteration">
+			<defaultvalue target="DigitalBanking"/>		
+		</field>
+	</wit>
+	<wit source="testplan"  target="TestSuite" translateUnmappedFields="false">
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="stateHandler" target="System.State">
+			<defaultvalue target="In Planning"/>
+			<value source='Approved' target="In Progress"/>
+			<value source='Retired' target="Closed"/>
+		</field>
+		<field source="blankHandler" target="System.AreaPath">
+			<defaultvalue target="DigitalBanking\OB"/>
 		</field>
 		<field source="blankHandler" target="System.Iteration">
 			<defaultvalue target="DigitalBanking"/>		
@@ -19,9 +36,11 @@
 		<field source="ownerHandler" target="System.AssignedTo"/>
 		<field source="stateHandler" target="System.State">
 			<defaultvalue target="In Planning"/>
+			<value source='Approved' target="In Progress"/>
+			<value source='Retired' target="Closed"/>
 		</field>
 		<field source="blankHandler" target="System.AreaPath">
-			<defaultvalue target="DigitalBanking\OB_QM"/>
+			<defaultvalue target="DigitalBanking\OB"/>
 		</field>
 		<field source="blankHandler" target="System.Iteration">
 			<defaultvalue target="DigitalBanking"/>		
@@ -34,9 +53,8 @@
 		<field source="stateHandler" target="System.State">
 			<defaultvalue target="Design"/>
 		</field>
-		<field source="areaPathHandler" target="System.AreaPath"/>
 		<field source="blankHandler" target="System.AreaPath">
-			<defaultvalue target="DigitalBanking\OB_QM"/>
+			<defaultvalue target="DigitalBanking\OB"/>
 		</field>
 		<field source="blankHandler" target="System.Iteration">
 			<defaultvalue target="DigitalBanking"/>		
