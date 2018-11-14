@@ -121,7 +121,7 @@ class CcmWorkManagementService {
 			def linkWI = getCacheWI(id)
 			if (linkWI != null) {
 				def linkId = linkWI.id
-				if (!linkExists(cacheWI, linkMap.target, linkId)) {
+				if (!linkExists(cacheWI, linkMap.target, linkId) && "${linkId}" != "${cacheWI.id}") {
 					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap.@target}", url: "${tfsUrl}/_apis/wit/workItems/${linkId}", attributes:[comment: "${linkMap.@source} of ${linkId}"]]]
 					wiData.body.add(change)
 				}
@@ -174,7 +174,7 @@ class CcmWorkManagementService {
 		wiMap.fieldMaps.each { fieldMap -> 
 			def fieldData = getFieldData(workItem, fieldMap, cacheWI, memberMap, wiMap)
 			if (fieldData != null) {
-				if (fieldData.value != null) {
+				if (!(fieldData instanceof ArrayList)) {
 					wiData.body.add(fieldData)
 				} else {
 					fieldData.each { fData ->

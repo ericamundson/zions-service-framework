@@ -64,7 +64,7 @@ class HistoryHandler implements IFieldHandler {
 		String outHTML = formatToHTMLOut(history, wi, wiMap)
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: outHTML]
 		if (wiCache != null) {
-			def cVal = wiCache.fields."${fieldMap.target}"
+			def cVal = wiCache.fields["${fieldMap.target}"]
 			if ("${cVal}" == "${retVal.value}") {
 				return null
 			}

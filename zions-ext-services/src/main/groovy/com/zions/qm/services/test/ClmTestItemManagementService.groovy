@@ -50,9 +50,13 @@ public class ClmTestItemManagementService {
 	 * @return
 	 */
 	def getChanges(String project, def qmItemData, def memberMap) {
-		def map = getTestMap(qmItemData)
-		def outItem = []
-		return generateItemData(qmItemData, map, project, memberMap)
+		def maps = getTestMaps(qmItemData)
+		def outItems = [:]
+		maps.each { map ->
+			def item = generateItemData(qmItemData, map, project, memberMap)
+			outItems["${map.target}"] = item
+		}
+		return outItems
 	}
 	
 	def generateItemData(def qmItemData, def map, String project, def memberMap) {
@@ -122,12 +126,12 @@ public class ClmTestItemManagementService {
 		return null
 	}
 
-	String getTestMap(qmItemData) {
+	def getTestMaps(qmItemData) {
 		String type = "${qmItemData.name()}"
-		def map = testMappingManagementService.mappingData.find { amap -> 
+		def maps = testMappingManagementService.mappingData.findAll { amap -> 
 			"${amap.source}" == "${type}"
 		}
-		return map
+		return maps
 	}
 	
 	/**

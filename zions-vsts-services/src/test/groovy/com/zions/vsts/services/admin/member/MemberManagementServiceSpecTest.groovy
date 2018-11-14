@@ -41,17 +41,47 @@ class MemberManagementServiceSpecTest extends Specification {
 		def teamInfo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/projectteam.json').text)
 		1 * projectManagementService.ensureTeam(_, _, _) >> teamInfo
 		
+		and: 'stub azure call to get entitlement.'
+		def entitlements = new JsonSlurper().parseText(this.getClass().getResource('/testdata/memberentitlements.json').text)
+		1 * genericRestClient.get(_) >> entitlements
+		
 		and: 'stub azure devops request adding member to a team'
 		1 * genericRestClient.post(_) >> [:]
 		
 		when: 'call method (addMemberToTeams) under test.'
 		def teamList = new JsonSlurper().parseText(this.getClass().getResource('/testdata/oneteam.json').text)
-		def res = underTest.addMemberToTeams("", 'buck@zionsbancorp.com', teamList.value)
+		def res = underTest.addMemberToTeams("", 'Matthew.Holbrook2@zionsbancorp.com', teamList.value)
 		
 		then: 'validate member added to team'
 		res == null
 	}
+	
+	def 'addMemberToTeams test success flow and member not current user.'() {
+		given: 'stub project management service ensureTeam'
+		def teamInfo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/projectteam.json').text)
+		1 * projectManagementService.ensureTeam(_, _, _) >> teamInfo
+		
+		and: 'stub azure call to get entitlement.'
+		def entitlements = new JsonSlurper().parseText(this.getClass().getResource('/testdata/memberentitlements.json').text)
+		1 * genericRestClient.get(_) >> entitlements
+		
+		and: 'stub azure devops request adding member to a team'
+		1 * genericRestClient.post(_) >> [:]
+		
+		and: 'stub azure call to get entitlement with John Milman'
+		def entitlements2 = new JsonSlurper().parseText(this.getClass().getResource('/testdata/memberentitlements2.json').text)
+		1 * genericRestClient.get(_) >> entitlements2
+		
+		and: 'stub azure call to patch entitlements to stakeholder'
+		1 * genericRestClient.patch(_) >> [:]
 
+		when: 'call method (addMemberToTeams) under test.'
+		def teamList = new JsonSlurper().parseText(this.getClass().getResource('/testdata/oneteam.json').text)
+		def res = underTest.addMemberToTeams("", 'John.Milman@zionsbancorp.com', teamList.value)
+		
+		then: 'validate member added to team'
+		res == null
+	}
 	def 'getProjectMembersMap test success flow.'() {
 		given: 'stub project management service getProject'
 		def projectInfo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)

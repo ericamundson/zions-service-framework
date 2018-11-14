@@ -54,7 +54,7 @@ class RemainingWorkHandler implements IFieldHandler {
 			retVal = [op:'add', path:"/fields/${fieldMap.target}", value: '']
 		}
 		if (wiCache != null) {
-			def cVal = wiCache.fields."${fieldMap.target}"
+			def cVal = wiCache.fields["${fieldMap.target}"]
 			if ("${cVal}" == "${retVal.value}") {
 				return null
 			}

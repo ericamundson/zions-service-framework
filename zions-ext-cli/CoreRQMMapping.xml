@@ -1,36 +1,45 @@
 <witmapping>
-	<wit source="TestPlan"  target="TestPlan" translateUnmappedFields="false">
+	<wit source="testplan"  target="TestPlan" translateUnmappedFields="false">
 		<field source="nameHandler" target="System.Title"/>
-		<field source="startDateHandler" target="Microsoft.VSTS.Scheduling.StartDate"/>
-		<field source="endDateHandler" target="Microsoft.VSTS.Scheduling.EndDate"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="ownerHandler" target="System.AssignedTo"/>
 		<field source="stateHandler" target="System.State">
+			<defaultvalue target="Active"/>
 		</field>
-		<field source="areaPathHandler" target="System.AreaPath">
-			<defaultvalue target="DigitalBanking"/>
+		<field source="blankHandler" target="System.AreaPath">
+			<defaultvalue target="DigitalBanking\OB"/>
 		</field>
-		<field source="iterationHandler" target="System.Iteration"/>
+		<field source="blankHandler" target="System.Iteration">
+			<defaultvalue target="DigitalBanking"/>		
+		</field>
 	</wit>
-	<wit source="TestSuite"  target="TestSuite" translateUnmappedFields="false">
+	<wit source="testsuite"  target="TestSuite" translateUnmappedFields="false">
 		<field source="nameHandler" target="System.Title"/>
-		<field source="startDateHandler" target="Microsoft.VSTS.Scheduling.StartDate"/>
-		<field source="endDateHandler" target="Microsoft.VSTS.Scheduling.EndDate"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="ownerHandler" target="System.AssignedTo"/>
-		<field source="stateHandler" target="System.State"/>
-		<field source="areaPathHandler" target="areaPath"/>
-		<field source="iterationHandler" target="iteration"/>
+		<field source="stateHandler" target="System.State">
+			<defaultvalue target="In Planning"/>
+		</field>
+		<field source="blankHandler" target="System.AreaPath">
+			<defaultvalue target="DigitalBanking\OB"/>
+		</field>
+		<field source="blankHandler" target="System.Iteration">
+			<defaultvalue target="DigitalBanking"/>		
+		</field>
 	</wit>
-	<wit source="TestCase"  target="TestCase" translateUnmappedFields="false">
-		<field source="testCaseHandler" target="System.Title"/>
-		<field source="startDateHandler" target="startDate"/>
-		<field source="endDateHandler" target="endDate"/>
+	<wit source="testcase"  target="TestCase" translateUnmappedFields="false">
+		<field source="testCaseNameHandler" target="System.Title"/>
 		<field source="testCaseDescriptionHandler" target="System.Description"/>
 		<field source="ownerHandler" target="System.AssignedTo"/>
-		<field source="stateHandler" target="System.State"/>
+		<field source="stateHandler" target="System.State">
+			<defaultvalue target="Design"/>
+		</field>
 		<field source="areaPathHandler" target="System.AreaPath"/>
-		<field source="iterationHandler" target="iteration"/>
-		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
+		<field source="blankHandler" target="System.AreaPath">
+			<defaultvalue target="DigitalBanking\OB"/>
+		</field>
+		<field source="blankHandler" target="System.Iteration">
+			<defaultvalue target="DigitalBanking"/>		
+		</field>
 	</wit>
 </witmapping>

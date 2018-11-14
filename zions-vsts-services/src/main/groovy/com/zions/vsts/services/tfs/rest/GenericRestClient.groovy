@@ -34,6 +34,10 @@ class GenericRestClient implements IGenericRestClient {
 		
 	private String token
 	
+	public String getTfsUrl() {
+		return tfsUrl
+	}
+	
 	/**
 	 * For unit testing
 	 */

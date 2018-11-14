@@ -1,0 +1,24 @@
+package com.zions.qm.services.test.handlers
+
+import com.zions.qm.services.test.ClmTestManagementService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+
+@Component
+class OwnerHandler extends QmBaseAttributeHandler {
+	@Autowired
+	ClmTestManagementService clmTestManagementService
+	
+	public String getQmFieldName() {
+		// TODO Auto-generated method stub
+		return 'owner'
+	}
+
+	public String formatValue(String value, def itemData) {
+		String ownerUrl = "${itemData.owner.@resource}"
+		def ownerInfo = clmTestManagementService.getTestItem(ownerUrl)
+		String outVal = "${ownerInfo.emailAddress.text()}"
+		return outVal;
+	}
+
+}
