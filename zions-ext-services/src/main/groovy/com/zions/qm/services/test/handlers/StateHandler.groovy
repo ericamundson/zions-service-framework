@@ -15,10 +15,10 @@ class StateHandler extends QmBaseAttributeHandler {
 	}
 
 	public String formatValue(String value, def itemData) {
-		String stateUrl = "${itemData.state.@resource}"
-		def stateInfo = clmTestManagementService.getTestItem(ownerUrl)
+		String stateUrl = "${itemData.state.@'ns7:resource'}"
+		def stateInfo = clmTestManagementService.getTestItem(stateUrl)
 		def stateItem = stateInfo.ProcessInfo.hasWorkflowState.WorkflowState.find { state ->
-			"${state.@about}" == "${stateUrl}"
+			"${state.@'rdf:about'}" == "${stateUrl}"
 		}
 		if (stateItem != null) {
 			return  "${stateItem.title.text()}"

@@ -12,6 +12,7 @@ class DescriptionHandler extends QmBaseAttributeHandler {
 
 	public String formatValue(String value, def fieldData) {
 		String outVal = value
+		if (value == null || value.length() == 0) return null
 		return outVal;
 	}
 

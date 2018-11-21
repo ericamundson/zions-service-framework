@@ -8,7 +8,7 @@ import com.zions.common.services.query.IFilter
 class MbFilter implements IFilter {
 	Date startDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", '2018-10-02T00:00:01.000-0700')
 	public def filter(def workItems) {
-		List<String> excluded = ["Track Build Item", "Retrospective", "Adhoc Request", "Adoption Item"]
+		List<String> excluded = ["Track Build Item", "Retrospective", "Adhoc Request", "Adoption Item","Enhancement Request"]
 		return workItems.workItem.findAll { wi ->
 			String type = "${wi.type.name.text()}"
 			//2017-01-09T11:59:02.780-0700

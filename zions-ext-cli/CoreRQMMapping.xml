@@ -1,19 +1,19 @@
 <witmapping>
-	<wit source="testplan"  target="TestPlan" translateUnmappedFields="false">
-		<field source="nameHandler" target="System.Title"/>
-		<field source="descriptionHandler" target="System.Description"/>
-		<field source="ownerHandler" target="System.AssignedTo"/>
-		<field source="stateHandler" target="System.State">
+	<wit source="testplan"  target="Test Plan" translateUnmappedFields="false">
+		<field source="nameHandler" target="name"/>
+		<field source="descriptionHandler" target="description"/>
+		<field source="ownerHandler" target="owner"/>
+		<field source="stateHandler" target="state">
 			<defaultvalue target="Active"/>
 		</field>
-		<field source="blankHandler" target="System.AreaPath">
+		<field source="blankHandler" target="areaPath">
 			<defaultvalue target="DigitalBanking\OB"/>
 		</field>
-		<field source="blankHandler" target="System.Iteration">
+		<field source="blankHandler" target="iteration">
 			<defaultvalue target="DigitalBanking"/>		
 		</field>
 	</wit>
-	<wit source="testsuite"  target="TestSuite" translateUnmappedFields="false">
+	<wit source="testsuite"  target="Test Suite" translateUnmappedFields="false">
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="ownerHandler" target="System.AssignedTo"/>
@@ -23,12 +23,12 @@
 		<field source="blankHandler" target="System.AreaPath">
 			<defaultvalue target="DigitalBanking\OB"/>
 		</field>
-		<field source="blankHandler" target="System.Iteration">
+		<field source="blankHandler" target="System.IterationPath">
 			<defaultvalue target="DigitalBanking"/>		
 		</field>
 	</wit>
-	<wit source="testcase"  target="TestCase" translateUnmappedFields="false">
-		<field source="testCaseNameHandler" target="System.Title"/>
+	<wit source="testcase"  target="Test Case" translateUnmappedFields="false">
+		<field source="nameHandler" target="System.Title"/>
 		<field source="testCaseDescriptionHandler" target="System.Description"/>
 		<field source="ownerHandler" target="System.AssignedTo"/>
 		<field source="stateHandler" target="System.State">
@@ -38,8 +38,9 @@
 		<field source="blankHandler" target="System.AreaPath">
 			<defaultvalue target="DigitalBanking\OB"/>
 		</field>
-		<field source="blankHandler" target="System.Iteration">
+		<field source="blankHandler" target="System.IterationPath">
 			<defaultvalue target="DigitalBanking"/>		
 		</field>
+		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
 	</wit>
 </witmapping>
