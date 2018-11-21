@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 abstract class QmBaseAttributeHandler implements IFieldHandler {
 
 	public Object execute(Object data) {
-		def itemData = data.qmItemData
+		def itemData = data.itemData
 		def fieldMap = data.fieldMap
 		def wiCache = data.cacheWI
 		def memberMap = data.memberMap
@@ -21,9 +21,18 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: aValue]
 		if (wiCache != null) {
-			def cVal = wiCache.fields."${fieldMap.target}"
-			if ("${cVal}" == "${retVal.value}") {
-				return null
+			String type = "${itemMap.target}"
+			if (type != 'Test Plan') {
+				String cVal = wiCache.fields."${fieldMap.target}"
+				if ("${cVal}" == "${retVal.value}") {
+					return null
+				}
+			} else {
+				String cVal = wiCache."${fieldMap.target}"
+				if ("${cVal}" == "${retVal.value}") {
+					return null
+				}
+	
 			}
 		}
 		return retVal;

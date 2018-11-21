@@ -13,7 +13,7 @@ class NameHandler extends QmBaseAttributeHandler {
 
 	public String formatValue(String value, def fieldData) {
 		String outVal = value
-		if (value.length > SIZE) {
+		if (value.length() > SIZE) {
 			outVal = value.substring(0, SIZE-1)
 		}
 		return outVal;

@@ -3,9 +3,11 @@ package com.zions.qm.services.test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
-
+import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
 import groovy.json.JsonSlurper
+import groovy.xml.XmlUtil
+import groovyx.net.http.ContentType
 
 /**
  * Class responsible for processing RQM test planning data to generate Azure Devops test data.
@@ -54,65 +56,89 @@ public class ClmTestItemManagementService {
 		def outItems = [:]
 		maps.each { map ->
 			def item = generateItemData(qmItemData, map, project, memberMap)
-			outItems["${map.target}"] = item
+			if (item != null) {
+				outItems["${map.target}"] = item
+			}
 		}
 		return outItems
 	}
 	
 	def generateItemData(def qmItemData, def map, String project, def memberMap) {
 		String type = map.target
-		
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		def wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-		String id = qmItemData.webId.text()
+		def wiData = [:]
+		String id = "${qmItemData.webId.text()}-${map.target}"
 		def cacheWI = getCacheWI(id)
-		if (cacheWI != null) {
-			def cid = cacheWI.id
-			wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
-			wiData.body.add(rev)
+		if (type != 'Test Plan') {
+			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+			if (cacheWI != null) {
+				def cid = cacheWI.id
+				wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: [:]]
+				def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
+				wiData.body.add(rev)
+			} else {
+				def idData = [ op: 'add', path: '/id', value: newId]
+				newId--
+				wiData.body.add(idData)
+			}
 		} else {
-			def idData = [ op: 'add', path: '/id', value: newId]
-			newId--
-			wiData.body.add(idData)
+			wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/testplan/plans", query:['api-version':'5.0-preview.1'], body: [:]]
+			if (cacheWI != null) {
+				def cid = cacheWI.id
+				wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/testplan/plans/${cid}", query:['api-version':'5.0-preview.1'], body: [:]]
+			}
 		}
+		
 		map.fields.each { field ->
 			def fieldData = getFieldData(qmItemData, field, memberMap, cacheWI, map)
 			if (fieldData != null) {
-				if (fieldData.value != null) {
-					wiData.body.add(fieldData)
-				} else {
-					fieldData.each { fData ->
-						if (fData.value != null) {
-							wiData.body.add(fData)
+				if (type != 'Test Plan') {
+					if (fieldData.value != null) {
+						wiData.body.add(fieldData)
+					} else {
+						fieldData.each { fData ->
+							if (fData.value != null) {
+								wiData.body.add(fData)
+							}
 						}
+					}
+				} else {
+					if (fieldData.value != null) {
+						wiData.body["${field.target}"] = fieldData.value
 					}
 				}
 			}
 			
 		}
-		if (wiData.body.size() == 1) {
-			return null
+		if (type != 'Test Plan') {
+			if (wiData.body.size() == 1) {
+				return null
+			}
+		} else {
+			if (wiData.body.size() == 0) {
+				return null
+			}
+
 		}
 		return wiData
 
 	}
 	
 	def getFieldData(def qmItemData, def field, def memberMap, def cacheWI, def map) {
-		String handlerName = "${fieldMap.source}"
+		String handlerName = "${field.source}"
 		String fValue = ""
 		if (this.fieldMap["${handlerName}"] != null) {
 			def data = [itemData: qmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map]
 			def fieldData = this.fieldMap["${handlerName}"].execute(data)
 			if (fieldData != null) {
-				def val = fieldData.'value'
-				if (fieldMap.defaultMap != null) {
-					val = fieldMap.defaultMap.target
+				String val = "${fieldData.'value'}"
+				if (field.defaultValue != null) {
+					val = "${field.defaultValue}"
 				}
-				if (fieldMap.valueMap.size() > 0) {
+				if (field.values.size() > 0) {
 					
-					fieldMap.valueMap.each { aval ->
+					field.values.each { aval ->
 						if ("${fValue}" == "${aval.source}") {
 							val = "${aval.target}"
 							return
