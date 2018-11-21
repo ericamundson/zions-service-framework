@@ -163,7 +163,7 @@ public class TestManagementService {
 	def associateSuiteToPlan(def planData, def suiteData) {
 		String suiteId = "${suiteData.id}"
 		if (!hasSuite(planData, suiteId)) {
-			String uri = 
+			//String uri = 
 		}
 	}
 	
