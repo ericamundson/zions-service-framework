@@ -186,30 +186,36 @@ public class BuildManagementService {
 	
 	public def getBuildTemplate(def collection, def project, def repo, String buildStage) {
 		log.debug("BuildManagementService::getBuildTemplate -- Looking for custom build properties ...")
-		String templateName = "";
+		String templateName = null
 		def buildPropertiesFile = codeManagementService.getBuildPropertiesFile(collection, project, repo, buildPropsFileName)
 		if (buildPropertiesFile != null) {
 			// read file for template name
 			String fileContent = buildPropertiesFile.toString()
-			if (fileContent.contains('build-template=')) {
+			java.util.Properties prop = new java.util.Properties()
+			prop.load(new java.io.StringBufferInputStream(fileContent))
+			templateName = prop.getProperty("build-template"+"-"+buildStage)
+			//if (fileContent.contains('build-template=')) {
+			if (template != null) {
 				templateName = fileContent.substring("build-template=".length())+"-"+buildStage;
 			}
 			log.debug("BuildManagementService::getBuildTemplate -- Specified templateName = ${templateName}")
-		} else {
-			log.debug("BuildManagementService::getBuildTemplate -- No build properties file found; detecting build type ...")
+		}
+		// if we didn't find a template specified in the build properties file, try to determine build type and load the one for build type
+		if (templateName == null) {
+			log.debug("BuildManagementService::getBuildTemplate -- No build properties file found or template not specified in file; detecting build type ...")
 			def buildType = detectBuildType(collection, project, repo)
-			log.debug("BuildManagementService::getBuildTemplate -- Detected BuildType = ${buildType}")
+			log.debug("BuildManagementService::getBuildTemplate -- Detected build type = ${buildType}")
 			if (buildType == BuildType.NONE) {
 				return null
 			}
 			// Looking for template build definition with name like 'template-maven-ci', 'template-gradle-release', 'template-ant-ci', etc.
 			templateName = "template-"+buildType.toString().toLowerCase()+"-"+buildStage
 		}
-		log.debug("BuildManagementService::getBuildTemplate -- Using ADO template: "+templateName)
+		log.debug("BuildManagementService::getBuildTemplate -- Loading ADO build template: "+templateName)
 		//def bDef = getBuild(collection, project, templateName)
 		def bDef = getTemplate(collection, project, templateName)
 		if (bDef == null) {
-			log.debug("BuildManagementService::getBuildTemplate -- Build template "+templateName+" not found. Using generic template.")
+			log.debug("BuildManagementService::getBuildTemplate -- Build template "+templateName+" not found. Loading generic template ...")
 			bDef = getTemplate(collection, project, "template-"+this.genericTemplateName+"-"+buildStage)
 		}
 		if (bDef == null) {
