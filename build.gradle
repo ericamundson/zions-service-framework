@@ -17,6 +17,7 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+		classpath 'be.jlr-home.gradle:plantumlPlugin:0.1.+'
     }
 }
 
@@ -25,11 +26,13 @@ allprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'groovy'
+	apply plugin: 'plantuml'
     apply plugin: 'jacoco'
     if ("${buildType}" == 'ci') {
         apply plugin: 'codenarc'
     }
-    
+	 
+
 	test {
 		//String activeProfile =  System.properties['spring.profiles.active']
 		systemProperty "spring.profiles.active", 'test'

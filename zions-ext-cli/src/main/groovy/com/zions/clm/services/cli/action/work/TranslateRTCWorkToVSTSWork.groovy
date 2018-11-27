@@ -50,12 +50,12 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 
 	public def execute(ApplicationArguments data) {
 		boolean excludeMetaUpdate = true
-		def excludes = [:]
+		def includes = [:]
 		try {
-			String excludeList = data.getOptionValues('exclude.update')[0]
-			def excludeItems = excludeList.split(',')
-			excludeItems.each { item ->
-				excludes[item] = item
+			String includeList = data.getOptionValues('include.update')[0]
+			def includeItems = includeList.split(',')
+			includeItems.each { item ->
+				includes[item] = item
 			}
 		} catch (e) {}
 		String project = data.getOptionValues('clm.projectArea')[0]
@@ -73,11 +73,11 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		def mapping = new XmlSlurper().parseText(mFile.text)
 		def ccmWits = loadCCMWITs(templateDir)
 		//Update TFS wit definitions.
-		if (excludes['meta'] == null) {
+		if (includes['meta'] != null) {
 			def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, ccmWits)
 		}
 		//refresh.
-		if (excludes['refresh'] == null) {
+		if (includes['refresh'] != null) {
 			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
@@ -93,7 +93,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 			}
 		}
 		//translate work data.
-		if (excludes['workdata'] == null) {
+		if (includes['workdata'] != null) {
 			def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
 			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
@@ -122,7 +122,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		}
 		//		workManagementService.testBatchWICreate(collection, tfsProject)
 		//apply work links
-		if (excludes['worklinks'] == null) {
+		if (includes['worklinks'] != null) {
 			def linkMapping = processTemplateService.getLinkMapping(mapping)
 			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			while (true) {
@@ -149,7 +149,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		}
 
 		//extract & apply attachments.
-		if (excludes['attachments'] == null) {
+		if (includes['attachments'] != null) {
 			def linkMapping = processTemplateService.getLinkMapping(mapping)
 			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			while (true) {

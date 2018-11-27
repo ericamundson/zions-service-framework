@@ -4,6 +4,14 @@ bootJar {
 	baseName = 'zions-ext-cli'
 	version =  "${version}"
 }
+plantuml {
+	sourcePath = 'src/main/groovy' +
+	':src/test/groovy'
+}
+javadoc {
+	 options.addStringOption('sourcepath', project.plantuml.sourcePath)
+	 options.docFilesSubDirs = true
+}
 
 dependencies {
 	compile project(':zions-ext-services')

@@ -27,6 +27,29 @@ import groovy.xml.XmlUtil
  * Provides command line interaction to synchronize RQM test planning with VSTS.
  * 
  * @author z091182
+ * 
+ * @startuml
+ * 
+ * annotation Autowired
+ * 
+ * class Map<? extends String, ? extends IFilter> {
+ * 	+ put(key, element)
+ * 	+ get(key)
+ * .. groovy access/set elements ...
+ * 	+ [key] 
+ * }
+ * class TranslateRQMToMTM {
+ * 	+validate(ApplicationArguments args)
+ * 	+execute(ApplicationArguments args)
+ * 	+filtered(def, String)
+ * }
+ * 
+ * CliAction <|-- TranslateRQMToMTM
+ * TranslateRQMToMTM .. Autowired:  Spring Boot
+ * TranslateRQMToMTM o--> Map: @Autowired filterMap
+ * TranslateRQMToMTM o--> QmMetadataManagementService: @Autowired qmMetadataManagementService
+ * 
+ * @enduml
  *
  */
 @Component
@@ -40,29 +63,29 @@ class TranslateRQMToMTM implements CliAction {
 	@Autowired
 	WorkManagementService workManagementService;
 	@Autowired
-	ClmTestManagementService clmTestManagementService
+	ClmTestManagementService clmTestManagementService;
 	@Autowired
-	ClmTestItemManagementService clmTestItemManagementService
+	ClmTestItemManagementService clmTestItemManagementService;
 	@Autowired
-	MemberManagementService memberManagementService
+	MemberManagementService memberManagementService;
 //	@Autowired
 //	AttachmentsManagementService attachmentsManagementService
 	@Autowired
-	FileManagementService fileManagementService
+	FileManagementService fileManagementService;
 	@Autowired
-	TestManagementService testManagementService
+	TestManagementService testManagementService;
 
 	public TranslateRQMToMTM() {
 	}
 
 	public def execute(ApplicationArguments data) {
 		boolean excludeMetaUpdate = true
-		def excludes = [:]
+		def includes = [:]
 		try {
-			String excludeList = data.getOptionValues('exclude.update')[0]
-			def excludeItems = excludeList.split(',')
-			excludeItems.each { item ->
-				excludes[item] = item
+			String includeList = data.getOptionValues('include.update')[0]
+			def includeItems = includeList.split(',')
+			includeItems.each { item ->
+				includes[item] = item
 			}
 		} catch (e) {}
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
@@ -81,15 +104,15 @@ class TranslateRQMToMTM implements CliAction {
 		def mapping = new XmlSlurper().parseText(mFile.text)
 		def testTypes = loadTestTypes(templateDir)
 		//Update TFS wit definitions.
-		if (excludes['meta'] == null) {
+		if (includes['meta'] != null) {
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
-		if (excludes['clean'] == null) {
+		if (includes['clean'] != null) {
 			testManagementService.cleanupTestItems(collection, tfsProject, areaPath)
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
 		//refresh.
-		if (excludes['refresh'] == null) {
+		if (includes['refresh'] != null) {
 			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
@@ -105,7 +128,7 @@ class TranslateRQMToMTM implements CliAction {
 			}
 		}
 		//translate work data.
-		if (excludes['data'] == null) {
+		if (includes['data'] != null) {
 			def mappingData = testMappingManagementService.mappingData
 			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery, project)
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
@@ -125,10 +148,9 @@ class TranslateRQMToMTM implements CliAction {
 					int id = Integer.parseInt(testplan.webId.text())
 					
 					def changes = clmTestItemManagementService.getChanges(tfsProject, testplan, memberMap)
+					def plan = null
 					changes.each { key, val ->
-						pidMap[pcount] = "${id}-testplan"
-						pChangeList.add(val)
-						pcount++
+						plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
 					}
 					
 					testplan.testsuite.each { testsuiteRef ->
@@ -137,12 +159,10 @@ class TranslateRQMToMTM implements CliAction {
 						int tsid = Integer.parseInt(testsuite.webId.text())
 						String idtype = "${tsid}-testsuite"
 						if (!idKeyMap.containsKey(idtype)) {
-							def tschanges = clmTestItemManagementService.getChanges(tfsProject, testsuite, memberMap)
+							def tschanges = clmTestItemManagementService.getChanges(tfsProject, testsuite, memberMap, plan)
 							tschanges.each { key, val ->
 								String idkey = "${tsid}-${key}"
-								idMap[count] = idkey
-								changeList.add(val)
-								count++
+								def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
 							}
 							idKeyMap[idtype] = idtype
 						}
@@ -189,9 +209,6 @@ class TranslateRQMToMTM implements CliAction {
 //						count++
 //					}
 				}
-				if (pChangeList.size() > 0) {
-					testManagementService.batchPlanChanges(collection, tfsProject, pChangeList, pidMap)
-				}
 				if (changeList.size() > 0) {
 					int bcount = 0
 					def bidMap = [:]
@@ -200,17 +217,17 @@ class TranslateRQMToMTM implements CliAction {
 					while (tcount < count) {
 						bidMap[bcount] = idMap[tcount]
 						bchangeList.add(changeList[tcount])
-						if (bcount == 199) {
+						bcount++
+						if (bcount == 200) {
 							workManagementService.batchWIChanges(collection, tfsProject, bchangeList, bidMap)
 							bcount = 0
 							bidMap = [:]
 							bchangeList = []
 						}
 						tcount++
-						bcount++
 					}
 					if (bcount > 0) {
-						workManagementService.batchWIChanges(collection, tfsProject, bchangeList, idMap)
+						workManagementService.batchWIChanges(collection, tfsProject, bchangeList, bidMap)
 						
 					}
 				}
@@ -224,10 +241,10 @@ class TranslateRQMToMTM implements CliAction {
 		}
 		//		workManagementService.testBatchWICreate(collection, tfsProject)
 		//apply work links
-		if (excludes['links'] == null) {
+		if (includes['links'] != null) {
 			def itemMapping = testMappingManagementService.getMappingData()
 			//def linkMapping = processTemplateService.getLinkMapping(mapping)
-			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery)
+			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery, project)
 			while (true) {
 				def changeList = []
 				def idMap = [:]
@@ -235,21 +252,64 @@ class TranslateRQMToMTM implements CliAction {
 				def filtered = filtered(testItems, wiFilter)
 				filtered.each { testItem ->
 					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
+					String itemXml = XmlUtil.serialize(testplan)
+					String webId = "${testplan.webId.text()}"
 					testplan.testsuite.each { testsuiteRef ->
 						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
-						testManagementService.setParent(testplan, testsuite, itemMapping)
+						def tcs = []
 						testsuite.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-							testManagementService.setParent(testsuite, testcase, itemMapping)
+							tcs.add(testcase)
 						}
+						testManagementService.setParent(testsuite, tcs, itemMapping)
 					}
+					def tcs = []
 					testplan.testcase.each { testcaseRef ->
 						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-						testManagementService.setParent(testplan, testcase, itemMapping)
+						String tcitemXml = XmlUtil.serialize(testcase)
+						String tcwebId = "${testcase.webId.text()}"
+						tcs.add(testcase)
 					}
+					testManagementService.setParent(testplan, tcs, itemMapping)
 				}
-				if (changeList.size() > 0) {
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+				def nextLink = testItems.'**'.find { node ->
+					
+					node.name() == 'link' && node.@rel == 'next'
+				}
+				if (nextLink == null) break
+				testItems = clmTestManagementService.nextPage(nextLink.@href)
+			}
+		}
+		if (includes['execution'] != null) {
+			def itemMapping = testMappingManagementService.getMappingData()
+			//def linkMapping = processTemplateService.getLinkMapping(mapping)
+			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery, project)
+			while (true) {
+				def changeList = []
+				def idMap = [:]
+				int count = 0
+				def filtered = filtered(testItems, wiFilter)
+				filtered.each { testItem ->
+					def testplan = clmTestManagementService.getTestItem()
+					String itemXml = XmlUtil.serialize(testplan)
+					String webId = "${testplan.webId.text()}"
+					String parentHref = "${testItem.id.text()}"
+					def testRun = testManagementService.ensureTestRun(collection, tfsProject, testplan)
+					testplan.testsuite.each { testsuiteRef ->
+						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+						def tcs = []
+						testsuite.testcase.each { testcaseRef ->
+							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+							tcs.add(testcase)
+						}
+					}
+					def tcs = []
+					testplan.testcase.each { testcaseRef ->
+						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+						String tcitemXml = XmlUtil.serialize(testcase)
+						String tcwebId = "${testcase.webId.text()}"
+						tcs.add(testcase)
+					}
 				}
 				def nextLink = testItems.'**'.find { node ->
 					
@@ -261,7 +321,7 @@ class TranslateRQMToMTM implements CliAction {
 		}
 
 		//extract & apply attachments.
-//		if (excludes['attachments'] == null) {
+//		if (includes['attachments'] != null) {
 //			def linkMapping = processTemplateService.getLinkMapping(mapping)
 //			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 //			while (true) {

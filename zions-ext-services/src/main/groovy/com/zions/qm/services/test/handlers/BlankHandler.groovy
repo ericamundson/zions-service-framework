@@ -11,7 +11,7 @@ class BlankHandler extends QmBaseAttributeHandler {
 		return 'none'
 	}
 
-	public String formatValue(String value, def fieldData) {
+	public def formatValue(def value, def itemData) {
 		return '';
 	}
 

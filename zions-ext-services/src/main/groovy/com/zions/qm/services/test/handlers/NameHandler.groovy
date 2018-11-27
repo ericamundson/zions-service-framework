@@ -11,8 +11,8 @@ class NameHandler extends QmBaseAttributeHandler {
 		return 'title'
 	}
 
-	public String formatValue(String value, def fieldData) {
-		String outVal = value
+	public def formatValue(def value, def itemData) {
+		String outVal = "${value}"
 		if (value.length() > SIZE) {
 			outVal = value.substring(0, SIZE-1)
 		}
