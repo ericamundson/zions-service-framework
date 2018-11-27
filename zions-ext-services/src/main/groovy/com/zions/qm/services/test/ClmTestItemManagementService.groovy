@@ -63,14 +63,17 @@ public class ClmTestItemManagementService {
 		return outItems
 	}
 	
-	def generateItemData(def qmItemData, def map, String project, def memberMap) {
+	def generateExecutionData(def qmItemData, def map, String project, def memberMap, def runData) {
+	}
+	
+	def generateItemData(def qmItemData, def map, String project, def memberMap, def parent = null) {
 		String type = map.target
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [:]
 		String id = "${qmItemData.webId.text()}-${map.target}"
 		def cacheWI = getCacheWI(id)
-		if (type != 'Test Plan') {
+		if (type == 'Test Case') {
 			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			if (cacheWI != null) {
 				def cid = cacheWI.id
@@ -82,18 +85,33 @@ public class ClmTestItemManagementService {
 				newId--
 				wiData.body.add(idData)
 			}
-		} else {
-			wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/testplan/plans", query:['api-version':'5.0-preview.1'], body: [:]]
+		} else if (type == 'Test Plan'){
+			wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans", query:['api-version':'5.0-preview.2'], body: [:]]
 			if (cacheWI != null) {
 				def cid = cacheWI.id
-				wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/testplan/plans/${cid}", query:['api-version':'5.0-preview.1'], body: [:]]
+				wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${cid}", query:['api-version':'5.0-preview.2'], body: [:]]
+			}
+		} else if (type == 'Test Suite'){
+			if (parent != null) {
+				String parentId = "${parent.id}"
+				String cid = "${parent.rootSuite.id}"
+				wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0-preview.3'], body: [:]]
+				wiData.body.add([parent: parent.rootSuite]) 
+				if (cacheWI != null) {
+					cid = cacheWI.id
+					wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0-preview.3'], body: [:]]
+				}
 			}
 		}
 		
 		map.fields.each { field ->
 			def fieldData = getFieldData(qmItemData, field, memberMap, cacheWI, map)
 			if (fieldData != null) {
-				if (type != 'Test Plan') {
+				if (type != 'Test Case') {
+					if (fieldData.value != null) {
+						wiData.body["${field.target}"] = fieldData.value
+					}
+				} else {
 					if (fieldData.value != null) {
 						wiData.body.add(fieldData)
 					} else {
@@ -103,20 +121,16 @@ public class ClmTestItemManagementService {
 							}
 						}
 					}
-				} else {
-					if (fieldData.value != null) {
-						wiData.body["${field.target}"] = fieldData.value
-					}
 				}
 			}
 			
 		}
 		if (type != 'Test Plan') {
-			if (wiData.body.size() == 1) {
+			if (wiData.body.size() == 0) {
 				return null
 			}
 		} else {
-			if (wiData.body.size() == 0) {
+			if (wiData.body.size() == 1) {
 				return null
 			}
 
@@ -131,22 +145,22 @@ public class ClmTestItemManagementService {
 		if (this.fieldMap["${handlerName}"] != null) {
 			def data = [itemData: qmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map]
 			def fieldData = this.fieldMap["${handlerName}"].execute(data)
-			if (fieldData != null) {
-				String val = "${fieldData.'value'}"
-				if (field.defaultValue != null) {
-					val = "${field.defaultValue}"
-				}
-				if (field.values.size() > 0) {
-					
-					field.values.each { aval ->
-						if ("${fValue}" == "${aval.source}") {
-							val = "${aval.target}"
-							return
-						}
-					}
-				}
-				fieldData.'value' = val
-			}
+//			if (fieldData != null) {
+//				String val = "${fieldData.'value'}"
+//				if (field.defaultValue != null) {
+//					val = "${field.defaultValue}"
+//				}
+//				if (field.values.size() > 0) {
+//					
+//					field.values.each { aval ->
+//						if ("${fValue}" == "${aval.source}") {
+//							val = "${aval.target}"
+//							return
+//						}
+//					}
+//				}
+//				fieldData.'value' = val
+//			}
 			return fieldData
 		}
 		return null
