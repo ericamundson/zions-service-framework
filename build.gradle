@@ -6,7 +6,10 @@ buildscript {
 		if ("${queue}" == 'Hosted') {
 			mavenCentral()
 		}
-        maven {
+ 		flatDir {
+			dirs "libs"
+		}
+       maven {
             name 'ZionsNexusPublicSnapshots'
             url "${nexusUrl}/repository/public-snapshots/"
         }
@@ -17,7 +20,8 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-		classpath 'be.jlr-home.gradle:plantumlPlugin:0.1.+'
+		classpath 'com.zions.gradle:gplantumlPlugin:0.1.1'
+		classpath 'net.sourceforge.plantuml:plantuml:8001'
     }
 }
 
@@ -26,7 +30,7 @@ allprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'groovy'
-	apply plugin: 'plantuml'
+	apply plugin: 'gplantuml'
     apply plugin: 'jacoco'
     if ("${buildType}" == 'ci') {
         apply plugin: 'codenarc'
