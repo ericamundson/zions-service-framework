@@ -81,12 +81,36 @@ class WorkManagementService {
 	 * @param witData - batch of work item changes
 	 * @return
 	 */
-	def batchWIChanges(def collection, def project, def witData, def idMap) {
-		def body = new JsonBuilder(witData).toPrettyString()
+	def batchWIChanges(def collection, def project, def changeList, def idMap) {
 		//		File s = new File('defaultwit.json')
 		//		def w = s.newDataOutputStream()
 		//		w << body
 		//		w.close()
+		int bcount = 0
+		def bidMap = [:]
+		def bchangeList = []
+		int tcount = 0
+		int count = changeList.size()
+		while (tcount < count) {
+			bidMap[bcount] = idMap[tcount]
+			bchangeList.add(changeList[tcount])
+			bcount++
+			if (bcount == 200) {
+				doPost(collection, project, bchangeList, bidMap)
+				bcount = 0
+				bidMap = [:]
+				bchangeList = []
+			}
+			tcount++
+		}
+		if (bcount > 0) {
+			doPost(collection, project, bchangeList, bidMap)
+			
+		}
+	}
+	
+	private doPost(collection, tfsProject, bchangeList, bidMap) {
+		def body = new JsonBuilder(bchangeList).toPrettyString()
 		def result = genericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/\$batch",
@@ -96,10 +120,11 @@ class WorkManagementService {
 			
 			)
 		if (result != null) {
-			cacheResult(result, idMap)
+			cacheResult(result, bidMap)
 		} else {
 			log.error("Batch request failed!")
 		}
+
 	}
 	
 	def cacheResult(result, idMap) {

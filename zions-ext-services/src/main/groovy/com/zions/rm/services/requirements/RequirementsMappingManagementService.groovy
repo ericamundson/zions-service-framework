@@ -4,6 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+/**
+ * Load rm mapping file
+ * @author z091182
+ * 
+ * @startuml
+ * class RequirementsMappingManagementService {
+ * ... data ...
+ * @Autowired String requirementsMappingFileName 
+ * get it's value from ${req.mapping.file} Spring property
+ * ... behavior ...
+ *  +def getMappingData()
+ * }
+ * note left: @Component
+ @enduml
+ *
+ */
 @Component
 class RequirementsMappingManagementService {
 	@Autowired

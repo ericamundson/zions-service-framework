@@ -46,8 +46,8 @@ import groovy.xml.XmlUtil
  * 
  * CliAction <|-- TranslateRQMToMTM
  * TranslateRQMToMTM .. Autowired:  Spring Boot
- * TranslateRQMToMTM o--> Map: @Autowired filterMap
- * TranslateRQMToMTM o--> QmMetadataManagementService: @Autowired qmMetadataManagementService
+ * TranslateRQMToMTM --> Map: @Autowired filterMap
+ * TranslateRQMToMTM --> QmMetadataManagementService: @Autowired qmMetadataManagementService
  * 
  * @enduml
  *
@@ -210,26 +210,7 @@ class TranslateRQMToMTM implements CliAction {
 //					}
 				}
 				if (changeList.size() > 0) {
-					int bcount = 0
-					def bidMap = [:]
-					def bchangeList = []
-					int tcount = 0
-					while (tcount < count) {
-						bidMap[bcount] = idMap[tcount]
-						bchangeList.add(changeList[tcount])
-						bcount++
-						if (bcount == 200) {
-							workManagementService.batchWIChanges(collection, tfsProject, bchangeList, bidMap)
-							bcount = 0
-							bidMap = [:]
-							bchangeList = []
-						}
-						tcount++
-					}
-					if (bcount > 0) {
-						workManagementService.batchWIChanges(collection, tfsProject, bchangeList, bidMap)
-						
-					}
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 				}
 				def nextLink = testItems.'**'.find { node ->
 					

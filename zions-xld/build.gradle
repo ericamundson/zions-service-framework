@@ -15,4 +15,6 @@ jar {
 	 compile files('lib/xl-license-api-2018.3.5.jar')
 	 compile files('lib/xl-license-web-2018.3.5.jar')
 	 compile files('lib/xl-repository-api-2018.3.5.jar')
+	 compile files('lib/xl-plugin-2018.3.5.jar')
+	 
  }

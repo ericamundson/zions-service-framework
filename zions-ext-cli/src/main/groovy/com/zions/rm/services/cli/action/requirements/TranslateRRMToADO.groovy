@@ -59,10 +59,10 @@ import groovy.xml.XmlUtil
  * CliAction <|-- TranslateRRMToADO
  * TranslateRRMToADO .. Autowired:  Defines class member as injected by Spring
  * TranslateRRMToADO .. Component:  Defines class as Spring Component
- * TranslateRRMToADO o--> Map: @Autowired filterMap
- * TranslateRRMToADO o--> MemberManagementService: @Autowired memberManagementService
- * TranslateRRMToADO o--> FileManagementService: @Autowired fileManagementService
- * TranslateRRMToADO o--> WorkManagementService: @Autowired workManagementService
+ * TranslateRRMToADO --> Map: @Autowired filterMap
+ * TranslateRRMToADO --> MemberManagementService: @Autowired memberManagementService
+ * TranslateRRMToADO --> FileManagementService: @Autowired fileManagementService
+ * TranslateRRMToADO --> WorkManagementService: @Autowired workManagementService
  * 
  * @enduml
  * 
@@ -120,7 +120,7 @@ class TranslateRRMToADO implements CliAction {
 		}
 		//translate work data.
 		if (includes['data'] != null) {
-			def reqItems = []
+			def reqItems = clmRequirementsManagementService.queryForModules(project, query)
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			while (true) {
 				//TODO: ccmWorkManagementService.resetNewId()
@@ -135,33 +135,15 @@ class TranslateRRMToADO implements CliAction {
 				filtered.each { 
 				}
 				if (changeList.size() > 0) {
-					int bcount = 0
-					def bidMap = [:]
-					def bchangeList = []
-					int tcount = 0
-					while (tcount < count) {
-						bidMap[bcount] = idMap[tcount]
-						bchangeList.add(changeList[tcount])
-						bcount++
-						if (bcount == 200) {
-							workManagementService.batchWIChanges(collection, tfsProject, bchangeList, bidMap)
-							bcount = 0
-							bidMap = [:]
-							bchangeList = []
-						}
-						tcount++
-					}
-					if (bcount > 0) {
-						workManagementService.batchWIChanges(collection, tfsProject, bchangeList, bidMap)
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 						
-					}
 				}
-				def nextLink = testItems.'**'.find { node ->
+				def nextLink = reqItems.'**'.find { node ->
 					
 					node.name() == 'link' && node.@rel == 'next'
 				}
 				if (nextLink == null) break
-				reqItems = clmReqManagementService.nextPage(nextLink.@href)
+				reqItems = clmRequirementsManagementService.nextPage(nextLink.@href)
 			}
 		}
 		//		workManagementService.testBatchWICreate(collection, tfsProject)
@@ -173,7 +155,9 @@ class TranslateRRMToADO implements CliAction {
 				def idMap = [:]
 				int count = 0
 				def filtered = filtered(testItems, rmFilter)
-				filtered.each { 				}
+				filtered.each {	moduleRef ->			
+					
+				}
 				def nextLink = testItems.'**'.find { node ->
 					
 					node.name() == 'link' && node.@rel == 'next'
