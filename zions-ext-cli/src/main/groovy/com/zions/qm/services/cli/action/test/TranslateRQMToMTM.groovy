@@ -271,25 +271,23 @@ class TranslateRQMToMTM implements CliAction {
 				int count = 0
 				def filtered = filtered(testItems, wiFilter)
 				filtered.each { testItem ->
-					def testplan = clmTestManagementService.getTestItem()
+					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
 					String itemXml = XmlUtil.serialize(testplan)
 					String webId = "${testplan.webId.text()}"
 					String parentHref = "${testItem.id.text()}"
 					def testRun = testManagementService.ensureTestRun(collection, tfsProject, testplan)
 					testplan.testsuite.each { testsuiteRef ->
 						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
-						def tcs = []
 						testsuite.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-							tcs.add(testcase)
 						}
 					}
-					def tcs = []
 					testplan.testcase.each { testcaseRef ->
 						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 						String tcitemXml = XmlUtil.serialize(testcase)
 						String tcwebId = "${testcase.webId.text()}"
-						tcs.add(testcase)
+						String tchref
+						def executionresults = clmTestManagementService.getExecutionResultViaHref("${testcaseRef.@href}", "${testItem.id.text()}", project)
 					}
 				}
 				def nextLink = testItems.'**'.find { node ->

@@ -51,19 +51,58 @@ public class ClmTestItemManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	def getChanges(String project, def qmItemData, def memberMap) {
+	def getChanges(String project, def qmItemData, def memberMap, def runData = null) {
 		def maps = getTestMaps(qmItemData)
 		def outItems = [:]
 		maps.each { map ->
-			def item = generateItemData(qmItemData, map, project, memberMap)
-			if (item != null) {
-				outItems["${map.target}"] = item
+			if ("${map.target}" == 'Result') {
+				def item = generateExecutionData(qmItemData, map, project, memberMap, runData)
+				if (item != null) {
+					outItems["${map.target}"] = item
+				}
+
+			} else {
+				def item = generateItemData(qmItemData, map, project, memberMap)
+				if (item != null) {
+					outItems["${map.target}"] = item
+				}
 			}
 		}
 		return outItems
 	}
 	
 	def generateExecutionData(def qmItemData, def map, String project, def memberMap, def runData) {
+		String type = map.target
+		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def exData = [:]
+		String id = "${qmItemData.webId.text()}-${map.target}"
+		String runId = "${runData.id}"
+		def cacheResult = getResultData(id)
+		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0-preview.2'], body: [:]]
+		if (cacheResult != null) {
+			def cid = cacheResult.id
+			exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results${cid}", query:['api-version':'5.0-preview.2'], body: [:]]
+		}
+		map.fields.each { field ->
+			def fieldData = getFieldData(qmItemData, field, memberMap, cacheResult, map)
+			if (fieldData != null) {
+				if (fieldData.value != null) {
+					exData.body.add(fieldData)
+				} else {
+					fieldData.each { fData ->
+						if (fData.value != null) {
+							exData.body.add(fData)
+						}
+					}
+				}
+			}
+			
+		}
+		if (exData.body.size() == 0) {
+			return null
+		}
+		return exData
 	}
 	
 	def generateItemData(def qmItemData, def map, String project, def memberMap, def parent = null) {
@@ -125,7 +164,7 @@ public class ClmTestItemManagementService {
 			}
 			
 		}
-		if (type != 'Test Plan') {
+		if (type != 'Test Case') {
 			if (wiData.body.size() == 0) {
 				return null
 			}
@@ -182,6 +221,16 @@ public class ClmTestItemManagementService {
 	 */
 	def getCacheWI(id) {
 		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
+		if (cacheData.exists()) {
+			JsonSlurper s = new JsonSlurper()
+			return s.parse(cacheData)
+		}
+		return null
+
+	}
+	
+	def getResultData(String id) {
+		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}resultData.json");
 		if (cacheData.exists()) {
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)

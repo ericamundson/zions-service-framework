@@ -307,9 +307,22 @@ public class TestManagementService {
 		w.close()
 	}
 
-	
+	def saveResultState(def runData, String id) {
+		File cacheDir = new File(this.cacheLocation)
+		if (!cacheDir.exists()) {
+			cacheDir.mkdir();
+		}
+		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
+		if (!wiDir.exists()) {
+			wiDir.mkdir()
+		}
+		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}resultData.json");
+		def w  = cacheData.newDataOutputStream()
+		w << new JsonBuilder(runData).toPrettyString()
+		w.close()
+	}
+
 	def ensureTestRun(String collection, String project, def planData) {
-		String pname = "${parent.name()}"
 		String pid = "${planData.webId.text()}-Test Plan"
 		def runData = getCacheRunData(pid)
 		
@@ -317,15 +330,26 @@ public class TestManagementService {
 			def parentData = getCacheData(pid)
 		
 			runData = createRunData(collection, project, parentData)
-			
-			saveRunDataState(runData, pid)
+			if (runData != null) {
+				saveRunDataState(runData, pid)
+			}
 		}
-
+		return runData
 	}
 	
 	def createRunData(String collection, String project, def planData ) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def testpoints = getTestPoints(collection, project, planData)
-	
+		def data = [name: "${planData.name} Run", plan: [id: planData.id], pointIds:testpoints]
+		String body = new JsonBuilder( data ).toString()
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/runs",
+			body: body,
+			query: ['api-version':'5.0-preview.2']
+			)
+		return result
 	}
 
 	def getTestPoints(String collection, String project, def planData ) {
@@ -335,7 +359,7 @@ public class TestManagementService {
 			contentType: ContentType.JSON,
 			//requestContentType: ContentType.JSON,
 			uri: url,
-			query: ['api-version':'5.0-preview.3']
+			query: ['api-version':'5.0-preview.2']
 			)
 		result.'value'.each { point ->
 			retVal.add(point.id)
@@ -356,6 +380,15 @@ public class TestManagementService {
 	
 	def getCacheRunData(String id) {
 		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}runData.json");
+		if (cacheData.exists()) {
+			JsonSlurper s = new JsonSlurper()
+			return s.parse(cacheData)
+		}
+		return null
+
+	}
+	def getResultData(String id) {
+		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}resultData.json");
 		if (cacheData.exists()) {
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)

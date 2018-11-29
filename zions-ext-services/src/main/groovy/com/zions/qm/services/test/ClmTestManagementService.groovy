@@ -3,6 +3,7 @@ package com.zions.qm.services.test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import com.zions.common.services.rest.IGenericRestClient
+import groovy.xml.XmlUtil
 
 /**
  * o Handle RQM test queries.
@@ -49,13 +50,18 @@ class ClmTestManagementService {
 		def project = URLEncoder.encode(projectName, 'UTF-8')
 		//project = project.replace('+', '%20')
 		def outItems = []
-
-		String uri = this.qmGenericRestClient.qmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/executionresult?fields=feed/entry/content/executionresult/[(testcase/@href='${tchref}' and testplan/@href='${planhref}')]";
+		String query = "feed/entry/content/executionresult[testcase/@href='${tchref}']/*"
+		String uri = this.qmGenericRestClient.qmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/executionresult";
 		def result = qmGenericRestClient.get(
 				uri: uri,
-				headers: [Accept: 'application/xml'] );
+				headers: [Accept: 'application/xml'],
+				query: [fields: query] );
+		String resultsxml = XmlUtil.serialize(result)
 		while (true) {
-			result.entry.each { item ->
+			def erlist = result.'**'.findAll { it.name() == 'executionresult' }
+			
+			erlist.each { item ->
+				String itemxml = XmlUtil.serialize(item)
 				outItems.add(item)
 			}
 			def nextLink = result.'**'.find { node ->

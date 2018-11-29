@@ -63,10 +63,52 @@ import groovy.xml.XmlUtil
  * TranslateRRMToADO --> MemberManagementService: @Autowired memberManagementService
  * TranslateRRMToADO --> FileManagementService: @Autowired fileManagementService
  * TranslateRRMToADO --> WorkManagementService: @Autowired workManagementService
+ *  
+ * 
+ * 
+ * 
+ * 
  * 
  * @enduml
  * 
- *
+ * @startuml
+ * participant CLI
+ * CLI -> TranslateRRMToADO: validate arguements
+ * CLI -> TranslateRRMToADO: execute
+ * alt include.update has 'clean'
+ * 	TranslateRRMToADO -> WorkManagementService: clean
+ * end
+ * alt include.update has 'data'
+ *  TranslateRRMToADO -> RequirementsMappingManagementService: get field mapping
+ *  TranslateRRMToADO -> MemberManagementService: get member map
+ *  TranslateRRMToADO -> ClmRequirementsManagementService: get modules via query
+ *  loop each { modules object structure }
+ *  	TranslateRRMToADO -> ClmRequirementsItemManagementService: get changes
+ *  	TranslateRRMToADO -> List: add changes
+ *  end
+ *  TranslateRRMToADO -> WorkManagementService: send list of changes
+ * end
+ * alt include.update has 'links'
+ *  TranslateRRMToADO -> RequirementsMappingManagementService: get field mapping
+ *  TranslateRRMToADO -> MemberManagementService: get member map
+ *  TranslateRRMToADO -> ClmRequirementsManagementService: get modules via query
+ *  loop each { modules object structure }
+ *  	TranslateRRMToADO -> ClmRequirementsItemManagementService: get link changes
+ *  	TranslateRRMToADO -> List: add changes
+ *  end
+ *  TranslateRRMToADO -> WorkManagementService: send list of changes
+ * end
+ * alt include.update has 'attachments'
+ *  TranslateRRMToADO -> RequirementsMappingManagementService: get field mapping
+ *  TranslateRRMToADO -> MemberManagementService: get member map
+ *  TranslateRRMToADO -> ClmRequirementsManagementService: get modules via query
+ *  loop each { modules object structure }
+ *  	TranslateRRMToADO -> ClmRequirementsItemManagementService: get attachment changes
+ *  	TranslateRRMToADO -> List: add changes
+ *  end
+ *  TranslateRRMToADO -> WorkManagementService: send list of changes
+ * end
+ * @enduml
  */
 @Component
 class TranslateRRMToADO implements CliAction {
