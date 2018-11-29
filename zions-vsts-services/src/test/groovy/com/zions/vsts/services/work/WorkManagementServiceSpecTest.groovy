@@ -5,6 +5,7 @@ import static org.junit.Assert.*
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
+import groovy.json.JsonSlurper
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.spockframework.mock.MockUtil
@@ -94,6 +95,22 @@ class WorkManagementServiceSpecTest extends Specification {
 		then:
 		true
 	}
+	
+	def 'clean call success flow'() {
+		given: 'setup getWorkitems stub'
+		def workitems = new JsonSlurper().parseText(this.getClass().getResource('/testdata/workitemsquery.json').text)		
+		1 *  genericRestClient.post(_) >> workitems
+		
+		and: 'setup deleteWorkitem stub'
+		1* genericRestClient.delete(_) >> null
+		
+		when: 'call method under test (clean)'
+		underTest.clean('', 'theproject', "Select [System.Id], [System.Title] From WorkItems Where ([System.WorkItemType] = 'Test Plan'  OR [System.WorkItemType] = 'Test Case') AND [System.AreaPath] = stuff")
+
+		then: 'nothing to validate'
+		true
+	}
+	
 }
 
 @TestConfiguration

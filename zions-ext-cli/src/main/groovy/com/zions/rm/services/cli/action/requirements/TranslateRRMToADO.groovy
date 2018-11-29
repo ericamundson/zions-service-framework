@@ -7,19 +7,13 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
-import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
-import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
-import com.zions.qm.services.test.ClmTestItemManagementService
-import com.zions.qm.services.test.ClmTestManagementService
 import com.zions.qm.services.metadata.QmMetadataManagementService
-import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.rm.services.requirements.ClmRequirementsItemManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
-import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
@@ -29,8 +23,15 @@ import groovy.xml.XmlUtil
 /**
  * Provides command line interaction to synchronize RRM requirements management with ADO.
  * 
+ * <p/>Class design
+ * <img src="TranslateRRMToADO_class_diagram.png"/>
+ * </p/>
+ * Flow
+ * <img src="TranslateRRMToADO_sequence_diagram.png"/>
+ * 
  * @author z091182
  * 
+ * <p/><p hidden>
  * @startuml TranslateRRMToADO_class_diagram.png
  * 
  * annotation Autowired
@@ -109,6 +110,7 @@ import groovy.xml.XmlUtil
  *  TranslateRRMToADO -> WorkManagementService: send list of changes
  * end
  * @enduml
+ * </p>
  */
 @Component
 class TranslateRRMToADO implements CliAction {

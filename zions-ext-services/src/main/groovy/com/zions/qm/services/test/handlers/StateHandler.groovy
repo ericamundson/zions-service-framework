@@ -14,7 +14,8 @@ class StateHandler extends QmBaseAttributeHandler {
 		return 'state'
 	}
 
-	public def formatValue(def value, def itemData) {
+	public def formatValue(def value, def data) {
+		def itemData = data.itemData
 		String stateUrl = "${itemData.state.@'ns7:resource'}"
 		def stateInfo = clmTestManagementService.getTestItem(stateUrl)
 		def stateItem = stateInfo.ProcessInfo.hasWorkflowState.WorkflowState.find { state ->

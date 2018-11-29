@@ -10,7 +10,7 @@ class DescriptionHandler extends QmBaseAttributeHandler {
 		return 'description'
 	}
 
-	public def formatValue(def value, def itemData) {
+	public def formatValue(def value, def data) {
 		String outVal = "${value}"
 		if (value == null || value.length() == 0) return null
 		return outVal;

@@ -18,7 +18,8 @@ class StepsHandler extends QmBaseAttributeHandler {
 		return 'none'
 	}
 
-	public def formatValue(def value, def itemData) {
+	public def formatValue(def value, def data) {
+		def itemData = data.itemData
 		String outVal = null
 		def ts = getTestScript(itemData)
 		if (ts != null) 

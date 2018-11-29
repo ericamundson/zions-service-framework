@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component
 
 /**
  * Load rm mapping file
+ * 
+ * Design<p/>
+ * <img src="RequirementsMappingManagementService.png"/>
+ * 
  * @author z091182
  * 
  * @startuml

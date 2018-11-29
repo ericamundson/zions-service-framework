@@ -14,7 +14,7 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 		
 		String name = getQmFieldName()
 		def aValue = itemData."${name}".text()
-		aValue = formatValue(aValue, itemData)
+		aValue = formatValue(aValue, data)
 		if (aValue == null) {
 			return null
 		} else {
