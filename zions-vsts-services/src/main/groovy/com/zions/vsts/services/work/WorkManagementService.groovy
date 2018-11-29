@@ -23,6 +23,8 @@ import groovyx.net.http.ContentType
 @Slf4j
 class WorkManagementService {
 	
+	final private int BATCHSIZE = 200
+	
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
 		
@@ -35,6 +37,53 @@ class WorkManagementService {
 
 	public WorkManagementService() {
 		
+	}
+	
+	def clean(String collection, String project, String query) {
+		def wis = getWorkItems(collection, project, query)
+		def changelist = []
+		wis.workItems.each { wi ->
+			def twi = getWorkItem(wi.url)
+			deleteWorkitem(twi.id)
+		}
+	}
+	
+	def getWorkItem(String url) {
+		def result = genericRestClient.get(
+			uri: url,
+			contentType: ContentType.JSON,
+			query: [destroy: true, 'api-version': '5.0-preview.3']
+			)
+		return result
+	}
+
+	def getWorkItems(String collection, String project, String aquery) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def query = [query: aquery]
+		String body = new JsonBuilder(query).toPrettyString()
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/wiql",
+			body: body,
+			//headers: [Accept: 'application/json'],
+			query: ['api-version': '5.0-preview.2']
+			)
+		return result
+
+	}
+	
+	def deleteWorkitem(String collection, String project, String id) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def result = genericRestClient.delete(
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
+			//headers: [Accept: 'application/json'],
+			query: ['api-version': '5.0-preview.3']
+			)
+		return result
+
 	}
 	
 	def refreshCache(def collection, def project, def cacheIds) {
@@ -95,7 +144,7 @@ class WorkManagementService {
 			bidMap[bcount] = idMap[tcount]
 			bchangeList.add(changeList[tcount])
 			bcount++
-			if (bcount == 200) {
+			if (bcount == BATCHSIZE) {
 				doPost(collection, project, bchangeList, bidMap)
 				bcount = 0
 				bidMap = [:]

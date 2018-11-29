@@ -7,6 +7,10 @@ jar {
 	
 }
 
+groovydoc {
+	enabled = false
+}
+
  dependencies {
 	 compile files('lib/joda-time-2.9.5.jar')
 	 compile files('lib/xl-base-2018.3.5.jar')
