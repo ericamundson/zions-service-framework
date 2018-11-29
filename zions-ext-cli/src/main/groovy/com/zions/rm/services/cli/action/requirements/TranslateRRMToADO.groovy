@@ -31,7 +31,7 @@ import groovy.xml.XmlUtil
  * 
  * @author z091182
  * 
- * @startuml
+ * @startuml TranslateRRMToADO_class_diagram.png
  * 
  * annotation Autowired
  * annotation Component
@@ -45,9 +45,9 @@ import groovy.xml.XmlUtil
  * 
  * class TranslateRRMToADO {
  * ... TODO: Implement these Spring Components in zions-ext-services project...
- * @Autowired ClmRequirementsItemManagementService clmRequirementsItemManagementService
- * @Autowired ClmRequirementsManagementService clmRequirementsManagementService
- * @Autowired RequirementsMappingManagementService requirementsMappingManagementService
+ * atAutowired ClmRequirementsItemManagementService clmRequirementsItemManagementService
+ * atAutowired ClmRequirementsManagementService clmRequirementsManagementService
+ * atAutowired RequirementsMappingManagementService requirementsMappingManagementService
  * 
  * ... TODO: Need to complete implementation of ...
  * 	+validate(ApplicationArguments args)
@@ -71,7 +71,7 @@ import groovy.xml.XmlUtil
  * 
  * @enduml
  * 
- * @startuml
+ * @startuml TranslateRRMToADO_sequence_diagram.png
  * participant CLI
  * CLI -> TranslateRRMToADO: validate arguements
  * CLI -> TranslateRRMToADO: execute
