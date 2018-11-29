@@ -14,7 +14,8 @@ class OwnerHandler extends QmBaseAttributeHandler {
 		return 'owner'
 	}
 
-	public def formatValue(def value, def itemData) {
+	public def formatValue(def value, def data) {
+		def itemData = data.itemData
 		String ownerUrl = "${itemData.owner.@'ns7:resource'}"
 		if (ownerUrl == null || ownerUrl.length() == 0) return null
 		def ownerInfo = clmTestManagementService.getTestItem(ownerUrl)

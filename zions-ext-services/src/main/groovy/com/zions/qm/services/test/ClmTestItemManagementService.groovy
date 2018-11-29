@@ -51,12 +51,12 @@ public class ClmTestItemManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	def getChanges(String project, def qmItemData, def memberMap, def runData = null) {
+	def getChanges(String project, def qmItemData, def memberMap, def runData = null, def testCase = null) {
 		def maps = getTestMaps(qmItemData)
 		def outItems = [:]
 		maps.each { map ->
 			if ("${map.target}" == 'Result') {
-				def item = generateExecutionData(qmItemData, map, project, memberMap, runData)
+				def item = generateExecutionData(qmItemData, map, project, memberMap, runData, testCase)
 				if (item != null) {
 					outItems["${map.target}"] = item
 				}
@@ -71,7 +71,7 @@ public class ClmTestItemManagementService {
 		return outItems
 	}
 	
-	def generateExecutionData(def qmItemData, def map, String project, def memberMap, def runData) {
+	def generateExecutionData(def qmItemData, def map, String project, def memberMap, def runData, def testCase) {
 		String type = map.target
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
@@ -85,7 +85,7 @@ public class ClmTestItemManagementService {
 			exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results${cid}", query:['api-version':'5.0-preview.2'], body: [:]]
 		}
 		map.fields.each { field ->
-			def fieldData = getFieldData(qmItemData, field, memberMap, cacheResult, map)
+			def fieldData = getFieldData(qmItemData, field, memberMap, cacheResult, map, runData, testCase)
 			if (fieldData != null) {
 				if (fieldData.value != null) {
 					exData.body.add(fieldData)
@@ -178,11 +178,17 @@ public class ClmTestItemManagementService {
 
 	}
 	
-	def getFieldData(def qmItemData, def field, def memberMap, def cacheWI, def map) {
+	def getFieldData(def qmItemData, def field, def memberMap, def cacheWI, def map, def runData = null, def testCase = null) {
 		String handlerName = "${field.source}"
 		String fValue = ""
 		if (this.fieldMap["${handlerName}"] != null) {
 			def data = [itemData: qmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map]
+			if (testCase != null) {
+				data['testCase'] = testCase
+			}
+			if (runData != null) {
+				data['runData'] = runData
+			}
 			def fieldData = this.fieldMap["${handlerName}"].execute(data)
 //			if (fieldData != null) {
 //				String val = "${fieldData.'value'}"

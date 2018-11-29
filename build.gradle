@@ -35,8 +35,16 @@ allprojects {
     if ("${buildType}" == 'ci') {
         apply plugin: 'codenarc'
     }
-	 
-
+	
+	task handleGroovydoc(type: Copy) {
+		from('src/main/groovy') {
+			include '**/*.png'
+		}
+		into 'build/docs/groovydoc'
+	}
+	
+	handleGroovydoc.dependsOn groovydoc
+	
 	test {
 		//String activeProfile =  System.properties['spring.profiles.active']
 		systemProperty "spring.profiles.active", 'test'

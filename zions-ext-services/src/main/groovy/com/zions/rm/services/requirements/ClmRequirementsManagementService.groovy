@@ -5,6 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 /**
+ * Handles queries into DNG to navigate object structure of DNG.
+ * 
+ * Design<p/>
+ * <img src="ClmRequirementsManagementService.png"/>
+ * 
  * @author z091182
  * 
  * @startuml

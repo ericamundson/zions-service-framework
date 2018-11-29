@@ -42,4 +42,25 @@
 		</field>
 		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
 	</wit>
+	<wit source="executionresult"  target="Result" translateUnmappedFields="false">
+		<field source="resultTestCaseReferenceHandler" target="testCase"/>
+		<field source="resultStartDateHandler" target="startedDate"/>
+		<field source="resultStateHandler" target="state">
+			<defaultvalue target="Active"/>		
+			<value source="com.ibm.rqm.execution.common.state.passed" target="Pass"/>
+			<value source="com.ibm.rqm.execution.common.state.paused" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.inprogress" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.notrun" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.perm_failed" target="Failed"/> 
+			<value source="com.ibm.rqm.execution.common.state.incomplete" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.inconclusive" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.part_blocked" target="Block"/> 
+			<value source="com.ibm.rqm.execution.common.state.deferred" target="Not applicable"/> 
+			<value source="com.ibm.rqm.execution.common.state.failed" target="Failed"/> 
+			<value source="com.ibm.rqm.execution.common.state.error" target="Failed"/> 
+			<value source="com.ibm.rqm.execution.common.state.blocked" target="Block"/> 		
+			</field>
+		<field source="resultOwnerHandler" target="owner"/>
+		
+	</wit>
 </witmapping>

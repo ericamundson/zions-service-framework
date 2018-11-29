@@ -46,11 +46,13 @@ class ClmTestManagementService {
 		return result
 	}
 	
-	def getExecutionResultViaHref(String tchref, String planhref, String projectName) {
+	def getExecutionResultViaHref(String tcWebId, String planWebId, String projectName) {
 		def project = URLEncoder.encode(projectName, 'UTF-8')
 		//project = project.replace('+', '%20')
+		String tchref = this.qmGenericRestClient.qmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/testcase/urn:com.ibm.rqm:testcase:${tcWebId}"
+		String tphref = this.qmGenericRestClient.qmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/testplan/urn:com.ibm.rqm:testplan:${planWebId}"
 		def outItems = []
-		String query = "feed/entry/content/executionresult[testcase/@href='${tchref}']/*"
+		String query = "feed/entry/content/executionresult[testcase/@href='${tchref}' and testplan/@href='${tphref}']/*"
 		String uri = this.qmGenericRestClient.qmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/executionresult";
 		def result = qmGenericRestClient.get(
 				uri: uri,

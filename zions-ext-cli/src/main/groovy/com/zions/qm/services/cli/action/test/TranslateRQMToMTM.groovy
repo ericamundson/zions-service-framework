@@ -263,6 +263,7 @@ class TranslateRQMToMTM implements CliAction {
 		}
 		if (includes['execution'] != null) {
 			def itemMapping = testMappingManagementService.getMappingData()
+			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			//def linkMapping = processTemplateService.getLinkMapping(mapping)
 			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery, project)
 			while (true) {
@@ -287,13 +288,16 @@ class TranslateRQMToMTM implements CliAction {
 						String tcitemXml = XmlUtil.serialize(testcase)
 						String tcwebId = "${testcase.webId.text()}"
 						String tchref
-						def executionresults = clmTestManagementService.getExecutionResultViaHref("${testcaseRef.@href}", "${testItem.id.text()}", project)
+						def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
+						executionresults.each { result ->
+							def resultData = clmTestItemManagementService.getChanges(project, itemMapping, memberMap, testRun)
+						}
 					}
 				}
 				def nextLink = testItems.'**'.find { node ->
 					
 					node.name() == 'link' && node.@rel == 'next'
-				}
+				}re
 				if (nextLink == null) break
 				testItems = clmTestManagementService.nextPage(nextLink.@href)
 			}

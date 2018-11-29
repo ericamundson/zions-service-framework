@@ -43,19 +43,18 @@ class WorkManagementService {
 		def wis = getWorkItems(collection, project, query)
 		def changelist = []
 		wis.workItems.each { wi ->
-			def twi = getWorkItem(wi.url)
-			deleteWorkitem(twi.id)
+			deleteWorkitem(wi.url)
 		}
 	}
 	
-	def getWorkItem(String url) {
-		def result = genericRestClient.get(
-			uri: url,
-			contentType: ContentType.JSON,
-			query: [destroy: true, 'api-version': '5.0-preview.3']
-			)
-		return result
-	}
+//	def getWorkItem(String url) {
+//		def result = genericRestClient.get(
+//			uri: url,
+//			contentType: ContentType.JSON,
+//			query: [destroy: true, 'api-version': '5.0-preview.3']
+//			)
+//		return result
+//	}
 
 	def getWorkItems(String collection, String project, String aquery) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
@@ -74,11 +73,9 @@ class WorkManagementService {
 
 	}
 	
-	def deleteWorkitem(String collection, String project, String id) {
-		def eproject = URLEncoder.encode(project, 'utf-8')
-		eproject = eproject.replace('+', '%20')
+	def deleteWorkitem(String url) {
 		def result = genericRestClient.delete(
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
+			uri: url,
 			//headers: [Accept: 'application/json'],
 			query: ['api-version': '5.0-preview.3']
 			)

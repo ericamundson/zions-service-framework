@@ -1,0 +1,45 @@
+{
+  "queryType": "flat",
+  "asOf": "2014-12-29T20:49:34.617Z",
+  "columns": [
+    {
+      "referenceName": "System.Id",
+      "name": "ID",
+      "url": "https://dev.azure.com/fabrikam/_apis/wit/fields/System.Id"
+    },
+    {
+      "referenceName": "System.Title",
+      "name": "Title",
+      "url": "https://dev.azure.com/fabrikam/_apis/wit/fields/System.Title"
+    },
+    {
+      "referenceName": "System.State",
+      "name": "State",
+      "url": "https://dev.azure.com/fabrikam/_apis/wit/fields/System.State"
+    }
+  ],
+  "sortColumns": [
+    {
+      "field": {
+        "referenceName": "Microsoft.VSTS.Common.Priority",
+        "name": "Priority",
+        "url": "https://dev.azure.com/fabrikam/_apis/wit/fields/Microsoft.VSTS.Common.Priority"
+      },
+      "descending": false
+    },
+    {
+      "field": {
+        "referenceName": "System.CreatedDate",
+        "name": "Created Date",
+        "url": "https://dev.azure.com/fabrikam/_apis/wit/fields/System.CreatedDate"
+      },
+      "descending": true
+    }
+  ],
+  "workItems": [
+    {
+      "id": 300,
+      "url": "https://dev.azure.com/fabrikam/_apis/wit/workItems/300"
+    }  
+  ]
+}

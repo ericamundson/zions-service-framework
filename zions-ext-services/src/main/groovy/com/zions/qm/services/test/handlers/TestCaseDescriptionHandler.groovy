@@ -16,7 +16,8 @@ class TestCaseDescriptionHandler extends QmBaseAttributeHandler {
 		return 'description'
 	}
 
-	public def formatValue(def value, def itemData) {
+	public def formatValue(def value, def data) {
+		def itemData = data.itemData
 		String tcDescription = value
 		def ts = getTestScript(itemData)
 		String tsDesc = null

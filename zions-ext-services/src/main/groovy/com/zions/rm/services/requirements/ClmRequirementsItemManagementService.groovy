@@ -5,7 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 /**
+ * Handles all of the behavior to pull RM data for setting up output data to be sent to ADO to create/update work items.
+ * 
+ * Design<p/>
+ * <img src="ClmRequirementsItemManagementService.png"/>
+ * 
  * @author z091182
+ * 
  * 
  * @startuml
  * 
