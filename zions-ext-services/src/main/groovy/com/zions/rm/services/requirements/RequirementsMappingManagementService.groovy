@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component
 @Component
 class RequirementsMappingManagementService {
 	@Autowired
-	@Value('${req.mapping.file}')
+	@Value('${rm.mapping.file}')
 	String requirementsMappingFileName
 	
 	def mappingDataInfo = []

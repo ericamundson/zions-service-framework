@@ -252,7 +252,7 @@ class TranslateRRMToADO implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectArea', 'rm.template.dir', 'tfs.url', 'tfs.user', 'tfs.project', 'tfs.areapath', 'test.mapping.file', 'rm.query', 'rm.filter']
+		def required = ['clm.url', 'clm.user', 'clm.projectArea', 'rm.template.dir', 'tfs.url', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'rm.query', 'rm.filter']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
