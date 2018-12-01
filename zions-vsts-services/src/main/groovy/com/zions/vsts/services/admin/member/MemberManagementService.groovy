@@ -10,7 +10,25 @@ import groovyx.net.http.ContentType
 
 /**
  * Provides behaviors to manage users on a VSTS project.  Adding users to projects and teams.
+ * 
+ * <p/>Design
+ * <img src="MemberManagementService.png"/>
+ * 
  * @author z091182
+ * 
+ * @startuml
+ * class com.zions.vsts.services.admin.member.MemberManagementService {
+ * ... entry point method to add members into project and teams ...
+ * + addMemberToTeams(String collection, String email,  def teams): returns new identity object
+ * ... entry point method to be used by migration tools to ensure valid user is set ...
+ * + getProjectMembersMap(collection, project): return Map of identities keyed by email
+ * }
+ * note left: @Component
+ * 
+ * com.zions.vsts.services.admin.member.MemberManagementService --> com.zions.common.services.rest.IGenericRestClient: @Autowired genericRestClient
+ * com.zions.common.services.rest.IGenericRestClient <|.. com.zions.vsts.services.tfs.rest.GenericRestClient : Injected by Spring
+ * com.zions.vsts.services.admin.member.MemberManagementService --> com.zions.vsts.services.admin.project.ProjectManagementService: @Autowired projectManagmentService injected by Spring
+ * @enduml
  *
  */
 @Component

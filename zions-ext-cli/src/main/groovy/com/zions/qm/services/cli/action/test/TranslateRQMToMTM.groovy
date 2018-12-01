@@ -26,12 +26,38 @@ import groovy.xml.XmlUtil
 /**
  * Provides command line interaction to synchronize RQM test planning with VSTS.
  * 
+ * <p><b>Command-line arguments:</b></p>
+ * <ul>
+ * 	<li>translateRQMToMTM - The action's Spring bean name.</li>
+ * <ul>
+ * <p><b>The following's command-line format: --name=value</b></p>
+ * <ul>
+ *  <li>clm.url - CLM url</li>
+ *  <li>clm.user - CLM userid</li>
+ *  <li>clm.password - (optional) CLM password. It can be hidden in props file.</li>
+ *  <li>ccm.projectArea - RQM project area</li>
+ *  <li>tfs.url - ADO url</li>
+ *  <li>tfs.user - ADO user</li>
+ *  <li>tfs.token - ADO PAT</li>
+ *  <li>tfs.project - ADO project</li>
+ *  <li>qm.template.dir - RQM meta-data xml</li>
+ *  <li>tfs.areapath - ADO area path to set Test planning items.</li>
+ *  <li>test.mapping.file - The xml mapping file to enable field data flow.</li>
+ *  <li>qm.query - The xpath RQM testplan query.</li>
+ *  <li>qm.filter - the name of filter class to used to pair down items that can't be filtered by query.</li>
+ *  </ul>
+ * </ul>
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="TranslateRQMToMTM_class_diagram.png"/>
+ * <p><b>Flow:</b></p>
+ * <img src="TranslateRQMToMTM_sequence_diagram.png"/>
  * @author z091182
  * 
- * @startuml
+ * @startuml TranslateRQMToMTM_class_diagram.png
  * 
  * annotation Autowired
- * 
+ * annotation Component
  * class Map<? extends String, ? extends IFilter> {
  * 	+ put(key, element)
  * 	+ get(key)
@@ -39,16 +65,101 @@ import groovy.xml.XmlUtil
  * 	+ [key] 
  * }
  * class TranslateRQMToMTM {
+ * ... Called by CliApplication to validate args ...
  * 	+validate(ApplicationArguments args)
+ * 
+ * ... Called by CliApplication to execute behavior with args ...
  * 	+execute(ApplicationArguments args)
+ * 
+ * ...  Filter query result ...
  * 	+filtered(def, String)
  * }
  * 
- * CliAction <|-- TranslateRQMToMTM
- * TranslateRQMToMTM .. Autowired:  Spring Boot
- * TranslateRQMToMTM --> Map: @Autowired filterMap
- * TranslateRQMToMTM --> QmMetadataManagementService: @Autowired qmMetadataManagementService
  * 
+ * CliAction <|.. TranslateRQMToMTM
+ * TranslateRQMToMTM .. Autowired:  Spring Boot
+ * TranslateRQMToMTM .. Component: Spring injectable type
+ * TranslateRQMToMTM --> Map: @Autowired filterMap
+ * package com.zions.vsts.services.work {
+ *  TranslateRQMToMTM --> WorkManagementService: @Autowired workManagementService
+ *  TranslateRQMToMTM --> FileManagementService: @Autowired fileManagementService
+ * }
+ * TranslateRQMToMTM --> com.zions.qm.services.metadata.QmMetadataManagementService: @Autowired qmMetadataManagementService
+ * package com.zions.qm.services.test {
+ *  TranslateRQMToMTM --> ClmTestManagementService: @Autowired clmTestManagementService
+ *  TranslateRQMToMTM --> ClmTestItemManagementService: @Autowired clmTestItemManagementService
+ *  TranslateRQMToMTM --> TestMappingManagementService: @Autowired testMappingManagementService
+ * }
+ * TranslateRQMToMTM -->  com.zions.vsts.services.admin.member.MemberManagementService: @Autowired memberManagementService
+ * TranslateRQMToMTM --> com.zions.vsts.services.test.TestManagementService: @Autowired TestManagementService
+ * @enduml
+ * 
+ * @startuml TranslateRQMToMTM_sequence_diagram.png
+ * participant CliApplication
+ * CliApplication -> TranslateRQMToMTM: validate(ApplicationArguments args)
+ * CliApplication -> TranslateRQMToMTM: execute(ApplicationArguments args)
+ * alt include.update has 'clean'
+ * 	TranslateRQMToMTM -> TestManagementService: cleanupTestItems(collection, tfsProject, areaPath)
+ * end
+ *  alt include.update has 'data'
+ *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
+ *  TranslateRQMToMTM -> MemberManagementService: get member map
+ *  TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
+ *  loop each { testplan object structure }
+ *  	TranslateRQMToMTM -> ClmTestItemManagementService: get data changes
+ *  	TranslateRQMToMTM -> TestManagementService: sent plan and suite changes
+ *  	loop each test suite of test plan
+ *  		TranslateRQMToMTM -> ClmTestItemManagementService: get data changes
+ *  		TranslateRQMToMTM -> TestManagementService: sent plan and suite changes
+ *  		loop each test case of test suite
+ *  			TranslateRQMToMTM -> ClmTestItemManagementService: get work item data changes
+ *  			TranslateRQMToMTM -> List: add 'Test Case' work item changes
+ *  		end
+ *  	end
+ *  	loop each test case of test plan
+ *  		TranslateRQMToMTM -> ClmTestItemManagementService: get work item data changes
+ *  		TranslateRQMToMTM -> List: add 'Test Case' work item changes
+ *  	end
+ *  end
+ *  TranslateRQMToMTM -> WorkManagementService: send list of changes to wi batch.
+ *  end
+ *  alt include.update has 'links'
+ *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
+ *  TranslateRQMToMTM -> MemberManagementService: get member map
+ *  TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
+ *  loop each { testplan object structure }
+ *  	loop each testsuite for testplan
+ *  		loop each test case for test suite
+ *  			TranslateRQMToMTM -> List: add test case to list
+ *  		end
+ *  		TranslateRQMToMTM -> TestManagementService: setParent of list of test case to test suite
+ *  	end
+ *  	loop each test case for test plan
+ *  		TranslateRQMToMTM -> List: add test case to list
+ *  	end
+ *  	TranslateRQMToMTM -> TestManagementService: setParent of list of test case to test plan
+ *  end
+ *  end
+ *  alt include.update has 'execution'
+ *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
+ *  TranslateRQMToMTM -> MemberManagementService: get member map
+ *  TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
+ *  loop each { testplan object structure }
+ *  	TranslateRQMToMTM -> TestManagmentService: ensure test runs for test plan
+ *  	loop each { test suite }
+ *  		loop each { test case of test suite}
+ *  			TranslateRQMToMTM -> ClmTestItemManagementService: ensure test result data for testcase
+ *  			TranslateRQMToMTM -> List: add changes
+ *  			TranslateRQMToMTM -> TestManagmentService: send test result data
+ *  		end
+ *  	end
+ *  	loop each { test case of test plan}
+ *  		TranslateRQMToMTM -> ClmTestItemManagementService: ensure test result data for testcase
+ *  		TranslateRQMToMTM -> List: add changes
+ *  		TranslateRQMToMTM -> TestManagmentService: send test result data
+ *  	end
+ *  end
+ *  end
  * @enduml
  *
  */
@@ -78,6 +189,9 @@ class TranslateRQMToMTM implements CliAction {
 	public TranslateRQMToMTM() {
 	}
 
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.cli.action.CliAction#execute(org.springframework.boot.ApplicationArguments)
+	 */
 	public def execute(ApplicationArguments data) {
 		boolean excludeMetaUpdate = true
 		def includes = [:]
@@ -334,6 +448,13 @@ class TranslateRQMToMTM implements CliAction {
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
 
+	/**
+	 * Filters top level queries items.
+	 * 
+	 * @param items - ojgect of elements to be filtered Groovy object generation from XML rest result
+	 * @param filter - Name of IFilter to use
+	 * @return filtered result.
+	 */
 	def filtered(def items, String filter) {
 		if (this.filterMap[filter] != null) {
 			return this.filterMap[filter].filter(items)
@@ -355,6 +476,9 @@ class TranslateRQMToMTM implements CliAction {
 		return testTypes
 	}
 
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.cli.action.CliAction#validate(org.springframework.boot.ApplicationArguments)
+	 */
 	public Object validate(ApplicationArguments args) throws Exception {
 		def required = ['clm.url', 'clm.user', 'clm.projectArea', 'qm.template.dir', 'tfs.url', 'tfs.user', 'tfs.project', 'tfs.areapath', 'test.mapping.file', 'qm.query', 'qm.filter']
 		required.each { name ->

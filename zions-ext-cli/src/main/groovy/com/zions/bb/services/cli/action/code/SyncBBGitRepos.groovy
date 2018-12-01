@@ -15,9 +15,44 @@ import groovy.json.JsonSlurper
 /**
  * Command line class to import GIT repos from Bitbucket project to VSTS project and apply grants for access to
  * repos to specific team.
+ * <p><b>Command-line arguments:</b></p>
+ * <ul>
+ * 	<li> syncBBGitRepos - The action's Spring bean name.</li>
+ * <ul>
+ * <p><b>The following's command-line format: --name=value</b></p>
+ * <ul>
+ *  <li>tfs.url - ADO host url</li>
+ *  <li>tfs.user - ADO user id</li>
+ *  <li>(optional) tfs.token - ADO PAT</li>
+ *  <li>bb.url - Bitbucket URL</li>
+ *  <li>bb.user - Bitbucket user</li>
+ *  <li>bb.password - Bitbucket password</li>
+ *  <li>bb.project - Butbucket Project</li>
+ *  <li>tfs.project - ADO project</li>
+ *  <li>tfs.team - ADO Team</li>
+ *  <li>grant.template - general permissions to set on repo for team</li>
+ *  </ul>
+ * </ul>
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="SyncBBGitRepos.png"/>
  * 
  * @author z091182
- *
+ * 
+ * @startuml
+ * class SyncBBGitRepos [[java:com.zions.bb.services.cli.action.code.SyncBBGitRepos]] {
+ * 	~CodeManagementService codeManagmentService
+ * 	~BBCodeManagementService bBCodeManagmentService
+ * 	+SyncBBGitRepos(CodeManagementService codeManagmentService, BBCodeManagementService bBCodeManagmentService, PermissionsManagementService permissionsManagementService)
+ * 	+def execute(ApplicationArguments data)
+ * 	+Object validate(ApplicationArguments args)
+ * }
+ * interface CliAction [[java:com.zions.common.services.cli.action.CliAction]] {
+ * }
+ * CliAction <|.. SyncBBGitRepos
+ * SyncBBGitRepos --> com.zions.vsts.services.code.CodeManagementService: @Autowired codeManagmentService
+ * SyncBBGitRepos --> com.zions.bb.services.code.BBCodeManagementService: @Autowired bBCodeManagmentService
+ * @enduml
  */
 @Component
 class SyncBBGitRepos implements CliAction {

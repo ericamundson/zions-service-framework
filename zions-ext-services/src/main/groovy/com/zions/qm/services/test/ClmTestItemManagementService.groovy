@@ -12,7 +12,25 @@ import groovyx.net.http.ContentType
 /**
  * Class responsible for processing RQM test planning data to generate Azure Devops test data.
  * 
+ * <p>Design</p>
+ * <img src="ClmTestItemManagementService.png"/>
+ * 
  * @author z091182
+ * 
+ * @startuml
+ * class ClmTestItemManagementService {
+ *  ... Get ADO Test Plan/Execution field data ...
+ *  + getChanges(String project, def qmItemData, def memberMap, def runData = null, def testCase = null)
+ * }
+ * note left: @Component
+ * 
+ * class Map<String, IFieldHandler> {
+ * }
+ * note left: String is name of handler Class, IFieldHandler is actual class
+ * 
+ * ClmTestItemManagementService --> Map: @Autowired fieldMap - The data conversion handlers
+ * ClmTestItemManagementService --> TestMappingManagementService: @Autowired testMappingManagementService - Manages field in to out map data.
+ * @enduml
  *
  */
 @Component
@@ -71,7 +89,18 @@ public class ClmTestItemManagementService {
 		return outItems
 	}
 	
-	def generateExecutionData(def qmItemData, def map, String project, def memberMap, def runData, def testCase) {
+	/**
+	 * Generates ADO test result information from mapping.
+	 * 
+	 * @param qmItemData - RQM executionresult data
+	 * @param map - Field map data
+	 * @param project - ADO project name
+	 * @param memberMap - ADO project member map
+	 * @param runData - ADO Run data
+	 * @param testCase - RQM testcase data
+	 * @return ADO 'Result' rest object
+	 */
+	private def generateExecutionData(def qmItemData, def map, String project, def memberMap, def runData, def testCase) {
 		String type = map.target
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
@@ -105,7 +134,7 @@ public class ClmTestItemManagementService {
 		return exData
 	}
 	
-	def generateItemData(def qmItemData, def map, String project, def memberMap, def parent = null) {
+	private def generateItemData(def qmItemData, def map, String project, def memberMap, def parent = null) {
 		String type = map.target
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
@@ -178,7 +207,7 @@ public class ClmTestItemManagementService {
 
 	}
 	
-	def getFieldData(def qmItemData, def field, def memberMap, def cacheWI, def map, def runData = null, def testCase = null) {
+	private def getFieldData(def qmItemData, def field, def memberMap, def cacheWI, def map, def runData = null, def testCase = null) {
 		String handlerName = "${field.source}"
 		String fValue = ""
 		if (this.fieldMap["${handlerName}"] != null) {
@@ -211,7 +240,7 @@ public class ClmTestItemManagementService {
 		return null
 	}
 
-	def getTestMaps(qmItemData) {
+	private def getTestMaps(qmItemData) {
 		String type = "${qmItemData.name()}"
 		def maps = testMappingManagementService.mappingData.findAll { amap -> 
 			"${amap.source}" == "${type}"
@@ -225,7 +254,7 @@ public class ClmTestItemManagementService {
 	 * @param id
 	 * @return
 	 */
-	def getCacheWI(id) {
+	private def getCacheWI(id) {
 		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
 		if (cacheData.exists()) {
 			JsonSlurper s = new JsonSlurper()
@@ -235,7 +264,7 @@ public class ClmTestItemManagementService {
 
 	}
 	
-	def getResultData(String id) {
+	private def getResultData(String id) {
 		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}resultData.json");
 		if (cacheData.exists()) {
 			JsonSlurper s = new JsonSlurper()

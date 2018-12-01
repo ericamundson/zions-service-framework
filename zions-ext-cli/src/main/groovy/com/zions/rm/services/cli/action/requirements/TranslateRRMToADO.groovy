@@ -74,7 +74,7 @@ import groovy.xml.XmlUtil
  * 
  * @startuml TranslateRRMToADO_sequence_diagram.png
  * participant CLI
- * CLI -> TranslateRRMToADO: validate arguements
+ * CLI -> TranslateRRMToADO: validate arguments
  * CLI -> TranslateRRMToADO: execute
  * alt include.update has 'clean'
  * 	TranslateRRMToADO -> WorkManagementService: clean
