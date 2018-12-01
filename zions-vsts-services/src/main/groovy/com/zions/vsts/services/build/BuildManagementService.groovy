@@ -15,6 +15,12 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 
+/**
+ * @author z091182
+ * 
+ * 
+ *
+ */
 @Component
 @Slf4j
 public class BuildManagementService {

@@ -11,6 +11,41 @@ import com.zions.vsts.services.admin.member.MemberManagementService
 import groovy.json.JsonSlurper
 
 
+/**
+ * This command-line action ensures CLM users/teams are also up to date with users in ADO
+ * 
+ * <p><b>Command-line arguments:</b></p>
+ * <ul>
+ * 	<li> syncProjectWithRTCMembers - The action's Spring bean name.</li>
+ * <ul>
+ * <p><b>The following's command-line format: --name=value</b></p>
+ * <ul>
+ *  <li>tfs.url - ADO url</li>
+ *  <li>tfs.user - ADO user</li>
+ *  <li>tfs.token - ADO token</li>
+ *  <li>clm.url - CLM url</li>
+ *  <li>clm.user - CLM user</li>
+ *  <li>clm.password - CLM password</li>
+ *  <li>clm.ccm.project - CLM project name</li>
+ *  <li>tfs.project - ADO project name</li>
+ *  <li>namemap.json.file - A file to map CLM teams/projects to correct ADO team area/project</li>
+ *  </ul>
+ * </ul>
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="SyncProjectWithRTCMembers.png"/>
+ * 
+ * @author z091182
+ * 
+ * @startuml
+ * class SyncProjectWithRTCMembers {
+ * }
+ * note left: @Component
+ * SyncProjectWithRTCMembers --> com.zions.clm.services.rtc.project.members.CcmMemberManagementService: @Autowired ccmMemberManagmentService - Query the CLM users
+ * SyncProjectWithRTCMembers --> com.zions.vsts.services.admin.member.MemberManagementService: @Autowired memberManagmentService - Ensures members/teams in ADO
+ * @enduml
+ *
+ */
 @Component
 class SyncProjectWithRTCMembers implements CliAction {
 	MemberManagementService memberManagmentService

@@ -10,6 +10,39 @@ import com.zions.common.services.cli.action.CliAction
 import groovy.json.JsonBuilder
 import groovy.xml.MarkupBuilder
 
+/**
+ * Action to extract work item meta-data from an input file of RTC data.
+ * 
+ * <p><b>Command-line arguments:</b></p>
+ * <ul>
+ * 	<li>buildWITStarter - The action's Spring bean name.</li>
+ * <ul>
+ * <p><b>The following's command-line format: --name=value</b></p>
+ * <ul>
+ *  <li>in.file - file with RTC data</li>
+ *  <li>out.file - file to generate.</li>
+ *  <li></li>
+ *  </ul>
+ * </ul>
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="BuildWITStarter.png"/>
+ * 
+ * @author z091182
+ * 
+ * @startuml
+ * class BuildWITStarter [[java:com.zions.clm.services.cli.action.wit.BuildWITStarter]] {
+ *  ~println writer
+ *  +void ExtractCcmWIMetadata()
+ *  ~def buildStarterXml(def inFile)
+ *  +def execute(ApplicationArguments data)
+ *  +Object validate(ApplicationArguments args)
+ * }
+ * interface CliAction [[java:com.zions.common.services.cli.action.CliAction]] {
+ * }
+ * CliAction <|.. BuildWITStarter
+ * @enduml
+ */
 @Component
 class BuildWITStarter implements CliAction {
 	

@@ -35,15 +35,38 @@ allprojects {
     if ("${buildType}" == 'ci') {
         apply plugin: 'codenarc'
     }
+	sourceSets {
+		groovydoc {
+			resources {
+				srcDir 'src/groovydoc'
+			}
+		}
+	}
 	
-	task handleGroovydoc(type: Copy) {
+	// Star generatation of framework documentation
+	groovydoc {
+		classpath = sourceSets.groovydoc.output + classpath
+	}
+	
+	task copyDesigns(type: Copy) {
 		from('src/main/groovy') {
 			include '**/*.png'
 		}
 		into 'build/docs/groovydoc'
+		dependsOn 'groovydoc'
 	}
 	
-	handleGroovydoc.dependsOn groovydoc
+	task fullGroovydoc(type: Delete) {
+		delete fileTree('src/main/groovy') {
+			include '**/*.png'
+			include '**/*.cmapx'
+		}
+		dependsOn 'copyDesigns'
+		
+	
+	}
+	// End generation of framework documentation
+	
 	
 	test {
 		//String activeProfile =  System.properties['spring.profiles.active']

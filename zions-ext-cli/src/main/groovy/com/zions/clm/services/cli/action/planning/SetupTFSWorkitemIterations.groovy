@@ -13,6 +13,51 @@ import com.zions.vsts.services.work.planning.IterationManagementService
 import com.zions.vsts.services.workitem.AreasManagementService
 import groovy.json.JsonBuilder
 
+/**
+ * Provides ability to setup ADO sprints from CLM
+ * 
+ * This is currently not usable. To pull sprints from 
+ * ADO required HTML scrapping. New ADO UI broke it.
+ * 
+ * 
+ * <p><b>Command-line arguments:</b></p>
+ * <ul>
+ * 	<li>setupTFSWorkitemIterations - The action's Spring bean name.</li>
+ * <ul>
+ * <p><b>The following's command-line format: --name=value</b></p>
+ * <ul>
+ *  <li>clm.url - CLM url</li>
+ *  <li>clm.user - CLM userid</li>
+ *  <li>clm.password - </li>
+ *  <li>ccm.projectArea - RTC project area</li>
+ *  <li>tfs.url - ADO url</li>
+ *  <li>tfs.user - ADO user</li>
+ *  <li>tfs.token - ADO PAT</li>
+ *  <li>tfs.project - ADO project</li>
+ *  <li></li>
+ *  </ul>
+ * </ul>
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="SetupTFSWorkitemIterations.png"/>
+ * 
+ * @author z091182
+ * 
+ * @startuml
+ * class SetupTFSWorkitemIterations [[java:com.zions.clm.services.cli.action.planning.SetupTFSWorkitemIterations]] {
+ * 	+SetupTFSWorkitemIterations()
+ * 	+def execute(ApplicationArguments data)
+ * 	+Object validate(ApplicationArguments args)
+ * }
+ * interface CliAction [[java:com.zions.common.services.cli.action.CliAction]] {
+ * }
+ * CliAction <|.. SetupTFSWorkitemIterations
+ * SetupTFSWorkitemIterations --> com.zions.vsts.services.work.planning.IterationManagementService: @Autowired iterationManagementService
+ * SetupTFSWorkitemIterations --> com.zions.vsts.services.admin.project.ProjectManagementService: @Autowired projectManagementService
+ * SetupTFSWorkitemIterations --> com.zions.clm.services.ccm.project.planning.PlanManagementService: @Autowired planManagementService
+ * @enduml
+ *
+ */
 @Component
 class SetupTFSWorkitemIterations implements CliAction {
 	@Autowired
