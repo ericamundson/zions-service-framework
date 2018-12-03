@@ -45,6 +45,7 @@ import groovy.xml.XmlUtil
  *  <li>test.mapping.file - The xml mapping file to enable field data flow.</li>
  *  <li>qm.query - The xpath RQM testplan query.</li>
  *  <li>qm.filter - the name of filter class to used to pair down items that can't be filtered by query.</li>
+ *  <li>include.update - Comma delimited list of the phases that will run during execution. E.G. refresh,clean,data,execution,links,attachments</li>
  *  </ul>
  * </ul>
  * 

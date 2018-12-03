@@ -4,6 +4,24 @@ import org.springframework.stereotype.Component
 
 import com.zions.common.services.query.IFilter
 
+/**
+ * Work item filter related to ALMOps conversion
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="AlmOpsFilter.png"/>
+ * 
+ * @author z091182
+ *
+ * @startuml
+ * class AlmOpsFilter  {
+ * 	+def filter(def workItems)
+ * }
+ * interface IFilter [[java:com.zions.common.services.query.IFilter]] {
+ * }
+ * IFilter <|.. AlmOpsFilter
+ * @enduml
+ *
+ */
 @Component
 class AlmOpsFilter implements IFilter {
 

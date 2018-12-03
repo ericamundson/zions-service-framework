@@ -4,6 +4,25 @@ import org.springframework.stereotype.Component
 
 import com.zions.common.services.query.IFilter
 
+/**
+ * Filter work items for Mobile Banking.
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="MbFilter.png"/>
+ * 
+ * @author z091182
+ *
+ * @startuml
+ * class MbFilter  {
+ * 	+def filter(def workItems)
+ * }
+ * interface IFilter [[java:com.zions.common.services.query.IFilter]] {
+ * }
+ * IFilter <|.. MbFilter
+ * @enduml
+ *
+ *
+ */
 @Component
 class MbFilter implements IFilter {
 	Date startDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", '2018-10-02T00:00:01.000-0700')

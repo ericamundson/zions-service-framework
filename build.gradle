@@ -43,7 +43,7 @@ allprojects {
 		}
 	}
 	
-	// Star generatation of framework documentation
+	// Start generatation of framework documentation
 	groovydoc {
 		classpath = sourceSets.groovydoc.output + classpath
 	}

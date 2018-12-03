@@ -10,6 +10,12 @@ import com.zions.common.services.cli.action.CliAction
 
 import groovy.json.JsonBuilder
 
+/**
+ * Currently not used.  Training sample for Astro.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class CacheWorkitemAttachments implements CliAction {
 	AttachmentsManagementService attachmentsManagementService;
