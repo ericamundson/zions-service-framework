@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component
 @Component
 @Slf4j
 class GenericRestClient extends AGenericRestClient {
-	RESTClient delegate;
 		
 	String tfsUrl;
 	

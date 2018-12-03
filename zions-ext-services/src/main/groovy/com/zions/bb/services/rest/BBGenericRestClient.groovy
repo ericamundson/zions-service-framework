@@ -17,9 +17,6 @@ import com.zions.common.services.rest.IGenericRestClient
 
 @Component
 class BBGenericRestClient extends AGenericRestClient {
-	private RESTClient delegate;
-	
-	
 	String bbUrl;
 	
 	private String user;

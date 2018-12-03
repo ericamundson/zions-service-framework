@@ -55,8 +55,6 @@ import org.springframework.stereotype.Component
 @Slf4j
 @Component
 public class RmGenericRestClient extends AGenericRestClient {
-	private RESTClient delegate;
-	
 	String userid;
 	
 	String password;

@@ -7,7 +7,7 @@ import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
 
 abstract class AGenericRestClient implements IGenericRestClient {
-	private RESTClient delegate;
+	RESTClient delegate;
 	
 	boolean checked = false
 
