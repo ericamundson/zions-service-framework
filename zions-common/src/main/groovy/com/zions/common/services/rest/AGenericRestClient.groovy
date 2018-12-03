@@ -8,6 +8,8 @@ import groovyx.net.http.RESTClient
 
 abstract class AGenericRestClient implements IGenericRestClient {
 	private RESTClient delegate;
+	
+	boolean checked = false
 
 	@Override
 	abstract public void setCredentials(String user, String token);
@@ -39,7 +41,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	@Override
 	def get(Map input) {
 		//log.debug("GenericRestClient::get -- URI before checkBlankCollection: "+input.uri)
-		Map oinput = checkBlankCollection(input)
+		Map oinput = input
+		if (checked) {
+			oinput = checkBlankCollection(input)
+		}
 		//log.debug("GenericRestClient::get -- URI after checkBlankCollection: "+oinput.uri)
 		HttpResponseDecorator resp = delegate.get(oinput)
 		return resp.data;
@@ -50,7 +55,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def put(Map input) {
-		Map oinput = checkBlankCollection(input)
+		Map oinput = input
+		if (checked) {
+			oinput = checkBlankCollection(input)
+		}
 		HttpResponseDecorator resp = delegate.put(oinput)
 		
 		if (resp.status != 200) {
@@ -64,7 +72,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def delete(Map input) {
-		Map oinput = checkBlankCollection(input)
+		Map oinput = input
+		if (checked) {
+			oinput = checkBlankCollection(input)
+		}
 		HttpResponseDecorator resp = delegate.delete(oinput)
 		if (resp.status != 204) {
 			return null;
@@ -77,7 +88,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def patch(Map input) {
-		Map oinput = checkBlankCollection(input)
+		Map oinput = input
+		if (checked) {
+			oinput = checkBlankCollection(input)
+		}
 		HttpResponseDecorator resp = delegate.patch(oinput)
 		
 		if (resp.status != 200) {
@@ -91,7 +105,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def post(Map input) {
-		Map oinput = checkBlankCollection(input)
+		Map oinput = input
+		if (checked) {
+			oinput = checkBlankCollection(input)
+		}
 		HttpResponseDecorator resp = delegate.post(oinput)
 		//JsonOutput t
 		if (resp.status != 200) {
@@ -122,7 +139,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	}
 
 	public Object rateLimitPost(Map input) {
-		Map oinput = checkBlankCollection(input)
+		Map oinput = input
+		if (checked) {
+			oinput = checkBlankCollection(input)
+		}
 		Map retryCopy = deepcopy(oinput)
 		HttpResponseDecorator resp = delegate.post(oinput)
 		

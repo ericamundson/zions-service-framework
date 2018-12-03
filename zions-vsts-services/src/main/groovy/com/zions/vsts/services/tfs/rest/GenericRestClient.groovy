@@ -44,6 +44,7 @@ class GenericRestClient extends AGenericRestClient {
 	 */
 	public GenericRestClient(RESTClient client) {
 		delegate = client
+		checked = true
 	}
 
 	@Autowired
@@ -58,7 +59,7 @@ class GenericRestClient extends AGenericRestClient {
 		delegate.handler.failure = { it }
 		setProxy()
 		setCredentials(user, token);
-
+		checked = true;
 	}
 	
 	/* (non-Javadoc)
