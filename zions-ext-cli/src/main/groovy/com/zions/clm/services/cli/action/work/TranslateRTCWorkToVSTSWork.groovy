@@ -19,10 +19,109 @@ import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
 
 /**
- * Provides command line interaction to synchronize RTC work items with VSTS.
+ * Provides command line interaction to synchronize RTC work items with ADO.
+ * 
+ * <p><b>Command-line arguments:</b></p>
+ * <ul>
+ * 	<li>translateRTCWorkToVSTSWork - The action's Spring bean name.</li>
+ * <ul>
+ * <p><b>The following's command-line format: --name=value</b></p>
+ * <ul>
+ *  <li>clm.url - CLM url</li>
+ *  <li>clm.user - CLM userid</li>
+ *  <li>clm.password - (optional) CLM password. It can be hidden in props file.</li>
+ *  <li>ccm.projectArea - RQM project area</li>
+ *  <li>tfs.url - ADO url</li>
+ *  <li>tfs.user - ADO user</li>
+ *  <li>tfs.token - ADO PAT</li>
+ *  <li>tfs.project - ADO project</li>
+ *  <li>ccm.template.dir - RTC meta-data xml</li>
+ *  <li>tfs.areapath - ADO area path to set Test planning items.</li>
+ *  <li>wit.mapping.file - The xml mapping file to enable field data flow.</li>
+ *  <li>wi.query - The xpath RQM testplan query.</li>
+ *  <li>wi.filter - the name of filter class to used to pair down items that can't be filtered by query.</li>
+ *  <li>include.update - Comma delimited list of the phases that will run during execution. E.G. meta,refresh,clean,workdata,worklinks,attachments</li>
+ *  </ul>
+ * </ul>
+ * 
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="TranslateRTCWorkToVSTSWork.png"/>
+ * <p><b>Flow:</b></p>
+ * <img src="TranslateRTCWorkToVSTSWork_sequence_diagram.png"/>
  * 
  * @author z091182
  *
+ * @startuml TranslateRTCWorkToVSTSWork.png
+ * annotation Autowired
+ * annotation Component
+ * class TranslateRTCWorkToVSTSWork [[java:com.zions.clm.services.cli.action.work.TranslateRTCWorkToVSTSWork]] {
+ *	+TranslateRTCWorkToVSTSWork()
+ *	+def execute(ApplicationArguments data)
+ *	~def filtered(def workItems, String filter)
+ *	~def loadCCMWITs(def ccmTemplateDir)
+ *	+Object validate(ApplicationArguments args)
+ * }
+ * interface CliAction [[java:com.zions.common.services.cli.action.CliAction]] {
+ * }
+ * class Map<String, IFilter> {
+ * }
+ * TranslateRTCWorkToVSTSWork ..> Autowired
+ * TranslateRTCWorkToVSTSWork ..> Component
+ * CliAction <|.. TranslateRTCWorkToVSTSWork
+ * TranslateRTCWorkToVSTSWork --> Map: @Autowired filterMap
+ * TranslateRTCWorkToVSTSWork --> com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService: @Autowired ccmWIMetadataManagementService
+ * TranslateRTCWorkToVSTSWork --> com.zions.vsts.services.work.templates.ProcessTemplateService: @Autowired processTemplateService
+ * package com.zions.vsts.services.work {
+ * 	TranslateRTCWorkToVSTSWork --> WorkManagementService: @Autowired workManagementService
+ *  TranslateRTCWorkToVSTSWork --> FileManagementService: @Autowired fileManagementService
+ * }
+ * TranslateRTCWorkToVSTSWork --> com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService: @Autowired clmWorkItemManagementService
+ * TranslateRTCWorkToVSTSWork --> com.zions.clm.services.ccm.workitem.CcmWorkManagementService: @Autowired ccmWorkManagementService
+ * TranslateRTCWorkToVSTSWork --> com.zions.vsts.services.admin.member.MemberManagementService: @Autowired memberManagementService
+ * TranslateRTCWorkToVSTSWork --> com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService: @Autowired attachmentsManagementService
+ * @enduml
+ * 
+ * @startuml TranslateRTCWorkToVSTSWork_sequence_diagram.png
+ * 
+ * participant CliApplication
+ * CliApplication -> TranslateRQMToMTM: validate(ApplicationArguments args)
+ * CliApplication -> TranslateRQMToMTM: execute(ApplicationArguments args)
+ * alt include.update has 'clean'
+ * 	TranslateRTCWorkToVSTSWork -> WorkManagementService: clean up added work items
+ * end
+ *  alt include.update has 'workdata'
+ *  TranslateRTCWorkToVSTSWork -> ProcessTemplateService: get field mapping
+ *  TranslateRTCWorkToVSTSWork -> MemberManagementService: get member map
+ *  TranslateRTCWorkToVSTSWork -> ccmWorkManagementService: get work items via query
+ *  loop each { work item  }
+ *  	TranslateRTCWorkToVSTSWork -> ClmTestItemManagementService: get data changes
+ *  	TranslateRTCWorkToVSTSWork -> List: add changes to list
+ *  end
+ *  TranslateRTCWorkToVSTSWork -> WorkManagementService: send list of changes to wi batch.
+ *  end
+ *  alt include.update has 'worklinks'
+ *  TranslateRTCWorkToVSTSWork -> ProcessTemplateService: get field mapping
+ *  TranslateRTCWorkToVSTSWork -> MemberManagementService: get member map
+ *  TranslateRTCWorkToVSTSWork -> CcmWorkManagementService: get work items via query
+ *  loop each { work item  }
+ *  	TranslateRTCWorkToVSTSWork -> ClmTestItemManagementService: get link data changes
+ *  	TranslateRTCWorkToVSTSWork -> List: add changes to list
+ *  end
+ *  TranslateRTCWorkToVSTSWork -> WorkManagementService: send list of changes to wi batch.
+ *  end
+ *  alt include.update has 'attachments'
+ *  TranslateRTCWorkToVSTSWork -> ProcessTemplateService: get field mapping
+ *  TranslateRTCWorkToVSTSWork -> MemberManagementService: get member map
+ *  TranslateRTCWorkToVSTSWork -> ccmWorkManagementService: get work items via query
+ *  loop each { work item  }
+ *  	TranslateRTCWorkToVSTSWork -> AttachmentsManagementService: save CLM attachment to cache
+ *  	TranslateRTCWorkToVSTSWork -> FileManagementService: ensure attachment associated to ADO and provide wi changes
+ *  	TranslateRTCWorkToVSTSWork -> List: Add attachment change to batch list.
+ *  end
+ *  TranslateRTCWorkToVSTSWork -> WorkManagementService: send list of changes to wi batch.
+ *  end
+ *  @enduml
  */
 @Component
 class TranslateRTCWorkToVSTSWork implements CliAction {

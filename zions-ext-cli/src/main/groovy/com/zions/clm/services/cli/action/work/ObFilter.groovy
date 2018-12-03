@@ -4,6 +4,24 @@ import org.springframework.stereotype.Component
 
 import com.zions.common.services.query.IFilter
 
+/**
+ * Work item filter for Online Banking team.
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="ObFilter.png"/>
+ * 
+ * @author z091182
+ *
+ * @startuml
+ * class ObFilter  {
+ * 	+def filter(def workItems)
+ * }
+ * interface IFilter [[java:com.zions.common.services.query.IFilter]] {
+ * }
+ * IFilter <|.. ObFilter
+ * @enduml
+ *
+ */
 @Component
 class ObFilter implements IFilter {
 

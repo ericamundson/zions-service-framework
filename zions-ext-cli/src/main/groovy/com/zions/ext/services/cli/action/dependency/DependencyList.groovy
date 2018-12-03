@@ -9,6 +9,14 @@ import com.zions.common.services.cli.action.CliAction
 
 import groovy.json.JsonBuilder
 
+/**
+ * Quick command-line utility to build a gradle dependency list from a folder of jars.
+ * 
+ * This was used for module zions-ccm-client-service gradle.build file.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class DependencyList implements CliAction {
 	

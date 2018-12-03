@@ -1,5 +1,6 @@
 package com.zions.rm.services.rest;
 
+import com.zions.common.services.rest.AGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonBuilder
 import groovy.json.JsonOutput
@@ -53,7 +54,7 @@ import org.springframework.stereotype.Component
 
 @Slf4j
 @Component
-public class RmGenericRestClient implements IGenericRestClient {
+public class RmGenericRestClient extends AGenericRestClient {
 	private RESTClient delegate;
 	
 	String userid;
@@ -73,21 +74,6 @@ public class RmGenericRestClient implements IGenericRestClient {
 		delegate.handler.failure = { it }
 		setProxy();
 		init();
-	}
-	def setProxy() {
-		String proxyHost = System.getProperty("proxy.Host")
-		if (proxyHost != null) {
-			String proxyPort = System.getProperty("proxy.Port")
-			String proxyUser = System.getProperty("proxy.User")
-			String proxyPassword = System.getProperty("proxy.Password")
-			
-			delegate.client.getCredentialsProvider().setCredentials(
-				new AuthScope(proxyHost, Integer.parseInt(proxyPort)),
-				new UsernamePasswordCredentials(proxyUser, proxyPassword)
-			)
-			delegate.setProxy(proxyHost, Integer.parseInt(proxyPort), 'http')
-			log.info('stuff')
-		}
 	}
 
 	def init()
@@ -122,61 +108,9 @@ public class RmGenericRestClient implements IGenericRestClient {
 		}
 	}
 	
-	def get(Map input) {
-		HttpResponseDecorator resp = delegate.get(input)
-		
-		def out = resp.data;
-		//println new groovy.xml.StreamingMarkupBuilder().bindNode(out) as String
-		return out;
-	}
-	def getWResponse(Map input) {
-		HttpResponseDecorator resp = delegate.get(input)
-		
-		return resp;
-	}
-
-	def put(Map input) {
-		HttpResponseDecorator resp = delegate.put(input)
-		
-		if (resp.status != 200) {
-			return null;
-		}
-		def out = resp.data;
-		return out;
-	}
-	
-	def delete(Map input) {
-		HttpResponseDecorator resp = delegate.delete(input)
-		if (resp.status != 204) {
-			return null;
-		}
-	}
-	
-	def patch(Map input) {
-		HttpResponseDecorator resp = delegate.patch(input)
-		
-		if (resp.status != 200) {
-			return null;
-		}
-		def out = resp.data;
-		return out;
-	}
-
-	def post(Map input) {
-		HttpResponseDecorator resp = delegate.post(input)
-		JsonOutput t
-		def out = resp.data;
-		return out;
-	}
-
 	public void setCredentials(String user, String token) {
 		// TODO Auto-generated method stub
 		
-	}
-	@Override
-	public Object rateLimitPost(Map input) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
 
