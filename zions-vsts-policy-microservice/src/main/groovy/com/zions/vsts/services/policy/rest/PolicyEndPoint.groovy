@@ -38,10 +38,13 @@ public class PolicyEndPoint {
 			def eventData = slurper.parseText(json)
 			def changeSet = eventData.resource;
 			changeSet.refUpdates.each { update ->
-				// only protect certain branch types
-				if ("${update.name}".startsWith("refs/heads/master") || 
-					"${update.name}".startsWith("refs/heads/release") ||
-					"${update.name}".toLowerCase().startsWith("refs/heads/feature/ifb")) {
+				// only protect certain branch types / patterns
+				String branchName = "${update.name}".toLowerCase()
+				if (branchName.startsWith("refs/heads/master") || 
+					branchName.startsWith("refs/heads/release") ||
+					branchName.startsWith("refs/heads/feature/ifb") ||
+					branchName.startsWith("refs/heads/ifb/") ||
+					branchName.startsWith("refs/heads/dr/")) {
 					// only when branch is new
 					if ("${update.oldObjectId}" == "0000000000000000000000000000000000000000") {
 						log.debug("In PolicyEndPoint - changes:\n"+changeSet)
