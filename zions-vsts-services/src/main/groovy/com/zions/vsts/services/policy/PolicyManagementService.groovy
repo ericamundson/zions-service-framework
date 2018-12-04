@@ -59,6 +59,7 @@ public class PolicyManagementService {
 	}
 	/**
 	 *  This method creates and applies the CI build policy for validating code merges for new pull requests.
+	 *  It also extends to create the CI and Release build definitions if they do not already exist.
 	 *  
 	 *  @return Response - ??
 	 */
@@ -66,8 +67,10 @@ public class PolicyManagementService {
 		
 		// get the CI build
 		def projectData = repoData.project
+		// check for DR branch
+		boolean isDRBranch = ("${branchName}".toLowerCase().startsWith("refs/heads/dr/"))
 		// result is a JSON object
-		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData)
+		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, isDRBranch)
 		int ciBuildId = result.ciBuildId
 		if (ciBuildId == -1) {
 			log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was returned. Unable to create the validation build policy!")
