@@ -95,11 +95,11 @@ public class RmGenericRestClient implements IGenericRestClient {
 		try {
 			
 			HttpResponseDecorator resp = this.delegate.get(	
-				uri: "${this.rmUrl}/qm/authenticated/identity",
+				uri: "${this.rmUrl}/rm/authenticated/identity",
 				headers: [Accept: 'text/html']
 			);	
 			resp = this.delegate.post( 
-				uri: "${this.rmUrl}/qm/authenticated/j_security_check",
+				uri: "${this.rmUrl}/rm/authenticated/j_security_check",
 				query: [j_username: this.userid, j_password: this.password],
 				requestContentType: 'application/x-www-form-urlencoded'
 			);
