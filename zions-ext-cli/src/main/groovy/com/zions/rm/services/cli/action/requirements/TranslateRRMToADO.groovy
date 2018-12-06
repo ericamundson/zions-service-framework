@@ -23,15 +23,35 @@ import groovy.xml.XmlUtil
 /**
  * Provides command line interaction to synchronize RRM requirements management with ADO.
  * 
- * <p/>Class design
+ * <p><b>Command-line arguments:</b></p>
+ * <ul>
+ * 	<li>translateRRMToADO - The action's Spring bean name.</li>
+ * <ul>
+ * <p><b>The following's command-line format: --name=value</b></p>
+ * <ul>
+ *  <li>clm.url - CLM url</li>
+ *  <li>clm.user - CLM userid</li>
+ *  <li>clm.password - (optional) CLM password. It can be hidden in props file.</li>
+ *  <li>ccm.projectArea - RQM project area</li>
+ *  <li>tfs.url - ADO url</li>
+ *  <li>tfs.user - ADO user</li>
+ *  <li>tfs.token - ADO PAT</li>
+ *  <li>tfs.project - ADO project</li>
+ *  <li>tfs.areapath - ADO area path to set Test planning items.</li>
+ *  <li>rm.mapping.file - The xml mapping file to enable field data flow.</li>
+ *  <li>rm.query - The xpath RQM testplan query.</li>
+ *  <li>rm.filter - the name of filter class to used to pair down items that can't be filtered by query.</li>
+ *  <li>include.update - Comma delimited list of the phases that will run during execution. E.G. refresh,clean,data,execution,links,attachments</li>
+ *  </ul>
+ * </ul>
+ * 
+ * <p><b>Class design:</b></p>
  * <img src="TranslateRRMToADO_class_diagram.png"/>
- * </p/>
- * Flow
+ * <p><b>Behavior:</b></p>
  * <img src="TranslateRRMToADO_sequence_diagram.png"/>
  * 
  * @author z091182
  * 
- * <p/><p hidden>
  * @startuml TranslateRRMToADO_class_diagram.png
  * 
  * annotation Autowired
@@ -46,9 +66,9 @@ import groovy.xml.XmlUtil
  * 
  * class TranslateRRMToADO {
  * ... TODO: Implement these Spring Components in zions-ext-services project...
- * atAutowired ClmRequirementsItemManagementService clmRequirementsItemManagementService
- * atAutowired ClmRequirementsManagementService clmRequirementsManagementService
- * atAutowired RequirementsMappingManagementService requirementsMappingManagementService
+ * @Autowired ClmRequirementsItemManagementService clmRequirementsItemManagementService
+ * @Autowired ClmRequirementsManagementService clmRequirementsManagementService
+ * @Autowired RequirementsMappingManagementService requirementsMappingManagementService
  * 
  * ... TODO: Need to complete implementation of ...
  * 	+validate(ApplicationArguments args)
@@ -64,12 +84,6 @@ import groovy.xml.XmlUtil
  * TranslateRRMToADO --> MemberManagementService: @Autowired memberManagementService
  * TranslateRRMToADO --> FileManagementService: @Autowired fileManagementService
  * TranslateRRMToADO --> WorkManagementService: @Autowired workManagementService
- *  
- * 
- * 
- * 
- * 
- * 
  * @enduml
  * 
  * @startuml TranslateRRMToADO_sequence_diagram.png
@@ -110,7 +124,6 @@ import groovy.xml.XmlUtil
  *  TranslateRRMToADO -> WorkManagementService: send list of changes
  * end
  * @enduml
- * </p>
  */
 @Component
 class TranslateRRMToADO implements CliAction {
@@ -146,7 +159,7 @@ class TranslateRRMToADO implements CliAction {
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
 		String project = data.getOptionValues('clm.projectArea')[0]
 		String templateDir = data.getOptionValues('rm.template.dir')[0]
-		String mappingFile = data.getOptionValues('req.mapping.file')[0]
+		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
 		String rmQuery = data.getOptionValues('rm.query')[0]
 		String rmFilter = data.getOptionValues('rm.filter')[0]
 		String collection = ""
@@ -155,7 +168,7 @@ class TranslateRRMToADO implements CliAction {
 		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
 		File mFile = new File(mappingFile)
-
+		
 		def mapping = new XmlSlurper().parseText(mFile.text)
 		if (includes['clean'] != null) {
 		}

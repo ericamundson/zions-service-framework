@@ -22,7 +22,7 @@ class ResultTestCaseReferenceHandler extends QmBaseAttributeHandler {
 		String tId = "${testCase.webId}-Test Case"
 		def adoTestCase = clmTestItemManagerService.getCacheWI(tId)
 		if (adoTestCase == null) return null
-		def outVal = [id: adoTestCase.id, name: "${adoTestCase.fields.'System.Title'}", url: "${adoTestCase._links.href}"]
+		def outVal = [id: adoTestCase.id, name: "${adoTestCase.fields.'System.Title'}", url: "${adoTestCase._links.self.href}"]
 		return outVal;
 	}
 

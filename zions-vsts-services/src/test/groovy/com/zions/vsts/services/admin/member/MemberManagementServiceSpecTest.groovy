@@ -82,6 +82,7 @@ class MemberManagementServiceSpecTest extends Specification {
 		then: 'validate member added to team'
 		res == null
 	}
+	
 	def 'getProjectMembersMap test success flow.'() {
 		given: 'stub project management service getProject'
 		def projectInfo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)

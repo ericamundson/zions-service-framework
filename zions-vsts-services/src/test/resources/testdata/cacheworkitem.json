@@ -1,0 +1,101 @@
+{
+    "id": 22572,
+    "rev": 2,
+    "fields": {
+        "System.AreaPath": "DigitalBanking\\OB\\Online Banking",
+        "System.TeamProject": "DigitalBanking",
+        "System.IterationPath": "DigitalBanking",
+        "System.WorkItemType": "User Story",
+        "System.State": "New",
+        "System.Reason": "New",
+        "System.CreatedDate": "2018-09-06T12:18:14.66Z",
+        "System.CreatedBy": {
+            "displayName": "Douglas Wilson",
+            "url": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/0c4c0e82-cdbb-6164-b90b-979556c6189c",
+            "_links": {
+                "avatar": {
+                    "href": "https://eto-dev.visualstudio.com/_apis/GraphProfile/MemberAvatars/aad.MGM0YzBlODItY2RiYi03MTY0LWI5MGItOTc5NTU2YzYxODlj"
+                }
+            },
+            "id": "0c4c0e82-cdbb-6164-b90b-979556c6189c",
+            "uniqueName": "Douglas.Wilson@zionsbancorp.com",
+            "imageUrl": "https://eto-dev.visualstudio.com/_api/_common/identityImage?id=0c4c0e82-cdbb-6164-b90b-979556c6189c",
+            "descriptor": "aad.MGM0YzBlODItY2RiYi03MTY0LWI5MGItOTc5NTU2YzYxODlj"
+        },
+        "System.ChangedDate": "2018-11-16T20:32:19Z",
+        "System.ChangedBy": {
+            "displayName": "Eric Amundson",
+            "url": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "_links": {
+                "avatar": {
+                    "href": "https://eto-dev.visualstudio.com/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+                }
+            },
+            "id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "uniqueName": "eric.amundson2@zionsbancorp.com",
+            "imageUrl": "https://eto-dev.visualstudio.com/_api/_common/identityImage?id=34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+        },
+        "System.CommentCount": 1,
+        "System.Title": "Bancorp Name Change: CCOnline NSB NMLS#",
+        "System.BoardColumn": "New",
+        "System.BoardColumnDone": false,
+        "Microsoft.VSTS.Scheduling.StoryPoints": 3.0,
+        "Microsoft.VSTS.Common.StateChangeDate": "2018-11-16T20:23:57.873Z",
+        "Microsoft.VSTS.Common.Priority": 3,
+        "Microsoft.VSTS.Common.ValueArea": "Business",
+        "WEF_8036838721CC4DC0B35839429B90A6D8_Kanban.Column": "New",
+        "WEF_8036838721CC4DC0B35839429B90A6D8_Kanban.Column.Done": false,
+        "Custom.ExternalID": "RTC-161011",
+        "System.Description": "As a CCOnline customer I would like to see consistent and up to date naming so that I know with whom I'm entering into the lending relationship.",
+        "Microsoft.VSTS.Common.AcceptanceCriteria": "NSB NMLS# has been updated in the image below the footer for all CCOnline NSB apps.<br><br>The text in the image should read:<br>Zions Bancorporation, N.A. NMLS#467014",
+        "Custom.Approvals": "{&quot;approvalStates&quot;:[]}"
+    },
+    "relations": [
+        {
+            "rel": "System.LinkTypes.Hierarchy-Reverse",
+            "url": "https://eto-dev.visualstudio.com/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/21906",
+            "attributes": {
+                "isLocked": false,
+                "comment": "parent of 21906"
+            }
+        },
+        {
+            "rel": "AttachedFile",
+            "url": "https://eto-dev.visualstudio.com/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/attachments/8cdf928c-f7a7-435f-a407-5ecc2e1f9366",
+            "attributes": {
+                "authorizedDate": "2018-11-16T20:32:19Z",
+                "id": 3861063,
+                "resourceCreatedDate": "2018-11-16T20:32:19Z",
+                "resourceModifiedDate": "2018-11-16T20:32:19Z",
+                "revisedDate": "9999-01-01T00:00:00Z",
+                "comment": "Added attachment CC Online - Bancorp Name Change.docx",
+                "name": "CC Online - Bancorp Name Change.docx"
+            }
+        }
+    ],
+    "_links": {
+        "self": {
+            "href": "https://eto-dev.visualstudio.com/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/22572"
+        },
+        "workItemUpdates": {
+            "href": "https://eto-dev.visualstudio.com/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/22572/updates"
+        },
+        "workItemRevisions": {
+            "href": "https://eto-dev.visualstudio.com/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/22572/revisions"
+        },
+        "workItemComments": {
+            "href": "https://eto-dev.visualstudio.com/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/22572/comments"
+        },
+        "html": {
+            "href": "https://eto-dev.visualstudio.com/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22572"
+        },
+        "workItemType": {
+            "href": "https://eto-dev.visualstudio.com/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItemTypes/User%20Story"
+        },
+        "fields": {
+            "href": "https://eto-dev.visualstudio.com/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/fields"
+        }
+    },
+    "url": "https://eto-dev.visualstudio.com/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/22572"
+}

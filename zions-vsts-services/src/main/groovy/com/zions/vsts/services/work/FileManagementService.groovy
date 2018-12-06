@@ -31,6 +31,13 @@ class FileManagementService {
 	    }
 	}
 	
+	/**
+	 * @param collection - collection name 
+	 * @param project - project name
+	 * @param id - RTC work item ID
+	 * @param files - list of File objects
+	 * @return Work item update data
+	 */
 	def ensureAttachments(collection, project, id, files) {
 		def cacheWI = workManagementService.getCacheWI(id)
 		if (cacheWI != null) {
@@ -38,12 +45,15 @@ class FileManagementService {
 			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
-			files.each { file ->
+			files.each { fileItem ->
+				File file = fileItem.file
+				
 				if (!linkExists(cacheWI, file)) {
 					def area = cacheWI.fields.'System.AreaPath'
 					def uploadData = uploadAttachment(collection, project, area, file)
 					if (uploadData != null) {
-						def change = [op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: uploadData.url, attributes:[comment: "Added attachment ${file.name}"]]]
+						String comment = "${fileItem.comment}"
+						def change = [op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: uploadData.url, attributes:[comment: comment]]]
 						wiData.body.add(change)
 					}
 				}

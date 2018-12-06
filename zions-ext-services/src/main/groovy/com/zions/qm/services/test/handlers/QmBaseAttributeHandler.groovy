@@ -26,7 +26,7 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 				if (fieldMap.values.size() > 0) {
 	
 					fieldMap.values.each { aval ->
-						if ("${fValue}" == "${aval.source}") {
+						if ("${aValue}" == "${aval.source}") {
 							val = "${aval.target}"
 							return
 						}

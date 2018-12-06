@@ -147,6 +147,20 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 	public TranslateRTCWorkToVSTSWork() {
 	}
 
+	/**
+	 * Executes integration action.
+	 * 
+	 * 
+	 * <p><b>Flow:</b></p>
+	 * <img src="TranslateRTCWorkToVSTSWork_execute_flow.png"/>
+	 *  
+	 * @see com.zions.common.services.cli.action.CliAction#execute(org.springframework.boot.ApplicationArguments)
+	 * 
+	 * @startuml TranslateRTCWorkToVSTSWork_execute_flow.png
+	 * participant CLI 
+	 * CLI -> TranslateRTCWorkToVSTSWork: execute(applicationArguments)
+	 * @enduml
+	 */
 	public def execute(ApplicationArguments data) {
 		boolean excludeMetaUpdate = true
 		def includes = [:]

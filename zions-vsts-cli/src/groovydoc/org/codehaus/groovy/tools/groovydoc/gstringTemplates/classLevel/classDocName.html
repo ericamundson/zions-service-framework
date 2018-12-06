@@ -658,13 +658,22 @@ if (classDoc.isInterface()) {
                     <!--   -->
                 </a>
                     <h3>Method Detail</h3>
-                    <% visibleMethods.each { method -> %>
+                    <% visibleMethods.each { method ->
+                    	String mcommentText = '' 
+                    	if (method.commentText()) {
+                    		mcommentText = method.commentText()
+							int mindex = mcommentText.indexOf('startuml')
+							if (mcommentText.length() > 0 && mindex > 0) {
+								mcommentText = mcommentText.substring(0, mindex)
+							}
+                    	}
+                    %>
                         <a name="${nameFromParams(method)}"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
                                 <h4>${method.typeParameters() ?
                                     org.codehaus.groovy.tools.groovydoc.SimpleGroovyClassDoc.encodeAngleBrackets(method.typeParameters()) + ' ' : ''}${annotations(method, '\n') + modifiers(method)}${linkable(method.returnType())} <strong>${method.name()}</strong>(${paramsOf(method, false)})</h4>
-                                <p>${method.commentText()}</p>
+                                <p>${mcommentText}</p>
                             </li>
                         </ul>
                     <% } %>

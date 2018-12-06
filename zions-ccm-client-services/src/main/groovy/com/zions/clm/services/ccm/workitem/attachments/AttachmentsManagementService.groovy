@@ -59,8 +59,9 @@ public class AttachmentsManagementService {
 			IAttachment attachment = (IAttachment) auditableClient.resolveAuditable((IAttachmentHandle) attachHandle,
 				IAttachment.DEFAULT_PROFILE, null);
 			def file = saveAttachment(attachment, id);
+			def item = [name: file, comment: "Added attachment ${file.name}"]
 			if (file != null) {
-				files.add(file)
+				files.add(item)
 			}
 		}	
 		return files
