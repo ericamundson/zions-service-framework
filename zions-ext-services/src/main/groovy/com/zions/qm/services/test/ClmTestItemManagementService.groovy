@@ -117,13 +117,7 @@ public class ClmTestItemManagementService {
 			def fieldData = getFieldData(qmItemData, field, memberMap, cacheResult, map, runData, testCase)
 			if (fieldData != null) {
 				if (fieldData.value != null) {
-					exData.body.add(fieldData)
-				} else {
-					fieldData.each { fData ->
-						if (fData.value != null) {
-							exData.body.add(fData)
-						}
-					}
+					exData.body["${field.target}"] = fieldData.value
 				}
 			}
 			
@@ -211,7 +205,7 @@ public class ClmTestItemManagementService {
 		String handlerName = "${field.source}"
 		String fValue = ""
 		if (this.fieldMap["${handlerName}"] != null) {
-			def data = [itemData: qmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map]
+			def data = [itemData: qmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, runData: runData, testCase: testCase]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}

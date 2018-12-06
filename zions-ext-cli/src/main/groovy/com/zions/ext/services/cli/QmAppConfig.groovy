@@ -1,7 +1,12 @@
 package com.zions.ext.services.cli
 
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.rest.IGenericRestClient
+import com.zions.qm.services.rest.QmGenericRestClient
+import com.zions.qm.services.test.ClmTestAttachmentManagementService
+
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -13,8 +18,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 @Profile("qm")
 @ComponentScan(["com.zions.qm.services","com.zions.vsts.services"])
 public class QmAppConfig {
+	
 	@Bean
 	JavaMailSender sender() {
 		return new JavaMailSenderImpl()
 	}
+	
 }

@@ -51,7 +51,7 @@ class BBCodeManagementService {
 	 * Get the GIT url for all of a project's repos.
 	 * 
 	 * @param project
-	 * @return
+	 * @return Map = [[url: 'http://git.cs.stuff', name: 'stuff'], [[[url: 'http://git.cs.stuff2', name: 'stuff2']
 	 */
 	public def getProjectRepoUrls(String project) {
 		def urls = []

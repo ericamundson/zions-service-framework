@@ -29,6 +29,22 @@ public class TestManagementService {
 		
 	}
 	
+	def sendResultChanges(String collection, String project, def executionResult, String id) {
+		String method = "${executionResult.method}"
+		executionResult.remove('method')
+		def result = null
+		String nuri = "${genericRestClient.getTfsUrl()}${executionResult.uri}"
+		executionResult.uri = nuri
+		if (method == 'post') {
+			result = genericRestClient.post(executionResult)
+		} else if (method == 'patch') {
+			result = genericRestClient.patch(executionResult)
+		}
+		if (result != null) {
+			this.saveResultState(result, id)
+		}
+	}
+	
 	def batchPlanChanges(String collection, String tfsProject, def changeList, def idMap) {
 		int count = 0
 		changeList.each { change ->
