@@ -88,6 +88,13 @@ allprojects {
 
 
 	}
+	
+	task publishDocs( type: Copy ) {
+		from('build/docs/groovydoc') { include '**/*' }
+		into "${publishLocation}/${project.name}"
+		dependsOn 'fullGroovydoc'
+		
+	}
 	// End generation of framework documentation
 
 

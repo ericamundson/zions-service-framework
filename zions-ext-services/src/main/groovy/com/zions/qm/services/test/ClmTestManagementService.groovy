@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.xml.XmlUtil
+import groovyx.net.http.ContentType
 
 /**
  * o Handle RQM test queries.
@@ -28,7 +29,15 @@ class ClmTestManagementService {
 		return result
 
 	}
-	
+	def getContent(String uri) {
+		def result = qmGenericRestClient.get(
+			uri: uri,
+			contentType: ContentType.BINARY
+			);
+		return result
+
+	}
+
 	def getTestPlansViaQuery(String query, String projectName) {
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')

@@ -8,9 +8,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
-
+import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
-import com.zions.qm.services.rest.QmGenericRestClient
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -32,7 +31,7 @@ class TranslateRQMToMTMSpecSpecConfig {
 	
 	@Bean
 	IGenericRestClient qmGenericRestClient() {
-		return factory.Mock(QmGenericRestClient)
+		return factory.Mock(ClmGenericRestClient)
 	}
 	
 	@Bean

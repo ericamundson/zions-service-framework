@@ -86,7 +86,7 @@ class HistoryToDiscussionHandler implements IFieldHandler {
 		}
 		int count = 0
 		changesList.reverseEach { change ->
-			Date modifiedDate = change.modifiedDate
+			Date modifiedDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", change.modifiedDate)
 			if (modified == null || modifiedDate.time > modified.time) {
 				bHtml.div(style:'border:2px solid black') {
 					div { 
