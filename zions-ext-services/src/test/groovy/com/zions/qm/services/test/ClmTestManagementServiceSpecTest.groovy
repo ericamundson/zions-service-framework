@@ -2,9 +2,8 @@ package com.zions.qm.services.test
 
 import static org.junit.Assert.*
 
+import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
-import com.zions.qm.services.rest.QmGenericRestClient
-import com.zions.qm.services.test.ClmTestManagementService
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
@@ -72,7 +71,7 @@ class ClmTestManagementServiceSpecTestConfig {
 	
 	@Bean
 	IGenericRestClient qmGenericRestClient() {
-		return factory.Mock(QmGenericRestClient)
+		return factory.Mock(ClmGenericRestClient)
 	}
 	
 	@Bean

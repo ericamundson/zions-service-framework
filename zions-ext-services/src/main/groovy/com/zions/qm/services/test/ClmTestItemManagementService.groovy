@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
+import com.zions.ext.services.cache.CacheManagementService
+
 import groovy.json.JsonSlurper
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
@@ -43,6 +45,9 @@ public class ClmTestItemManagementService {
 	@Autowired
 	@Value('${tfs.url}')
 	String tfsUrl
+	
+	@Autowired
+	CacheManagementService cacheManagementService
 
 	@Autowired
 	private Map<String, IFieldHandler> fieldMap;
@@ -107,7 +112,7 @@ public class ClmTestItemManagementService {
 		def exData = [:]
 		String id = "${qmItemData.webId.text()}-${map.target}"
 		String runId = "${runData.id}"
-		def cacheResult = getResultData(id)
+		def cacheResult = cacheManagementService.getResultData(id)
 		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0-preview.2'], body: [:]]
 		if (cacheResult != null) {
 			def cid = cacheResult.id
@@ -134,7 +139,7 @@ public class ClmTestItemManagementService {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [:]
 		String id = "${qmItemData.webId.text()}-${map.target}"
-		def cacheWI = getCacheWI(id)
+		def cacheWI = cacheManagementService.getCacheWI(id)
 		if (type == 'Test Case') {
 			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			if (cacheWI != null) {
@@ -242,30 +247,5 @@ public class ClmTestItemManagementService {
 		return maps
 	}
 	
-	/**
-	 * Check cache for work item state.
-	 *
-	 * @param id
-	 * @return
-	 */
-	private def getCacheWI(id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
-		if (cacheData.exists()) {
-			JsonSlurper s = new JsonSlurper()
-			return s.parse(cacheData)
-		}
-		return null
-
-	}
-	
-	private def getResultData(String id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}resultData.json");
-		if (cacheData.exists()) {
-			JsonSlurper s = new JsonSlurper()
-			return s.parse(cacheData)
-		}
-		return null
-
-	}
 
 }

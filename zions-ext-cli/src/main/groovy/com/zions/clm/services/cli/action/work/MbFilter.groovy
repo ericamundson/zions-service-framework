@@ -36,18 +36,27 @@ class MbFilter implements IFilter {
 			//2017-01-09T11:59:02.780-0700
 			String iteration = "${wi.target.name.text()}"
 			String category = "${wi.category.name.text()}"
-			String parentState = null
 			String wiState = "${wi.state.group.text()}"
 			String wiType = "${wi.type.name.text()}"
-			String parentType = null
-			if (wi.parent.state) {
-				parentState = "${wi.parent.state.group.text()}"
-				parentType = "${wi.parent.type.name.text()}"
+			def relateds = [:]
+			wi.related.each { related -> 
+				relateds["${wi.related.type.name.text()}"] = "${wi.related.state.group.text()}"
 			}
 			
 			boolean flag = false
 			if (category == 'Team Mario' && iteration == 'Backlog' && "${wi.target.archived.text()}" == 'false' && !excluded.contains(type)) {
-				flag = (parentState == null && wiState != 'closed') || (wiType != 'Defect' && wiType != 'Task' && wiState != 'closed')  || ((wiType == 'Defect' || wiType == 'Task') && parentState != 'closed' && (parentType == 'Epic' || parentType == 'Story'))
+				//flag = (parentState == null && wiState != 'closed') || ((wiType == 'Story' && wiType == 'Epic') && wiState != 'closed')  || ((wiType == 'Defect' || wiType == 'Task') && parentState != 'closed' && (parentType == 'Epic' || parentType == 'Story'))
+				boolean openRelated = false
+				def aState = relateds['Story']
+				if (aState != null && aState != 'closed') {
+					openRelated = true
+				}
+				aState = relateds['Epic']
+				if (aState != null && aState != 'closed') {
+					openRelated = true
+				}
+
+				flag = (wiState != 'closed') || openRelated
 			}
 			flag
 		}

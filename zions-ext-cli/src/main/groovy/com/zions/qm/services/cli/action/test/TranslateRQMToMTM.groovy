@@ -162,7 +162,7 @@ import groovy.xml.XmlUtil
  *  	loop each { test case of test plan}
  *  		TranslateRQMToMTM -> CLMTestManagementService: get execution results for test case of this plan
  *  		loop each execution result
- *				TranslateRQMToMTM -> ClmTestItemManagementService: ensure test result data for testcase
+ 				TranslateRQMToMTM -> ClmTestItemManagementService: ensure test result data for testcase
  *  			TranslateRQMToMTM -> TestManagmentService: send test result data
  *  		end
  *  	end
@@ -484,8 +484,13 @@ class TranslateRQMToMTM implements CliAction {
 					}
 					testplan.testcase.each { testcaseRef ->
 						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-						String tcitemXml = XmlUtil.serialize(testcase)
-						String tcwebId = "${testcase.webId.text()}"
+							def files = clmAttachmentManagementService.cacheAttachments(testcase)
+							//def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+//							if (wiChanges != null) {
+//								idMap[count] = "${id}"
+//								changeList.add(wiChanges)
+//								count++
+//							}
 					}
 				}
 				if (changeList.size() > 0) {

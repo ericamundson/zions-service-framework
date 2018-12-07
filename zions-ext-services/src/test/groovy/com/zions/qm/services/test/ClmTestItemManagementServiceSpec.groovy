@@ -4,6 +4,7 @@ import static org.junit.Assert.*
 
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.work.handler.IFieldHandler
+import com.zions.ext.services.cache.CacheManagementService
 import com.zions.qm.services.test.handlers.NameHandler
 import com.zions.qm.services.test.handlers.StartDateHandler
 import groovy.json.JsonSlurper
@@ -64,6 +66,15 @@ class ClmTestItemManagementServiceSpecConfig {
 		return new ClmTestItemManagementService()
 	}
 	
+	@Autowired
+	@Value('${cache.location}')
+	String cacheLocation
+	@Bean
+	CacheManagementService cacheManagementService() {
+		return new CacheManagementService(cacheLocation)
+	}
+
+
 	@Bean
 	TestMappingManagementService testMappingManagementService() {
 		return new TestMappingManagementService()

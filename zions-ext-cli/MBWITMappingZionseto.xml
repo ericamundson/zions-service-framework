@@ -3,7 +3,7 @@
 		<wit name="Track Build Item"/>
 	</exclude>
 	<wit source="Default"  translateUnmappedFields="false">
-		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="mbIddHandler" target="Custom.ExternalID"/>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
@@ -38,11 +38,11 @@
 			<defaultvalue target="DigitalBanking"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<defaultvalue target="3"/>
+			<defaultvalue target="2"/>
 			<value source="High" target="1"/>
-			<value source="Medium" target="2"/>
+			<value source="Medium" target="3"/>
 			<value source="Low" target="4"/>			
-			<value source="Unassigned" target="3"/>			
+			<value source="Unassigned" target="2"/>			
 		</field>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
@@ -84,7 +84,7 @@
 	</wit>
 	
 	<wit source="Story" target="User Story" translateUnmappedFields="false">
-		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="mbIddHandler" target="Custom.ExternalID"/>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="approvalsHandler" target="Custom.Approvals"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
@@ -124,11 +124,11 @@
 			<defaultvalue target="DigitalBanking"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<defaultvalue target="3"/>
+			<defaultvalue target="2"/>
 			<value source="High" target="1"/>
-			<value source="Medium" target="2"/>
+			<value source="Medium" target="3"/>
 			<value source="Low" target="4"/>			
-			<value source="Unassigned" target="3"/>			
+			<value source="Unassigned" target="2"/>			
 		</field>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
@@ -173,7 +173,7 @@
 		
 	</wit>
 	<wit source="Epic" target="Feature" translateUnmappedFields="false">
-		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="mbIddHandler" target="Custom.ExternalID"/>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="approvalsHandler" target="Custom.Approvals"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
@@ -210,11 +210,11 @@
 			<defaultvalue target="DigitalBanking"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<defaultvalue target="3"/>
+			<defaultvalue target="2"/>
 			<value source="High" target="1"/>
-			<value source="Medium" target="2"/>
+			<value source="Medium" target="3"/>
 			<value source="Low" target="4"/>			
-			<value source="Unassigned" target="3"/>			
+			<value source="Unassigned" target="2"/>			
 		</field>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
@@ -260,7 +260,7 @@
 	</wit>
 	
 	<wit source="Defect" target="Bug" translateUnmappedFields="false">
-		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="mbIddHandler" target="Custom.ExternalID"/>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
@@ -276,9 +276,12 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="internalSeverity" target="Microsoft.VSTS.Common.Severity">
-			<defaultvalue target="1"/>
+			<defaultvalue target="4"/>
 			<value source="Blocker" target="1"/>
-			<value source="Low" target="4"/>
+			<value source="Critical" target="1"/>
+			<value source="Major" target="2"/>
+			<value source="Minor" target="3"/>
+			<value source="Trival" target="4"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="Resolved"/>
@@ -300,11 +303,11 @@
 			<defaultvalue target="DigitalBanking"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<defaultvalue target="3"/>
+			<defaultvalue target="2"/>
 			<value source="High" target="1"/>
-			<value source="Medium" target="2"/>
+			<value source="Medium" target="3"/>
 			<value source="Low" target="4"/>			
-			<value source="Unassigned" target="3"/>			
+			<value source="Unassigned" target="2"/>			
 		</field>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
@@ -345,7 +348,7 @@
 		</newfields>
 	</wit>
 	<wit source="Task" target="Task" translateUnmappedFields="false">
-		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="mbIddHandler" target="Custom.ExternalID"/>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
@@ -378,11 +381,11 @@
 			<defaultvalue target="DigitalBanking"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<defaultvalue target="3"/>
+			<defaultvalue target="2"/>
 			<value source="High" target="1"/>
-			<value source="Medium" target="2"/>
+			<value source="Medium" target="3"/>
 			<value source="Low" target="4"/>			
-			<value source="Unassigned" target="3"/>			
+			<value source="Unassigned" target="2"/>			
 		</field>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
