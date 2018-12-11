@@ -1,7 +1,5 @@
 package com.zions.common.services.rest
 
-import static org.junit.Assert.doubleIsDifferent
-
 import org.apache.http.Header
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
