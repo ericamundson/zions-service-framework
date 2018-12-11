@@ -386,7 +386,7 @@ public class BuildManagementService {
 		bDef.project = project
 		bDef.badgeEnabled = false
 		bDef.demands = []
-		bDef.variableGroups = []
+//		bDef.variableGroups = []
 		bDef.properties = [source: 'AllDefinitions']
 //		bDef.quality = 1
 //		bDef.queueStatus = 0
@@ -431,9 +431,13 @@ public class BuildManagementService {
 		bDef.project = project
 		bDef.badgeEnabled = false
 		bDef.demands = []
-		bDef.variableGroups = []
+		//bDef.variableGroups = []
 		bDef.properties = [source: 'AllDefinitions']
-//		bDef.triggers = []
+		if ("${buildStage}".equalsIgnoreCase("release")) {
+			def branchFilters = ["+refs/heads/DR/*"]
+			def drTrigger = ["branchFilters": branchFilters, "pathFilters": [], "batchChanges": false, "maxConcurrentBuildsPerBranch": 1, "pollingInterval": 0, "triggerType": "continuousIntegration"]
+			bDef.triggers = [drTrigger]
+		}
 		bDef.project = project
 		bDef.repository.id = "${repo.id}"
 		bDef.repository.name = "${repo.name}"
