@@ -64,10 +64,18 @@ class HistoryToDiscussionHandler implements IFieldHandler {
 		def retVal = null
 		if (wiCache != null) {
 			String modified = wiCache.fields['System.ChangedDate']
-			Date modDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", modified)
-			String outHTML = formatToHTMLOut(history, wi, wiMap, modDate)
-			if (outHTML == null) return null
-			retVal = [op:'add', path:"/fields/${fieldMap.target}", value: outHTML]
+			if (modified != null && modified.length()> 0) {
+				if (modified.lastIndexOf('.') > -1) {
+					modified = modified.substring(0, modified.lastIndexOf('.'))
+				} else {
+					modified = modified.replace('Z', '')
+				}
+				modified = modified + ".999Z"
+				Date modDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", modified)
+				String outHTML = formatToHTMLOut(history, wi, wiMap, modDate)
+				if (outHTML == null) return null
+				retVal = [op:'add', path:"/fields/${fieldMap.target}", value: outHTML]
+			}
 		} else {
 			String outHTML = formatToHTMLOut(history, wi, wiMap, null)
 			if (outHTML == null) return null

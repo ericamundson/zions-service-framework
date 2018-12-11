@@ -14,10 +14,10 @@
 		</field>
 	</wit>
 	<wit source="testsuite"  target="Test Suite" translateUnmappedFields="false">
-		<field source="nameHandler" target="name"/>
-		<field source="descriptionHandler" target="description"/>
-		<field source="planOwnerHandler" target="owner"/>
-		<field source="stateHandler" target="state">
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="planOwnerHandler" target="System.AssignedTo"/>
+		<field source="stateHandler" target="System.State">
 			<defaultvalue target="In Planning"/>
 		</field>
 		<field source="planBlankHandler" target="area">

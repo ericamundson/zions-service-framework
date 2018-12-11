@@ -42,7 +42,7 @@ public class AttachmentsManagementService {
 	 * Main interface method to cache RTC work item attachments.
 	 * 
 	 * @param id
-	 * @return
+	 * @return [name: file, comment: "Added attachment ${file.name}"]
 	 */
 	public def cacheWorkItemAttachments(int id) {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
@@ -59,7 +59,7 @@ public class AttachmentsManagementService {
 			IAttachment attachment = (IAttachment) auditableClient.resolveAuditable((IAttachmentHandle) attachHandle,
 				IAttachment.DEFAULT_PROFILE, null);
 			def file = saveAttachment(attachment, id);
-			def item = [name: file, comment: "Added attachment ${file.name}"]
+			def item = [file: file, comment: "Added attachment ${file.name}"]
 			if (file != null) {
 				files.add(item)
 			}

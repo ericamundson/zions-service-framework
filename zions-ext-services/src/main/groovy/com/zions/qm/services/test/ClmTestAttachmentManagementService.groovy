@@ -2,6 +2,7 @@ package com.zions.qm.services.test
 
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.ext.services.cache.CacheManagementService
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -23,36 +24,59 @@ import org.springframework.stereotype.Component
  * @enduml
  */
 @Component
+@Slf4j
 class ClmTestAttachmentManagementService {
-	
+
 	@Autowired
 	IGenericRestClient qmGenericRestClient
-	
+
 	@Autowired
 	ClmTestManagementService clmTestManagementService
-	
+
 	@Autowired
 	CacheManagementService cacheManagementService
-		
+
 	public ClmTestAttachmentManagementService() {
 	}
-	
+
 	/**
-	 * @param testCase - E.G. [[filename: 'dummy.jpg', url: 'https://someurl'], [filename: 'dummy2.jpg', url: 'https://someurl2']]
+	 * Cache all test case attachments including script and steps.
+	 * 
+	 * @param testCase 
 	 * @param id
 	 * @return
 	 */
-	public def cacheAttachments(def testCase) {
+	public def cacheTestCaseAttachments(def testCase) {
 		def files = []
 		String id = "${testCase.webId.text()}-Test Case"
-		
+		testCase.attachment.each { attachment ->
+			String aurl = "${attachment.@href}"
+			def result = clmTestManagementService.getContent(aurl)
+			String cd = "${result.headers.'Content-Disposition'}"
+			
+			String[] sItem = cd.split('=')
+			String filename = null
+			if (sItem.size() == 2) {
+				filename = sItem[1]
+				filename = filename.replace('"', '')
+			}
+			if (filename != null) {
+				def file = cacheManagementService.saveBinaryAsAttachment(result.data, "${filename}", id)
+				def item = [file: file, comment: "Added attachment ${filename}"]
+				//File cFile = saveAttachment
+				files.add(item)
+			}
+		}
 		def ts = getTestScript(testCase)
 		if (ts != null)	{
 			def stepFiles = handleTestSteps(ts, id)
+			stepFiles.each { file ->
+				files.add(file)
+			}
 		}
 		return files
 	}
-	
+
 	private def handleTestSteps(ts, id) {
 		def files = []
 		int sCount = 2
@@ -61,13 +85,28 @@ class ClmTestAttachmentManagementService {
 			step.attachment.each { attachment ->
 				String aurl = "${attachment.@href}"
 				def result = clmTestManagementService.getContent(aurl)
-				//File cFile = saveAttachment
+				String cd = "${result.headers.'Content-Disposition'}"
+				
+				String[] sItem = cd.split('=')
+				String filename = null
+				if (sItem.size() == 2) {
+					filename = sItem[1]
+					filename = filename.replace('"', '')
+				}
+				if (filename != null) {
+					def file = cacheManagementService.saveBinaryAsAttachment(result.data, "${filename}", id)
+					def item = [file: file, comment: comment]
+					//File cFile = saveAttachment
+					files.add(item)
+				}
 			}
+			sCount++
 		}
+		return files
 	}
-	
-	
-	
+
+
+
 	private def getTestScript(def itemData) {
 		def tss = itemData.testscript
 		if (tss.size() > 0) {
@@ -77,6 +116,4 @@ class ClmTestAttachmentManagementService {
 		}
 		return null
 	}
-
-
 }

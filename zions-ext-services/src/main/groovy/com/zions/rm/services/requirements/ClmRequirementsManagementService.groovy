@@ -1,6 +1,6 @@
 package com.zions.rm.services.requirements
 
-import com.zions.rm.services.rest.RmGenericRestClient
+import com.zions.common.services.rest.IGenericRestClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component
 class ClmRequirementsManagementService {
 	
 	@Autowired
-	RmGenericRestClient rmGenericRestClient
+	IGenericRestClient rmGenericRestClient
 	
 	def queryForModules(String project, String query ) {
 		
