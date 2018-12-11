@@ -18,7 +18,7 @@ class CacheManagementService {
 	
 	public CacheManagementService() {}
 	
-	def saveBinaryAsAttachment(def result, String id) {
+	def saveBinaryAsAttachment(ByteArrayInputStream result, String name, String id) {
 		try {
 			File cacheDir = new File(this.cacheLocation)
 			if (!cacheDir.exists()) {
@@ -33,10 +33,12 @@ class CacheManagementService {
 			if (!attachmentDir.exists()) {
 				attachmentDir.mkdir()
 			}
-			File save = new File("${this.cacheLocation}${File.separator}${id}${File.separator}attachments${File.separator}${attachment.getName()}");
-			def os = save.newObjectOutputStream()
-			os << result
-			os.close()
+			File save = new File("${this.cacheLocation}${File.separator}${id}${File.separator}attachments${File.separator}${name}");
+			if (!save.exists()) {
+				DataOutputStream os = save.newDataOutputStream()
+				os << result.bytes
+				os.close()
+			}
 			return save
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

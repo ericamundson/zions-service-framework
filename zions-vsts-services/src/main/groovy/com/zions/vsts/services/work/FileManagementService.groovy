@@ -51,8 +51,8 @@ class FileManagementService {
 	
 	private def encodeFile( Object data ) throws UnsupportedEncodingException {
 	    if ( data instanceof File ) {
-	        def entity = new org.apache.http.entity.FileEntity( (File) data, "application/octet-stream" );
-	        entity.setContentType( "application/octet-stream" );
+	        def entity = new org.apache.http.entity.FileEntity( (File) data, "application/json" );
+	        entity.setContentType( "application/json" );
 	        return entity
 	    } else {
 	        throw new IllegalArgumentException( 
@@ -111,19 +111,19 @@ class FileManagementService {
 
 	private def uploadAttachment(collection, project, area, File file) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		def currentEncoder = genericRestClient.delegate.encoder.'application/octet-stream'
+		def currentEncoder = genericRestClient.delegate.encoder.'application/json'
 		genericRestClient.delegate.encoder.'application/json' = this.&encodeFile
 		def efilename = URLEncoder.encode(file.name, 'utf-8').replace('+', '%20')
 		def earea = URLEncoder.encode(area, 'utf-8').replace('+', '%20')
 		def result = genericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
-			requestContentType: ContentType.BINARY,
+			requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/attachments",
 			body: file,
 			query: ['api-version': '5.0-preview.3', uploadType: 'Simple', areaPath: earea, fileName: efilename]
 			
 			)
-		genericRestClient.delegate.encoder.'application/octet-stream' = currentEncoder
+		genericRestClient.delegate.encoder.'application/json' = currentEncoder
 		return result
 	}
 }

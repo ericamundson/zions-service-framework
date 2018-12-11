@@ -3,7 +3,7 @@
 		<wit name="Track Build Item"/>
 	</exclude>
 	<wit source="Default"  translateUnmappedFields="false">
-		<field source="mbIddHandler" target="Custom.ExternalID"/>
+		<field source="mbIdHandler" target="Custom.ExternalID"/>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
@@ -84,7 +84,7 @@
 	</wit>
 	
 	<wit source="Story" target="User Story" translateUnmappedFields="false">
-		<field source="mbIddHandler" target="Custom.ExternalID"/>
+		<field source="mbIdHandler" target="Custom.ExternalID"/>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="approvalsHandler" target="Custom.Approvals"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
@@ -173,7 +173,7 @@
 		
 	</wit>
 	<wit source="Epic" target="Feature" translateUnmappedFields="false">
-		<field source="mbIddHandler" target="Custom.ExternalID"/>
+		<field source="mbIdHandler" target="Custom.ExternalID"/>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="approvalsHandler" target="Custom.Approvals"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
@@ -190,6 +190,7 @@
 		-->
 		<field source="summaryHandler" target="System.Title"/>
 		<field source="description" target="System.Description"/>
+		<field source="mbSubStateHandler" target="Custom.SubState"/>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="Resolved"/>
 			<value source="Invalid" target="Invalid"/>
@@ -260,7 +261,7 @@
 	</wit>
 	
 	<wit source="Defect" target="Bug" translateUnmappedFields="false">
-		<field source="mbIddHandler" target="Custom.ExternalID"/>
+		<field source="mbIdHandler" target="Custom.ExternalID"/>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
@@ -278,13 +279,15 @@
 		<field source="internalSeverity" target="Microsoft.VSTS.Common.Severity">
 			<defaultvalue target="4"/>
 			<value source="Blocker" target="1"/>
-			<value source="Critical" target="1"/>
-			<value source="Major" target="2"/>
-			<value source="Minor" target="3"/>
+			<value source="Critical" target="2"/>
+			<value source="Major" target="3"/>
+			<value source="Minor" target="4"/>
 			<value source="Trival" target="4"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="Resolved"/>
+			<value source="Refinement Ready" target="New"/>
+			<value source="Sprint Ready" target="New"/>			
 			<value source="Invalid" target="Invalid"/>
 			<value source="New" target="New"/>
 			<value source="Execute" target="Active"/>
@@ -348,7 +351,7 @@
 		</newfields>
 	</wit>
 	<wit source="Task" target="Task" translateUnmappedFields="false">
-		<field source="mbIddHandler" target="Custom.ExternalID"/>
+		<field source="mbIdHandler" target="Custom.ExternalID"/>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>

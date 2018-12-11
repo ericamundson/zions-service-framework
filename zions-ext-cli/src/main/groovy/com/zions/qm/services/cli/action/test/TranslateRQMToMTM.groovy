@@ -284,10 +284,17 @@ class TranslateRQMToMTM implements CliAction {
 				def pChangeList = []
 				def idKeyMap = [:]
 				def filtered = filtered(testItems, wiFilter)
+				clmTestItemManagementService.resetNewId()
 				filtered.each { testItem ->
 					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
-					String itemXml = XmlUtil.serialize(testplan)
 					int id = Integer.parseInt(testplan.webId.text())
+					//Generate test data
+//					String itemXml = XmlUtil.serialize(testplan)
+//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/testplan${id}.xml")
+//					def os = resultFile.newDataOutputStream()
+//					os << itemXml
+//					os.close()
+					
 					
 					def changes = clmTestItemManagementService.getChanges(tfsProject, testplan, memberMap)
 					def plan = null
@@ -328,8 +335,13 @@ class TranslateRQMToMTM implements CliAction {
 					}
 					testplan.testcase.each { testcaseRef ->
 						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-						String tcXml = XmlUtil.serialize(testcase)
 						int aid = Integer.parseInt(testcase.webId.text())
+						// generate test data
+//						String testcasexml = XmlUtil.serialize(testcase)
+//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
+//						os = resultFile.newDataOutputStream()
+//						os << testcasexml
+//						os.close()
 						String idtype = "${aid}-testcase"
 						if (!idKeyMap.containsKey(idtype)) {
 							def tcchanges = clmTestItemManagementService.getChanges(tfsProject, testcase, memberMap)
@@ -403,6 +415,7 @@ class TranslateRQMToMTM implements CliAction {
 				testItems = clmTestManagementService.nextPage(nextLink.@href)
 			}
 		}
+		
 		if (includes['execution'] != null) {
 			def itemMapping = testMappingManagementService.getMappingData()
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
@@ -468,12 +481,12 @@ class TranslateRQMToMTM implements CliAction {
 					String itemXml = XmlUtil.serialize(testplan)
 					String webId = "${testplan.webId.text()}"
 					String parentHref = "${testItem.id.text()}"
-					def testRun = testManagementService.ensureTestRun(collection, tfsProject, testplan)
 					testplan.testsuite.each { testsuiteRef ->
 						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
 						testsuite.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-							def files = clmAttachmentManagementService.cacheAttachments(testcase)
+							String id = "${testcase.webId.text()}-Test Case"
+							def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
 							def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
 							if (wiChanges != null) {
 								idMap[count] = "${id}"
@@ -484,13 +497,14 @@ class TranslateRQMToMTM implements CliAction {
 					}
 					testplan.testcase.each { testcaseRef ->
 						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-							def files = clmAttachmentManagementService.cacheAttachments(testcase)
-							//def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-//							if (wiChanges != null) {
-//								idMap[count] = "${id}"
-//								changeList.add(wiChanges)
-//								count++
-//							}
+						String id = "${testcase.webId.text()}-Test Case"
+						def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)		
+						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+						if (wiChanges != null) {
+							idMap[count] = "${id}"
+							changeList.add(wiChanges)
+							count++
+						}
 					}
 				}
 				if (changeList.size() > 0) {
@@ -499,7 +513,7 @@ class TranslateRQMToMTM implements CliAction {
 				def nextLink = testItems.'**'.find { node ->
 					
 					node.name() == 'link' && node.@rel == 'next'
-				}re
+				}
 				if (nextLink == null) break
 				testItems = clmTestManagementService.nextPage(nextLink.@href)
 			}

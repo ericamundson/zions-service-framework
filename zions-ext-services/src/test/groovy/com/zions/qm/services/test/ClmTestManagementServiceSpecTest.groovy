@@ -61,6 +61,44 @@ class ClmTestManagementServiceSpecTest extends Specification {
 		then: 'validate list of plans'
 		testPlans.entry.size() > 0
 	}
+	
+	def 'getExecutionResultViaHref no execution.'() {
+		given: "A stub of RQM get execution results request"
+		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/executionresults.xml').text)
+		1 * qmGenericRestClient.get(_) >> testplansInfo
+
+		when: 'calling of method under test (getNextPage)'
+		def executionresults = underTest.getExecutionResultViaHref('123', '456', 'aproject')
+		
+		then: 'validate list of results'
+		executionresults.size() == 0
+	}
+	
+	def 'getExecutionResultViaHref success flow.'() {
+		given: "A stub of RQM get execution results request"
+		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/executionresults1.xml').text)
+		1 * qmGenericRestClient.get(_) >> testplansInfo
+
+		when: 'calling of method under test (getNextPage)'
+		def executionresults = underTest.getExecutionResultViaHref('123', '578', 'aproject')
+		
+		then: 'validate list of results'
+		executionresults.size() == 1
+	}
+	
+	def 'getContent success flow.'() {
+		given: "A stub of RQM request to get attachment with headers"
+		File file = new File('563414- Product Classifications Table')
+		def of = file.newDataOutputStream()
+		of.close()
+		1 * qmGenericRestClient.get(_) >> [data: of, headers: ['Content-Disposition': 'filename="563414- Product Classifications Table"']]
+		
+		when: 'Call method under test (getContent)'
+		def result = underTest.getContent('http://someimage')
+		
+		then: 'Validate result data'
+		result.headers.containsKey('Content-Disposition')
+	}
 }
 
 @TestConfiguration

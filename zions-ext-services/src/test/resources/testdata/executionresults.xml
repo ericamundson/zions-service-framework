@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tag0:feed xmlns:tag0="http://www.w3.org/2005/Atom">
+	<tag0:title type="text">executionresult ATOM feed for project area
+		Mobile and Online Banking (Quality Management)</tag0:title>
+	<tag0:id>https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionresult
+	</tag0:id>
+	<tag0:link rel="alternate"
+		href="https://clm.cs.zionsbank.com/qm/web/console/" />
+	<tag0:link rel="self"
+		href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionresult?fields=feed%2Fentry%2Fcontent%2Fexecutionresult%5Btestcase%2F%40href%3D%27https%3A%2F%2Fclm.cs.zionsbank.com%2Fqm%2Fservice%2Fcom.ibm.rqm.integration.service.IIntegrationService%2Fresources%2FMobile+and+Online+Banking+%28Quality+Management%29%2Ftestcase%2Furn%3Acom.ibm.rqm%3Atestcase%3A47598%27+and+testplan%2F%40href%3D%27https%3A%2F%2Fclm.cs.zionsbank.com%2Fqm%2Fservice%2Fcom.ibm.rqm.integration.service.IIntegrationService%2Fresources%2FMobile+and+Online+Banking+%28Quality+Management%29%2Ftestplan%2Furn%3Acom.ibm.rqm%3Atestplan%3A216%27%5D%2F*" />
+</tag0:feed>

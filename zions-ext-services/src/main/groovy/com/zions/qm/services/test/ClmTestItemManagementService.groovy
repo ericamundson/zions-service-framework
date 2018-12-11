@@ -144,7 +144,7 @@ public class ClmTestItemManagementService {
 			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			if (cacheWI != null) {
 				def cid = cacheWI.id
-				wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: [:]]
+				wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 				def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 				wiData.body.add(rev)
 			} else {
@@ -218,22 +218,6 @@ public class ClmTestItemManagementService {
 				data['runData'] = runData
 			}
 			def fieldData = this.fieldMap["${handlerName}"].execute(data)
-//			if (fieldData != null) {
-//				String val = "${fieldData.'value'}"
-//				if (field.defaultValue != null) {
-//					val = "${field.defaultValue}"
-//				}
-//				if (field.values.size() > 0) {
-//					
-//					field.values.each { aval ->
-//						if ("${fValue}" == "${aval.source}") {
-//							val = "${aval.target}"
-//							return
-//						}
-//					}
-//				}
-//				fieldData.'value' = val
-//			}
 			return fieldData
 		}
 		return null

@@ -14,6 +14,8 @@ import com.ibm.team.repository.common.IContributor
 import com.ibm.team.repository.common.IContributorHandle
 import com.ibm.team.repository.common.TeamRepositoryException
 import com.ibm.team.scm.common.IChangeSet
+import com.ibm.team.workitem.client.IWorkItemClient
+import com.ibm.team.workitem.common.model.IAttribute
 import com.ibm.team.workitem.common.model.IComment
 import com.ibm.team.workitem.common.model.IWorkItem
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
@@ -51,9 +53,13 @@ class MbIdHandler implements IFieldHandler {
 		def wiCache = data.cacheWI
 		def memberMap = data.memberMap
 		String sId = "RTC-${wi.id}"
-		String eId = wi.getValue('externalid')
+		String fieldId = "externalid"
+		IWorkItemClient workItemClient = rtcRepositoryClient.repo.getClientLibrary(IWorkItemClient.class)
+		
+		IAttribute attribute = workItemClient.findAttribute(wi.projectArea, fieldId, null);
+		String eId = wi.getValue(attribute)
 		if (eId != null && eId.length() > 0) {
-			sId = sId + " eId"
+			sId = sId + " ${eId}"
 		}
 		
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: "${sId}"]

@@ -1,5 +1,7 @@
 package com.zions.common.services.rest
 
+import static org.junit.Assert.doubleIsDifferent
+
 import org.apache.http.Header
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
@@ -41,20 +43,44 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	@Override
 	def get(Map input) {
 		//log.debug("GenericRestClient::get -- URI before checkBlankCollection: "+input.uri)
+		boolean withHeader = false
+		if (input.withHeader) {
+			withHeader = input.withHeader
+		}
+		input.remove('withHeader')
 		Map oinput = input
 		if (checked) {
 			oinput = checkBlankCollection(input)
 		}
 		//log.debug("GenericRestClient::get -- URI after checkBlankCollection: "+oinput.uri)
 		HttpResponseDecorator resp = delegate.get(oinput)
+		
+		if (withHeader) {
+			def headerMap = [:]
+			resp.allHeaders.each { Header header ->
+				headerMap[header.name] = header.value 
+			}
+			def result = [data: resp.data, headers: headerMap]
+			return result
+		}
 		return resp.data;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#get(java.util.Map)
+	 */
+	
+
 	/* (non-Javadoc)
 	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#put(java.util.Map)
 	 */
 	@Override
 	def put(Map input) {
+		boolean withHeader = false
+		if (input.withHeader) {
+			withHeader = input.withHeader
+		}
+		input.remove('withHeader')
 		Map oinput = input
 		if (checked) {
 			oinput = checkBlankCollection(input)
@@ -63,6 +89,14 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		
 		if (resp.status != 200) {
 			return null;
+		}
+		if (withHeader) {
+			def headerMap = [:]
+			resp.allHeaders.each { Header header ->
+				headerMap[header.name] = header.value 
+			}
+			def result = [data: resp.data, headers: headerMap]
+			return result
 		}
 		return resp.data;
 	}
@@ -88,6 +122,11 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def patch(Map input) {
+		boolean withHeader = false
+		if (input.withHeader) {
+			withHeader = input.withHeader
+		}
+		input.remove('withHeader')
 		Map oinput = input
 		if (checked) {
 			oinput = checkBlankCollection(input)
@@ -97,6 +136,14 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		if (resp.status != 200) {
 			return null;
 		}
+		if (withHeader) {
+			def headerMap = [:]
+			resp.allHeaders.each { Header header ->
+				headerMap[header.name] = header.value 
+			}
+			def result = [data: resp.data, headers: headerMap]
+			return result
+		}
 		return resp.data;
 	}
 
@@ -105,6 +152,11 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def post(Map input) {
+		boolean withHeader = false
+		if (input.withHeader) {
+			withHeader = input.withHeader
+		}
+		input.remove('withHeader')
 		Map oinput = input
 		if (checked) {
 			oinput = checkBlankCollection(input)
@@ -113,6 +165,14 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		//JsonOutput t
 		if (resp.status != 200) {
 			log.debug("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
+		}
+		if (withHeader) {
+			def headerMap = [:]
+			resp.allHeaders.each { Header header ->
+				headerMap[header.name] = header.value 
+			}
+			def result = [data: resp.data, headers: headerMap]
+			return result
 		}
 		return resp.data;
 	}
@@ -139,6 +199,11 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	}
 
 	public Object rateLimitPost(Map input) {
+		boolean withHeader = false
+		if (input.withHeader) {
+			withHeader = input.withHeader
+		}
+		input.remove('withHeader')
 		Map oinput = input
 		if (checked) {
 			oinput = checkBlankCollection(input)
@@ -155,6 +220,14 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
 			System.sleep(300000)
 			resp = delegate.post(retryCopy)
+		}
+		if (withHeader) {
+			def headerMap = [:]
+			resp.allHeaders.each { Header header ->
+				headerMap[header.name] = header.value 
+			}
+			def result = [data: resp.data, headers: headerMap]
+			return result
 		}
 		return resp.data;
 	}
