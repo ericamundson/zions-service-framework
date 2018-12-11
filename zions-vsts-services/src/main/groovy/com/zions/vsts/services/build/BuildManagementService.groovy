@@ -123,7 +123,11 @@ public class BuildManagementService {
 		}
 	}
 	
-	public def ensureBuildsForBranch(def collection, def projectData, def repo) {
+	public def ensureBuildsForBranch(def collection, def projectData, def repo, boolean isDRBranch) {
+		// if this is for a DR branch, call special operation
+		if (isDRBranch) {
+			return ensureDRBuilds(collection, projectData, repo)
+		}
 		def buildTemplate = null
 		boolean buildFolderCreated = false
 		log.debug("BuildManagementService::ensureBuildsForBranch -- Look for existing CI Build ...")
@@ -181,6 +185,66 @@ public class BuildManagementService {
 					log.debug("BuildManagementService::ensureBuildsForBranch -- Release build created: "+relBldName)
 				}
 			}
+		} else {
+			log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing Release Build for ${repo.name}.")
+		}
+		def returnObject = [folderName: buildFolderName,
+							ciBuildId: ciBldId,
+							ciBuildName: ciBldName,
+							releaseBuildName: relBldName]
+
+		return returnObject
+	}
+	
+	public def ensureDRBuilds(def collection, def projectData, def repo) {
+		Integer ciBldId = -1
+		def ciBldName = ""
+		// set folder name as we are assuming CI and Release builds exist for the repo 
+		def buildFolderName = "${repo.name}"
+		log.debug("BuildManagementService::ensureDRBuilds -- Look for existing DR CI Build for ${repo.name} ...")
+		def build = getDRBuild(collection, projectData, repo, 'ci')
+		if (build.count == 0) {
+			log.debug("BuildManagementService::ensureDRBuilds -- Existing DR CI build not found.  Get CI Build for ${repo.name} ...")
+			def buildTemplate = getBuild(collection, projectData, "${repo.name}-ci")
+			if (buildTemplate == null) {
+				log.error("BuildManagementService::ensureDRBuilds -- CI build not found for ${repo.name}.")
+			} else {
+				log.debug("BuildManagementService::ensureDRBuilds -- Found CI build for ${repo.name}.  Using as template")
+				def ciBuild = createDRBuildDefinition(collection, projectData, repo, buildTemplate, 'ci', "${repo.name}")
+				if (ciBuild == null ) {
+					log.error("BuildManagementService::ensureDRBuilds -- DR CI Build creation failed!")
+				} else {
+					ciBldId = Integer.parseInt("${ciBuild.id}")
+					ciBldName = "${ciBuild.name}"
+					log.debug("BuildManagementService::ensureDRBuilds -- DR CI Build created: "+ciBldName)
+				}
+			}
+		} else {
+			log.debug("BuildManagementService::ensureDRBuilds -- Found exsting DR CI Build for ${repo.name}. Setting Id for return to "+build.value[0].id)
+			ciBldId = build.value[0].id
+			//ciBldName = "${build.name}"
+		}
+		def relBldName = ""
+		log.debug("BuildManagementService::ensureDRBuilds -- Look for existing DR Release Build for ${repo.name} ...")
+		def build1 = getDRBuild(collection, projectData, repo, 'release')
+		if (build1.count == 0) {
+			log.debug("BuildManagementService::ensureDRBuilds -- Existing DR Release build not found.  Get Release Build for ${repo.name} ...")
+			def buildTemplate = getBuild(collection, projectData, "${repo.name}-release")
+			if (buildTemplate == null) {
+				log.error("BuildManagementService::ensureDRBuilds -- Release build not found for ${repo.name}.")
+				// Not returning null here and stopping since the CI build was created so let's go ahead and create the build validation policy
+				//return null
+			} else {
+				def relBd = createDRBuildDefinition(collection, projectData, repo, buildTemplate, 'release', "${repo.name}")
+				if (relBd == null ) {
+					log.error("BuildManagementService::ensureDRBuilds -- DR Release Build creation failed!")
+				} else {
+					relBldName = "${relBd.name}"
+					log.debug("BuildManagementService::ensureDRBuilds -- DR Release build created: "+relBldName)
+				}
+			}
+		} else {
+			log.debug("BuildManagementService::ensureDRBuilds -- Found exsting DR Release Build for ${repo.name}.")
 		}
 		def returnObject = [folderName: buildFolderName,
 							ciBuildId: ciBldId,
@@ -200,10 +264,6 @@ public class BuildManagementService {
 			java.util.Properties prop = new java.util.Properties()
 			prop.load(new java.io.StringBufferInputStream(fileContent))
 			templateName = prop.getProperty("build-template"+"-"+buildStage)
-			//if (fileContent.contains('build-template=')) {
-			if (template != null) {
-				templateName = fileContent.substring("build-template=".length())+"-"+buildStage;
-			}
 			log.debug("BuildManagementService::getBuildTemplate -- Specified templateName = ${templateName}")
 		}
 		// if we didn't find a template specified in the build properties file, try to determine build type and load the one for build type
@@ -291,6 +351,7 @@ public class BuildManagementService {
 				)
 	}
 
+	// intended as an alternative to calling createBuild to prevent from looking up and loading the build template a second time
 	public def createBuildFromTemplate(def collection, def project, def repo, def buildTemplate, String buildStage, def folder) {
 		return createBuildDefinition(collection, project, repo, buildTemplate, buildStage, folder);
 	}
@@ -331,7 +392,7 @@ public class BuildManagementService {
 		bDef.project = project
 		bDef.badgeEnabled = false
 		bDef.demands = []
-		bDef.variableGroups = []
+//		bDef.variableGroups = []
 		bDef.properties = [source: 'AllDefinitions']
 //		bDef.quality = 1
 //		bDef.queueStatus = 0
@@ -360,6 +421,46 @@ public class BuildManagementService {
 			}
 		}
 		//def memberData = memberManagementService.getMember(collection, 'z091182')
+		return writeBuildDefinition(collection, project, bDef)
+	}
+
+	def createDRBuildDefinition(def collection, def project, def repo, def bDef, String buildStage, def folder) {
+		// set all the necessary properties and post the request
+		bDef.remove('authoredBy')
+		bDef.name = "${repo.name}-dr-${buildStage}"
+		bDef.id = -1
+		bDef.draftOf = null
+		bDef.path = "${folder}"
+		bDef.counters = [:]
+		bDef.comment = "DR ${buildStage} build for ${repo.name}"
+		bDef.createdDate = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+		bDef.project = project
+		bDef.badgeEnabled = false
+		bDef.demands = []
+		//bDef.variableGroups = []
+		bDef.properties = [source: 'AllDefinitions']
+		if ("${buildStage}".equalsIgnoreCase("release")) {
+			def branchFilters = ["+refs/heads/DR/*"]
+			def drTrigger = ["branchFilters": branchFilters, "pathFilters": [], "batchChanges": false, "maxConcurrentBuildsPerBranch": 1, "pollingInterval": 0, "triggerType": "continuousIntegration"]
+			bDef.triggers = [drTrigger]
+		}
+		bDef.project = project
+		bDef.repository.id = "${repo.id}"
+		bDef.repository.name = "${repo.name}"
+		bDef.repository.url = "${repo.url}"
+		bDef.repository.defaultBranch = "${repo.defaultBranch}"
+		bDef.retentionSettings = getRetentionSettings(collection)
+		def queueData = getQueue(collection, project, "On-Prem DR")
+		if (queueData != null) {
+			bDef.queue = queueData
+			bDef.process.phases.each { phase ->
+				phase.target.queue = queueData
+			}
+		}
+		return writeBuildDefinition(collection, project, bDef)
+	}
+
+	def writeBuildDefinition(def collection, def project, def bDef) {
 		def body = new JsonBuilder(bDef).toPrettyString()
 		
 //		File f = new File("${repo.name}-${buildStage}.json")
@@ -405,6 +506,17 @@ public class BuildManagementService {
 	public def getBuild(def collection, def project, def repo, def qualifier) {
 		log.debug("BuildManagementService::getBuild -- buildName = "+repo.name+"-"+qualifier)
 		def query = ['api-version':'4.1','name':"${repo.name}-${qualifier}"]
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
+				query: query,
+				)
+		return result
+	}
+
+	public def getDRBuild(def collection, def project, def repo, def qualifier) {
+		log.debug("BuildManagementService::getDRBuild -- buildName = "+repo.name+"-dr-"+qualifier)
+		def query = ['api-version':'4.1','name':"${repo.name}-dr-${qualifier}"]
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
