@@ -6,6 +6,35 @@ import org.apache.http.auth.UsernamePasswordCredentials
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
 
+/**
+ * Main implementation for all ReST interaction within framework.
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="AGenericRestClient.png"/>
+ * 
+ * @author z091182
+ *
+ * @startuml
+ * abstract class AGenericRestClient [[java:com.zions.common.services.rest.AGenericRestClient]] {
+ * 	~RESTClient delegate
+ * 	~boolean checked
+ * 	+{abstract}void setCredentials(String user, String token)
+ * 	~def setProxy()
+ * 	~def get(Map input)
+ * 	~def put(Map input)
+ * 	~def delete(Map input)
+ * 	~def patch(Map input)
+ *  ~def post(Map input)
+ * 	~def checkBlankCollection(Map input)
+ * 	+Object rateLimitPost(Map input)
+ * 	~def deepcopy()
+ * }
+ * interface IGenericRestClient [[java:com.zions.common.services.rest.IGenericRestClient]] {
+ * }
+ * IGenericRestClient <|.. AGenericRestClient
+ * AGenericRestClient --> groovyx.net.http.RESTClient: delegate
+ * @enduml
+ */
 abstract class AGenericRestClient implements IGenericRestClient {
 	RESTClient delegate;
 	
