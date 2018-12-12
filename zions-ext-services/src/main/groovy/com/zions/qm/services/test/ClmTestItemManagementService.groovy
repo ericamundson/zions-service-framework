@@ -3,9 +3,10 @@ package com.zions.qm.services.test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
+
+import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
-import com.zions.ext.services.cache.CacheManagementService
 
 import groovy.json.JsonSlurper
 import groovy.xml.XmlUtil
