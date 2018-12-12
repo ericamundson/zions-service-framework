@@ -3,7 +3,7 @@ package com.zions.vsts.services.test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient;
 import groovy.json.JsonBuilder
@@ -23,7 +23,7 @@ public class TestManagementService {
 	private ProjectManagementService projectManagmentService;
 
 	@Autowired
-	CacheManagementService cacheManagementService
+	ICacheManagementService cacheManagementService
 	
 	public TestManagementService() {
 		
@@ -41,7 +41,7 @@ public class TestManagementService {
 			result = genericRestClient.patch(executionResult)
 		}
 		if (result != null) {
-			cacheManagementService.saveToCache(result, id, CacheManagementService.RESULT_DATA)
+			cacheManagementService.saveToCache(result, id, ICacheManagementService.RESULT_DATA)
 		}
 	}
 	
@@ -60,7 +60,7 @@ public class TestManagementService {
 				result = genericRestClient.patch(change)
 			}
 			if (result != null) {
-				cacheManagementService.saveToCache(result, idMap[count], CacheManagementService.WI_DATA)
+				cacheManagementService.saveToCache(result, idMap[count], ICacheManagementService.WI_DATA)
 			}
 			count++
 		}
@@ -79,7 +79,7 @@ public class TestManagementService {
 			result = genericRestClient.patch(change)
 		}
 		if (result != null) {
-			cacheManagementService.saveToCache(result, id, CacheManagementService.WI_DATA)
+			cacheManagementService.saveToCache(result, id, ICacheManagementService.WI_DATA)
 		}
 		return result
 	}
@@ -187,7 +187,7 @@ public class TestManagementService {
 				
 				
 				String cid = "${child.webId.text()}-${ctname}"
-				def childData = cacheManagementService.getFromCache(cid, CacheManagementService.WI_DATA)
+				def childData = cacheManagementService.getFromCache(cid, ICacheManagementService.WI_DATA)
 				if (childData != null) {
 					tcIds.add("${childData.id}")
 				}
@@ -297,14 +297,14 @@ public class TestManagementService {
 
 	def ensureTestRun(String collection, String project, def planData) {
 		String pid = "${planData.webId.text()}-Test Plan"
-		def runData = cacheManagementService.getFromCache(pid, CacheManagementService.RUN_DATA)
+		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
 		
 		if (runData == null) {
-			def parentData = cacheManagementService.getFromCache(pid, CacheManagementService.WI_DATA)
+			def parentData = cacheManagementService.getFromCache(pid, ICacheManagementService.WI_DATA)
 		
 			runData = createRunData(collection, project, parentData)
 			if (runData != null) {
-				cacheManagementService.saveToCache(runData, pid, CacheManagementService.RUN_DATA)
+				cacheManagementService.saveToCache(runData, pid, ICacheManagementService.RUN_DATA)
 			}
 		}
 		return runData

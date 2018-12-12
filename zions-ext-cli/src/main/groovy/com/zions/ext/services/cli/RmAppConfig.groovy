@@ -2,6 +2,7 @@ package com.zions.ext.services.cli
 
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.rest.IGenericRestClient
 
@@ -40,7 +41,7 @@ public class RmAppConfig {
 	}
 	
 	@Bean 
-	CacheManagementService cacheManagementService() {
+	ICacheManagementService cacheManagementService() {
 		return new CacheManagementService(cacheLocation)
 	}
 	
