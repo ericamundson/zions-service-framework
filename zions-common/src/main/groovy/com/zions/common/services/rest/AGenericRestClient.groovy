@@ -210,7 +210,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	def checkBlankCollection(Map input) {
 		String uri = "${input.uri}"
 		String checkedUri = "${this.tfsUrl}//"
-		if (uri.startsWith(checkedUri) ) {
+		if (this.tfsUrl && uri.startsWith(checkedUri) ) {
 		
 			uri = "${this.tfsUrl}/${uri.substring(checkedUri.length())}"
 			input.uri = uri
