@@ -1,7 +1,8 @@
 package com.zions.qm.services.test
 
+import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
-import com.zions.ext.services.cache.CacheManagementService
+
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value

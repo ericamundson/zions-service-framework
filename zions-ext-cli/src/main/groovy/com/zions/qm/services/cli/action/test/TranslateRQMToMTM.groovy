@@ -453,7 +453,7 @@ class TranslateRQMToMTM implements CliAction {
 						executionresults.each { result ->
 							def resultData = clmTestItemManagementService.getChanges(project, result, memberMap, testRun, testcase)
 							String rwebId = "${result.webId.text()}-Result"
-							//testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+							testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
 						}
 					}
 				}

@@ -2,6 +2,7 @@ package com.zions.vsts.services.work
 
 import static org.junit.Assert.*
 
+import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
@@ -10,6 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.spockframework.mock.MockUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
@@ -37,6 +39,9 @@ class WorkManagementServiceSpecTest extends Specification {
 		
 	@Autowired
 	IGenericRestClient genericRestClient
+	
+	@Autowired
+	CacheManagementService cacheManagmentService
 	
 	def "Injected services are mocks"() {
 		expect:
@@ -119,6 +124,10 @@ class WorkManagementServiceSpecTest extends Specification {
 class WorkManagementServiceConfig {
 	def mockFactory = new DetachedMockFactory()
 	
+	@Autowired
+	@Value('${cache.location}')
+	String cacheLocation
+
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return mockFactory.Mock(GenericRestClient, name: 'genericRestClient')
@@ -128,6 +137,11 @@ class WorkManagementServiceConfig {
 	WorkManagementService underTest() {
 		WorkManagementService out = new WorkManagementService()
 		return out
+	}
+	
+	@Bean
+	CacheManagementService cacheManagmentService() {
+		return new CacheManagementService(cacheLocation)
 	}
 	
 
