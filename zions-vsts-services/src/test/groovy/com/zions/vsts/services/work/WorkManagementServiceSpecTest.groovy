@@ -3,6 +3,7 @@ package com.zions.vsts.services.work
 import static org.junit.Assert.*
 
 import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
@@ -41,7 +42,7 @@ class WorkManagementServiceSpecTest extends Specification {
 	IGenericRestClient genericRestClient
 	
 	@Autowired
-	CacheManagementService cacheManagmentService
+	ICacheManagementService cacheManagmentService
 	
 	def "Injected services are mocks"() {
 		expect:
@@ -140,7 +141,7 @@ class WorkManagementServiceConfig {
 	}
 	
 	@Bean
-	CacheManagementService cacheManagmentService() {
+	ICacheManagementService cacheManagmentService() {
 		return new CacheManagementService(cacheLocation)
 	}
 	

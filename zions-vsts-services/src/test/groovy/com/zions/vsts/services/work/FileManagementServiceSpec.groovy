@@ -12,6 +12,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
@@ -29,7 +30,7 @@ class FileManagementServiceSpec extends Specification {
 	FileManagementService underTest
 	
 	@Autowired
-	CacheManagementService cacheManagementService
+	ICacheManagementService cacheManagementService
 
 	def 'ensureAttachments main flow'() {
 		given: 'stub for WorkManagementService getCacheWI call'
@@ -71,7 +72,7 @@ class FileManagementServiceSpecConfig {
 	}
 	
 	@Bean
-	CacheManagementService cacheManagementService() {
+	ICacheManagementService cacheManagementService() {
 		return mockFactory.Mock(CacheManagementService)
 	}
 

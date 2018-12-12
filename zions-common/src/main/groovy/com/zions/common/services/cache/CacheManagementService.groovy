@@ -9,9 +9,6 @@ import org.springframework.stereotype.Component
 @Component
 class CacheManagementService implements ICacheManagementService {
 	
-	public static String WI_DATA = 'wiData'
-	public static String RESULT_DATA = 'resultData'
-	public static String RUN_DATA = 'runData'
 	
 	@Autowired
 	@Value('${cache.location}')

@@ -1,6 +1,6 @@
 package com.zions.qm.services.test
 
-import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 
 import groovy.util.logging.Slf4j
@@ -35,7 +35,7 @@ class ClmTestAttachmentManagementService {
 	ClmTestManagementService clmTestManagementService
 
 	@Autowired
-	CacheManagementService cacheManagementService
+	ICacheManagementService cacheManagementService
 
 	public ClmTestAttachmentManagementService() {
 	}

@@ -3,7 +3,7 @@ package com.zions.vsts.services.work
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
@@ -29,7 +29,7 @@ class WorkManagementService {
 	private IGenericRestClient genericRestClient;
 		
 	@Autowired(required=true)
-	CacheManagementService cacheManagementService
+	ICacheManagementService cacheManagementService
 	
 	@Value('${id.tracking.field}')
 	private String idTrackingField
@@ -87,7 +87,7 @@ class WorkManagementService {
 		def idMap = [:]
 		int count = 0
 		cacheIds.each { id -> 
-			def wi = cacheManagementService.getFromCache(id, 'wiData')
+			def wi = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 			if (wi != null) {
 				String vstsId = "${wi.id}"
 				vstsIds.add(vstsId)
@@ -98,7 +98,7 @@ class WorkManagementService {
 		def vstsWIs = getListedWorkitems(collection, project, vstsIds)
 		count = 0
 		vstsWIs.each { wi -> 
-			cacheManagementService.saveToCache(wi, idMap[count], CacheManagementService.WI_DATA)
+			cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
 			count++
 		}
 	}
@@ -177,7 +177,7 @@ class WorkManagementService {
 		result.value.each { resp ->
 			if ("${resp.code}" == '200') {
 				def wi = new JsonSlurper().parseText(resp.body)
-				cacheManagementService.saveToCache(wi, idMap[count], CacheManagementService.WI_DATA)
+				cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
 			} else {
 				def issue = new JsonSlurper().parseText(resp.body)
 				log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
