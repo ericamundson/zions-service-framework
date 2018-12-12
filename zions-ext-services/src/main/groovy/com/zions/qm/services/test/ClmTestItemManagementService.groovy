@@ -113,7 +113,7 @@ public class ClmTestItemManagementService {
 		def exData = [:]
 		String id = "${qmItemData.webId.text()}-${map.target}"
 		String runId = "${runData.id}"
-		def cacheResult = cacheManagementService.getResultData(id)
+		def cacheResult = cacheManagementService.getFromCache(id, 'resultData')
 		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0-preview.2'], body: [:]]
 		if (cacheResult != null) {
 			def cid = cacheResult.id
@@ -140,7 +140,7 @@ public class ClmTestItemManagementService {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [:]
 		String id = "${qmItemData.webId.text()}-${map.target}"
-		def cacheWI = cacheManagementService.getCacheWI(id)
+		def cacheWI = cacheManagementService.getFromCache(id, 'wiData')
 		if (type == 'Test Case') {
 			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			if (cacheWI != null) {

@@ -87,7 +87,7 @@ class WorkManagementService {
 		def idMap = [:]
 		int count = 0
 		cacheIds.each { id -> 
-			def wi = cacheManagementService.getCacheWI(id)
+			def wi = cacheManagementService.getFromCache(id, 'wiData')
 			if (wi != null) {
 				String vstsId = "${wi.id}"
 				vstsIds.add(vstsId)
@@ -98,7 +98,7 @@ class WorkManagementService {
 		def vstsWIs = getListedWorkitems(collection, project, vstsIds)
 		count = 0
 		vstsWIs.each { wi -> 
-			cacheManagementService.saveState(wi, idMap[count])
+			cacheManagementService.saveToCache(wi, idMap[count], CacheManagementService.WI_DATA)
 			count++
 		}
 	}
@@ -177,7 +177,7 @@ class WorkManagementService {
 		result.value.each { resp ->
 			if ("${resp.code}" == '200') {
 				def wi = new JsonSlurper().parseText(resp.body)
-				cacheManagementService.saveState(wi, idMap[count])
+				cacheManagementService.saveToCache(wi, idMap[count], CacheManagementService.WI_DATA)
 			} else {
 				def issue = new JsonSlurper().parseText(resp.body)
 				log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
