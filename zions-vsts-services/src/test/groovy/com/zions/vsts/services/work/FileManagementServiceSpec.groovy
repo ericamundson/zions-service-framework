@@ -34,7 +34,7 @@ class FileManagementServiceSpec extends Specification {
 	def 'ensureAttachments main flow'() {
 		given: 'stub for WorkManagementService getCacheWI call'
 		def wiData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/cacheworkitem.json').text)
-		1 * cacheManagementService.getCacheWI(_) >> wiData
+		1 * cacheManagementService.getFromCache(_,_) >> wiData
 		
 		and: 'stub for upload attachment rest request'
 		1 * genericRestClient.rateLimitPost(_) >> [url: 'https://an.azure.location']

@@ -41,7 +41,7 @@ public class TestManagementService {
 			result = genericRestClient.patch(executionResult)
 		}
 		if (result != null) {
-			cacheManagementService.saveResultState(result, id)
+			cacheManagementService.saveToCache(result, id, CacheManagementService.RESULT_DATA)
 		}
 	}
 	
@@ -60,7 +60,7 @@ public class TestManagementService {
 				result = genericRestClient.patch(change)
 			}
 			if (result != null) {
-				cacheManagementService.saveState(result, idMap[count])
+				cacheManagementService.saveToCache(result, idMap[count], CacheManagementService.WI_DATA)
 			}
 			count++
 		}
@@ -79,7 +79,7 @@ public class TestManagementService {
 			result = genericRestClient.patch(change)
 		}
 		if (result != null) {
-			cacheManagementService.saveState(result, id)
+			cacheManagementService.saveToCache(result, id, CacheManagementService.WI_DATA)
 		}
 		return result
 	}
@@ -187,7 +187,7 @@ public class TestManagementService {
 				
 				
 				String cid = "${child.webId.text()}-${ctname}"
-				def childData = cacheManagementService.getCacheData(cid)
+				def childData = cacheManagementService.getFromCache(cid, CacheManagementService.WI_DATA)
 				if (childData != null) {
 					tcIds.add("${childData.id}")
 				}
@@ -297,14 +297,14 @@ public class TestManagementService {
 
 	def ensureTestRun(String collection, String project, def planData) {
 		String pid = "${planData.webId.text()}-Test Plan"
-		def runData = cacheManagementService.getCacheRunData(pid)
+		def runData = cacheManagementService.getFromCache(pid, CacheManagementService.RUN_DATA)
 		
 		if (runData == null) {
-			def parentData = cacheManagementService.getCacheData(pid)
+			def parentData = cacheManagementService.getFromCache(pid, CacheManagementService.WI_DATA)
 		
 			runData = createRunData(collection, project, parentData)
 			if (runData != null) {
-				cacheManagementService.saveRunDataState(runData, pid)
+				cacheManagementService.saveToCache(runData, pid, CacheManagementService.RUN_DATA)
 			}
 		}
 		return runData

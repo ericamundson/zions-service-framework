@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class CacheManagementService {
+class CacheManagementService implements ICacheManagementService {
+	
+	public static String WI_DATA = 'wiData'
+	public static String RESULT_DATA = 'resultData'
+	public static String RUN_DATA = 'runData'
 	
 	@Autowired
 	@Value('${cache.location}')
@@ -49,14 +53,31 @@ class CacheManagementService {
 	
 	}
 
+	
+	public def saveToCache(def data, String id, String type) {
+		File cacheDir = new File(this.cacheLocation)
+		if (!cacheDir.exists()) {
+			cacheDir.mkdir();
+		}
+		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
+		if (!wiDir.exists()) {
+			wiDir.mkdir()
+		}
+		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}${type}.json");
+		def w  = cacheData.newDataOutputStream()
+		w << new JsonBuilder(data).toPrettyString()
+		w.close()
+
+	}
+
 	/**
 	 * Check cache for work item state.
 	 *
 	 * @param id
 	 * @return
 	 */
-	def getCacheData(id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
+	def getFromCache(def id, String type) {
+		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}${type}.json");
 		if (cacheData.exists()) {
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)
@@ -64,88 +85,5 @@ class CacheManagementService {
 		return null
 
 	}
-	
-	/**
-	 * Check cache for work item state.
-	 *
-	 * @param id
-	 * @return
-	 */
-	def getCacheWI(id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
-		if (cacheData.exists()) {
-			JsonSlurper s = new JsonSlurper()
-			return s.parse(cacheData)
-		}
-		return null
-
-	}
-
-	def getResultData(String id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}resultData.json");
-		if (cacheData.exists()) {
-			JsonSlurper s = new JsonSlurper()
-			return s.parse(cacheData)
-		}
-		return null
-
-	}
-	
-	def saveState(def wi, String id) {
-		File cacheDir = new File(this.cacheLocation)
-		if (!cacheDir.exists()) {
-			cacheDir.mkdir();
-		}
-		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
-		if (!wiDir.exists()) {
-			wiDir.mkdir()
-		}
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
-		def w  = cacheData.newDataOutputStream()
-		w << new JsonBuilder(wi).toPrettyString()
-		w.close()
-	}
-	
-	
-	def getCacheRunData(String id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}runData.json");
-		if (cacheData.exists()) {
-			JsonSlurper s = new JsonSlurper()
-			return s.parse(cacheData)
-		}
-		return null
-
-	}
-	
-	def saveRunDataState(def runData, String id) {
-		File cacheDir = new File(this.cacheLocation)
-		if (!cacheDir.exists()) {
-			cacheDir.mkdir();
-		}
-		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
-		if (!wiDir.exists()) {
-			wiDir.mkdir()
-		}
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}runData.json");
-		def w  = cacheData.newDataOutputStream()
-		w << new JsonBuilder(runData).toPrettyString()
-		w.close()
-	}
-
-	def saveResultState(def runData, String id) {
-		File cacheDir = new File(this.cacheLocation)
-		if (!cacheDir.exists()) {
-			cacheDir.mkdir();
-		}
-		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
-		if (!wiDir.exists()) {
-			wiDir.mkdir()
-		}
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}resultData.json");
-		def w  = cacheData.newDataOutputStream()
-		w << new JsonBuilder(runData).toPrettyString()
-		w.close()
-	}
-
 
 }
