@@ -3,7 +3,7 @@ buildscript {
 	repositories {
 		if ("${queue}" == 'Hosted') {
 			mavenCentral()
-			jcentral()
+			jcenter()
 		}
 		flatDir { dirs "libs" }
 		maven {
