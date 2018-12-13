@@ -11,5 +11,6 @@
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="translateRRMToADO --clm.url=https://clm.cs.zionsbank.com --clm.user=z091182  --tfs.url=https://dev.azure.com --tfs.collection=eto-dev --tfs.user=z091182  --clm.projectAreaURI=&quot;_klNSEBNGEeSmasotILOx6w&quot;  --rm.mapping.file=&quot;./CoreRRMMapping.xml&quot; --tfs.project=&quot;FutureCore&quot; --process.name=&quot;ZionsAgile&quot; --include.update=data --rm.query=&quot;collectionURI=_Z2_j8fQqEeihN7TNly_siw&quot; --rm.filter=allFilter --tfs.areapath=&quot;FutureCore\\Requirements&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=rm -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=v070339 -Dproxy.Password=n0vemberL!berty"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=rm -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=z091182 -Dproxy.Password=4878Middy001"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
 </launchConfiguration>

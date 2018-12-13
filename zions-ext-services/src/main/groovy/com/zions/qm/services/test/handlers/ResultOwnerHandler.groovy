@@ -16,9 +16,13 @@ class ResultOwnerHandler extends QmBaseAttributeHandler {
 	}
 
 	public def formatValue(def value, def data) {
-		String outVal = "${value}"
-		if (value.length() > SIZE) {
-			outVal = value.substring(0, SIZE-1)
+		def outVal = null
+		def itemData = data.itemData
+		String url = "${itemData.owner.@'ns7:resource'}"
+		def owner = clmTestManagementService.getTestItem(url)
+		if (owner != null ) {
+			String email = "${owner.emailAddress.text()}"
+			outVal = [uniqueName: email.toLowerCase()]
 		}
 		return outVal;
 	}

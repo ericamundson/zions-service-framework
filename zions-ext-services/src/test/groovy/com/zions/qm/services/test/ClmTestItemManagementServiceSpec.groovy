@@ -4,12 +4,15 @@ import static org.junit.Assert.*
 
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.qm.services.test.handlers.NameHandler
 import com.zions.qm.services.test.handlers.StartDateHandler
@@ -26,7 +29,32 @@ class ClmTestItemManagementServiceSpec extends Specification {
 	@Autowired
 	TestMappingManagementService testMappingManagementService
 
-	def 'getChanges main flow with testplan data'() {
+	def 'getChanges main flow with test plan data'() {
+		given: 'Plan data'
+		//Plan data
+		def testplan = new XmlSlurper().parseText(getClass().getResource('/testdata/testplan218.xml').text)
+
+		and: 'team map'		
+		//Team map
+		def teamInfo = new JsonSlurper().parseText(getClass().getResource('/testdata/teammembers.json').text)
+		def teamMap = [:]
+		teamInfo.'value'.each { id ->
+			def identity = id.identity
+			String uid = "${identity.uniqueName}"
+			if (teamMap[uid.toLowerCase()] == null) {
+				teamMap[uid.toLowerCase()] = identity
+			}
+
+		}
+
+		when: 'call method under test (getChanges).'
+		def changedata = underTest.getChanges('DigitalBanking', testplan, teamMap)
+		
+		then: 'ensure change data'
+		true
+	}
+
+	def 'getChanges main flow with test suite data'() {
 //		given: 'Plan data'
 //		//Plan data
 //		def testplan = new XmlSlurper().parseText(getClass().getResource('/testdata/testplan.xml').text)
@@ -50,7 +78,67 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		then: 'ensure change data'
 		true
 	}
+	
+	def 'getChanges main flow with test case data'() {
+		given: 'Plan data'
+		//Plan data
+		def testcase = new XmlSlurper().parseText(getClass().getResource('/testdata/testcase49884.xml').text)
 
+		and: 'team map'		
+		//Team map
+		def teamInfo = new JsonSlurper().parseText(getClass().getResource('/testdata/teammembers.json').text)
+		def teamMap = [:]
+		teamInfo.'value'.each { id ->
+			def identity = id.identity
+			String uid = "${identity.uniqueName}"
+			if (teamMap[uid.toLowerCase()] == null) {
+				teamMap[uid.toLowerCase()] = identity
+			}
+
+		}
+
+		when: 'call method under test (getChanges).'
+		def changedata = underTest.getChanges('DigitalBanking', testcase, teamMap)
+		
+		then: 'ensure change data'
+		true
+	}
+	
+	def 'getChanges main flow with execution result data'() {
+				given: 'Result data'
+				//Plan data
+				def executionresults = new XmlSlurper().parseText(getClass().getResource('/testdata/executionresults1.xml').text)
+				def erlist = executionresults.'**'.findAll { it.name() == 'executionresult' }
+				def outItems = []
+				erlist.each { item ->
+					outItems.add(item)
+				}
+				and: 'Test case data'
+				def testcase = new XmlSlurper().parseText(getClass().getResource('/testdata/testcase47598.xml').text)
+
+				and: 'Run data'
+				def runData = new JsonSlurper().parseText(getClass().getResource('/testdata/runData.json').text)
+	
+				and: 'team map'
+				//Team map
+				def teamInfo = new JsonSlurper().parseText(getClass().getResource('/testdata/teammembers.json').text)
+				def teamMap = [:]
+				teamInfo.'value'.each { id ->
+					def identity = id.identity
+					String uid = "${identity.uniqueName}"
+					if (teamMap[uid.toLowerCase()] == null) {
+						teamMap[uid.toLowerCase()] = identity
+					}
+		
+				}
+		
+				when: 'call method under test (getChanges).'
+				def changedata = underTest.getChanges('DigitalBanking', outItems[0], teamMap, runData, testcase)
+		
+				then: 'ensure change data'
+				true
+			}
+		
 }
 
 @TestConfiguration
@@ -64,6 +152,15 @@ class ClmTestItemManagementServiceSpecConfig {
 		return new ClmTestItemManagementService()
 	}
 	
+	@Autowired
+	@Value('${cache.location}')
+	String cacheLocation
+	@Bean
+	ICacheManagementService cacheManagementService() {
+		return new CacheManagementService(cacheLocation)
+	}
+
+
 	@Bean
 	TestMappingManagementService testMappingManagementService() {
 		return new TestMappingManagementService()

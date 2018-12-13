@@ -10,7 +10,25 @@ import groovyx.net.http.ContentType
 
 /**
  * Provides behaviors to manage users on a VSTS project.  Adding users to projects and teams.
+ * 
+ * <p/>Design
+ * <img src="MemberManagementService.png"/>
+ * 
  * @author z091182
+ * 
+ * @startuml
+ * class com.zions.vsts.services.admin.member.MemberManagementService {
+ * ... entry point method to add members into project and teams ...
+ * + addMemberToTeams(String collection, String email,  def teams): returns new identity object
+ * ... entry point method to be used by migration tools to ensure valid user is set ...
+ * + getProjectMembersMap(collection, project): return Map of identities keyed by email
+ * }
+ * note left: @Component
+ * 
+ * com.zions.vsts.services.admin.member.MemberManagementService --> com.zions.common.services.rest.IGenericRestClient: @Autowired genericRestClient
+ * com.zions.common.services.rest.IGenericRestClient <|.. com.zions.vsts.services.tfs.rest.GenericRestClient : Injected by Spring
+ * com.zions.vsts.services.admin.member.MemberManagementService --> com.zions.vsts.services.admin.project.ProjectManagementService: @Autowired projectManagmentService injected by Spring
+ * @enduml
  *
  */
 @Component
@@ -182,6 +200,34 @@ public class MemberManagementService {
 		def teams = getAllTeams(collection, projectData)
 		def retVal = [:]
 		teams.value.each { teamData -> 
+			def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/teams/${teamData.id}/members",
+					query: ['api-version': '5.0-preview.2']
+					)
+			result.value.each { ridentity ->
+				def identity = ridentity.identity
+				String uid = "${identity.uniqueName}"
+				if (retVal[uid.toLowerCase()] == null) {
+					retVal[uid.toLowerCase()] = identity
+				}
+			}
+		}
+		return retVal
+	}
+	/**
+	 * Return a Map of team members with key being the uniqueName of member.
+	 *
+	 * @param collection
+	 * @param project
+	 * @param teamName
+	 * @return
+	 */
+	def getProjectMembersMapById(collection, project) {
+		def projectData = projectManagementService.getProject(collection, project)
+		def teams = getAllTeams(collection, projectData)
+		def retVal = [:]
+		teams.value.each { teamData ->
 			def result = genericRestClient.get(
 					contentType: ContentType.JSON,
 					uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/teams/${teamData.id}/members",

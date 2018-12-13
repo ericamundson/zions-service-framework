@@ -12,6 +12,51 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.workitem.AreasManagementService
 import groovy.json.JsonBuilder
 
+/**
+ * Provides ability to setup ADO team areas from CLM
+ * 
+ * This is currently not usable. To pull team areas from 
+ * TFS required HTML scrapping. New ADO UI broke it.
+ * 
+ * <p><b>Command-line arguments:</b></p>
+ * <ul>
+ * 	<li>setupTFSWorkitemAreas - The action's Spring bean name.</li>
+ * <ul>
+ * <p><b>The following's command-line format: --name=value</b></p>
+ * <ul>
+ *  <li>clm.url - CLM url</li>
+ *  <li>clm.user - CLM userid</li>
+ *  <li>clm.password - </li>
+ *  <li>ccm.projectArea - RTC project area</li>
+ *  <li>tfs.url - ADO url</li>
+ *  <li>tfs.user - ADO user</li>
+ *  <li>tfs.token - ADO PAT</li>
+ *  <li>tfs.project - ADO project</li>
+ *  <li></li>
+ *  </ul>
+ * </ul>
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="SetupTFSWorkitemAreas.png"/>
+ * 
+ * @author z091182
+ *
+ * @startuml
+ * class SetupTFSWorkitemAreas [[java:com.zions.clm.services.cli.action.planning.SetupTFSWorkitemAreas]] {
+ * 	~AreasManagementService areasManagementService
+ * 	~ProjectManagementService projectManagementService
+ * 	+SetupTFSWorkitemAreas()
+ * 	+def execute(ApplicationArguments data)
+ * 	+Object validate(ApplicationArguments args)
+ * }
+ * interface CliAction [[java:com.zions.common.services.cli.action.CliAction]] {
+ * }
+ * CliAction <|.. SetupTFSWorkitemAreas
+ * SetupTFSWorkitemAreas --> AreasManagementService: @Autowired areasManagementService
+ * SetupTFSWorkitemAreas --> PlanManagementService:  @Autowired planManagementService
+ * SetupTFSWorkitemAreas --> ProjectManagementService: @Autowired projectManagementService
+ * @enduml
+ */
 @Component
 class SetupTFSWorkitemAreas implements CliAction {
 	@Autowired

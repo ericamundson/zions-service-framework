@@ -13,9 +13,27 @@ import groovy.json.JsonSlurper
 
 
 /**
- * Command line class to import GIT repos from Bitbucket project to VSTS project and apply grants for access to
+ * Command line class to import GIT repos from a directory of repositories to VSTS project and apply grants for access to
  * repos to specific team.
  * 
+ * <p><b>Command-line arguments:</b></p>
+ * <ul>
+ * 	<li> syncReposList - The action's Spring bean name.</li>
+ * <ul>
+ * <p><b>The following's command-line format: --name=value</b></p>
+ * <ul>
+ *  <li>tfs.url - ADO host url</li>
+ *  <li>tfs.user - ADO user id</li>
+ *  <li>(optional) tfs.token - ADO PAT</li>
+ *  <li>bb.url - Bitbucket URL</li>
+ *  <li>bb.user - Bitbucket user</li>
+ *  <li>bb.password - Bitbucket password</li>
+ *  <li>bb.project - Butbucket Project</li>
+ *  <li>tfs.project - ADO project</li>
+ *  <li>tfs.team - ADO Team</li>
+ *  <li>grant.template - general permissions to set on repo for team</li>
+ *  </ul>
+ * </ul>
  * @author z091182
  *
  */

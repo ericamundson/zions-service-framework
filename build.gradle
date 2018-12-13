@@ -1,115 +1,194 @@
 buildscript {
-    ext {
-        springBootVersion = '2.0.0.RELEASE'
-    }
-    repositories {
+	ext { springBootVersion = '2.0.0.RELEASE' }
+	repositories {
 		if ("${queue}" == 'Hosted') {
 			mavenCentral()
+			jcenter()
 		}
- 		flatDir {
-			dirs "libs"
+		flatDir { dirs "libs" }
+		maven {
+			name 'ZionsNexusPublicSnapshots'
+			url "${nexusUrl}/repository/public-snapshots/"
 		}
-       maven {
-            name 'ZionsNexusPublicSnapshots'
-            url "${nexusUrl}/repository/public-snapshots/"
-        }
-        maven {
-            name 'ZionsNexusPublic'
-            url "${nexusUrl}/repository/public/"
-        }
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+		maven {
+			name 'ZionsNexusPublic'
+			url "${nexusUrl}/repository/public/"
+		}
+	}
+	dependencies {
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 		classpath 'com.zions.gradle:gplantumlPlugin:0.1.1'
-		classpath 'net.sourceforge.plantuml:plantuml:8001'
-    }
+		classpath 'net.sourceforge.plantuml:plantuml:8059'
+		classpath 'org.ajoberstar:gradle-git-publish:2.0.0'
+	}
 }
 
 allprojects {
-    apply plugin: 'maven'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'groovy'
+	apply plugin: 'maven'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'groovy'
 	apply plugin: 'gplantuml'
-    apply plugin: 'jacoco'
-    if ("${buildType}" == 'ci') {
-        apply plugin: 'codenarc'
-    }
-	
-	task handleGroovydoc(type: Copy) {
-		from('src/main/groovy') {
-			include '**/*.png'
-		}
-		into 'build/docs/groovydoc'
-	}
-	
-	handleGroovydoc.dependsOn groovydoc
-	
-	test {
-		//String activeProfile =  System.properties['spring.profiles.active']
-		systemProperty "spring.profiles.active", 'test'
-	}
-    bootJar {
-        enabled = false
-    }
-    group = 'com.zionsbancorp.scm'
-    //version = '1.0.0-SNAPSHOT'
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+	apply plugin: 'org.ajoberstar.git-publish'
+	if ("${buildType}" == 'ci') {
+		apply plugin: 'jacoco'
+		//apply plugin: 'codenarc'
+		jacocoTestCoverageVerification {
+			violationRules {
+				rule { limit { minimum = 0.1 } }
+			}
+			//	afterEvaluate {
+			//		classDirectories = files(classDirectories.files.collect {
+			//			fileTree(dir: it, exclude: [
+			//					'**/*Test**'
+			//			])
+			//		})
+			//	}
 
-    repositories {
+
+		}
+		jacocoTestReport {
+			reports {
+				xml.enabled false
+				csv.enabled false
+				html.destination file("${buildDir}/jacocoHtml")
+			}
+			//    afterEvaluate {
+			//        classDirectories = files(classDirectories.files.collect {
+			//            fileTree(dir: it, exclude: [
+			//                    '**/*Test**'
+			//            ])
+			//        })
+			//    }
+		}
+		
+		check.dependsOn jacocoTestReport
+	}
+
+
+	// Start generatation of framework documentation
+	sourceSets {
+		groovydoc {
+			resources { srcDir 'src/groovydoc' }
+		}
+	}
+	groovydoc {
+		classpath = sourceSets.groovydoc.output + classpath
+	}
+
+	task copyDesigns(type: Copy) {
+		from('src/main/groovy') { include '**/*.png' }
+		into 'build/docs/groovydoc'
+		dependsOn 'groovydoc'
+	}
+
+	task fullGroovydoc(type: Delete) {
+		delete fileTree('src/main/groovy') {
+			include '**/*.png'
+			include '**/*.cmapx'
+		}
+		dependsOn 'copyDesigns'
+
+
+	}
+	
+	gitPublish {
+		// where to publish to (repo must exist)
+		repoUri = 'https://ericamundson@github.com/ericamundson/ericamundson.github.io.git'
+		// (or 'https://github.com/ajoberstar/test-repo.git', depending on authentication)
+	
+		// branch will be created if it doesn't exist
+		branch = 'master'
+	
+		// generally, you don't need to touch this
+		repoDir = file("${publishLocation}") // defaults to $buildDir/gitPublish
+	
+		// what to publish, this is a standard CopySpec
+		contents {
+			from('build/docs/groovydoc') { include '**/*' }
+			into "${project.name}"
+		}
+	
+	
+		// what to keep in the existing branch (include=keep)
+		preserve {
+			include '*/**'
+			exclude '1.0.0/temp.txt'
+		}
+	
+		// message used when committing changes
+		commitMessage = 'Publishing version ' + "${version}" + ' documentation'
+	}
+	
+	gitPublishPush.dependsOn 'fullGroovydoc'
+//	task publishDocs( type: Copy ) {
+//		from('build/docs/groovydoc') { include '**/*' }
+//		into "${publishLocation}/${project.name}"
+//		dependsOn 'fullGroovydoc'
+//		
+//	}
+	// End generation of framework documentation
+
+
+	test { //String activeProfile =  System.properties['spring.profiles.active']
+		systemProperty "spring.profiles.active", 'test' }
+	bootJar { enabled = false }
+	group = 'com.zionsbancorp.scm'
+	//version = '1.0.0-SNAPSHOT'
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+
+	repositories {
 		if ("${queue}" == 'Hosted') {
 			mavenCentral()
-	        maven {
-	            name 'spring'
-	            url "http://repo.spring.io/plugins-release/"
-	        } 
-		}  
-        mavenLocal()
-        maven {
-            name 'ZionsNexusPublicSnapshots'
-            url "${nexusUrl}/repository/public-snapshots/"
-        }   
-        maven {
-            name 'ZionsNexusPublic'
-            url "${nexusUrl}/repository/public/"
-        }
-    }
+			maven {
+				name 'spring'
+				url "http://repo.spring.io/plugins-release/"
+			}
+		}
+		mavenLocal()
+		maven {
+			name 'ZionsNexusPublicSnapshots'
+			url "${nexusUrl}/repository/public-snapshots/"
+		}
+		maven {
+			name 'ZionsNexusPublic'
+			url "${nexusUrl}/repository/public/"
+		}
+	}
 
-    dependencies {
-        // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
-        // https://mvnrepository.com/artifact/com.github.rholder/gradle-one-jar
-        compile 'org.springframework.boot:spring-boot-starter'
-        compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.1'
-        compile 'org.codehaus.groovy:groovy-all:2.4.13'
-        compile 'org.apache.ivy:ivy:2.4.0'
-        compile 'bsf:bsf:2.4.0'
-        compile 'commons-io:commons-io:2.5'
-        compile 'commons-cli:commons-cli:1.3.1'
-        compile 'org.slf4j:slf4j-api:1.7.16'
-//		compile group: 'net.sf.json-lib', name: 'json-lib', version: '2.4'
-//		compile group: 'xom', name: 'xom', version: '1.2.5'
-		
-        compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.2') {
-            exclude(module: 'groovy')
-        }
-    
-        testCompile(
-                'org.springframework.boot:spring-boot-starter-test',
+	dependencies {
+		// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+		// https://mvnrepository.com/artifact/com.github.rholder/gradle-one-jar
+		compile 'org.springframework.boot:spring-boot-starter'
+		compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.1'
+		compile 'org.codehaus.groovy:groovy-all:2.4.13'
+		compile 'org.apache.ivy:ivy:2.4.0'
+		compile 'bsf:bsf:2.4.0'
+		compile 'commons-io:commons-io:2.5'
+		compile 'commons-cli:commons-cli:1.3.1'
+		compile 'org.slf4j:slf4j-api:1.7.16'
+		//		compile group: 'net.sf.json-lib', name: 'json-lib', version: '2.4'
+		//		compile group: 'xom', name: 'xom', version: '1.2.5'
+
+		compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.2') { exclude(module: 'groovy') }
+
+		testCompile(
+				'org.springframework.boot:spring-boot-starter-test',
 				'org.springframework:spring-mock:2.0.8',
-                'junit:junit:4.12',
-                'cglib:cglib-nodep:3.1',
-                'org.objenesis:objenesis:2.4',
-                'org.codehaus.groovy:groovy-all:2.4.13',
-                'org.spockframework:spock-core:1.2-groovy-2.4',
-				'org.spockframework:spock-spring:1.2-groovy-2.4'        
+				'junit:junit:4.12',
+				'cglib:cglib-nodep:3.1',
+				'org.objenesis:objenesis:2.4',
+				'org.codehaus.groovy:groovy-all:2.4.13',
+				'org.spockframework:spock-core:1.2-groovy-2.4',
+				'org.spockframework:spock-spring:1.2-groovy-2.4'
 				)
-    }
+	}
 }
 
 dependencies {
-    compile project(':zions-vsts-cli')
-    compile project(':zions-vsts-services')
-    compile project(':zions-vsts-build-microservice')
-    compile project(':zions-vsts-policy-microservice')
+	compile project(':zions-vsts-cli')
+	compile project(':zions-vsts-services')
+	compile project(':zions-vsts-build-microservice')
+	compile project(':zions-vsts-policy-microservice')
 }

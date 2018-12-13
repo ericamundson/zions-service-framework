@@ -3,6 +3,7 @@ package com.zions.vsts.services.test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient;
 import groovy.json.JsonBuilder
@@ -22,11 +23,26 @@ public class TestManagementService {
 	private ProjectManagementService projectManagmentService;
 
 	@Autowired
-	@Value('${cache.location}')
-	String cacheLocation
+	ICacheManagementService cacheManagementService
 	
 	public TestManagementService() {
 		
+	}
+	
+	def sendResultChanges(String collection, String project, def executionResult, String id) {
+		String method = "${executionResult.method}"
+		executionResult.remove('method')
+		def result = null
+		String nuri = "${genericRestClient.getTfsUrl()}${executionResult.uri}"
+		executionResult.uri = nuri
+		if (method == 'post') {
+			result = genericRestClient.post(executionResult)
+		} else if (method == 'patch') {
+			result = genericRestClient.patch(executionResult)
+		}
+		if (result != null) {
+			cacheManagementService.saveToCache(result, id, ICacheManagementService.RESULT_DATA)
+		}
 	}
 	
 	def batchPlanChanges(String collection, String tfsProject, def changeList, def idMap) {
@@ -44,7 +60,7 @@ public class TestManagementService {
 				result = genericRestClient.patch(change)
 			}
 			if (result != null) {
-				saveState(result, idMap[count])
+				cacheManagementService.saveToCache(result, idMap[count], ICacheManagementService.WI_DATA)
 			}
 			count++
 		}
@@ -63,7 +79,7 @@ public class TestManagementService {
 			result = genericRestClient.patch(change)
 		}
 		if (result != null) {
-			saveState(result, id)
+			cacheManagementService.saveToCache(result, id, ICacheManagementService.WI_DATA)
 		}
 		return result
 	}
@@ -106,8 +122,8 @@ public class TestManagementService {
 				}
 			}
 		}
-		File cacheL = new File(cacheLocation)
-		cacheL.deleteDir()
+//		File cacheL = new File(cacheLocation)
+//		cacheL.deleteDir()
 	}
 	
 	def getTestWorkItems(String collection, String project, String teamArea) {
@@ -171,7 +187,7 @@ public class TestManagementService {
 				
 				
 				String cid = "${child.webId.text()}-${ctname}"
-				def childData = getCacheData(cid)
+				def childData = cacheManagementService.getFromCache(cid, ICacheManagementService.WI_DATA)
 				if (childData != null) {
 					tcIds.add("${childData.id}")
 				}
@@ -278,60 +294,17 @@ public class TestManagementService {
 
 	}
 	
-	def saveState(def wi, String id) {
-		File cacheDir = new File(this.cacheLocation)
-		if (!cacheDir.exists()) {
-			cacheDir.mkdir();
-		}
-		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
-		if (!wiDir.exists()) {
-			wiDir.mkdir()
-		}
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
-		def w  = cacheData.newDataOutputStream()
-		w << new JsonBuilder(wi).toPrettyString()
-		w.close()
-	}
-	def saveRunDataState(def runData, String id) {
-		File cacheDir = new File(this.cacheLocation)
-		if (!cacheDir.exists()) {
-			cacheDir.mkdir();
-		}
-		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
-		if (!wiDir.exists()) {
-			wiDir.mkdir()
-		}
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}runData.json");
-		def w  = cacheData.newDataOutputStream()
-		w << new JsonBuilder(runData).toPrettyString()
-		w.close()
-	}
-
-	def saveResultState(def runData, String id) {
-		File cacheDir = new File(this.cacheLocation)
-		if (!cacheDir.exists()) {
-			cacheDir.mkdir();
-		}
-		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
-		if (!wiDir.exists()) {
-			wiDir.mkdir()
-		}
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}resultData.json");
-		def w  = cacheData.newDataOutputStream()
-		w << new JsonBuilder(runData).toPrettyString()
-		w.close()
-	}
 
 	def ensureTestRun(String collection, String project, def planData) {
 		String pid = "${planData.webId.text()}-Test Plan"
-		def runData = getCacheRunData(pid)
+		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
 		
 		if (runData == null) {
-			def parentData = getCacheData(pid)
+			def parentData = cacheManagementService.getFromCache(pid, ICacheManagementService.WI_DATA)
 		
 			runData = createRunData(collection, project, parentData)
 			if (runData != null) {
-				saveRunDataState(runData, pid)
+				cacheManagementService.saveToCache(runData, pid, ICacheManagementService.RUN_DATA)
 			}
 		}
 		return runData
@@ -368,32 +341,4 @@ public class TestManagementService {
 		return retVal
 	}
 
-	def getCacheData(String id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
-		if (cacheData.exists()) {
-			JsonSlurper s = new JsonSlurper()
-			return s.parse(cacheData)
-		}
-		return null
-
-	}
-	
-	def getCacheRunData(String id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}runData.json");
-		if (cacheData.exists()) {
-			JsonSlurper s = new JsonSlurper()
-			return s.parse(cacheData)
-		}
-		return null
-
-	}
-	def getResultData(String id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}resultData.json");
-		if (cacheData.exists()) {
-			JsonSlurper s = new JsonSlurper()
-			return s.parse(cacheData)
-		}
-		return null
-
-	}
 }

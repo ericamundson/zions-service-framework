@@ -8,6 +8,14 @@ import com.zions.common.services.rest.IGenericRestClient
 import groovy.xml.MarkupBuilder
 import groovyx.net.http.ContentType
 
+/**
+ * Handles RTC work item queries which provide DTO return of XML results
+ * 
+ * @see groovy.util.slurpersupport.GPathResult
+ * 
+ * @author z091182
+ *
+ */
 @Component
 public class ClmWorkItemManagementService {
 
@@ -19,6 +27,8 @@ public class ClmWorkItemManagementService {
 	}
 	
 	def getWorkItemHistory(int id) {
+		
+		XmlSlurper s
 		
 		def uri = "${this.clmGenericRestClient.clmUrl}/ccm/service/com.ibm.team.workitem.common.internal.rest.IWorkItemRestService/workItemDTO2"
 		def query = [id: id, includeAttributes: false, includeLinks: false, includeApprovals: false, includeHistory: true, includeLinkHistory: true]

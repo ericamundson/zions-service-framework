@@ -14,6 +14,25 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+/**
+ * Application main for all command-line actions.
+ * 
+ * <p><b>Design:</b></p>
+ * <img src="CliApplication.png"/>
+ * 
+ * @author z091182
+ *
+ * @startuml
+ * class CliApplication [[java:com.zions.ext.services.cli.CliApplication]] {
+ * 	-Map<String,CliAction> actionsMap
+ * 	+{static}void main(String[] args)
+ * 	+void run(ApplicationArguments args)
+ * }
+ * interface ApplicationRunner [[java:org.springframework.boot.ApplicationRunner]] {
+ * }
+ * ApplicationRunner <|.. CliApplication
+ * @enduml
+ */
 @SpringBootApplication
 @Slf4j
 public class CliApplication implements ApplicationRunner {
@@ -21,6 +40,10 @@ public class CliApplication implements ApplicationRunner {
 	@Autowired
 	private Map<String, CliAction> actionsMap;
 	
+	/**
+	 * 
+	 * @param args - command-line arguments
+	 */
 	static public void main(String[] args) {
 		SpringApplication app = new SpringApplication(CliApplication.class);
 		app.setBannerMode(Banner.Mode.OFF);

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.rest.IGenericRestClient
-import com.zions.qm.services.rest.QmGenericRestClient
+import com.zions.clm.services.rest.ClmGenericRestClient
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 

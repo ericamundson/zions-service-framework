@@ -1,5 +1,8 @@
 package com.zions.rm.services.requirements
 
+
+import com.zions.common.services.rest.IGenericRestClient
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import groovy.util.slurpersupport.NodeChild
@@ -41,10 +44,9 @@ class ClmRequirementsManagementService {
 	IGenericRestClient rmGenericRestClient
 	
 	def queryForModules(String projectURI, String query ) {
-
-		String uri = this.rmGenericRestClient.rmUrl + "/rm/publish/modules?" + query;
+		String uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?" + query;
 		if (query == null || query.length() == 0 || "${query}" == 'none') {  // if no query provided, then at least restrict to the project area
-			uri = this.rmGenericRestClient.rmUrl + "/rm/publish/modules?projectURI=" + projectURI;
+			uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?projectURI=" + projectURI;
 		}
 		def result = rmGenericRestClient.get(
 				uri: uri,

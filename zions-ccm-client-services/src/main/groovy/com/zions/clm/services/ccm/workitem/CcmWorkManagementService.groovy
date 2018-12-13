@@ -11,8 +11,10 @@ import com.ibm.team.workitem.common.model.AttributeTypes
 import com.ibm.team.workitem.common.model.IAttribute
 import com.ibm.team.workitem.common.model.IWorkItem
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.work.handler.IFieldHandler
+
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 
@@ -35,8 +37,12 @@ class CcmWorkManagementService {
 	WorkitemAttributeManager workitemAttributeManager
 	
 	@Autowired
+	ICacheManagementService cacheManagementService
+
+	@Autowired
 	@Value('${cache.location}')
 	String cacheLocation
+	
 	@Autowired
 	@Value('${tfs.url}')
 	String tfsUrl
@@ -87,7 +93,7 @@ class CcmWorkManagementService {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
 		IWorkItem workItem = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, null);
-		def cacheWI = getCacheWI(id)
+		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
@@ -118,7 +124,7 @@ class CcmWorkManagementService {
 	def generateLinkChanges(def wiData, String linkIds, key, linkMap, cacheWI) {
 		def linksList = linkIds.split(',')
 		linksList.each { id -> 
-			def linkWI = getCacheWI(id)
+			def linkWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 			if (linkWI != null) {
 				def linkId = linkWI.id
 				if (!linkExists(cacheWI, linkMap.target, linkId) && "${linkId}" != "${cacheWI.id}") {
@@ -160,7 +166,7 @@ class CcmWorkManagementService {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-		def cacheWI = getCacheWI(id)
+		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
@@ -279,19 +285,4 @@ class CcmWorkManagementService {
 		
 	}
 	
-	/**
-	 * Check cache for work item state.
-	 * 
-	 * @param id
-	 * @return
-	 */
-	def getCacheWI(id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
-		if (cacheData.exists()) {
-			JsonSlurper s = new JsonSlurper()
-			return s.parse(cacheData)
-		}
-		return null
-
-	}
 }
