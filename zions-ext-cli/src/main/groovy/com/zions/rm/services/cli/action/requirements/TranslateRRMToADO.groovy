@@ -2,6 +2,7 @@ package com.zions.rm.services.cli.action.requirements
 
 import java.util.Map
 
+import org.apache.ivy.core.module.descriptor.ModuleDescriptor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
@@ -141,7 +142,7 @@ class TranslateRRMToADO implements CliAction {
 	@Autowired 
 	ClmRequirementsManagementService clmRequirementsManagementService
 	@Autowired 
-	RequirementsMappingManagementService requirementsMappingManagementService
+	RequirementsMappingManagementService rmMappingManagementService
 	
 	public TranslateRRMToADO() {
 	}
@@ -157,8 +158,9 @@ class TranslateRRMToADO implements CliAction {
 			}
 		} catch (e) {}
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
-		String project = data.getOptionValues('clm.projectArea')[0]
-		String templateDir = data.getOptionValues('rm.template.dir')[0]
+
+		String projectURI = data.getOptionValues('clm.projectAreaURI')[0]
+
 		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
 		String rmQuery = data.getOptionValues('rm.query')[0]
 		String rmFilter = data.getOptionValues('rm.filter')[0]
@@ -177,7 +179,47 @@ class TranslateRRMToADO implements CliAction {
 		}
 		//translate work data.
 		if (includes['data'] != null) {
-			def reqItems = clmRequirementsManagementService.queryForModules(project, query)
+			// Get field mappings, target members map and RM modules to translate to ADO
+			def mappingData = rmMappingManagementService.mappingData
+			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+			def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
+			def changeList = []
+			def idMap = [:]
+			int count = 0
+			modules.each { module ->
+				// Iterate through all module elements 
+				int it = 0 // we have to use our own "it" since Groovy won't allow an implicit "it" to be incremented
+				while(true) {
+					// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
+					if (module.orderedArtifacts[it].isHeading() && 
+						it < module.orderedArtifacts.size()-1 && 
+						module.orderedArtifacts[it+1].isSupportingMaterial()) {
+						
+						module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
+						module.orderedArtifacts[it].setIsDeleted(true)
+						it++  // Skip Heading artifact 
+					}
+					def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
+					def aid = module.orderedArtifacts[it].getID()
+					changes.each { key, val ->
+						String idkey = "${aid}-${key}"
+						idMap[count] = idkey
+						changeList.add(val)
+						count++
+						
+					}
+					it++
+					if (it >= module.orderedArtifacts.size() - 1) {
+						break
+					}
+				}
+				
+				if (changeList.size() > 0) {
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+				}
+
+			}
+			/*
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			while (true) {
 				//TODO: ccmWorkManagementService.resetNewId()
@@ -202,6 +244,7 @@ class TranslateRRMToADO implements CliAction {
 				if (nextLink == null) break
 				reqItems = clmRequirementsManagementService.nextPage(nextLink.@href)
 			}
+			*/
 		}
 		//		workManagementService.testBatchWICreate(collection, tfsProject)
 		//apply work links
@@ -265,7 +308,7 @@ class TranslateRRMToADO implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectArea', 'rm.template.dir', 'tfs.url', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'rm.query', 'rm.filter']
+		def required = ['clm.url', 'clm.user', 'clm.projectAreaURI', 'tfs.url', 'tfs.collection', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'rm.query', 'rm.filter']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
