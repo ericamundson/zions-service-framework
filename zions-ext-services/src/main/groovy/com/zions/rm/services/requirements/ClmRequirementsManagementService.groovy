@@ -1,6 +1,5 @@
 package com.zions.rm.services.requirements
 
-import com.zions.rm.services.rest.RmGenericRestClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import groovy.util.slurpersupport.NodeChild
@@ -39,8 +38,7 @@ import groovy.xml.XmlUtil
 class ClmRequirementsManagementService {
 	
 	@Autowired
-	RmGenericRestClient rmGenericRestClient
-	//IGenericRestClient rmGenericRestClient
+	IGenericRestClient rmGenericRestClient
 	
 	def queryForModules(String projectURI, String query ) {
 
