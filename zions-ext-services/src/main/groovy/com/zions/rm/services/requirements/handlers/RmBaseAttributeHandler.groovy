@@ -32,7 +32,7 @@ abstract class RmBaseAttributeHandler implements IFieldHandler {
 		def itemMap = data.itemMap
 		
 		String name = getFieldName()
-		def aValue = itemData."${name}".text()
+		def aValue = itemData.attributeMap."${name}"
 		aValue = formatValue(aValue, itemData)
 		if (aValue == null) {
 			return null
