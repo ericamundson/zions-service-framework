@@ -439,9 +439,9 @@ class TranslateRQMToMTM implements CliAction {
 							String tcwebId = "${testcase.webId.text()}"
 							def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 							executionresults.each { result ->
-								def resultData = clmTestItemManagementService.getChanges(project, result, memberMap, testRun, testcase)
+								def resultData = clmTestItemManagementService.getChanges(tfsProject, result, memberMap, testRun, testcase)
 								String rwebId = "${result.webId.text()}-Result"
-								//testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+								testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
 							}
 						}
 					}
@@ -451,7 +451,7 @@ class TranslateRQMToMTM implements CliAction {
 						String tcwebId = "${testcase.webId.text()}"
 						def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 						executionresults.each { result ->
-							def resultData = clmTestItemManagementService.getChanges(project, result, memberMap, testRun, testcase)
+							def resultData = clmTestItemManagementService.getChanges(tfsProject, result, memberMap, testRun, testcase)
 							String rwebId = "${result.webId.text()}-Result"
 							testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
 						}
