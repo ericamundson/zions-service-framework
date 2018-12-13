@@ -74,7 +74,155 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		then: ''
 		wits.size() > 0
 	}
-
+	
+	def 'getWorkItemType success flow.'() {
+		given: 'project management service getProjecProperty stub'
+		1 * projectManagementService.getProjectProperty(_, _ , _) >> "aTemplateId"
+		
+		and: 'azure rest client http get stub'
+		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/processDTSTest.json').text)
+		1 * genericRestClient.get(_) >> out
+		
+		and:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		
+		when: 'call method (getWorkItemType) under test.'
+		def result = underTest.getWorkItemType('', 'DigitalBanking',  'DTSTest.EnhancementRequest','none','System.ProcessTemplateType')
+		
+		then: ''
+		"${result.name}" == "Enhancement Request"
+	}
+	
+	def 'getWorkitemTemplateFields success flow.'() {
+		given: 'project management service getProject stub'
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		1 * projectManagementService.getProject(_, _ ) >> project
+		
+		and: 'azure rest client http get stub'
+		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/dfprocessfields.json').text)
+		1 * genericRestClient.get(_) >> out
+		
+		when: 'call method (getWorkitemTemplateFields) under test.'
+		def result = underTest.getWorkitemTemplateFields('',  '',  '')
+		
+		then: ''
+		"${result.count}" == "58"
+	}
+	
+	/*def 'getWorkitemTemplateXML success flow.'() {
+		
+		when: 'call method (getWorkitemTemplateXML) under test.'
+		def result = underTest.getWorkitemTemplateXML('',  '',  '')
+		
+		then: ''
+		result == null
+	}
+	*/
+	def 'getField success flow.'() {
+		given: 
+		String json = this.getClass().getResource('/testdata/repos.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		String url = "https://dev.azure.com/eto-dev/DigitalBanking/_apis/git/repositories/"
+		
+		when: 'call method (getField) under test.'
+		def result = underTest.getField(url)
+		
+		then: ''
+		"${result.count}" == "4"
+	}
+	
+	def 'getFields success flow.'() {
+		given:
+		String json = this.getClass().getResource('/testdata/processfields.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		
+		when: 'call method (getFields) under test.'
+		def result = underTest.getFields('', project)
+		
+		then: ''
+		"${result.count}" == "220"
+	}
+	
+	def 'queryForField success flow.'() {
+		given:
+		String json = this.getClass().getResource('/testdata/processfields.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		
+		when: 'call method (queryForField) under test.'
+		def result = underTest.queryForField('', project, '', true)
+		
+		then: ''
+		result == null
+	}
+	
+	def 'getField success flow with three params'() {
+		given:
+		given: 'project management service getProject stub'
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		1 * projectManagementService.getProject(_, _ ) >> project
+		
+		and:
+		String json = this.getClass().getResource('/testdata/Microsoft.VSTS.Common.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		when: 'call method (getField) under test.'
+		def result = underTest.getField('', 'DigitalBanking', '')
+		
+		then: ''
+		"${result.name}" == "Acceptance Criteria"
+	}
+	
+	def 'updateWorkitemTemplate success flow with three params'() {
+		given:
+		String json = this.getClass().getResource('/testdata/processbug.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.put(_) >> out
+		
+		when: 'call method (updateWorkitemTemplate) under test.'
+		def result = underTest.updateWorkitemTemplate('', 'DigitalBanking', '', '')
+		
+		then: ''
+		"${result.name}" == "Bug"
+	}
+	
+	def 'getDefaultMapping success flow with three params'() {
+		given:
+		def mapping =[:]
+		def wit =[source: 'Default']
+		mapping << wit
+		
+		when: 'call method (getDefaultMapping) under test.'
+		def result = underTest.getDefaultMapping(mapping)
+		
+		then: ''
+		result == null;
+	}
+	
+	def 'hasMapping success flow with three params'() {
+		given:
+		def mapping =[:]
+		def wit =[:]
+		
+		when: 'call method (hasMapping) under test.'
+		def result = underTest.hasMapping(mapping, wit)
+		
+		then: ''
+		result == false;
+	}
 }
 
 @TestConfiguration

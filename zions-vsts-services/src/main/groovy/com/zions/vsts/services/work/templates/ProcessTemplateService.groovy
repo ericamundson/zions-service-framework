@@ -244,7 +244,7 @@ public class ProcessTemplateService  {
 					translateMapping["${wit.WORKITEMTYPE.@name}"] = witMap
 				} else {
 					def witMapping = getWITMapping(mapping, wit)
-					def witMap = [source: "${witMapping.@source}", target: "${witMapping.@target}", fieldMaps: [], defaultMap: null]
+					witMap = [source: "${witMapping.@source}", target: "${witMapping.@target}", fieldMaps: [], defaultMap: null]
 					witMap = addMappedFields(witMap, witMapping)
 					witMap = addUnmappedFields(witMap, wit, witMapping)
 					translateMapping["${witMapping.@source}"] = witMap
