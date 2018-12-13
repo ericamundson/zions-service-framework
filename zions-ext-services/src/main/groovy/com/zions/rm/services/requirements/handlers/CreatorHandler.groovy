@@ -17,9 +17,11 @@ class CreatorHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
+		String outVal = null
 		String ownerUrl = value
 		if (ownerUrl == null || ownerUrl.length() == 0) return null
-		String outVal = clmRequirementsManagementService.getMemberEmail(ownerUrl)
+		String email = clmRequirementsManagementService.getMemberEmail(ownerUrl)
+		outVal = email.toLowerCase()
 		return outVal;
 	}
 

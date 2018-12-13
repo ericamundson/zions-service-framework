@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class CreatedHandler extends RmBaseAttributeHandler {
-
+	private String fSimpleDateTimeFormatPattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 	@Override
 	public String getFieldName() {
 		// TODO Auto-generated method stub
@@ -13,11 +13,6 @@ class CreatedHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		String outVal = "${value}"
-		if (value.length() == 0) {
-			return null
-		}
-		return outVal;
+		return "${value}".replace('+0000','Z')
 	}
-
 }
