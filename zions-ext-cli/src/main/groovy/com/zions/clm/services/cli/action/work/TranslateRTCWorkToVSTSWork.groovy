@@ -92,9 +92,9 @@ import groovy.json.JsonBuilder
  *  alt include.update has 'workdata'
  *  TranslateRTCWorkToVSTSWork -> ProcessTemplateService: get field mapping
  *  TranslateRTCWorkToVSTSWork -> MemberManagementService: get member map
- *  TranslateRTCWorkToVSTSWork -> ccmWorkManagementService: get work items via query
+ *  TranslateRTCWorkToVSTSWork -> ClmWorkitemManagementService: get work items via query
  *  loop each { work item  }
- *  	TranslateRTCWorkToVSTSWork -> ClmTestItemManagementService: get data changes
+ *  	TranslateRTCWorkToVSTSWork -> CcmWorkManagementService: get data changes
  *  	TranslateRTCWorkToVSTSWork -> List: add changes to list
  *  end
  *  TranslateRTCWorkToVSTSWork -> WorkManagementService: send list of changes to wi batch.
@@ -102,9 +102,9 @@ import groovy.json.JsonBuilder
  *  alt include.update has 'worklinks'
  *  TranslateRTCWorkToVSTSWork -> ProcessTemplateService: get field mapping
  *  TranslateRTCWorkToVSTSWork -> MemberManagementService: get member map
- *  TranslateRTCWorkToVSTSWork -> CcmWorkManagementService: get work items via query
+ *  TranslateRTCWorkToVSTSWork -> ClmWorkitemManagementService: get work items via query
  *  loop each { work item  }
- *  	TranslateRTCWorkToVSTSWork -> ClmTestItemManagementService: get link data changes
+ *  	TranslateRTCWorkToVSTSWork -> CcmWorkManagementService: get link data changes
  *  	TranslateRTCWorkToVSTSWork -> List: add changes to list
  *  end
  *  TranslateRTCWorkToVSTSWork -> WorkManagementService: send list of changes to wi batch.
@@ -112,7 +112,7 @@ import groovy.json.JsonBuilder
  *  alt include.update has 'attachments'
  *  TranslateRTCWorkToVSTSWork -> ProcessTemplateService: get field mapping
  *  TranslateRTCWorkToVSTSWork -> MemberManagementService: get member map
- *  TranslateRTCWorkToVSTSWork -> ccmWorkManagementService: get work items via query
+ *  TranslateRTCWorkToVSTSWork -> ClmWorkitemManagementService: get work items via query
  *  loop each { work item  }
  *  	TranslateRTCWorkToVSTSWork -> AttachmentsManagementService: save CLM attachment to cache
  *  	TranslateRTCWorkToVSTSWork -> FileManagementService: ensure attachment associated to ADO and provide wi changes
