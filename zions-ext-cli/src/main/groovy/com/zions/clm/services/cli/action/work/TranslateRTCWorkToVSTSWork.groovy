@@ -24,7 +24,6 @@ import groovy.json.JsonBuilder
  * <p><b>Command-line arguments:</b></p>
  * <ul>
  * 	<li>translateRTCWorkToVSTSWork - The action's Spring bean name.</li>
- * <ul>
  * <p><b>The following's command-line format: --name=value</b></p>
  * <ul>
  *  <li>clm.url - CLM url</li>
@@ -85,8 +84,8 @@ import groovy.json.JsonBuilder
  * @startuml TranslateRTCWorkToVSTSWork_sequence_diagram.png
  * 
  * participant CliApplication
- * CliApplication -> TranslateRQMToMTM: validate(ApplicationArguments args)
- * CliApplication -> TranslateRQMToMTM: execute(ApplicationArguments args)
+ * CliApplication -> TranslateRTCWorkToVSTSWork: validate(ApplicationArguments args)
+ * CliApplication -> TranslateRTCWorkToVSTSWork: execute(ApplicationArguments args)
  * alt include.update has 'clean'
  * 	TranslateRTCWorkToVSTSWork -> WorkManagementService: clean up added work items
  * end

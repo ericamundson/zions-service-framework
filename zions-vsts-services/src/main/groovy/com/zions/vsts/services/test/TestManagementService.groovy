@@ -86,6 +86,7 @@ public class TestManagementService {
 		def result = null
 		String nuri = "${genericRestClient.getTfsUrl()}${executionResult.uri}"
 		executionResult.uri = nuri
+		String jsonBody = new JsonBuilder(executionResult).toPrettyString()
 		if (method == 'post') {
 			result = genericRestClient.post(executionResult)
 		} else if (method == 'patch') {

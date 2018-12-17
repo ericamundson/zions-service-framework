@@ -5,6 +5,7 @@ import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.ext.services.cli.action.rest.RestClient
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -50,5 +51,10 @@ public class QmAppConfig {
 	@Bean
 	IGenericRestClient qmGenericRestClient() {
 		return new ClmGenericRestClient(clmUrl, userid, password)
+	}
+	
+	@Bean
+	CliAction restClient() {
+		return new RestClient()
 	}
 }
