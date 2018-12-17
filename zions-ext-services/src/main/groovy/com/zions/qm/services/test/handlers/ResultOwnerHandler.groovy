@@ -22,7 +22,7 @@ class ResultOwnerHandler extends QmBaseAttributeHandler {
 		def owner = clmTestManagementService.getTestItem(url)
 		if (owner != null ) {
 			String email = "${owner.emailAddress.text()}"
-			outVal = [uniqueName: email.toLowerCase()]
+			outVal = email.toLowerCase()
 		}
 		return outVal;
 	}

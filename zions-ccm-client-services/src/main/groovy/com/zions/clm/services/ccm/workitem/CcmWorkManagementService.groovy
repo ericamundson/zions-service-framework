@@ -14,7 +14,7 @@ import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.work.handler.IFieldHandler
-
+import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 
@@ -128,7 +128,7 @@ class CcmWorkManagementService {
 			if (linkWI != null) {
 				def linkId = linkWI.id
 				if (!linkExists(cacheWI, linkMap.target, linkId) && "${linkId}" != "${cacheWI.id}") {
-					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap.@target}", url: "${tfsUrl}/_apis/wit/workItems/${linkId}", attributes:[comment: "${linkMap.@source} of ${linkId}"]]]
+					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap.@target}", url: "${tfsUrl}/_apis/wit/workItems/${linkId}", attributes:[comment: "${linkMap.@source}"]]]
 					wiData.body.add(change)
 				}
 			}
@@ -195,6 +195,7 @@ class CcmWorkManagementService {
 		if (wiData.body.size() == 1) {
 			return null
 		}
+		//String json = new JsonBuilder(wiData).toPrettyString()
 		return wiData
 	}
 		

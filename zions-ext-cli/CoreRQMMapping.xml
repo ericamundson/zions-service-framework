@@ -43,9 +43,9 @@
 		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
 	</wit>
 	<wit source="executionresult"  target="Result" translateUnmappedFields="false">
-		<field source="resultTestCaseReferenceHandler" target="testCase"/>
+		<field source="resultTestCaseReferenceHandler" target="testCaseReferenceId"/>
 		<field source="resultStartDateHandler" target="startedDate"/>
-		<field source="resultStateHandler" target="state">
+		<field source="resultStateHandler" target="outcome">
 			<defaultvalue target="Active"/>		
 			<value source="com.ibm.rqm.execution.common.state.passed" target="Pass"/>
 			<value source="com.ibm.rqm.execution.common.state.paused" target="Active"/> 
@@ -60,7 +60,7 @@
 			<value source="com.ibm.rqm.execution.common.state.error" target="Failed"/> 
 			<value source="com.ibm.rqm.execution.common.state.blocked" target="Block"/> 		
 			</field>
-		<field source="resultOwnerHandler" target="owner"/>
+		<!-- <field source="resultOwnerHandler" target="owner"/> -->
 		
 	</wit>
 </witmapping>
