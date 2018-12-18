@@ -67,6 +67,7 @@ class ClmTestAttachmentManagementService {
 				//File cFile = saveAttachment
 				files.add(item)
 			}
+			return files
 		}
 		def ts = getTestScript(testCase)
 		if (ts != null)	{

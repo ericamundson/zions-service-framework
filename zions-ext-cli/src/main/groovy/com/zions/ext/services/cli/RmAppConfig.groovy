@@ -4,6 +4,7 @@ import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,4 +50,11 @@ public class RmAppConfig {
 	IGenericRestClient rmGenericRestClient() {
 		return new ClmGenericRestClient(clmUrl, userid, password)
 	}
+	
+	
+	@Bean
+	CommandManagementService commandManagementService() {
+		return new CommandManagementService();
+	}
+
 }

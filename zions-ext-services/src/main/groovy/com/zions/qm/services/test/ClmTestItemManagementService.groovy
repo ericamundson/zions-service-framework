@@ -114,23 +114,25 @@ public class ClmTestItemManagementService {
 		String id = "${qmItemData.webId.text()}-${map.target}"
 		String runId = "${runData.id}"
 		def cacheResult = cacheManagementService.getFromCache(id, ICacheManagementService.RESULT_DATA)
-		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0-preview.2'], body: [:]]
+		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0-preview.5'], body: []]
 		if (cacheResult != null) {
 			def cid = cacheResult.id
-			exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results${cid}", query:['api-version':'5.0-preview.2'], body: [:]]
+			exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results${cid}", query:['api-version':'5.0-preview.5'], body: []]
 		}
+		def bodyItem = [:]
 		map.fields.each { field ->
 			def fieldData = getFieldData(qmItemData, field, memberMap, cacheResult, map, runData, testCase)
 			if (fieldData != null) {
 				if (fieldData.value != null) {
-					exData.body["${field.target}"] = fieldData.value
+					bodyItem["${field.target}"] = fieldData.value
 				}
 			}
 			
 		}
-		if (exData.body.size() == 0) {
+		if (bodyItem.size() == 0) {
 			return null
 		}
+		exData.body.add(bodyItem)
 		return exData
 	}
 	
@@ -140,8 +142,9 @@ public class ClmTestItemManagementService {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [:]
 		String id = "${qmItemData.webId.text()}-${map.target}"
-		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
+		def cacheWI = null
 		if (type == 'Test Case') {
+			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			if (cacheWI != null) {
 				def cid = cacheWI.id
@@ -154,12 +157,14 @@ public class ClmTestItemManagementService {
 				wiData.body.add(idData)
 			}
 		} else if (type == 'Test Plan'){
+			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.PLAN_DATA)
 			wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans", query:['api-version':'5.0-preview.2'], body: [:]]
 			if (cacheWI != null) {
 				def cid = cacheWI.id
 				wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${cid}", query:['api-version':'5.0-preview.2'], body: [:]]
 			}
 		} else if (type == 'Test Suite'){
+			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.SUITE_DATA)
 			if (parent != null) {
 				String parentId = "${parent.id}"
 				String cid = "${parent.rootSuite.id}"
