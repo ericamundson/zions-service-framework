@@ -30,16 +30,23 @@ class ClmModuleElement {
 	public boolean isHeading() {
 		return isHeading;
 	}
-	public boolean isSupportingMaterial() {
-		return (artifactType == "Supporting Material")
+	public boolean isToIncorporateTitle() {
+		return (artifactType == 'Supporting Material' ||
+				artifactType == 'Scope' ||
+				artifactType == 'Out of Scope' ||
+				artifactType == 'Assumption' )
 	}
-	public void setTitle(String in_title) {
-		attributeMap.'title' = in_title
-	}
+
 	public String getTitle() {
 		return attributeMap.'title'
 	}
 	public String getID() {
 		return attributeMap.'Identifier'
+	}
+	public void setTitle(String in_title) {
+		attributeMap.'title' = in_title
+	}
+	public void setDescription(String in_desc) {
+		attributeMap.'Primary Text' = in_desc
 	}
 }

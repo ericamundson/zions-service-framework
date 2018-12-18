@@ -193,11 +193,14 @@ class TranslateRRMToADO implements CliAction {
 					// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
 					if (module.orderedArtifacts[it].isHeading() && 
 						it < module.orderedArtifacts.size()-1 && 
-						module.orderedArtifacts[it+1].isSupportingMaterial()) {
+						module.orderedArtifacts[it+1].isToIncorporateTitle()) {
 						
 						module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
 						module.orderedArtifacts[it].setIsDeleted(true)
 						it++  // Skip Heading artifact 
+					}
+					else if (module.orderedArtifacts[it].isHeading()) {
+						module.orderedArtifacts[it].setDescription("") // If simple heading, remove duplicate description
 					}
 					def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
 					def aid = module.orderedArtifacts[it].getID()
