@@ -4,6 +4,7 @@ import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.ext.services.cli.action.rest.RestClient
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
@@ -57,4 +58,11 @@ public class QmAppConfig {
 	CliAction restClient() {
 		return new RestClient()
 	}
+	
+	
+	@Bean
+	CommandManagementService commandManagementService() {
+		return new CommandManagementService();
+	}
+
 }

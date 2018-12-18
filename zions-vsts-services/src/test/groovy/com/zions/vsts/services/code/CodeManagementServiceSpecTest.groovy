@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -48,6 +49,9 @@ class CodeManagementServiceSpecTest extends Specification {
 	
 	@Autowired
 	private CodeManagementService underTest
+	
+	@Autowired
+	private CommandManagementService commandManagementService
 	
 	@Test
 	def 'getRepos success flow with two params' () {
@@ -235,4 +239,8 @@ class CodeManagementServiceTestConfig {
 		return mockFactory.Mock(PermissionsManagementService);
 	}
 	
+	@Bean
+	CommandManagementService commandManagementService() {
+		return mockFactory.Mock(CommandManagementService);
+	}
 }
