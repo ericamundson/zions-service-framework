@@ -75,12 +75,12 @@ public class ClmTestItemManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	def getChanges(String project, def qmItemData, def memberMap, def runData = null, def testCase = null) {
+	def getChanges(String project, def qmItemData, def memberMap, def resultMap = null, def testCase = null) {
 		def maps = getTestMaps(qmItemData)
 		def outItems = [:]
 		maps.each { map ->
 			if ("${map.target}" == 'Result') {
-				def item = generateExecutionData(qmItemData, map, project, memberMap, runData, testCase)
+				def item = generateExecutionData(qmItemData, map, project, memberMap, resultMap, testCase)
 				if (item != null) {
 					outItems["${map.target}"] = item
 				}
@@ -102,26 +102,27 @@ public class ClmTestItemManagementService {
 	 * @param map - Field map data
 	 * @param project - ADO project name
 	 * @param memberMap - ADO project member map
-	 * @param runData - ADO Run data
+	 * @param resultMap - ADO map of test case id to result
 	 * @param testCase - RQM testcase data
 	 * @return ADO 'Result' rest object
 	 */
-	private def generateExecutionData(def qmItemData, def map, String project, def memberMap, def runData, def testCase) {
+	private def generateExecutionData(def qmItemData, def map, String project, def memberMap, def resultMap, def testCase) {
 		String type = map.target
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def exData = [:]
 		String id = "${qmItemData.webId.text()}-${map.target}"
-		String runId = "${runData.id}"
-		def cacheResult = cacheManagementService.getFromCache(id, ICacheManagementService.RESULT_DATA)
+		def cacheResult = getResultData(resultMap, testCase)
+		if (!cacheResult) return null
+		String runId = "${cacheResult.testRun.id}"
 		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0-preview.5'], body: []]
 		if (cacheResult != null) {
 			def cid = cacheResult.id
-			exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results${cid}", query:['api-version':'5.0-preview.5'], body: []]
+			exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results/${cid}", query:['api-version':'5.0-preview.5'], body: []]
 		}
 		def bodyItem = [:]
 		map.fields.each { field ->
-			def fieldData = getFieldData(qmItemData, field, memberMap, cacheResult, map, runData, testCase)
+			def fieldData = getFieldData(qmItemData, field, memberMap, cacheResult, map, resultMap, testCase)
 			if (fieldData != null) {
 				if (fieldData.value != null) {
 					bodyItem["${field.target}"] = fieldData.value
@@ -134,6 +135,13 @@ public class ClmTestItemManagementService {
 		}
 		exData.body.add(bodyItem)
 		return exData
+	}
+	
+	private def getResultData(def resultMap, def testCase) {
+		String rqmId = "${testCase.webId.text()}-Test Case"
+		def adoTestCase = cacheManagementService.getFromCache(rqmId, ICacheManagementService.WI_DATA)
+		if (adoTestCase == null) return null
+		return resultMap["${adoTestCase.id}"]
 	}
 	
 	private def generateItemData(def qmItemData, def map, String project, def memberMap, def parent = null) {
@@ -212,16 +220,16 @@ public class ClmTestItemManagementService {
 
 	}
 	
-	private def getFieldData(def qmItemData, def field, def memberMap, def cacheWI, def map, def runData = null, def testCase = null) {
+	private def getFieldData(def qmItemData, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null) {
 		String handlerName = "${field.source}"
 		String fValue = ""
 		if (this.fieldMap["${handlerName}"] != null) {
-			def data = [itemData: qmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, runData: runData, testCase: testCase]
+			def data = [itemData: qmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}
-			if (runData != null) {
-				data['runData'] = runData
+			if (resultMap != null) {
+				data['resultMap'] = resultMap
 			}
 			def fieldData = this.fieldMap["${handlerName}"].execute(data)
 			return fieldData

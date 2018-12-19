@@ -116,9 +116,13 @@ class ClmTestItemManagementServiceSpec extends Specification {
 				and: 'Test case data'
 				def testcase = new XmlSlurper().parseText(getClass().getResource('/testdata/testcase47598.xml').text)
 
-				and: 'Run data'
-				def runData = new JsonSlurper().parseText(getClass().getResource('/testdata/runData.json').text)
-	
+				and: 'result map data'
+				def result = new JsonSlurper().parseText(getClass().getResource('/testdata/resultsMap.json').text)
+				def tcMap = [:]
+				result.'value'.each { aresult ->
+					tcMap["${aresult.testCase.id}"] = aresult
+				}
+		
 				and: 'team map'
 				//Team map
 				def teamInfo = new JsonSlurper().parseText(getClass().getResource('/testdata/teammembers.json').text)
@@ -133,7 +137,7 @@ class ClmTestItemManagementServiceSpec extends Specification {
 				}
 		
 				when: 'call method under test (getChanges).'
-				def changedata = underTest.getChanges('DigitalBanking', outItems[0], teamMap, runData, testcase)
+				def changedata = underTest.getChanges('DigitalBanking', outItems[0], teamMap, tcMap, testcase)
 		
 				then: 'ensure change data'
 				true

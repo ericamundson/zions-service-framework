@@ -4,6 +4,8 @@ import com.zions.common.services.work.handler.IFieldHandler
 import org.springframework.stereotype.Component
 
 abstract class QmBaseAttributeHandler implements IFieldHandler {
+	
+	boolean cacheCheck = true
 
 	public Object execute(Object data) {
 		def itemData = data.itemData
@@ -37,7 +39,7 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 		}
 
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: aValue]
-		if (wiCache != null) {
+		if (cacheCheck && wiCache != null) {
 			String type = "${itemMap.target}"
 			if (type != 'Test Case') {
 				def cVal = wiCache."${fieldMap.target}"
