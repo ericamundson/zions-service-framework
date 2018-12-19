@@ -431,7 +431,7 @@ class TranslateRQMToMTM implements CliAction {
 					String itemXml = XmlUtil.serialize(testplan)
 					String webId = "${testplan.webId.text()}"
 					String parentHref = "${testItem.id.text()}"
-					def testRun = testManagementService.ensureTestRun(collection, tfsProject, testplan)
+					def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
 					testplan.testsuite.each { testsuiteRef ->
 						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
 						testsuite.testcase.each { testcaseRef ->
@@ -439,7 +439,7 @@ class TranslateRQMToMTM implements CliAction {
 							String tcwebId = "${testcase.webId.text()}"
 							def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 							executionresults.each { result ->
-								def resultData = clmTestItemManagementService.getChanges(tfsProject, result, memberMap, testRun, testcase)
+								def resultData = clmTestItemManagementService.getChanges(tfsProject, result, memberMap, resultMap, testcase)
 								String rwebId = "${result.webId.text()}-Result"
 								testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
 							}
@@ -451,7 +451,7 @@ class TranslateRQMToMTM implements CliAction {
 						String tcwebId = "${testcase.webId.text()}"
 						def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 						executionresults.each { result ->
-							def resultData = clmTestItemManagementService.getChanges(tfsProject, result, memberMap, testRun, testcase)
+							def resultData = clmTestItemManagementService.getChanges(tfsProject, result, memberMap, resultMap, testcase)
 							String rwebId = "${result.webId.text()}-Result"
 							testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
 						}
