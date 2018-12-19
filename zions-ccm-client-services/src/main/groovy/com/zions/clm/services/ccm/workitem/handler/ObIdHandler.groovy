@@ -8,19 +8,16 @@ import com.ibm.team.links.common.IReference
 import com.ibm.team.links.common.factory.IReferenceFactory
 import com.ibm.team.process.common.IProjectArea
 import com.ibm.team.repository.client.IItemManager
-import com.ibm.team.repository.client.ITeamRepository
 import com.ibm.team.repository.common.IAuditable
 import com.ibm.team.repository.common.IAuditableHandle
 import com.ibm.team.repository.common.IContributor
 import com.ibm.team.repository.common.IContributorHandle
 import com.ibm.team.repository.common.TeamRepositoryException
 import com.ibm.team.scm.common.IChangeSet
-import com.ibm.team.workitem.api.common.IState
-import com.ibm.team.workitem.common.IWorkItemCommon
+import com.ibm.team.workitem.client.IWorkItemClient
+import com.ibm.team.workitem.common.model.IAttribute
 import com.ibm.team.workitem.common.model.IComment
 import com.ibm.team.workitem.common.model.IWorkItem
-import com.ibm.team.workitem.common.model.Identifier
-import com.ibm.team.workitem.common.workflow.IWorkflowInfo
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.utils.ProcessAreaUtil
 import com.zions.clm.services.ccm.workitem.WorkitemAttributeManager
@@ -31,14 +28,12 @@ import groovy.json.StringEscapeUtils
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
 import groovy.xml.XmlUtil
-
-import org.eclipse.core.runtime.IProgressMonitor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
 @Slf4j
-class MbSubStateHandler implements IFieldHandler {
+class ObIdHandler implements IFieldHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired
@@ -48,7 +43,7 @@ class MbSubStateHandler implements IFieldHandler {
 	
 	static int SIZE = 255
 
-	public MbSubStateHandler() {}
+	public IdHandler() {}
 
 
 	@Override
@@ -57,22 +52,20 @@ class MbSubStateHandler implements IFieldHandler {
 		def fieldMap = data.fieldMap
 		def wiCache = data.cacheWI
 		def memberMap = data.memberMap
-		Identifier<IState> state = wi.getState2();
-		IWorkflowInfo wfInfo = getWorkItemCommon().findWorkflowInfo(wi,
-				getMonitor());
-		String stateName = wfInfo.getStateName(state);
-		if (stateName == null) {
-			return null;
+		String sId = "RTC-${wi.id}"
+		String eId = getAttributeValue('com.ibm.team.workitem.jirakey', wi)
+		if (eId != null && eId.length() > 0) {
+			sId = "${sId} Jira-${eId}"
 		}
-		String aVal = null
-		if ("${stateName}" == 'Refinement Ready') {
-			aVal = 'Refinement Ready'
-		} else if ("${stateName}" == 'Sprint Ready') {
-			aVal = 'Sprint Ready'
+		eId = getAttributeValue('com.ibm.team.workitem.oracleid', wi)
+		if (eId != null && eId.length() > 0) {
+			sId = "${sId} Oracle-${eId}"
 		}
-		if (aVal == null) return null
-		
-		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: aVal]
+		eId = getAttributeValue('com.ibm.team.workitem.externalid', wi)
+		if (eId != null && eId.length() > 0) {
+			sId = "${sId} External-${eId}"
+		}
+		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: "${sId}"]
 		if (wiCache != null) {
 			def cVal = wiCache.fields["${fieldMap.target}"]
 			if ("${cVal}" == "${retVal.value}") {
@@ -82,13 +75,18 @@ class MbSubStateHandler implements IFieldHandler {
 		return retVal;
 	}
 	
-	IWorkItemCommon getWorkItemCommon() {
-		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
-		return teamRepository.getClientLibrary(IWorkItemCommon.class)
-	}
+	def getAttributeValue(String fieldId, IWorkItem wi) {
+		IWorkItemClient workItemClient = rtcRepositoryClient.repo.getClientLibrary(IWorkItemClient.class)
+		
+		IAttribute attribute = workItemClient.findAttribute(wi.projectArea, fieldId, null);
+		if (attribute == null) return null
+		def val = null
+		try {
+			val = wi.getValue(attribute)
+		} catch (err) {
+		}
+		return val
 
-	IProgressMonitor getMonitor() {
-		return rtcRepositoryClient.getMonitor()
 	}
 
 }
