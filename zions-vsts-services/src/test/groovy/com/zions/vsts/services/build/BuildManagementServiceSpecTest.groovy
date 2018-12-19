@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -48,6 +49,9 @@ class BuildManagementServiceSpecTest extends Specification {
 	
 	@Autowired
 	private CodeManagementService codeManagementService
+	
+	@Autowired
+	private CommandManagementService commandManagementService
 	
 	@Autowired
 	private BuildManagementService underTest
@@ -237,15 +241,113 @@ class BuildManagementServiceSpecTest extends Specification {
 		1 * genericRestClient.get(_) >> out
 		
 		and:
+		String json1 = this.getClass().getResource('/testdata/buildqueues.json').text
+		JsonSlurper js1 = new JsonSlurper()
+		def out1 = js.parseText(json1)
+		1 * genericRestClient.get(_) >> out1
+		
+		and:
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
-		def bDef
+		def bDef = new JsonSlurper().parseText(this.getClass().getResource('/testdata/bdef.json').text)
 		
 		when:
 		def result = underTest.createBuildDefinition('', project, repo, bDef, 'Dev', '')
 		
 		then:
-		"${result.count}" =="0"
+		result == null
+	}
+	
+	@Test
+	def 'createDRBuildDefinition success flow' () {
+		given:
+		String json = this.getClass().getResource('/testdata/buildConfigurations.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		and:
+		String json1 = this.getClass().getResource('/testdata/buildqueues.json').text
+		JsonSlurper js1 = new JsonSlurper()
+		def out1 = js.parseText(json1)
+		1 * genericRestClient.get(_) >> out1
+		
+		and:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
+		def bDef = new JsonSlurper().parseText(this.getClass().getResource('/testdata/bdef.json').text)
+		
+		when:
+		def result = underTest.createDRBuildDefinition('', project, repo, bDef, 'Dev', '') 
+		
+		then:
+		result == null
+	}
+	
+	@Test
+	def 'createBuild success flow' () {
+		given:
+		String json = this.getClass().getResource('/testdata/buildConfigurations.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		and:
+		String json1 = this.getClass().getResource('/testdata/buildqueues.json').text
+		JsonSlurper js1 = new JsonSlurper()
+		def out1 = js.parseText(json1)
+		1 * genericRestClient.get(_) >> out1
+		
+		and:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
+		//def bDef = new JsonSlurper().parseText(this.getClass().getResource('/testdata/bdef.json').text)
+		
+		when:
+		def result = underTest.createBuild('', project, repo, BuildType.GRADLE, 'Dev', '') 
+		
+		then:
+		result == null
+	}
+	
+	@Test
+	def 'branchPolicy success flow' () {
+		given:
+		String json = this.getClass().getResource('/testdata/buildConfigurations.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.post(_) >> out
+				
+		and:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
+		def ciBuild = new JsonSlurper().parseText(this.getClass().getResource('/testdata/cibuild.json').text)
+		def branch = new JsonSlurper().parseText(this.getClass().getResource('/testdata/branch.json').text)
+		
+		when:
+		def result = underTest.branchPolicy('', project, repo, ciBuild, branch)
+		
+		then:
+		"${result.count}" == "0"
+	}
+	
+	@Test
+	def 'getBuildTemplate success flow' () {
+		given:
+		/*String json = this.getClass().getResource('/testdata/buildConfigurations.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.post(_) >> out
+				
+		and:*/
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
+		
+		when:
+		def result = underTest.getBuildTemplate('', project, repo, 'Dev')
+		
+		then:
+		result == null
 	}
 	
 		
@@ -263,7 +365,7 @@ class BuildManagementServiceTestConfig {
 	}
 	
 	@Bean
-	CodeManagementService cdeManagementService() {
+	CodeManagementService codeManagementService() {
 		return mockFactory.Mock(CodeManagementService);
 	}
 	
@@ -285,6 +387,11 @@ class BuildManagementServiceTestConfig {
 	@Bean
 	PermissionsManagementService permissionsManagementService() {
 		return mockFactory.Mock(PermissionsManagementService);
+	}
+	
+	@Bean
+	CommandManagementService commandManagementService() {
+		return mockFactory.Mock(CommandManagementService);
 	}
 	
 	@Bean
