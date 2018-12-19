@@ -460,7 +460,7 @@ class TranslateRQMToMTM implements CliAction {
 				def nextLink = testItems.'**'.find { node ->
 					
 					node.name() == 'link' && node.@rel == 'next'
-				}re
+				}
 				if (nextLink == null) break
 				testItems = clmTestManagementService.nextPage(nextLink.@href)
 			}
