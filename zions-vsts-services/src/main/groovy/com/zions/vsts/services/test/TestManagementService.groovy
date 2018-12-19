@@ -92,9 +92,9 @@ public class TestManagementService {
 		} else if (method == 'patch') {
 			result = genericRestClient.patch(executionResult)
 		}
-		if (result != null) {
-			cacheManagementService.saveToCache(result, id, ICacheManagementService.RESULT_DATA)
-		}
+//		if (result != null) {
+//			cacheManagementService.saveToCache(result, id, ICacheManagementService.RESULT_DATA)
+//		}
 		return result
 	}
 	
@@ -137,6 +137,20 @@ public class TestManagementService {
 			cacheManagementService.saveToCache(result, id, dataType)
 		}
 		return result
+	}
+	
+	private def getResultsTestcaseMap(def url) {
+		def result = genericRestClient.get(
+			uri: url,
+			contentType: ContentType.JSON,
+			query: [destroy: true, 'api-version': '5.0-preview.3']
+			)
+		def tcMap = [:]
+		result.'value'.each { aresult ->
+			tcMap["${aresult.testCase.id}"] = aresult
+		}
+		return tcMap
+
 	}
 
 	private String getTestChangeType(def change) {
@@ -372,7 +386,8 @@ public class TestManagementService {
 				cacheManagementService.saveToCache(runData, pid, ICacheManagementService.RUN_DATA)
 			}
 		}
-		return runData
+		def resultTestCaseMap = getResultsTestcaseMap("${runData.url}/results")
+		return resultTestCaseMap
 	}
 	
 	private def createRunData(String collection, String project, def planData ) {
