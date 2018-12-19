@@ -4,12 +4,15 @@ import static org.junit.Assert.*
 
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
@@ -22,17 +25,17 @@ class FileManagementServiceSpec extends Specification {
 	
 	@Autowired
 	IGenericRestClient genericRestClient
-	
-	@Autowired
-	WorkManagementService workManagmentService
-	
+		
 	@Autowired
 	FileManagementService underTest
+	
+	@Autowired
+	ICacheManagementService cacheManagementService
 
 	def 'ensureAttachments main flow'() {
 		given: 'stub for WorkManagementService getCacheWI call'
 		def wiData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/cacheworkitem.json').text)
-		1 * workManagmentService.getCacheWI(_) >> wiData
+		1 * cacheManagementService.getFromCache(_,_) >> wiData
 		
 		and: 'stub for upload attachment rest request'
 		1 * genericRestClient.rateLimitPost(_) >> [url: 'https://an.azure.location']
@@ -51,7 +54,10 @@ class FileManagementServiceSpec extends Specification {
 @PropertySource("classpath:test.properties")
 class FileManagementServiceSpecConfig {
 	def mockFactory = new DetachedMockFactory()
-	
+	@Autowired
+	@Value('${cache.location}')
+	String cacheLocation
+
 	@Bean
 	IGenericRestClient genericRestClient() {
 		RESTClient delegate = new RESTClient()
@@ -60,14 +66,15 @@ class FileManagementServiceSpecConfig {
 	}
 	
 	@Bean
-	WorkManagementService workManagmentService() {
-		return mockFactory.Mock(WorkManagementService)
-	}
-	
-	@Bean
 	FileManagementService underTest() {
 		FileManagementService out = new FileManagementService()
 		return out
 	}
+	
+	@Bean
+	ICacheManagementService cacheManagementService() {
+		return mockFactory.Mock(CacheManagementService)
+	}
+
 
 }

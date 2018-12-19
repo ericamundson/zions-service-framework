@@ -3,6 +3,7 @@ package com.zions.common.services.rest
 import org.apache.http.Header
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
+import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
 
@@ -35,6 +36,7 @@ import groovyx.net.http.RESTClient
  * AGenericRestClient --> groovyx.net.http.RESTClient: delegate
  * @enduml
  */
+@Slf4j
 abstract class AGenericRestClient implements IGenericRestClient {
 	RESTClient delegate;
 	
@@ -210,7 +212,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	def checkBlankCollection(Map input) {
 		String uri = "${input.uri}"
 		String checkedUri = "${this.tfsUrl}//"
-		if (uri.startsWith(checkedUri) ) {
+		if (this.tfsUrl && uri.startsWith(checkedUri) ) {
 		
 			uri = "${this.tfsUrl}/${uri.substring(checkedUri.length())}"
 			input.uri = uri

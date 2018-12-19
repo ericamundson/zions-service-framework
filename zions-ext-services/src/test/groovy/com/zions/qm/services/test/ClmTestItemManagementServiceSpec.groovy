@@ -11,8 +11,9 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.work.handler.IFieldHandler
-import com.zions.ext.services.cache.CacheManagementService
 import com.zions.qm.services.test.handlers.NameHandler
 import com.zions.qm.services.test.handlers.StartDateHandler
 import groovy.json.JsonSlurper
@@ -155,7 +156,7 @@ class ClmTestItemManagementServiceSpecConfig {
 	@Value('${cache.location}')
 	String cacheLocation
 	@Bean
-	CacheManagementService cacheManagementService() {
+	ICacheManagementService cacheManagementService() {
 		return new CacheManagementService(cacheLocation)
 	}
 

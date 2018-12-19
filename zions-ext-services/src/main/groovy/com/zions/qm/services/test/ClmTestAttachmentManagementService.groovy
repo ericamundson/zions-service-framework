@@ -1,7 +1,8 @@
 package com.zions.qm.services.test
 
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
-import com.zions.ext.services.cache.CacheManagementService
+
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -34,7 +35,7 @@ class ClmTestAttachmentManagementService {
 	ClmTestManagementService clmTestManagementService
 
 	@Autowired
-	CacheManagementService cacheManagementService
+	ICacheManagementService cacheManagementService
 
 	public ClmTestAttachmentManagementService() {
 	}
@@ -66,6 +67,7 @@ class ClmTestAttachmentManagementService {
 				//File cFile = saveAttachment
 				files.add(item)
 			}
+			return files
 		}
 		def ts = getTestScript(testCase)
 		if (ts != null)	{

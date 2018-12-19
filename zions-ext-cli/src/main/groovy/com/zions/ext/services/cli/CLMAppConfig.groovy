@@ -1,7 +1,9 @@
 package com.zions.ext.services.cli
 
+import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
-import com.zions.ext.services.cache.CacheManagementService
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -26,7 +28,7 @@ public class CLMAppConfig {
 	}
 	
 	@Bean 
-	CacheManagementService cacheManagementService() {
+	ICacheManagementService cacheManagementService() {
 		return new CacheManagementService(cacheLocation)
 	}
 }
