@@ -101,6 +101,15 @@ public class TestManagementService {
 		return result
 	}
 	
+	/**
+	 * Batch a set of plan item changes to ADO.
+	 * 
+	 * @param collection - ADO organization
+	 * @param tfsProject - ADO project name
+	 * @param changeList - Set of ADO request objects
+	 * @param idMap - Map of RQM to ADO ids
+	 * @return
+	 */
 	public def batchPlanChanges(String collection, String tfsProject, def changeList, def idMap) {
 		int count = 0
 		changeList.each { change ->
@@ -123,6 +132,40 @@ public class TestManagementService {
 		}
 	}
 	
+	/**
+	 * Send a single plan item changesp
+	 * 
+	 * <p><b>Flow</b></p>
+	 * <img src="TestManagmentService_sendPlanChanges.png"/>
+	 * 
+	 * @param collection - ADO organization
+	 * @param tfsProject - ADO project
+	 * @param change - ADO plan item request data
+	 * @param id - cache item ID
+	 * @return ADO request result.
+	 * 
+	 * @startuml TestManagmentService_sendPlanChanges.png
+	 * participant "TranslateRQMToMTM:caller" as caller
+	 * participant "TestManagementService:this" as this
+	 * participant "Map:change" as change
+	 * participant "IGenericRestClient:genericRestClient" as genericRestClient
+	 * participant "ICacheManagementService:cacheManagmentService" as cacheManagementService
+	 * caller -> this: sendPlanChanges(collection, adoProject, change, cacheId)
+	 * this -> genericRestClient: tfsUrl
+	 * this -> this: build request url
+	 * this -> change: get request method (post or patch)
+	 * this -> change: remove method
+	 * alt method == 'post'
+	 * 	this -> genericRestClient: post(modified change) : response
+	 * else method == 'patch'
+	 * 	this -> genericRestClient: post(modified change) : response
+	 * end
+	 * alt response != null
+	 * 	this -> cacheManagementService: saveToCache(result, cacheId, cacheType)
+	 * end
+	 * @enduml
+	 * 
+	 */
 	public def sendPlanChanges(String collection, String tfsProject, def change, String id) {
 		String nuri = "${genericRestClient.getTfsUrl()}${change.uri}"
 		change.uri = nuri

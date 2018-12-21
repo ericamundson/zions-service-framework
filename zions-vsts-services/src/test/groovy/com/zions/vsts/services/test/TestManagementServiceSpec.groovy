@@ -8,32 +8,51 @@ import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
+import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
-import groovy.json.JsonBuilder
+import com.zions.vsts.services.work.WorkManagementServiceConfig
+
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
+@ContextConfiguration(classes=[TestManagementServiceSpecConfig])
 class TestManagementServiceSpec extends Specification {
+	@Autowired(required=true)
+	private IGenericRestClient genericRestClient;
+	
+	@Autowired(required=true)
+	private ProjectManagementService projectManagmentService;
+
+	@Autowired
+	ICacheManagementService cacheManagementService
 	
 	@Autowired
-	IGenericRestClient realGenericRestClient
+	TestManagementService underTest
 
-	
-	def 'getTestWorkItems success flow.'() {
-		//fail("Not yet implemented")
+	def 'ensureResultAttachments success sending attachment to ADO' () {
+		given: 'Stub call to cacheManagementService.getFromCache'
+		
+		and: 'Stub call to genericRestClient.get that gets attachments inside of hasAttachment (no attachment found)'
+		
+		and: 'Stub call to genericRestClient.post that send attachment to ADO'
+		
+		when: 'make call to method under test ensureResultAttachments'
+		
+		then: 'validate result of attachment Request'
 	}
 	
-	def 'setup test associations'() {
-//		given:
-//		def assoc = [sequenceNumber: 0, id: 21546, suiteEntryType: 'suite']
-//		String body = new JsonBuilder(assoc).toPrettyString()
-//		
-//		when:
-//		String url = "${realGenericRestClient.getTfsUrl()}/DigitalBanking//_apis/testplan/suiteentry/"
-//		def result = realGenericRestClient.patch
+	def 'ensureResultAttachments attachment exist in ADO' () {
+		given: 'Stub call to cacheManagementService.getFromCache'
 		
+		and: 'Stub call to genericRestClient.get that gets attachments inside of hasAttachment (attachment found)'
+				
+		when: 'make call to method under test ensureResultAttachments'
+		
+		then: 'validate result of attachment Request'
 	}
 
 }
@@ -45,8 +64,23 @@ class TestManagementServiceSpecConfig {
 	def mockFactory = new DetachedMockFactory()
 	
 	@Bean
-	IGenericRestClient realGenericRestClient() {
-		return new GenericRestClient('https://dev.azure.com/eto-dev', 'z091182', 'nne526gq4vgseefkdn25v4cw2pm74qsacn2ylkhlqjltrd4oalvq')
+	IGenericRestClient genericRestClient() {
+		return mockFactory.Mock(GenericRestClient)
 	}
-
+	
+	@Bean
+	ProjectManagementService projectManagmentService() {
+		return mockFactory.Mock(ProjectManagementService)
+	}
+	
+	@Bean
+	ICacheManagementService cacheManagementService() {
+		return mockFactory.Mock(ICacheManagementService)
+	}
+	
+	@Bean
+	TestManagementService underTest() {
+		return new TestManagementService()
+	}
+	
 }

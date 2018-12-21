@@ -50,7 +50,7 @@ class WebCMSFilter implements IFilter {
 			Date mDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", "${wi.modified.text()}")
 			long cT = startDate.time
 			long wT = mDate.time
-			boolean val = openParentState || wT > cT ||(wiState != 'closed'  && archivedTarget == 'false' && !excluded.contains(type))
+			boolean val = openParentState || openRelatedState || wT > cT ||(wiState != 'closed'  && archivedTarget == 'false' && !excluded.contains(type))
 			return val
 		}
 	}
