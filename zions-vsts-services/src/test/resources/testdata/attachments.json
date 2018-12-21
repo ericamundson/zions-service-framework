@@ -1,0 +1,12 @@
+{
+  "count": 1,
+  "value": [
+    {
+      "createdDate": "2016-07-13T13:09:45.427Z",
+      "url": "https://dev.azure.com/fabrikam/Fabrikam-Fiber-TFVC/_apis/test/Runs/23/Results/100000/Attachments/19",
+      "id": 19,
+      "fileName": "textAsFileAttachment.txt",
+      "comment": "Test attachment upload"
+    }
+  ]
+}
