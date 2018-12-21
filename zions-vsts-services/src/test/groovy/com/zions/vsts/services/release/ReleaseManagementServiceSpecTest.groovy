@@ -53,7 +53,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 	@Autowired
 	private ReleaseManagementService underTest
 	
-	@Test
+	/*@Test
 	def 'getRelease successflow'() {
 		
 		given:
@@ -69,7 +69,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 			
 		then:
 			result != null
-	}
+	}*/
 		
 }
 
