@@ -326,6 +326,38 @@ class CodeManagementServiceSpecTest extends Specification {
 		thrown(NullPointerException)
 	
 	}*/
+	
+	@Test
+	def 'ensureDeployManifest success flow' () {
+		
+		given:
+		String json = this.getClass().getResource('/testdata/items.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		String json1 = this.getClass().getResource('/testdata/refs.json').text
+		JsonSlurper js1 = new JsonSlurper()
+		def out1 = js1.parseText(json1)
+		1 * genericRestClient.get(_) >> out1
+		
+		
+		String json2 = this.getClass().getResource('/testdata/codepushes.json').text
+		JsonSlurper js2 = new JsonSlurper()
+		def out2 = js2.parseText(json1)
+		2 * genericRestClient.post(_) >> out2
+		
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		
+		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
+		
+		when:
+		def result = underTest.ensureDeployManifest('',project,repo)
+		
+		then:
+		result != null
+	
+	}
 		
 }
 
