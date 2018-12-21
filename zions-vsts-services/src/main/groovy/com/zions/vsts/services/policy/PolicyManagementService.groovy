@@ -61,7 +61,7 @@ public class PolicyManagementService {
 	 *  This method creates and applies the CI build policy for validating code merges for new pull requests.
 	 *  It also extends to create the CI and Release build definitions if they do not already exist.
 	 *  
-	 *  @return Response - ??
+	 *  @return Response
 	 */
 	public def ensureBuildPolicy(def collection, def repoData, def branchName) {
 		
@@ -76,9 +76,10 @@ public class PolicyManagementService {
 			log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was returned. Unable to create the validation build policy!")
 			return null
 		}
+		def pipelineName = isDRBranch ? "${repoData.name} DR validation" : "${repoData.name} validation"
 		def policy = [id: -2, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
 		    type: [id: "0609b952-1397-4640-95ec-e00a01b2c241"],
-		    settings:[buildDefinitionId: ciBuildId, displayName: "${repoData.name} validation", manualQueueOnly: false, queueOnSourceUpdateOnly:true, validDuration: 720,
+		    settings:[buildDefinitionId: ciBuildId, displayName: pipelineName, manualQueueOnly: false, queueOnSourceUpdateOnly:true, validDuration: 720,
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
