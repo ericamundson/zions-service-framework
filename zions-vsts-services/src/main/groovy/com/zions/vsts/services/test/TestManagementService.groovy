@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
-import com.zions.vsts.services.tfs.rest.GenericRestClient;
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
@@ -33,6 +33,8 @@ import groovyx.net.http.ContentType
  * 	+def getTestRuns(def project)
  * 	+def setParent(def parent, def children, def map)
  * 	+def ensureTestRun(String collection, String project, def planData)
+ *  +def ensureResultAttachment(String collection, String tfsProject, def rfiles, def testcase, def resultMap)
+ *  -boolean hasAttachment(String url, String filename)
  * 	-String getTestChangeType(def change)
  * 	-def getTestWorkItems(String collection, String project, String teamArea)
  * 	-def getWorkItem(String url)
@@ -58,7 +60,7 @@ import groovyx.net.http.ContentType
 @Component
 public class TestManagementService {
 	@Autowired(required=true)
-	private GenericRestClient genericRestClient;
+	private IGenericRestClient genericRestClient;
 	
 	@Autowired(required=true)
 	private ProjectManagementService projectManagmentService;
@@ -86,7 +88,8 @@ public class TestManagementService {
 		def result = null
 		String nuri = "${genericRestClient.getTfsUrl()}${executionResult.uri}"
 		executionResult.uri = nuri
-		String jsonBody = new JsonBuilder(executionResult).toPrettyString()
+		// For test data.
+		//String jsonBody = new JsonBuilder(executionResult).toPrettyString()
 		if (method == 'post') {
 			result = genericRestClient.post(executionResult)
 		} else if (method == 'patch') {
@@ -98,6 +101,15 @@ public class TestManagementService {
 		return result
 	}
 	
+	/**
+	 * Batch a set of plan item changes to ADO.
+	 * 
+	 * @param collection - ADO organization
+	 * @param tfsProject - ADO project name
+	 * @param changeList - Set of ADO request objects
+	 * @param idMap - Map of RQM to ADO ids
+	 * @return
+	 */
 	public def batchPlanChanges(String collection, String tfsProject, def changeList, def idMap) {
 		int count = 0
 		changeList.each { change ->
@@ -120,6 +132,40 @@ public class TestManagementService {
 		}
 	}
 	
+	/**
+	 * Send a single plan item changesp
+	 * 
+	 * <p><b>Flow</b></p>
+	 * <img src="TestManagmentService_sendPlanChanges.png"/>
+	 * 
+	 * @param collection - ADO organization
+	 * @param tfsProject - ADO project
+	 * @param change - ADO plan item request data
+	 * @param id - cache item ID
+	 * @return ADO request result.
+	 * 
+	 * @startuml TestManagmentService_sendPlanChanges.png
+	 * participant "TranslateRQMToMTM:caller" as caller
+	 * participant "TestManagementService:this" as this
+	 * participant "Map:change" as change
+	 * participant "IGenericRestClient:genericRestClient" as genericRestClient
+	 * participant "ICacheManagementService:cacheManagmentService" as cacheManagementService
+	 * caller -> this: sendPlanChanges(collection, adoProject, change, cacheId)
+	 * this -> genericRestClient: tfsUrl
+	 * this -> this: build request url
+	 * this -> change: get request method (post or patch)
+	 * this -> change: remove method
+	 * alt method == 'post'
+	 * 	this -> genericRestClient: post(modified change) : response
+	 * else method == 'patch'
+	 * 	this -> genericRestClient: post(modified change) : response
+	 * end
+	 * alt response != null
+	 * 	this -> cacheManagementService: saveToCache(result, cacheId, cacheType)
+	 * end
+	 * @enduml
+	 * 
+	 */
 	public def sendPlanChanges(String collection, String tfsProject, def change, String id) {
 		String nuri = "${genericRestClient.getTfsUrl()}${change.uri}"
 		change.uri = nuri
@@ -137,6 +183,44 @@ public class TestManagementService {
 			cacheManagementService.saveToCache(result, id, dataType)
 		}
 		return result
+	}
+	
+	public def ensureResultAttachments(String collection, String tfsProject, def rfiles, def testcase, def resultMap) {
+		String tcWebId = "${testcase.webId.text()}-Test Case"
+		def adoTestCase = cacheManagementService.getFromCache(tcWebId, ICacheManagementService.WI_DATA)
+		def result = resultMap["${adoTestCase.id}"]
+		def attachmentUrl = "${result.url}/attachments"
+		rfiles.each { afile ->
+			File attFile = afile.file
+			String name = attFile.name
+			if (!hasAttachment(attachmentUrl, name)) {
+				String stream = attFile.bytes.encodeBase64
+				String comment = "${afile:comment}"
+				def body = [attachmentType: 'GeneralAttachment', fileName: name, comment: comment, stream: stream]
+				def rresult = genericRestClient.post(
+					uri: attachmentUrl,
+					contentType: ContentType.JSON,
+					requestContentType: ContentType.JSON,
+					body: body,
+					query: [destroy: true, 'api-version': '5.0-preview.1']
+					)
+		
+			}
+		}
+	}
+	
+	private boolean hasAttachment(String url, String filename) {
+		
+		def result = genericRestClient.get(
+			uri: utl,
+			contentType: ContentType.JSON,
+			query: [destroy: true, 'api-version': '5.0-preview.1']
+			)
+		def att = result.'value'.find { attachment ->
+			"${attachment.filename}" == "${filename}"
+			
+		}
+		return att != null
 	}
 	
 	private def getResultsTestcaseMap(def url) {

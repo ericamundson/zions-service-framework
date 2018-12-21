@@ -460,7 +460,7 @@ class TranslateRQMToMTM implements CliAction {
 				def nextLink = testItems.'**'.find { node ->
 					
 					node.name() == 'link' && node.@rel == 'next'
-				}re
+				}
 				if (nextLink == null) break
 				testItems = clmTestManagementService.nextPage(nextLink.@href)
 			}
@@ -481,6 +481,7 @@ class TranslateRQMToMTM implements CliAction {
 					String itemXml = XmlUtil.serialize(testplan)
 					String webId = "${testplan.webId.text()}"
 					String parentHref = "${testItem.id.text()}"
+					def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
 					testplan.testsuite.each { testsuiteRef ->
 						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
 						testsuite.testcase.each { testcaseRef ->
@@ -504,6 +505,15 @@ class TranslateRQMToMTM implements CliAction {
 							idMap[count] = "${id}"
 							changeList.add(wiChanges)
 							count++
+						}
+						String tcwebId = "${testcase.webId.text()}"
+						def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
+						executionresults.each { result ->
+							def cacheData = []
+							def rfiles = clmAttachmentManagementService.cacheTestItemAttachments(result)
+							if (rfiles.size() > 0) {
+								def attResult = testManagementService.ensureResultAttachments(collection, tfsProject, rfiles, testcase, resultMap)
+							}	
 						}
 					}
 				}
