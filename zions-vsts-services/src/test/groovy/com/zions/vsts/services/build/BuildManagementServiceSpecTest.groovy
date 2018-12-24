@@ -14,7 +14,6 @@ import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
-import com.zions.vsts.services.admin.project.ProjectManagementServiceTestConfig
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
 import com.zions.vsts.services.permissions.PermissionsManagementService
@@ -24,7 +23,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 /**
- * Variety of test case for unit testing MemberManagementService
+ * Variety of test case for unit testing BuildManagementService
  *
  * @author v072160
  *
@@ -334,17 +333,34 @@ class BuildManagementServiceSpecTest extends Specification {
 	@Test 
 	def 'getBuildTemplate success flow' () {
 		given:
-		/*String json = this.getClass().getResource('/testdata/buildConfigurations.json').text
-		JsonSlurper js = new JsonSlurper()
-		def out = js.parseText(json)
-		1 * genericRestClient.post(_) >> out
-				
-		and:*/
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
 		
 		when:
 		def result = underTest.getBuildTemplate('', project, repo, 'Dev')
+		
+		then:
+		result == null
+	}
+	
+	@Test
+	def 'getBuildTemplate other success flow' () {
+		given:
+		def items = "build-template-gradle = gradle"//new JsonSlurper().parseText(this.getClass().getResource('/testdata/items.json').text)
+		1 * codeManagementService.getBuildPropertiesFile(_,_,_,_) >> items
+		
+		and:
+		String json = this.getClass().getResource('/testdata/buildtemplates.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		2 * genericRestClient.get(_) >> out
+		
+		and:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
+		
+		when:
+		def result = underTest.getBuildTemplate('', project, repo, 'gradle')
 		
 		then:
 		result == null
@@ -449,22 +465,96 @@ class BuildManagementServiceSpecTest extends Specification {
 		1 * projectManagementService.getProject(_,_,true) >> project
 		
 		and: 
-		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repos.json').text)
+		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/testrepos.json').text)
 		1 * codeManagementService.getRepos(_,_,_) >> repos
 		
+		and:
+		def items = new JsonSlurper().parseText(this.getClass().getResource('/testdata/items.json').text)
+		4 * codeManagementService.listTopLevel(_,_,_) >> items
+		4 * codeManagementService.ensureDeployManifest(_,_,_) >> items
+		
 		def team = new JsonSlurper().parseText(this.getClass().getResource('/testdata/projectteam.json').text)
-		
-		def folder
-		def colletion
-		
+
+		def folder =""
+	
+		and:
+		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		8 * genericRestClient.get(_) >> out
+	
 		when:
 		def result = underTest.ensureBuilds('', 'project', folder, team)
 		
 		then:
-		result != null
+		result.size() == 4
 	}
 	
+	@Test
+	def 'detectBuildType gradle success flow' () {
+		given:
+		def items = new JsonSlurper().parseText(this.getClass().getResource('/testdata/items.json').text)
+		1 * codeManagementService.listTopLevel(_,_,_) >> items
 		
+		def pomitems = new JsonSlurper().parseText(this.getClass().getResource('/testdata/pomitems.json').text)
+		1 * codeManagementService.listTopLevel(_,_,_) >> pomitems
+		
+		def nodeitems = new JsonSlurper().parseText(this.getClass().getResource('/testdata/nodeitems.json').text)
+		1 * codeManagementService.listTopLevel(_,_,_) >> nodeitems
+		
+		def antitems = new JsonSlurper().parseText(this.getClass().getResource('/testdata/antitems.json').text)
+		1 * codeManagementService.listTopLevel(_,_,_) >> antitems
+		
+		and:
+		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repos.json').text)
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		
+		
+		when:
+		def resultGradle = underTest.detectBuildType('', project, repo)
+		def resultMaven = underTest.detectBuildType('', project, repo)
+		def resultNode = underTest.detectBuildType('', project, repo)
+		def resultAnt = underTest.detectBuildType('', project, repo)
+		
+		then:
+		"GRADLE" == resultGradle.toString()
+		"MAVEN" == resultMaven.toString()
+		"NODE" == resultNode.toString()
+		"ANT" == resultAnt.toString()
+	}
+	
+	@Test
+	def 'ensureBuild successflow' () {
+		given:
+		String json = this.getClass().getResource('/testdata/builddefinitionscountzero.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		and:
+		String json1 = this.getClass().getResource('/testdata/buildConfigurations.json').text
+		JsonSlurper js1 = new JsonSlurper()
+		def out1 = js.parseText(json1)
+		1 * genericRestClient.get(_) >> out1
+		
+		and:
+		String json2 = this.getClass().getResource('/testdata/buildqueues.json').text
+		JsonSlurper js2 = new JsonSlurper()
+		def out2 = js.parseText(json2)
+		1 * genericRestClient.get(_) >> out2
+		
+		
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repos.json').text)
+		def folder =""
+		def buildStage = ""
+		
+		when:
+		def result = underTest.ensureBuild('', project, repo, BuildType.GRADLE, '', folder)
+		
+		then:
+		result == null
+	}	
 }
 
 @TestConfiguration
