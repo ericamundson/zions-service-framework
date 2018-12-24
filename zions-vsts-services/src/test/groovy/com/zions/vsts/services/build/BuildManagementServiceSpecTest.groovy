@@ -442,17 +442,11 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.folderName}" == ""
 	}
 	
-	/*@Test
+	@Test
 	def 'ensureBuilds success flow' () {
 		given:
-		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
-		JsonSlurper js = new JsonSlurper()
-		def out = js.parseText(json)
-		2 * genericRestClient.get(_) >> out
-				
-		and:
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
-		1 * projectManagementService.getProject(_,_,_) >> project
+		1 * projectManagementService.getProject(_,_,true) >> project
 		
 		and: 
 		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repos.json').text)
@@ -460,12 +454,15 @@ class BuildManagementServiceSpecTest extends Specification {
 		
 		def team = new JsonSlurper().parseText(this.getClass().getResource('/testdata/projectteam.json').text)
 		
+		def folder
+		def colletion
+		
 		when:
-		def result = underTest.ensureBuilds("eto-dev", project, null, team)
+		def result = underTest.ensureBuilds('', 'project', folder, team)
 		
 		then:
-		"${result.folderName}" == ""
-	}*/
+		result != null
+	}
 	
 		
 }
