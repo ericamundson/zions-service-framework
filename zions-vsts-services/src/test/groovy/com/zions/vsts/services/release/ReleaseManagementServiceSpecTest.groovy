@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -51,25 +52,85 @@ class ReleaseManagementServiceSpecTest extends Specification {
 	private EndpointManagementService endpointManagementService
 	
 	@Autowired
+	private CommandManagementService commandManagementService
+	
+	@Autowired
 	private ReleaseManagementService underTest
 	
-	/*@Test
-	def 'getRelease successflow'() {
-		
+	@Test
+	def 'ensureReleases with getRelease successflow' () {
 		given:
-		String json = this.getClass().getResource('/testdata/definations.json').text
+		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
-		1 * genericRestClient.get(_) >> out
+		8 * genericRestClient.get(_) >> out
 		
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		projectManagementService.getProject(_, _, _) >> project
+		//def template = new JsonSlurper().parseText(this.getClass().getResource('/testdata/templates.json').text)
+		and:
+		def team = new JsonSlurper().parseText(this.getClass().getResource('/testdata/teammembers.json').text)
+		
+		and:
+		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/testrepos.json').text)
+		codeManagementService.getRepos(_, _, _) >> repos
+		
+		and:
+		genericRestClient.getTfsUrl() >> "visualstudio"
 		
 		when:
-			def result = underTest.getRelease('', project, '')
-			
+		def result = underTest.ensureReleases("visualstudioz", "DigitalBanking", '', '', '', team)
+		
 		then:
-			result != null
-	}*/
+		result != null
+	}
+	
+	@Test
+	def 'ensureReleases with createRelease successflow' () {
+		given:
+		//8 * genericRestClient.get(_) >> null
+		//and:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		projectManagementService.getProject(_, _, _) >> project
+		and:
+		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/testrepos.json').text)
+		codeManagementService.getRepos(_, _, _) >> repos
+		
+		def team = new JsonSlurper().parseText(this.getClass().getResource('/testdata/teammembers.json').text)
+		def teamData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/projectteam.json').text)
+		memberManagementService.getTeam(_,_,_) >> teamData
+		
+		and:
+		def buildDef = new JsonSlurper().parseText(this.getClass().getResource('/testdata/singlebuilddefination.json').text)
+		buildManagementService.getBuild(_, _, _) >> buildDef
+		
+		and:
+		def endpoint = new JsonSlurper().parseText(this.getClass().getResource('/testdata/serviceendpoints.json').text)
+		endpointManagementService.getServiceEndpoint(_,_,_) >> endpoint
+		
+		and:
+		genericRestClient.getTfsUrl() >> "visualstudio"
+		def artifacts = [:]
+		def template = new JsonSlurper().parseText(this.getClass().getResource('/testdata/singletemplate.json').text)
+		//template << artifacts
+		when:
+		def result = underTest.ensureReleases("visualstudioz", "DigitalBanking", template, '', '', team)
+		
+		then:
+		result != null
+	}
+	
+	@Test
+	def 'ensureReleaseFolder success flow' () {
+		given:
+		genericRestClient.getTfsUrl() >> "visualstudio"
+		
+		when:
+		def result = underTest.ensureReleaseFolder('', 'DigitalBanking','C\\test\\folder')
+		
+		then:
+		result != null
+	}
 		
 }
 
@@ -112,6 +173,11 @@ class ReleaseManagementServiceTestConfig {
 	@Bean
 	PermissionsManagementService permissionsManagementService() {
 		return mockFactory.Mock(PermissionsManagementService);
+	}
+	
+	@Bean
+	CommandManagementService commandManagementService() {
+		return mockFactory.Mock(CommandManagementService);
 	}
 	
 	@Bean

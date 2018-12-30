@@ -4,6 +4,7 @@ import static org.junit.Assert.*
 
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
@@ -19,6 +20,11 @@ import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ProcessTemplateServiceSpecTestConfig])
 class ProcessTemplateServiceSpecTest extends Specification {
+	
+	@Autowired
+	@Value('${test.mapping.file}')
+	String testMappingFileName
+	
 	
 	@Autowired
 	IGenericRestClient genericRestClient
@@ -199,11 +205,27 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		"${result.name}" == "Bug"
 	}
 	
-	def 'getDefaultMapping success flow with three params'() {
+	def 'getDefaultMapping success flow '() {
 		given:
-		def mapping =[:]
-		def wit =[source: 'Default']
-		mapping << wit
+		def mappingDataInfo = []
+		def xmlMappingData = new XmlSlurper().parse(new File(testMappingFileName))
+		xmlMappingData.wit.each { tType ->
+			def map = [source: tType.@source, target: tType.@target, fields: []]
+			tType.field.each { field ->
+				def ofield = [source: field.@source, target: field.@target, defaultValue: null, values:[]]
+				field.'value'.each { aValue ->
+					def oValue = [source: aValue.@source, target: aValue.@target]
+					ofield.values.add(oValue) 
+				}
+				field.defaultvalue.each { dValue ->
+					ofield.defaultValue = dValue.@target
+				}
+				map.fields.add(ofield)
+			}
+			mappingDataInfo.add(map)
+		}
+		
+		def mapping = [mappingDataInfo]
 		
 		when: 'call method (getDefaultMapping) under test.'
 		def result = underTest.getDefaultMapping(mapping)
@@ -222,6 +244,71 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		
 		then: ''
 		result == false;
+	}
+	
+	def 'createPickList success flow'() {
+		given:
+		String json = this.getClass().getResource('/testdata/processlists.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.post(_) >> out
+		
+		and:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def witFieldChange= [:]
+		
+		when: 'call method (createPickList) under test.'
+		def result = underTest.createPickList('', project, witFieldChange)
+		
+		then: ''
+		"${result.count}" == "15"
+	}
+	
+	def 'genColor success flow'() {
+		
+		when: 'call method (genColor) under test.'
+		def result = underTest.genColor()
+		
+		then: ''
+		result != null
+	}
+	
+	/*def 'ensureLayout success flow'() {
+		given:
+		String json = this.getClass().getResource('/testdata/processlists.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.post(_) >> out
+		
+		and:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def wit= [:]
+		def defaultWit = [:]
+		def layout = [:]
+		def pages = [:] 
+		layout << pages
+		defaultWit << layout
+		
+		when: 'call method (ensureLayout) under test.'
+		//def result = underTest.ensureLayout('', project, wit, defaultWit)
+		
+		then: ''
+		//result != null
+	}*/
+	
+	def 'updateWorkitemTemplates success flow.'() {
+		given: 'No stubs'
+		def mapping = underTest.getTypeMapResource('rtctypemap.json')
+		
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		
+		def ccmWits
+		
+		when:
+		def result = underTest.updateWorkitemTemplates('', project, mapping, ccmWits)
+		
+		then: ''
+		result != null
 	}
 }
 
