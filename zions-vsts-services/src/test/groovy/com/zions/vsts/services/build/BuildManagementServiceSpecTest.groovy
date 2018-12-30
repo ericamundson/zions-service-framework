@@ -76,10 +76,10 @@ class BuildManagementServiceSpecTest extends Specification {
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		
 		when:
-		def result = underTest.getTemplate('', project, 'DigitalBanking')
+		def result = underTest.getTemplate('', project, 'Azure Cloud Services')
 		
 		then:
-		result == null
+		result != null
 	}
 	
 	@Test
@@ -277,7 +277,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		def bDef = new JsonSlurper().parseText(this.getClass().getResource('/testdata/bdef.json').text)
 		
 		when:
-		def result = underTest.createDRBuildDefinition('', project, repo, bDef, 'Dev', '') 
+		def result = underTest.createDRBuildDefinition('', project, repo, bDef, 'release', '') 
 		
 		then:
 		result == null
