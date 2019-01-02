@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.DataGenerationService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.work.WorkManagementServiceConfig
@@ -34,15 +36,18 @@ class TestManagementServiceSpec extends Specification {
 	
 	@Autowired
 	TestManagementService underTest
+	
+	@Autowired
+	DataGenerationService dataGenerationService
 
 	def 'ensureResultAttachments success sending attachment to ADO' () {
 		given: 'Stub call to cacheManagementService.getFromCache'
-		def adoTestcase = new JsonSlurper().parseText(this.getClass().getResource('/testdata/wiData.json').text)
+		def adoTestcase = dataGenerationService.generate('/testdata/wiData.json')
 		1 * cacheManagementService.getFromCache(_, _) >> adoTestcase		
 
 		
 		and: 'Stub call to genericRestClient.get that gets attachments inside of hasAttachment (no attachment found)'
-		def attachments = new JsonSlurper().parseText(this.getClass().getResource('/testdata/attachments.json').text)
+		def attachments = dataGenerationService.generate('/testdata/attachments.json')
 		1 * genericRestClient.get(_) >> attachments
 		
 		and: 'Stub call to genericRestClient.post that send attachment to ADO'
@@ -55,10 +60,10 @@ class TestManagementServiceSpec extends Specification {
 		def rFiles = [[file:file, comment: 'out test']]
 		
 		and: 'Data for RQM test case'
-		def rqmTestCase = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testcase49881.xml').text)
+		def rqmTestCase = dataGenerationService.generate('/testdata/testcase49881.xml')
 		
 		and: 'Data for result map'
-		def results = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resultsMap.json').text)
+		def results = dataGenerationService.generate('/testdata/resultsMap.json')
 		def resultMap = [:]
 		results.'value'.each { result ->
 			resultMap["${result.testCase.id}"] = result
@@ -77,12 +82,12 @@ class TestManagementServiceSpec extends Specification {
 	
 	def 'ensureResultAttachments attachment already exists in ADO' () {
 		given: 'Stub call to cacheManagementService.getFromCache'
-		def adoTestcase = new JsonSlurper().parseText(this.getClass().getResource('/testdata/wiData.json').text)
+		def adoTestcase = dataGenerationService.generate('/testdata/wiData.json')
 		1 * cacheManagementService.getFromCache(_, _) >> adoTestcase		
 
 		
 		and: 'Stub call to genericRestClient.get that gets attachments inside of hasAttachment (no attachment found)'
-		def attachments = new JsonSlurper().parseText(this.getClass().getResource('/testdata/attachments.json').text)
+		def attachments = dataGenerationService.generate('/testdata/attachments.json')
 		1 * genericRestClient.get(_) >> attachments
 		
 
@@ -94,10 +99,10 @@ class TestManagementServiceSpec extends Specification {
 		def rFiles = [[file:file, comment: 'out test']]
 		
 		and: 'Data for RQM test case'
-		def rqmTestCase = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testcase49881.xml').text)
+		def rqmTestCase = dataGenerationService.generate('/testdata/testcase49881.xml')
 		
 		and: 'Data for result map'
-		def results = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resultsMap.json').text)
+		def results = dataGenerationService.generate('/testdata/resultsMap.json')
 		def resultMap = [:]
 		results.'value'.each { result ->
 			resultMap["${result.testCase.id}"] = result
@@ -117,10 +122,10 @@ class TestManagementServiceSpec extends Specification {
 	
 	def 'sendPlanChanges with new plan item'() {
 		given:'Setup change data'
-		def change = new JsonSlurper().parseText(this.getClass().getResource('/testdata/changepost.json').text)
+		def change = dataGenerationService.generate('/testdata/changepost.json')
 		
 		and: 'ensure stub of post call'
-		def plan = new JsonSlurper().parseText(this.getClass().getResource('/testdata/Test Plan.json').text)
+		def plan = dataGenerationService.generate('/testdata/TestPlan.json')
 		1 * genericRestClient.post(_) >> plan
 		
 		when: 'Run method under test sendPlanChanges'
@@ -136,10 +141,10 @@ class TestManagementServiceSpec extends Specification {
 	
 	def 'sendPlanChanges with update plan item'() {
 		given:'Setup change data'
-		def change = new JsonSlurper().parseText(this.getClass().getResource('/testdata/changepatch.json').text)
+		def change = dataGenerationService.generate('/testdata/changepatch.json')
 		
 		and: 'ensure stub of post call'
-		def plan = new JsonSlurper().parseText(this.getClass().getResource('/testdata/Test Plan.json').text)
+		def plan = dataGenerationService.generate('/testdata/TestPlan.json')
 		1 * genericRestClient.patch(_) >> plan
 		
 		when: 'Run method under test sendPlanChanges'
@@ -155,10 +160,10 @@ class TestManagementServiceSpec extends Specification {
 
 	def 'sendResultChanges with new result'() {
 		given:'Setup change data'
-		def change = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resultpost.json').text)
+		def change = dataGenerationService.generate('/testdata/resultpost.json')
 		
 		and: 'ensure stub of post call'
-		def result = new JsonSlurper().parseText(this.getClass().getResource('/testdata/result.json').text)
+		def result = dataGenerationService.generate('/testdata/result.json')
 		1 * genericRestClient.post(_) >> result
 		
 		when: 'Run method under test sendResultChanges'
@@ -173,10 +178,10 @@ class TestManagementServiceSpec extends Specification {
 	}
 	def 'sendResultChanges with update result'() {
 		given:'Setup change data'
-		def change = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resultpatch.json').text)
+		def change = dataGenerationService.generate('/testdata/resultpatch.json')
 		
 		and: 'ensure stub of post call'
-		def result = new JsonSlurper().parseText(this.getClass().getResource('/testdata/result.json').text)
+		def result = dataGenerationService.generate('/testdata/result.json')
 		1 * genericRestClient.patch(_) >> result
 		
 		when: 'Run method under test sendResultChanges'
@@ -195,28 +200,27 @@ class TestManagementServiceSpec extends Specification {
 		def map = getMappingData()
 		
 		and: 'setup parent data'
-		def parentData =  new JsonSlurper().parseText(this.getClass().getResource('/testdata/Test Plan.json').text)
-		def parent =  new XmlSlurper().parseText(this.getClass().getResource('/testdata/testplan218.xml').text)
+		def parentData =  dataGenerationService.generate('/testdata/TestPlan.json')
+		def parent =  dataGenerationService.generate('/testdata/testplanT.xml')
 		
 		and: 'setup child test case data'
 		def children = []
-		def child = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testcase49881.xml').text)
-		children.add(child)
-		child = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testcase49886.xml').text)
-		children.add(child)
+		for (int i = 0; i < 9; i++) {
+			def child = dataGenerationService.generate('/testdata/testcaseT.xml')
+			children.add(child)
+		}
 		
 		and: 'stub parent cache request'
 		1 * cacheManagementService.getFromCache(_,_) >> parentData
 		
 		and: 'stub child cache calls'
-		def tc1 =  new JsonSlurper().parseText(this.getClass().getResource('/testdata/testcase1.json').text)
-		1 * cacheManagementService.getFromCache(_,_) >> tc1
-		def tc2 =  new JsonSlurper().parseText(this.getClass().getResource('/testdata/testcase2.json').text)
-		1 * cacheManagementService.getFromCache(_,_) >> tc2
-
+		for (int i = 0; i < 9; i++) {
+			def tc1 =  dataGenerationService.generate('/testdata/testcaseT.json')
+			1 * cacheManagementService.getFromCache(_,_) >> tc1
+		}
 		
 		and: 'stub a ado call to associate a test case to a plan'
-		1 * genericRestClient.post(_) >> [:]
+		2 * genericRestClient.post(_) >> [:]
 		
 		when: 'call method under test setParent'
 		boolean success = true
@@ -230,9 +234,117 @@ class TestManagementServiceSpec extends Specification {
 		success
 	}
 	
+	def 'setParent with suite and child test case'() {
+		given: 'Setup map data'
+		def map = getMappingData()
+		
+		and: 'setup parent data'
+		def parentData =  dataGenerationService.generate('/testdata/testsuiteT.json')
+		def parent =  dataGenerationService.generate('/testdata/testsuiteT.xml')
+		
+		and: 'setup child test case data'
+		def children = []
+		for (int i = 0; i < 9; i++) {
+			def child = dataGenerationService.generate('/testdata/testcaseT.xml')
+			children.add(child)
+		}
+		
+		and: 'stub parent cache request'
+		1 * cacheManagementService.getFromCache(_,_) >> parentData
+		
+		and: 'stub child cache calls'
+		for (int i = 0; i < 9; i++) {
+			def tc1 =  dataGenerationService.generate('/testdata/testcaseT.json')
+			1 * cacheManagementService.getFromCache(_,_) >> tc1
+		}
+		
+		and: 'stub a ado call to associate a test case to a plan'
+		2 * genericRestClient.post(_) >> [:]
+		
+		when: 'call method under test setParent'
+		boolean success = true
+		try {
+			def result = underTest.setParent(parent, children, map)
+		} catch (e) {
+			e.printStackTrace()
+			success = false
+		}
+		
+		then:
+		success
+	}
+
+	def 'getTestRuns normal flow'() {
+		given: 'Stub ado call to get projects'
+		1 * projectManagmentService.getProject(_,_) >> dataGenerationService.generate('/testdata/project.json')
+		
+		and: 'stub ado call to get runs'
+		1 * genericRestClient.get(_) >> [:]
+		
+		when: 'call method under test getTestRuns'
+		def result = underTest.getTestRuns('')
+		
+		then:
+		true
+	}
+	
+	def 'cleanupTestItems normal flow'() {
+		given: 'stub to query for team area test work items'
+		1 * genericRestClient.getTfsUrl() >> ''
+		1 * genericRestClient.post(_) >> dataGenerationService.generate('/testdata/wiqlResult.json')
+		
+		and: 'stub calls to get work item and delete them'
+		for (int i = 0; i < 9; i++) {
+			1 * genericRestClient.get(_) >> dataGenerationService.generate('/testdata/wiDataT.json')
+			1 * genericRestClient.getTfsUrl() >> ''
+			1 * genericRestClient.delete(_) >> [:]
+		}
+		
+		when: 'calling method under test cleanupTestItems'
+		boolean success = true
+		try {
+			def result = underTest.cleanupTestItems('', '', '')
+		} catch (e) {
+			success = false
+		}
+		
+		then: 
+		success
+	}
+	
+	def 'ensureTestRun null result from cache'() {
+		given: 'stub cache access the runData'
+		1 * cacheManagementService.getFromCache(_,_) >> null
+		
+		and: 'stub get plan from cache'
+		1 * cacheManagementService.getFromCache(_,_) >> dataGenerationService.generate('/testdata/TestPlan.json')
+		
+		and: 'stub post to create run data'
+		1 * genericRestClient.get(_) >> dataGenerationService.generate('/testdata/points.json')
+		1 * genericRestClient.post(_) >> dataGenerationService.generate('/testdata/runData.json')
+		
+		and: 'stub saving to cache'
+		1 * cacheManagementService.saveToCache(_, _, _) >> [:]
+		
+		and: 'stub getting map'
+		1 * genericRestClient.get(_) >> dataGenerationService.generate('/testdata/resultsMap.json')
+		
+		when: 'call method under test ensureTestRun'
+		def planData = dataGenerationService.generate('/testdata/testplanT.xml')
+		boolean success = true
+		try {
+			def result = underTest.ensureTestRun('', '', planData)
+		} catch (e) {
+			success = false
+		}
+		
+		then:
+		success
+	}
+	
 	def getMappingData() {
 		def mappingDataInfo = []
-		def xmlMappingData = new XmlSlurper().parseText(this.getClass().getResource('/testdata/CoreRQMMapping.xml').text)
+		def xmlMappingData = dataGenerationService.generate('/testdata/CoreRQMMapping.xml')
 		xmlMappingData.wit.each { tType ->
 			def map = [source: tType.@source, target: tType.@target, fields: []]
 			tType.field.each { field ->
@@ -256,6 +368,7 @@ class TestManagementServiceSpec extends Specification {
 
 @TestConfiguration
 @Profile("test")
+@ComponentScan(["com.zions.common.services.test", "com.zions.vsts.services.test"])
 @PropertySource("classpath:test.properties")
 class TestManagementServiceSpecConfig {
 	def mockFactory = new DetachedMockFactory()
@@ -278,6 +391,11 @@ class TestManagementServiceSpecConfig {
 	@Bean
 	TestManagementService underTest() {
 		return new TestManagementService()
+	}
+	
+	@Bean
+	DataGenerationService dataGenerationService() {
+		return new DataGenerationService()
 	}
 	
 }

@@ -6,6 +6,7 @@ interface ICacheManagementService {
 	public static String RUN_DATA = 'runData'
 	public static String PLAN_DATA = 'planData'
 	public static String SUITE_DATA = 'suiteData'
+	public static String CONFIGURATION_DATA = 'configurationData'
 	
 	def getFromCache(def id, String type);
 	

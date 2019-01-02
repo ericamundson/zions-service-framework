@@ -350,7 +350,10 @@ public class TestManagementService {
 		String uri = "${change.uri}"
 		if (uri.indexOf('suites') > -1) {
 			type = ICacheManagementService.SUITE_DATA
+		} else if (uri.indexOf('configurations') > -1) {
+			type = ICacheManagementService.CONFIGURATION_DATA
 		}
+
 		return type
 	}
 	
@@ -413,38 +416,40 @@ public class TestManagementService {
 			)
 		return result
 	}
-	private def filterTestCaseIds(String url, def ids) {
-		def tcs = getSuiteTestCase(url)
-		def otcs = ids.findAll { id ->
-			boolean excludesId = true
-			tcs.'value'.each { tc ->
-				if ("${tc.id}" == "${id}") {
-					excludesId = false
-					return
-				}
-			}
-			return excludesId
-		}
-		return otcs
-	}
 	
-	private def getSuiteTestCase(String url) {
-		String tcUrl = "${url}/testcases"
-		def result = genericRestClient.get(
-			contentType: ContentType.JSON,
-			//requestContentType: ContentType.JSON,
-			uri: url,
-			query: ['api-version':'5.0-preview.3']
-			)
-		return result
-
-	}
+	//not used
+//	private def filterTestCaseIds(String url, def ids) {
+//		def tcs = getSuiteTestCase(url)
+//		def otcs = ids.findAll { id ->
+//			boolean excludesId = true
+//			tcs.'value'.each { tc ->
+//				if ("${tc.id}" == "${id}") {
+//					excludesId = false
+//					return
+//				}
+//			}
+//			return excludesId
+//		}
+//		return otcs
+//	}
+	
+	// not used
+//	private def getSuiteTestCase(String url) {
+//		String tcUrl = "${url}/testcases"
+//		def result = genericRestClient.get(
+//			contentType: ContentType.JSON,
+//			//requestContentType: ContentType.JSON,
+//			uri: url,
+//			query: ['api-version':'5.0-preview.3']
+//			)
+//		return result
+//
+//	}
 	
 	private def associateCaseToSuite(def suiteData, def tcids) {
 		String suiteUrl = "${suiteData.url}"
-		def ids = filterTestCaseIds(suiteUrl, tcids)
-		if (ids.size()>0) {
-			String tcIds = ids.join(',')
+		if (tcids.size()>0) {
+			String tcIds = tcids.join(',')
 			addTestCase(suiteUrl, tcIds)
 		}
 	}
@@ -507,6 +512,11 @@ public class TestManagementService {
 			uri: url,
 			query: ['api-version':'5.0-preview.2']
 			)
+			
+//		File points = new File('points.json')
+//		def os = points.newDataOutputStream()
+//		os << new JsonBuilder(result).toPrettyString()
+//		os.close()
 		result.'value'.each { point ->
 			retVal.add(point.id)
 			
