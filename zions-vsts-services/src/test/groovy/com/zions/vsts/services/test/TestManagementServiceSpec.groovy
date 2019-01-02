@@ -65,8 +65,13 @@ class TestManagementServiceSpec extends Specification {
 		and: 'Data for result map'
 		def results = dataGenerationService.generate('/testdata/resultsMap.json')
 		def resultMap = [:]
+		int count = 0
 		results.'value'.each { result ->
 			resultMap["${result.testCase.id}"] = result
+			if (count == 0) {
+				resultMap["${adoTestcase.id}"] = result
+			}
+			count++
 		}
 		when: 'make call to method under test ensureResultAttachments'
 		boolean success = true
@@ -104,8 +109,13 @@ class TestManagementServiceSpec extends Specification {
 		and: 'Data for result map'
 		def results = dataGenerationService.generate('/testdata/resultsMap.json')
 		def resultMap = [:]
+		int count = 0
 		results.'value'.each { result ->
 			resultMap["${result.testCase.id}"] = result
+			if (count == 0) {
+				resultMap["${adoTestcase.id}"] = result
+			}
+			count++
 		}
 		
 		when: 'make call to method under test ensureResultAttachments'

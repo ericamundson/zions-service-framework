@@ -23,7 +23,7 @@ class DataGenerationServiceSpec extends Specification {
 		File template = new File(this.getClass().getResource('/testdata/TestPlanT.json').file)
 		
 		when:
-		def plan = underTest.generateForJson(template)
+		def plan = underTest.generate(template)
 		
 		then:
 		true
