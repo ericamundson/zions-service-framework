@@ -269,6 +269,34 @@ class TranslateRQMToMTM implements CliAction {
 					testItems = clmTestManagementService.nextPage(testItems.@href)
 			}
 		}
+		//translate test platform configurations.
+		if (includes['configurations'] != null) {
+			def mappingData = testMappingManagementService.mappingData
+			def configItems = clmTestManagementService.getConfigurationsViaQuery(wiQuery, project)
+			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+			while (true) {
+				configItems.entry.each { testItem ->
+					def configuration = clmTestManagementService.getTestItem(testItem.id.text())
+					//int id = Integer.parseInt(configuration.webId.text())
+					def id = "${configuration.name.text()}-Configuration"
+//					String resultsxml = XmlUtil.serialize(configuration)
+//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/configurationT.xml")
+//					def os = resultFile.newDataOutputStream()
+//					os << resultsxml
+//					os.close()
+					def changes = clmTestItemManagementService.getChanges(tfsProject, configuration, memberMap)
+					changes.each { key, val ->
+						def oconfig = testManagementService.sendPlanChanges(collection, tfsProject, val, id)
+					}
+				}
+				def nextLink = configItems.'**'.find { node ->
+					
+					node.name() == 'link' && node.@rel == 'next'
+				}
+				if (nextLink == null) break
+				configItems = clmTestManagementService.nextPage(nextLink.@href)
+			}
+		}
 		//translate work data.
 		if (includes['data'] != null) {
 			def mappingData = testMappingManagementService.mappingData
@@ -308,7 +336,7 @@ class TranslateRQMToMTM implements CliAction {
 						int tsid = Integer.parseInt(testsuite.webId.text())
 						String idtype = "${tsid}-testsuite"
 						if (!idKeyMap.containsKey(idtype)) {
-							def tschanges = clmTestItemManagementService.getChanges(tfsProject, testsuite, memberMap, plan)
+							def tschanges = clmTestItemManagementService.getChanges(tfsProject, testsuite, memberMap, null, null, plan)
 							tschanges.each { key, val ->
 								String idkey = "${tsid}-${key}"
 								def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")

@@ -75,7 +75,7 @@ public class ClmTestItemManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	def getChanges(String project, def qmItemData, def memberMap, def resultMap = null, def testCase = null) {
+	def getChanges(String project, def qmItemData, def memberMap, def resultMap = null, def testCase = null, def parent = null) {
 		def maps = getTestMaps(qmItemData)
 		def outItems = [:]
 		maps.each { map ->
@@ -85,8 +85,14 @@ public class ClmTestItemManagementService {
 					outItems["${map.target}"] = item
 				}
 
-			} else {
-				def item = generateItemData(qmItemData, map, project, memberMap)
+			} else if ("${map.target}" == 'Configuration') {
+				def item = generateConfigurationData(qmItemData, map, project, memberMap)
+				if (item != null) {
+					outItems["${map.target}"] = item
+				}
+
+			}else {
+				def item = generateItemData(qmItemData, map, project, memberMap, parent)
 				if (item != null) {
 					outItems["${map.target}"] = item
 				}
@@ -137,6 +143,43 @@ public class ClmTestItemManagementService {
 		return exData
 	}
 	
+	
+	private def generateConfigurationData(def qmItemData, def map, String project, def memberMap) {
+		String type = map.target
+		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def exData = [:]
+		String id = "${qmItemData.name.text()}-${map.target}"
+		def cacheConfig = cacheManagementService.getFromCache(id, ICacheManagementService.CONFIGURATION_DATA)
+
+		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Configurations", query:['api-version':'5.0-preview.2'], body: []]
+		if (cacheConfig != null) {
+			def cid = cacheConfig.id
+			exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Configurations/${cid}", query:['api-version':'5.0-preview.2'], body: []]
+		}
+		def bodyItem = [:]
+		map.fields.each { field ->
+			def fieldData = getFieldData(qmItemData, field, memberMap, cacheConfig, map)
+			if (fieldData != null) {
+				if (fieldData.value != null) {
+					bodyItem["${field.target}"] = fieldData.value
+				}
+			}
+			
+		}
+		if (bodyItem.size() == 0) {
+			return null
+		}
+		if (!bodyItem['values']) {
+			bodyItem['values'] = []
+		
+		}
+		bodyItem['isDefault'] = false
+		exData.body = bodyItem
+		
+		return exData
+	}
+
 	private def getResultData(def resultMap, def testCase) {
 		String rqmId = "${testCase.webId.text()}-Test Case"
 		def adoTestCase = cacheManagementService.getFromCache(rqmId, ICacheManagementService.WI_DATA)
@@ -177,7 +220,7 @@ public class ClmTestItemManagementService {
 				String parentId = "${parent.id}"
 				String cid = "${parent.rootSuite.id}"
 				wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0-preview.3'], body: [:]]
-				wiData.body.add([parent: parent.rootSuite]) 
+				wiData.body.parent = parent.rootSuite
 				if (cacheWI != null) {
 					cid = cacheWI.id
 					wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0-preview.3'], body: [:]]
