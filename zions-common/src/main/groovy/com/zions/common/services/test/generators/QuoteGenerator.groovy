@@ -31,7 +31,8 @@ class QuoteGenerator implements Generator {
 	private def init() {
 		if (length == 0) {
 			try {
-				URL url = this.getClass().getResource('/quotes.json')
+				String name = '/quotes.json'
+				URL url = this.getClass().getResource(name)
 				File template = new File(url.file)
 				quotes = new JsonSlurper().parse(template)
 				length = quotes.size()
