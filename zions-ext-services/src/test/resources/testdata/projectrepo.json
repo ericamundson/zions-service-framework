@@ -1,0 +1,28 @@
+{
+	"soapenv:Body": {
+			"response": {
+				"method": "getProjectAreasPaged",
+				"interface": "com.ibm.team.process.internal.service.web.IProcessWebUIService",
+				"returnValue": {
+					"type": "COMPLEX",
+					"value": {
+					"elements": [
+					{
+						"summary": "projectArea",
+						"count": "38",
+						"type": "rest:ResultSetDTO",
+						"itemId": "_RacQAqxLEeaFjP5SwynnQA"
+					}
+					]
+					}
+				}
+			},
+		"links": {
+                "clone": [
+                   {
+                        "href": "https://clm.cs.zionsbank.com/qm/service/com.ibm.team.process.internal.service.web.IProcessWebUIService/projectAreasPaged"
+                    }
+                ]
+            }
+	}
+}
