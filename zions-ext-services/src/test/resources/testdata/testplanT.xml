@@ -3,7 +3,7 @@
   <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:216</ns3:identifier>
   <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:216?stylesheet=true"/>
   <ns2:webId>{{integerGenerator}}</ns2:webId>
-  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">OB Maintenance Validation Plan - October 2016</ns3:title>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">{{quoteGenerator}}</ns3:title>
   <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">Validation testing for October Release</ns3:description>
   <ns2:creationDate>2016-10-11T14:54:50.444Z</ns2:creationDate>
   <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2016-10-11T15:09:49.007Z</ns5:updated>

@@ -112,6 +112,30 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		then: 'ensure change data'
 		true
 	}
+	def 'getChanges main flow with configuration data'() {
+		given: 'Plan data'
+		//Plan data
+		def configuration = dataGenerationService.generate('/testdata/configurationT.xml')
+
+		and: 'team map'
+		//Team map
+		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
+		def teamMap = [:]
+		teamInfo.'value'.each { id ->
+			def identity = id.identity
+			String uid = "${identity.uniqueName}"
+			if (teamMap[uid.toLowerCase()] == null) {
+				teamMap[uid.toLowerCase()] = identity
+			}
+
+		}
+
+		when: 'call method under test (getChanges).'
+		def changedata = underTest.getChanges('DigitalBanking', configuration, teamMap)
+
+		then: 'ensure change data'
+		true
+	}
 
 	def 'getChanges main flow with execution result data'() {
 		given: 'Result data'

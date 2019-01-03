@@ -105,6 +105,15 @@ import groovy.xml.XmlUtil
  * alt include.update has 'clean'
  * 	TranslateRQMToMTM -> TestManagementService: cleanupTestItems(collection, tfsProject, areaPath)
  * end
+ *  alt include.update has 'configuration'
+ *  	TranslateRQMToMTM -> MemberManagementService: get member map
+ *  	TranslateRQMToMTM -> ClmTestManagementService: get configuration via query
+ *  	loop each { configuration }
+ *  		TranslateRQMToMTM -> ClmTestManagementService: get configuration details
+ *  		TranslateRQMToMTM -> ClmTestItemManagementService: get data changes
+ *  		TranslateRQMToMTM -> TestManagementService: send configuration changes
+ *  	end
+ *  end
  *  alt include.update has 'data'
  *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
  *  TranslateRQMToMTM -> MemberManagementService: get member map
@@ -178,12 +187,6 @@ import groovy.xml.XmlUtil
  *  						
  *  			end
  *  		end
- *  	end
- *  end
- *  alt include.update has 'configuration'
- *  	TranslateRQMToMTM -> MemberManagementService: get member map
- *  	TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
- *  	loop each { test plans }
  *  	end
  *  end
  * @enduml
