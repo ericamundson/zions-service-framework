@@ -16,7 +16,6 @@ import spock.mock.DetachedMockFactory
 @ContextConfiguration(classes=[TranslateRQMToMTMSpecSpecConfig])
 class TranslateRQMToMTMSpec extends Specification {
 
-	@Test
 	def "Full run"() {
 		
 	}
