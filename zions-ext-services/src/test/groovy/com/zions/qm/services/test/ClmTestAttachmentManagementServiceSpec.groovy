@@ -48,9 +48,9 @@ class ClmTestAttachmentManagementServiceSpec extends Specification {
 		
 		and: 'Stub of cache management service save binary'
 		File sFile = new File('stuff.txt')
-		def os = sFile.newDataOutputStream()
-		os << "Here's some text"
-		os.close()
+//		def os = sFile.newDataOutputStream()
+//		os << "Here's some text"
+//		os.close()
 		1 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> sFile
 		
 		and: 'test plan with single attachment'
@@ -75,9 +75,9 @@ class ClmTestAttachmentManagementServiceSpec extends Specification {
 		
 		and: 'Stub of cache management service save binary'
 		File sFile = new File('stuff.txt')
-		def os = sFile.newDataOutputStream()
-		os << "Here's some text"
-		os.close()
+//		def os = sFile.newDataOutputStream()
+//		os << "Here's some text"
+//		os.close()
 		2 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> sFile
 		
 		and: 'test case with single attachment'
