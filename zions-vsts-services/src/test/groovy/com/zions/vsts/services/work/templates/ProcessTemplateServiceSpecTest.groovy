@@ -205,7 +205,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		"${result.name}" == "Bug"
 	}
 	
-	def 'getDefaultMapping success flow '() {
+	/*def 'getDefaultMapping success flow '() {
 		given:
 		def mappingDataInfo = []
 		def xmlMappingData = new XmlSlurper().parse(new File(testMappingFileName))
@@ -232,7 +232,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		
 		then: ''
 		result != null;
-	}
+	}*/
 	
 	def 'hasMapping success flow with three params'() {
 		given:
