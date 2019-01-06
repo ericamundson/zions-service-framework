@@ -14,7 +14,6 @@ import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
-import com.zions.vsts.services.admin.project.ProjectManagementServiceTestConfig
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
 import com.zions.vsts.services.permissions.PermissionsManagementService
@@ -33,7 +32,7 @@ import spock.mock.DetachedMockFactory
 class CodeManagementServiceSpecTest extends Specification {
 	
 	@Autowired
-	private IGenericRestClient genericRestClient;
+	private IGenericRestClient genericRestClient
 	
 	@Autowired
 	private ProjectManagementService projectManagementService
@@ -136,10 +135,10 @@ class CodeManagementServiceSpecTest extends Specification {
 	@Test
 	def 'getAuthUrl success flow' () {
 		when:
-		def out = underTest.getAuthUrl('http://dev.azure.com', 'abc', 'abc')
+		def out = underTest.getAuthUrl('https://dev.azure.com', 'v072160', 'K@nakadurga@2171')
 		
 		then:
-		out == "https://abc:abc@ev.azure.com"
+		out == "https://v072160:K%40nakadurga%402171@dev.azure.com"
 	}
 	
 	/*@Test
@@ -200,6 +199,165 @@ class CodeManagementServiceSpecTest extends Specification {
 		result == null
 	
 	}
+
+	@Test
+	def 'createRepo success flow' () {
+		
+		given:
+		String json = this.getClass().getResource('/testdata/repos.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.post(_) >> out
+		
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		
+		when:
+		def result = underTest.createRepo('',project,'DigitalBanking')
+		
+		then:
+		"${result.count}" == "4"
+	
+	}
+	
+	@Test
+	def 'getRepo success flow' () {
+		
+		given:
+		String json = this.getClass().getResource('/testdata/DigitalBanking.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		
+		when:
+		def result = underTest.getRepo('',project,'DigitalBanking')
+		
+		then:
+		"${result.id}" == "26862cc3-6775-4676-bb22-3bad625dcaa7"
+	
+	}
+	
+	@Test
+	def 'getDeployManifest success flow' () {
+		
+		given:
+		String json = this.getClass().getResource('/testdata/items.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		
+		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
+		
+		when:
+		def result = underTest.getDeployManifest('',project,repo)
+		
+		then:
+		result ==null
+	
+	}
+	
+	@Test
+	def 'importRepo success flow' () {
+		
+		given:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		1 * projectManagementService.getProject(_, _ ) >> project
+		
+		and:
+		def endpoint = new JsonSlurper().parseText(this.getClass().getResource('/testdata/serviceendpoints.json').text)
+		1 * endpointManagementService.createServiceEndpoint(_,_,_,_,_) >> endpoint
+	
+		and:
+		String json = this.getClass().getResource('/testdata/importRequests.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		2 * genericRestClient.post(_) >> out
+		
+		when:
+		def result = underTest.importRepo('', 'DigitalBanking', 'DigitalBanking', '', '', '')
+		
+		then:
+		"${result.count}" =="0"
+	
+	}
+	
+	@Test
+	def 'importRepoDir NullPointerException flow' () {
+		given:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		1 * projectManagementService.getProject(_, _ ) >> project
+		when:
+		def result = underTest.importRepoDir('', 'DigitalBanking', 'DigitialBanking', null, 'v072160', 'K@nakadurga@2171')
+		
+		then:
+		thrown(NullPointerException)
+	
+	}
+	
+	@Test
+	def 'importRepoCLI NullPointerException flow' () {
+		given:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		1 * projectManagementService.getProject(_, _ ) >> project
+		
+		when:
+		def result = underTest.importRepoCLI('', 'DigitalBanking', 'DigitialBanking', null, 'v072160', 'K@nakadurga@2171')
+		
+		then:
+		thrown(NullPointerException)
+	
+	}
+	
+	/*@Test
+	def 'importRepoCLI success flow' () {
+		given:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		1 * projectManagementService.getProject(_, _ ) >> project
+	
+		when:
+		def result = underTest.importRepoCLI('', 'DigitalBanking', 'DigitalBanking', 'https://dev.azure.com/ZionsETO/DTS/_git/zions-service-framework', 'v072160', 'K@nakadurga@2171')
+		
+		
+		
+		then:
+		thrown(NullPointerException)
+	
+	}*/
+	
+	@Test
+	def 'ensureDeployManifest success flow' () {
+		
+		given:
+		String json = this.getClass().getResource('/testdata/items.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		String json1 = this.getClass().getResource('/testdata/refs.json').text
+		JsonSlurper js1 = new JsonSlurper()
+		def out1 = js1.parseText(json1)
+		1 * genericRestClient.get(_) >> out1
+		
+		
+		String json2 = this.getClass().getResource('/testdata/codepushes.json').text
+		JsonSlurper js2 = new JsonSlurper()
+		def out2 = js2.parseText(json1)
+		2 * genericRestClient.post(_) >> out2
+		
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		
+		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
+		
+		when:
+		def result = underTest.ensureDeployManifest('',project,repo)
+		
+		then:
+		result != null
+	
+	}
 		
 }
 
@@ -216,27 +374,27 @@ class CodeManagementServiceTestConfig {
 	
 	@Bean
 	CodeManagementService underTest() {
-		return new CodeManagementService() ;
+		return new CodeManagementService() 
 	}
 	
 	@Bean
 	ProjectManagementService projectManagementService() {
-		return mockFactory.Mock(ProjectManagementService);
+		return mockFactory.Mock(ProjectManagementService)
 	}
 	
 	@Bean
 	EndpointManagementService endpointManagementService() {
-		return mockFactory.Mock(EndpointManagementService);
+		return mockFactory.Mock(EndpointManagementService)
 	}
 	
 	@Bean
 	MemberManagementService memberManagementService() {
-		return mockFactory.Mock(MemberManagementService);
+		return mockFactory.Mock(MemberManagementService)
 	}
 	
 	@Bean
 	PermissionsManagementService permissionsManagementService() {
-		return mockFactory.Mock(PermissionsManagementService);
+		return mockFactory.Mock(PermissionsManagementService)
 	}
 	
 	@Bean
