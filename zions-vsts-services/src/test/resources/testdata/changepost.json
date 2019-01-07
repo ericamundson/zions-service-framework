@@ -1,0 +1,27 @@
+{
+    "method": "post",
+    "requestContentType": "JSON",
+    "contentType": "JSON",
+    "uri": "/DigitalBanking/_apis/test/plans/27058",
+    "query": {
+        "api-version": "5.0-preview.2"
+    },
+    "body": {
+        "owner": {
+            "displayName": "Darren Dustin",
+            "url": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/17802f35-8862-66bd-9abc-196e22a957a8",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MTc4MDJmMzUtODg2Mi03NmJkLTlhYmMtMTk2ZTIyYTk1N2E4"
+                }
+            },
+            "id": "17802f35-8862-66bd-9abc-196e22a957a8",
+            "uniqueName": "Darren.Dustin@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_api/_common/identityImage?id=17802f35-8862-66bd-9abc-196e22a957a8",
+            "descriptor": "aad.MTc4MDJmMzUtODg2Mi03NmJkLTlhYmMtMTk2ZTIyYTk1N2E4"
+        },
+        "area": {
+            "name": "DigitalBanking\\OB"
+        }
+    }
+}

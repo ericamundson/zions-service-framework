@@ -123,6 +123,7 @@ public class MemberManagementService {
 				uri: "${eUrl}/${collection}/_apis/userentitlements",
 				query: ['api-version': '5.0-preview.2', skip: skip]
 				)
+			if (result == null) return null
 			retEntitlement = result.'members'.find { entitlement ->
 				String aemail = "${entitlement.user.mailAddress}"
 				String cemail = "${email}"

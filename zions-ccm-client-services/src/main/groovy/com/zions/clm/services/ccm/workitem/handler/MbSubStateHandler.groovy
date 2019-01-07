@@ -66,7 +66,7 @@ class MbSubStateHandler implements IFieldHandler {
 		}
 		String aVal = null
 		if ("${stateName}" == 'Refinement Ready') {
-			aVal = 'Refine Ready'
+			aVal = 'Refinement Ready'
 		} else if ("${stateName}" == 'Sprint Ready') {
 			aVal = 'Sprint Ready'
 		}

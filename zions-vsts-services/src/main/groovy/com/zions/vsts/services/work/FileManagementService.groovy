@@ -2,7 +2,7 @@ package com.zions.vsts.services.work
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 
 import groovy.util.logging.Slf4j
@@ -43,7 +43,7 @@ class FileManagementService {
 	private IGenericRestClient genericRestClient;
 	
 	@Autowired(required=true)
-	private WorkManagementService workManagementService;
+	private ICacheManagementService cacheManagementService;
 
 	public FileManagementService() {
 		
@@ -70,7 +70,7 @@ class FileManagementService {
 	 * @return Work item update data
 	 */
 	def ensureAttachments(collection, project, id, files) {
-		def cacheWI = workManagementService.getCacheWI(id)
+		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]

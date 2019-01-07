@@ -8,7 +8,6 @@
 </listAttribute>
 <listAttribute key="org.eclipse.eclemma.core.SCOPE_IDS">
 <listEntry value="=zions-ext-services/src\/main\/groovy"/>
-<listEntry value="=zions-ext-services/src\/main\/resources"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=zions-ext-services"/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
