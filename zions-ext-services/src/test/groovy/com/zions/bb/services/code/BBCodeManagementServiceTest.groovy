@@ -26,23 +26,7 @@ public class BBCodeManagementServiceTest extends Specification {
 	IGenericRestClient bBGenericRestClient
 	
 	@Autowired
-	IGenericRestClient bBGenericRestClient1
-	
-	@Autowired
 	BBCodeManagementService underTest
-	
-	/*def 'getKey for project name success flow.'(){
-		
-		def rwits = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
-		1 * bBGenericRestClient.get(_) >> rwits
-		
-		when: 'calling of method under test (getKey)'
-		def keyname = underTest.getKey('almops')
-		
-		then: ''
-		true
-		
-	}*/
 	
 	def 'getProjectRepoUrls for project name success flow.'(){
 		
@@ -50,7 +34,7 @@ public class BBCodeManagementServiceTest extends Specification {
 		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
 		(1..3) * bBGenericRestClient.get(_) >> testplan
 		
-		def test = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects2.json').text)
+		def test = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects_lastpage_false.json').text)
 		1 * bBGenericRestClient.get(_) >> test
 		
 		when: 'calling of method under test (getProjectRepoUrls)'
@@ -71,11 +55,6 @@ class BBCodeManagementServiceTestConfig {
 	
 	@Bean
 	IGenericRestClient bBGenericRestClient() {
-		return factory.Mock(ClmGenericRestClient)
-	}
-	
-	@Bean
-	IGenericRestClient bBGenericRestClient1() {
 		return factory.Mock(ClmGenericRestClient)
 	}
 	
