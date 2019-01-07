@@ -26,10 +26,28 @@ import com.zions.common.services.query.IFilter
 class ObFilter implements IFilter {
 
 	public def filter(def workItems) {
-		List<String> excluded = ["Track Build Item", "Retrospective", "Adhoc Request", "Adoption Item"]
+		List<String> excluded = ["Track Build Item", "Retrospective",  "Adoption Item", "Infrastrucure Request"]
 		return workItems.workItem.findAll { wi ->
 			String type = "${wi.type.name.text()}"
-			"${wi.state.group.text()}" != 'closed' && "${wi.target.archived.text()}" == 'false' && !excluded.contains(type)
+			String target = "${wi.target.name.text()}"
+			String wiState = "${wi.state.group.text()}"
+			String archivedTarget = "${wi.target.archived.text()}"
+			boolean openParentState = false
+			String parentState = "${wi.parent.state.group.text()}"
+			String parentType = "${wi.parent.type.name.text()}"
+			String parentArchivedTarget = "${wi.parent.target.archived.text()}"
+			if (parentState.length() > 0 && parentState != 'closed' && parentArchivedTarget == 'false' && !excluded.contains(parentType)) {
+				openParentState = true
+			}
+			boolean openRelatedState = false
+			String relatedState = "${wi.related.state.group.text()}"
+			String relatedType = "${wi.related.type.name.text()}"
+			String relatedArchivedTarget = "${wi.related.target.archived.text()}"
+			if (relatedState.length() > 0 && relatedState != 'closed' && !excluded.contains(relatedType)) {
+				openRelatedState = true
+			}
+			boolean val = openParentState || (wiState != 'closed'  && archivedTarget == 'false' && !excluded.contains(type))
+			return val
 		}
 	}
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:configuration xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Mobile+and+Online+Banking+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/configuration/TE26</ns3:identifier>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">ZFNB_IE11</ns3:title>
+  <ns2:name>ZFNB_IE11</ns2:name>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2017-03-08T23:05:06.614Z</ns5:updated>
+  <ns2:summary>BrowserIE11 and ZFNB Affiliate</ns2:summary>
+  <ns2:configuration>{"Assets":{"AssetInstance":{"AssetType":{"type":"4950","name":"Machine","typeId":"4950","externalId":"Machine","isHardened":"true","visibility":"0","Attributes":""}}}}</ns2:configuration>
+  <ns2:configurationParts>
+    <ns2:configurationPart type="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/labresourceattribute/Machine"/>
+  </ns2:configurationParts>
+  <ns2:com.ibm.rational.test.lm.config.lrdid id="_quN3AARTEeeskuyKHUAgjQ"/>
+</ns2:configuration>

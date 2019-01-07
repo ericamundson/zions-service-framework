@@ -1,12 +1,14 @@
-package com.zions.ext.services.cache
+package com.zions.common.services.cache
 
+import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class CacheManagementService {
+class CacheManagementService implements ICacheManagementService {
+	
 	
 	@Autowired
 	@Value('${cache.location}')
@@ -48,24 +50,31 @@ class CacheManagementService {
 	
 	}
 
+	
+	public def saveToCache(def data, String id, String type) {
+		File cacheDir = new File(this.cacheLocation)
+		if (!cacheDir.exists()) {
+			cacheDir.mkdir();
+		}
+		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
+		if (!wiDir.exists()) {
+			wiDir.mkdir()
+		}
+		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}${type}.json");
+		def w  = cacheData.newDataOutputStream()
+		w << new JsonBuilder(data).toPrettyString()
+		w.close()
+
+	}
+
 	/**
 	 * Check cache for work item state.
 	 *
 	 * @param id
 	 * @return
 	 */
-	def getCacheWI(id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}wiData.json");
-		if (cacheData.exists()) {
-			JsonSlurper s = new JsonSlurper()
-			return s.parse(cacheData)
-		}
-		return null
-
-	}
-	
-	def getResultData(String id) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}resultData.json");
+	def getFromCache(def id, String type) {
+		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}${type}.json");
 		if (cacheData.exists()) {
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)

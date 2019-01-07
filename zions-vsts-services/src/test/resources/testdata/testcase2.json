@@ -1,0 +1,91 @@
+{
+    "id": 23456,
+    "rev": 1,
+    "fields": {
+        "System.AreaPath": "DigitalBanking\\OB",
+        "System.TeamProject": "DigitalBanking",
+        "System.IterationPath": "DigitalBanking",
+        "System.WorkItemType": "Test Case",
+        "System.State": "Design",
+        "System.Reason": "New",
+        "System.AssignedTo": {
+            "displayName": "rationalmigration",
+            "id": null
+        },
+        "System.CreatedDate": "2018-12-18T17:48:24.447Z",
+        "System.CreatedBy": {
+            "displayName": "Eric Amundson",
+            "url": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+                }
+            },
+            "id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "uniqueName": "eric.amundson2@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_api/_common/identityImage?id=34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+        },
+        "System.ChangedDate": "2018-12-18T17:48:24.447Z",
+        "System.ChangedBy": {
+            "displayName": "Eric Amundson",
+            "url": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+                }
+            },
+            "id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "uniqueName": "eric.amundson2@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_api/_common/identityImage?id=34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+        },
+        "System.CommentCount": 0,
+        "System.Title": "Credit Card Advance - Create Transfer",
+        "Microsoft.VSTS.Common.StateChangeDate": "2018-12-18T17:48:24.447Z",
+        "Microsoft.VSTS.Common.ActivatedDate": "2018-12-18T17:48:24.447Z",
+        "Microsoft.VSTS.Common.ActivatedBy": {
+            "displayName": "Eric Amundson",
+            "url": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+                }
+            },
+            "id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "uniqueName": "eric.amundson2@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_api/_common/identityImage?id=34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+        },
+        "Microsoft.VSTS.Common.Priority": 2,
+        "Microsoft.VSTS.TCM.AutomationStatus": "Not Automated",
+        "Custom.Automate": false,
+        "Custom.AutomationState": "Not Automated",
+        "System.Description": "<div style=\"border:2px solid black;\">\n  <div>\n    RTC Test Case Description:\n  </div>\n  <div>A customer is allowed to make a payment to a credit card, current or future dated\n\n A customer is allowed to take an advance from a credit card, current or future dated.  The preview screen for a credit card advance will include a warning message for an affiliate specific fee.</div>\n</div>\n<div style=\"border:2px solid black;\">\n  <div>\n    RTC Test Suite Description:\n  </div>\n  <div>A customer is allowed to make a payment to a credit card, current or future dated\n\n A customer is allowed to take an advance from a credit card, current or future dated.  The preview screen for a credit card advance will include a warning message for an affiliate specific fee.</div>\n</div>",
+        "Microsoft.VSTS.TCM.Steps": "<steps steps='0' last='2'>\n  <step id='2' type='ValidateStep'>\n    <parameterizedString isFormatted='true'>&lt;div&gt;Log into the UI with a personal OB client that has a Visa enabled for Advances&lt;br/&gt;From the My Bank page click on the Transfers tab&lt;br/&gt;Click on 'Create Transfer'&lt;br/&gt;Select the Visa account in the From field&lt;br/&gt;Select a DDA or SAV account in the To field&lt;br/&gt;Enter '20.00' in the Amount field&lt;br/&gt;Leave the Delivery Date as today's date&lt;br/&gt;The Memo field is optional&lt;br/&gt;Click 'Preview Transfer' &lt;br/&gt;Validate the data on the Confirmation popup - note the warning message regarding an advance fee, then hit 'Submit'&lt;/div&gt;\r\n</parameterizedString>\n    <parameterizedString isFormatted='true'>&lt;div&gt;The transfer succeeds. &lt;br/&gt;\r\n  &lt;br/&gt;The current dated transfers display in MLFI - automation phase II.&lt;/div&gt;\r\n</parameterizedString>\n  </step>\n</steps>"
+    },
+    "_links": {
+        "self": {
+            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/27228"
+        },
+        "workItemUpdates": {
+            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/27228/updates"
+        },
+        "workItemRevisions": {
+            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/27228/revisions"
+        },
+        "workItemComments": {
+            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/27228/comments"
+        },
+        "html": {
+            "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=27228"
+        },
+        "workItemType": {
+            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItemTypes/Test%20Case"
+        },
+        "fields": {
+            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/fields"
+        }
+    },
+    "url": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/27228"
+}

@@ -57,6 +57,28 @@ class ClmTestManagementService {
 		return result
 	}
 	
+	def getConfigurationsViaQuery(String query, String projectName) {
+		def encoded = URLEncoder.encode(query, 'UTF-8')
+		encoded = encoded.replace('+', '%20')
+		def project = URLEncoder.encode(projectName, 'UTF-8')
+		//project = project.replace('+', '%20')
+
+		String uri = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/configuration?fields=" + encoded;
+		if (query == null || query.length() == 0 || "${query}" == 'none') {
+			uri = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/configuration";
+			
+		}
+		def result = qmGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/xml'] );
+//		String resultsxml = XmlUtil.serialize(result)
+//		File resultFile = new File('../zions-ext-services/src/test/resources/testdata/configurations.xml')
+//		def os = resultFile.newDataOutputStream()
+//		os << resultsxml
+//		os.close()
+		return result
+	}
+
 	def getExecutionResultViaHref(String tcWebId, String planWebId, String projectName) {
 		def project = URLEncoder.encode(projectName, 'UTF-8')
 		//project = project.replace('+', '%20')

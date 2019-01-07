@@ -271,15 +271,17 @@ public class BuildManagementService {
 			log.debug("BuildManagementService::getBuildTemplate -- No build properties file found or template not specified in file; detecting build type ...")
 			def buildType = detectBuildType(collection, project, repo)
 			log.debug("BuildManagementService::getBuildTemplate -- Detected build type = ${buildType}")
-			if (buildType == BuildType.NONE) {
-				return null
+			if (buildType != BuildType.NONE) {
+				// Looking for template build definition with name like 'template-maven-ci', 'template-gradle-release', 'template-ant-ci', etc.
+				templateName = "template-"+buildType.toString().toLowerCase()+"-"+buildStage
 			}
-			// Looking for template build definition with name like 'template-maven-ci', 'template-gradle-release', 'template-ant-ci', etc.
-			templateName = "template-"+buildType.toString().toLowerCase()+"-"+buildStage
 		}
-		log.debug("BuildManagementService::getBuildTemplate -- Loading ADO build template: "+templateName)
-		//def bDef = getBuild(collection, project, templateName)
-		def bDef = getTemplate(collection, project, templateName)
+		def bDef = null
+		// if we found a valid build type, try to load the build template
+		if (templateName != null) {
+			log.debug("BuildManagementService::getBuildTemplate -- Loading ADO build template: "+templateName)
+			bDef = getTemplate(collection, project, templateName)
+		}
 		if (bDef == null) {
 			log.debug("BuildManagementService::getBuildTemplate -- Build template "+templateName+" not found. Loading generic template ...")
 			bDef = getTemplate(collection, project, "template-"+this.genericTemplateName+"-"+buildStage)
