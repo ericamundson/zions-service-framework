@@ -1,0 +1,86 @@
+package com.zions.bb.services.code;
+
+import static org.junit.Assert.*
+
+import com.zions.clm.services.rest.ClmGenericRestClient
+import com.zions.qm.services.test.ClmTestManagementService
+import groovy.json.JsonSlurper
+import com.zions.bb.services.code.BBCodeManagementService
+import com.zions.common.services.rest.IGenericRestClient
+
+import org.junit.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Profile
+import org.springframework.context.annotation.PropertySource
+import org.springframework.test.context.ContextConfiguration
+
+import spock.lang.Specification
+import spock.mock.DetachedMockFactory
+
+@ContextConfiguration(classes=[BBCodeManagementServiceTestConfig])
+public class BBCodeManagementServiceTest extends Specification {
+	
+	@Autowired
+	IGenericRestClient bBGenericRestClient
+	
+	@Autowired
+	IGenericRestClient bBGenericRestClient1
+	
+	@Autowired
+	BBCodeManagementService underTest
+	
+	/*def 'getKey for project name success flow.'(){
+		
+		def rwits = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
+		1 * bBGenericRestClient.get(_) >> rwits
+		
+		when: 'calling of method under test (getKey)'
+		def keyname = underTest.getKey('almops')
+		
+		then: ''
+		true
+		
+	}*/
+	
+	def 'getProjectRepoUrls for project name success flow.'(){
+		
+				
+		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
+		(1..3) * bBGenericRestClient.get(_) >> testplan
+		
+		def test = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects2.json').text)
+		1 * bBGenericRestClient.get(_) >> test
+		
+		when: 'calling of method under test (getProjectRepoUrls)'
+		def keyname = underTest.getProjectRepoUrls('almops')
+		
+		then: ''
+		true
+		
+	}
+
+}
+
+@TestConfiguration
+@Profile("test")
+@PropertySource("classpath:test.properties")
+class BBCodeManagementServiceTestConfig {
+	def factory = new DetachedMockFactory()
+	
+	@Bean
+	IGenericRestClient bBGenericRestClient() {
+		return factory.Mock(ClmGenericRestClient)
+	}
+	
+	@Bean
+	IGenericRestClient bBGenericRestClient1() {
+		return factory.Mock(ClmGenericRestClient)
+	}
+	
+	@Bean
+	BBCodeManagementService underTest() {
+		return new BBCodeManagementService()
+	}
+}
