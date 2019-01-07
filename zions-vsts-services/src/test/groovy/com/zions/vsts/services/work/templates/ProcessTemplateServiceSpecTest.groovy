@@ -311,6 +311,20 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result != null
 	}
 	
+	def loadCCMWITs() {
+		def wits = []
+		URI uri = this.getClass().getResource('/testdata/wit_templates').toURI()
+		File tDir = new File(uri.path)
+		if (tDir.exists() || tDir.isDirectory()) {
+			tDir.eachFile { file ->
+				def witData = new XmlSlurper().parse(file)
+				wits.add(witData)
+			}
+		}
+		return wits
+	}
+
+	
 }
 
 @TestConfiguration
