@@ -78,7 +78,6 @@ class BBCodeManagementService {
 					uri: "${bBGenericRestClient.bbUrl}/rest/api/1.0/projects/${key}/repos?start=${nextStart}",
 					headers: [Accept: 'application/json'],
 					)
-				
 			reposPart.values.each { repo ->
 			repo.links.'clone'.each { clone ->
 				if ("${clone.name}" == 'http') {

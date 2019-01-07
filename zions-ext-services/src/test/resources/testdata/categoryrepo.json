@@ -1,12 +1,11 @@
 {
 	"soapenv:Body": {
 			"response": {
-				"method": "getProjectAreasPaged",
-				"interface": "com.ibm.team.process.internal.service.web.IProcessWebUIService",
+				"method": "getCustomAttributesDTO",
+				"interface": "com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService",
 				"returnValue": {
 					"type": "COMPLEX",
 					"value": {
-					"archived":true,
 					"elements": [
 					{
 						"summary": "projectArea",
@@ -21,7 +20,7 @@
 		"links": {
                 "clone": [
                    {
-                        "href": "https://clm.cs.zionsbank.com/qm/service/com.ibm.team.process.internal.service.web.IProcessWebUIService/projectAreasPaged"
+                        "href": "https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService/customAttributesDTO"
                     }
                 ]
             }

@@ -27,7 +27,7 @@ class ClmTestManagementService {
 			uri: uri,
 			headers: [Accept: 'text/xml'] );
 		return result
-
+	
 	}
 	
 	def getContent(String uri) {

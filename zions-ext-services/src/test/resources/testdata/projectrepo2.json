@@ -5,18 +5,19 @@
 				"interface": "com.ibm.team.process.internal.service.web.IProcessWebUIService",
 				"returnValue": {
 					"type": "COMPLEX",
-					"value": {
 					"archived":true,
-					"elements": [
-					{
+					"values": [{
+						"archived":false,
 						"summary": "projectArea",
 						"count": "38",
 						"type": "rest:ResultSetDTO",
-						"itemId": "_RacQAqxLEeaFjP5SwynnQA"
-					}
-					]
-					}
-				}
+						"itemId": "_RacQAqxLEeaFjP5SwynnQA",
+						"categories":[{
+							"archived":false
+					}]
+					
+				}]
+			}
 			},
 		"links": {
                 "clone": [

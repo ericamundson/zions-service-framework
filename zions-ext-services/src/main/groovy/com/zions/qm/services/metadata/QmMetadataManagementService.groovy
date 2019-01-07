@@ -43,7 +43,9 @@ class QmMetadataManagementService {
 	def extractQmMetadata(String projectArea, File templateDir) {
 		def schema = getQMSchema();
 		xsdTypes.each { key, type ->
+			println type
 			def tSchema = findSchema(schema, type)
+			println tSchema
 			String xml = generateMetaData(projectArea,key, schema, tSchema, templateDir)
 			File oFile = new File(templateDir, "${key}.xml");
 			def w = oFile.newWriter();
@@ -187,7 +189,11 @@ class QmMetadataManagementService {
 	 */
 	def generateCategoryFields(String projectArea, def key, MarkupBuilder bXml) {
 		def cats = this.getCategories(key, projectArea)
+				println 'cats'
+				println cats.'soapenv:Body'.response.returnValue.values
+				println cats.'soapenv:Body'.response.returnValue.values.each
 		cats.'soapenv:Body'.response.returnValue.values.each { cat ->
+			println cat.archived
 			if (!cat.archived) {
 				bXml.FIELD(name: cat.name, refname: cat.itemId, type: 'string') {
 					ALLOWEDVALUES(expanditems: true) {

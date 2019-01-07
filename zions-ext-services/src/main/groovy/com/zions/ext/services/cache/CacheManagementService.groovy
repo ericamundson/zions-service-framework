@@ -19,6 +19,7 @@ class CacheManagementService {
 	public CacheManagementService() {}
 	
 	def saveBinaryAsAttachment(ByteArrayInputStream result, String name, String id) {
+		
 		try {
 			File cacheDir = new File(this.cacheLocation)
 			if (!cacheDir.exists()) {
