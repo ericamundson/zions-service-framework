@@ -7,7 +7,7 @@ class DescriptionHandler extends QmBaseAttributeHandler {
 
 	public String getQmFieldName() {
 		// TODO Auto-generated method stub
-		return 'description'
+		return 'summary'
 	}
 
 	public def formatValue(def value, def data) {

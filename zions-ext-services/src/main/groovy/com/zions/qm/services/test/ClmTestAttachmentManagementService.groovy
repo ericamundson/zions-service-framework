@@ -36,10 +36,38 @@ class ClmTestAttachmentManagementService {
 
 	@Autowired
 	ICacheManagementService cacheManagementService
+	
+	@Autowired
+	TestMappingManagementService testMappingManagementService
 
 	public ClmTestAttachmentManagementService() {
 	}
 
+	public def cacheTestItemAttachments(def titem) {
+		def files = []
+		String type = getOutType(titem)
+		String id = "${titem.webId.text()}-${type}"
+		titem.attachment.each { attachment ->
+			String aurl = "${attachment.@href}"
+			def result = clmTestManagementService.getContent(aurl)
+			String cd = "${result.headers.'Content-Disposition'}"
+			
+			String[] sItem = cd.split('=')
+			String filename = null
+			if (sItem.size() == 2) {
+				filename = sItem[1]
+				filename = filename.replace('"', '')
+			}
+			if (filename != null) {
+				def file = cacheManagementService.saveBinaryAsAttachment(result.data, filename, id)
+				def item = [file: file, comment: "Added attachment ${filename}"]
+				//File cFile = saveAttachment
+				files.add(item)
+			}
+		}
+
+		return files
+	}
 	/**
 	 * Cache all test case attachments including script and steps.
 	 * 
@@ -62,12 +90,11 @@ class ClmTestAttachmentManagementService {
 				filename = filename.replace('"', '')
 			}
 			if (filename != null) {
-				def file = cacheManagementService.saveBinaryAsAttachment(result.data, "${filename}", id)
+				def file = cacheManagementService.saveBinaryAsAttachment(result.data, filename, id)
 				def item = [file: file, comment: "Added attachment ${filename}"]
 				//File cFile = saveAttachment
 				files.add(item)
 			}
-			return files
 		}
 		def ts = getTestScript(testCase)
 		if (ts != null)	{
@@ -118,4 +145,16 @@ class ClmTestAttachmentManagementService {
 		}
 		return null
 	}
+	
+	private def getOutType(qmItemData) {
+		String type = "${qmItemData.name()}"
+		def maps = testMappingManagementService.mappingData.findAll { amap ->
+			"${amap.source}" == "${type}"
+		}
+		if (maps.size() > 0) {
+			return maps[0].target
+		}
+		return maps
+	}
+
 }

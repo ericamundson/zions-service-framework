@@ -4,10 +4,13 @@ import static org.junit.Assert.*
 
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.DataGenerationService
+
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
@@ -24,6 +27,9 @@ class ClmTestManagementServiceSpecTest extends Specification {
 	
 	@Autowired
 	ClmTestManagementService underTest
+	
+	@Autowired
+	DataGenerationService dataGenerationService
 
 	def 'getTestItem success flow.'() {
 		given: "A stub of RQM get test item request"
@@ -48,6 +54,18 @@ class ClmTestManagementServiceSpecTest extends Specification {
 		
 		then: 'validate list of plans'
 		testPlans.entry.size() > 0
+	}
+	
+	def 'getConfigurationsViaQuery success flow.'() {
+		given: "A stub of RQM get test item request"
+		def configurationsInfo = dataGenerationService.generate('/testdata/configurations.xml')
+		1 * qmGenericRestClient.get(_) >> configurationsInfo
+
+		when: 'calling of method under test (getConfigurationsViaQuery)'
+		def configurations = underTest.getConfigurationsViaQuery('', 'DigitalBanking')
+		
+		then: 'validate list of configurations'
+		configurations.entry.size() > 0
 	}
 
 	def 'getNextPage success flow.'() {
@@ -103,6 +121,7 @@ class ClmTestManagementServiceSpecTest extends Specification {
 
 @TestConfiguration
 @Profile("test")
+@ComponentScan(["com.zions.common.services.test"])
 @PropertySource("classpath:test.properties")
 class ClmTestManagementServiceSpecTestConfig {
 	def factory = new DetachedMockFactory()
@@ -116,6 +135,12 @@ class ClmTestManagementServiceSpecTestConfig {
 	ClmTestManagementService underTest() {
 		return new ClmTestManagementService()
 	}
+	
+	@Bean
+	DataGenerationService dataGenerationService() {
+		return new DataGenerationService()
+	}
+
 }
 
 
