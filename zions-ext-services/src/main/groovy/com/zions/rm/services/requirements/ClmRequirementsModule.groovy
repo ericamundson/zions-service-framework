@@ -11,4 +11,7 @@ class ClmRequirementsModule {
 		attributeMap = in_attributes
 		orderedArtifacts = in_artifacts
 	}	
+	def getTitle() {
+		attributeMap.'title'
+	}
 }

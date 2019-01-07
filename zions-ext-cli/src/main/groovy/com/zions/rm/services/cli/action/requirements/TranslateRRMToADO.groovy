@@ -15,6 +15,7 @@ import com.zions.rm.services.requirements.ClmRequirementsItemManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
+import com.zions.vsts.services.mr.SmartDocManagementService
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
@@ -136,7 +137,8 @@ class TranslateRRMToADO implements CliAction {
 	FileManagementService fileManagementService;
 	@Autowired
 	WorkManagementService workManagementService
-	
+	@Autowired
+	SmartDocManagementService smartDocManagementService
 	@Autowired 
 	ClmRequirementsItemManagementService clmRequirementsItemManagementService
 	@Autowired 
@@ -159,16 +161,22 @@ class TranslateRRMToADO implements CliAction {
 		} catch (e) {}
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
 
-		String projectURI = data.getOptionValues('clm.projectAreaURI')[0]
-
+		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
+		String tfsUser = data.getOptionValues('tfs.user')[0]
 		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
 		String rmQuery = data.getOptionValues('rm.query')[0]
 		String rmFilter = data.getOptionValues('rm.filter')[0]
+		String tfsProjectURI = data.getOptionValues('tfs.projectUri')[0]
+		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
+		String tfsCollectionGUID = data.getOptionValues('tfs.collectionId')[0]
+		String tfsOAuthToken = data.getOptionValues('tfs.oAuthToken')
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
+		String mrTemplate = data.getOptionValues('mr.template')[0]
+		String mrFolder = data.getOptionValues('mr.folder')[0]
 		File mFile = new File(mappingFile)
 		
 		def mapping = new XmlSlurper().parseText(mFile.text)
@@ -180,13 +188,17 @@ class TranslateRRMToADO implements CliAction {
 		//translate work data.
 		if (includes['data'] != null) {
 			// Get field mappings, target members map and RM modules to translate to ADO
+			println('Getting Mapping Data...')
 			def mappingData = rmMappingManagementService.mappingData
+			println('Getting ADO Project Members...')
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+			println("${getCurTimestamp()} - Querying DNG Modules...")
 			def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
 			def changeList = []
 			def idMap = [:]
 			int count = 0
 			modules.each { module ->
+				println("${getCurTimestamp()} - Processing Module $count of ${modules.size()}...")
 				// Iterate through all module elements 
 				int it = 0 // we have to use our own "it" since Groovy won't allow an implicit "it" to be incremented
 				while(true) {
@@ -211,14 +223,17 @@ class TranslateRRMToADO implements CliAction {
 						count++
 						
 					}
-					it++
 					if (it >= module.orderedArtifacts.size() - 1) {
 						break
 					}
+					it++
 				}
 				
 				if (changeList.size() > 0) {
+					println("${getCurTimestamp()} - Creating Work Items...")
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+					println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
+					smartDocManagementService.createSmartDoc(module, collection, tfsUser, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
 				}
 
 			}
@@ -300,7 +315,10 @@ class TranslateRRMToADO implements CliAction {
 
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
-
+	def getCurTimestamp() {
+		new Date().format( 'yyyy/MM/dd HH:MM' )
+	}
+	
 	def filtered(def items, String filter) {
 		if (this.filterMap[filter] != null) {
 			return this.filterMap[filter].filter(items)
@@ -311,7 +329,7 @@ class TranslateRRMToADO implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectAreaURI', 'tfs.url', 'tfs.collection', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'rm.query', 'rm.filter']
+		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'tfs.oAuthToken', 'rm.mapping.file', 'rm.query', 'rm.filter']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
