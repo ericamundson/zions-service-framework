@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<entry xmlns="http://www.w3.org/2005/Atom">
+		<id>https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService/customAttributesDTO
+		</id>
+		<link
+			href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService/customAttributesDTO"
+			rel="alternate" type="application/xml" title="" />
+	</entry>
+</feed>

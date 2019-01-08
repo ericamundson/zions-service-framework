@@ -25,10 +25,9 @@ class QmProjectManagementService {
 				contentType: ContentType.JSON,
 				uri: url,
 				query: [hideArchivedProjects:true, owningApplicationKey:'JTS-Sentinel-Id',pageNum: page, pageSize: 25],
-				headers: [accept: 'text/json']
-			)
+				headers: [accept: 'text/json']);
 			pas.'soapenv:Body'.response.returnValue.value.elements.each { pa ->
-				if ("${pa.summary}" == projectArea) {
+			if ("${pa.summary}" == projectArea) {
 					thepa = pa
 				}
 				cpsize++
@@ -37,6 +36,7 @@ class QmProjectManagementService {
 			if (thepa != null) break;
 			cpsize = 0;
 			page++
+		
 		}
 		return thepa
 	}
