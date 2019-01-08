@@ -1,0 +1,22 @@
+{
+	"value": 
+		{
+			"id": "f8149f31-ec53-47e2-8f33-0fc8da4fc9aa",
+			"name": "MobileBanking",
+			"url": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/git/repositories/f8149f31-ec53-47e2-8f33-0fc8da4fc9aa",
+			"project": {
+				"id": "76e58233-44a1-4241-8d2c-09db3fbca66d",
+				"name": "DigitalBanking",
+				"description": "DigitalBanking is a multi-team project consisting of Online Banking, Mobile Banking and D3 ",
+				"url": "https://dev.azure.com/eto-dev/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d",
+				"state": "wellFormed",
+				"revision": 86,
+				"visibility": "private"
+			},
+			"defaultBranch": "refs/heads/master",
+			"size": 119902204,
+			"remoteUrl": "https://eto-dev@dev.azure.com/eto-dev/DigitalBanking/_git/MobileBanking",
+			"sshUrl": "git@ssh.dev.azure.com:v3/eto-dev/DigitalBanking/MobileBanking"
+		}
+	
+}
