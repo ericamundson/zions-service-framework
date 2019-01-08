@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.query.IFilter
 
 /**
- * Work item filter for Online Banking team.
+ * Work item filter for AEM team.
  * 
  * <p><b>Design:</b></p>
  * <img src="WebCMSFilter.png"/>
