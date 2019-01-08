@@ -1,0 +1,14 @@
+{
+	"count":1,
+	"id": 1234,
+	"name": "build def",
+	"repository":{
+		"id":1,
+		"name": "something"
+	},
+	"process":{
+		"phases":{
+		}
+	}
+}
+

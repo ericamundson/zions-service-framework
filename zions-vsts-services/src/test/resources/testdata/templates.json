@@ -1,0 +1,2875 @@
+{
+	"count": 28,
+	"value": [
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/71a9a2d3-a98a-4caa-96ab-affca411ecda/1.126.2/icon"
+			},
+			"id": "vsBuild",
+			"name": ".NET Desktop",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted VS2017",
+			"iconTaskId": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+			"description": "Build and test a .NET or Windows classic desktop solution.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					},
+					"BuildConfiguration": {
+						"value": "release",
+						"allowOverride": true
+					},
+					"BuildPlatform": {
+						"value": "any cpu",
+						"allowOverride": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Use NuGet 4.4.1",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2c65196a-54fd-4a02-9be8-d9d1837b7c5d",
+										"versionSpec": "0.*",
+										"definitionType": "task"
+									},
+									"inputs": {
+										"versionSpec": "4.4.1",
+										"checkLatest": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"command": "restore",
+										"solution": "$(Parameters.solution)",
+										"selectOrConfig": "select",
+										"includeNuGetOrg": "true"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"solution": "$(Parameters.solution)",
+										"platform": "$(BuildPlatform)",
+										"configuration": "$(BuildConfiguration)",
+										"restoreNugetPackages": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "ef087383-ee5e-42c7-9a53-ab56c98420f9",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"testAssemblyVer2": "**\\$(BuildConfiguration)\\*test*.dll\n!**\\obj\\**",
+										"platform": "$(BuildPlatform)",
+										"configuration": "$(BuildConfiguration)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": true,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "0675668a-7bba-4ccb-901d-5ad6554ca653",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SearchPattern": "**\\bin\\**\\*.pdb",
+										"SymbolsArtifactName": "Symbols_$(BuildConfiguration)",
+										"SymbolServerType": "TeamServices",
+										"PublishSymbols": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SourceFolder": "$(system.defaultworkingdirectory)",
+										"Contents": "**\\bin\\$(BuildConfiguration)\\**",
+										"TargetFolder": "$(build.artifactstagingdirectory)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.artifactstagingdirectory)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container",
+										"TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"name": "solution",
+							"label": "Solution",
+							"defaultValue": "**\\*.sln",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": "The path to the Visual Studio solution file or NuGet packages.config. Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders."
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/71a9a2d3-a98a-4caa-96ab-affca411ecda/1.126.2/icon"
+			},
+			"id": "UniversalWindowsPlatform",
+			"name": "Universal Windows Platform",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted VS2017",
+			"iconTaskId": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+			"description": "Build and test a Universal Windows Platform application using Visual Studio.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"variables": {
+					"BuildConfiguration": {
+						"value": "release",
+						"allowOverride": true
+					},
+					"BuildPlatform": {
+						"value": "x86|x64|ARM",
+						"allowOverride": true
+					},
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Use NuGet 4.4.1",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2c65196a-54fd-4a02-9be8-d9d1837b7c5d",
+										"versionSpec": "0.*",
+										"definitionType": "task"
+									},
+									"inputs": {
+										"versionSpec": "4.4.1",
+										"checkLatest": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "NuGet restore **\\*.sln",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+										"versionSpec": "2.*",
+										"definitionType": "task"
+									},
+									"inputs": {
+										"solution": "$(Parameters.solution)",
+										"selectOrConfig": "select",
+										"feed": "",
+										"includeNuGetOrg": "true",
+										"nugetConfigPath": "",
+										"noCache": "false",
+										"packagesDirectory": "",
+										"verbosity": "-"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Build solution **\\*.sln",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+										"versionSpec": "1.*",
+										"definitionType": "task"
+									},
+									"inputs": {
+										"solution": "$(Parameters.solution)",
+										"vsVersion": "15.0",
+										"msbuildArgs": "/p:AppxBundlePlatforms=\"$(BuildPlatform)\" /p:AppxPackageDir=\"$(Build.ArtifactStagingDirectory)\\AppxPackages\\\\\" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload",
+										"platform": "x86",
+										"configuration": "$(BuildConfiguration)",
+										"clean": "false",
+										"maximumCpuCount": "false",
+										"restoreNugetPackages": "false",
+										"msbuildArchitecture": "x86",
+										"logProjectEvents": "true",
+										"createLogFile": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"displayName": "Publish artifact: drop",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": "task"
+									},
+									"inputs": {
+										"PathtoPublish": "$(Build.ArtifactStagingDirectory)\\AppxPackages",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container",
+										"TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "b832bec5-8c27-4fef-9fb8-6bec8524ad8a",
+										"versionSpec": "0.*",
+										"definitionType": null
+									},
+									"inputs": {
+										
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"options": {
+								
+							},
+							"properties": {
+								
+							},
+							"name": "solution",
+							"label": "Solution",
+							"defaultValue": "**\\*.sln",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.",
+							"visibleRule": "",
+							"groupName": ""
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/2ca8fe15-42ea-4b26-80f1-e0738ec17e89/1.3.11/icon"
+			},
+			"id": "AzureCloud",
+			"name": "Azure Cloud Services",
+			"canDelete": false,
+			"category": "Deployment",
+			"defaultHostedQueue": "Hosted VS2017",
+			"iconTaskId": "2ca8fe15-42ea-4b26-80f1-e0738ec17e89",
+			"description": "Build, package, test, and deploy an Azure Cloud Service.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"triggers": [
+					{
+						"branchFilters": [],
+						"pathFilters": [],
+						"batchChanges": false,
+						"maxConcurrentBuildsPerBranch": 1,
+						"triggerType": "continuousIntegration"
+					}
+				],
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					},
+					"BuildConfiguration": {
+						"value": "release",
+						"allowOverride": true
+					},
+					"BuildPlatform": {
+						"value": "any cpu",
+						"allowOverride": true
+					},
+					"targetProfile": {
+						"value": "Cloud",
+						"allowOverride": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Use NuGet 4.4.1",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2c65196a-54fd-4a02-9be8-d9d1837b7c5d",
+										"versionSpec": "0.*",
+										"definitionType": "task"
+									},
+									"inputs": {
+										"versionSpec": "4.4.1",
+										"checkLatest": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"command": "restore",
+										"solution": "$(Parameters.solution)",
+										"selectOrConfig": "select",
+										"includeNuGetOrg": "true"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"solution": "$(Parameters.solution)",
+										"platform": "$(BuildPlatform)",
+										"configuration": "$(BuildConfiguration)",
+										"restoreNugetPackages": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"solution": "$(Parameters.CloudServiceProject)",
+										"msbuildArgs": "/t:Publish /p:TargetProfile=$(targetProfile) /p:DebugType=None /p:SkipInvalidConfigurations=true /p:OutputPath=bin\\ /p:PublishDir=\"$(build.artifactstagingdirectory)\\\\\"",
+										"platform": "$(BuildPlatform)",
+										"configuration": "$(BuildConfiguration)",
+										"restoreNugetPackages": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "ef087383-ee5e-42c7-9a53-ab56c98420f9",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"testAssemblyVer2": "**\\$(BuildConfiguration)\\*test*.dll\n!**\\obj\\**",
+										"platform": "$(BuildPlatform)",
+										"configuration": "$(BuildConfiguration)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ca8fe15-42ea-4b26-80f1-e0738ec17e89",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"CsPkg": "$(build.artifactstagingdirectory)\\*.cspkg",
+										"CsCfg": "$(build.artifactstagingdirectory)\\*.cscfg",
+										"DeploymentLabel": "$(Build.BuildNumber)",
+										"ConnectedServiceName": "$(Parameters.ConnectedServiceName)",
+										"StorageAccount": "$(Parameters.StorageAccount)",
+										"ServiceName": "$(Parameters.ServiceName)",
+										"ServiceLocation": "$(Parameters.ServiceLocation)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": true,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "0675668a-7bba-4ccb-901d-5ad6554ca653",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SearchPattern": "**\\bin\\**\\*.pdb",
+										"SymbolsArtifactName": "Symbols_$(BuildConfiguration)",
+										"SymbolServerType": "TeamServices",
+										"PublishSymbols": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.artifactstagingdirectory)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container",
+										"TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"options": {
+								
+							},
+							"properties": {
+								
+							},
+							"name": "solution",
+							"label": "Solution",
+							"defaultValue": "**\\*.sln",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.",
+							"visibleRule": "",
+							"groupName": ""
+						},
+						{
+							"options": {
+								
+							},
+							"properties": {
+								
+							},
+							"name": "CloudServiceProject",
+							"label": "Azure service project",
+							"defaultValue": "**\\*.ccproj",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.",
+							"visibleRule": "",
+							"groupName": ""
+						},
+						{
+							"options": {
+								
+							},
+							"properties": {
+								
+							},
+							"name": "ConnectedServiceName",
+							"label": "Azure subscription (Classic)",
+							"defaultValue": "",
+							"required": true,
+							"type": "connectedService:Azure:Certificate,UsernamePassword",
+							"helpMarkDown": "Azure Classic subscription to target for deployment.",
+							"visibleRule": "",
+							"groupName": ""
+						},
+						{
+							"options": {
+								
+							},
+							"properties": {
+								"EditableOptions": "True"
+							},
+							"name": "StorageAccount",
+							"label": "Storage account",
+							"defaultValue": "",
+							"required": true,
+							"type": "pickList",
+							"helpMarkDown": "Storage account must exist prior to deployment.",
+							"visibleRule": "",
+							"groupName": ""
+						},
+						{
+							"options": {
+								
+							},
+							"properties": {
+								"EditableOptions": "True"
+							},
+							"name": "ServiceName",
+							"label": "Service name",
+							"defaultValue": "",
+							"required": true,
+							"type": "pickList",
+							"helpMarkDown": "Select or enter an existing cloud service name.",
+							"visibleRule": "",
+							"groupName": ""
+						},
+						{
+							"options": {
+								
+							},
+							"properties": {
+								"EditableOptions": "True"
+							},
+							"name": "ServiceLocation",
+							"label": "Service location",
+							"defaultValue": "",
+							"required": true,
+							"type": "pickList",
+							"helpMarkDown": "Select a region for new service deployment. Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
+							"visibleRule": "",
+							"groupName": ""
+						}
+					],
+					"dataSourceBindings": [
+						{
+							"dataSourceName": "AzureStorageServiceNames",
+							"parameters": {
+								
+							},
+							"endpointId": "$(ConnectedServiceName)",
+							"target": "StorageAccount"
+						},
+						{
+							"dataSourceName": "AzureHostedServiceNames",
+							"parameters": {
+								
+							},
+							"endpointId": "$(ConnectedServiceName)",
+							"target": "ServiceName"
+						},
+						{
+							"dataSourceName": "AzureLocations",
+							"parameters": {
+								
+							},
+							"endpointId": "$(ConnectedServiceName)",
+							"target": "ServiceLocation"
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/497d490f-eea7-4f2b-ab94-48d9c1acdcb1/4.3.15/icon"
+			},
+			"id": "AzureWeb",
+			"name": "Azure Web App for ASP.NET",
+			"canDelete": false,
+			"category": "Deployment",
+			"defaultHostedQueue": "Hosted VS2017",
+			"iconTaskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+			"description": "Build, package, test, and deploy an ASP.NET Azure Web App.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"triggers": [
+					{
+						"branchFilters": [],
+						"pathFilters": [],
+						"batchChanges": false,
+						"maxConcurrentBuildsPerBranch": 1,
+						"triggerType": "continuousIntegration"
+					}
+				],
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					},
+					"BuildConfiguration": {
+						"value": "release",
+						"allowOverride": true
+					},
+					"BuildPlatform": {
+						"value": "any cpu",
+						"allowOverride": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Use NuGet 4.4.1",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2c65196a-54fd-4a02-9be8-d9d1837b7c5d",
+										"versionSpec": "0.*",
+										"definitionType": "task"
+									},
+									"inputs": {
+										"versionSpec": "4.4.1",
+										"checkLatest": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"command": "restore",
+										"solution": "$(Parameters.solution)",
+										"selectOrConfig": "select",
+										"includeNuGetOrg": "true"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"solution": "$(Parameters.solution)",
+										"msbuildArgs": "/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation=\"$(build.artifactstagingdirectory)\\\\\"",
+										"platform": "$(BuildPlatform)",
+										"configuration": "$(BuildConfiguration)",
+										"restoreNugetPackages": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "ef087383-ee5e-42c7-9a53-ab56c98420f9",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"testAssemblyVer2": "**\\$(BuildConfiguration)\\*test*.dll\n!**\\obj\\**",
+										"platform": "$(BuildPlatform)",
+										"configuration": "$(BuildConfiguration)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+										"versionSpec": "3.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"Package": "$(build.artifactstagingdirectory)/**/*.zip",
+										"ConnectedServiceName": "$(Parameters.connectedServiceName)",
+										"WebAppName": "$(Parameters.WebAppName)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": true,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "0675668a-7bba-4ccb-901d-5ad6554ca653",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SearchPattern": "**\\bin\\**\\*.pdb",
+										"SymbolsArtifactName": "Symbols_$(BuildConfiguration)",
+										"SymbolServerType": "TeamServices",
+										"PublishSymbols": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.artifactstagingdirectory)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container",
+										"TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"options": {
+								
+							},
+							"properties": {
+								
+							},
+							"name": "solution",
+							"label": "Solution",
+							"defaultValue": "**\\*.sln",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.",
+							"visibleRule": "",
+							"groupName": ""
+						},
+						{
+							"options": {
+								
+							},
+							"properties": {
+								
+							},
+							"name": "connectedServiceName",
+							"label": "Azure subscription",
+							"defaultValue": "",
+							"required": true,
+							"type": "connectedService:AzureRM",
+							"helpMarkDown": "Select the Azure Resource Manager subscription for the deployment",
+							"visibleRule": "",
+							"groupName": ""
+						},
+						{
+							"options": {
+								
+							},
+							"properties": {
+								"EditableOptions": "True"
+							},
+							"name": "WebAppName",
+							"label": "App service name",
+							"defaultValue": "",
+							"required": true,
+							"type": "pickList",
+							"helpMarkDown": "Enter or select the name of an existing Azure App Service",
+							"visibleRule": "",
+							"groupName": ""
+						}
+					],
+					"dataSourceBindings": [
+						{
+							"dataSourceName": "AzureRMWebAppNames",
+							"parameters": {
+								
+							},
+							"endpointId": "$(connectedServiceName)",
+							"target": "WebAppName"
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/1e78dc1b-9132-4b18-9c75-0e7ecc634b74/5.142.1/icon"
+			},
+			"id": "Xcode",
+			"name": "Xcode",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted macOS",
+			"iconTaskId": "1e78dc1b-9132-4b18-9c75-0e7ecc634b74",
+			"description": "Build, test, archive, or package an Xcode workspace on macOS.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					},
+					"Configuration": {
+						"value": "Release",
+						"allowOverride": true
+					},
+					"SDK": {
+						"value": "iphoneos",
+						"allowOverride": true
+					},
+					"TestSDK": {
+						"value": "iphonesimulator",
+						"allowOverride": true
+					},
+					"TestConfiguration": {
+						"value": "Debug",
+						"allowOverride": true
+					},
+					"P12password": {
+						"value": null,
+						"isSecret": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "d2eff759-736d-4b7b-8554-7ba0960d49d6",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"certPwd": "$(P12password)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "1e78dc1b-9132-4b18-9c75-0e7ecc634b74",
+										"versionSpec": "5.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"actions": "test",
+										"configuration": "$(TestConfiguration)",
+										"sdk": "$(TestSDK)",
+										"xcWorkspacePath": "$(Parameters.xcWorkspacePath)",
+										"scheme": "$(Parameters.scheme)",
+										"xcodeVersion": "$(Parameters.xcodeVersion)",
+										"xcodeDeveloperDir": "$(Parameters.xcodeDeveloperDir)",
+										"signingOption": "default",
+										"packageApp": "false",
+										"destinationPlatformOption": "iOS",
+										"publishJUnitResults": "true"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "1e78dc1b-9132-4b18-9c75-0e7ecc634b74",
+										"versionSpec": "5.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"actions": "build",
+										"configuration": "$(Configuration)",
+										"sdk": "$(SDK)",
+										"xcWorkspacePath": "$(Parameters.xcWorkspacePath)",
+										"scheme": "$(Parameters.scheme)",
+										"xcodeVersion": "$(Parameters.xcodeVersion)",
+										"xcodeDeveloperDir": "$(Parameters.xcodeDeveloperDir)",
+										"exportPath": "output/$(SDK)/$(Configuration)",
+										"publishJUnitResults": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SourceFolder": "$(system.defaultworkingdirectory)",
+										"Contents": "**/*.ipa",
+										"TargetFolder": "$(build.artifactstagingdirectory)",
+										"CleanTargetFolder": "false",
+										"OverWrite": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.artifactstagingdirectory)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "ad5cd22a-be4e-48bb-adce-181a32432da5",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"app": "**/*.ipa"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "b832bec5-8c27-4fef-9fb8-6bec8524ad8a",
+										"versionSpec": "0.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"app": "**/*.ipa"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"name": "xcWorkspacePath",
+							"label": "Workspace or project path",
+							"defaultValue": "**/*.xcodeproj/project.xcworkspace",
+							"type": "filePath",
+							"helpMarkDown": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcodeproj`."
+						},
+						{
+							"name": "scheme",
+							"label": "Scheme",
+							"defaultValue": "",
+							"type": "string",
+							"helpMarkDown": "(Optional) Enter a scheme name defined in Xcode. It must be a shared scheme, with its <strong>Shared</strong> checkbox enabled under <strong>Managed Schemes</strong> in Xcode. If you specify a <strong>Workspace or project path</strong> above without specifying a scheme, and the workspace has a single shared scheme, it will be automatically used."
+						},
+						{
+							"options": {
+								"default": "Default",
+								"8": "Xcode 8",
+								"9": "Xcode 9",
+								"10": "Xcode 10",
+								"specifyPath": "Specify path"
+							},
+							"name": "xcodeVersion",
+							"label": "Xcode version",
+							"defaultValue": "default",
+							"type": "pickList",
+							"helpMarkDown": "Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory."
+						},
+						{
+							"name": "xcodeDeveloperDir",
+							"label": "Xcode developer path",
+							"defaultValue": "",
+							"type": "string",
+							"helpMarkDown": "(Optional) Enter a path to a specific Xcode developer directory (e.g. `/Applications/Xcode_9.0.0.app/Contents/Developer`). This is useful when multiple versions of Xcode are installed on the agent machine.",
+							"visibleRule": "xcodeVersion == specifyPath"
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				
+			},
+			"id": "blank",
+			"name": "Empty pipeline",
+			"canDelete": false,
+			"category": "Empty",
+			"defaultHostedQueue": "Hosted VS2017",
+			"description": "Start with an empty pipeline and add your own steps.",
+			"template": {
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/27edd013-36fd-43aa-96a3-7d73e1e35285/1.143.1/icon"
+			},
+			"id": "XamarinAndroid",
+			"name": "Xamarin.Android",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted VS2017",
+			"iconTaskId": "27edd013-36fd-43aa-96a3-7d73e1e35285",
+			"description": "Build an Android app and Xamarin.UITest assembly. Test on real devices with App Center.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					},
+					"BuildConfiguration": {
+						"value": "Release"
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Use NuGet 4.4.1",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2c65196a-54fd-4a02-9be8-d9d1837b7c5d",
+										"versionSpec": "0.*",
+										"definitionType": "task"
+									},
+									"inputs": {
+										"versionSpec": "4.4.1",
+										"checkLatest": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"command": "restore",
+										"solution": "$(Parameters.restorePkgSolution)",
+										"selectOrConfig": "select",
+										"includeNuGetOrg": "true"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "27edd013-36fd-43aa-96a3-7d73e1e35285",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"project": "**/*Droid*.csproj",
+										"outputDir": "$(build.binariesdirectory)/$(BuildConfiguration)",
+										"configuration": "$(BuildConfiguration)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "c6c4c611-aa2e-4a33-b606-5eaba2196824",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"solution": "**/*test*.csproj",
+										"configuration": "$(BuildConfiguration)",
+										"msbuildArguments": "/p:OutputPath=\"$(build.binariesdirectory)/$(BuildConfiguration)/test-assembly\"",
+										"restoreNugetPackages": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "80f3f6a0-82a6-4a22-ba7a-e5b8c541b9b9",
+										"versionSpec": "3.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"files": "$(Parameters.appFiles)",
+										"apksign": "false",
+										"zipalign": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.binariesdirectory)/$(BuildConfiguration)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "ad5cd22a-be4e-48bb-adce-181a32432da5",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"app": "$(Parameters.appFiles)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "b832bec5-8c27-4fef-9fb8-6bec8524ad8a",
+										"versionSpec": "0.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"app": "$(Parameters.appFiles)"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"name": "restorePkgSolution",
+							"label": "Solution to restore packages",
+							"defaultValue": "**\\*.sln",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": "The path to the Visual Studio Solution file"
+						},
+						{
+							"name": "appFiles",
+							"label": "App File",
+							"defaultValue": "$(build.binariesdirectory)/$(BuildConfiguration)/*.apk",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": "Relative path from repo root of the files(s).  Wildcards can be used.  For example, `**\\\\bin\\\\*.apk` for all APK files in bin subfolder."
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/0f077e3a-af59-496d-81bc-ad971b7464e0/2.142.2/icon"
+			},
+			"id": "XamariniOS",
+			"name": "Xamarin.iOS",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted macOS",
+			"iconTaskId": "0f077e3a-af59-496d-81bc-ad971b7464e0",
+			"description": "Build a Xamarin.iOS app and Xamarin.UITest assembly. Test on real devices with App Center.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					},
+					"BuildConfiguration": {
+						"value": "Release",
+						"allowOverride": true
+					},
+					"P12password": {
+						"value": null,
+						"isSecret": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "d2eff759-736d-4b7b-8554-7ba0960d49d6",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"certPwd": "$(P12password)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Use NuGet 4.5",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2c65196a-54fd-4a02-9be8-d9d1837b7c5d",
+										"versionSpec": "0.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"versionSpec": "4.5",
+										"checkLatest": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"command": "restore",
+										"solution": "$(Parameters.solution)",
+										"selectOrConfig": "select",
+										"includeNuGetOrg": "true"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Select Xamarin SDK version",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+										"versionSpec": "3.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"targetType": "inline",
+										"script": "# To manually select a Xamarin SDK version on the Hosted macOS agent, run this script with the SDK version you want to target\n# https://go.microsoft.com/fwlink/?linkid=871629 \n\nsudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 5_4_1"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "0f077e3a-af59-496d-81bc-ad971b7464e0",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"solution": "$(Parameters.solution)",
+										"configuration": "$(BuildConfiguration)",
+										"forSimulator": "true",
+										"runNugetRestore": "false",
+										"buildTool": "msbuild"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SourceFolder": "$(system.defaultworkingdirectory)",
+										"Contents": "**/*.ipa",
+										"TargetFolder": "$(build.artifactstagingdirectory)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.artifactstagingdirectory)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "ad5cd22a-be4e-48bb-adce-181a32432da5",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"app": "$(Parameters.appFiles)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "b832bec5-8c27-4fef-9fb8-6bec8524ad8a",
+										"versionSpec": "0.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"app": "$(Parameters.appFiles)"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"name": "solution",
+							"label": "Solution to build",
+							"defaultValue": "**/*.sln",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": "Relative path from repo root of the Xamarin.iOS solution to build."
+						},
+						{
+							"name": "appFiles",
+							"label": "App File",
+							"defaultValue": "**/*.ipa",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": "Relative path from repo root of the files(s).  Wildcards can be used.  For example, `**\\\\bin\\\\*.apk` for all APK files in bin subfolder."
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/df857559-8715-46eb-a74e-ac98b9178aa0/1.0.16/icon"
+			},
+			"id": "android",
+			"name": "Android",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted VS2017",
+			"iconTaskId": "df857559-8715-46eb-a74e-ac98b9178aa0",
+			"description": "Build, test, sign, and align an Android APK.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "8d8eebd8-2b94-4c97-85af-839254cc6da4",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"wrapperScript": "$(Parameters.wrapperScript)",
+										"tasks": "$(Parameters.tasks)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "80f3f6a0-82a6-4a22-ba7a-e5b8c541b9b9",
+										"versionSpec": "3.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"files": "**/*.apk",
+										"apksign": "false",
+										"zipalign": "false"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SourceFolder": "$(system.defaultworkingdirectory)",
+										"Contents": "**/*.apk",
+										"TargetFolder": "$(build.artifactstagingdirectory)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.artifactstagingdirectory)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "ad5cd22a-be4e-48bb-adce-181a32432da5",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"app": "**/*.apk"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "b832bec5-8c27-4fef-9fb8-6bec8524ad8a",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"app": "**/*.apk"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"name": "wrapperScript",
+							"label": "Gradle Wrapper",
+							"defaultValue": "gradlew",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": ""
+						},
+						{
+							"name": "tasks",
+							"label": "Tasks",
+							"defaultValue": "build",
+							"required": true,
+							"type": "string",
+							"helpMarkDown": ""
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/3a6a2d63-f2b2-4e93-bcf9-0cbe22f5dc26/1.143.1/icon"
+			},
+			"id": "ant",
+			"name": "Ant",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted Ubuntu 1604",
+			"iconTaskId": "3a6a2d63-f2b2-4e93-bcf9-0cbe22f5dc26",
+			"description": "Build and test a Java project with Apache Ant.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "3a6a2d63-f2b2-4e93-bcf9-0cbe22f5dc26",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"antBuildFile": "$(Parameters.antBuildFile)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SourceFolder": "$(system.defaultworkingdirectory)",
+										"Contents": "**/*.jar",
+										"TargetFolder": "$(build.artifactstagingdirectory)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.artifactstagingdirectory)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"name": "antBuildFile",
+							"label": "Ant build file",
+							"defaultValue": "build.xml",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": ""
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/8d8eebd8-2b94-4c97-85af-839254cc6da4/2.143.2/icon"
+			},
+			"id": "gradle",
+			"name": "Gradle",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted VS2017",
+			"iconTaskId": "8d8eebd8-2b94-4c97-85af-839254cc6da4",
+			"description": "Build and test a Java project with Gradle.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "8d8eebd8-2b94-4c97-85af-839254cc6da4",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"wrapperScript": "$(Parameters.wrapperScript)",
+										"tasks": "$(Parameters.tasks)",
+										"testResultsFiles": "**/TEST-*.xml"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SourceFolder": "$(system.defaultworkingdirectory)",
+										"Contents": "**/*.jar",
+										"TargetFolder": "$(build.artifactstagingdirectory)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.artifactstagingdirectory)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"name": "wrapperScript",
+							"label": "Gradle wrapper",
+							"defaultValue": "gradlew",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": "Relative path from the repository root to the Gradle Wrapper script.",
+							"visibleRule": "",
+							"groupName": ""
+						},
+						{
+							"name": "tasks",
+							"label": "Tasks",
+							"defaultValue": "build",
+							"required": true,
+							"type": "string",
+							"helpMarkDown": "",
+							"visibleRule": "",
+							"groupName": ""
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/ac4ee482-65da-4485-a532-7b085873e532/3.143.3/icon"
+			},
+			"id": "maven",
+			"name": "Maven",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted Ubuntu 1604",
+			"iconTaskId": "ac4ee482-65da-4485-a532-7b085873e532",
+			"description": "Build and test a Java project with Apache Maven.",
+			"template": {
+				"options": [
+					{
+						"enabled": true,
+						"definition": {
+							"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+						},
+						"inputs": {
+							
+						}
+					}
+				],
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "ac4ee482-65da-4485-a532-7b085873e532",
+										"versionSpec": "3.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"mavenPOMFile": "$(Parameters.mavenPOMFile)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+										"versionSpec": "2.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SourceFolder": "$(system.defaultworkingdirectory)",
+										"Contents": "**/*.jar",
+										"TargetFolder": "$(build.artifactstagingdirectory)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "1.*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.artifactstagingdirectory)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"processParameters": {
+					"inputs": [
+						{
+							"name": "mavenPOMFile",
+							"label": "Maven POM file",
+							"defaultValue": "pom.xml",
+							"required": true,
+							"type": "filePath",
+							"helpMarkDown": ""
+						}
+					]
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/497d490f-eea7-4f2b-ab94-48d9c1acdcb1/4.3.15/icon"
+			},
+			"id": "javaazureweb",
+			"name": "Azure Web App for Java",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted VS2017",
+			"iconTaskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+			"description": "Build a Java WAR file and deploy it to an Azure Web App.",
+			"template": {
+				"variables": {
+					"system.debug": {
+						"value": "false",
+						"allowOverride": true
+					}
+				},
+				"properties": {
+					
+				},
+				"tags": [],
+				"_links": {
+					"self": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0"
+					},
+					"web": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"
+					},
+					"editor": {
+						"href": "https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"
+					},
+					"badge": {
+						"href": "https://dev.azure.com/eto-dev/_apis/build/status/0"
+					}
+				},
+				"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+				"jobAuthorizationScope": "projectCollection",
+				"process": {
+					"phases": [
+						{
+							"steps": [
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "ac4ee482-65da-4485-a532-7b085873e532",
+										"versionSpec": "*",
+										"definitionType": null
+									},
+									"inputs": {
+										
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "3a6a2d63-f2b2-4e93-bcf9-0cbe22f5dc26",
+										"versionSpec": "*",
+										"definitionType": null
+									},
+									"inputs": {
+										"antBuildFile": "build.xml"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "8d8eebd8-2b94-4c97-85af-839254cc6da4",
+										"versionSpec": "*",
+										"definitionType": null
+									},
+									"inputs": {
+										
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"displayName": "Copy files to staging folder",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+										"versionSpec": "*",
+										"definitionType": null
+									},
+									"inputs": {
+										"SourceFolder": "$(system.defaultworkingdirectory)",
+										"Contents": "**/*.war",
+										"TargetFolder": "$(build.artifactstagingdirectory)"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": true,
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+										"versionSpec": "*",
+										"definitionType": null
+									},
+									"inputs": {
+										"PathtoPublish": "$(build.artifactstagingdirectory)",
+										"ArtifactName": "drop",
+										"ArtifactType": "Container"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Stop Azure Web App",
+									"timeoutInMinutes": 0,
+									"condition": "succeeded()",
+									"task": {
+										"id": "f045e430-8704-11e6-968f-e717e6411619",
+										"versionSpec": "*",
+										"definitionType": null
+									},
+									"inputs": {
+										"Action": "Stop Azure App Service"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Deploy Azure Web App",
+									"timeoutInMinutes": 0,
+									"task": {
+										"id": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+										"versionSpec": "*",
+										"definitionType": null
+									},
+									"inputs": {
+										"Package": "$(build.artifactstagingdirectory)/**/*.war"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": true,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Start Azure Web App",
+									"timeoutInMinutes": 0,
+									"condition": "succeeded()",
+									"task": {
+										"id": "f045e430-8704-11e6-968f-e717e6411619",
+										"versionSpec": "*",
+										"definitionType": null
+									},
+									"inputs": {
+										"Action": "Start Azure App Service"
+									}
+								},
+								{
+									"environment": {
+										
+									},
+									"enabled": false,
+									"continueOnError": false,
+									"alwaysRun": false,
+									"displayName": "Swap Azure Web App slots",
+									"timeoutInMinutes": 0,
+									"condition": "succeeded()",
+									"task": {
+										"id": "f045e430-8704-11e6-968f-e717e6411619",
+										"versionSpec": "*",
+										"definitionType": null
+									},
+									"inputs": {
+										"Action": "Swap Slots"
+									}
+								}
+							],
+							"name": null,
+							"refName": null,
+							"jobAuthorizationScope": 0
+						}
+					],
+					"type": 1
+				},
+				"drafts": [],
+				"url": "https://dev.azure.com/eto-dev/_apis/build/Definitions/0",
+				"uri": "vstfs:///Build/Definition/0",
+				"type": "build",
+				"queueStatus": "enabled",
+				"project": {
+					"name": "",
+					"state": "unchanged",
+					"visibility": "unchanged"
+				}
+			}
+		},
+		{
+			"icons": {
+				"image/png": "https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/97ef6e59-b8cc-48aa-9937-1a01e35e7584/2.4.2/icon"
+			},
+			"id": "ServiceFabricApplication",
+			"name": "Azure Service Fabric application",
+			"canDelete": false,
+			"category": "Build",
+			"defaultHostedQueue": "Hosted VS2017",
+			"iconTaskId": "97ef6e59-b8cc-48aa-9937-1a01e35e7584",
+			"description": "Build and package an Azure Service Fabric application.",
+			"template": 
+	[{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/71a9a2d3-a98a-4caa-96ab-affca411ecda/1.126.2/icon"},"id":"vsBuild","name":".NET Desktop","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"71a9a2d3-a98a-4caa-96ab-affca411ecda","description":"Build and test a .NET or Windows classic desktop solution.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"release","allowOverride":true},"BuildPlatform":{"value":"any cpu","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":null},"inputs":{"command":"restore","solution":"$(Parameters.solution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":null},"inputs":{"solution":"$(Parameters.solution)","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"ef087383-ee5e-42c7-9a53-ab56c98420f9","versionSpec":"2.*","definitionType":null},"inputs":{"testAssemblyVer2":"**\\$(BuildConfiguration)\\*test*.dll\n!**\\obj\\**","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)"}},{"environment":{},"enabled":true,"continueOnError":true,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"0675668a-7bba-4ccb-901d-5ad6554ca653","versionSpec":"2.*","definitionType":null},"inputs":{"SearchPattern":"**\\bin\\**\\*.pdb","SymbolsArtifactName":"Symbols_$(BuildConfiguration)","SymbolServerType":"TeamServices","PublishSymbols":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(system.defaultworkingdirectory)","Contents":"**\\bin\\$(BuildConfiguration)\\**","TargetFolder":"$(build.artifactstagingdirectory)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"name":"solution","label":"Solution","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"The path to the Visual Studio solution file or NuGet packages.config. Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders."}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/71a9a2d3-a98a-4caa-96ab-affca411ecda/1.126.2/icon"},"id":"UniversalWindowsPlatform","name":"Universal Windows Platform","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"71a9a2d3-a98a-4caa-96ab-affca411ecda","description":"Build and test a Universal Windows Platform application using Visual Studio.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"BuildConfiguration":{"value":"release","allowOverride":true},"BuildPlatform":{"value":"x86|x64|ARM","allowOverride":true},"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"NuGet restore **\\*.sln","timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":"task"},"inputs":{"solution":"$(Parameters.solution)","selectOrConfig":"select","feed":"","includeNuGetOrg":"true","nugetConfigPath":"","noCache":"false","packagesDirectory":"","verbosity":"-"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Build solution **\\*.sln","timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":"task"},"inputs":{"solution":"$(Parameters.solution)","vsVersion":"15.0","msbuildArgs":"/p:AppxBundlePlatforms=\"$(BuildPlatform)\" /p:AppxPackageDir=\"$(Build.ArtifactStagingDirectory)\\AppxPackages\\\\\" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload","platform":"x86","configuration":"$(BuildConfiguration)","clean":"false","maximumCpuCount":"false","restoreNugetPackages":"false","msbuildArchitecture":"x86","logProjectEvents":"true","createLogFile":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"displayName":"Publish artifact: drop","timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":"task"},"inputs":{"PathtoPublish":"$(Build.ArtifactStagingDirectory)\\AppxPackages","ArtifactName":"drop","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"b832bec5-8c27-4fef-9fb8-6bec8524ad8a","versionSpec":"0.*","definitionType":null},"inputs":{}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"solution","label":"Solution","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.","visibleRule":"","groupName":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/2ca8fe15-42ea-4b26-80f1-e0738ec17e89/1.3.11/icon"},"id":"AzureCloud","name":"Azure Cloud Services","canDelete":false,"category":"Deployment","defaultHostedQueue":"Hosted VS2017","iconTaskId":"2ca8fe15-42ea-4b26-80f1-e0738ec17e89","description":"Build, package, test, and deploy an Azure Cloud Service.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"triggers":[{"branchFilters":[],"pathFilters":[],"batchChanges":false,"maxConcurrentBuildsPerBranch":1,"triggerType":"continuousIntegration"}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"release","allowOverride":true},"BuildPlatform":{"value":"any cpu","allowOverride":true},"targetProfile":{"value":"Cloud","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":null},"inputs":{"command":"restore","solution":"$(Parameters.solution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":null},"inputs":{"solution":"$(Parameters.solution)","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":null},"inputs":{"solution":"$(Parameters.CloudServiceProject)","msbuildArgs":"/t:Publish /p:TargetProfile=$(targetProfile) /p:DebugType=None /p:SkipInvalidConfigurations=true /p:OutputPath=bin\\ /p:PublishDir=\"$(build.artifactstagingdirectory)\\\\\"","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"ef087383-ee5e-42c7-9a53-ab56c98420f9","versionSpec":"2.*","definitionType":null},"inputs":{"testAssemblyVer2":"**\\$(BuildConfiguration)\\*test*.dll\n!**\\obj\\**","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"2ca8fe15-42ea-4b26-80f1-e0738ec17e89","versionSpec":"1.*","definitionType":null},"inputs":{"CsPkg":"$(build.artifactstagingdirectory)\\*.cspkg","CsCfg":"$(build.artifactstagingdirectory)\\*.cscfg","DeploymentLabel":"$(Build.BuildNumber)","ConnectedServiceName":"$(Parameters.ConnectedServiceName)","StorageAccount":"$(Parameters.StorageAccount)","ServiceName":"$(Parameters.ServiceName)","ServiceLocation":"$(Parameters.ServiceLocation)"}},{"environment":{},"enabled":true,"continueOnError":true,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"0675668a-7bba-4ccb-901d-5ad6554ca653","versionSpec":"2.*","definitionType":null},"inputs":{"SearchPattern":"**\\bin\\**\\*.pdb","SymbolsArtifactName":"Symbols_$(BuildConfiguration)","SymbolServerType":"TeamServices","PublishSymbols":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"solution","label":"Solution","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"CloudServiceProject","label":"Azure service project","defaultValue":"**\\*.ccproj","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"ConnectedServiceName","label":"Azure subscription (Classic)","defaultValue":"","required":true,"type":"connectedService:Azure:Certificate,UsernamePassword","helpMarkDown":"Azure Classic subscription to target for deployment.","visibleRule":"","groupName":""},{"options":{},"properties":{"EditableOptions":"True"},"name":"StorageAccount","label":"Storage account","defaultValue":"","required":true,"type":"pickList","helpMarkDown":"Storage account must exist prior to deployment.","visibleRule":"","groupName":""},{"options":{},"properties":{"EditableOptions":"True"},"name":"ServiceName","label":"Service name","defaultValue":"","required":true,"type":"pickList","helpMarkDown":"Select or enter an existing cloud service name.","visibleRule":"","groupName":""},{"options":{},"properties":{"EditableOptions":"True"},"name":"ServiceLocation","label":"Service location","defaultValue":"","required":true,"type":"pickList","helpMarkDown":"Select a region for new service deployment. Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.","visibleRule":"","groupName":""}],"dataSourceBindings":[{"dataSourceName":"AzureStorageServiceNames","parameters":{},"endpointId":"$(ConnectedServiceName)","target":"StorageAccount"},{"dataSourceName":"AzureHostedServiceNames","parameters":{},"endpointId":"$(ConnectedServiceName)","target":"ServiceName"},{"dataSourceName":"AzureLocations","parameters":{},"endpointId":"$(ConnectedServiceName)","target":"ServiceLocation"}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/497d490f-eea7-4f2b-ab94-48d9c1acdcb1/4.3.15/icon"},"id":"AzureWeb","name":"Azure Web App for ASP.NET","canDelete":false,"category":"Deployment","defaultHostedQueue":"Hosted VS2017","iconTaskId":"497d490f-eea7-4f2b-ab94-48d9c1acdcb1","description":"Build, package, test, and deploy an ASP.NET Azure Web App.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"triggers":[{"branchFilters":[],"pathFilters":[],"batchChanges":false,"maxConcurrentBuildsPerBranch":1,"triggerType":"continuousIntegration"}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"release","allowOverride":true},"BuildPlatform":{"value":"any cpu","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":null},"inputs":{"command":"restore","solution":"$(Parameters.solution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":null},"inputs":{"solution":"$(Parameters.solution)","msbuildArgs":"/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation=\"$(build.artifactstagingdirectory)\\\\\"","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"ef087383-ee5e-42c7-9a53-ab56c98420f9","versionSpec":"2.*","definitionType":null},"inputs":{"testAssemblyVer2":"**\\$(BuildConfiguration)\\*test*.dll\n!**\\obj\\**","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"497d490f-eea7-4f2b-ab94-48d9c1acdcb1","versionSpec":"3.*","definitionType":null},"inputs":{"Package":"$(build.artifactstagingdirectory)/**/*.zip","ConnectedServiceName":"$(Parameters.connectedServiceName)","WebAppName":"$(Parameters.WebAppName)"}},{"environment":{},"enabled":true,"continueOnError":true,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"0675668a-7bba-4ccb-901d-5ad6554ca653","versionSpec":"2.*","definitionType":null},"inputs":{"SearchPattern":"**\\bin\\**\\*.pdb","SymbolsArtifactName":"Symbols_$(BuildConfiguration)","SymbolServerType":"TeamServices","PublishSymbols":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"solution","label":"Solution","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"connectedServiceName","label":"Azure subscription","defaultValue":"","required":true,"type":"connectedService:AzureRM","helpMarkDown":"Select the Azure Resource Manager subscription for the deployment","visibleRule":"","groupName":""},{"options":{},"properties":{"EditableOptions":"True"},"name":"WebAppName","label":"App service name","defaultValue":"","required":true,"type":"pickList","helpMarkDown":"Enter or select the name of an existing Azure App Service","visibleRule":"","groupName":""}],"dataSourceBindings":[{"dataSourceName":"AzureRMWebAppNames","parameters":{},"endpointId":"$(connectedServiceName)","target":"WebAppName"}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/1e78dc1b-9132-4b18-9c75-0e7ecc634b74/5.142.1/icon"},"id":"Xcode","name":"Xcode","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted macOS","iconTaskId":"1e78dc1b-9132-4b18-9c75-0e7ecc634b74","description":"Build, test, archive, or package an Xcode workspace on macOS.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true},"Configuration":{"value":"Release","allowOverride":true},"SDK":{"value":"iphoneos","allowOverride":true},"TestSDK":{"value":"iphonesimulator","allowOverride":true},"TestConfiguration":{"value":"Debug","allowOverride":true},"P12password":{"value":null,"isSecret":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"d2eff759-736d-4b7b-8554-7ba0960d49d6","versionSpec":"2.*","definitionType":null},"inputs":{"certPwd":"$(P12password)"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"0f9f66ca-250e-40fd-9678-309bcd439d5e","versionSpec":"1.*","definitionType":null},"inputs":{}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"1e78dc1b-9132-4b18-9c75-0e7ecc634b74","versionSpec":"5.*","definitionType":null},"inputs":{"actions":"test","configuration":"$(TestConfiguration)","sdk":"$(TestSDK)","xcWorkspacePath":"$(Parameters.xcWorkspacePath)","scheme":"$(Parameters.scheme)","xcodeVersion":"$(Parameters.xcodeVersion)","xcodeDeveloperDir":"$(Parameters.xcodeDeveloperDir)","signingOption":"default","packageApp":"false","destinationPlatformOption":"iOS","publishJUnitResults":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"1e78dc1b-9132-4b18-9c75-0e7ecc634b74","versionSpec":"5.*","definitionType":null},"inputs":{"actions":"build","configuration":"$(Configuration)","sdk":"$(SDK)","xcWorkspacePath":"$(Parameters.xcWorkspacePath)","scheme":"$(Parameters.scheme)","xcodeVersion":"$(Parameters.xcodeVersion)","xcodeDeveloperDir":"$(Parameters.xcodeDeveloperDir)","exportPath":"output/$(SDK)/$(Configuration)","publishJUnitResults":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(system.defaultworkingdirectory)","Contents":"**/*.ipa","TargetFolder":"$(build.artifactstagingdirectory)","CleanTargetFolder":"false","OverWrite":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"ad5cd22a-be4e-48bb-adce-181a32432da5","versionSpec":"1.*","definitionType":null},"inputs":{"app":"**/*.ipa"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"b832bec5-8c27-4fef-9fb8-6bec8524ad8a","versionSpec":"0.*","definitionType":null},"inputs":{"app":"**/*.ipa"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"name":"xcWorkspacePath","label":"Workspace or project path","defaultValue":"**/*.xcodeproj/project.xcworkspace","type":"filePath","helpMarkDown":"(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcodeproj`."},{"name":"scheme","label":"Scheme","defaultValue":"","type":"string","helpMarkDown":"(Optional) Enter a scheme name defined in Xcode. It must be a shared scheme, with its <strong>Shared</strong> checkbox enabled under <strong>Managed Schemes</strong> in Xcode. If you specify a <strong>Workspace or project path</strong> above without specifying a scheme, and the workspace has a single shared scheme, it will be automatically used."},{"options":{"default":"Default","8":"Xcode 8","9":"Xcode 9","10":"Xcode 10","specifyPath":"Specify path"},"name":"xcodeVersion","label":"Xcode version","defaultValue":"default","type":"pickList","helpMarkDown":"Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory."},{"name":"xcodeDeveloperDir","label":"Xcode developer path","defaultValue":"","type":"string","helpMarkDown":"(Optional) Enter a path to a specific Xcode developer directory (e.g. `/Applications/Xcode_9.0.0.app/Contents/Developer`). This is useful when multiple versions of Xcode are installed on the agent machine.","visibleRule":"xcodeVersion == specifyPath"}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{},"id":"blank","name":"Empty pipeline","canDelete":false,"category":"Empty","defaultHostedQueue":"Hosted VS2017","description":"Start with an empty pipeline and add your own steps.","template":{"variables":{"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"jobAuthorizationScope":"projectCollection","process":{"phases":[{"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/27edd013-36fd-43aa-96a3-7d73e1e35285/1.143.1/icon"},"id":"XamarinAndroid","name":"Xamarin.Android","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"27edd013-36fd-43aa-96a3-7d73e1e35285","description":"Build an Android app and Xamarin.UITest assembly. Test on real devices with App Center.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"Release"}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":null},"inputs":{"command":"restore","solution":"$(Parameters.restorePkgSolution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"27edd013-36fd-43aa-96a3-7d73e1e35285","versionSpec":"1.*","definitionType":null},"inputs":{"project":"**/*Droid*.csproj","outputDir":"$(build.binariesdirectory)/$(BuildConfiguration)","configuration":"$(BuildConfiguration)"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"c6c4c611-aa2e-4a33-b606-5eaba2196824","versionSpec":"1.*","definitionType":null},"inputs":{"solution":"**/*test*.csproj","configuration":"$(BuildConfiguration)","msbuildArguments":"/p:OutputPath=\"$(build.binariesdirectory)/$(BuildConfiguration)/test-assembly\"","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"80f3f6a0-82a6-4a22-ba7a-e5b8c541b9b9","versionSpec":"3.*","definitionType":null},"inputs":{"files":"$(Parameters.appFiles)","apksign":"false","zipalign":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.binariesdirectory)/$(BuildConfiguration)","ArtifactName":"drop","ArtifactType":"Container"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"ad5cd22a-be4e-48bb-adce-181a32432da5","versionSpec":"1.*","definitionType":null},"inputs":{"app":"$(Parameters.appFiles)"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"b832bec5-8c27-4fef-9fb8-6bec8524ad8a","versionSpec":"0.*","definitionType":null},"inputs":{"app":"$(Parameters.appFiles)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"name":"restorePkgSolution","label":"Solution to restore packages","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"The path to the Visual Studio Solution file"},{"name":"appFiles","label":"App File","defaultValue":"$(build.binariesdirectory)/$(BuildConfiguration)/*.apk","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the files(s).  Wildcards can be used.  For example, `**\\\\bin\\\\*.apk` for all APK files in bin subfolder."}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/0f077e3a-af59-496d-81bc-ad971b7464e0/2.142.2/icon"},"id":"XamariniOS","name":"Xamarin.iOS","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted macOS","iconTaskId":"0f077e3a-af59-496d-81bc-ad971b7464e0","description":"Build a Xamarin.iOS app and Xamarin.UITest assembly. Test on real devices with App Center.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"Release","allowOverride":true},"P12password":{"value":null,"isSecret":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"d2eff759-736d-4b7b-8554-7ba0960d49d6","versionSpec":"2.*","definitionType":null},"inputs":{"certPwd":"$(P12password)"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"0f9f66ca-250e-40fd-9678-309bcd439d5e","versionSpec":"1.*","definitionType":null},"inputs":{}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.5","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":null},"inputs":{"versionSpec":"4.5","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":null},"inputs":{"command":"restore","solution":"$(Parameters.solution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":false,"displayName":"Select Xamarin SDK version","timeoutInMinutes":0,"task":{"id":"6c731c3c-3c68-459a-a5c9-bde6e6595b5b","versionSpec":"3.*","definitionType":null},"inputs":{"targetType":"inline","script":"# To manually select a Xamarin SDK version on the Hosted macOS agent, run this script with the SDK version you want to target\n# https://go.microsoft.com/fwlink/?linkid=871629 \n\nsudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 5_4_1"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"0f077e3a-af59-496d-81bc-ad971b7464e0","versionSpec":"2.*","definitionType":null},"inputs":{"solution":"$(Parameters.solution)","configuration":"$(BuildConfiguration)","forSimulator":"true","runNugetRestore":"false","buildTool":"msbuild"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(system.defaultworkingdirectory)","Contents":"**/*.ipa","TargetFolder":"$(build.artifactstagingdirectory)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"ad5cd22a-be4e-48bb-adce-181a32432da5","versionSpec":"1.*","definitionType":null},"inputs":{"app":"$(Parameters.appFiles)"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"b832bec5-8c27-4fef-9fb8-6bec8524ad8a","versionSpec":"0.*","definitionType":null},"inputs":{"app":"$(Parameters.appFiles)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"name":"solution","label":"Solution to build","defaultValue":"**/*.sln","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the Xamarin.iOS solution to build."},{"name":"appFiles","label":"App File","defaultValue":"**/*.ipa","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the files(s).  Wildcards can be used.  For example, `**\\\\bin\\\\*.apk` for all APK files in bin subfolder."}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/df857559-8715-46eb-a74e-ac98b9178aa0/1.0.16/icon"},"id":"android","name":"Android","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"df857559-8715-46eb-a74e-ac98b9178aa0","description":"Build, test, sign, and align an Android APK.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"8d8eebd8-2b94-4c97-85af-839254cc6da4","versionSpec":"2.*","definitionType":null},"inputs":{"wrapperScript":"$(Parameters.wrapperScript)","tasks":"$(Parameters.tasks)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"80f3f6a0-82a6-4a22-ba7a-e5b8c541b9b9","versionSpec":"3.*","definitionType":null},"inputs":{"files":"**/*.apk","apksign":"false","zipalign":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(system.defaultworkingdirectory)","Contents":"**/*.apk","TargetFolder":"$(build.artifactstagingdirectory)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"ad5cd22a-be4e-48bb-adce-181a32432da5","versionSpec":"1.*","definitionType":null},"inputs":{"app":"**/*.apk"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"b832bec5-8c27-4fef-9fb8-6bec8524ad8a","versionSpec":"1.*","definitionType":null},"inputs":{"app":"**/*.apk"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"name":"wrapperScript","label":"Gradle Wrapper","defaultValue":"gradlew","required":true,"type":"filePath","helpMarkDown":""},{"name":"tasks","label":"Tasks","defaultValue":"build","required":true,"type":"string","helpMarkDown":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/3a6a2d63-f2b2-4e93-bcf9-0cbe22f5dc26/1.143.1/icon"},"id":"ant","name":"Ant","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted Ubuntu 1604","iconTaskId":"3a6a2d63-f2b2-4e93-bcf9-0cbe22f5dc26","description":"Build and test a Java project with Apache Ant.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"3a6a2d63-f2b2-4e93-bcf9-0cbe22f5dc26","versionSpec":"1.*","definitionType":null},"inputs":{"antBuildFile":"$(Parameters.antBuildFile)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(system.defaultworkingdirectory)","Contents":"**/*.jar","TargetFolder":"$(build.artifactstagingdirectory)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"name":"antBuildFile","label":"Ant build file","defaultValue":"build.xml","required":true,"type":"filePath","helpMarkDown":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/8d8eebd8-2b94-4c97-85af-839254cc6da4/2.143.2/icon"},"id":"gradle","name":"Gradle","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"8d8eebd8-2b94-4c97-85af-839254cc6da4","description":"Build and test a Java project with Gradle.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"8d8eebd8-2b94-4c97-85af-839254cc6da4","versionSpec":"2.*","definitionType":null},"inputs":{"wrapperScript":"$(Parameters.wrapperScript)","tasks":"$(Parameters.tasks)","testResultsFiles":"**/TEST-*.xml"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(system.defaultworkingdirectory)","Contents":"**/*.jar","TargetFolder":"$(build.artifactstagingdirectory)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"name":"wrapperScript","label":"Gradle wrapper","defaultValue":"gradlew","required":true,"type":"filePath","helpMarkDown":"Relative path from the repository root to the Gradle Wrapper script.","visibleRule":"","groupName":""},{"name":"tasks","label":"Tasks","defaultValue":"build","required":true,"type":"string","helpMarkDown":"","visibleRule":"","groupName":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/ac4ee482-65da-4485-a532-7b085873e532/3.143.3/icon"},"id":"maven","name":"Maven","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted Ubuntu 1604","iconTaskId":"ac4ee482-65da-4485-a532-7b085873e532","description":"Build and test a Java project with Apache Maven.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"ac4ee482-65da-4485-a532-7b085873e532","versionSpec":"3.*","definitionType":null},"inputs":{"mavenPOMFile":"$(Parameters.mavenPOMFile)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(system.defaultworkingdirectory)","Contents":"**/*.jar","TargetFolder":"$(build.artifactstagingdirectory)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"name":"mavenPOMFile","label":"Maven POM file","defaultValue":"pom.xml","required":true,"type":"filePath","helpMarkDown":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/497d490f-eea7-4f2b-ab94-48d9c1acdcb1/4.3.15/icon"},"id":"javaazureweb","name":"Azure Web App for Java","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"497d490f-eea7-4f2b-ab94-48d9c1acdcb1","description":"Build a Java WAR file and deploy it to an Azure Web App.","template":{"variables":{"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"ac4ee482-65da-4485-a532-7b085873e532","versionSpec":"*","definitionType":null},"inputs":{}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"3a6a2d63-f2b2-4e93-bcf9-0cbe22f5dc26","versionSpec":"*","definitionType":null},"inputs":{"antBuildFile":"build.xml"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"8d8eebd8-2b94-4c97-85af-839254cc6da4","versionSpec":"*","definitionType":null},"inputs":{}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"displayName":"Copy files to staging folder","timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"*","definitionType":null},"inputs":{"SourceFolder":"$(system.defaultworkingdirectory)","Contents":"**/*.war","TargetFolder":"$(build.artifactstagingdirectory)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Stop Azure Web App","timeoutInMinutes":0,"condition":"succeeded()","task":{"id":"f045e430-8704-11e6-968f-e717e6411619","versionSpec":"*","definitionType":null},"inputs":{"Action":"Stop Azure App Service"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Deploy Azure Web App","timeoutInMinutes":0,"task":{"id":"497d490f-eea7-4f2b-ab94-48d9c1acdcb1","versionSpec":"*","definitionType":null},"inputs":{"Package":"$(build.artifactstagingdirectory)/**/*.war"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Start Azure Web App","timeoutInMinutes":0,"condition":"succeeded()","task":{"id":"f045e430-8704-11e6-968f-e717e6411619","versionSpec":"*","definitionType":null},"inputs":{"Action":"Start Azure App Service"}},{"environment":{},"enabled":false,"continueOnError":false,"alwaysRun":false,"displayName":"Swap Azure Web App slots","timeoutInMinutes":0,"condition":"succeeded()","task":{"id":"f045e430-8704-11e6-968f-e717e6411619","versionSpec":"*","definitionType":null},"inputs":{"Action":"Swap Slots"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/97ef6e59-b8cc-48aa-9937-1a01e35e7584/2.4.2/icon"},"id":"ServiceFabricApplication","name":"Azure Service Fabric application","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"97ef6e59-b8cc-48aa-9937-1a01e35e7584","description":"Build and package an Azure Service Fabric application.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"triggers":[{"branchFilters":[],"pathFilters":[],"batchChanges":false,"maxConcurrentBuildsPerBranch":1,"triggerType":"continuousIntegration"}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"Release","allowOverride":true},"BuildPlatform":{"value":"x64"}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":null},"inputs":{"command":"restore","solution":"$(Parameters.solution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":null},"inputs":{"solution":"$(Parameters.solution)","msbuildArgs":"/p:Deterministic=true /p:PathMap=$(Agent.BuildDirectory)=C:\\","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":null},"inputs":{"solution":"$(Parameters.serviceFabricProject)","msbuildArgs":"/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\\applicationpackage","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(build.artifactstagingdirectory)\\applicationpackage","Contents":"**\\*.pdb","TargetFolder":"$(build.artifactstagingdirectory)\\pdbs","CleanTargetFolder":"false","OverWrite":"false","flattenFolders":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"b7e8b412-0437-4065-9371-edc5881de25b","versionSpec":"1.*","definitionType":null},"inputs":{"SourceFolder":"$(build.artifactstagingdirectory)\\applicationpackage","Contents":"**\\*.pdb"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"97ef6e59-b8cc-48aa-9937-1a01e35e7584","versionSpec":"2.*","definitionType":null},"inputs":{"applicationPackagePath":"$(build.artifactstagingdirectory)\\applicationpackage","versionSuffix":".$(build.buildnumber)","updateOnlyChanged":"true","pkgArtifactName":"drop","updateType":"Manifest versions"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(system.defaultworkingdirectory)","Contents":"**\\PublishProfiles\\*.xml\n**\\ApplicationParameters\\*.xml","TargetFolder":"$(build.artifactstagingdirectory)\\projectartifacts"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"solution","label":"Solution","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"serviceFabricProject","label":"Service Fabric project","defaultValue":"**\\*.sfproj","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.","visibleRule":"","groupName":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/97ef6e59-b8cc-48aa-9937-1a01e35e7584/2.4.2/icon"},"id":"ServiceFabricApplicationWithDocker","name":"Azure Service Fabric application with Docker support","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"97ef6e59-b8cc-48aa-9937-1a01e35e7584","description":"Build and package an Azure Service Fabric application that contains Docker images to be pushed to a container registry.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"triggers":[{"branchFilters":[],"pathFilters":[],"batchChanges":false,"maxConcurrentBuildsPerBranch":1,"triggerType":"continuousIntegration"}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"Release","allowOverride":true},"BuildPlatform":{"value":"x64"}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":null},"inputs":{"command":"restore","solution":"$(Parameters.solution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":null},"inputs":{"solution":"$(Parameters.solution)","msbuildArgs":"/p:Deterministic=true /p:PathMap=$(Agent.BuildDirectory)=C:\\","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":null},"inputs":{"solution":"$(Parameters.serviceFabricProject)","msbuildArgs":"/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\\applicationpackage;BuiltDockerImagesFilePath=$(build.artifactstagingdirectory)\\BuiltDockerImages.txt","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"e28912f1-0114-4464-802a-a3a35437fd16","versionSpec":"0.*","definitionType":null},"inputs":{"action":"Tag images","imageNamesPath":"$(build.artifactstagingdirectory)\\BuiltDockerImages.txt"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"e28912f1-0114-4464-802a-a3a35437fd16","versionSpec":"0.*","definitionType":null},"inputs":{"action":"Push images","imageNamesPath":"$(build.artifactstagingdirectory)\\BuiltDockerImages.txt","imageDigestFile":"$(build.artifactstagingdirectory)\\ImageDigests.txt"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(build.artifactstagingdirectory)\\applicationpackage","Contents":"**\\*.pdb","TargetFolder":"$(build.artifactstagingdirectory)\\pdbs","CleanTargetFolder":"false","OverWrite":"false","flattenFolders":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"b7e8b412-0437-4065-9371-edc5881de25b","versionSpec":"1.*","definitionType":null},"inputs":{"SourceFolder":"$(build.artifactstagingdirectory)\\applicationpackage","Contents":"**\\*.pdb"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"97ef6e59-b8cc-48aa-9937-1a01e35e7584","versionSpec":"2.*","definitionType":null},"inputs":{"applicationPackagePath":"$(build.artifactstagingdirectory)\\applicationpackage","updateType":"Docker image settings","imageNamesPath":"$(build.artifactstagingdirectory)\\BuiltDockerImages.txt","imageDigestsPath":"$(build.artifactstagingdirectory)\\ImageDigests.txt"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"97ef6e59-b8cc-48aa-9937-1a01e35e7584","versionSpec":"2.*","definitionType":null},"inputs":{"applicationPackagePath":"$(build.artifactstagingdirectory)\\applicationpackage","versionSuffix":".$(build.buildnumber)","updateOnlyChanged":"true","pkgArtifactName":"drop","updateType":"Manifest versions"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"$(system.defaultworkingdirectory)","Contents":"**\\PublishProfiles\\*.xml\n**\\ApplicationParameters\\*.xml","TargetFolder":"$(build.artifactstagingdirectory)\\projectartifacts"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"solution","label":"Solution","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"serviceFabricProject","label":"Service Fabric project","defaultValue":"**\\*.sfproj","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\\\*.sln` for all sln files in all sub folders.","visibleRule":"","groupName":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/c24b86d4-4256-4925-9a29-246f81aa64a7/2.142.2/icon"},"id":"jenkins","name":"Jenkins","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted Ubuntu 1604","iconTaskId":"c24b86d4-4256-4925-9a29-246f81aa64a7","description":"Queue a Jenkins job and download its artifacts.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"timeoutInMinutes":0,"task":{"id":"c24b86d4-4256-4925-9a29-246f81aa64a7","versionSpec":"1.*","definitionType":null},"inputs":{"jobName":"$(Parameters.jobName)","serverEndpoint":"$(Parameters.serverEndpoint)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"86c37a92-59a7-444b-93c7-220fcf91e29c","versionSpec":"1.*","definitionType":null},"inputs":{"saveTo":"$(Build.ArtifactStagingDirectory)","jobName":"$(Parameters.jobName)","serverEndpoint":"$(Parameters.serverEndpoint)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(Build.ArtifactStagingDirectory)","ArtifactName":"drop","ArtifactType":"Container"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"jobName","label":"Job name","defaultValue":"","required":true,"type":"string","helpMarkDown":"The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"serverEndpoint","label":"Jenkins service connection","defaultValue":"","required":true,"type":"connectedService:Jenkins","helpMarkDown":"Select the service connection for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins service connection.","visibleRule":"","groupName":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/9e9db38a-b40b-4c13-b7f0-31031c894c22/1.0.35/icon"},"id":"AzureIaaS","name":"Load test using Azure IaaS virtual machines","canDelete":false,"category":"Deployment","defaultHostedQueue":"Hosted VS2017","iconTaskId":"9e9db38a-b40b-4c13-b7f0-31031c894c22","description":"Create a rig on Azure IaaS virtual machines to run load tests using VSTS cloud-based load testing service.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true},"resourceGroupName":{"value":""},"VSTSAccountName":{"value":""},"VSTSPersonalAccessToken":{"value":""},"agentCount":{"value":"1"},"adminPassword":{"value":""},"adminUserName":{"value":""}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":true,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"94a74903-f93f-4075-884f-dc11f34058b4","versionSpec":"1.*","definitionType":"task"},"inputs":{"ConnectedServiceNameSelector":"ConnectedServiceName","ConnectedServiceName":"$(Parameters.connectedServiceName)","ConnectedServiceNameClassic":"","action":"Start","actionClassic":"Select Resource Group","resourceGroupName":"$(resourceGroupName)","location":"East US"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"94a74903-f93f-4075-884f-dc11f34058b4","versionSpec":"1.*","definitionType":"task"},"inputs":{"ConnectedServiceNameSelector":"ConnectedServiceName","ConnectedServiceName":"$(Parameters.connectedServiceName)","action":"Create Or Update Resource Group","actionClassic":"Select Resource Group","resourceGroupName":"$(resourceGroupName)","csmFile":"$(Parameters.csmFile)","location":"East US","overrideParameters":"-VSTSAccountName $(VSTSAccountName) -vstsPersonalAccessToken (ConvertTo-SecureString -String '$(VSTSPersonalAccessToken)' -AsPlainText -Force) -agentCount $(agentCount) -adminPassword (ConvertTo-SecureString -String '$(adminPassword)' -AsPlainText -Force) -adminUsername $(adminUserName)"}},{"environment":{},"enabled":true,"continueOnError":true,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"9e9db38a-b40b-4c13-b7f0-31031c894c22","versionSpec":"1.*","definitionType":"task"},"inputs":{"MachineType":"2","TestSettings":"$(Parameters.TestSettings)","TestDrop":"$(Parameters.TestDrop)","LoadTest":"$(Parameters.LoadTest)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"94a74903-f93f-4075-884f-dc11f34058b4","versionSpec":"1.*","definitionType":"task"},"inputs":{"ConnectedServiceNameSelector":"ConnectedServiceName","ConnectedServiceName":"$(Parameters.connectedServiceName)","action":"Stop","actionClassic":"Select Resource Group","resourceGroupName":"$(resourceGroupName)","location":"East US"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"connectedServiceName","label":"Azure subscription","defaultValue":"","required":true,"type":"connectedService:AzureRM","helpMarkDown":"Select the Azure Resource Manager subscription for the deployment.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"csmFile","label":"Azure template","defaultValue":"","required":true,"type":"filePath","helpMarkDown":"Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"LoadTest","label":"Load test file","defaultValue":"","required":true,"type":"string","helpMarkDown":"The load test filename to be used under the load test folder specified above.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"TestDrop","label":"Load test files folder","defaultValue":"","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root where the load test solution build output will be available.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"TestSettings","label":"Test settings file","defaultValue":"","required":true,"type":"filePath","helpMarkDown":"Relative path from repo root for the test settings file to use for the load test.","visibleRule":"","groupName":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/71a9a2d3-a98a-4caa-96ab-affca411ecda/1.126.2/icon"},"id":"AspNetBuild","name":"ASP.NET","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"71a9a2d3-a98a-4caa-96ab-affca411ecda","description":"Build and test an ASP.NET web application.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"release","allowOverride":true},"BuildPlatform":{"value":"any cpu","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"NuGet restore","timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":"task"},"inputs":{"command":"restore","solution":"$(Parameters.solution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Build solution","timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":"task"},"inputs":{"solution":"$(Parameters.solution)","msbuildArgs":"/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation=\"$(build.artifactstagingdirectory)\\\\\"","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","clean":"false","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Test Assemblies","timeoutInMinutes":0,"task":{"id":"ef087383-ee5e-42c7-9a53-ab56c98420f9","versionSpec":"2.*","definitionType":"task"},"inputs":{"testAssemblyVer2":"**\\$(BuildConfiguration)\\*test*.dll\n!**\\obj\\**","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)"}},{"environment":{},"enabled":true,"continueOnError":true,"alwaysRun":false,"displayName":"Publish symbols path","timeoutInMinutes":0,"task":{"id":"0675668a-7bba-4ccb-901d-5ad6554ca653","versionSpec":"2.*","definitionType":"task"},"inputs":{"SearchPattern":"**\\bin\\**\\*.pdb","SymbolsArtifactName":"Symbols_$(BuildConfiguration)","SymbolServerType":"TeamServices","PublishSymbols":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"displayName":"Publish Artifact","timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":"task"},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"$(Parameters.ArtifactName)","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"solution","label":"Path to solution or packages.config","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"The path to the Visual Studio solution file or NuGet packages.config","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"ArtifactName","label":"Artifact Name","defaultValue":"drop","required":true,"type":"string","helpMarkDown":"The name of the artifact to create.","visibleRule":"","groupName":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/5541a522-603c-47ad-91fc-a4b1d163081b/2.144.2/icon"},"id":"AspNetCore","name":"ASP.NET Core","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted Ubuntu 1604","iconTaskId":"5541a522-603c-47ad-91fc-a4b1d163081b","description":"Build and test an ASP.NET Core web application.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"Release","allowOverride":true},"BuildPlatform":{"value":"any cpu","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Restore","timeoutInMinutes":0,"task":{"id":"5541a522-603c-47ad-91fc-a4b1d163081b","versionSpec":"2.*","definitionType":"task"},"inputs":{"command":"restore","projects":"$(Parameters.RestoreBuildProjects)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Build","timeoutInMinutes":0,"task":{"id":"5541a522-603c-47ad-91fc-a4b1d163081b","versionSpec":"2.*","definitionType":"task"},"inputs":{"command":"build","projects":"$(Parameters.RestoreBuildProjects)","arguments":"--configuration $(BuildConfiguration)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Test","timeoutInMinutes":0,"task":{"id":"5541a522-603c-47ad-91fc-a4b1d163081b","versionSpec":"2.*","definitionType":"task"},"inputs":{"command":"test","projects":"$(Parameters.TestProjects)","arguments":"--configuration $(BuildConfiguration)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Publish","timeoutInMinutes":0,"task":{"id":"5541a522-603c-47ad-91fc-a4b1d163081b","versionSpec":"2.*","definitionType":"task"},"inputs":{"command":"publish","publishWebProjects":"True","zipAfterPublish":"True","projects":"$(Parameters.RestoreBuildProjects)","arguments":"--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"displayName":"Publish Artifact","timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":"task"},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"drop","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"RestoreBuildProjects","label":"Project(s) to restore and build","defaultValue":"**/*.csproj","type":"multiline","helpMarkDown":"Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the subfolders.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"TestProjects","label":"Project(s) to test","defaultValue":"**/*[Tt]ests/*.csproj","type":"multiline","helpMarkDown":"Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the subfolders.","visibleRule":"","groupName":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/fe47e961-9fa8-4106-8639-368c022d43ad/1.0.32/icon"},"id":"NodeJSWithGulp","name":"Node.js With gulp","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted Ubuntu 1604","iconTaskId":"fe47e961-9fa8-4106-8639-368c022d43ad","description":"Build a Node.js application using the gulp task runner.","template":{"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"npm install","timeoutInMinutes":0,"task":{"id":"fe47e961-9fa8-4106-8639-368c022d43ad","versionSpec":"1.*","definitionType":"task"},"inputs":{"command":"install"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Run gulp task","timeoutInMinutes":0,"task":{"id":"b82cfbe4-34f9-40f5-889e-c8842ca9dd9d","versionSpec":"0.*","definitionType":"task"},"inputs":{"gulpFile":"gulpfile.js","targets":"","arguments":"","cwd":"","gulpjs":"node_modules/gulp/bin/gulp.js","publishJUnitResults":"true","testResultsFiles":"**/TEST-*.xml","testRunTitle":"","enableCodeCoverage":"false","testFramework":"Mocha","srcFiles":"","testFiles":"test/*.js"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Archive files","timeoutInMinutes":0,"task":{"id":"d8b84976-e99a-4b86-b885-4849694435b0","versionSpec":"2.*","definitionType":"task"},"inputs":{"rootFolderOrFile":"$(System.DefaultWorkingDirectory)","includeRootFolder":"false","archiveType":"zip","tarCompression":"gz","archiveFile":"$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip","replaceExistingArchive":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Publish artifacts: drop","timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":"task"},"inputs":{"PathtoPublish":"$(Build.ArtifactStagingDirectory)","ArtifactName":"drop","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)","Parallel":"false","ParallelCount":"8"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/fe47e961-9fa8-4106-8639-368c022d43ad/1.0.32/icon"},"id":"NodeJSWithGrunt","name":"Node.js With Grunt","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted Ubuntu 1604","iconTaskId":"fe47e961-9fa8-4106-8639-368c022d43ad","description":"Build a Node.js application using the Grunt task runner.","template":{"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"npm install","timeoutInMinutes":0,"task":{"id":"fe47e961-9fa8-4106-8639-368c022d43ad","versionSpec":"1.*","definitionType":"task"},"inputs":{"command":"install"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Run Grunt task","timeoutInMinutes":0,"task":{"id":"521d1e15-f5fb-4b73-a93b-b2fe88a9a286","versionSpec":"0.*","definitionType":"task"},"inputs":{"gruntFile":"gruntfile.js","targets":"","arguments":"","cwd":"","gruntCli":"node_modules/grunt-cli/bin/grunt","publishJUnitResults":"false","testResultsFiles":"**/TEST-*.xml","testRunTitle":"","enableCodeCoverage":"false","testFramework":"Mocha","srcFiles":"","testFiles":"test/*.js"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Archive files","timeoutInMinutes":0,"task":{"id":"d8b84976-e99a-4b86-b885-4849694435b0","versionSpec":"2.*","definitionType":"task"},"inputs":{"rootFolderOrFile":"$(System.DefaultWorkingDirectory)","includeRootFolder":"false","archiveType":"zip","tarCompression":"gz","archiveFile":"$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip","replaceExistingArchive":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Publish artifacts: drop","timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":"task"},"inputs":{"PathtoPublish":"$(Build.ArtifactStagingDirectory)","ArtifactName":"drop","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)","Parallel":"false","ParallelCount":"8"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/e28912f1-0114-4464-802a-a3a35437fd16/1.1.24/icon"},"id":"container","name":"Docker container","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted Ubuntu 1604","iconTaskId":"e28912f1-0114-4464-802a-a3a35437fd16","description":"Build a Docker image and push it to a container registry.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Build an image","timeoutInMinutes":0,"task":{"id":"e28912f1-0114-4464-802a-a3a35437fd16","versionSpec":"0.*","definitionType":"task"},"inputs":{"dockerRegistryEndpoint":"","action":"Build an image","dockerFile":"**/Dockerfile","buildArguments":"","defaultContext":"true","context":"","imageName":"$(Build.Repository.Name):$(Build.BuildId)","qualifyImageName":"true","additionalImageTags":"","includeSourceTags":"false","includeLatestTag":"false","imageDigestFile":"","containerName":"","ports":"","volumes":"","envVars":"","workDir":"","entrypoint":"","containerCommand":"","detached":"true","restartPolicy":"no","restartMaxRetries":"","customCommand":"","dockerHostEndpoint":"","cwd":"$(System.DefaultWorkingDirectory)"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Push an image","timeoutInMinutes":0,"task":{"id":"e28912f1-0114-4464-802a-a3a35437fd16","versionSpec":"0.*","definitionType":"task"},"inputs":{"dockerRegistryEndpoint":"","action":"Push an image","dockerFile":"**/Dockerfile","buildArguments":"","defaultContext":"true","context":"","imageName":"$(Build.Repository.Name):$(Build.BuildId)","qualifyImageName":"true","additionalImageTags":"","includeSourceTags":"false","includeLatestTag":"false","imageDigestFile":"","containerName":"","ports":"","volumes":"","envVars":"","workDir":"","entrypoint":"","containerCommand":"","detached":"true","restartPolicy":"no","restartMaxRetries":"","customCommand":"","dockerHostEndpoint":"","cwd":"$(System.DefaultWorkingDirectory)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/71a9a2d3-a98a-4caa-96ab-affca411ecda/1.126.2/icon"},"id":"ASPNetWithContainers","name":"ASP.NET with containers","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"71a9a2d3-a98a-4caa-96ab-affca411ecda","description":"Build and push an ASP.NET application with container support.","template":{"triggers":[{"branchFilters":[],"pathFilters":[],"batchChanges":false,"maxConcurrentBuildsPerBranch":1,"triggerType":"continuousIntegration"}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"Release","allowOverride":true},"BuildPlatform":{"value":"Any CPU"}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":null},"inputs":{"command":"restore","solution":"$(Parameters.solution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":null},"inputs":{"solution":"$(Parameters.solution)","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"6975e2d1-96d3-4afc-8a41-498b5d34ea19","versionSpec":"0.*","definitionType":null},"inputs":{"containerregistrytype":"Azure Container Registry","dockerRegistryEndpoint":"","azureSubscriptionEndpoint":"$(Parameters.azureSubscriptionEndpoint)","azureContainerRegistry":"$(Parameters.azureContainerRegistry)","dockerComposeFile":"$(Parameters.dockerComposeFile)","additionalDockerComposeFiles":"docker-compose.ci.yml","dockerComposeFileArgs":"DOCKER_BUILD_SOURCE=","projectName":"$(Build.Repository.Name)","qualifyImageNames":"true","action":"Build services","additionalImageTags":"$(Build.BuildId)","includeSourceTags":"false","includeLatestTag":"false","buildImages":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"6975e2d1-96d3-4afc-8a41-498b5d34ea19","versionSpec":"0.*","definitionType":null},"inputs":{"containerregistrytype":"Azure Container Registry","dockerRegistryEndpoint":"","azureSubscriptionEndpoint":"$(Parameters.azureSubscriptionEndpoint)","azureContainerRegistry":"$(Parameters.azureContainerRegistry)","dockerComposeFile":"$(Parameters.dockerComposeFile)","additionalDockerComposeFiles":"docker-compose.ci.yml","dockerComposeFileArgs":"DOCKER_BUILD_SOURCE=","projectName":"$(Build.Repository.Name)","qualifyImageNames":"true","action":"Push services","additionalImageTags":"$(Build.BuildId)","includeSourceTags":"false","includeLatestTag":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"6975e2d1-96d3-4afc-8a41-498b5d34ea19","versionSpec":"0.*","definitionType":null},"inputs":{"containerregistrytype":"Azure Container Registry","dockerRegistryEndpoint":"","azureSubscriptionEndpoint":"$(Parameters.azureSubscriptionEndpoint)","azureContainerRegistry":"$(Parameters.azureContainerRegistry)","dockerComposeFile":"$(Parameters.dockerComposeFile)","additionalDockerComposeFiles":"docker-compose.ci.yml","dockerComposeFileArgs":"DOCKER_BUILD_SOURCE=","projectName":"$(Build.Repository.Name)","qualifyImageNames":"true","action":"Lock services","outputDockerComposeFile":"$(Build.ArtifactStagingDirectory)/docker-compose.yml"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c","versionSpec":"2.*","definitionType":null},"inputs":{"SourceFolder":"","Contents":"**/docker-compose.env.yml\n**/docker-compose.env.*.yml","TargetFolder":"$(Build.ArtifactStagingDirectory)","CleanTargetFolder":"false","OverWrite":"false","flattenFolders":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":null},"inputs":{"PathtoPublish":"$(Build.ArtifactStagingDirectory)","ArtifactName":"docker-compose","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"solution","label":"Solution","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"The path to the Visual Studio solution file. For example **\\\\*.sln for all sln files in all sub folders."},{"options":{},"properties":{},"name":"dockerComposeFile","label":"Docker Compose File","defaultValue":"**/docker-compose.yml","required":true,"type":"filePath","helpMarkDown":"Path to the primary Docker Compose file to use.","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"azureSubscriptionEndpoint","label":"Azure subscription","defaultValue":"","type":"connectedService:AzureRM","helpMarkDown":"Select an Azure subscription","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"azureContainerRegistry","label":"Azure Container Registry","defaultValue":"","type":"pickList","helpMarkDown":"Select an Azure Container Registry","visibleRule":"","groupName":""}],"dataSourceBindings":[{"dataSourceName":"AzureRMContainerRegistries","parameters":{},"endpointId":"$(azureSubscriptionEndpoint)","target":"azureContainerRegistry","resultTemplate":"{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/71a9a2d3-a98a-4caa-96ab-affca411ecda/1.126.2/icon"},"id":"AspNetCoreNetFxBuild","name":"ASP.NET Core (.NET Framework)","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"71a9a2d3-a98a-4caa-96ab-affca411ecda","description":"Build an ASP.NET Core web application that targets the full .NET Framework.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"release","allowOverride":true},"BuildPlatform":{"value":"any cpu","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"NuGet restore","timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":"task"},"inputs":{"command":"restore","solution":"$(Parameters.solution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Build solution","timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":"task"},"inputs":{"solution":"$(Parameters.solution)","msbuildArgs":"/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation=\"$(build.artifactstagingdirectory)\\WebApp.zip\" /p:DeployIisAppPath=\"Default Web Site\"","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","clean":"false","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Test Assemblies","timeoutInMinutes":0,"task":{"id":"ef087383-ee5e-42c7-9a53-ab56c98420f9","versionSpec":"2.*","definitionType":"task"},"inputs":{"testAssemblyVer2":"**\\$(BuildConfiguration)\\*test*.dll\n!**\\obj\\**","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)"}},{"environment":{},"enabled":true,"continueOnError":true,"alwaysRun":false,"displayName":"Publish symbols path","timeoutInMinutes":0,"task":{"id":"0675668a-7bba-4ccb-901d-5ad6554ca653","versionSpec":"2.*","definitionType":"task"},"inputs":{"SearchPattern":"**\\bin\\**\\*.pdb","SymbolsArtifactName":"Symbols_$(BuildConfiguration)","SymbolServerType":"TeamServices","PublishSymbols":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"displayName":"Publish Artifact","timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":"task"},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"$(Parameters.ArtifactName)","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"solution","label":"Path to solution or packages.config","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"The path to the Visual Studio solution file or NuGet packages.config","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"ArtifactName","label":"Artifact Name","defaultValue":"drop","required":true,"type":"string","helpMarkDown":"The name of the artifact to create.","visibleRule":"","groupName":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/334727f4-9495-4f9d-a391-fc621d671474/0.2.4/icon"},"id":"Go","name":"Go (preview)","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"334727f4-9495-4f9d-a391-fc621d671474","description":"Build a Go application.","template":{"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"release","allowOverride":true},"BuildPlatform":{"value":"any cpu","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"334727f4-9495-4f9d-a391-fc621d671474","versionSpec":"0.*","definitionType":"task"},"inputs":{}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"go get","timeoutInMinutes":0,"task":{"id":"34b37fdd-bbf7-4ef1-b37c-9652ca7bb355","versionSpec":"0.*","definitionType":"task"},"inputs":{"command":"get","arguments":"-d"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"go build","timeoutInMinutes":0,"task":{"id":"34b37fdd-bbf7-4ef1-b37c-9652ca7bb355","versionSpec":"0.*","definitionType":"task"},"inputs":{"command":"build","arguments":"-o \"$(System.TeamProject).exe\""}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Archive files","timeoutInMinutes":0,"task":{"id":"d8b84976-e99a-4b86-b885-4849694435b0","versionSpec":"2.*","definitionType":"task"},"inputs":{"rootFolderOrFile":"$(Build.Repository.LocalPath)","includeRootFolder":"False"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"displayName":"Publish artifact","timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":"task"},"inputs":{"PathtoPublish":"$(Build.ArtifactStagingDirectory)","ArtifactName":"drop","ArtifactType":"Container"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/33c63b11-352b-45a2-ba1b-54cb568a29ca/0.142.1/icon"},"id":"PythonPackage","name":"Python package","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted Ubuntu 1604","iconTaskId":"33c63b11-352b-45a2-ba1b-54cb568a29ca","description":"Create and test a Python package on multiple Python versions.","template":{"options":[{"enabled":false,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"python.version":{"value":"2.7, 3.5, 3.6, 3.7"},"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"33c63b11-352b-45a2-ba1b-54cb568a29ca","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"$(python.version)","addToPath":"true","architecture":"x64"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Install dependencies","timeoutInMinutes":0,"task":{"id":"d9bafed4-0b18-4f58-968d-86655b4d2ce9","versionSpec":"2.*","definitionType":"task"},"inputs":{"script":"python -m pip install --upgrade pip && pip install -r requirements.txt","failOnStderr":"false"}},{"environment":{},"enabled":false,"continueOnError":true,"alwaysRun":false,"displayName":"Flake8","timeoutInMinutes":0,"condition":"succeeded()","task":{"id":"d9bafed4-0b18-4f58-968d-86655b4d2ce9","versionSpec":"2.*","definitionType":"task"},"inputs":{"script":"pip install flake8 && flake8","failOnStderr":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"pytest","timeoutInMinutes":0,"task":{"id":"d9bafed4-0b18-4f58-968d-86655b4d2ce9","versionSpec":"2.*","definitionType":"task"},"inputs":{"script":"pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml","failOnStderr":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"0b0f01ed-7dde-43ff-9cbb-e48954daf9b1","versionSpec":"2.*","definitionType":"task"},"inputs":{"testResultsFiles":"**/test-results.xml","testRunTitle":"Python $(python.version)"}}],"name":"Build and Test","refName":"Phase_1","condition":"succeeded()","target":{"executionOptions":{"multipliers":["python.version"],"maxConcurrency":1,"continueOnError":false,"type":1},"allowScriptsAuthAccessOption":false,"type":1},"jobAuthorizationScope":0},{"dependencies":[{"scope":"Phase_1","event":"Completed"}],"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"33c63b11-352b-45a2-ba1b-54cb568a29ca","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":">= 3.6","addToPath":"true","architecture":"x64"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Build sdist","timeoutInMinutes":0,"task":{"id":"d9bafed4-0b18-4f58-968d-86655b4d2ce9","versionSpec":"2.*","definitionType":"task"},"inputs":{"script":"python setup.py sdist","failOnStderr":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":"task"},"inputs":{"PathtoPublish":"dist","ArtifactName":"dist","ArtifactType":"Container"}}],"name":"Publish","refName":"Phase_2","condition":"succeeded()","target":{"executionOptions":{"type":0},"allowScriptsAuthAccessOption":false,"type":1},"jobAuthorizationScope":0}],"type":1},"processParameters":{},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{},"id":"helmWithDocker","name":"Azure Kubernetes Service ","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted Ubuntu 1604","iconTaskId":"e28912f1-0114-4464-802a-a3a35437fd12","description":"Build a container image, push it to the specified container registry. After image push is complete, package the Helm chart and publish it as an artifact.","template":{"variables":{"system.debug":{"value":"false","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Build a container image","timeoutInMinutes":0,"task":{"id":"e28912f1-0114-4464-802a-a3a35437fd16","versionSpec":"0.*","definitionType":"task"},"inputs":{}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Push a container image","timeoutInMinutes":0,"task":{"id":"e28912f1-0114-4464-802a-a3a35437fd16","versionSpec":"0.*","definitionType":"task"},"inputs":{"containerregistrytype":"Azure Container Registry","dockerRegistryEndpoint":"","azureSubscriptionEndpoint":"","azureContainerRegistry":"","action":"Push an image","dockerFile":"**/Dockerfile","buildArguments":"","defaultContext":"true","context":"","imageName":"$(Build.Repository.Name):$(Build.BuildId)","imageNamesPath":"","qualifyImageName":"true","additionalImageTags":"","includeSourceTags":"false","includeLatestTag":"false","imageDigestFile":"","containerName":"","ports":"","volumes":"","envVars":"","workDir":"","entrypoint":"","containerCommand":"","detached":"true","restartPolicy":"no","restartMaxRetries":"","customCommand":"","dockerHostEndpoint":"","enforceDockerNamingConvention":"true","cwd":"$(System.DefaultWorkingDirectory)","memory":""}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Install Helm 2.9.1","timeoutInMinutes":0,"task":{"id":"068d5909-43e6-48c5-9e01-7c8a94816220","versionSpec":"0.*","definitionType":"task"},"inputs":{"helmVersion":"2.9.1","installKubeCtl":"true","kubectlVersion":"1.10.3","checkLatestKubeCtl":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"helm init --client-only","timeoutInMinutes":0,"task":{"id":"afa7d54d-537b-4dc8-b60a-e0eeea2c9a87","versionSpec":"0.*","definitionType":"task"},"inputs":{"connectionType":"Azure Resource Manager","azureSubscriptionEndpoint":"","azureResourceGroup":"","kubernetesCluster":"","kubernetesServiceEndpoint":"","namespace":"","command":"init","chartType":"FilePath","chartName":"","chartPath":"","version":"","releaseName":"","overrideValues":"","valueFile":"","destination":"$(Build.ArtifactStagingDirectory)","canaryimage":"false","upgradetiller":"false","updatedependency":"false","save":"false","install":"false","recreate":"false","resetValues":"false","force":"false","waitForExecution":"true","arguments":"--client-only","tillernamespace":""}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"helm package","timeoutInMinutes":0,"task":{"id":"afa7d54d-537b-4dc8-b60a-e0eeea2c9a87","versionSpec":"0.*","definitionType":"task"},"inputs":{"connectionType":"Azure Resource Manager","azureSubscriptionEndpoint":"","azureResourceGroup":"","kubernetesCluster":"","kubernetesServiceEndpoint":"","namespace":"","command":"package","chartType":"FilePath","chartName":"","chartPath":"","version":"","releaseName":"","overrideValues":"","valueFile":"","destination":"$(Build.ArtifactStagingDirectory)","canaryimage":"false","upgradetiller":"false","updatedependency":"false","save":"false","install":"false","recreate":"false","resetValues":"false","force":"false","waitForExecution":"true","arguments":"","tillernamespace":""}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Publish Artifacts: drop","timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":"task"},"inputs":{"PathtoPublish":"$(Build.ArtifactStagingDirectory)","ArtifactName":"drop","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)","Parallel":"false","ParallelCount":"8"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}},{"icons":{"image/png":"https://dev.azure.com/eto-dev/_apis/distributedtask/tasks/71a9a2d3-a98a-4caa-96ab-affca411ecda/1.126.2/icon"},"id":"AzureFunctionWebApp","name":"C# Function","canDelete":false,"category":"Build","defaultHostedQueue":"Hosted VS2017","iconTaskId":"71a9a2d3-a98a-4caa-96ab-affca411ecda","description":"Build and test a C# (.NET class library) based Azure Function.","template":{"options":[{"enabled":true,"definition":{"id":"5d58cc01-7c75-450c-be18-a388ddb129ec"},"inputs":{}}],"variables":{"system.debug":{"value":"false","allowOverride":true},"BuildConfiguration":{"value":"release","allowOverride":true},"BuildPlatform":{"value":"any cpu","allowOverride":true}},"properties":{},"tags":[],"_links":{"self":{"href":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0"},"web":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/definition?definitionId=0"},"editor":{"href":"https://dev.azure.com/eto-dev/00000000-0000-0000-0000-000000000000/_build/designer?id=0&_a=edit-build-definition"},"badge":{"href":"https://dev.azure.com/eto-dev/_apis/build/status/0"}},"buildNumberFormat":"$(date:yyyyMMdd)$(rev:.r)","jobAuthorizationScope":"projectCollection","process":{"phases":[{"steps":[{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Use NuGet 4.4.1","timeoutInMinutes":0,"task":{"id":"2c65196a-54fd-4a02-9be8-d9d1837b7c5d","versionSpec":"0.*","definitionType":"task"},"inputs":{"versionSpec":"4.4.1","checkLatest":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"NuGet restore","timeoutInMinutes":0,"task":{"id":"333b11bd-d341-40d9-afcf-b32d5ce6f23b","versionSpec":"2.*","definitionType":"task"},"inputs":{"command":"restore","solution":"$(Parameters.solution)","selectOrConfig":"select","includeNuGetOrg":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Build solution","timeoutInMinutes":0,"task":{"id":"71a9a2d3-a98a-4caa-96ab-affca411ecda","versionSpec":"1.*","definitionType":"task"},"inputs":{"solution":"$(Parameters.solution)","msbuildArgs":"/p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=\"$(Agent.TempDirectory)\\WebAppContent\\\\\"","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)","clean":"false","restoreNugetPackages":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Archive Files","timeoutInMinutes":0,"task":{"id":"d8b84976-e99a-4b86-b885-4849694435b0","versionSpec":"2.*","definitionType":"task"},"inputs":{"rootFolderOrFile":"$(Agent.TempDirectory)\\WebAppContent","includeRootFolder":"false","archiveType":"zip","archiveFile":"$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip","replaceExistingArchive":"true"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":false,"displayName":"Test Assemblies","timeoutInMinutes":0,"task":{"id":"ef087383-ee5e-42c7-9a53-ab56c98420f9","versionSpec":"2.*","definitionType":"task"},"inputs":{"testAssemblyVer2":"**\\$(BuildConfiguration)\\*test*.dll\n!**\\obj\\**","platform":"$(BuildPlatform)","configuration":"$(BuildConfiguration)"}},{"environment":{},"enabled":true,"continueOnError":true,"alwaysRun":false,"displayName":"Publish symbols path","timeoutInMinutes":0,"task":{"id":"0675668a-7bba-4ccb-901d-5ad6554ca653","versionSpec":"2.*","definitionType":"task"},"inputs":{"SearchPattern":"**\\bin\\**\\*.pdb","SymbolsArtifactName":"Symbols_$(BuildConfiguration)","SymbolServerType":"TeamServices","PublishSymbols":"false"}},{"environment":{},"enabled":true,"continueOnError":false,"alwaysRun":true,"displayName":"Publish Artifact","timeoutInMinutes":0,"task":{"id":"2ff763a7-ce83-4e1f-bc89-0ae63477cebe","versionSpec":"1.*","definitionType":"task"},"inputs":{"PathtoPublish":"$(build.artifactstagingdirectory)","ArtifactName":"$(Parameters.ArtifactName)","ArtifactType":"Container","TargetPath":"\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"}}],"name":null,"refName":null,"jobAuthorizationScope":0}],"type":1},"processParameters":{"inputs":[{"options":{},"properties":{},"name":"solution","label":"Path to solution or packages.config","defaultValue":"**\\*.sln","required":true,"type":"filePath","helpMarkDown":"The path to the Visual Studio solution file or NuGet packages.config","visibleRule":"","groupName":""},{"options":{},"properties":{},"name":"ArtifactName","label":"Artifact Name","defaultValue":"drop","required":true,"type":"string","helpMarkDown":"The name of the artifact to create.","visibleRule":"","groupName":""}]},"drafts":[],"url":"https://dev.azure.com/eto-dev/_apis/build/Definitions/0","uri":"vstfs:///Build/Definition/0","type":"build","queueStatus":"enabled","project":{"name":"","state":"unchanged","visibility":"unchanged"}}}]}
