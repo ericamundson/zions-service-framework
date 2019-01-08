@@ -102,7 +102,7 @@ public class QmMetadataManagementServiceTest extends Specification {
 	def 'extractQmMetadata success flow.'() {
 		
 		//def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/qmmetadata.xml').text)
-		File file = new File("C:\\Users\\v072202\\Desktop")
+		File file = new File("src/test/resources/testdata")
 		
 		given: "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/qmmetadata.xml').text)

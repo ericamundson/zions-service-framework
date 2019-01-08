@@ -38,7 +38,6 @@ class QmProjectManagementService {
 			page++
 		
 		}
-		println thepa
 		return thepa
 	}
 }
