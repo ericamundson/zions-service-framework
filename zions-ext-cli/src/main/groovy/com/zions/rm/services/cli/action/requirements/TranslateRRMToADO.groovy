@@ -160,7 +160,7 @@ class TranslateRRMToADO implements CliAction {
 			}
 		} catch (e) {}
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
-
+		String mrTfsUrl = data.getOptionValues('mr.tfsUrl')[0]
 		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
 		String tfsUser = data.getOptionValues('tfs.user')[0]
 		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
@@ -169,7 +169,7 @@ class TranslateRRMToADO implements CliAction {
 		String tfsProjectURI = data.getOptionValues('tfs.projectUri')[0]
 		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
 		String tfsCollectionGUID = data.getOptionValues('tfs.collectionId')[0]
-		String tfsOAuthToken = data.getOptionValues('tfs.oAuthToken')
+		String tfsOAuthToken = data.getOptionValues('tfs.oAuthToken')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -198,7 +198,7 @@ class TranslateRRMToADO implements CliAction {
 			def idMap = [:]
 			int count = 0
 			modules.each { module ->
-				println("${getCurTimestamp()} - Processing Module $count of ${modules.size()}...")
+				println("${getCurTimestamp()} - Processing Module ${count + 1} of ${modules.size()}...")
 				// Iterate through all module elements 
 				int it = 0 // we have to use our own "it" since Groovy won't allow an implicit "it" to be incremented
 				while(true) {
@@ -233,10 +233,14 @@ class TranslateRRMToADO implements CliAction {
 					println("${getCurTimestamp()} - Creating Work Items...")
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 					println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
-					smartDocManagementService.createSmartDoc(module, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
+					def result = smartDocManagementService.createSmartDoc(module, collection, mrTfsUrl, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
+					if (result.code != "") {
+						println("SmartDoc creation failed.  Error message: ${result.message}, Error name: ${result.name}")
+					}
 				}
 
 			}
+			println("Processing completed")
 			/*
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			while (true) {

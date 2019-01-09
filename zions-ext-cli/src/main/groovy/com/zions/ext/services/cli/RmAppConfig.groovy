@@ -1,7 +1,7 @@
 package com.zions.ext.services.cli
 
 import com.zions.clm.services.rest.ClmGenericRestClient
-import com.zions.mr.services.rest.MRGenericRestClient 
+import com.zions.mr.services.rest.MrGenericRestClient 
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
@@ -28,10 +28,6 @@ public class RmAppConfig {
 	@Autowired
 	@Value('${mr.url}')
 	String mrUrl
-	
-	@Autowired
-	@Value('${mr.tfsUrl}')
-	String mrTfsUrl
 	
 	@Autowired
 	@Value('${clm.user}') 
@@ -66,7 +62,7 @@ public class RmAppConfig {
 	
 	@Bean
 	IGenericRestClient mrGenericRestClient() {
-		return new MRGenericRestClient(mrUrl, mrTfsUrl, tfsUserid)
+		return new MrGenericRestClient(mrUrl, tfsUserid)
 	}
 	
 	@Bean

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
-import com.zions.mr.services.rest.MRGenericRestClient
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
@@ -40,7 +39,7 @@ class SmartDocManagementService {
 		// TODO Auto-generated constructor stub
 	}
 	
-	def createSmartDoc(def module, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsOAuthToken, def mrTemplate, def mrFolder) {
+	def createSmartDoc(def module, def collection, def mrTfsUrl, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsOAuthToken, def mrTemplate, def mrFolder) {
 		String body;
 		String docTitle = module.getTitle()
 		String domain = ""
@@ -51,7 +50,7 @@ class SmartDocManagementService {
 			{
 			"userId": "${mrGenericRestClient.getUserid()}",
 			"userPassword":"$userPassword",
-			"serverUrl":"${mrGenericRestClient.getMrTfsUrl()}",
+			"serverUrl":"$mrTfsUrl",
 			"domain":"$domain",
 			"oAuthAccessToken":"$tfsOAuthToken",
 			"projectUri":"$tfsProjectURI",
@@ -68,7 +67,8 @@ class SmartDocManagementService {
 			"workItemDetails": ${wiDetails.detailString}
 			}
 			"""
-		return doPost(body)
+
+			return doPost(body)
 		}
 		
 	private def doPost(def body) {
@@ -106,7 +106,7 @@ class SmartDocManagementService {
 				}
 				if (module.orderedArtifacts[i+1].getDepth() > module.orderedArtifacts[i].getDepth()) {
 					def wiDetails = getWorkitemDetails(i+1, module)
-					jsonString = jsonString + """{"id":"${cacheWI.id}","linkType":"Related","Links":${wiDetails.detailString}}"""
+					jsonString = jsonString + """{"id":"${cacheWI.id}","linkType":"Related","links":${wiDetails.detailString}}"""
 					i = wiDetails.index	
 				}
 				else {
