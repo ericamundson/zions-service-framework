@@ -7,6 +7,7 @@ class ClmModuleElement {
 	String baseArtifactURI
 	String about
 	String artifactType
+	String tfsWorkitemType
 	boolean isDeleted
 	def attributeMap
 	def links
@@ -24,9 +25,6 @@ class ClmModuleElement {
 
 	}
 	
-	public getArtifactType() {
-		return artifactType
-	}
 	public boolean isHeading() {
 		return isHeading;
 	}
@@ -36,7 +34,6 @@ class ClmModuleElement {
 				artifactType == 'Out of Scope' ||
 				artifactType == 'Assumption' )
 	}
-
 	public String getTitle() {
 		return attributeMap.'title'
 	}
