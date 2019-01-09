@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
-import com.zions.vsts.services.tfs.rest.GenericRestClient
+import com.zions.mr.services.rest.MRGenericRestClient
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
@@ -21,12 +21,17 @@ import groovyx.net.http.ContentType
 @Component
 @Slf4j
 class SmartDocManagementService {
-	
+	class WorkItemDetails {
+		WorkItemDetails(String details, Integer i) {
+			detailString = details
+			index = i
+		}
+		String detailString
+		Integer index
+	}
+
 	@Autowired(required=true)
-	private IGenericRestClient genericRestClient
-	
-//	@Autowired(required=true)
-//	private IGenericRestClient mrGenericRestClient
+	private IGenericRestClient mrGenericRestClient
 	
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
@@ -35,16 +40,18 @@ class SmartDocManagementService {
 		// TODO Auto-generated constructor stub
 	}
 	
-	def createSmartDoc(def module, def collection, def tfsUser, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsOAuthToken, def mrTemplate, def mrFolder) {
+	def createSmartDoc(def module, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsOAuthToken, def mrTemplate, def mrFolder) {
 		String body;
 		String docTitle = module.getTitle()
 		String domain = ""
 		String userPassword = ""
+		def index = 0
+		def wiDetails = getWorkitemDetails(0, module)
 		body = """
 			{
-			"userId": "$tfsUser",
+			"userId": "${mrGenericRestClient.getUserid()}",
 			"userPassword":"$userPassword",
-			"serverUrl":"${genericRestClient.getTfsUrl()}",
+			"serverUrl":"${mrGenericRestClient.getMrTfsUrl()}",
 			"domain":"$domain",
 			"oAuthAccessToken":"$tfsOAuthToken",
 			"projectUri":"$tfsProjectURI",
@@ -58,14 +65,13 @@ class SmartDocManagementService {
 			"templateName": "$mrTemplate",
 			"folder": "$mrFolder",
 			"autoRootCreation": true,
-			"workItemDetails": ${getWorkitemDetails(module)}
+			"workItemDetails": ${wiDetails.detailString}
 			}
 			"""
 		return doPost(body)
 		}
 		
 	private def doPost(def body) {
-		/*
 		def result = mrGenericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
 			uri: "${mrGenericRestClient.getMrUrl()}/Services/ExternalService.svc/api/smartdocs/create",
@@ -79,13 +85,16 @@ class SmartDocManagementService {
 			log.error("SmartDoc request failed!")
 			return null
 		}
-		*/
+
 		return null
 	}
 	
-	private def getWorkitemDetails(def module) {
+	private WorkItemDetails getWorkitemDetails(def iStart, def module) {
 		String jsonString = '['
-		module.orderedArtifacts.each { artifact ->
+		def i = iStart
+		def iStartDepth = module.orderedArtifacts[iStart].getDepth()
+		while(i < module.orderedArtifacts.size() - 1 && module.orderedArtifacts[i].getDepth() >= iStartDepth) {
+			def artifact = module.orderedArtifacts[i]
 			if (!artifact.isDeleted) {
 				String id = "${artifact.getID()}-${artifact.getTfsWorkitemType()}"
 				def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
@@ -95,9 +104,20 @@ class SmartDocManagementService {
 				if (jsonString[jsonString.size()-1] == '}') {
 					jsonString = jsonString + ',' + '\n'
 				}
-				jsonString = jsonString + """{"id":"${cacheWI.id}","linkType":"Related"}"""
+				if (module.orderedArtifacts[i+1].getDepth() > module.orderedArtifacts[i].getDepth()) {
+					def wiDetails = getWorkitemDetails(i+1, module)
+					jsonString = jsonString + """{"id":"${cacheWI.id}","linkType":"Related","Links":${wiDetails.detailString}}"""
+					i = wiDetails.index	
+				}
+				else {
+					jsonString = jsonString + """{"id":"${cacheWI.id}","linkType":"Related"}"""
+					i++
+				}
+			}
+			else {
+				i++
 			}
 		}
-		return jsonString + ']'
+		return new WorkItemDetails(jsonString + ']',i)
 	}
 }

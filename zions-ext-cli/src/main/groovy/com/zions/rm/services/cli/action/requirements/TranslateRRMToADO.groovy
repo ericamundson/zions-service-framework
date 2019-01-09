@@ -233,7 +233,7 @@ class TranslateRRMToADO implements CliAction {
 					println("${getCurTimestamp()} - Creating Work Items...")
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 					println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
-					smartDocManagementService.createSmartDoc(module, collection, tfsUser, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
+					smartDocManagementService.createSmartDoc(module, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
 				}
 
 			}
@@ -329,7 +329,7 @@ class TranslateRRMToADO implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'tfs.oAuthToken', 'rm.mapping.file', 'rm.query', 'rm.filter']
+		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'tfs.oAuthToken', 'rm.mapping.file', 'rm.query', 'rm.filter', 'mr.url', 'mr.tfsUrl', 'mr.template', 'mr.folder']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

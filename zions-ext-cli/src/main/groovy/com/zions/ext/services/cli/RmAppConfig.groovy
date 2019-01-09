@@ -1,6 +1,7 @@
 package com.zions.ext.services.cli
 
 import com.zions.clm.services.rest.ClmGenericRestClient
+import com.zions.mr.services.rest.MRGenericRestClient 
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
@@ -23,10 +24,22 @@ public class RmAppConfig {
 	@Autowired
 	@Value('${clm.url}') 
 	String clmUrl
+
+	@Autowired
+	@Value('${mr.url}')
+	String mrUrl
+	
+	@Autowired
+	@Value('${mr.tfsUrl}')
+	String mrTfsUrl
 	
 	@Autowired
 	@Value('${clm.user}') 
 	String userid 
+	
+	@Autowired
+	@Value('${tfs.user}')
+	String tfsUserid
 	
 	@Autowired
 	@Value('${clm.password}') 
@@ -51,6 +64,10 @@ public class RmAppConfig {
 		return new ClmGenericRestClient(clmUrl, userid, password)
 	}
 	
+	@Bean
+	IGenericRestClient mrGenericRestClient() {
+		return new MRGenericRestClient(mrUrl, mrTfsUrl, tfsUserid)
+	}
 	
 	@Bean
 	CommandManagementService commandManagementService() {

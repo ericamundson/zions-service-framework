@@ -53,16 +53,17 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 class MRGenericRestClient extends AGenericRestClient {
-	String userid = "";
-	String password = "";
-	public String rmUrl = "";
+	public String userid = ""
+	public String mrUrl = ""
+	public String mrTfsUrl = ""
 	
 	@Autowired
-	public MRGenericRestClient(@Value('${mr.url}') String rmUrl, @Value('${tfs.user}') String userid) {
+	public MRGenericRestClient(@Value('${mr.url}') String mrUrl, @Value('${mr.tfsUrl}') String mrTfsUrl,@Value('${tfs.user}') String tfsUserid) {
 
-		this.rmUrl = rmUrl;
-		this.userid = userid;
-		delegate = new RESTClient(rmUrl)
+		this.mrUrl = mrUrl
+		this.mrTfsUrl = mrTfsUrl
+		this.userid = tfsUserid
+		delegate = new RESTClient(mrUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		setProxy();

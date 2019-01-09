@@ -73,21 +73,21 @@ class ClmRequirementsManagementService {
 					moduleType = parseArtifactAttributes(child, moduleAttributeMap )
 				}
 				else if (iName == "moduleContext") {
+					def kk = 0
 					child.children().each { contextBinding ->
-						String about = contextBinding.about
-						String artifactTitle = contextBinding.title
-						String format = contextBinding.format
-						int depth = contextBinding.depth.toInteger()
-						String isHeading = contextBinding.isHeading
-						String baseURI = contextBinding.core
-						
-						ClmModuleElement artifact = new ClmModuleElement(artifactTitle, baseURI, depth, format, isHeading, about)
-						orderedArtifacts.add(artifact)
-						if (format == "Text") {
-							// Get artifact details (attributes and links) from DNG
-							getTextArtifact(artifact)
-						}
-
+							String about = contextBinding.about
+							String artifactTitle = contextBinding.title
+							String format = contextBinding.format
+							int depth = contextBinding.depth.toInteger()
+							String isHeading = contextBinding.isHeading
+							String baseURI = contextBinding.core
+							
+							ClmModuleElement artifact = new ClmModuleElement(artifactTitle, baseURI, depth, format, isHeading, about)
+							orderedArtifacts.add(artifact)
+							if (format == "Text") {
+								// Get artifact details (attributes and links) from DNG
+								getTextArtifact(artifact)
+							}
 					}
 					def j = 1
 				}
