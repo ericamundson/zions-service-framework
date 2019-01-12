@@ -15,6 +15,7 @@ import spock.mock.DetachedMockFactory
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.project.planning.PlanManagementService
 import com.zions.clm.services.rest.ClmGenericRestClient
+import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
 import com.zions.vsts.services.admin.member.MemberManagementService
@@ -32,6 +33,9 @@ public class RestClientSpecTest extends Specification {
 
 	@Autowired
 	IGenericRestClient genericRestClient;
+	
+	@Autowired
+	Map<String, IGenericRestClient> clientMap
 
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
@@ -68,17 +72,107 @@ public class RestClientSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		//TODO:  write validate success flow
+		given: 'Stub with Application Arguments'
+		String[] args = loadArgs('get','json','jsonResponse.json')
+		def appArgs = new DefaultApplicationArguments(args)
+
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
+
+		then: ''
+		result == true
 	}
 
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		//TODO:  write validate exception flow
+		given:'Stub with Application Arguments'
+		String[] args = ['--clm.url=http://localhost:8080']
+		def appArgs = new DefaultApplicationArguments(args)
+		
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
+		
+		then:
+		thrown Exception
 	}
 	
 	@Test
-	def 'execute ApplicationArguments success flow.' () {
-		//TODO:  write execute success flow
+	def 'execute ApplicationArguments success flow for json.' () {
+		given:
+		given:
+		String json = this.getClass().getResource('/testdata/jsonResponse.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		genericRestClient.get(_) >> out
+		genericRestClient.post(_) >> out
+		genericRestClient.patch(_) >> out
+		genericRestClient.put(_) >> out
+		genericRestClient.delete(_) >> out
+		genericRestClient.default(_) >> out
+		
+		when: 'calling of method under test (validate)'
+		def resultGet = underTest.execute(new DefaultApplicationArguments(loadArgs('get','json','jsonResponse.json')))
+		def resultPost = underTest.execute(new DefaultApplicationArguments(loadArgs('post','json','jsonResponse.json')))
+		def resultPatch = underTest.execute(new DefaultApplicationArguments(loadArgs('patch','json','jsonResponse.json')))
+		def resultPut = underTest.execute(new DefaultApplicationArguments(loadArgs('put','json','jsonResponse.json')))
+		def resultDelete = underTest.execute(new DefaultApplicationArguments(loadArgs('delete','json','jsonResponse.json')))
+		def resultDefault = underTest.execute(new DefaultApplicationArguments(loadArgs('default','json','jsonResponse.json')))
+		
+		then:
+		resultGet == null
+		resultPost == null
+		resultPatch == null
+		resultPut == null
+		resultDelete == null
+		resultDefault == null
+	}
+	
+	@Test
+	def 'execute ApplicationArguments success flow for xml.' () {
+		given:
+		given:
+		String json = this.getClass().getResource('/testdata/xmlResponse.xml').text
+		JsonSlurper js = new JsonSlurper()
+		def out = '<a1>adf</a1>'//js.parseText(json)
+		genericRestClient.get(_) >> out
+		genericRestClient.post(_) >> out
+		genericRestClient.patch(_) >> out
+		genericRestClient.put(_) >> out
+		genericRestClient.delete(_) >> out
+		genericRestClient.default(_) >> out
+		
+		when: 'calling of method under test (validate)'
+		def resultGet = underTest.execute(new DefaultApplicationArguments(loadArgs('get','xml','xmlResponse.xml')))
+		def resultPost = underTest.execute(new DefaultApplicationArguments(loadArgs('post','xml','xmlResponse.xml')))
+		def resultPatch = underTest.execute(new DefaultApplicationArguments(loadArgs('patch','xml','xmlResponse.xml')))
+		def resultPut = underTest.execute(new DefaultApplicationArguments(loadArgs('put','xml','xmlResponse.xml')))
+		def resultDelete = underTest.execute(new DefaultApplicationArguments(loadArgs('delete','xml','xmlResponse.xml')))
+		def resultDefault = underTest.execute(new DefaultApplicationArguments(loadArgs('default','xml','xmlResponse.xml')))
+		
+		then:
+		resultGet == null
+		resultPost == null
+		resultPatch == null
+		resultPut == null
+		resultDelete == null
+		resultDefault == null
+	}
+
+	private String[] loadArgs(String requestType, String protocol, String responseFile) {
+		String[] args = [
+			'--clm.url=http://localhost:8080',
+			'--clm.user=user',
+			'--clm.password=password',
+			'--tfs.url=tfsurl',
+			'--tfs.user=tfsuser',
+			'--tfs.token=tfstoken',
+			'--request.file=request.json',
+			'--response.file='+responseFile,
+			'--request.type='+requestType,
+			'--client.name=genericRestClient',
+			'--result.protocol='+protocol
+		]
+		return args
 	}
 }
 
@@ -90,7 +184,12 @@ class RestClientTestConfig {
 
 	@Bean
 	IGenericRestClient genericRestClient() {
-		return factory.Mock(ClmGenericRestClient)
+		return factory.Mock(GenericRestClient)
+	}
+	
+	@Bean
+	Map<String, IGenericRestClient> clientMap() {
+		return ['genericRestClient': genericRestClient()]
 	}
 
 	@Bean
