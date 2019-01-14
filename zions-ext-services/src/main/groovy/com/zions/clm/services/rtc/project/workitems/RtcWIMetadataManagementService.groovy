@@ -1,16 +1,22 @@
 package com.zions.clm.services.rtc.project.workitems
 
+/*import org.junit.experimental.categories.Categories.ExcludeCategory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
-import groovy.xml.XmlUtil
+import groovy.xml.XmlUtil*/
 
-@Component
-@Slf4j
-class RtcWIMetadataManagementService {
+@Deprecated
+
+/*
+ * As discussed with Eric, we are not using this class
+ */
+
+
+class RtcWIMetadataManagementService {/*
 	@Autowired
 	IGenericRestClient clmGenericRestClient
 
@@ -18,17 +24,18 @@ class RtcWIMetadataManagementService {
 		
 	}
 	
-
+		
 	def extractWorkitemMetadata(def projectArea, def starterFile) {
 		def types = getWorkItemTypes(projectArea)
+		println types
 		types.projectArea.workItemTypes.each { atype ->
-			println atype.name.text()
 			extractTypeMetadata(projectArea, "${atype.name.text()}", starterFile)
 		}
 	}
 	
 	def extractTypeMetadata(def projectArea, def wit, def starterFile) {
 		File fInFile = new File(starterFile)
+		println fInFile.readLines()
 		def writer = new StringWriter()
 		MarkupBuilder bXml = new MarkupBuilder(writer)
 		bXml.'witd:WITD'(application:'Work item type editor',
@@ -79,4 +86,6 @@ class RtcWIMetadataManagementService {
 
 	}
 	
-}
+*/}
+
+

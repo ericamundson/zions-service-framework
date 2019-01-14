@@ -77,4 +77,11 @@
 		<!-- <field source="resultOwnerHandler" target="owner"/> -->
 		
 	</wit>
+	<wit source="configuration"  target="Configuration" translateUnmappedFields="false">
+		<field source="nameHandler" target="name"/>
+		<field source="summaryHandler" target="description"/>
+		<field source="blankHandler" target="state">
+			<defaultvalue target="Active"/>
+		</field>
+	</wit>
 </witmapping>

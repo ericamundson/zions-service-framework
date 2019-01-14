@@ -1,0 +1,9 @@
+{
+	"$id": "1",
+	"innerException": null,
+	"message": "TF400813: The user 'c38f90d0-da54-455b-b1ae-c43b6009d294\\sairam.mandadi@zionsbancorp.com' is not authorized to access this resource.",
+	"typeName": "Microsoft.TeamFoundation.Framework.Server.UnauthorizedRequestException, Microsoft.TeamFoundation.Framework.Server",
+	"typeKey": "UnauthorizedRequestException",
+	"errorCode": 0,
+	"eventId": 3000
+}

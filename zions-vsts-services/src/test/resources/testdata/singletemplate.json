@@ -1,0 +1,27 @@
+{
+	"artifacts" : [
+	{
+	"alias":"",
+	"definitionReference" : 
+	{
+		"sourceId":"",
+		"artifactSourceDefinitionUrl" : [{ "id":""}],
+		"project" :{
+			"id" : "",
+			"name":""
+		},
+		"artifactSourceDefinitionUrl" : {"id":""},
+		"definition" : {
+			"id" : "",
+			"name":""
+		}
+		
+	}
+	
+	}
+	],
+	"environments" : [
+		{ "deployPhases" : [] },
+		{ "deployPhases" : []}
+	]
+}

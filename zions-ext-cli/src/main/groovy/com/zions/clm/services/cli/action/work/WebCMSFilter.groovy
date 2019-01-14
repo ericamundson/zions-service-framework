@@ -5,20 +5,20 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.query.IFilter
 
 /**
- * Work item filter for Online Banking team.
+ * Work item filter for AEM team.
  * 
  * <p><b>Design:</b></p>
- * <img src="ObFilter.png"/>
+ * <img src="WebCMSFilter.png"/>
  * 
  * @author z091182
  *
  * @startuml
- * class ObFilter  {
+ * class WebCMSFilter  {
  * 	+def filter(def workItems)
  * }
  * interface IFilter [[java:com.zions.common.services.query.IFilter]] {
  * }
- * IFilter <|.. ObFilter
+ * IFilter <|.. WebCMSFilter
  * @enduml
  *
  */

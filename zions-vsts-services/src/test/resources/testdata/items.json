@@ -1,13 +1,15 @@
 {
+	"build-template-gradle" : "gradle",
 	"count": 1,
 	"value": [
 		{
 			"objectId": "1b9f5490f9924813736344b793734f6ba9f862f1",
 			"gitObjectType": "tree",
 			"commitId": "848d40b053716669590fba319958dc7db017621b",
-			"path": "/",
+			"path": "build.gradle",
 			"isFolder": true,
 			"url": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/git/repositories/26862cc3-6775-4676-bb22-3bad625dcaa7/items?path=%2F&versionType=Branch&versionOptions=None"
 		}
 	]
+	
 }
