@@ -117,17 +117,18 @@ class CodeManagementService {
 
 	}
 
-	public def getBuildPropertiesFile(def collection, def project, def repo, def filename) {
+	public def getBuildPropertiesFile(def collection, def project, def repo, def filename, def branchName) {
 		log.debug("CodeManagementService::getBuildPropertiesFile -- collection: ${collection}, project: ${project.id}, repo: ${repo.id}, filename: ")
 		String filePath = "/${filename}"
-		def query = ['api-version':'4.1','path':filePath, 'includeContent':true]
+		def query = ['api-version':'4.1','path':filePath, 'includeContent':true, 'versionDescriptor.version':"${branchName}",'versionDescriptor.versionType':'branch']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/items",
 			query: query
 		)
 		log.debug("CodeManagementService::getBuildPropertiesFile -- Return result: "+result)
-		return result
+		if (result == null) return null
+		return result.content
 
 	}
 

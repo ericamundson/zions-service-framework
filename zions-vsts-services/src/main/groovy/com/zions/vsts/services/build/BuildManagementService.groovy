@@ -38,10 +38,6 @@ public class BuildManagementService {
 	private String queue
 
 	@Autowired
-	@Value('${tfs.build.properties.file}')
-	private String buildPropsFileName
-
-	@Autowired
 	private IGenericRestClient genericRestClient;
 
 	@Autowired
@@ -123,7 +119,7 @@ public class BuildManagementService {
 		}
 	}
 	
-	public def ensureBuildsForBranch(def collection, def projectData, def repo, boolean isDRBranch) {
+	public def ensureBuildsForBranch(def collection, def projectData, def repo, boolean isDRBranch, def ciTemplate, def releaseTemplate) {
 		// if this is for a DR branch, call special operation
 		if (isDRBranch) {
 			return ensureDRBuilds(collection, projectData, repo)
@@ -136,7 +132,7 @@ public class BuildManagementService {
 		def buildFolderName = ""
 		def build = getBuild(collection, projectData, repo, 'ci')
 		if (build.count == 0) {
-			buildTemplate = getBuildTemplate(collection, projectData, repo, 'ci')
+			buildTemplate = getBuildTemplate(collection, projectData, repo, 'ci', ciTemplate)
 			if (buildTemplate == null) {
 				log.error("BuildManagementService::ensureBuildsForBranch -- CI build template not found.")
 				//return null
@@ -164,10 +160,11 @@ public class BuildManagementService {
 			// assume if build was found that folder is already created
 			buildFolderCreated = true
 		}
+		Integer relBldId = -1
 		def relBldName = ""
 		def build1 = getBuild(collection, projectData, repo, 'release')
 		if (build1.count == 0) {
-			buildTemplate = getBuildTemplate(collection, projectData, repo, 'release')
+			buildTemplate = getBuildTemplate(collection, projectData, repo, 'release', releaseTemplate)
 			if (buildTemplate == null) {
 				log.error("BuildManagementService::ensureBuildsForBranch -- Release build template not found.")
 				// Not returning null here and stopping since the CI build was created so let's go ahead and create the build validation policy
@@ -181,16 +178,19 @@ public class BuildManagementService {
 				if (relBd == null ) {
 					log.error("BuildManagementService::ensureBuildsForBranch -- Release Build creation failed!")
 				} else {
+					relBldId = Integer.parseInt("${relBd.id}")
 					relBldName = "${relBd.name}"
 					log.debug("BuildManagementService::ensureBuildsForBranch -- Release build created: "+relBldName)
 				}
 			}
 		} else {
 			log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing Release Build for ${repo.name}.")
+			//relBldId = build1.value[0].id
 		}
 		def returnObject = [folderName: buildFolderName,
 							ciBuildId: ciBldId,
 							ciBuildName: ciBldName,
+							releaseBuildId: relBldId,
 							releaseBuildName: relBldName]
 
 		return returnObject
@@ -254,19 +254,9 @@ public class BuildManagementService {
 		return returnObject
 	}
 	
-	public def getBuildTemplate(def collection, def project, def repo, String buildStage) {
+	public def getBuildTemplate(def collection, def project, def repo, String buildStage, String templateName) {
 		log.debug("BuildManagementService::getBuildTemplate -- Looking for custom build properties ...")
-		String templateName = null
-		def buildPropertiesFile = codeManagementService.getBuildPropertiesFile(collection, project, repo, buildPropsFileName)
-		if (buildPropertiesFile != null) {
-			// read file for template name
-			String fileContent = buildPropertiesFile.toString()
-			java.util.Properties prop = new java.util.Properties()
-			prop.load(new java.io.StringBufferInputStream(fileContent))
-			templateName = prop.getProperty("build-template"+"-"+buildStage)
-			log.debug("BuildManagementService::getBuildTemplate -- Specified templateName = ${templateName}")
-		}
-		// if we didn't find a template specified in the build properties file, try to determine build type and load the one for build type
+		// if build template not specified in the build properties file, try to determine build type and load the one for build type
 		if (templateName == null) {
 			log.debug("BuildManagementService::getBuildTemplate -- No build properties file found or template not specified in file; detecting build type ...")
 			def buildType = detectBuildType(collection, project, repo)
@@ -279,8 +269,13 @@ public class BuildManagementService {
 		def bDef = null
 		// if we found a valid build type, try to load the build template
 		if (templateName != null) {
-			log.debug("BuildManagementService::getBuildTemplate -- Loading ADO build template: "+templateName)
-			bDef = getTemplate(collection, project, templateName)
+			if (this.useTfsTemplate) {
+				log.debug("BuildManagementService::getBuildTemplate -- Loading ADO build template: "+templateName)
+				bDef = getTemplate(collection, project, templateName)
+			} else {
+				log.debug("BuildManagementService::getBuildTemplate -- Using local resource file.  File name: "+ templateName)
+				bDef = getResource(templateName)
+			}
 		}
 		if (bDef == null) {
 			log.debug("BuildManagementService::getBuildTemplate -- Build template "+templateName+" not found. Loading generic template ...")
@@ -393,7 +388,7 @@ public class BuildManagementService {
 		bDef.createdDate = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 		bDef.project = project
 		bDef.badgeEnabled = false
-		bDef.demands = []
+//		bDef.demands = []
 //		bDef.variableGroups = []
 		bDef.properties = [source: 'AllDefinitions']
 //		bDef.quality = 1
@@ -438,7 +433,7 @@ public class BuildManagementService {
 		bDef.createdDate = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 		bDef.project = project
 		bDef.badgeEnabled = false
-		bDef.demands = []
+		//bDef.demands = []
 		//bDef.variableGroups = []
 		bDef.properties = [source: 'AllDefinitions']
 		if ("${buildStage}".equalsIgnoreCase("release")) {
@@ -569,13 +564,34 @@ public class BuildManagementService {
 		return result1
 	}
 
-	public def getResource(String buildType, String phase) {
+	public def getBuildById(def collection, def project, def id) {
+		log.debug("BuildManagementService::getBuildById -- ID = " + id)
+		def query = ['api-version':'4.1']
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${id}",
+				query: query,
+				)
+		if (result == null) {
+			log.debug("BuildManagementService::getBuildById -- build with ID " + id + " not found. Returning NULL ...")
+			return null
+		}
+		return result
+	}
+
+	public def getResource(String buildType, String phase, String resourceName) {
 		def template = null
+		def filename = "${buildType}-${phase}" 
+		if (resourceName != null) {
+			filename = resourceName
+		}
 		try {
-		def s = getClass().getResourceAsStream("/build_templates/${buildType}-${phase}.json")
-		JsonSlurper js = new JsonSlurper()
-		template = js.parse(s)
-		} catch (e) {}
+			def s = getClass().getResourceAsStream("/build_templates/${filename}.json")
+			JsonSlurper js = new JsonSlurper()
+			template = js.parse(s)
+		} catch (e) {
+			log.debug("BuildManagementService::getResource -- Exception caught reading resource with name ${filename}.json not found. Returning NULL ...")
+		}
 		return template
 	}
 }
