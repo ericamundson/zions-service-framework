@@ -47,17 +47,55 @@ public class ExtractQmMetadataSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		//TODO: validate ApplicationArguments success flow.
+		given: 'Stub with Application Arguments'
+		String[] args = loadArgs()
+		def appArgs = new DefaultApplicationArguments(args)
+
+
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
+
+		then: ''
+		result == true
+	}
+
+	private String[] loadArgs() {
+		String[] args = [
+			'--clm.url=http://localhost:8080',
+			'--clm.user=user',
+			'--clm.password=password',
+			'--qm.projectArea=src',
+			'--qm.template.dir=gradle'
+		]
+		return args
 	}
 
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		//TODO: validate ApplicationArguments exception flow.
+		given:'Stub with Application Arguments'
+		String[] args = ['--clm.url=http://localhost:8080']
+		def appArgs = new DefaultApplicationArguments(args)
+
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
+
+		then:
+		thrown Exception
 	}
 
 	@Test
 	def 'execute ApplicationArguments success flow.' () {
-		//TODO: execute ApplicationArguments success flow.
+		given: 'Stub with Application Arguments'
+		def appArgs = new DefaultApplicationArguments(loadArgs())
+
+		and:
+		qmMetadataManagementService.extractQmMetadata(_, _) >> "<a1>some meta<a1>"
+		
+		when: 'calling of method under test (validate)'
+		def result = underTest.execute(appArgs)
+
+		then:
+		result == null
 	}
 }
 
@@ -70,6 +108,11 @@ class ExtractQmMetadataTestConfig {
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return factory.Mock(GenericRestClient)
+	}
+	
+	@Bean
+	QmMetadataManagementService qmMetadataManagementService() {
+		return factory.Mock(QmMetadataManagementService)
 	}
 
 	@Bean
