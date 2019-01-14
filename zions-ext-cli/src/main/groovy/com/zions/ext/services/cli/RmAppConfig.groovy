@@ -7,6 +7,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
