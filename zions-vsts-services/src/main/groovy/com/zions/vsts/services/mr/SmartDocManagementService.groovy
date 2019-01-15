@@ -67,7 +67,7 @@ class SmartDocManagementService {
 			"workItemDetails": ${wiDetails.detailString}
 			}
 			"""
-
+			println(body)
 			return doPost(body)
 		}
 		
