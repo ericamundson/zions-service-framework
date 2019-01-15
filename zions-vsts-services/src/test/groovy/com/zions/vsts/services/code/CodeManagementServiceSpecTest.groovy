@@ -116,9 +116,10 @@ class CodeManagementServiceSpecTest extends Specification {
 	@Test
 	def 'getBuildPropertiesFile success flow' () {
 		given:
-		String json = this.getClass().getResource('/testdata/items.json').text
-		JsonSlurper js = new JsonSlurper()
-		def out = js.parseText(json)
+		String file = this.getClass().getResource('/testdata/dts-re-build.properties').text
+		//JsonSlurper js = new JsonSlurper()
+		//def out = js.parseText(json)
+		def out = file
 		1 * genericRestClient.get(_) >> out
 		
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
