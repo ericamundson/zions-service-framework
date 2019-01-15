@@ -353,7 +353,6 @@ class BuildManagementServiceSpecTest extends Specification {
 	def 'getBuildTemplate other success flow' () {
 		given:
 		def items = "build-template-gradle = gradle"//new JsonSlurper().parseText(this.getClass().getResource('/testdata/items.json').text)
-		1 * codeManagementService.getBuildPropertiesFile(_,_,_,_) >> items
 		
 		and:
 		String json = this.getClass().getResource('/testdata/buildtemplates.json').text
@@ -366,7 +365,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
 		
 		when:
-		def result = underTest.getBuildTemplate('', project, repo, 'gradle', null)
+		def result = underTest.getBuildTemplate('', project, repo, 'ci', 'build-template-gradle')
 		
 		then:
 		result == null
