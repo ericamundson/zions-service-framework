@@ -73,7 +73,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 }
 
 @TestConfiguration
-@Profile("rm")
+@Profile("test")
 @ComponentScan(["com.zions.common.services.test"])
 @PropertySource("classpath:rm.properties")
 class ClmRequirementsFileManagementServiceSpecConfig {
