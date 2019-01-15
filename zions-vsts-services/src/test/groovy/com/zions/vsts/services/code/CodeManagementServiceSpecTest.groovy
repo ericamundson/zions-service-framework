@@ -126,7 +126,7 @@ class CodeManagementServiceSpecTest extends Specification {
 		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repos.json').text)
 		
 		when:
-		def result = underTest.getBuildPropertiesFile("eto-dev", project, repos,'')
+		def result = underTest.getBuildPropertiesFile("eto-dev", project, repos,'', "master")
 		
 		then:
 		"${result.count}" == "1"

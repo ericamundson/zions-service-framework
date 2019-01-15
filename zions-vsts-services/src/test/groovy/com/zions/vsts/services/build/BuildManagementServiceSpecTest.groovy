@@ -56,10 +56,10 @@ class BuildManagementServiceSpecTest extends Specification {
 	private BuildManagementService underTest
 	
 	@Test
-	def 'getRepos success flow' () {
+	def 'getResource success flow' () {
 	
 		when:
-		def result = underTest.getResource('gradle','CI')
+		def result = underTest.getResource('gradle','CI',null)
 		
 		then:
 		"${result.id}" == "83"
@@ -343,7 +343,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		1 * genericRestClient.get(_) >> out
 		
 		when:
-		def result = underTest.getBuildTemplate('', project, repo, 'release')
+		def result = underTest.getBuildTemplate('', project, repo, 'release', null)
 		
 		then:
 		result == null
@@ -366,7 +366,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
 		
 		when:
-		def result = underTest.getBuildTemplate('', project, repo, 'gradle')
+		def result = underTest.getBuildTemplate('', project, repo, 'gradle', null)
 		
 		then:
 		result == null
@@ -439,7 +439,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
 		
 		when:
-		def result = underTest.ensureBuildsForBranch('', projectData, repo, false)
+		def result = underTest.ensureBuildsForBranch('', projectData, repo, false, null, null)
 		
 		then:
 		"${result.folderName}" == ""
@@ -458,7 +458,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
 		
 		when:
-		def result = underTest.ensureBuildsForBranch('', projectData, repo, false)
+		def result = underTest.ensureBuildsForBranch('', projectData, repo, false, null, null)
 		
 		then:
 		"${result.folderName}" == ""
