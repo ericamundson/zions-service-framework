@@ -63,7 +63,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
-		8 * genericRestClient.get(_) >> out
+		7 * genericRestClient.get(_) >> out
 		
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		projectManagementService.getProject(_, _, _) >> project
@@ -79,7 +79,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 		genericRestClient.getTfsUrl() >> "visualstudio"
 		
 		when:
-		def result = underTest.ensureReleases("eto-dev", "DigitalBanking", '', '', '', team)
+		def result = underTest.ensureReleases("visualstudioz", "DigitalBanking", '', '', '', team)
 		
 		then:
 		result != null
@@ -114,7 +114,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 		def template = new JsonSlurper().parseText(this.getClass().getResource('/testdata/singletemplate.json').text)
 		//template << artifacts
 		when:
-		def result = underTest.ensureReleases("eto-dev", "DigitalBanking", template, '', '', team)
+		def result = underTest.ensureReleases("visualstudioz", "DigitalBanking", template, '', '', team)
 		
 		then:
 		result != null
