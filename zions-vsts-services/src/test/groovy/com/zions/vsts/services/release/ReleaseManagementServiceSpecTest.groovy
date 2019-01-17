@@ -63,7 +63,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
-		7 * genericRestClient.get(_) >> out
+		4 * genericRestClient.get(_) >> out
 		
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		projectManagementService.getProject(_, _, _) >> project
