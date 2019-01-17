@@ -139,22 +139,6 @@ class ClmRequirementsItemManagementService {
 		if (this.fieldMap["${handlerName}"] != null) {
 			def data = [itemData: rmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map]
 			def fieldData = this.fieldMap["${handlerName}"].execute(data)
-//			if (fieldData != null) {
-//				String val = "${fieldData.'value'}"
-//				if (field.defaultValue != null) {
-//					val = "${field.defaultValue}"
-//				}
-//				if (field.values.size() > 0) {
-//
-//					field.values.each { aval ->
-//						if ("${fValue}" == "${aval.source}") {
-//							val = "${aval.target}"
-//							return
-//						}
-//					}
-//				}
-//				fieldData.'value' = val
-//			}
 			return fieldData
 		}
 		return null

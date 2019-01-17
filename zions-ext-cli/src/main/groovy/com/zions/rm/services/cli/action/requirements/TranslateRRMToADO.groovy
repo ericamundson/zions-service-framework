@@ -11,6 +11,7 @@ import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementServ
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
 import com.zions.qm.services.metadata.QmMetadataManagementService
+import com.zions.qm.services.test.ClmTestAttachmentManagementService
 import com.zions.rm.services.requirements.ClmRequirementsItemManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
@@ -21,6 +22,7 @@ import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
 import groovy.xml.XmlUtil
+import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 
 /**
  * Provides command line interaction to synchronize RRM requirements management with ADO.
@@ -145,6 +147,8 @@ class TranslateRRMToADO implements CliAction {
 	ClmRequirementsManagementService clmRequirementsManagementService
 	@Autowired 
 	RequirementsMappingManagementService rmMappingManagementService
+	@Autowired
+	ClmRequirementsFileManagementService rmFileManagementService
 	
 	public TranslateRRMToADO() {
 	}
@@ -214,14 +218,19 @@ class TranslateRRMToADO implements CliAction {
 					else if (module.orderedArtifacts[it].isHeading()) {
 						module.orderedArtifacts[it].setDescription("") // If simple heading, remove duplicate description
 					}
-					def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
-					def aid = module.orderedArtifacts[it].getID()
-					changes.each { key, val ->
-						String idkey = "${aid}-${key}"
-						idMap[count] = idkey
-						changeList.add(val)
-						count++
-						
+					if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
+						def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
+						def aid = module.orderedArtifacts[it].getID()
+						changes.each { key, val ->
+							String idkey = "${aid}-${key}"
+							idMap[count] = idkey
+							changeList.add(val)
+							count++
+							
+						}
+					}
+					else {
+						println("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
 					}
 					if (it >= module.orderedArtifacts.size() - 1) {
 						break
@@ -229,16 +238,49 @@ class TranslateRRMToADO implements CliAction {
 					it++
 				}
 				
+
+				// Create work items and SmartDoc container in Azure DevOps
 				if (changeList.size() > 0) {
-					println("${getCurTimestamp()} - Creating Work Items...")
+					// Process work item changes in Azure DevOps
+					println("${getCurTimestamp()} - Processing work item changes...")
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+					
+					// Create the SmartDoc
 					println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
 					def result = smartDocManagementService.createSmartDoc(module, collection, mrTfsUrl, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
-					if (result.code != "") {
-						println("SmartDoc creation failed.  Error message: ${result.message}, Error name: ${result.name}")
+					if (result.error.code != "null") {
+						println("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
+					}
+					else {
+						println("SmartDoc creation succeeded. Result: ${result.result}")
 					}
 				}
+				
+				// Upload Attachments to Azure DevOps
+				println("${getCurTimestamp()} - Uploading attachments...")
+				changeList.clear()
+				idMap.clear()
+				module.orderedArtifacts.each { artifact ->
+					if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
+						def files = []
+						files[0] = rmFileManagementService.cacheRequirementFile(artifact)
+						
+						String id = "${artifact.getID()}-${artifact.getTfsWorkitemType()}"
 
+						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+						if (wiChanges != null) {
+							idMap[count] = "${id}"
+							changeList.add(wiChanges)
+							count++
+						}
+						
+					}
+				}
+				if (changeList.size() > 0) {
+					// Associate attachments to work items in Azure DevOps
+					println("${getCurTimestamp()} - Associating attachments to work items...")
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+				}
 			}
 			println("Processing completed")
 			/*
@@ -268,57 +310,10 @@ class TranslateRRMToADO implements CliAction {
 			}
 			*/
 		}
-		//		workManagementService.testBatchWICreate(collection, tfsProject)
-		//apply work links
-		if (includes['links'] != null) {
-			def testItems = [] //query for req
-			while (true) {
-				def changeList = []
-				def idMap = [:]
-				int count = 0
-				def filtered = filtered(testItems, rmFilter)
-				filtered.each {	moduleRef ->			
-					
-				}
-				def nextLink = testItems.'**'.find { node ->
-					
-					node.name() == 'link' && node.@rel == 'next'
-				}
-				if (nextLink == null) break
-				testItems = [] //next page of query
-			}
-		}
-
-		//extract & apply attachments.
-//		if (includes['attachments'] != null) {
-//			def linkMapping = processTemplateService.getLinkMapping(mapping)
-//			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
-//			while (true) {
-//				def changeList = []
-//				def idMap = [:]
-//				int count = 0
-//				def filtered = filtered(workItems, wiFilter)
-//				filtered.each { workitem ->
-//					int id = Integer.parseInt(workitem.id.text())
-//					def files = attachmentsManagementService.cacheWorkItemAttachments(id)
-//					def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-//					if (wiChanges != null) {
-//						idMap[count] = "${id}"
-//						changeList.add(wiChanges)
-//						count++
-//					}
-//				}
-//				if (changeList.size() > 0) {
-//					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-//				}
-//				def rel = workItems.@rel
-//				if ("${rel}" != 'next') break
-//					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
-//			}
-//		}
 
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
+	
 	def getCurTimestamp() {
 		new Date().format( 'yyyy/MM/dd HH:MM' )
 	}
