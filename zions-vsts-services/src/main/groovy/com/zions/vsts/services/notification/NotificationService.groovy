@@ -30,24 +30,29 @@ public class NotificationService {
 	public NotificationService() {
 	}
 
-    public String sendBuildCreatedNotification(String folder, String ciBuildDef, String releaseBuildDef) {
+    public String sendBuildCreatedNotification(String folder, String ciBuildDef, String releaseBuildDef, String releaseDefName) {
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
 		log.debug("NotificationService::sendBuildCreatedNotification -- Folder: ${folder}, CI build name: ${ciBuildDef}, Release build name: ${releaseBuildDef}")
         try {
             helper.setTo("${recipientEmailAddress}")
-            String body = "The following build definitions have been created from templates: \n" +
+            String body = "The following build definitions were created from templates: \n" +
             			"Folder name: "+folder+"\n Builds: \n"
             if (ciBuildDef != "") {
-            	body += ciBuildDef+"\n"
+            	body += "  " + ciBuildDef + "\n"
             }
             if (releaseBuildDef != "") {
-            	body += releaseBuildDef+"\n"
+            	body += "  " + releaseBuildDef + "\n"
             }
-            body += "\n These new build definitions need to be reviewd for completeness and accuracy."
+            if (releaseDefName != "") {
+            	body += "\n The following release definition was created from a template: \n" +
+            		"  " + releaseDefName + "\n"
+            }
+
+            body += "\n These new build and release definitions need to be reviewed for completeness and accuracy."
             helper.setText(body);
-            helper.setSubject("New build definitions created! Please review");
+            helper.setSubject("New pipeline definitions created! Please review");
 
     		log.debug("NotificationService::sendBuildCreatedNotification -- Sending build created email notification")
             sender.send(message);

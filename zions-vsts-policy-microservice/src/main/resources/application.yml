@@ -38,6 +38,11 @@ tfs:
       name: generic
     properties:
       file: dts-re-build.properties
+  release:
+    use:
+      template: false
+    generic:
+      name: template-release
 
 # Specify port for Tomcat (default = 8080)
 server:

@@ -1,6 +1,7 @@
 package com.zions.vsts.services.policy;
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import groovy.util.logging.Slf4j
 import groovy.json.JsonBuilder;
@@ -9,7 +10,10 @@ import groovyx.net.http.ContentType
 
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.build.BuildManagementService
+import com.zions.vsts.services.code.CodeManagementService
+import com.zions.vsts.services.release.ReleaseManagementService
 import com.zions.vsts.services.notification.NotificationService
+import com.zions.vsts.services.tfs.rest.GenericRestClient
 
 /**
  * 
@@ -21,22 +25,36 @@ import com.zions.vsts.services.notification.NotificationService
 public class PolicyManagementService {
 
 	@Autowired
+	@Value('${tfs.build.properties.file}')
+	private String buildPropsFileName
+
+	@Autowired
 	private IGenericRestClient genericRestClient;
 
 	@Autowired
 	BuildManagementService buildManagementService
 	
 	@Autowired
+	private CodeManagementService codeManagementService
+
+	@Autowired
+	ReleaseManagementService releaseManagementService
+	
+	@Autowired
 	NotificationService notificationService
+	
+	private java.util.Properties branchProps
+
+	private static final String ENFORCE_BUILD_POLICY = "enforce-build-policy"
 
 	public PolicyManagementService() {
 	}
 
 	/**
-	 *  This method handles ensuring that all the necessary policies and build definitions are in
+	 *  This method handles ensuring that all the necessary policies, build definitions and release definitions are in
 	 *  place for a new branch.
 	 *  
-	 *  @return Response - ??
+	 *  @return Response
 	 */
 
 	public def handleNewBranch(def resourceData, def collection, def branchName) {
@@ -49,7 +67,17 @@ public class PolicyManagementService {
 	}
 
 	public def ensurePolicies(def collection, def repoData, def branchName) {
-		// first create the CI build policy
+		def branch = "${branchName}".substring("refs/heads/".length())
+		log.debug("PolicyManagementService::ensurePolicies -- Get build properties for branch ${branch}")
+		def buildPropertiesFile = codeManagementService.getBuildPropertiesFile(collection, repoData.project, repoData, buildPropsFileName, branch)
+		if (buildPropertiesFile != null) {
+			// load properties from file
+			String fileContent = buildPropertiesFile.toString()
+			this.branchProps = new java.util.Properties()
+			this.branchProps.load(new java.io.StringBufferInputStream(fileContent))
+		}
+
+		// first create the CI build validation policy
 		ensureBuildPolicy(collection, repoData, branchName)
 		// create other policies ...
 		ensureMinimumApproversPolicy(collection, repoData, branchName)
@@ -65,15 +93,31 @@ public class PolicyManagementService {
 	 */
 	public def ensureBuildPolicy(def collection, def repoData, def branchName) {
 		
+		// See if branch participates in build policy enforcement
+		String enforceBuildPolicy = this.branchProps.getProperty("enforce-build-policy")
+		if (enforceBuildPolicy != null && !enforceBuildPolicy.equalsIgnoreCase("true")) {
+			log.debug("PolicyManagementService::ensureBuildPolicy -- Branch opted OUT of build policy enforcement ...")
+			return
+		}
+		
 		// get the CI build
 		def projectData = repoData.project
 		// check for DR branch
 		boolean isDRBranch = ("${branchName}".toLowerCase().startsWith("refs/heads/dr/"))
+		def ciBuildTemplate = null
+		def relBuildTemplate = null
+		if (!isDRBranch) {
+			ciBuildTemplate = this.branchProps.getProperty("build-template-ci")
+			relBuildTemplate = this.branchProps.getProperty("build-template-release")
+		}
+		log.debug("PolicyManagementService::ensureBuildPolicy -- Specified CI build template = ${ciBuildTemplate}")
+		log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release build template = ${relBuildTemplate}")
+
 		// result is a JSON object
-		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, isDRBranch)
+		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, isDRBranch, ciBuildTemplate, relBuildTemplate)
 		int ciBuildId = result.ciBuildId
 		if (ciBuildId == -1) {
-			log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was returned. Unable to create the validation build policy!")
+			log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was found or created. Unable to create the validation build policy!")
 			return null
 		}
 		def pipelineName = isDRBranch ? "${repoData.name} DR validation" : "${repoData.name} validation"
@@ -85,16 +129,37 @@ public class PolicyManagementService {
 		]
 		def res = createPolicy(collection, projectData, policy)
 		log.debug("PolicyManagementService::ensureBuildPolicy -- result = "+res)
+		
+		int relBuildId = result.releaseBuildId
+		// create release definition for release build
+		def relDef = null
+		def relDefName = ""
+		if (relBuildId > -1) {
+			def releaseTemplate = null
+			// look for specified release template
+			if (!isDRBranch) {
+				releaseTemplate = this.branchProps.getProperty("release-template")
+			}
+			log.debug("PolicyManagementService::ensureBuildPolicy -- Release Build Definition created. Will attempt to create a release definition")
+			relDef = releaseManagementService.ensureReleaseForBuild(collection, projectData, repoData, relBuildId, isDRBranch, releaseTemplate)
+		}
+		if (relDef == null) {
+			log.error("PolicyManagementService::ensureBuildPolicy -- Release Definition creation failed!")
+		} else {
+			relDefName = "${relDef.name}"
+			log.debug("PolicyManagementService::ensureBuildPolicy -- Release Definition created: "+relDefName)
+		}
+		
 		// send email if builds were created
 		if (result.ciBuildName != "" || result.releaseBuildName != "") {
 			// send notification of new builds created
-			notificationService.sendBuildCreatedNotification("${repoData.name}", result.ciBuildName, result.releaseBuildName)
+			notificationService.sendBuildCreatedNotification("${repoData.name}", result.ciBuildName, result.releaseBuildName, relDefName)
 		}
 	}
 	
 	private def createPolicy(def collection, def projectData, def policy) {
 		def body = new JsonBuilder(policy).toPrettyString()
-		log.debug("PolicyManagementService::createPolicy -- Request body = "+body)
+		//log.debug("PolicyManagementService::createPolicy -- Request body = "+body)
 		def result = genericRestClient.post(
 				requestContentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_apis/policy/configurations",

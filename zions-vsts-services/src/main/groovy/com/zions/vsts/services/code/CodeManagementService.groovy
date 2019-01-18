@@ -2,7 +2,6 @@ package com.zions.vsts.services.code
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -31,9 +30,6 @@ class CodeManagementService {
 	@Autowired
 	private PermissionsManagementService permissionsManagementService
 	
-	@Autowired
-	private CommandManagementService commandManagementService
-
 	public CodeManagementService() {
 		
 	}
@@ -117,17 +113,18 @@ class CodeManagementService {
 
 	}
 
-	public def getBuildPropertiesFile(def collection, def project, def repo, def filename) {
+	public def getBuildPropertiesFile(def collection, def project, def repo, def filename, def branchName) {
 		log.debug("CodeManagementService::getBuildPropertiesFile -- collection: ${collection}, project: ${project.id}, repo: ${repo.id}, filename: ")
 		String filePath = "/${filename}"
-		def query = ['api-version':'4.1','path':filePath, 'includeContent':true]
+		def query = ['api-version':'4.1','path':filePath, 'includeContent':true, 'versionDescriptor.version':"${branchName}",'versionDescriptor.versionType':'branch']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/items",
 			query: query
 		)
 		log.debug("CodeManagementService::getBuildPropertiesFile -- Return result: "+result)
-		return result
+		if (result == null) return null
+		return result.content
 
 	}
 

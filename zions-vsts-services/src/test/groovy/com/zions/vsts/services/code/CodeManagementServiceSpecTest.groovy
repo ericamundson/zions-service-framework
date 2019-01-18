@@ -116,20 +116,21 @@ class CodeManagementServiceSpecTest extends Specification {
 	@Test
 	def 'getBuildPropertiesFile success flow' () {
 		given:
-		String json = this.getClass().getResource('/testdata/items.json').text
-		JsonSlurper js = new JsonSlurper()
-		def out = js.parseText(json)
-		1 * genericRestClient.get(_) >> out
+		String file = this.getClass().getResource('/testdata/dts-re-build.properties').text
+		//JsonSlurper js = new JsonSlurper()
+		//def out = js.parseText(json)
+		//def out = content.file
+		1 * genericRestClient.get(_) >> [content:file]
 		
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		
 		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repos.json').text)
 		
 		when:
-		def result = underTest.getBuildPropertiesFile("eto-dev", project, repos,'')
-		
+		def result = underTest.getBuildPropertiesFile("eto-dev", project, repos,'', "master")
+
 		then:
-		"${result.count}" == "1"
+		result != null
 	}
 	
 	@Test
