@@ -291,7 +291,7 @@ public class ReleaseManagementService {
 			JsonSlurper js = new JsonSlurper()
 			template = js.parse(s)
 		} catch (e) {
-			log.debug("ReleaseManagementService::getTemplateAsResource -- Exception caught reading resource with name ${filename}.json not found. Returning NULL ...")
+			log.debug("ReleaseManagementService::getTemplateAsResource -- Exception caught reading resource with name ${resourceName}.json not found. Returning NULL ...")
 		}
 		return template
 	}
