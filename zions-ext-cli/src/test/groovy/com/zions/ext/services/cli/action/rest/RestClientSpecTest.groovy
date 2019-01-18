@@ -2,6 +2,7 @@ package com.zions.ext.services.cli.action.rest
 
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.DefaultApplicationArguments
 import org.springframework.boot.test.context.TestConfiguration;
@@ -69,11 +70,17 @@ public class RestClientSpecTest extends Specification {
 
 	@Autowired
 	CodeManagementService codeManagementService
+	
+	@Value('${test.json.response.file}')
+	String jsonResponseFileName
+	
+	@Value('${test.xml.response.file}')
+	String xmlResponseFileName
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
 		given: 'Stub with Application Arguments'
-		String[] args = loadArgs('get','json','jsonResponse.json')
+		String[] args = loadArgs('get','json', jsonResponseFileName)
 		def appArgs = new DefaultApplicationArguments(args)
 
 		when: 'calling of method under test (validate)'
@@ -111,12 +118,12 @@ public class RestClientSpecTest extends Specification {
 		genericRestClient.default(_) >> out
 		
 		when: 'calling of method under test (validate)'
-		def resultGet = underTest.execute(new DefaultApplicationArguments(loadArgs('get','json','jsonResponse.json')))
-		def resultPost = underTest.execute(new DefaultApplicationArguments(loadArgs('post','json','jsonResponse.json')))
-		def resultPatch = underTest.execute(new DefaultApplicationArguments(loadArgs('patch','json','jsonResponse.json')))
-		def resultPut = underTest.execute(new DefaultApplicationArguments(loadArgs('put','json','jsonResponse.json')))
-		def resultDelete = underTest.execute(new DefaultApplicationArguments(loadArgs('delete','json','jsonResponse.json')))
-		def resultDefault = underTest.execute(new DefaultApplicationArguments(loadArgs('default','json','jsonResponse.json')))
+		def resultGet = underTest.execute(new DefaultApplicationArguments(loadArgs('get','json',jsonResponseFileName)))
+		def resultPost = underTest.execute(new DefaultApplicationArguments(loadArgs('post','json',jsonResponseFileName)))
+		def resultPatch = underTest.execute(new DefaultApplicationArguments(loadArgs('patch','json',jsonResponseFileName)))
+		def resultPut = underTest.execute(new DefaultApplicationArguments(loadArgs('put','json',jsonResponseFileName)))
+		def resultDelete = underTest.execute(new DefaultApplicationArguments(loadArgs('delete','json',jsonResponseFileName)))
+		def resultDefault = underTest.execute(new DefaultApplicationArguments(loadArgs('default','json',jsonResponseFileName)))
 		
 		then:
 		resultGet == null
@@ -131,9 +138,7 @@ public class RestClientSpecTest extends Specification {
 	def 'execute ApplicationArguments success flow for xml.' () {
 		given:
 		given:
-		String json = this.getClass().getResource('/testdata/xmlResponse.xml').text
-		JsonSlurper js = new JsonSlurper()
-		def out = '<a1>adf</a1>'//js.parseText(json)
+		def out = '<a1>adf</a1>'
 		genericRestClient.get(_) >> out
 		genericRestClient.post(_) >> out
 		genericRestClient.patch(_) >> out
@@ -142,12 +147,12 @@ public class RestClientSpecTest extends Specification {
 		genericRestClient.default(_) >> out
 		
 		when: 'calling of method under test (validate)'
-		def resultGet = underTest.execute(new DefaultApplicationArguments(loadArgs('get','xml','xmlResponse.xml')))
-		def resultPost = underTest.execute(new DefaultApplicationArguments(loadArgs('post','xml','xmlResponse.xml')))
-		def resultPatch = underTest.execute(new DefaultApplicationArguments(loadArgs('patch','xml','xmlResponse.xml')))
-		def resultPut = underTest.execute(new DefaultApplicationArguments(loadArgs('put','xml','xmlResponse.xml')))
-		def resultDelete = underTest.execute(new DefaultApplicationArguments(loadArgs('delete','xml','xmlResponse.xml')))
-		def resultDefault = underTest.execute(new DefaultApplicationArguments(loadArgs('default','xml','xmlResponse.xml')))
+		def resultGet = underTest.execute(new DefaultApplicationArguments(loadArgs('get','xml',xmlResponseFileName)))
+		def resultPost = underTest.execute(new DefaultApplicationArguments(loadArgs('post','xml',xmlResponseFileName)))
+		def resultPatch = underTest.execute(new DefaultApplicationArguments(loadArgs('patch','xml',xmlResponseFileName)))
+		def resultPut = underTest.execute(new DefaultApplicationArguments(loadArgs('put','xml',xmlResponseFileName)))
+		def resultDelete = underTest.execute(new DefaultApplicationArguments(loadArgs('delete','xml',xmlResponseFileName)))
+		def resultDefault = underTest.execute(new DefaultApplicationArguments(loadArgs('default','xml',xmlResponseFileName)))
 		
 		then:
 		resultGet == null
