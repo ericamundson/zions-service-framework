@@ -19,7 +19,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\ZFNB"/>
+			<defaultvalue target="WebCMS\VBC"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -103,7 +103,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\ZFNB"/>
+			<defaultvalue target="WebCMS\VBC"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -188,7 +188,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\ZFNB"/>
+			<defaultvalue target="WebCMS\VBC"/>
 		</field>
 		<!--  
 New 	
@@ -294,7 +294,7 @@ Removed
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\ZFNB"/>
+			<defaultvalue target="WebCMS\VBC"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -381,7 +381,7 @@ Removed
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\ZFNB"/>
+			<defaultvalue target="WebCMS\VBC"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
