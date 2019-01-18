@@ -771,6 +771,7 @@ public class WorkitemAttributeManager  {
 		Identifier<? extends ILiteral> currentIdentifier = (Identifier<? extends ILiteral>) value;
 		ILiteral literal = enumeration
 				.findEnumerationLiteral(currentIdentifier);
+		if (literal == null) return CONSTANT_NO_VALUE;
 		return literal.getName();
 	}
 

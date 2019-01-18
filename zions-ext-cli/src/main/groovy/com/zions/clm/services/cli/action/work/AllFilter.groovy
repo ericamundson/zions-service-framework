@@ -26,8 +26,11 @@ import com.zions.common.services.query.IFilter
 class AllFilter implements IFilter {
 
 	public def filter(def workItems) {
+		List<String> excluded = ["Track Build Item", "Retrospective",  "Adoption Item", "Infrastrucure Request"]
 		return workItems.workItem.findAll { wi ->
-			true
+			String type = "${wi.type.name.text()}"
+			boolean val = !excluded.contains(type)
+			return val
 		}
 	}
 
