@@ -43,6 +43,9 @@ class ClmModuleElement {
 	public String getID() {
 		return attributeMap.'Identifier'
 	}
+	public String setID(in_id) {
+		attributeMap.'Identifier' = in_id
+	}
 	public void setTitle(String in_title) {
 		attributeMap.'title' = in_title
 	}
