@@ -5,12 +5,12 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
-import com.zions.vsts.services.tfs.rest.GenericRestClient;
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
@@ -207,13 +207,11 @@ public class ReleaseManagementService {
 		def body = new JsonBuilder(template).toPrettyString()
 		//log.debug("ReleaseManagementService::writeReleaseDefinition -- Request body = ${body}")
 
-		def baseUri = genericRestClient.getTfsUrl().replace('visualstudio', 'vsrm.visualstudio')
-		def releaseApi = "/${collection}/${project.id}/_apis/release/definitions".replace('//', '/')
-		def uri = "${baseUri}${releaseApi}"
-		log.debug("ReleaseManagementService::writeReleaseDefinition -- URI = ${uri}")
+		def releaseUri = getReleaseApiUrl(collection, project)
+		log.debug("ReleaseManagementService::writeReleaseDefinition -- URI = ${releaseUri}/definitions")
 		def result = genericRestClient.post(
 			requestContentType: ContentType.JSON,
-			uri: "${uri}",
+			uri: "${releaseUri}/definitions",
 			body: body,
 			headers: [Accept: 'application/json;api-version=4.1-preview.3;excludeUrls=true'],
 			)
@@ -222,14 +220,12 @@ public class ReleaseManagementService {
 	
 	public def getRelease(def collection, def project, String name) {
 		log.debug("ReleaseManagementService::getRelease -- Looking for Release Definition with name ${name}")
-		def query = ['api-version':'4.1-preview.3','searchText':"${name}",'isExactNameMatch':'true']
-		def baseUri = genericRestClient.getTfsUrl().replace('visualstudio', 'vsrm.visualstudio')
-		def releaseApi = "/${collection}/${project.id}/_apis/release/definitions".replace('//', '/')
-		def uri = "${baseUri}${releaseApi}"
-		log.debug("ReleaseManagementService::getRelease -- URI = ${uri}")
+		def query = ['api-version':'4.1-preview.3','searchText':"${name}",isExactNameMatch:true]
+		def releaseUri = getReleaseApiUrl(collection, project)
+		log.debug("ReleaseManagementService::getRelease -- URI = ${releaseUri}/definitions")
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
-				uri: "${uri}",
+				uri: "${releaseUri}/definitions",
 				query: query,
 				)
 		//log.debug("ReleaseManagementService::getRelease -- Result: "+ result)
@@ -240,7 +236,7 @@ public class ReleaseManagementService {
 		query = ['api-version':'4.1-preview.3']
 		def result1 = genericRestClient.get(
 				contentType: ContentType.JSON,
-				uri: "${uri}/${result.value[0].id}",
+				uri: "${releaseUri}/definitions/${result.value[0].id}",
 				query: query,
 				)
 		//query = ['api-version':'4.1', 'propertyFilters':'processParameters']
@@ -262,10 +258,10 @@ public class ReleaseManagementService {
 				efolder = efolder.replace('+', '%20')
 		
 				def body = new JsonBuilder(folderObj).toPrettyString()
-				def uri = genericRestClient.getTfsUrl().replace('visualstudio', 'vsrm.visualstudio')
+				def releaseUri = getReleaseApiUrl(collection, project)
 				def result = genericRestClient.post(
 					requestContentType: ContentType.JSON,
-					uri: "${uri}/${collection}/${eproject}/_apis/Release/folders/${efolder}",
+					uri: "${releaseUri}/folders/${efolder}",
 					body: body,
 					headers: [accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
 					)
@@ -275,6 +271,17 @@ public class ReleaseManagementService {
 			}
 			i++
 		}
+	}
+
+	def getReleaseApiUrl(def collection, def project) {
+		def baseUri = genericRestClient.getTfsUrl()
+		if ("${baseUri}".contains("visualstudio.com")) {
+			baseUri = baseUri.replace('visualstudio.com', 'vsrm.visualstudio.com')
+		} else {
+			baseUri = baseUri.replace('dev.azure.com', 'vsrm.dev.azure.com')
+		}
+		def releaseApi = "/${collection}/${project.id}/_apis/release".replace('//', '/')
+		return "${baseUri}${releaseApi}"
 	}
 
 	public def getTemplateAsResource(String resourceName) {

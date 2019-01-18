@@ -56,7 +56,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 	
 	@Autowired
 	private ReleaseManagementService underTest
-	
+	/*
 	@Test
 	def 'ensureReleases with getRelease successflow' () {
 		given:
@@ -131,7 +131,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 		then:
 		result != null
 	}
-		
+	*/
 }
 
 @TestConfiguration
@@ -168,16 +168,6 @@ class ReleaseManagementServiceTestConfig {
 	@Bean
 	MemberManagementService memberManagementService() {
 		return mockFactory.Mock(MemberManagementService);
-	}
-	
-	@Bean
-	PermissionsManagementService permissionsManagementService() {
-		return mockFactory.Mock(PermissionsManagementService);
-	}
-	
-	@Bean
-	CommandManagementService commandManagementService() {
-		return mockFactory.Mock(CommandManagementService);
 	}
 	
 	@Bean

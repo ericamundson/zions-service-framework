@@ -1,7 +1,6 @@
 package com.zions.vsts.services.tfs.rest
 
 import com.zions.common.services.rest.AGenericRestClient
-import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.HttpResponseDecorator
