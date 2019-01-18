@@ -49,10 +49,9 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 		ritem.setID('123456')
 		ritem.setTfsWorkitemType('User Story')
 		
-		and: 'Cache directory exists for this item'
-		String id = "${ritem.getID()}-${ritem.getTfsWorkitemType()}"
-		def idMap = [id]
-		cacheManagementService.saveToCache("wi json stuff", idMap[0], ICacheManagementService.WI_DATA)
+		and: 'Step of cacheManagementService saveBinaryAsAttachment call'
+		File attFile = new File('attachment.txt')
+		1 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> attFile
 		
 		and: 'Stub of clmRequirementsManagementService getContent call'
 		String encodedStuff = "Here's some text".bytes.encodeBase64()
@@ -74,8 +73,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 
 @TestConfiguration
 @Profile("test")
-@ComponentScan(["com.zions.common.services.test"])
-@PropertySource("classpath:rm.properties")
+@PropertySource("classpath:test.properties")
 class ClmRequirementsFileManagementServiceSpecConfig {
 	def factory = new DetachedMockFactory()
 	
@@ -91,17 +89,12 @@ class ClmRequirementsFileManagementServiceSpecConfig {
 	
 	@Bean
 	ICacheManagementService cacheManagementService() {
-		return new CacheManagementService()
+		return factory.Mock(CacheManagementService)
 	}
 	
 	@Bean
 	ClmRequirementsFileManagementService underTest() {
 		return new ClmRequirementsFileManagementService()
-	}
-	
-	@Bean
-	DataGenerationService dataGenerationService() {
-		return new DataGenerationService()
 	}
 	
 	@Bean
