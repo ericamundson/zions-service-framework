@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<entry xmlns="http://www.w3.org/2005/Atom">
+		<id>https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/schema/qm.xsd
+		</id>
+		<link
+			href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/schema/qm.xsd"
+			rel="alternate" type="application/xml" title="" />
+	</entry>
+	<entry xmlns="http://www.w3.org/2005/Atom">
+		<id>https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService/customAttributesDTO
+		</id>
+		<link
+			href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService/customAttributesDTO"
+			rel="alternate" type="application/xml" title="" />
+	</entry>
+	<element name="testplan">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="testsuite">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="testcase">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="testscript">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="TestCaseExecutionRecord">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="executionworkitem">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="TestSuiteExecutionRecord">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="suiteexecutionrecord">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="TestCaseExecutionResult">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="executionresult">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="TestSuiteExecutionResult">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="testsuitelog">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+	<element name="step">
+		<complexType>
+			<annotation>
+				<documentation xml:lang="en">
+					A test case answers a question the status about the state of a piece
+					of functionality in your product. It contains optional sections
+					that can be used to enter the data on the concepts you would like
+					to track.
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="abstract-testcase" />
+			</complexContent>
+		</complexType>
+	</element>
+</feed>

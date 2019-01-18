@@ -187,7 +187,7 @@ class QmMetadataManagementService {
 	 */
 	def generateCategoryFields(String projectArea, def key, MarkupBuilder bXml) {
 		def cats = this.getCategories(key, projectArea)
-		cats.'soapenv:Body'.response.returnValue.values.each { cat ->
+			cats.'soapenv:Body'.response.returnValue.values.each { cat ->
 			if (!cat.archived) {
 				bXml.FIELD(name: cat.name, refname: cat.itemId, type: 'string') {
 					ALLOWEDVALUES(expanditems: true) {

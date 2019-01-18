@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import groovy.util.slurpersupport.NodeChild
 import groovy.xml.XmlUtil
+import groovyx.net.http.ContentType
 
 /**
  * Handles queries into DNG to navigate object structure of DNG.
@@ -73,21 +74,24 @@ class ClmRequirementsManagementService {
 					moduleType = parseArtifactAttributes(child, moduleAttributeMap )
 				}
 				else if (iName == "moduleContext") {
+					def kk = 0
 					child.children().each { contextBinding ->
-						String about = contextBinding.about
-						String artifactTitle = contextBinding.title
-						String format = contextBinding.format
-						int depth = contextBinding.depth.toInteger()
-						String isHeading = contextBinding.isHeading
-						String baseURI = contextBinding.core
-						
-						ClmModuleElement artifact = new ClmModuleElement(artifactTitle, baseURI, depth, format, isHeading, about)
-						orderedArtifacts.add(artifact)
-						if (format == "Text") {
-							// Get artifact details (attributes and links) from DNG
-							getTextArtifact(artifact)
-						}
-
+							String about = contextBinding.about
+							String artifactTitle = contextBinding.title
+							String format = contextBinding.format
+							int depth = contextBinding.depth.toInteger()
+							String isHeading = contextBinding.isHeading
+							String baseURI = contextBinding.core
+							
+							ClmModuleElement artifact = new ClmModuleElement(artifactTitle, baseURI, depth, format, isHeading, about)
+							orderedArtifacts.add(artifact)
+							if (format == "Text") {
+								// Get artifact details (attributes and links) from DNG
+								getTextArtifact(artifact)
+							}
+							else {
+								getNonTextArtifact(artifact)
+							}
 					}
 					def j = 1
 				}
@@ -150,7 +154,34 @@ class ClmRequirementsManagementService {
 		return
 
 	}
-	
+	private void getNonTextArtifact(ClmModuleElement in_artifact) {
+		
+		def result = rmGenericRestClient.get(
+				uri: in_artifact.about.replace("resources/", "publish/resources?resourceURI="),
+				headers: [Accept: 'application/xml'] );
+					
+		// Extract artifact attributes
+		result.children().each { artifact ->
+			artifact.children().each { child ->
+				String iName = child.name()
+				if (iName == "collaboration" ) {
+					// Set artifact type and attributes
+					String artifactType = parseArtifactAttributes( child, in_artifact.attributeMap)
+					in_artifact.setArtifactType(artifactType)
+				}
+				else if (iName == "wrappedResourceURI") {
+					// Set primary text
+					String primaryText = child
+					in_artifact.attributeMap.put("Primary Text", primaryText)
+					String hRef = "${child}"
+					in_artifact.setFileHref(hRef)
+				}
+			}
+		}
+		
+		return
+
+	}
 	private String parseArtifactAttributes(NodeChild in_rootCollaborationNode, Map out_attributeMap ) {
 		// Declare type as return argument
 		String artifactType
@@ -193,5 +224,14 @@ class ClmRequirementsManagementService {
 		return artifactType
 
 	}
+	
+	def getContent(String uri) {
+		def result = rmGenericRestClient.get(
+			withHeader: true,
+			uri: uri,
+			contentType: ContentType.BINARY
+			);
+		return result
 
+	}
 }

@@ -1,0 +1,15 @@
+{
+    "requestContentType": "application/json",
+    "contentType": "application/json",
+    "uri": "https://dev.azure.com/eto-dev/DigitalBanking/_apis/test/Runs/149/results",
+    "query": {
+        "api-version": "5.0-preview.2"
+    },
+    "body": [
+        {
+            "testCaseReferenceId": 25333,
+            "priority": 2,
+            "outcome": "Passed"
+        }
+    ]
+}

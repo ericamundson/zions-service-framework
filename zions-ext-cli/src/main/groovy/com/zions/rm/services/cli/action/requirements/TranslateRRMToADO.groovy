@@ -11,15 +11,18 @@ import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementServ
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
 import com.zions.qm.services.metadata.QmMetadataManagementService
+import com.zions.qm.services.test.ClmTestAttachmentManagementService
 import com.zions.rm.services.requirements.ClmRequirementsItemManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
+import com.zions.vsts.services.mr.SmartDocManagementService
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
 import groovy.xml.XmlUtil
+import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 
 /**
  * Provides command line interaction to synchronize RRM requirements management with ADO.
@@ -136,13 +139,16 @@ class TranslateRRMToADO implements CliAction {
 	FileManagementService fileManagementService;
 	@Autowired
 	WorkManagementService workManagementService
-	
+	@Autowired
+	SmartDocManagementService smartDocManagementService
 	@Autowired 
 	ClmRequirementsItemManagementService clmRequirementsItemManagementService
 	@Autowired 
 	ClmRequirementsManagementService clmRequirementsManagementService
 	@Autowired 
 	RequirementsMappingManagementService rmMappingManagementService
+	@Autowired
+	ClmRequirementsFileManagementService rmFileManagementService
 	
 	public TranslateRRMToADO() {
 	}
@@ -158,17 +164,23 @@ class TranslateRRMToADO implements CliAction {
 			}
 		} catch (e) {}
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
-
-		String projectURI = data.getOptionValues('clm.projectAreaURI')[0]
-
+		String mrTfsUrl = data.getOptionValues('mr.tfsUrl')[0]
+		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
+		String tfsUser = data.getOptionValues('tfs.user')[0]
 		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
 		String rmQuery = data.getOptionValues('rm.query')[0]
 		String rmFilter = data.getOptionValues('rm.filter')[0]
+		String tfsProjectURI = data.getOptionValues('tfs.projectUri')[0]
+		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
+		String tfsCollectionGUID = data.getOptionValues('tfs.collectionId')[0]
+		String tfsOAuthToken = data.getOptionValues('tfs.oAuthToken')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
+		String mrTemplate = data.getOptionValues('mr.template')[0]
+		String mrFolder = data.getOptionValues('mr.folder')[0]
 		File mFile = new File(mappingFile)
 		
 		def mapping = new XmlSlurper().parseText(mFile.text)
@@ -180,13 +192,17 @@ class TranslateRRMToADO implements CliAction {
 		//translate work data.
 		if (includes['data'] != null) {
 			// Get field mappings, target members map and RM modules to translate to ADO
+			println('Getting Mapping Data...')
 			def mappingData = rmMappingManagementService.mappingData
+			println('Getting ADO Project Members...')
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+			println("${getCurTimestamp()} - Querying DNG Modules...")
 			def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
 			def changeList = []
 			def idMap = [:]
 			int count = 0
 			modules.each { module ->
+				println("${getCurTimestamp()} - Processing Module ${count + 1} of ${modules.size()}...")
 				// Iterate through all module elements 
 				int it = 0 // we have to use our own "it" since Groovy won't allow an implicit "it" to be incremented
 				while(true) {
@@ -202,26 +218,71 @@ class TranslateRRMToADO implements CliAction {
 					else if (module.orderedArtifacts[it].isHeading()) {
 						module.orderedArtifacts[it].setDescription("") // If simple heading, remove duplicate description
 					}
-					def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
-					def aid = module.orderedArtifacts[it].getID()
-					changes.each { key, val ->
-						String idkey = "${aid}-${key}"
-						idMap[count] = idkey
-						changeList.add(val)
-						count++
-						
+					if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
+						def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
+						def aid = module.orderedArtifacts[it].getID()
+						changes.each { key, val ->
+							String idkey = "${aid}-${key}"
+							idMap[count] = idkey
+							changeList.add(val)
+							count++
+							
+						}
 					}
-					it++
+					else {
+						println("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
+					}
 					if (it >= module.orderedArtifacts.size() - 1) {
 						break
 					}
+					it++
 				}
 				
+
+				// Create work items and SmartDoc container in Azure DevOps
 				if (changeList.size() > 0) {
+					// Process work item changes in Azure DevOps
+					println("${getCurTimestamp()} - Processing work item changes...")
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+					
+					// Create the SmartDoc
+					println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
+					def result = smartDocManagementService.createSmartDoc(module, collection, mrTfsUrl, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
+					if (result.error.code != "null") {
+						println("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
+					}
+					else {
+						println("SmartDoc creation succeeded. Result: ${result.result}")
+					}
+				}
+				
+				// Upload Attachments to Azure DevOps
+				println("${getCurTimestamp()} - Uploading attachments...")
+				changeList.clear()
+				idMap.clear()
+				module.orderedArtifacts.each { artifact ->
+					if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
+						def files = []
+						files[0] = rmFileManagementService.cacheRequirementFile(artifact)
+						
+						String id = "${artifact.getID()}-${artifact.getTfsWorkitemType()}"
+
+						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+						if (wiChanges != null) {
+							idMap[count] = "${id}"
+							changeList.add(wiChanges)
+							count++
+						}
+						
+					}
+				}
+				if (changeList.size() > 0) {
+					// Associate attachments to work items in Azure DevOps
+					println("${getCurTimestamp()} - Associating attachments to work items...")
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 				}
-
 			}
+			println("Processing completed")
 			/*
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			while (true) {
@@ -249,58 +310,14 @@ class TranslateRRMToADO implements CliAction {
 			}
 			*/
 		}
-		//		workManagementService.testBatchWICreate(collection, tfsProject)
-		//apply work links
-		if (includes['links'] != null) {
-			def testItems = [] //query for req
-			while (true) {
-				def changeList = []
-				def idMap = [:]
-				int count = 0
-				def filtered = filtered(testItems, rmFilter)
-				filtered.each {	moduleRef ->			
-					
-				}
-				def nextLink = testItems.'**'.find { node ->
-					
-					node.name() == 'link' && node.@rel == 'next'
-				}
-				if (nextLink == null) break
-				testItems = [] //next page of query
-			}
-		}
-
-		//extract & apply attachments.
-//		if (includes['attachments'] != null) {
-//			def linkMapping = processTemplateService.getLinkMapping(mapping)
-//			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
-//			while (true) {
-//				def changeList = []
-//				def idMap = [:]
-//				int count = 0
-//				def filtered = filtered(workItems, wiFilter)
-//				filtered.each { workitem ->
-//					int id = Integer.parseInt(workitem.id.text())
-//					def files = attachmentsManagementService.cacheWorkItemAttachments(id)
-//					def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-//					if (wiChanges != null) {
-//						idMap[count] = "${id}"
-//						changeList.add(wiChanges)
-//						count++
-//					}
-//				}
-//				if (changeList.size() > 0) {
-//					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-//				}
-//				def rel = workItems.@rel
-//				if ("${rel}" != 'next') break
-//					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
-//			}
-//		}
 
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
-
+	
+	def getCurTimestamp() {
+		new Date().format( 'yyyy/MM/dd HH:MM' )
+	}
+	
 	def filtered(def items, String filter) {
 		if (this.filterMap[filter] != null) {
 			return this.filterMap[filter].filter(items)
@@ -311,7 +328,7 @@ class TranslateRRMToADO implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectAreaURI', 'tfs.url', 'tfs.collection', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'rm.query', 'rm.filter']
+		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'tfs.oAuthToken', 'rm.mapping.file', 'rm.query', 'rm.filter', 'mr.url', 'mr.tfsUrl', 'mr.template', 'mr.folder']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

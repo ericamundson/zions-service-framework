@@ -1,11 +1,13 @@
 package com.zions.ext.services.cli
 
 import com.zions.clm.services.rest.ClmGenericRestClient
+import com.zions.mr.services.rest.MrGenericRestClient 
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -23,10 +25,18 @@ public class RmAppConfig {
 	@Autowired
 	@Value('${clm.url}') 
 	String clmUrl
+
+	@Autowired
+	@Value('${mr.url}')
+	String mrUrl
 	
 	@Autowired
 	@Value('${clm.user}') 
 	String userid 
+	
+	@Autowired
+	@Value('${tfs.user}')
+	String tfsUserid
 	
 	@Autowired
 	@Value('${clm.password}') 
@@ -51,6 +61,10 @@ public class RmAppConfig {
 		return new ClmGenericRestClient(clmUrl, userid, password)
 	}
 	
+	@Bean
+	IGenericRestClient mrGenericRestClient() {
+		return new MrGenericRestClient(mrUrl, tfsUserid)
+	}
 	
 	@Bean
 	CommandManagementService commandManagementService() {

@@ -3,6 +3,8 @@ package com.zions.rm.services.requirements
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
+
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.qm.services.test.TestMappingManagementService
@@ -60,6 +62,9 @@ class ClmRequirementsItemManagementService {
 	@Autowired
 	RequirementsMappingManagementService rmMappingManagementService
 	
+	@Autowired(required=true)
+	ICacheManagementService cacheManagementService
+	
 	int newId = -1
 	
 	
@@ -84,13 +89,15 @@ class ClmRequirementsItemManagementService {
 	}
 	
 	def generateItemData(def rmItemData, def map, String project, def memberMap, def parent = null) {
+		// Save TFS workitem type into the rm artifact
+		rmItemData.setTfsWorkitemType("${map.target}")
+		
+		
 		def etype = URLEncoder.encode("${map.target}", 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 		String id = "${rmItemData.getID()}-${map.target}"
-//		def cacheWI = getCacheWI(id)
-		def cacheWI = null  // Defer implementation of updates
-		
+		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
@@ -100,6 +107,7 @@ class ClmRequirementsItemManagementService {
 			wiData.body.add(idData)
 		}
 		
+		// Map each attribute from CLM to TFS
 		map.fields.each { field ->
 			def fieldData = getFieldData(rmItemData, field, memberMap, cacheWI, map)
 			if (fieldData != null) {
@@ -131,22 +139,6 @@ class ClmRequirementsItemManagementService {
 		if (this.fieldMap["${handlerName}"] != null) {
 			def data = [itemData: rmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map]
 			def fieldData = this.fieldMap["${handlerName}"].execute(data)
-//			if (fieldData != null) {
-//				String val = "${fieldData.'value'}"
-//				if (field.defaultValue != null) {
-//					val = "${field.defaultValue}"
-//				}
-//				if (field.values.size() > 0) {
-//
-//					field.values.each { aval ->
-//						if ("${fValue}" == "${aval.source}") {
-//							val = "${aval.target}"
-//							return
-//						}
-//					}
-//				}
-//				fieldData.'value' = val
-//			}
 			return fieldData
 		}
 		return null

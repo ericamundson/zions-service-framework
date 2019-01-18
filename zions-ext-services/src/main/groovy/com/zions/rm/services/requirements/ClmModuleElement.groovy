@@ -2,11 +2,14 @@ package com.zions.rm.services.requirements
 
 class ClmModuleElement {
 	boolean isHeading
+	boolean isDuplicate
 	String format
 	int depth
 	String baseArtifactURI
 	String about
 	String artifactType
+	String tfsWorkitemType
+	String fileHref
 	boolean isDeleted
 	def attributeMap
 	def links
@@ -21,12 +24,10 @@ class ClmModuleElement {
 		isHeading = (in_isHeading == "true")
 		about = in_about
 		isDeleted = false
+		isDuplicate = false  // Assume false until checkDuplicate has been run
 
 	}
 	
-	public getArtifactType() {
-		return artifactType
-	}
 	public boolean isHeading() {
 		return isHeading;
 	}
@@ -36,7 +37,6 @@ class ClmModuleElement {
 				artifactType == 'Out of Scope' ||
 				artifactType == 'Assumption' )
 	}
-
 	public String getTitle() {
 		return attributeMap.'title'
 	}

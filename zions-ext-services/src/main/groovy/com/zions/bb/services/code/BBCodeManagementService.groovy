@@ -79,8 +79,8 @@ class BBCodeManagementService {
 					headers: [Accept: 'application/json'],
 					)
 			reposPart.values.each { repo ->
-				repo.links.'clone'.each { clone ->
-					if ("${clone.name}" == 'http') {
+			repo.links.'clone'.each { clone ->
+				if ("${clone.name}" == 'http') {
 						urls.add([url:clone.href,name:repo.name])
 					}
 				}
