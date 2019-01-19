@@ -69,6 +69,7 @@ public class PolicyManagementService {
 	public def ensurePolicies(def collection, def repoData, def branchName) {
 		def branch = "${branchName}".substring("refs/heads/".length())
 		log.debug("PolicyManagementService::ensurePolicies -- Get build properties for branch ${branch}")
+		this.branchProps = null
 		def buildPropertiesFile = codeManagementService.getBuildPropertiesFile(collection, repoData.project, repoData, buildPropsFileName, branch)
 		if (buildPropertiesFile != null) {
 			// load properties from file
@@ -94,10 +95,12 @@ public class PolicyManagementService {
 	public def ensureBuildPolicy(def collection, def repoData, def branchName) {
 		
 		// See if branch participates in build policy enforcement
-		String enforceBuildPolicy = this.branchProps.getProperty("enforce-build-policy")
-		if (enforceBuildPolicy != null && !enforceBuildPolicy.equalsIgnoreCase("true")) {
-			log.debug("PolicyManagementService::ensureBuildPolicy -- Branch opted OUT of build policy enforcement ...")
-			return
+		if (this.branchProps != null) {
+			String enforceBuildPolicy = this.branchProps.getProperty("enforce-build-policy")
+			if (enforceBuildPolicy != null && !enforceBuildPolicy.equalsIgnoreCase("true")) {
+				log.debug("PolicyManagementService::ensureBuildPolicy -- Branch opted OUT of build policy enforcement ...")
+				return
+			}
 		}
 		
 		// get the CI build
@@ -107,11 +110,13 @@ public class PolicyManagementService {
 		def ciBuildTemplate = null
 		def relBuildTemplate = null
 		if (!isDRBranch) {
-			ciBuildTemplate = this.branchProps.getProperty("build-template-ci")
-			relBuildTemplate = this.branchProps.getProperty("build-template-release")
+			if (this.branchProps != null) {
+				ciBuildTemplate = this.branchProps.getProperty("build-template-ci")
+				relBuildTemplate = this.branchProps.getProperty("build-template-release")
+				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified CI build template = ${ciBuildTemplate}")
+				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release build template = ${relBuildTemplate}")
+			}
 		}
-		log.debug("PolicyManagementService::ensureBuildPolicy -- Specified CI build template = ${ciBuildTemplate}")
-		log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release build template = ${relBuildTemplate}")
 
 		// result is a JSON object
 		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, isDRBranch, ciBuildTemplate, relBuildTemplate)
@@ -138,13 +143,16 @@ public class PolicyManagementService {
 			def releaseTemplate = null
 			// look for specified release template
 			if (!isDRBranch) {
-				releaseTemplate = this.branchProps.getProperty("release-template")
+				if (this.branchProps != null) {
+					releaseTemplate = this.branchProps.getProperty("release-template")
+					log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release template = ${releaseTemplate}")
+				}
 			}
 			log.debug("PolicyManagementService::ensureBuildPolicy -- Release Build Definition created. Will attempt to create a release definition")
 			relDef = releaseManagementService.ensureReleaseForBuild(collection, projectData, repoData, relBuildId, isDRBranch, releaseTemplate)
 		}
 		if (relDef == null) {
-			log.error("PolicyManagementService::ensureBuildPolicy -- Release Definition creation failed!")
+			log.error("PolicyManagementService::ensureBuildPolicy -- Release Definition NOT created")
 		} else {
 			relDefName = "${relDef.name}"
 			log.debug("PolicyManagementService::ensureBuildPolicy -- Release Definition created: "+relDefName)
