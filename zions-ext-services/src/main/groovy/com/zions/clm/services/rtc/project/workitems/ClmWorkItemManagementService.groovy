@@ -41,7 +41,16 @@ public class ClmWorkItemManagementService {
 		return result
 	}
 	
-	
+	def getContent(String uri) {
+		def result = clmGenericRestClient.get(
+			withHeader: true,
+			uri: uri,
+			contentType: ContentType.BINARY
+			);
+		return result
+
+	}
+
 	public def getWorkItemsViaQuery(String query) {
 		//def query = "workitem/workItem[projectArea/name='${project}']/(id)"
 		def encoded = URLEncoder.encode(query, 'UTF-8')
@@ -51,7 +60,7 @@ public class ClmWorkItemManagementService {
 				uri: uri,
 				headers: [Accept: 'text/xml'] );
 			//XmlUtil u
-		String xml = XmlUtil.serialize(result)
+//		String xml = XmlUtil.serialize(result)
 //		File out = new File('tools_wi.xml')
 //		def o = out.newDataOutputStream()
 //		o << new groovy.xml.StreamingMarkupBuilder().bindNode(result) as String

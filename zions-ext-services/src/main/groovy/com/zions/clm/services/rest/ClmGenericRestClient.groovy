@@ -63,7 +63,7 @@ import org.springframework.stereotype.Component
 @Component
 public class ClmGenericRestClient extends AGenericRestClient {
 	
-	String userid = "";
+	public String userid = "";
 	String password = "";
 	public String clmUrl = "";
 	
