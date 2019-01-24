@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.core.io.ClassPathResource
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.cache.CacheManagementService
 
 @Configuration
@@ -17,7 +18,12 @@ public class AppConfig {
 	ICacheManagementService cacheManagementService() {
 		return new CacheManagementService(cacheLocation)
 	}
-	
+
+	@Bean
+	CommandManagementService commandManagementService() {
+		return new CommandManagementService();
+	}
+
 	@Autowired
 	@Value('${cache.location}')
 	String cacheLocation
