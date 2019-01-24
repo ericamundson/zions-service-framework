@@ -18,7 +18,6 @@ class AttachmentManagementService implements IAttachments {
 
 	public def sendAttachment(def info) {
 		File file = info.file
-		// TODO Auto-generated method stub
 		return fileManagementService.uploadAttachment('', this.tfsProject, this.tfsProject, file)
 	}
 

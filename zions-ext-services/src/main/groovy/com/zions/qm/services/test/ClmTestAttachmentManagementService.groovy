@@ -81,17 +81,9 @@ class ClmTestAttachmentManagementService {
 		testCase.attachment.each { attachment ->
 			String aurl = "${attachment.@href}"
 			def result = clmTestManagementService.getContent(aurl)
-			String cd = "${result.headers.'Content-Disposition'}"
-			
-			String[] sItem = cd.split('=')
-			String filename = null
-			if (sItem.size() == 2) {
-				filename = sItem[1]
-				filename = filename.replace('"', '')
-			}
-			if (filename != null) {
-				def file = cacheManagementService.saveBinaryAsAttachment(result.data, filename, id)
-				def item = [file: file, comment: "Added attachment ${filename}"]
+			if (result.filename != null) {
+				def file = cacheManagementService.saveBinaryAsAttachment(result.data, result.filename, id)
+				def item = [file: file, comment: "Added attachment ${result.filename}"]
 				//File cFile = saveAttachment
 				files.add(item)
 			}
@@ -114,16 +106,8 @@ class ClmTestAttachmentManagementService {
 			step.attachment.each { attachment ->
 				String aurl = "${attachment.@href}"
 				def result = clmTestManagementService.getContent(aurl)
-				String cd = "${result.headers.'Content-Disposition'}"
-				
-				String[] sItem = cd.split('=')
-				String filename = null
-				if (sItem.size() == 2) {
-					filename = sItem[1]
-					filename = filename.replace('"', '')
-				}
-				if (filename != null) {
-					def file = cacheManagementService.saveBinaryAsAttachment(result.data, "${filename}", id)
+				if (result.filename != null) {
+					def file = cacheManagementService.saveBinaryAsAttachment(result.data, "${result.filename}", id)
 					def item = [file: file, comment: comment]
 					//File cFile = saveAttachment
 					files.add(item)

@@ -128,7 +128,7 @@ public class ClmTestItemManagementService {
 		}
 		def bodyItem = [:]
 		map.fields.each { field ->
-			def fieldData = getFieldData(qmItemData, field, memberMap, cacheResult, map, resultMap, testCase)
+			def fieldData = getFieldData(qmItemData, id, field, memberMap, cacheResult, map, resultMap, testCase)
 			if (fieldData != null) {
 				if (fieldData.value != null) {
 					bodyItem["${field.target}"] = fieldData.value
@@ -159,7 +159,7 @@ public class ClmTestItemManagementService {
 		}
 		def bodyItem = [:]
 		map.fields.each { field ->
-			def fieldData = getFieldData(qmItemData, field, memberMap, cacheConfig, map)
+			def fieldData = getFieldData(qmItemData, id, field, memberMap, cacheConfig, map)
 			if (fieldData != null) {
 				if (fieldData.value != null) {
 					bodyItem["${field.target}"] = fieldData.value
@@ -229,7 +229,7 @@ public class ClmTestItemManagementService {
 		}
 		
 		map.fields.each { field ->
-			def fieldData = getFieldData(qmItemData, field, memberMap, cacheWI, map)
+			def fieldData = getFieldData(qmItemData, id, field, memberMap, cacheWI, map)
 			if (fieldData != null) {
 				if (type != 'Test Case') {
 					if (fieldData.value != null) {
@@ -263,11 +263,11 @@ public class ClmTestItemManagementService {
 
 	}
 	
-	private def getFieldData(def qmItemData, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null) {
+	private def getFieldData(def qmItemData, def id, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null) {
 		String handlerName = "${field.source}"
 		String fValue = ""
 		if (this.fieldMap["${handlerName}"] != null) {
-			def data = [itemData: qmItemData, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
+			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}

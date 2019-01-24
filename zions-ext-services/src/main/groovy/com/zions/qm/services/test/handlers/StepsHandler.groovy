@@ -2,8 +2,11 @@ package com.zions.qm.services.test.handlers
 
 import org.apache.commons.lang.StringEscapeUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+import com.zions.common.services.attachments.IAttachments
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.qm.services.test.ClmTestManagementService
 import groovy.xml.MarkupBuilder
 import groovy.xml.XmlUtil
@@ -12,6 +15,16 @@ import groovy.xml.XmlUtil
 class StepsHandler extends QmBaseAttributeHandler {
 	@Autowired
 	ClmTestManagementService clmTestManagementService
+	
+	@Autowired
+	IAttachments attachmentService
+	
+	@Autowired
+	ICacheManagementService cacheManagementService
+	
+	@Autowired
+	@Value('clm.url')
+	String clmUrl
 
 	public String getQmFieldName() {
 		// TODO Auto-generated method stub
@@ -20,16 +33,17 @@ class StepsHandler extends QmBaseAttributeHandler {
 
 	public def formatValue(def value, def data) {
 		def itemData = data.itemData
+		def id = data.id
 		String outVal = null
 		def ts = getTestScript(itemData)
 		if (ts != null) 
 		{
-			outVal = buildStepData(ts)
+			outVal = buildStepData(ts, id)
 		}
 		return outVal;
 	}
 	
-	String buildStepData(ts) {
+	String buildStepData(ts, id) {
 		def teststeps = ts.steps.step
 		if (teststeps.size()> 0) {
 			def writer = new StringWriter()
@@ -44,6 +58,7 @@ class StepsHandler extends QmBaseAttributeHandler {
 							htmlDoc = htmlDoc.replace('tag0:', '')
 							htmlDoc = htmlDoc.replace(' xmlns:tag0="http://www.w3.org/1999/xhtml"', '')
 							htmlDoc = htmlDoc.replace(' dir="ltr"', '')
+							htmlDoc = processImages(htmlDoc, id)
 							String html = StringEscapeUtils.escapeHtml(htmlDoc)
 							parameterizedString(isFormatted: 'true') {
 								mkp.yieldUnescaped html
@@ -55,6 +70,7 @@ class StepsHandler extends QmBaseAttributeHandler {
 							htmlDoc = htmlDoc.replace('tag0:', '')
 							htmlDoc = htmlDoc.replace(' xmlns:tag0="http://www.w3.org/1999/xhtml"', '')
 							htmlDoc = htmlDoc.replace(' dir="ltr"', '')
+							htmlDoc = processImages(htmlDoc, id)
 							String html = StringEscapeUtils.escapeHtml(htmlDoc)
 							parameterizedString(isFormatted: 'true') {
 								mkp.yieldUnescaped html
@@ -79,5 +95,23 @@ class StepsHandler extends QmBaseAttributeHandler {
 		}
 		return null
 	}
+	
+	String processImages(String html, String sId) {
+		def htmlData = new XmlSlurper().parseText(html)
+		def imgs = htmlData.'**'.findAll { p ->
+			String src = p.@src
+			"${p.name()}" == 'img' && "${src}".startsWith(this.clmUrl)
+		}
+		imgs.each { img ->
+			String url = img.@src
+			def oData = clmTestManagementService.getContent(url)
+			def file = cacheManagementService.saveBinaryAsAttachment(oData.data, oData.filename, sId)
+			def attData = attachmentService.sendAttachment([file:file])
+			img.@src = attData.url
+		}
+		String outHtml = XmlUtil.asString(htmlData)
+		return outHtml
+	}
+
 
 }
