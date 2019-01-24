@@ -147,6 +147,23 @@ class ClmRequirementsManagementService {
 					// Set primary text
 					String primaryText = new groovy.xml.StreamingMarkupBuilder().bind {mkp.yield child.text.richTextBody.children() }
 					in_artifact.attributeMap.put("Primary Text", primaryText)
+					
+					// Check to see if this artifact has an embedded collection
+					def collectionIndex = primaryText.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent')
+					if (collectionIndex > -1) {
+						def hrefIndex = primaryText.substring(collectionIndex).indexOf('href=')
+						
+					}
+					collectionIndex = primaryText.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimized')
+					if (collectionIndex > -1) {
+						def hrefIndex = primaryText.substring(collectionIndex).indexOf('href=')
+						String href = primaryText.substring(collectionIndex + hrefIndex + 6)
+						def endIndex = href.indexOf("'")
+						href = href.substring(1,endIndex)
+						in_artifact.collectionArtifacts = getCollectionArtifacts(href)
+					}
+					
+					// Check to see if this artifact has embedded images
 				}
 			}
 		}
@@ -172,7 +189,7 @@ class ClmRequirementsManagementService {
 				else if (iName == "wrappedResourceURI") {
 					// Set primary text
 					String primaryText = child
-					in_artifact.attributeMap.put("Primary Text", primaryText)
+					in_artifact.setDescription(primaryText)
 					String hRef = "${child}"
 					in_artifact.setFileHref(hRef)
 				}
@@ -181,6 +198,9 @@ class ClmRequirementsManagementService {
 		
 		return
 
+	}
+	private def getCollectionArtifacts(String href) {
+		def i = 1
 	}
 	private String parseArtifactAttributes(NodeChild in_rootCollaborationNode, Map out_attributeMap ) {
 		// Declare type as return argument

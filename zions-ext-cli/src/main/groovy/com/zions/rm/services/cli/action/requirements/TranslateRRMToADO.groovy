@@ -248,7 +248,10 @@ class TranslateRRMToADO implements CliAction {
 					// Create the SmartDoc
 					println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
 					def result = smartDocManagementService.createSmartDoc(module, collection, mrTfsUrl, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
-					if (result.error.code != "null") {
+					if (result == null) {
+						println("SmartDoc creation returned null")
+					}
+					else if (result.error != null && result.error.code != "null") {
 						println("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
 					}
 					else {
@@ -283,32 +286,7 @@ class TranslateRRMToADO implements CliAction {
 				}
 			}
 			println("Processing completed")
-			/*
-			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-			while (true) {
-				//TODO: ccmWorkManagementService.resetNewId()
-				def changeList = []
-				def pidMap = [:]
-				def idMap = [:]
-				int count = 0
-				int pcount = 0
-				def pChangeList = []
-				def idKeyMap = [:]
-				def filtered = filtered(reqItems, rmFilter)
-				filtered.each { 
-				}
-				if (changeList.size() > 0) {
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-						
-				}
-				def nextLink = reqItems.'**'.find { node ->
-					
-					node.name() == 'link' && node.@rel == 'next'
-				}
-				if (nextLink == null) break
-				reqItems = clmRequirementsManagementService.nextPage(nextLink.@href)
-			}
-			*/
+
 		}
 
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
