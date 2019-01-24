@@ -31,35 +31,83 @@ import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[CacheWorkitemAttachmentsTestConfig])
 public class CacheWorkitemAttachmentsSpecTest extends Specification {
-	
+
 	@Autowired
 	IGenericRestClient genericRestClient;
-	
+
 	@Autowired
 	AttachmentsManagementService attachmentsManagementService
-	
+
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
-	
+
 	@Autowired
 	ClmWorkItemManagementService clmWorkItemManagementService
-	
+
 	@Autowired
 	CacheWorkitemAttachments underTest
-	
+
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		//TODO: validate ApplicationArguments exception flow.
+		given: 'Stub with Application Arguments'
+		String[] args = loadArgs()
+		def appArgs = new DefaultApplicationArguments(args)
+
+
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
+
+		then: ''
+		result == true
 	}
-	
+
+	private String[] loadArgs() {
+		String[] args = [
+			'--clm.url=http://localhost:8080',
+			'--clm.user=user',
+			'--clm.password=password',
+			'--ccm.projectArea=src'
+		]
+		return args
+	}
+
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		//TODO: validate ApplicationArguments exception flow.
+		given:'Stub with Application Arguments'
+		String[] args = ['--clm.url=http://localhost:8080']
+		def appArgs = new DefaultApplicationArguments(args)
+		
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
+		
+		then:
+		thrown Exception
 	}
-	
+
 	@Test
 	def 'execute ApplicationArguments success flow.' () {
-		//TODO: execute ApplicationArguments success flow.
+		given: 'Stub with Application Arguments'
+		String[] args = loadArgs()
+		def appArgs = new DefaultApplicationArguments(args)
+		
+		and:
+		def workItems
+		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		
+		and:
+		//attachmentsManagementService.cacheWorkItemAttachments(_)
+		
+		and:
+		//clmWorkItemManagementService.nextPag(_)
+		//attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
+
+
+
+		when: 'calling of method under test (validate)'
+		def result = underTest.execute(appArgs)
+
+		then: ''
+		result == null
 	}
 }
 
@@ -68,31 +116,30 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 @PropertySource("classpath:test.properties")
 class CacheWorkitemAttachmentsTestConfig {
 	def factory = new DetachedMockFactory()
-	
+
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return factory.Mock(ClmGenericRestClient)
 	}
-	
+
 	@Bean
 	AttachmentsManagementService attachmentsManagementService() {
 		return new AttachmentsManagementService()
 	}
-	
+
 	@Bean
 	RtcRepositoryClient rtcRepositoryClient() {
 		return factory.Mock(RtcRepositoryClient)
 	}
-	
+
 	@Bean
 	ClmWorkItemManagementService clmWorkItemManagementService() {
 		return new ClmWorkItemManagementService()
 	}
-	
+
 	@Bean
 	CacheWorkitemAttachments underTest() {
 		return new CacheWorkitemAttachments(AttachmentsManagementService attachmentsManagementService,
-			ClmWorkItemManagementService clmWorkItemManagementService)
+				ClmWorkItemManagementService clmWorkItemManagementService)
 	}
-
 }
