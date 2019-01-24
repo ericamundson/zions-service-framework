@@ -2,6 +2,7 @@ package com.zions.vsts.services.code
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -30,6 +31,9 @@ class CodeManagementService {
 	@Autowired
 	private PermissionsManagementService permissionsManagementService
 	
+	@Autowired
+	private CommandManagementService commandManagementService
+
 	public CodeManagementService() {
 		
 	}
@@ -177,25 +181,19 @@ class CodeManagementService {
 			gitDir.mkdir()
 		}
 		
-		def proc = "git clone ${ourl}".execute(null, gitDir)
-		proc.waitForProcessOutput(System.out, System.err)
+		commandManagementService.executeCommand("git clone ${ourl}", gitDir)
 		File repoDir = new File(gitDir, repoName )
 		
-		proc = "git fetch".execute(null, repoDir)
-		proc.waitForProcessOutput(System.out, System.err)
-		proc = "git pull".execute(null, repoDir)
-		proc.waitForProcessOutput(System.out, System.err)
+		commandManagementService.executeCommand("git fetch", repoDir)
+		commandManagementService.executeCommand("git pull", repoDir)
 
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		def erepoName = URLEncoder.encode(repoName, 'utf-8')
 		erepoName = erepoName.replace('+', '%20')
 		def turl = getAuthUrl("${genericRestClient.tfsUrl}/${eproject}/_git/${erepoName}", genericRestClient.user, genericRestClient.token)
-		proc = "git remote set-url origin ${turl}".execute(null, repoDir)
-		proc.waitForProcessOutput(System.out, System.err)
-		proc = "git push".execute(null, repoDir)
-		proc.waitForProcessOutput(System.out, System.err)
-
+		commandManagementService.executeCommand("git remote set-url origin ${turl}", repoDir)
+		commandManagementService.executeCommand("git push", repoDir)
 	}
 	
 	def getAuthUrl(def url, def userid, def password) {
@@ -279,10 +277,5 @@ class CodeManagementService {
 		}
 		return manifest
 	}
-	
-	private commandExecute(String command, File dir) {
-		def proc = "${command}".execute(null, dir)
-		proc.waitForProcessOutput(System.out, System.err)
 
-	}
 }
