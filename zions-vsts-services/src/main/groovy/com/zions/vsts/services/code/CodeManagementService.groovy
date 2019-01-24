@@ -2,6 +2,7 @@ package com.zions.vsts.services.code
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -30,6 +31,9 @@ class CodeManagementService {
 	@Autowired
 	private PermissionsManagementService permissionsManagementService
 	
+	@Autowired
+	private CommandManagementService commandManagementService
+
 	public CodeManagementService() {
 		
 	}
@@ -279,10 +283,5 @@ class CodeManagementService {
 		}
 		return manifest
 	}
-	
-	private commandExecute(String command, File dir) {
-		def proc = "${command}".execute(null, dir)
-		proc.waitForProcessOutput(System.out, System.err)
 
-	}
 }
