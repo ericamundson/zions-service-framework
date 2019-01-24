@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.zions.clm.services.rest.ClmGenericRestClient;
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.xml.MarkupBuilder
+import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 
 /**
@@ -26,6 +27,25 @@ public class ClmWorkItemManagementService {
 		
 	}
 	
+	def getContent(String uri) {
+		def result = clmGenericRestClient.get(
+			withHeader: true,
+			uri: uri,
+			contentType: ContentType.BINARY
+			);
+		String cd = "${result.headers.'Content-Disposition'}"
+		
+		String[] sItem = cd.split('=')
+		String filename = null
+		if (sItem.size() == 2) {
+			filename = sItem[1]
+			filename = filename.replace('"', '')
+		}
+		def outData = [filename: filename, data: result.data]
+		return outData
+
+	}
+
 	def getWorkItemHistory(int id) {
 		
 		XmlSlurper s
@@ -49,6 +69,8 @@ public class ClmWorkItemManagementService {
 		def result = clmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'text/xml'] );
+			//XmlUtil u
+		String xml = XmlUtil.serialize(result)
 //		File out = new File('tools_wi.xml')
 //		def o = out.newDataOutputStream()
 //		o << new groovy.xml.StreamingMarkupBuilder().bindNode(result) as String

@@ -17,6 +17,7 @@ import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
+import groovy.util.logging.Slf4j
 
 /**
  * Provides command line interaction to synchronize RTC work items with ADO.
@@ -123,6 +124,7 @@ import groovy.json.JsonBuilder
  *  @enduml
  */
 @Component
+@Slf4j
 class TranslateRTCWorkToVSTSWork implements CliAction {
 	@Autowired
 	private Map<String, IFilter> filterMap;
@@ -190,6 +192,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		}
 		//refresh.
 		if (includes['refresh'] != null) {
+			log.info("Refreshing cache.")
 			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			while (true) {
 				def changeList = []
@@ -206,6 +209,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		}
 		//translate work data.
 		if (includes['workdata'] != null) {
+			log.info('Start workdata')
 			def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
 			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
@@ -231,10 +235,12 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				if ("${rel}" != 'next') break
 					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 			}
+			log.info('Finish workdata')
 		}
 		//		workManagementService.testBatchWICreate(collection, tfsProject)
 		//apply work links
 		if (includes['worklinks'] != null) {
+			log.info('Start worklinks')
 			def linkMapping = processTemplateService.getLinkMapping(mapping)
 			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			while (true) {
@@ -258,10 +264,12 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				if ("${rel}" != 'next') break
 					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 			}
+			log.info('Finish worklinks')
 		}
 
 		//extract & apply attachments.
 		if (includes['attachments'] != null) {
+			log.info('Start attachments')
 			def linkMapping = processTemplateService.getLinkMapping(mapping)
 			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
 			while (true) {
@@ -286,8 +294,9 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				if ("${rel}" != 'next') break
 					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 			}
+			log.info('Finish attachments')
 		}
-
+		
 		ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
 
