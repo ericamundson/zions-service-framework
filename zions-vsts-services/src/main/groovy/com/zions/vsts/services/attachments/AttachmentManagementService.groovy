@@ -14,11 +14,19 @@ class AttachmentManagementService implements IAttachments {
 	String tfsProject
 	
 	@Autowired
+	@Value('${tfs.collection}')
+	String tfsCollection
+
+	@Autowired
 	FileManagementService fileManagementService
 
 	public def sendAttachment(def info) {
 		File file = info.file
-		return fileManagementService.uploadAttachment('', this.tfsProject, this.tfsProject, file)
+		String collection = ''
+		if (tfsCollection) {
+			collection = tfsCollection
+		}
+		return fileManagementService.uploadAttachment(collection, this.tfsProject, this.tfsProject, file)
 	}
 
 }
