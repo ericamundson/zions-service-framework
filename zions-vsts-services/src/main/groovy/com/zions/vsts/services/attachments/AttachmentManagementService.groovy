@@ -14,8 +14,8 @@ class AttachmentManagementService implements IAttachments {
 	String tfsProject
 	
 	@Autowired
-	@Value('${tfs.collection}')
-	String tfsCollection
+	@Value('${tfs.collection:#{null}}')
+	private Optional<String> tfsCollection;
 
 	@Autowired
 	FileManagementService fileManagementService
@@ -23,8 +23,8 @@ class AttachmentManagementService implements IAttachments {
 	public def sendAttachment(def info) {
 		File file = info.file
 		String collection = ''
-		if (tfsCollection) {
-			collection = tfsCollection
+		if (tfsCollection.isPresent()) {
+			collection = tfsCollection.get()
 		}
 		return fileManagementService.uploadAttachment(collection, this.tfsProject, this.tfsProject, file)
 	}
