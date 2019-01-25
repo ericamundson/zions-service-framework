@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class AttachmentManagementService implements IAttachments {
 	
 	@Autowired
-	@Value('tfs.project')
+	@Value('${tfs.project}')
 	String tfsProject
 	
 	@Autowired
