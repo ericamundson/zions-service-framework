@@ -6,6 +6,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import groovy.xml.XmlUtil
 
 @Component
@@ -19,7 +20,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	
 	@Autowired
 	ICacheManagementService cacheManagementService
-
+	
+	@Autowired
+	@Value('${clm.url}')
+	String clmUrl
+	
 	@Override
 	public String getFieldName() {
 		// TODO Auto-generated method stub
@@ -47,7 +52,9 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		imgs.each { img ->
 			String url = img.@src
 			def oData = clmRequirementsManagementService.getContent(url)
-			def file = cacheManagementService.saveBinaryAsAttachment(oData.data, oData.filename, sId)
+			String contentDisp = "${oData.headers.'Content-Disposition'}"
+			String filename = contentDisp.substring(contentDisp.indexOf('filename=')+10,contentDisp.indexOf('";'))
+			def file = cacheManagementService.saveBinaryAsAttachment(oData.data, filename, sId)
 			def attData = attachmentService.sendAttachment([file:file])
 			img.@src = attData.url
 		}

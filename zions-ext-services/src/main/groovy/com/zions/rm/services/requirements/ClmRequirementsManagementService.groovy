@@ -146,7 +146,7 @@ class ClmRequirementsManagementService {
 				else if (iName == "content") {
 					// Set primary text
 					String primaryText = new groovy.xml.StreamingMarkupBuilder().bind {mkp.yield child.text.richTextBody.children() }
-					in_artifact.attributeMap.put("Primary Text", primaryText)
+					in_artifact.setDescription(primaryText)
 					
 					// Check to see if this artifact has an embedded collection
 					def collectionIndex = primaryText.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent')
@@ -187,8 +187,8 @@ class ClmRequirementsManagementService {
 					in_artifact.setArtifactType(artifactType)
 				}
 				else if (iName == "wrappedResourceURI") {
-					// Set primary text
-					String primaryText = child
+					// Set primary text 
+					String primaryText = "<div>Uploaded Attachment</div>"
 					in_artifact.setDescription(primaryText)
 					String hRef = "${child}"
 					in_artifact.setFileHref(hRef)
