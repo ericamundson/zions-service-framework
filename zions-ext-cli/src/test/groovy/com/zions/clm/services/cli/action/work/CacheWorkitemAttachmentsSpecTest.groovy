@@ -2,6 +2,7 @@ package com.zions.clm.services.cli.action.work
 
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.DefaultApplicationArguments
 import org.springframework.boot.test.context.TestConfiguration;
@@ -31,6 +32,9 @@ import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[CacheWorkitemAttachmentsTestConfig])
 public class CacheWorkitemAttachmentsSpecTest extends Specification {
+	
+	@Value('${test.work.items.file}')
+	String testWorkItemsFileName
 
 	@Autowired
 	IGenericRestClient genericRestClient;
@@ -91,17 +95,15 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		and:
-		def workItems
+		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
 		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
 		
 		and:
 		//attachmentsManagementService.cacheWorkItemAttachments(_)
 		
 		and:
-		//clmWorkItemManagementService.nextPag(_)
+		clmWorkItemManagementService.nextPage(_) >> workItems
 		//attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
-
-
 
 		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
@@ -124,7 +126,8 @@ class CacheWorkitemAttachmentsTestConfig {
 
 	@Bean
 	AttachmentsManagementService attachmentsManagementService() {
-		return new AttachmentsManagementService()
+		//return new AttachmentsManagementService()
+		return factory.Mock(AttachmentsManagementService)
 	}
 
 	@Bean
@@ -134,12 +137,13 @@ class CacheWorkitemAttachmentsTestConfig {
 
 	@Bean
 	ClmWorkItemManagementService clmWorkItemManagementService() {
-		return new ClmWorkItemManagementService()
+		//return new ClmWorkItemManagementService()
+		return factory.Mock(ClmWorkItemManagementService)
 	}
 
 	@Bean
 	CacheWorkitemAttachments underTest() {
-		return new CacheWorkitemAttachments(AttachmentsManagementService attachmentsManagementService,
-				ClmWorkItemManagementService clmWorkItemManagementService)
+		return new CacheWorkitemAttachments(attachmentsManagementService(),
+				clmWorkItemManagementService())
 	}
 }
