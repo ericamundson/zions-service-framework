@@ -47,6 +47,9 @@ public class MbFilterSpecTest extends Specification {
 		def result = underTest.filter(xmlWorkItems)
 		then:
 		result != null
+		println xmlWorkItems
+		println '---------------------------------------'
+		println result
 	}
 }
 
