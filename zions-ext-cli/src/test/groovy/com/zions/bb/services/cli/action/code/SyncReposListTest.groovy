@@ -1,7 +1,9 @@
 package com.zions.bb.services.cli.action.code;
 
-/*import org.springframework.beans.factory.annotation.Autowired
+import org.junit.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
+import org.springframework.boot.DefaultApplicationArguments
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
@@ -11,11 +13,14 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
+import com.zions.common.services.command.CommandManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
 import com.zions.vsts.services.permissions.PermissionsManagementService
+import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[SyncReposListTestConfig])
 public class SyncReposListTest extends Specification {
@@ -26,10 +31,13 @@ public class SyncReposListTest extends Specification {
 	@Autowired
 	SyncReposList underTest
 	
-	@Autowired(required=true)
+	@Autowired
 	CodeManagementService codeManagmentService
 	
-	@Autowired(required=true)
+	@Autowired
+	CommandManagementService commandManagementService
+	
+	@Autowired
 	PermissionsManagementService permissionsManagementService
 	
 	@Autowired
@@ -41,24 +49,115 @@ public class SyncReposListTest extends Specification {
 	@Autowired
 	MemberManagementService memberManagementService
 	
+	String[] args = [
+		'--tfs.url=http://localhost:8080/tfs',
+		'--tfs.collection=defaultcollection',
+		'--tfs.user=z091182',
+		'--tfs.token=hdepqrjz7sv4eewmqg4o55tflqndwbsue7yocki5xl5p5sqh6jxq',
+		'--tfs.project=Zions Tools Project',
+		'--grant.template=builder',
+		'--tfs.team=ALMOps',
+		'--in.urls=http://localhost:8080/tfs',
+		'--in.user=user',
+		'--in.password=password',
+		'--repo.dir=src/test/resources/testdata',
+		'--grant.template=password'
+	]
 	
-	def 'validate ApplicationArguments success flow.'() {
-		given: "A stub of RQM get test item request"
+	@Test
+	def 'validate method exception flow.'() {
 		
-		//ApplicationArguments args 
-		//args = ["tfs.url","tfs.user","tfs.token"] 
-		//names.nonOptionArgs('tfs.url', 'tfs.user', 'tfs.token')
-		//names = ['tfs.url', 'tfs.user', 'tfs.token',  'in.urls', 'in.user', 'in.password', 'tfs.project', 'tfs.team', 'grant.template', 'repo.dir']
-		//ApplicationArguments args = ["tfs.url","tfs.user","tfs.token"] 
-		//Set<String> args = new Object[name.length];
-		ApplicationArguments args = new File("src/test/resources/application-rm.properties").readLines()
+		given:'Stub with Application Arguments'
+		String[] args = ['--tfs.collection=defaultcollection']
+		def appArgs = new DefaultApplicationArguments(args)
+
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
+
+		then:
+		thrown Exception
+	}
+	
+	@Test
+	def 'validate method  flow.'() {
+		
+		given:'Stub with Application Arguments'
+		String[] args = []
+		def appArgs = new DefaultApplicationArguments(args)
+
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
+
+		then:
+		thrown Exception
+	}
+	
+	@Test
+	def 'validate method success flow.'() {
+		
+		given: "A stub of RQM get test item request"		
+		def appArgs = new DefaultApplicationArguments(args)
 		
 		when: 'calling of method under test (validate)'
-		def testPlans = underTest.validate(args)
+		def testPlans = underTest.validate(appArgs)
 		
 		then: ''
 		true
 	}
+	
+	@Test
+	def 'execute method  flow.'() {
+		
+		given:'Stub with Application Arguments'
+		String[] args = []
+		def appArgs = new DefaultApplicationArguments(args)
+
+		when: 'calling of method under test (execute)'
+		def result = underTest.execute(appArgs)
+
+		then:
+		thrown Exception
+	}
+	
+	@Test
+	def 'execute method filecheck flow.'() {
+		
+		given:'Stub with Application Arguments'
+		String[] args = ['--bb.project=stuff', '--tfs.project=stuff', '--tfs.collection=defaultcollection','--in.password=password',
+			'--in.user=user', '--bb.url=http://', '--repo.dir=src/test/resources/testdata', '--tfs.user=tfsuser',
+			'--tfs.token=tfstoken', '--grant.template=stuff', '--tfs.team=dumb' ]
+		def appArgs = new DefaultApplicationArguments(args)
+		
+		when: 'calling of method under test (validate)'
+		def result = underTest.execute(appArgs)
+		
+		then:
+		thrown Exception
+	}
+	
+	
+	@Test
+	def 'execute method success flow.'() {
+		
+		given:'Stub with Application Arguments'
+		def appArgs = new DefaultApplicationArguments(args)
+		
+		and:
+		def dummy =[]
+		codeManagmentService.importRepoDir(_, _, _, _, _, _) >> dummy
+		
+		and:
+		def dummy1 =[]
+		permissionsManagementService.ensureTeamToRepo(_, _, _, _, _) >> dummy1
+		
+		when: 'calling of method under test (execute)'
+		def result = underTest.execute(appArgs)
+
+		then:
+		true
+		
+	}
+		
 
 }
 
@@ -70,11 +169,22 @@ class SyncReposListTestConfig {
 	
 	@Bean
 	CodeManagementService codeManagmentService() {
-		return new CodeManagementService()
+		return factory.Mock(CodeManagementService)
+		//return new CodeManagementService()
+	}
+	
+	@Bean
+	CommandManagementService commandManagementService() {
+		return new CommandManagementService()
 	}
 	
 	@Bean
 	IGenericRestClient genericRestClient() {
+		return factory.Mock(GenericRestClient)
+	}
+	
+	@Bean
+	IGenericRestClient bBGenericRestClient() {
 		return factory.Mock(ClmGenericRestClient)
 	}
 	
@@ -90,7 +200,8 @@ class SyncReposListTestConfig {
 	
 	@Bean
 	PermissionsManagementService permissionsManagementService() {
-		return new PermissionsManagementService()
+		return factory.Mock(PermissionsManagementService)
+		//return new PermissionsManagementService()
 	}
 	
 	@Bean
@@ -104,4 +215,4 @@ class SyncReposListTestConfig {
 		PermissionsManagementService permissionsManagementService)
 	}
 
-}*/
+}

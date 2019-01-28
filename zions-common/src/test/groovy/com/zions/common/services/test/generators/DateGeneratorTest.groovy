@@ -30,6 +30,7 @@ public class DateGeneratorTest extends Specification {
 
 }
 
+
 @TestConfiguration
 @Profile("test")
 class DateGeneratorTestConfig {
