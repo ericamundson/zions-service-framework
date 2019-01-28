@@ -40,7 +40,7 @@ public class CacheManagementServiceTest extends Specification {
 	@Test
 	def 'saveToCache for project name success flow.'(){
 		
-	def data = new JsonSlurper().parseText(getClass().getResource('/testdata/TestPlanT.json').text)
+	def data = new JsonSlurper().parseText(getClass().getResource('/testdata/TestPlanT_Cache.json').text)
 				
 	when: 'calling of method under test (data)'
 	def keyname = underTest.saveToCache( data ,'','')
@@ -53,7 +53,7 @@ public class CacheManagementServiceTest extends Specification {
 	@Test
 	def 'getFromCache for project name success flow.'(){
 		
-	def data = new JsonSlurper().parseText(getClass().getResource('/testdata/TestPlanT.json').text)
+	def data = new JsonSlurper().parseText(getClass().getResource('/testdata/TestPlanT_Cache.json').text)
 				
 	when: 'calling of method under test (getFromCache)'
 	def keyname = underTest.getFromCache( '','')
