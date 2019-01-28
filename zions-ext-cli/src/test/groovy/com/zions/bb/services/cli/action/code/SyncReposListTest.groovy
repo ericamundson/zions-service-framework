@@ -119,22 +119,6 @@ public class SyncReposListTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
-	def 'execute method filecheck flow.'() {
-		
-		given:'Stub with Application Arguments'
-		String[] args = ['--bb.project=stuff', '--tfs.project=stuff', '--tfs.collection=defaultcollection','--in.password=password',
-			'--in.user=user', '--bb.url=http://', '--repo.dir=src/test/resources/testdata', '--tfs.user=tfsuser',
-			'--tfs.token=tfstoken', '--grant.template=stuff', '--tfs.team=dumb' ]
-		def appArgs = new DefaultApplicationArguments(args)
-		
-		when: 'calling of method under test (validate)'
-		def result = underTest.execute(appArgs)
-		
-		then:
-		thrown Exception
-	}
-	
 	
 	@Test
 	def 'execute method success flow.'() {
