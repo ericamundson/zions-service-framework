@@ -218,6 +218,10 @@ class TranslateRRMToADO implements CliAction {
 					else if (module.orderedArtifacts[it].isHeading()) {
 						module.orderedArtifacts[it].setDescription("") // If simple heading, remove duplicate description
 					}
+					else if (it > 0 && module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[it-1].getDepth()){ 
+						// For all other content, increment the depth if not already incremented so as to preserve outline numbering from DOORS
+						module.orderedArtifacts[it].incrementDepth(1)
+					}
 					if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
 						def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
 						def aid = module.orderedArtifacts[it].getID()
@@ -263,13 +267,13 @@ class TranslateRRMToADO implements CliAction {
 				println("${getCurTimestamp()} - Uploading attachments...")
 				changeList.clear()
 				idMap.clear()
+				count = 0
 				module.orderedArtifacts.each { artifact ->
 					if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
 						def files = []
 						files[0] = rmFileManagementService.cacheRequirementFile(artifact)
 						
-						String id = "${artifact.getID()}-${artifact.getTfsWorkitemType()}"
-
+						String id = artifact.getCacheID()
 						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
 						if (wiChanges != null) {
 							idMap[count] = "${id}"

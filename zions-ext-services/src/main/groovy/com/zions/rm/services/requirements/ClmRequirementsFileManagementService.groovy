@@ -30,8 +30,7 @@ class ClmRequirementsFileManagementService {
 
 	public def cacheRequirementFile(def ritem) {
 		def item
-		String type = ritem.getTfsWorkitemType()
-		String id = "${ritem.getID()}-${type}"
+		String id = ritem.getCacheID()
 
 		def result = clmRequirementsManagementService.getContent(ritem.getFileHref())
 		String contentDisp = "${result.headers.'Content-Disposition'}"

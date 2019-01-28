@@ -22,6 +22,9 @@ class ClmArtifact {
 	public String getID() {
 		return attributeMap.'Identifier'
 	}
+	public String getCacheID() {
+		"${this.getID()}-${this.getTfsWorkitemType()}"
+	}
 	public String setID(in_id) {
 		attributeMap.'Identifier' = in_id
 	}

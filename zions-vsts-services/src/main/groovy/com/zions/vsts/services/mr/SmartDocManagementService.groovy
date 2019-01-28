@@ -96,7 +96,7 @@ class SmartDocManagementService {
 		while(i < module.orderedArtifacts.size() - 1 && module.orderedArtifacts[i].getDepth() >= iStartDepth) {
 			def artifact = module.orderedArtifacts[i]
 			if (!artifact.isDeleted) {
-				String id = "${artifact.getID()}-${artifact.getTfsWorkitemType()}"
+				String id = artifact.getCacheID()
 				def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 				if (cacheWI == null) {
 					throw new FileNotFoundException(id)

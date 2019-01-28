@@ -39,11 +39,14 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		String description = "${value}".replace("<h:div xmlns:h='http://www.w3.org/1999/xhtml'>",'<div>').replace('<h:','<').replace('</h:','</')
 		
 		// Process any embedded images
-		String sId = itemData.getID()
-		return processImages(description, sId);
+		String sId = itemData.getCacheID()
+		def outHtml = processImages(description, sId)
+		
+		// Return html string, but remove <?xml tag as it causes issues
+		return XmlUtil.asString(outHtml).replace('<?xml version="1.0" encoding="UTF-8"?>\n', '')	
 	}
 	
-	String processImages(String html, String sId) {
+	def processImages(String html, String sId) {
 		def htmlData = new XmlSlurper().parseText(html)
 		def imgs = htmlData.'**'.findAll { p ->
 			String src = p.@src
@@ -58,8 +61,8 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			def attData = attachmentService.sendAttachment([file:file])
 			img.@src = attData.url
 		}
-		String outHtml = XmlUtil.asString(htmlData)
-		return outHtml
+		return htmlData
+
 	}
 
 }

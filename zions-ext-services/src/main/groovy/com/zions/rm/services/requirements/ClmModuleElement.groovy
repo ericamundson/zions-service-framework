@@ -31,4 +31,7 @@ class ClmModuleElement extends ClmArtifact {
 				artifactType == 'Assumption' ||
 				artifactType == 'Issue' )
 	}
+	public incrementDepth(def incr) {
+		this.depth = this.depth + incr
+	}
 }
