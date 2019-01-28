@@ -44,7 +44,7 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
-
+	
 	@Autowired
 	ClmWorkItemManagementService clmWorkItemManagementService
 
@@ -89,28 +89,50 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 	}
 
 	@Test
-	def 'execute ApplicationArguments success flow.' () {
+	def 'execute ApplicationArguments exception flow.' () {
 		given: 'Stub with Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
+		//def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)
 		
 		and:
 		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
 		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		//underTest.clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
 		
 		and:
-		//attachmentsManagementService.cacheWorkItemAttachments(_)
-		
-		and:
-		clmWorkItemManagementService.nextPage(_) >> workItems
-		//attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
+		//clmWorkItemManagementService.nextPage(_) >> workItems
+		//underTest.attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
 
 		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
 		then: ''
-		result == null
+		thrown NullPointerException
 	}
+	
+	/*@Test
+	def 'execute ApplicationArguments success flow.' () {
+		given: 'Stub with Application Arguments'
+		String[] args = loadArgs()
+		def appArgs = new DefaultApplicationArguments(args)
+		def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)
+		
+		and:
+		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
+		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		//underTest.clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		
+		and:
+		//clmWorkItemManagementService.nextPage(_) >> workItems
+		//underTest.attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
+
+		when: 'calling of method under test (validate)'
+		def result = uTest.execute(appArgs)
+
+		then: ''
+		result == null
+	}*/
 }
 
 @TestConfiguration
@@ -118,32 +140,42 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 @PropertySource("classpath:test.properties")
 class CacheWorkitemAttachmentsTestConfig {
 	def factory = new DetachedMockFactory()
-
+	
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return factory.Mock(ClmGenericRestClient)
 	}
-
+	
 	@Bean
 	AttachmentsManagementService attachmentsManagementService() {
 		//return new AttachmentsManagementService()
 		return factory.Mock(AttachmentsManagementService)
 	}
-
+	
 	@Bean
 	RtcRepositoryClient rtcRepositoryClient() {
 		return factory.Mock(RtcRepositoryClient)
 	}
-
+	
 	@Bean
 	ClmWorkItemManagementService clmWorkItemManagementService() {
 		//return new ClmWorkItemManagementService()
 		return factory.Mock(ClmWorkItemManagementService)
 	}
-
+	
+	/*@Autowired
+	RtcRepositoryClient rtcRepositoryClient*/
+	
+	@Autowired
+	AttachmentsManagementService attachmentsManagementService
+	
+	@Autowired
+	ClmWorkItemManagementService clmWorkItemManagementService
+	
 	@Bean
 	CacheWorkitemAttachments underTest() {
-		return new CacheWorkitemAttachments(attachmentsManagementService(),
-				clmWorkItemManagementService())
+		return new CacheWorkitemAttachments(attachmentsManagementService,
+			clmWorkItemManagementService)
 	}
+
 }
