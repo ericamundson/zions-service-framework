@@ -25,6 +25,9 @@ class ProcessTemplateServiceSpecTest extends Specification {
 	@Value('${test.mapping.file}')
 	String testMappingFileName
 	
+	@Value('${test.work.item.file}')
+	String testWorkItemFileName
+	
 	
 	@Autowired
 	IGenericRestClient genericRestClient
@@ -205,34 +208,16 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		"${result.name}" == "Bug"
 	}
 	
-	/*def 'getDefaultMapping success flow '() {
+	def 'getDefaultMapping success flow '() {
 		given:
-		def mappingDataInfo = []
 		def xmlMappingData = new XmlSlurper().parse(new File(testMappingFileName))
-		xmlMappingData.wit.each { tType ->
-			def map = [source: tType.@source, target: tType.@target, fields: []]
-			tType.field.each { field ->
-				def ofield = [source: field.@source, target: field.@target, defaultValue: null, values:[]]
-				field.'value'.each { aValue ->
-					def oValue = [source: aValue.@source, target: aValue.@target]
-					ofield.values.add(oValue) 
-				}
-				field.defaultvalue.each { dValue ->
-					ofield.defaultValue = dValue.@target
-				}
-				map.fields.add(ofield)
-			}
-			mappingDataInfo.add(map)
-		}
-		
-		def mapping = [mappingDataInfo]
 		
 		when: 'call method (getDefaultMapping) under test.'
-		def result = underTest.getDefaultMapping(mapping)
+		def result = underTest.getDefaultMapping(xmlMappingData)
 		
 		then: ''
 		result != null;
-	}*/
+	}
 	
 	def 'hasMapping success flow with three params'() {
 		given:
@@ -296,19 +281,47 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		//result != null
 	}*/
 	
-	def 'updateWorkitemTemplates success flow.'() {
+	def 'updateWorkitemTemplates exception flow.'() {
 		given: 'No stubs'
 		def mapping = underTest.getTypeMapResource('rtctypemap.json')
 		
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		
-		def ccmWits
+		def ccmWits = new XmlSlurper().parse(new File(testWorkItemFileName))
 		
 		when:
 		def result = underTest.updateWorkitemTemplates('', project, mapping, ccmWits)
 		
 		then: ''
-		result != null
+		thrown NullPointerException
+	}
+	
+	def 'getWITMapping success flow.'() {
+		given: 'No stubs'
+		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
+		
+		def wits = new XmlSlurper().parse(new File(testWorkItemFileName))
+		
+		when:
+		def result = underTest.getWITMapping(mapping, wits)
+		
+		then: ''
+		true
+	}
+	
+	def 'ensureWITChanges success flow.'() {
+		given: 'No stubs'
+		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
+		
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def changes = []
+		def change = [id: 1, displayName: 'abc', from: 'a', to: 'b']
+		changes.add(change)
+		when:
+		def result = underTest.ensureWITChanges('', project, '')
+		
+		then: ''
+		true
 	}
 	
 	def loadCCMWITs() {
@@ -323,7 +336,75 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		}
 		return wits
 	}
+	
+	@Test
+	def 'getTranslateMapping success flow one' () {
+		given:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
+		def ccmWits = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
+		
+		and:
+		String json = this.getClass().getResource('/testdata/processfields.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		when:
+		def result = underTest.getTranslateMapping('', project, mapping, ccmWits)
+		
+		then:
+		true
+	}
+	
+	@Test
+	def 'getTranslateMapping success flow two' () {
+		given:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
+		def ccmWits = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
+		
+		and:
+		String json = this.getClass().getResource('/testdata/processfields.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		1 * genericRestClient.get(_) >> out
+		
+		when:
+		def result = underTest.getTranslateMapping('', project, mapping, ccmWits)
+		
+		then:
+		true
+	}
 
+	@Test
+	def 'getLinkMapping success flow' () {
+		given:
+		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
+		
+		when:
+		def result = underTest.getLinkMapping(mapping)
+		
+		then:
+		result != null
+	}
+	
+	@Test
+	def 'getWIT success flow' () {
+		given:
+		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+		def changes = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
+		def rwits = new JsonSlurper().parseText(getClass().getResource('/testdata/workitemtypes.json').text)
+		genericRestClient.get(_) >> rwits
+		
+		when:
+		def resultOne = underTest.getWIT('eto-dev', 'DigitalBanking', 'Enhancement Request')
+		def resultTwo = underTest.getWIT('eto-dev', 'DigitalBanking', 'Something')
+		
+		then:
+		resultOne == null
+		resultTwo == null
+	}
 	
 }
 

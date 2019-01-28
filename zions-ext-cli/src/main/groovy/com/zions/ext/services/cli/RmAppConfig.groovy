@@ -1,14 +1,15 @@
 package com.zions.ext.services.cli
 
 import com.zions.clm.services.rest.ClmGenericRestClient
-import com.zions.mr.services.rest.MrGenericRestClient 
+import com.zions.mr.services.rest.MrGenericRestClient
+import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
-
+import com.zions.vsts.services.attachments.AttachmentManagementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -70,5 +71,9 @@ public class RmAppConfig {
 	CommandManagementService commandManagementService() {
 		return new CommandManagementService();
 	}
-
+	
+	@Bean
+	IAttachments attachmentService() {
+		return new AttachmentManagementService();
+	}
 }
