@@ -117,17 +117,18 @@ class CodeManagementService {
 
 	}
 
-	public def getBuildPropertiesFile(def collection, def project, def repo, def filename) {
-		log.debug("CodeManagementService::getBuildPropertiesFile -- collection: ${collection}, project: ${project.id}, repo: ${repo.id}, filename: ")
+	public def getBuildPropertiesFile(def collection, def project, def repo, def filename, def branchName) {
+		log.debug("CodeManagementService::getBuildPropertiesFile -- collection: ${collection}, project: ${project.name}, repo: ${repo.name}, filename: ${filename}, branchName: ${branchName}")
 		String filePath = "/${filename}"
-		def query = ['api-version':'4.1','path':filePath, 'includeContent':true]
+		def query = ['api-version':'4.1','path':filePath, 'includeContent':true, 'versionDescriptor.version':"${branchName}",'versionDescriptor.versionType':'branch']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/items",
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.name}/_apis/git/repositories/${repo.name}/items",
 			query: query
 		)
 		log.debug("CodeManagementService::getBuildPropertiesFile -- Return result: "+result)
-		return result
+		if (result == null) return null
+		return result.content
 
 	}
 
@@ -180,25 +181,19 @@ class CodeManagementService {
 			gitDir.mkdir()
 		}
 		
-		def proc = "git clone ${ourl}".execute(null, gitDir)
-		proc.waitForProcessOutput(System.out, System.err)
+		commandManagementService.executeCommand("git clone ${ourl}", gitDir)
 		File repoDir = new File(gitDir, repoName )
 		
-		proc = "git fetch".execute(null, repoDir)
-		proc.waitForProcessOutput(System.out, System.err)
-		proc = "git pull".execute(null, repoDir)
-		proc.waitForProcessOutput(System.out, System.err)
+		commandManagementService.executeCommand("git fetch", repoDir)
+		commandManagementService.executeCommand("git pull", repoDir)
 
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		def erepoName = URLEncoder.encode(repoName, 'utf-8')
 		erepoName = erepoName.replace('+', '%20')
 		def turl = getAuthUrl("${genericRestClient.tfsUrl}/${eproject}/_git/${erepoName}", genericRestClient.user, genericRestClient.token)
-		proc = "git remote set-url origin ${turl}".execute(null, repoDir)
-		proc.waitForProcessOutput(System.out, System.err)
-		proc = "git push".execute(null, repoDir)
-		proc.waitForProcessOutput(System.out, System.err)
-
+		commandManagementService.executeCommand("git remote set-url origin ${turl}", repoDir)
+		commandManagementService.executeCommand("git push", repoDir)
 	}
 	
 	def getAuthUrl(def url, def userid, def password) {
@@ -282,10 +277,5 @@ class CodeManagementService {
 		}
 		return manifest
 	}
-	
-	private commandExecute(String command, File dir) {
-		def proc = "${command}".execute(null, dir)
-		proc.waitForProcessOutput(System.out, System.err)
 
-	}
 }
