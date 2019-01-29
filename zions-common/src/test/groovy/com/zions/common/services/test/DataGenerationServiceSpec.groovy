@@ -28,6 +28,44 @@ class DataGenerationServiceSpec extends Specification {
 		then:
 		true
 	}
+	
+	@Test
+	def 'generate string resouce test with json' () {
+		given:
+		def resourceJson = '/testdata/TestPlanT.json'
+		when:
+		def plan = underTest.generate(resourceJson)
+		then:
+		plan != null
+	}
+	
+	@Test
+	def 'generate string resouce test with xml' () {
+		given:
+		def resourceXml= '/testdata/testcase.xml'
+		when:
+		def plan = underTest.generate(resourceXml)
+		then:
+		true
+	}
+	
+	@Test
+	def 'generate test with url' () {
+		given:
+		def resourceJson = '/testdata/TestPlanT.json'
+		def resourceXml= '/testdata/testcase.xml'
+		
+		URL urlJson = this.getClass().getResource(resourceJson)
+		URL urlXml = this.getClass().getResource(resourceXml)
+		
+		when:
+		def planJSON = underTest.generate(urlJson)
+		def planXML = underTest.generate(urlXml)
+		
+		then:
+		planJSON != null
+		planXML != null
+	}
 
 }
 

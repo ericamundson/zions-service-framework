@@ -48,7 +48,11 @@ import groovy.json.JsonSlurper
  */
 @Component
 class SyncProjectWithRTCMembers implements CliAction {
+	
+	@Autowired
 	MemberManagementService memberManagmentService
+	
+	@Autowired
 	CcmMemberManagementService ccmMemberManagmentService
 	
 	@Autowired
