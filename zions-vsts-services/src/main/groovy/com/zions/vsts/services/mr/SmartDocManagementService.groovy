@@ -10,6 +10,7 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovyx.net.http.ContentType
+import java.time.format.DateTimeFormatter
 
 /**
  * Manages VSTS/Modern Requirements interaction to create SmartDocs.
@@ -40,8 +41,9 @@ class SmartDocManagementService {
 	}
 	
 	def createSmartDoc(def module, def collection, def mrTfsUrl, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsOAuthToken, def mrTemplate, def mrFolder) {
+		def date = new Date()
 		String body;
-		String docTitle = module.getTitle()
+		String docTitle = "${module.getTitle()}-${date.format('yyyyMMddHHmmss')}"
 		String domain = ""
 		String userPassword = ""
 		def index = 0
@@ -85,8 +87,6 @@ class SmartDocManagementService {
 			log.error("SmartDoc request failed!")
 			return null
 		}
-
-		return null
 	}
 	
 	private WorkItemDetails getWorkitemDetails(def iStart, def module) {
@@ -96,7 +96,7 @@ class SmartDocManagementService {
 		while(i < module.orderedArtifacts.size() - 1 && module.orderedArtifacts[i].getDepth() >= iStartDepth) {
 			def artifact = module.orderedArtifacts[i]
 			if (!artifact.isDeleted) {
-				String id = "${artifact.getID()}-${artifact.getTfsWorkitemType()}"
+				String id = artifact.getCacheID()
 				def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 				if (cacheWI == null) {
 					throw new FileNotFoundException(id)
