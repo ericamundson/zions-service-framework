@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="IBM437"?>
+<witd:WITD application="Work item type editor" version="1.0" xmlns:witd="http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef">
+  <!-- 
+   -->
+  <WORKITEMTYPE name="User Story">
+    <DESCRIPTION>Tracks an activity the user will be able to perform with the product</DESCRIPTION>
+    <FIELDS>
+      <FIELD name="id" refname="RTC.Id" type="Integer" reportable="dimension">
+        <HELPTEXT>The system-generated id number for the work item (e.g. "123")</HELPTEXT>
+      </FIELD>
+      <FIELD name="resolutionDate" refname="RTC.resolutionDate" type="DateTime" reportable="dimension">
+        <HELPTEXT>The system-generated id number for the work item (e.g. "123")</HELPTEXT>
+      </FIELD>
+	</FIELDS>
+  </WORKITEMTYPE>
+ </witd:WITD>

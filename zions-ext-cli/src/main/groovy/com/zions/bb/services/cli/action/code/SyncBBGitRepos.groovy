@@ -56,8 +56,14 @@ import groovy.json.JsonSlurper
  */
 @Component
 class SyncBBGitRepos implements CliAction {
+	
+	@Autowired
 	CodeManagementService codeManagmentService
+	
+	@Autowired
 	BBCodeManagementService bBCodeManagmentService
+	
+	@Autowired
 	PermissionsManagementService permissionsManagementService
 	
 	@Autowired
