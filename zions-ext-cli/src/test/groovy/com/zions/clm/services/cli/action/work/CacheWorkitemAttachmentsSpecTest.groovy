@@ -2,6 +2,7 @@ package com.zions.clm.services.cli.action.work
 
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.DefaultApplicationArguments
 import org.springframework.boot.test.context.TestConfiguration;
@@ -32,35 +33,106 @@ import groovy.json.JsonSlurper
 @ContextConfiguration(classes=[CacheWorkitemAttachmentsTestConfig])
 public class CacheWorkitemAttachmentsSpecTest extends Specification {
 	
+	@Value('${test.work.items.file}')
+	String testWorkItemsFileName
+
 	@Autowired
 	IGenericRestClient genericRestClient;
-	
+
 	@Autowired
 	AttachmentsManagementService attachmentsManagementService
-	
+
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	
 	@Autowired
 	ClmWorkItemManagementService clmWorkItemManagementService
-	
+
 	@Autowired
 	CacheWorkitemAttachments underTest
-	
+
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		//TODO: validate ApplicationArguments exception flow.
+		given: 'Stub with Application Arguments'
+		String[] args = loadArgs()
+		def appArgs = new DefaultApplicationArguments(args)
+
+
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
+
+		then: ''
+		result == true
 	}
-	
+
+	private String[] loadArgs() {
+		String[] args = [
+			'--clm.url=http://localhost:8080',
+			'--clm.user=user',
+			'--clm.password=password',
+			'--ccm.projectArea=src'
+		]
+		return args
+	}
+
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		//TODO: validate ApplicationArguments exception flow.
+		given:'Stub with Application Arguments'
+		String[] args = ['--clm.url=http://localhost:8080']
+		def appArgs = new DefaultApplicationArguments(args)
+		
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
+		
+		then:
+		thrown Exception
+	}
+
+	@Test
+	def 'execute ApplicationArguments exception flow.' () {
+		given: 'Stub with Application Arguments'
+		String[] args = loadArgs()
+		def appArgs = new DefaultApplicationArguments(args)
+		//def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)
+		
+		and:
+		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
+		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		//underTest.clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		
+		and:
+		//clmWorkItemManagementService.nextPage(_) >> workItems
+		//underTest.attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
+
+		when: 'calling of method under test (validate)'
+		def result = underTest.execute(appArgs)
+
+		then: ''
+		thrown NullPointerException
 	}
 	
-	@Test
+	/*@Test
 	def 'execute ApplicationArguments success flow.' () {
-		//TODO: execute ApplicationArguments success flow.
-	}
+		given: 'Stub with Application Arguments'
+		String[] args = loadArgs()
+		def appArgs = new DefaultApplicationArguments(args)
+		def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)
+		
+		and:
+		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
+		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		//underTest.clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		
+		and:
+		//clmWorkItemManagementService.nextPage(_) >> workItems
+		//underTest.attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
+
+		when: 'calling of method under test (validate)'
+		def result = uTest.execute(appArgs)
+
+		then: ''
+		result == null
+	}*/
 }
 
 @TestConfiguration
@@ -76,7 +148,8 @@ class CacheWorkitemAttachmentsTestConfig {
 	
 	@Bean
 	AttachmentsManagementService attachmentsManagementService() {
-		return new AttachmentsManagementService()
+		//return new AttachmentsManagementService()
+		return factory.Mock(AttachmentsManagementService)
 	}
 	
 	@Bean
@@ -86,13 +159,23 @@ class CacheWorkitemAttachmentsTestConfig {
 	
 	@Bean
 	ClmWorkItemManagementService clmWorkItemManagementService() {
-		return new ClmWorkItemManagementService()
+		//return new ClmWorkItemManagementService()
+		return factory.Mock(ClmWorkItemManagementService)
 	}
+	
+	/*@Autowired
+	RtcRepositoryClient rtcRepositoryClient*/
+	
+	@Autowired
+	AttachmentsManagementService attachmentsManagementService
+	
+	@Autowired
+	ClmWorkItemManagementService clmWorkItemManagementService
 	
 	@Bean
 	CacheWorkitemAttachments underTest() {
-		return new CacheWorkitemAttachments(AttachmentsManagementService attachmentsManagementService,
-			ClmWorkItemManagementService clmWorkItemManagementService)
+		return new CacheWorkitemAttachments(attachmentsManagementService,
+			clmWorkItemManagementService)
 	}
 
 }
