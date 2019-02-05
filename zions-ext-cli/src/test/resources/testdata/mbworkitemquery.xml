@@ -1,0 +1,63 @@
+<workitem Version='1.0.0' rel='next'
+	href='https://localhost:9443/ccm/rpt/repository/workitem?id=_EzodoFOyEeio_vSPvIQyHg&amp;fields=workitem%2FworkItem%5BprojectArea%2Fname%3D%27Zions%20FutureCore%20Program%27%20and%20type%2Fid%3D%27defect%27%5D%2F%28id%7CitemId%7CcontextId%7Csummary%7Cstate%2Fname%7Ctype%2Fname%7Ctype%2Fid%7CteamArea%2Fname%7Ctarget%2Fid%7Cparent%2Fid%7Ctype%2Fname%7Cowner%2Fname%29&amp;size=100&amp;pos=100'>
+	<workItem>
+		<type>
+			<id>defect</id>
+			<name>Defect</name>
+		</type>
+		<id>11</id>
+		<itemId>_W8bSMD29Eeil7uERVOvuMQ</itemId>
+		<contextId>_on4akD2tEei_B_sSrr5N2A</contextId>
+		<summary>Test Anomaly</summary>
+		<state>
+			<name>New</name>
+		</state>
+		<target>
+			<id>1.0 S1</id>
+		</target>
+		<parent></parent>
+		<owner>
+			<name>Eric Amundson</name>
+		</owner>
+	</workItem>
+	<workItem>
+		<type>
+			<id>defect</id>
+			<name>Defect</name>
+		</type>
+		<id>55</id>
+		<itemId>_hCXpEEI_EeibitNO80teyA</itemId>
+		<contextId>_on4akD2tEei_B_sSrr5N2A</contextId>
+		<summary>A big brand new test of defect management</summary>
+		<state>
+			<name>New</name>
+		</state>
+		<target>
+			<id>1.0 S1</id>
+		</target>
+		<parent></parent>
+		<owner>
+			<name>Eric Amundson</name>
+		</owner>
+	</workItem>
+	<workItem>
+		<type>
+			<id>defect</id>
+			<name>Defect</name>
+		</type>
+		<id>68</id>
+		<itemId>_9Zk7kEbnEeir5al1ICnBCQ</itemId>
+		<contextId>_on4akD2tEei_B_sSrr5N2A</contextId>
+		<summary>Demo FutureCore defect child task plugin</summary>
+		<state>
+			<name>New</name>
+		</state>
+		<target>
+			<id>1.0 S1</id>
+		</target>
+		<parent></parent>
+		<owner>
+			<name>Eric Amundson</name>
+		</owner>
+	</workItem>
+</workitem>

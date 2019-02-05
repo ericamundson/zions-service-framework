@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class TestMappingManagementService {
 	@Autowired
-	@Value('${test.mapping.file}')
+	@Value('${test.mapping.file:}')
 	String testMappingFileName
 	
 	def mappingDataInfo = []

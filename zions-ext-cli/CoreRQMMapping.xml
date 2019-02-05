@@ -31,6 +31,7 @@
 		<field source="nameHandler" target="System.Title"/>
 		<field source="testCaseDescriptionHandler" target="System.Description"/>
 		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
 		<field source="stateHandler" target="System.State">
 			<defaultvalue target="Design"/>
 		</field>
@@ -84,4 +85,8 @@
 			<defaultvalue target="Active"/>
 		</field>
 	</wit>
+	<wit source="testplan"  target="Test Plan WI" translateUnmappedFields="false">
+		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
+	</wit>
+	
 </witmapping>

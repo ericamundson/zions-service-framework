@@ -194,7 +194,7 @@ public class ClmTestItemManagementService {
 		def wiData = [:]
 		String id = "${qmItemData.webId.text()}-${map.target}"
 		def cacheWI = null
-		if (type == 'Test Case') {
+		if (type == 'Test Case' || type.endsWith(' WI')) {
 			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			if (cacheWI != null) {

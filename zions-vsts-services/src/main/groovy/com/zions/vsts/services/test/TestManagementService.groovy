@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.project.ProjectManagementService
+import com.zions.vsts.services.work.WorkManagementService
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
@@ -67,6 +68,9 @@ public class TestManagementService {
 
 	@Autowired
 	ICacheManagementService cacheManagementService
+	
+	@Autowired
+	WorkManagementService workManagementService
 	
 	public TestManagementService() {
 		
@@ -186,6 +190,8 @@ public class TestManagementService {
 		}
 		if (result != null) {
 			cacheManagementService.saveToCache(result, id, dataType)
+			def wi = workManagementService.getWorkItem(collection, tfsProject, result.id)
+			cacheManagementService.saveToCache(wi, "${id} WI", ICacheManagementService.WI_DATA)
 		}
 		return result
 	}
