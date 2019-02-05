@@ -56,6 +56,66 @@
 		<newfields>
 		</newfields>
 	</wit>	
+	
+	<wit source="Business Requirement" target="Business Requirement" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="vendorIdHandler" target="Custom.VendorID"/>
+		<field source="gapNoGapHandler" target="Custom.GapNoGap"/>
+		<field source="detailsOfGapHandler" target="Custom.DetailsofGap"/>
+		<field source="tcsRecommendationHandler" target="Custom.TCSRecommendations"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<excluded>
+			<field name="Identifier"/>
+			<field name="Review Counter"/>
+			<field name="Status"/>
+		</excluded>
+		<newfields>
+		</newfields>
+	</wit>	
+	
+	<wit source="Scope" target="Section" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<excluded>
+			<field name="Identifier"/>
+			<field name="Review Counter"/>
+			<field name="Status"/>
+		</excluded>
+		<newfields>
+		</newfields>
+	</wit>	
+	
+	<wit source="Out of Scope" target="Section" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<excluded>
+			<field name="Identifier"/>
+			<field name="Review Counter"/>
+			<field name="Status"/>
+		</excluded>
+		<newfields>
+		</newfields>
+	</wit>	
+	
+	<wit source="Assumption" target="Section" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<excluded>
+			<field name="Identifier"/>
+			<field name="Review Counter"/>
+			<field name="Status"/>
+		</excluded>
+		<newfields>
+		</newfields>
+	</wit>	
 	<links>
 	</links>
 </witmapping>
