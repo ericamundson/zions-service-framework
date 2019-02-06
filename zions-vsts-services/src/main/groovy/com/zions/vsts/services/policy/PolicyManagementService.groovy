@@ -25,7 +25,7 @@ import com.zions.vsts.services.tfs.rest.GenericRestClient
 public class PolicyManagementService {
 
 	@Autowired
-	@Value('${tfs.build.properties.file}')
+	@Value('${tfs.build.properties.file:}')
 	private String buildPropsFileName
 
 	@Autowired

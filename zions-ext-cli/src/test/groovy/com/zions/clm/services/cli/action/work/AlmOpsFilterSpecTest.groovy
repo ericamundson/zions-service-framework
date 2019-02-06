@@ -2,6 +2,7 @@ package com.zions.clm.services.cli.action.work
 
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.DefaultApplicationArguments
 import org.springframework.boot.test.context.TestConfiguration;
@@ -32,12 +33,23 @@ import groovy.json.JsonSlurper
 @ContextConfiguration(classes=[AlmOpsFilterTestConfig])
 public class AlmOpsFilterSpecTest extends Specification {
 	
+	@Value('${test.work.items.file}')
+	String testWorkItemsFileName
+	
 	@Autowired
 	AlmOpsFilter underTest
 	
 	@Test
-	def 'filter success flow.'() {
-		//TODO: filter success flow.
+	def 'filter success flow '() {
+		given:
+		def xmlWorkItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
+		when:
+		def result = underTest.filter(xmlWorkItems)
+		then:
+		result != null
+		println xmlWorkItems
+		println '---------------------------------------'
+		println result
 	}
 }
 

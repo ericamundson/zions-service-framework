@@ -1,10 +1,7 @@
 <witmapping>
-	<exclude>
-		<wit name="Track Build Item"/>
-	</exclude>
-	<wit source="Default"  translateUnmappedFields="false">
-		<field source="idHandler" target="Custom.ExternalID"/>
-		<field source="commentsIntoHistoryHandler" target="System.History"/>
+	<wit source="Default"  translateUnmappedFields="true">
+		<field source="historyHandler" target="External.History"/>
+		<field source="commentsHandler" target="External.Comments"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
@@ -19,7 +16,6 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="internalState" target="System.State">
-			<defaultvalue target="New"/>
 			<value source="New" target="New"/>
 			<value source="In Progress" target="Active"/>
 			<value source="Implemented" target="Resolved"/>
@@ -29,20 +25,17 @@
 		<field source="modifiedBy" target="System.ChangedBy"/>
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
-		<field source="category" target="System.AreaPath">
-			<defaultvalue target="ADOIntegrationTesting\OB"/>
-		</field>
+		<field source="category" target="System.AreaPath" valuePrefix="\Zions Tools Project\Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
-		<field source="target" target="System.IterationPath">
-			<defaultvalue target="ADOIntegrationTesting"/>
-		</field>
+		<field source="target" target="System.IterationPath"/>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
-			<value source="High" target="2"/>
-			<value source="Medium" target="3"/>
-			<value source="Low" target="4"/>			
+			<value source="Must Have" target="2"/>
+			<value source="Should Have" target="3"/>
+			<value source="Could Have" target="4"/>			
 			<value source="Unassigned" target="3"/>			
 		</field>
+		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -58,7 +51,6 @@
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
 			<field name="summary"/>
-			<field name="internalApprovals"/>
 			<field name="internalComments"/>
 			<field name="internalStateTransitions"/>
 			<field name="contextId"/>
@@ -79,13 +71,14 @@
 			<field name="workItemType"/>
 		</excluded>
 		<newfields>
+			<field name="External History" refname="External.History" type="html" page="External" section="Section3" group="External History"/>
+			<field name="External Comments" refname="External.Comments" type="html" page="External" section="Section2" group="External Comments"/>
 		</newfields>
 	</wit>
 	
-	<wit source="Story" target="User Story" translateUnmappedFields="false">
-		<field source="idHandler" target="Custom.ExternalID"/>
-		<field source="commentsIntoHistoryHandler" target="System.History"/>
-		<field source="approvalsHandler" target="Custom.Approvals"/>
+	<wit source="Story" target="User Story" translateUnmappedFields="true">
+		<field source="historyHandler" target="External.History"/>
+		<field source="commentsHandler" target="External.Comments"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
 		<field source="resolver" target="Microsoft.VSTS.Common.ClosedBy"/>
 		<field source="implementedDateHandler" target="Microsoft.VSTS.Common.ResolvedDate"/>
@@ -97,7 +90,6 @@
 		<field source="summaryHandler" target="System.Title"/>
 		<field source="description" target="System.Description"/>
 		<field source="internalState" target="System.State">
-			<defaultvalue target="New"/>
 			<value source="New" target="New"/>
 			<value source="In Progress" target="Active"/>
 			<value source="Implemented" target="Resolved"/>
@@ -107,20 +99,17 @@
 		<field source="modifiedBy" target="System.ChangedBy"/>
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
-		<field source="category" target="System.AreaPath">
-			<defaultvalue target="ADOIntegrationTesting\OB"/>
-		</field>
+		<field source="category" target="System.AreaPath" valuePrefix="Zions Tools Project\Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
-		<field source="target" target="System.IterationPath">
-			<defaultvalue target="ADOIntegrationTesting"/>
-		</field>
+		<field source="target" target="System.IterationPath"/>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
-			<value source="High" target="2"/>
-			<value source="Medium" target="3"/>
-			<value source="Low" target="4"/>			
+			<value source="Must Have" target="2"/>
+			<value source="Should Have" target="3"/>
+			<value source="Could Have" target="4"/>			
 			<value source="Unassigned" target="3"/>			
 		</field>
+		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -135,7 +124,6 @@
 		</field>
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
-			<field name="internalApprovals"/>
 			<field name="summary"/>
 			<field name="internalComments"/>
 			<field name="internalStateTransitions"/>
@@ -159,13 +147,15 @@
 			<field name="workItemType"/>
 		</excluded>
 		<newfields>
+			<field name="External History" refname="External.History" type="html" page="External" section="Section3" group="External History"/>
+			<field name="External Comments" refname="External.Comments" type="html" page="External" section="Section2" group="External Comments"/>
 		</newfields>
 		
 	</wit>
 	
-	<wit source="Defect" target="Bug" translateUnmappedFields="false">
-		<field source="idHandler" target="Custom.ExternalID"/>
-		<field source="commentsIntoHistoryHandler" target="System.History"/>
+	<wit source="Defect" target="Bug" translateUnmappedFields="true">
+		<field source="historyHandler" target="External.History"/>
+		<field source="commentsHandler" target="External.Comments"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
@@ -189,20 +179,17 @@
 		<field source="modifiedBy" target="System.ChangedBy"/>
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
-		<field source="category" target="System.AreaPath">
-			<defaultvalue target="ADOIntegrationTesting\OB"/>
-		</field>
+		<field source="category" target="System.AreaPath" valuePrefix="Zions Tools Project\Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
-		<field source="target" target="System.IterationPath">
-			<defaultvalue target="ADOIntegrationTesting"/>
-		</field>
+		<field source="target" target="System.IterationPath"/>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
-			<value source="High" target="2"/>
-			<value source="Medium" target="3"/>
-			<value source="Low" target="4"/>			
+			<value source="Must Have" target="2"/>
+			<value source="Should Have" target="3"/>
+			<value source="Could Have" target="4"/>			
 			<value source="Unassigned" target="3"/>			
 		</field>
+		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -218,7 +205,6 @@
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
 			<field name="summary"/>
-			<field name="internalApprovals"/>
 			<field name="internalComments"/>
 			<field name="internalStateTransitions"/>
 			<field name="contextId"/>
@@ -240,11 +226,13 @@
 		</excluded>
 		
 		<newfields>
+			<field name="External History" refname="External.History" type="html" page="External" section="Section3" group="External History"/>
+			<field name="External Comments" refname="External.Comments" type="html" page="External" section="Section2" group="External Comments"/>
 		</newfields>
 	</wit>
-	<wit source="Initiative" target="Initiative" translateUnmappedFields="false">
-		<field source="idHandler" target="Custom.ExternalID"/>
-		<field source="commentsIntoHistoryHandler" target="System.History"/>
+	<wit source="Initiative" target="Initiative" translateUnmappedFields="true">
+		<field source="historyHandler" target="External.History"/>
+		<field source="commentsHandler" target="External.Comments"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
 		<field source="resolver" target="Microsoft.VSTS.Common.ClosedBy"/>
@@ -265,20 +253,17 @@
 		<field source="modifiedBy" target="System.ChangedBy"/>
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
-		<field source="category" target="System.AreaPath">
-			<defaultvalue target="ADOIntegrationTesting\OB"/>
-		</field>
+		<field source="category" target="System.AreaPath" valuePrefix="\Eric Zions\Zions Tools\"/>
 		<field source="internalTags" target="System.Tags"/>
-		<field source="target" target="System.IterationPath">
-			<defaultvalue target="ADOIntegrationTesting"/>
-		</field>
+		<field source="target" target="System.IterationPath"/>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
-			<value source="High" target="2"/>
-			<value source="Medium" target="3"/>
-			<value source="Low" target="4"/>			
+			<value source="Must Have" target="2"/>
+			<value source="Should Have" target="3"/>
+			<value source="Could Have" target="4"/>			
 			<value source="Unassigned" target="3"/>			
 		</field>
+		<field source="internalApprovals" target="Workitem.Task"/>
 		<field source="com.ibm.team.apt.attribute.complexity" target="Microsoft.VSTS.Scheduling.StoryPoints">
 			<value source="0 pts" target="0"/>
 			<value source="1 pt" target="1"/>
@@ -294,7 +279,6 @@
 		<field source="com.ibm.team.apt.attribute.acceptance" target="Microsoft.VSTS.Common.AcceptanceCriteria"/>
 		<excluded>
 			<field name="summary"/>
-			<field name="internalApprovals"/>
 			<field name="internalComments"/>
 			<field name="internalStateTransitions"/>
 			<field name="contextId"/>
@@ -317,6 +301,8 @@
 			<field name="workItemType"/>
 		</excluded>
 		<newfields>
+			<field name="External History" refname="External.History" type="html" page="External" section="Section3" group="External History"/>
+			<field name="External Comments" refname="External.Comments" type="html" page="External" section="Section2" group="External Comments"/>
 		</newfields>
 		
 	</wit>

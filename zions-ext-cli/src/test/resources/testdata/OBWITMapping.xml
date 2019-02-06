@@ -30,11 +30,28 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="ADOIntegrationTesting\OB"/>
+			<defaultvalue target="DigitalBanking\OB"/>
+			<value source='DigitalBanking\ACI' target="DigitalBanking\OB\ACI"/>
+			<value source='DigitalBanking\Amazing Rewards' target="DigitalBanking\OB\Amazing Rewards"/>
+			<value source='DigitalBanking\DPS' target="DigitalBanking\OB\DPS"/>
+			<value source='DigitalBanking\GPR' target="DigitalBanking\OB\GPR"/>
+			<value source='DigitalBanking\Infosec' target="DigitalBanking\OB\Infosec"/>
+			<value source='DigitalBanking\JBOSS' target="DigitalBanking\OB\JBOSS"/>
+			<value source='DigitalBanking\Mobile' target="DigitalBanking\OB\Mobile"/>
+			<value source='DigitalBanking\NAOP' target="DigitalBanking\OB\NAOP"/>
+			<value source='DigitalBanking\Online Banking' target="DigitalBanking\OB\Online Banking"/>
+			<value source='DigitalBanking\Rebranding' target="DigitalBanking\OB\Rebranding"/>
+			<value source='DigitalBanking\SAOB' target="DigitalBanking\OB\SAOB"/>
+			<value source='DigitalBanking\Zelle' target="DigitalBanking\OB\Zelle"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="ADOIntegrationTesting"/>
+			<defaultvalue target="DigitalBanking"/>
+			<value source="DigitalBanking\Main Development\Sprint 11" target="DigitalBanking\Sprint52"/>
+			<value source="DigitalBanking\Main Development\Sprint 12" target="DigitalBanking\Sprint53"/>
+			<value source="DigitalBanking\Main Development\Sprint 13" target="DigitalBanking\Sprint54"/>
+			<value source="DigitalBanking\Main Development\Sprint 14" target="DigitalBanking\Sprint55"/>
+			<value source="DigitalBanking\Main Development\Sprint 15" target="DigitalBanking\Sprint56"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -108,11 +125,28 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="ADOIntegrationTesting\OB"/>
+			<defaultvalue target="DigitalBanking\OB"/>
+			<value source='DigitalBanking\ACI' target="DigitalBanking\OB\ACI"/>
+			<value source='DigitalBanking\Amazing Rewards' target="DigitalBanking\OB\Amazing Rewards"/>
+			<value source='DigitalBanking\DPS' target="DigitalBanking\OB\DPS"/>
+			<value source='DigitalBanking\GPR' target="DigitalBanking\OB\GPR"/>
+			<value source='DigitalBanking\Infosec' target="DigitalBanking\OB\Infosec"/>
+			<value source='DigitalBanking\JBOSS' target="DigitalBanking\OB\JBOSS"/>
+			<value source='DigitalBanking\Mobile' target="DigitalBanking\OB\Mobile"/>
+			<value source='DigitalBanking\NAOP' target="DigitalBanking\OB\NAOP"/>
+			<value source='DigitalBanking\Online Banking' target="DigitalBanking\OB\Online Banking"/>
+			<value source='DigitalBanking\Rebranding' target="DigitalBanking\OB\Rebranding"/>
+			<value source='DigitalBanking\SAOB' target="DigitalBanking\OB\SAOB"/>
+			<value source='DigitalBanking\Zelle' target="DigitalBanking\OB\Zelle"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="ADOIntegrationTesting"/>
+			<defaultvalue target="DigitalBanking"/>
+			<value source="DigitalBanking\Main Development\Sprint 11" target="DigitalBanking\Sprint52"/>
+			<value source="DigitalBanking\Main Development\Sprint 12" target="DigitalBanking\Sprint53"/>
+			<value source="DigitalBanking\Main Development\Sprint 13" target="DigitalBanking\Sprint54"/>
+			<value source="DigitalBanking\Main Development\Sprint 14" target="DigitalBanking\Sprint55"/>
+			<value source="DigitalBanking\Main Development\Sprint 15" target="DigitalBanking\Sprint56"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -190,11 +224,28 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="ADOIntegrationTesting\OB"/>
+			<defaultvalue target="DigitalBanking\OB"/>
+			<value source='DigitalBanking\ACI' target="DigitalBanking\OB\ACI"/>
+			<value source='DigitalBanking\Amazing Rewards' target="DigitalBanking\OB\Amazing Rewards"/>
+			<value source='DigitalBanking\DPS' target="DigitalBanking\OB\DPS"/>
+			<value source='DigitalBanking\GPR' target="DigitalBanking\OB\GPR"/>
+			<value source='DigitalBanking\Infosec' target="DigitalBanking\OB\Infosec"/>
+			<value source='DigitalBanking\JBOSS' target="DigitalBanking\OB\JBOSS"/>
+			<value source='DigitalBanking\Mobile' target="DigitalBanking\OB\Mobile"/>
+			<value source='DigitalBanking\NAOP' target="DigitalBanking\OB\NAOP"/>
+			<value source='DigitalBanking\Online Banking' target="DigitalBanking\OB\Online Banking"/>
+			<value source='DigitalBanking\Rebranding' target="DigitalBanking\OB\Rebranding"/>
+			<value source='DigitalBanking\SAOB' target="DigitalBanking\OB\SAOB"/>
+			<value source='DigitalBanking\Zelle' target="DigitalBanking\OB\Zelle"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="ADOIntegrationTesting"/>
+			<defaultvalue target="DigitalBanking"/>
+			<value source="DigitalBanking\Main Development\Sprint 11" target="DigitalBanking\Sprint52"/>
+			<value source="DigitalBanking\Main Development\Sprint 12" target="DigitalBanking\Sprint53"/>
+			<value source="DigitalBanking\Main Development\Sprint 13" target="DigitalBanking\Sprint54"/>
+			<value source="DigitalBanking\Main Development\Sprint 14" target="DigitalBanking\Sprint55"/>
+			<value source="DigitalBanking\Main Development\Sprint 15" target="DigitalBanking\Sprint56"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -266,11 +317,28 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="ADOIntegrationTesting\OB"/>
+			<defaultvalue target="DigitalBanking\OB"/>
+			<value source='DigitalBanking\ACI' target="DigitalBanking\OB\ACI"/>
+			<value source='DigitalBanking\Amazing Rewards' target="DigitalBanking\OB\Amazing Rewards"/>
+			<value source='DigitalBanking\DPS' target="DigitalBanking\OB\DPS"/>
+			<value source='DigitalBanking\GPR' target="DigitalBanking\OB\GPR"/>
+			<value source='DigitalBanking\Infosec' target="DigitalBanking\OB\Infosec"/>
+			<value source='DigitalBanking\JBOSS' target="DigitalBanking\OB\JBOSS"/>
+			<value source='DigitalBanking\Mobile' target="DigitalBanking\OB\Mobile"/>
+			<value source='DigitalBanking\NAOP' target="DigitalBanking\OB\NAOP"/>
+			<value source='DigitalBanking\Online Banking' target="DigitalBanking\OB\Online Banking"/>
+			<value source='DigitalBanking\Rebranding' target="DigitalBanking\OB\Rebranding"/>
+			<value source='DigitalBanking\SAOB' target="DigitalBanking\OB\SAOB"/>
+			<value source='DigitalBanking\Zelle' target="DigitalBanking\OB\Zelle"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="ADOIntegrationTesting"/>
+			<defaultvalue target="DigitalBanking"/>
+			<value source="DigitalBanking\Main Development\Sprint 11" target="DigitalBanking\Sprint52"/>
+			<value source="DigitalBanking\Main Development\Sprint 12" target="DigitalBanking\Sprint53"/>
+			<value source="DigitalBanking\Main Development\Sprint 13" target="DigitalBanking\Sprint54"/>
+			<value source="DigitalBanking\Main Development\Sprint 14" target="DigitalBanking\Sprint55"/>
+			<value source="DigitalBanking\Main Development\Sprint 15" target="DigitalBanking\Sprint56"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
