@@ -255,11 +255,12 @@ public class BuildManagementService {
 	}
 	
 	public def getBuildTemplate(def collection, def project, def repo, String buildStage, String templateName) {
-		log.debug("BuildManagementService::getBuildTemplate -- Looking for custom build properties ...")
+		log.debug("BuildManagementService::getBuildTemplate -- Build template specified in properties is "+templateName)
 		// if build template not specified in the build properties file, try to determine build type and load the one for build type
+		def buildType = BuildType.NONE
 		if (templateName == null) {
-			log.debug("BuildManagementService::getBuildTemplate -- No build properties file found or template not specified in file; detecting build type ...")
-			def buildType = detectBuildType(collection, project, repo)
+			log.debug("BuildManagementService::getBuildTemplate -- Build template not specified in file; detecting build type ...")
+			buildType = detectBuildType(collection, project, repo)
 			log.debug("BuildManagementService::getBuildTemplate -- Detected build type = ${buildType}")
 			if (buildType != BuildType.NONE) {
 				// Looking for template build definition with name like 'template-maven-ci', 'template-gradle-release', 'template-ant-ci', etc.
@@ -274,7 +275,7 @@ public class BuildManagementService {
 				bDef = getTemplate(collection, project, templateName)
 			} else {
 				log.debug("BuildManagementService::getBuildTemplate -- Using local resource file.  File name: "+ templateName)
-				bDef = getResource(templateName)
+				bDef = getResource(buildType.toString().toLowerCase(), buildStage, templateName)
 			}
 		}
 		if (bDef == null) {
@@ -396,7 +397,6 @@ public class BuildManagementService {
 //		bDef.type = 2
 //		bDef.jobAuthorizationScope = 1
 //		bDef.triggers = []
-		bDef.project = project
 //		bDef.project.id = project.id
 //		bDef.project.name = project.name
 //		bDef.project.url = project.url
@@ -411,6 +411,7 @@ public class BuildManagementService {
 		bDef.repository.defaultBranch = "${repo.defaultBranch}"
 		bDef.retentionSettings = getRetentionSettings(collection)
 		def queueData = getQueue(collection, project, "${this.queue}")
+		log.debug("BuildManagementService::createBuildDefinition - Queue = ${queueData}")
 		if (queueData != null) {
 			bDef.queue = queueData
 			bDef.process.phases.each { phase ->
@@ -459,6 +460,7 @@ public class BuildManagementService {
 
 	def writeBuildDefinition(def collection, def project, def bDef) {
 		def body = new JsonBuilder(bDef).toPrettyString()
+		//log.debug("BuildManagementService::writeBuildDefinition --> ${body}")
 		
 //		File f = new File("${repo.name}-${buildStage}.json")
 //		def o = f.newDataOutputStream()
