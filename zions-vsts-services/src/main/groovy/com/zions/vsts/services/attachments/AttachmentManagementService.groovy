@@ -10,23 +10,19 @@ import org.springframework.stereotype.Component
 class AttachmentManagementService implements IAttachments {
 	
 	@Autowired
-	@Value('${tfs.project}')
+	@Value('${tfs.project:}')
 	String tfsProject
 	
 	@Autowired
-	@Value('${tfs.collection:#{null}}')
-	private Optional<String> tfsCollection;
+	@Value('${tfs.collection:}')
+	private String tfsCollection;
 
 	@Autowired
 	FileManagementService fileManagementService
 
 	public def sendAttachment(def info) {
 		File file = info.file
-		String collection = ''
-		if (tfsCollection.isPresent()) {
-			collection = tfsCollection.get()
-		}
-		return fileManagementService.uploadAttachment(collection, this.tfsProject, this.tfsProject, file)
+		return fileManagementService.uploadAttachment(this.tfsCollection, this.tfsProject, this.tfsProject, file)
 	}
 
 }
