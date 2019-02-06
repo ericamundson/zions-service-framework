@@ -20,11 +20,11 @@ import groovyx.net.http.ContentType
 @Slf4j
 public class ReleaseManagementService {
 	@Autowired
-	@Value('${tfs.release.use.template}')
+	@Value('${tfs.release.use.template:false}')
 	private boolean useAdoTemplate
 	
 	@Autowired
-	@Value('${tfs.release.generic.name}')
+	@Value('${tfs.release.generic.name:dev}')
 	private String genericTemplateName
 	
 	@Autowired

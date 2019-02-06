@@ -44,7 +44,7 @@ class ClmTestAttachmentManagementServiceSpec extends Specification {
 		given: 'Stub of clmTestManagementService getContent call'
 		String encodedStuff = "Here's some text".bytes.encodeBase64()
 		ByteArrayInputStream s = new ByteArrayInputStream("Here's some text".bytes)
-		1 * clmTestManagementService.getContent(_) >> [headers: ['Content-Disposition': 'filename=\"stuff.txt\"'], data: s]
+		1 * clmTestManagementService.getContent(_) >> [filename: 'file.txt', data: s]
 		
 		and: 'Stub of cache management service save binary'
 		File sFile = new File('stuff.txt')
@@ -71,7 +71,7 @@ class ClmTestAttachmentManagementServiceSpec extends Specification {
 		given: 'Stub of clmTestManagementService getContent call'
 		String encodedStuff = "Here's some text".bytes.encodeBase64()
 		ByteArrayInputStream s = new ByteArrayInputStream("Here's some text".bytes)
-		2 * clmTestManagementService.getContent(_) >> [headers: ['Content-Disposition': 'filename=\"stuff.txt\"'], data: s]
+		2 * clmTestManagementService.getContent(_) >> [filename: 'stuff.txt', data: s]
 		
 		and: 'Stub of cache management service save binary'
 		File sFile = new File('stuff.txt')

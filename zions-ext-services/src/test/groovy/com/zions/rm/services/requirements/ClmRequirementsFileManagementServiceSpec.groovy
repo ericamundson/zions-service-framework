@@ -56,7 +56,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 		and: 'Stub of clmRequirementsManagementService getContent call'
 		String encodedStuff = "Here's some text".bytes.encodeBase64()
 		ByteArrayInputStream s = new ByteArrayInputStream("Here's some text".bytes)
-		1 * clmRequirementsManagementService.getContent(_) >> [headers: ['Content-Disposition': 'filename=\"$wrappedResourceFilename\"'], data: s]
+		1 * clmRequirementsManagementService.getContent(_) >> [headers: ['Content-Disposition': 'filename=\"stuff.txt\";'], data: s]
 		
 		when: 'Calling method under test cacheRequirementFile'
 		boolean success = true

@@ -8,7 +8,7 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="syncProjectWithRTCMembers --tfs.url=https://dev.azure.com/eto-dev  --tfs.user=z091182 --tfs.token=&quot;h3mcxmkx2iweeazhbzwkfgjckd4takvvy4siu7o3ukizndgxcyja&quot; --clm.url=https://clm.cs.zionsbank.com --clm.user=z091182 --clm.password=4878Middy001 --clm.ccm.project=&quot;Mobile and Online Banking (Quality Management)&quot; --tfs.project=&quot;DigitalBanking&quot; --namemap.json.file=obqmteamnamemap.json --clm.context=qm"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="syncProjectWithRTCMembers --tfs.url=https://dev.azure.com/eto-dev  --tfs.user=z091182 --tfs.token=&quot;h3mcxmkx2iweeazhbzwkfgjckd4takvvy4siu7o3ukizndgxcyja&quot; --clm.url=https://clm.cs.zionsbank.com --clm.user=z091182 --clm.password=4878Middy001 --clm.ccm.project=&quot;Mobile and Online Banking (Quality Management)&quot; --tfs.project=&quot;ADOIntegrationTesting&quot; --namemap.json.file=obqmteamnamemap.json --clm.context=qm"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=clm -Dproxy.Host=172.18.4.115 -Dproxy.Port=8080 -Dproxy.User=z091182 -Dproxy.Password=4878Middy001"/>
 </launchConfiguration>

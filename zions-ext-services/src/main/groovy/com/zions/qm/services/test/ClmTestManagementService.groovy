@@ -108,7 +108,16 @@ class ClmTestManagementService {
 			uri: uri,
 			contentType: ContentType.BINARY
 			);
-		return result
+		String cd = "${result.headers.'Content-Disposition'}"
+		
+		String[] sItem = cd.split('=')
+		String filename = null
+		if (sItem.size() == 2) {
+			filename = sItem[1]
+			filename = filename.replace('"', '')
+		}
+		def outData = [filename: filename, data: result.data]
+		return outData
 
 	}
 

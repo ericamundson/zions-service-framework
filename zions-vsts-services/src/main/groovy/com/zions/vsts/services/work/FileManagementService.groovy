@@ -109,7 +109,7 @@ class FileManagementService {
 		return link != null
 	}
 
-	private def uploadAttachment(collection, project, area, File file) {
+	public def uploadAttachment(collection, project, area, File file) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def currentEncoder = genericRestClient.delegate.encoder.'application/json'
 		genericRestClient.delegate.encoder.'application/json' = this.&encodeFile

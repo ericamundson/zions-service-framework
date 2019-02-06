@@ -218,11 +218,15 @@ class TranslateRRMToADO implements CliAction {
 					else if (module.orderedArtifacts[it].isHeading()) {
 						module.orderedArtifacts[it].setDescription("") // If simple heading, remove duplicate description
 					}
+					else if (it > 0 && module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[it-1].getDepth()){ 
+						// For all other content, increment the depth if not already incremented so as to preserve outline numbering from DOORS
+						module.orderedArtifacts[it].incrementDepth(1)
+					}
 					if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
 						def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
-						def aid = module.orderedArtifacts[it].getID()
+						def aid = module.orderedArtifacts[it].getCacheID()
 						changes.each { key, val ->
-							String idkey = "${aid}-${key}"
+							String idkey = "${aid}"
 							idMap[count] = idkey
 							changeList.add(val)
 							count++
@@ -248,7 +252,10 @@ class TranslateRRMToADO implements CliAction {
 					// Create the SmartDoc
 					println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
 					def result = smartDocManagementService.createSmartDoc(module, collection, mrTfsUrl, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
-					if (result.error.code != "null") {
+					if (result == null) {
+						println("SmartDoc creation returned null")
+					}
+					else if (result.error != null && result.error.code != "null") {
 						println("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
 					}
 					else {
@@ -260,13 +267,13 @@ class TranslateRRMToADO implements CliAction {
 				println("${getCurTimestamp()} - Uploading attachments...")
 				changeList.clear()
 				idMap.clear()
+				count = 0
 				module.orderedArtifacts.each { artifact ->
 					if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
 						def files = []
 						files[0] = rmFileManagementService.cacheRequirementFile(artifact)
 						
-						String id = "${artifact.getID()}-${artifact.getTfsWorkitemType()}"
-
+						String id = artifact.getCacheID()
 						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
 						if (wiChanges != null) {
 							idMap[count] = "${id}"
@@ -283,32 +290,7 @@ class TranslateRRMToADO implements CliAction {
 				}
 			}
 			println("Processing completed")
-			/*
-			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-			while (true) {
-				//TODO: ccmWorkManagementService.resetNewId()
-				def changeList = []
-				def pidMap = [:]
-				def idMap = [:]
-				int count = 0
-				int pcount = 0
-				def pChangeList = []
-				def idKeyMap = [:]
-				def filtered = filtered(reqItems, rmFilter)
-				filtered.each { 
-				}
-				if (changeList.size() > 0) {
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-						
-				}
-				def nextLink = reqItems.'**'.find { node ->
-					
-					node.name() == 'link' && node.@rel == 'next'
-				}
-				if (nextLink == null) break
-				reqItems = clmRequirementsManagementService.nextPage(nextLink.@href)
-			}
-			*/
+
 		}
 
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()

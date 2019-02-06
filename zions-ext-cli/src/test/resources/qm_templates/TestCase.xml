@@ -1,0 +1,320 @@
+<witd:WITD application='Work item type editor' version='1.0' xmlns:witd='http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef'>
+  <WORKITEMTYPE name='TestCase'>
+    <DESCRIPTION>general work item starter</DESCRIPTION>
+    <FIELDS>
+      <FIELD name='identifier' refname='identifier' type='string' />
+      <FIELD name='team-area' refname='team-area' type='' />
+      <FIELD name='com.ibm.rqm.planning.editor.section.caseTestPreparation' refname='com.ibm.rqm.planning.editor.section.caseTestPreparation' type='richTextSection' />
+      <FIELD name='com.ibm.rqm.planning.editor.section.testCaseExpectedResults' refname='com.ibm.rqm.planning.editor.section.testCaseExpectedResults' type='richTextSection' />
+      <FIELD name='com.ibm.rqm.planning.editor.section.testCasePreCondition' refname='com.ibm.rqm.planning.editor.section.testCasePreCondition' type='richTextSection' />
+      <FIELD name='com.ibm.rqm.risk.editor.section.caseAssessment' refname='com.ibm.rqm.risk.editor.section.caseAssessment' type='richTextSection' />
+      <FIELD name='com.ibm.rqm.planning.editor.section.testCaseNotes' refname='com.ibm.rqm.planning.editor.section.testCaseNotes' type='richTextSection' />
+      <FIELD name='com.ibm.rqm.planning.editor.section.testCaseDesign' refname='com.ibm.rqm.planning.editor.section.testCaseDesign' type='richTextSection' />
+      <FIELD name='com.ibm.rqm.planning.editor.section.testCasePostCondition' refname='com.ibm.rqm.planning.editor.section.testCasePostCondition' type='richTextSection' />
+      <FIELD name='com.ibm.rqm.planning.editor.section.caseTestScope' refname='com.ibm.rqm.planning.editor.section.caseTestScope' type='richTextSection' />
+      <FIELD name='com.ibm.rqm.planning.editor.section.caseTestDescription' refname='com.ibm.rqm.planning.editor.section.caseTestDescription' type='richTextSection' />
+      <FIELD name='snapshot' refname='snapshot' type='string' />
+      <FIELD name='webId' refname='webId' type='int' />
+      <FIELD name='alias' refname='alias' type='string' />
+      <FIELD name='title' refname='title' type='string' />
+      <FIELD name='description' refname='description' type='string' />
+      <FIELD name='creationDate' refname='creationDate' type='dateTime' />
+      <FIELD name='updated' refname='updated' type='dateTime' />
+      <FIELD name='state' refname='state' type='anyURI' />
+      <FIELD name='creator' refname='creator' type='anyURI' />
+      <FIELD name='owner' refname='owner' type='anyURI' />
+      <FIELD name='locked' refname='locked' type='boolean' />
+      <FIELD name='weight' refname='weight' type='int' />
+      <FIELD name='priority' refname='priority' type='string' />
+      <FIELD name='estimate' refname='estimate' type='long' />
+      <FIELD name='trigger' refname='trigger' type='string' />
+      <FIELD name='activity' refname='activity' type='string' />
+      <FIELD name='suspect' refname='suspect' type='boolean' />
+      <FIELD name='linkvalidity' refname='linkvalidity' type='int' />
+      <FIELD name='approvals' refname='approvals' type='anyURI' />
+      <FIELD name='risk' refname='risk' type='string' />
+      <FIELD name='Active' refname='_cnHfcfKhEeWSXPAepUatNg' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Active' />
+          <LISTITEM value='Deferred' />
+          <LISTITEM value='Retired' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Automation Status' refname='_aklIovfREeOd1div3hxkJQ' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Automation Accepted' />
+          <LISTITEM value='Descoped for Automation' />
+          <LISTITEM value='No' />
+          <LISTITEM value='Ready' />
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Under Review' />
+          <LISTITEM value='Yes' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Business Approved' refname='_v-ZzYddSEeagqbBf-dQbIQ' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='No' />
+          <LISTITEM value='Rejected' />
+          <LISTITEM value='Yes' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Compliance Related' refname='_OdLvcOIlEeSY07pl-wLd9w' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='N/A' />
+          <LISTITEM value='Regulatory Only' />
+          <LISTITEM value='SOX &amp; Regulatory' />
+          <LISTITEM value='SOX Only' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Data Migration Impact' refname='_IpB1gr30EeSoTanGbIrECA' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Both' />
+          <LISTITEM value='Created Data' />
+          <LISTITEM value='Migrated Data' />
+          <LISTITEM value='Unassigned' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Enviroment' refname='_ko2F4i1mEeSd1div3hxkJQ' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Data Migration' />
+          <LISTITEM value='Disaster Recovery' />
+          <LISTITEM value='N/A' />
+          <LISTITEM value='Operational Data Store' />
+          <LISTITEM value='Parameter Environment' />
+          <LISTITEM value='Performance' />
+          <LISTITEM value='Production' />
+          <LISTITEM value='SITa' />
+          <LISTITEM value='SITb' />
+          <LISTITEM value='Staging' />
+          <LISTITEM value='Training' />
+          <LISTITEM value='UATa' />
+          <LISTITEM value='UATb' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Execution Planning' refname='_qHPRoeGYEeaFfIYeFlmcnQ' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='No Assigned Status' />
+          <LISTITEM value='Re-Execute - Internal Review' />
+          <LISTITEM value='Re-Execute - Requirement Change' />
+          <LISTITEM value='Test Case Update - Internal Review' />
+          <LISTITEM value='Test Case Update - Requirement Change' />
+          <LISTITEM value='Test Script Update - Internal Review' />
+          <LISTITEM value='Test Script Update - Requirement Change' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Finance Impact' refname='_J8ZqIMDSEeiLJf8dt7vz4g' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='No' />
+          <LISTITEM value='Yes' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Run Calendar' refname='_ul23MjhfEeSd1div3hxkJQ' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Anniversary Date' />
+          <LISTITEM value='Bi Monthly' />
+          <LISTITEM value='Billing Date' />
+          <LISTITEM value='Capitalization Date' />
+          <LISTITEM value='Day Mode - Fast' />
+          <LISTITEM value='Day Mode - Slow' />
+          <LISTITEM value='End of Day' />
+          <LISTITEM value='End of Month' />
+          <LISTITEM value='End of Quarter' />
+          <LISTITEM value='End of Term' />
+          <LISTITEM value='End of Year' />
+          <LISTITEM value='Escrow Periodic Analysis Date' />
+          <LISTITEM value='Maturity Billing' />
+          <LISTITEM value='Multiple EOD' />
+          <LISTITEM value='Multiple End of Month' />
+          <LISTITEM value='Multiple End of Year' />
+          <LISTITEM value='N/A' />
+          <LISTITEM value='Night Mode' />
+          <LISTITEM value='On Demand' />
+          <LISTITEM value='Payment Due Date' />
+          <LISTITEM value='Run Calendar' />
+          <LISTITEM value='System Interest Reserve / Rollover Date' />
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Weekly' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Test Team' refname='_eznu4km1EeSBMKsl2QbLJQ' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='BaNCS Product: Test' />
+          <LISTITEM value='Business Unit: CDA' />
+          <LISTITEM value='Business Unit: ELO' />
+          <LISTITEM value='Business Unit: EML' />
+          <LISTITEM value='Business Unit: RLC' />
+          <LISTITEM value='Business Unit: Secondary' />
+          <LISTITEM value='Business Unit: UAT Triage' />
+          <LISTITEM value='Data Migration: Test' />
+          <LISTITEM value='EIM: EDW Test' />
+          <LISTITEM value='Finance: EDW' />
+          <LISTITEM value='Finance: Evolv' />
+          <LISTITEM value='Finance: Evolv - TI' />
+          <LISTITEM value='Finance: FAH' />
+          <LISTITEM value='Finance: Financial Accounting Hub' />
+          <LISTITEM value='Finance: Frontier' />
+          <LISTITEM value='Finance: Loan Operations' />
+          <LISTITEM value='Finance: ODS' />
+          <LISTITEM value='Finance: Recon' />
+          <LISTITEM value='Interfaces: BaNCS Test' />
+          <LISTITEM value='Interfaces: Tier 2' />
+          <LISTITEM value='Interfaces: UAT' />
+          <LISTITEM value='N/A' />
+          <LISTITEM value='NFR: Test' />
+          <LISTITEM value='ODS Data' />
+          <LISTITEM value='R2R' />
+          <LISTITEM value='Reports: BaNCS Test' />
+          <LISTITEM value='Reports: ODS Test' />
+          <LISTITEM value='Rollout' />
+          <LISTITEM value='SNF: Test' />
+          <LISTITEM value='UAT' />
+          <LISTITEM value='zzArchived:' />
+          <LISTITEM value='zzArchived: Data Team' />
+          <LISTITEM value='zzArchived: Finance' />
+          <LISTITEM value='zzArchived: Finance: BaNCS' />
+          <LISTITEM value='zzArchived: Finance: Hyperion' />
+          <LISTITEM value='zzArchived: Finance: R2R' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Test Type' refname='_alzQovfREeOd1div3hxkJQ' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Data Staging' />
+          <LISTITEM value='Data Test' />
+          <LISTITEM value='Functional Test' />
+          <LISTITEM value='Integration Test' />
+          <LISTITEM value='Interface Batch Test' />
+          <LISTITEM value='NFR Test' />
+          <LISTITEM value='Other' />
+          <LISTITEM value='Production Validation' />
+          <LISTITEM value='Regression Test' />
+          <LISTITEM value='Smoke Test' />
+          <LISTITEM value='User Acceptance Test' />
+          <LISTITEM value='Web Services Test' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='UAT Groups' refname='_F1jiMr1NEeSoTanGbIrECA' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Affiliate Ops' />
+          <LISTITEM value='CIF' />
+          <LISTITEM value='CLS/AS' />
+          <LISTITEM value='CLS/QA' />
+          <LISTITEM value='Collections' />
+          <LISTITEM value='Contact Center' />
+          <LISTITEM value='Escrow' />
+          <LISTITEM value='General Audience' />
+          <LISTITEM value='N/A' />
+          <LISTITEM value='UAT Groups' />
+          <LISTITEM value='Underwriter' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Vendor Priority' refname='_amJ18vfREeOd1div3hxkJQ' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='High' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Workstream' refname='_amSY0vfREeOd1div3hxkJQ' type='string'>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='CIF' />
+          <LISTITEM value='Compliance &amp; Regulatory' />
+          <LISTITEM value='Deposits: AOP' />
+          <LISTITEM value='Deposits: CIF' />
+          <LISTITEM value='Deposits: DDA' />
+          <LISTITEM value='Deposits: Exceptions' />
+          <LISTITEM value='Deposits: IRA' />
+          <LISTITEM value='Deposits: Payments' />
+          <LISTITEM value='Deposits: Relationship Pricing' />
+          <LISTITEM value='Deposits: TD' />
+          <LISTITEM value='Deposits: Teller' />
+          <LISTITEM value='EDW' />
+          <LISTITEM value='Finance' />
+          <LISTITEM value='Finance:- BaNCS' />
+          <LISTITEM value='Finance:- EDW' />
+          <LISTITEM value='Finance:- Evolv' />
+          <LISTITEM value='Finance:- Financial Accounting Hub' />
+          <LISTITEM value='Finance:- Frontier' />
+          <LISTITEM value='Finance:- General Ledger' />
+          <LISTITEM value='Finance:- Hyperion' />
+          <LISTITEM value='Finance:- ODS' />
+          <LISTITEM value='General' />
+          <LISTITEM value='Integration' />
+          <LISTITEM value='Interface' />
+          <LISTITEM value='Lending Common' />
+          <LISTITEM value='Lending: Common' />
+          <LISTITEM value='Lending: Construction' />
+          <LISTITEM value='Lending: General' />
+          <LISTITEM value='Lending: Retail' />
+          <LISTITEM value='Lending: Securitization' />
+          <LISTITEM value='Lending: Syndication' />
+          <LISTITEM value='Migration' />
+          <LISTITEM value='NFR' />
+          <LISTITEM value='Non-FutureCORE' />
+          <LISTITEM value='ODS' />
+          <LISTITEM value='Relationship Pricing' />
+          <LISTITEM value='Reporting' />
+          <LISTITEM value='Rollout' />
+          <LISTITEM value='Teller' />
+          <LISTITEM value='Testing' />
+          <LISTITEM value='Unknown' />
+          <LISTITEM value='Workstream' />
+          <LISTITEM value='Zions Legacy QA:- AFIN' />
+          <LISTITEM value='Zions Legacy QA:- APPRO' />
+          <LISTITEM value='Zions Legacy QA:- Account Recon' />
+          <LISTITEM value='Zions Legacy QA:- BLMB' />
+          <LISTITEM value='Zions Legacy QA:- Bulk Transaction and Reversal (BTTR)' />
+          <LISTITEM value='Zions Legacy QA:- CMS' />
+          <LISTITEM value='Zions Legacy QA:- COD1' />
+          <LISTITEM value='Zions Legacy QA:- Convey Tax Port' />
+          <LISTITEM value='Zions Legacy QA:- Credit Bureau' />
+          <LISTITEM value='Zions Legacy QA:- DPCL' />
+          <LISTITEM value='Zions Legacy QA:- Deluxe ' />
+          <LISTITEM value='Zions Legacy QA:- EDWS' />
+          <LISTITEM value='Zions Legacy QA:- Electronic Report Delivery (ERDF)' />
+          <LISTITEM value='Zions Legacy QA:- FMAC' />
+          <LISTITEM value='Zions Legacy QA:- FileNet' />
+          <LISTITEM value='Zions Legacy QA:- Financial Accounting Hub -ORGL' />
+          <LISTITEM value='Zions Legacy QA:- Force Placed Insurance/Southwest' />
+          <LISTITEM value='Zions Legacy QA:- Frontier' />
+          <LISTITEM value='Zions Legacy QA:- Letters of Credit' />
+          <LISTITEM value='Zions Legacy QA:- Loan File Tracking System(LFTR)' />
+          <LISTITEM value='Zions Legacy QA:- Mass Maintenance (MMNT)' />
+          <LISTITEM value='Zions Legacy QA:- Norkom' />
+          <LISTITEM value='Zions Legacy QA:- ODS (REPT)' />
+          <LISTITEM value='Zions Legacy QA:- Online Banking' />
+          <LISTITEM value='Zions Legacy QA:- PEPP(ACH)' />
+          <LISTITEM value='Zions Legacy QA:- Payment Coupons' />
+          <LISTITEM value='Zions Legacy QA:- Primatics (Loan Accounting Engine)' />
+          <LISTITEM value='Zions Legacy QA:- RCIF' />
+          <LISTITEM value='Zions Legacy QA:- RCVY' />
+          <LISTITEM value='Zions Legacy QA:- RLPR' />
+          <LISTITEM value='Zions Legacy QA:- Risk Management' />
+          <LISTITEM value='Zions Legacy QA:- SBAL' />
+          <LISTITEM value='Zions Legacy QA:- STKY' />
+          <LISTITEM value='Zions Legacy QA:- Servicemembers Civil Relief Act (SCRA)' />
+          <LISTITEM value='Zions Legacy QA:- Statements and Notices' />
+          <LISTITEM value='Zions Legacy QA:- Super MICR' />
+          <LISTITEM value='Zions Legacy QA:- TIBK' />
+          <LISTITEM value='Zions Legacy QA:- Transaction Gateway' />
+          <LISTITEM value='Zions Legacy QA:- Viewpoint' />
+          <LISTITEM value='v071663' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='variables' refname='variables' type='string' />
+      <FIELD name='scriptStepCount' refname='scriptStepCount' type='int' />
+      <FIELD name='relatedChangeRequest' refname='relatedChangeRequest' type='anyURI' />
+      <FIELD name='copiedFrom' refname='copiedFrom' type='anyURI' />
+      <FIELD name='copiedRoot' refname='copiedRoot' type='anyURI' />
+      <FIELD name='Automated TC Name' refname='Automated_TC_Name' type='string' />
+      <FIELD name='Execution Count' refname='Execution_Count' type='string' />
+      <FIELD name='Risk Model (RE) Calculation' refname='Risk_Model__RE__Calculation' type='string' />
+      <FIELD name='TCG Category 1' refname='_k5J38USxEeiuULVYIY76YA' type='string' />
+      <FIELD name='TCG Category 2' refname='_k5l80ESxEeiuULVYIY76YA' type='string' />
+      <FIELD name='Test Case Group' refname='_k4meUUSxEeiuULVYIY76YA' type='string' />
+      <FIELD name='Test Case Important Level' refname='Test_Case_Important_Level' type='string' />
+      <FIELD name='Test Case Risk' refname='Test_Case_Risk' type='string' />
+      <FIELD name='Unresolved Defect Count' refname='Unresolved_Defect_Count' type='string' />
+      <FIELD name='Vendor TC Name' refname='Vendor_TC_Name' type='string' />
+      <FIELD name='esignatures' refname='esignatures' type='string' />
+      <FIELD name='markerAny' refname='markerAny' type='string' />
+    </FIELDS>
+  </WORKITEMTYPE>
+</witd:WITD>

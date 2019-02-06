@@ -1,6 +1,7 @@
 package com.zions.ext.services.cli
 
 import com.zions.clm.services.rest.ClmGenericRestClient
+import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
@@ -9,7 +10,7 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.ext.services.cli.action.rest.RestClient
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
-
+import com.zions.vsts.services.attachments.AttachmentManagementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -70,5 +71,15 @@ public class QmAppConfig {
 	CommandManagementService commandManagementService() {
 		return new CommandManagementService();
 	}
+	
+	@Bean
+	IGenericRestClient mrGenericRestClient() {
+		return new MrGenericRestClient('', '')
+	}
+
+//	@Bean
+//	IAttachments attachmentsService() {
+//		return new AttachmentManagementService();
+//	}
 
 }
