@@ -5,6 +5,8 @@ import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
+import com.zions.common.services.rest.IGenericRestClient
+import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.vsts.services.attachments.AttachmentManagementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -40,8 +42,13 @@ public class CLMAppConfig {
 	}
 	
 	@Bean
-	IAttachments attachmentsService() {
-		return new AttachmentManagementService();
+	IGenericRestClient mrGenericRestClient() {
+		return new MrGenericRestClient('', '')
 	}
+	
+//	@Bean
+//	IAttachments attachmentsService() {
+//		return new AttachmentManagementService();
+//	}
 
 }
