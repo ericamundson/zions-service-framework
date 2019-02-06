@@ -1,0 +1,453 @@
+[
+    {
+        "name": "Active",
+        "displayName": "Active",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Active",
+            "Deferred",
+            "Retired"
+        ]
+    },
+    {
+        "name": "Automation_Status",
+        "displayName": "Automation Status",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Automation Accepted",
+            "Descoped for Automation",
+            "No",
+            "Ready",
+            "Under Review",
+            "Yes"
+        ]
+    },
+    {
+        "name": "Business_Approved",
+        "displayName": "Business Approved",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "No",
+            "Rejected",
+            "Yes"
+        ]
+    },
+    {
+        "name": "Compliance_Related",
+        "displayName": "Compliance Related",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "N/A",
+            "Regulatory Only",
+            "SOX & Regulatory",
+            "SOX Only"
+        ]
+    },
+    {
+        "name": "Data_Migration_Impact",
+        "displayName": "Data Migration Impact",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Both",
+            "Created Data",
+            "Migrated Data"
+        ]
+    },
+    {
+        "name": "Enviroment",
+        "displayName": "Enviroment",
+        "attributeType": "Multiselect",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Data Migration",
+            "Disaster Recovery",
+            "N/A",
+            "Operational Data Store",
+            "Parameter Environment",
+            "Performance",
+            "Production",
+            "SITa",
+            "SITb",
+            "Staging",
+            "Training",
+            "UATa",
+            "UATb"
+        ]
+    },
+    {
+        "name": "Execution_Planning",
+        "displayName": "Execution Planning",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "No Assigned Status",
+            "Re-Execute - Internal Review",
+            "Re-Execute - Requirement Change",
+            "Test Case Update - Internal Review",
+            "Test Case Update - Requirement Change",
+            "Test Script Update - Internal Review",
+            "Test Script Update - Requirement Change"
+        ]
+    },
+    {
+        "name": "Finance_Impact",
+        "displayName": "Finance Impact",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "No",
+            "Yes"
+        ]
+    },
+    {
+        "name": "Run_Calendar",
+        "displayName": "Run Calendar",
+        "attributeType": "Multiselect",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Anniversary Date",
+            "Bi Monthly",
+            "Billing Date",
+            "Capitalization Date",
+            "Day Mode - Fast",
+            "Day Mode - Slow",
+            "End of Day",
+            "End of Month",
+            "End of Quarter",
+            "End of Term",
+            "End of Year",
+            "Escrow Periodic Analysis Date",
+            "Maturity Billing",
+            "Multiple EOD",
+            "Multiple End of Month",
+            "Multiple End of Year",
+            "N/A",
+            "Night Mode",
+            "On Demand",
+            "Payment Due Date",
+            "System Interest Reserve / Rollover Date",
+            "Weekly"
+        ]
+    },
+    {
+        "name": "Test_Team",
+        "displayName": "Test Team",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "BaNCS Product: Test",
+            "Business Unit: CDA",
+            "Business Unit: ELO",
+            "Business Unit: EML",
+            "Business Unit: RLC",
+            "Business Unit: Secondary",
+            "Business Unit: UAT Triage",
+            "Data Migration: Test",
+            "EIM: EDW Test",
+            "Finance: EDW",
+            "Finance: Evolv",
+            "Finance: Evolv - TI",
+            "Finance: FAH",
+            "Finance: Financial Accounting Hub",
+            "Finance: Frontier",
+            "Finance: Loan Operations",
+            "Finance: ODS",
+            "Finance: Recon",
+            "Interfaces: BaNCS Test",
+            "Interfaces: Tier 2",
+            "Interfaces: UAT",
+            "N/A",
+            "NFR: Test",
+            "ODS Data",
+            "R2R",
+            "Reports: BaNCS Test",
+            "Reports: ODS Test",
+            "Rollout",
+            "SNF: Test",
+            "UAT",
+            "zzArchived:",
+            "zzArchived: Data Team",
+            "zzArchived: Finance",
+            "zzArchived: Finance: BaNCS",
+            "zzArchived: Finance: Hyperion",
+            "zzArchived: Finance: R2R"
+        ]
+    },
+    {
+        "name": "Test_Type",
+        "displayName": "Test Type",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Data Staging",
+            "Data Test",
+            "Functional Test",
+            "Integration Test",
+            "Interface Batch Test",
+            "NFR Test",
+            "Other",
+            "Production Validation",
+            "Regression Test",
+            "Smoke Test",
+            "User Acceptance Test",
+            "Web Services Test"
+        ]
+    },
+    {
+        "name": "UAT_Groups",
+        "displayName": "UAT Groups",
+        "attributeType": "Multiselect",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Affiliate Ops",
+            "CIF",
+            "CLS/AS",
+            "CLS/QA",
+            "Collections",
+            "Contact Center",
+            "Escrow",
+            "General Audience",
+            "N/A",
+            "Underwriter"
+        ]
+    },
+    {
+        "name": "Vendor_Priority",
+        "displayName": "Vendor Priority",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "High"
+        ]
+    },
+    {
+        "name": "Workstream",
+        "displayName": "Workstream",
+        "attributeType": "Multiselect",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "CIF",
+            "Compliance & Regulatory",
+            "Deposits: AOP",
+            "Deposits: CIF",
+            "Deposits: DDA",
+            "Deposits: Exceptions",
+            "Deposits: IRA",
+            "Deposits: Payments",
+            "Deposits: Relationship Pricing",
+            "Deposits: TD",
+            "Deposits: Teller",
+            "EDW",
+            "Finance",
+            "Finance:- BaNCS",
+            "Finance:- EDW",
+            "Finance:- Evolv",
+            "Finance:- Financial Accounting Hub",
+            "Finance:- Frontier",
+            "Finance:- General Ledger",
+            "Finance:- Hyperion",
+            "Finance:- ODS",
+            "General",
+            "Integration",
+            "Interface",
+            "Lending Common",
+            "Lending: Common",
+            "Lending: Construction",
+            "Lending: General",
+            "Lending: Retail",
+            "Lending: Securitization",
+            "Lending: Syndication",
+            "Migration",
+            "NFR",
+            "Non-FutureCORE",
+            "ODS",
+            "Relationship Pricing",
+            "Reporting",
+            "Rollout",
+            "Teller",
+            "Testing",
+            "Zions Legacy QA:- AFIN",
+            "Zions Legacy QA:- APPRO",
+            "Zions Legacy QA:- Account Recon",
+            "Zions Legacy QA:- BLMB",
+            "Zions Legacy QA:- Bulk Transaction and Reversal (BTTR)",
+            "Zions Legacy QA:- CMS",
+            "Zions Legacy QA:- COD1",
+            "Zions Legacy QA:- Convey Tax Port",
+            "Zions Legacy QA:- Credit Bureau",
+            "Zions Legacy QA:- DPCL",
+            "Zions Legacy QA:- Deluxe ",
+            "Zions Legacy QA:- EDWS",
+            "Zions Legacy QA:- Electronic Report Delivery (ERDF)",
+            "Zions Legacy QA:- FMAC",
+            "Zions Legacy QA:- FileNet",
+            "Zions Legacy QA:- Financial Accounting Hub -ORGL",
+            "Zions Legacy QA:- Force Placed Insurance/Southwest",
+            "Zions Legacy QA:- Frontier",
+            "Zions Legacy QA:- Letters of Credit",
+            "Zions Legacy QA:- Loan File Tracking System(LFTR)",
+            "Zions Legacy QA:- Mass Maintenance (MMNT)",
+            "Zions Legacy QA:- Norkom",
+            "Zions Legacy QA:- ODS (REPT)",
+            "Zions Legacy QA:- Online Banking",
+            "Zions Legacy QA:- PEPP(ACH)",
+            "Zions Legacy QA:- Payment Coupons",
+            "Zions Legacy QA:- Primatics (Loan Accounting Engine)",
+            "Zions Legacy QA:- RCIF",
+            "Zions Legacy QA:- RCVY",
+            "Zions Legacy QA:- RLPR",
+            "Zions Legacy QA:- Risk Management",
+            "Zions Legacy QA:- SBAL",
+            "Zions Legacy QA:- STKY",
+            "Zions Legacy QA:- Servicemembers Civil Relief Act (SCRA)",
+            "Zions Legacy QA:- Statements and Notices",
+            "Zions Legacy QA:- Super MICR",
+            "Zions Legacy QA:- TIBK",
+            "Zions Legacy QA:- Transaction Gateway",
+            "Zions Legacy QA:- Viewpoint"
+        ]
+    },
+    {
+        "name": "Automated_TC_Name",
+        "displayName": "Automated TC Name",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Execution_Count",
+        "displayName": "Execution Count",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Risk_Model__RE__Calculation",
+        "displayName": "Risk Model (RE) Calculation",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "_k5J38USxEeiuULVYIY76YA",
+        "displayName": "TCG Category 1",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "_k5l80ESxEeiuULVYIY76YA",
+        "displayName": "TCG Category 2",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "_k4meUUSxEeiuULVYIY76YA",
+        "displayName": "Test Case Group",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Test_Case_Important_Level",
+        "displayName": "Test Case Important Level",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Test_Case_Risk",
+        "displayName": "Test Case Risk",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Unresolved_Defect_Count",
+        "displayName": "Unresolved Defect Count",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Vendor_TC_Name",
+        "displayName": "Vendor TC Name",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    }
+]

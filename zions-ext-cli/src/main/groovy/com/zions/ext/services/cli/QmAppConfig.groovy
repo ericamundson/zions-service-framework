@@ -57,6 +57,11 @@ public class QmAppConfig {
 	}
 	
 	@Bean
+	IGenericRestClient mrGenericRestClient() {
+		return new MrGenericRestClient('none', 'none')
+	}
+
+	@Bean
 	CliAction restClient() {
 		return new RestClient()
 	}
@@ -67,10 +72,6 @@ public class QmAppConfig {
 		return new CommandManagementService();
 	}
 	
-	@Bean
-	IGenericRestClient mrGenericRestClient() {
-		return new MrGenericRestClient('', '')
-	}
 
 //	@Bean
 //	IAttachments attachmentsService() {

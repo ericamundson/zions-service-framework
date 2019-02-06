@@ -1,0 +1,63 @@
+[
+    {
+        "name": "Active",
+        "displayName": "Active",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "No",
+            "Yes"
+        ]
+    },
+    {
+        "name": "Release",
+        "displayName": "Release",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Ignore - Do Not Report",
+            "Release One",
+            "Release OneDOTOne",
+            "Release Three (DPR)",
+            "Release Two",
+            "Release TwoDOTFive",
+            "Release TwoDOTNine",
+            "Release TwoDOTTwo"
+        ]
+    },
+    {
+        "name": "Reporting_Group",
+        "displayName": "Reporting Group",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "N/A",
+            "PRT",
+            "UAT"
+        ]
+    },
+    {
+        "name": "Reporting_Type",
+        "displayName": "Reporting Type",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "N/A",
+            "PRT",
+            "PSIT",
+            "Post ST/CIT",
+            "Pre-UAT",
+            "ST/CIT",
+            "SxS",
+            "UAT"
+        ]
+    }
+]
