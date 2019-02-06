@@ -196,16 +196,29 @@ class TranslateRRMToADO implements CliAction {
 			def mappingData = rmMappingManagementService.mappingData
 			println('Getting ADO Project Members...')
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-			println("${getCurTimestamp()} - Querying DNG Modules...")
+			println("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
 			def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
 			def changeList = []
 			def idMap = [:]
 			int count = 0
 			modules.each { module ->
-				println("${getCurTimestamp()} - Processing Module ${count + 1} of ${modules.size()}...")
+				println("${getCurTimestamp()} - Processing Module: ${module.getTitle()} (${count + 1} of ${modules.size()}) ...")
+				// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
+				def errCount = 0
+				module.orderedArtifacts.each { artifact ->
+					if (artifact.isHeading() && artifact.getArtifactType() != 'Heading' ) {
+						println("*** ERROR: Artifact #${artifact.getID()} has inconsistent row type in module ${module.getTitle()}")
+						errCount++
+					}
+				}
+				if (errCount > 0) {
+					println("*** ERROR: Skipping module '${module.getTitle()}' due to $errCount errors")
+				}
+					
 				// Iterate through all module elements 
 				int it = 0 // we have to use our own "it" since Groovy won't allow an implicit "it" to be incremented
-				while(true) {
+				while(errCount == 0) {
+
 					// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
 					if (module.orderedArtifacts[it].isHeading() && 
 						it < module.orderedArtifacts.size()-1 && 
@@ -261,33 +274,35 @@ class TranslateRRMToADO implements CliAction {
 					else {
 						println("SmartDoc creation succeeded. Result: ${result.result}")
 					}
-				}
-				
-				// Upload Attachments to Azure DevOps
-				println("${getCurTimestamp()} - Uploading attachments...")
-				changeList.clear()
-				idMap.clear()
-				count = 0
-				module.orderedArtifacts.each { artifact ->
-					if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
-						def files = []
-						files[0] = rmFileManagementService.cacheRequirementFile(artifact)
-						
-						String id = artifact.getCacheID()
-						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-						if (wiChanges != null) {
-							idMap[count] = "${id}"
-							changeList.add(wiChanges)
-							count++
+					
+					// Upload Attachments to Azure DevOps
+					println("${getCurTimestamp()} - Uploading attachments...")
+					changeList.clear()
+					idMap.clear()
+					count = 0
+					module.orderedArtifacts.each { artifact ->
+						if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
+							def files = []
+							files[0] = rmFileManagementService.cacheRequirementFile(artifact)
+							
+							String id = artifact.getCacheID()
+							def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+							if (wiChanges != null) {
+								idMap[count] = "${id}"
+								changeList.add(wiChanges)
+								count++
+							}
+							
 						}
-						
+					}
+					if (changeList.size() > 0) {
+						// Associate attachments to work items in Azure DevOps
+						println("${getCurTimestamp()} - Associating attachments to work items...")
+						workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 					}
 				}
-				if (changeList.size() > 0) {
-					// Associate attachments to work items in Azure DevOps
-					println("${getCurTimestamp()} - Associating attachments to work items...")
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-				}
+				
+
 			}
 			println("Processing completed")
 
