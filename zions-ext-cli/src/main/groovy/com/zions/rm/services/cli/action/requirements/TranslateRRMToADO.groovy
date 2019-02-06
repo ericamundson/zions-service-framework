@@ -224,9 +224,9 @@ class TranslateRRMToADO implements CliAction {
 					}
 					if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
 						def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
-						def aid = module.orderedArtifacts[it].getID()
+						def aid = module.orderedArtifacts[it].getCacheID()
 						changes.each { key, val ->
-							String idkey = "${aid}-${key}"
+							String idkey = "${aid}"
 							idMap[count] = idkey
 							changeList.add(val)
 							count++
