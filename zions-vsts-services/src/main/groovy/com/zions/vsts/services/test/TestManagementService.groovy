@@ -190,7 +190,8 @@ public class TestManagementService {
 		}
 		if (result != null) {
 			cacheManagementService.saveToCache(result, id, dataType)
-			def wi = workManagementService.getWorkItem(collection, tfsProject, result.id)
+			String wid = "${result.id}"
+			def wi = workManagementService.getWorkItem(collection, tfsProject, wid)
 			cacheManagementService.saveToCache(wi, "${id} WI", ICacheManagementService.WI_DATA)
 		}
 		return result
