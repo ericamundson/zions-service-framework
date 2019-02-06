@@ -1,132 +1,134 @@
 package com.zions.bb.services.cli.action.code;
 
-import org.codehaus.groovy.ant.Groovy;
+import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.DefaultApplicationArguments
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
+import spock.lang.Specification
+import spock.mock.DetachedMockFactory
 import com.zions.bb.services.code.BBCodeManagementService
-import com.zions.common.services.command.CommandManagementService
+import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
+import com.zions.common.services.command.CommandManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
 import com.zions.vsts.services.permissions.PermissionsManagementService
-
-import spock.lang.Specification;
-import spock.mock.DetachedMockFactory
+import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[SyncBBGitReposTestConfig])
-public class SyncBBGitReposTest extends Specification {
+public class SyncBBGitReposTest extends Specification{
 	
 	@Autowired
-	BBCodeManagementService bBCodeManagementService
+	IGenericRestClient genericRestClient;
 	
 	@Autowired
-	CodeManagementService codeManagementService
-	
-	@Autowired
-	PermissionsManagementService permissionsManagementService
+	IGenericRestClient bBGenericRestClient;
 	
 	@Autowired
 	SyncBBGitRepos underTest
 	
-	def 'execute main flow.'() {
-//		given: 'setup of underTest'
-//		SyncBBGitRepos underTest = new SyncBBGitRepos(codeManagementService, bBCodeManagementService, permissionsManagementService)
+	@Autowired(required=true)
+	CodeManagementService codeManagmentService
+	
+	@Autowired
+	CommandManagementService commandManagementService
+	
+	@Autowired(required=true)
+	PermissionsManagementService permissionsManagementService
+	
+	@Autowired(required=true)
+	ProjectManagementService projectManagementService
+	
+	@Autowired(required=true)
+	EndpointManagementService endpointManagementService
+	
+	@Autowired(required=true)
+	MemberManagementService memberManagementService
+	
+	@Autowired(required=true)
+	BBCodeManagementService bBCodeManagmentService
+	
+	String[] args = [
+			'--tfs.url=http://localhost/tfs',
+			'--tfs.collection=defaultcollection',
+			'--tfs.user=z091182',
+			'--tfs.token=hdepqrjz7sv4eewmqg4o55tflqndwbsue7yocki5xl5p5sqh6jxq',
+			'--bb.project=almops',
+			'--tfs.project=DigitalBanking',
+			'--bb.url=http://localhost:8080/bb',
+			'--grant.template=builder',
+			'--tfs.team=ALMOps',
+			'--bb.user=user',
+			'--bb.password=password',
+			'--repo.dir=/git',
+			'--grant.template=password'
+		]
 		
-		given: 'stub args'
-		String[] args = ['--bb.project=stuff', '--tfs.project=stuff', '--bb.password=password',
-			'--bb.user=user', '--bb.url=http://', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser',
-			'--tfs.token=tfstoken', '--grant.template=stuff', '--tfs.team=dumb' ]
+	@Test
+	def 'validate method success flow.'() {
+		given: "A stub of RQM get test item request"
+		
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: 'stub repos call'
-		1 * bBCodeManagementService.getProjectRepoUrls(_) >> [[url: 'stuff', name:'stuff'], [url:'stuff2', name:'stuff2']]
+		when: 'calling of method under test (validate)'
+		def testPlans = underTest.validate(appArgs)
 		
-		and: 'stub to code management calls'
-		2 * codeManagementService.importRepoCLI(_, _, _, _, _, _)
-		
-		and: 'stub permission calls'
-		2 * permissionsManagementService.ensureTeamToRepo(_, _, _, _, _)
-		
-		when: 'call under test execute'
-		boolean success = true
-		try {
-			underTest.execute(appArgs)
-		} catch (e) {
-			success = false
-		}
-
-		then:
-		success
+		then: ''
+		true
 	}
 	
-	def 'execute flow with delete dir.'() {
-//		given: 'setup of underTest'
-//		SyncBBGitRepos underTest = new SyncBBGitRepos(codeManagementService, bBCodeManagementService, permissionsManagementService)
+	@Test
+	def 'validate method exception flow.'() {
 		
-		given: 'setup git dir'
-		File dir = new File('git')
-		dir.mkdir()
-		
-		and: 'stub args'
-		String[] args = ['--bb.project=stuff', '--tfs.project=stuff', '--bb.password=password',
-			'--bb.user=user', '--bb.url=http://', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser',
-			'--tfs.token=tfstoken', '--grant.template=stuff', '--tfs.team=dumb' ]
+		given:'Stub with Application Arguments'
+		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: 'stub repos call'
-		1 * bBCodeManagementService.getProjectRepoUrls(_) >> [[url: 'stuff', name:'stuff'], [url:'stuff2', name:'stuff2']]
-		
-		and: 'stub to code management calls'
-		2 * codeManagementService.importRepoCLI(_, _, _, _, _, _)
-		
-		and: 'stub permission calls'
-		2 * permissionsManagementService.ensureTeamToRepo(_, _, _, _, _)
-		
-		when: 'call under test execute'
-		boolean success = true
-		try {
-			underTest.execute(appArgs)
-		} catch (e) {
-			success = false
-		}
+		when: 'calling of method under test (validate)'
+		def result = underTest.validate(appArgs)
 
 		then:
-		success
+		thrown Exception
 	}
-	def 'validate main flow.'() {
-//		given: 'setup of underTest'
-//		SyncBBGitRepos underTest = new SyncBBGitRepos(codeManagementService, bBCodeManagementService, permissionsManagementService)
+	
+	@Test
+	def 'execute method exception flow.'() {
 		
-		
-		given: 'stub args'
-		String[] args = ['--bb.project=stuff', '--tfs.project=stuff', '--bb.password=password',
-			'--bb.user=user', '--bb.url=http://', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser',
-			'--tfs.token=tfstoken', '--grant.template=stuff', '--tfs.team=dumb' ]
+		given:'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
+		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
+		(1..3) * bBGenericRestClient.get(_) >> testplan
 		
+		def test = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects_lastpage_false.json').text)
+		1 * bBGenericRestClient.get(_) >> test
 		
-		when: 'call under test execute'
-		boolean success = true
-		try {
-			underTest.validate(appArgs)
-		} catch (e) {
-			success = false
-		}
+		and:
+		def dummy =[]
+		codeManagmentService.importRepoDir(_, _, _, _, _, _) >> dummy
+		
+		and:
+		def dummy1 =[]
+		permissionsManagementService.ensureTeamToRepo(_, _, _, _, _) >> dummy1
+					
+		when: 'calling of method under test (validate)'
+		def result = underTest.execute(appArgs)
 
 		then:
-		success
+		true
+		
 	}
-
+	
+	
 }
-
 
 @TestConfiguration
 @Profile("test")
@@ -136,57 +138,54 @@ class SyncBBGitReposTestConfig {
 	
 	@Bean
 	IGenericRestClient genericRestClient() {
-		return factory.Mock(IGenericRestClient)
+		return factory.Mock(GenericRestClient)
 	}
 	
 	@Bean
-	BBCodeManagementService bBCodeManagementService() {
-		return factory.Mock(BBCodeManagementService)
-	}
-	
-	@Bean
-	CodeManagementService codeManagementService() {
-		return factory.Mock(CodeManagementService)
+	IGenericRestClient bBGenericRestClient() {
+		return factory.Mock(ClmGenericRestClient)
 	}
 	
 	@Bean
 	PermissionsManagementService permissionsManagementService() {
 		return factory.Mock(PermissionsManagementService)
 	}
-		
+	
 	@Bean
 	ProjectManagementService projectManagementService() {
-		return factory.Mock(ProjectManagementService)
+		return new ProjectManagementService()
 	}
 	
 	@Bean
 	EndpointManagementService endpointManagementService() {
-		return factory.Mock(EndpointManagementService)
+		return new EndpointManagementService()
 	}
 	
 	@Bean
-	MemberManagementService memberManagementService() {
-		return factory.Mock(MemberManagementService)
+	CodeManagementService codeManagmentService() {
+			return factory.Mock(CodeManagementService)
 	}
 	
 	@Bean
 	CommandManagementService commandManagementService() {
-		return factory.Mock(CommandManagementService)
+		return new CommandManagementService()
 	}
 	
-	@Autowired
-	BBCodeManagementService bBCodeManagementService
+	@Bean
+	MemberManagementService memberManagementService() {
+		return new MemberManagementService()
+	}
 	
-	@Autowired
-	CodeManagementService codeManagementService
+	@Bean
+	BBCodeManagementService bBCodeManagmentService() {
+		return new BBCodeManagementService()
+	}
 	
-	@Autowired
-	PermissionsManagementService permissionsManagementService
-
 	@Bean
 	SyncBBGitRepos underTest() {
-		return new SyncBBGitRepos(codeManagementService, bBCodeManagementService, permissionsManagementService)
+		return new SyncBBGitRepos(CodeManagementService codeManagmentService,
+		BBCodeManagementService bBCodeManagmentService,
+		PermissionsManagementService permissionsManagementService)
 	}
-		
-}
 
+}

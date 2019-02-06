@@ -39,7 +39,11 @@ import groovy.json.JsonSlurper
  */
 @Component
 class SyncReposList implements CliAction {
+	
+	@Autowired
 	CodeManagementService codeManagmentService
+	
+	@Autowired
 	PermissionsManagementService permissionsManagementService
 	
 	@Autowired

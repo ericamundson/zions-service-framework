@@ -16,12 +16,12 @@ import org.springframework.stereotype.Component
 class AttachmentManagementService implements IAttachments {
 	
 	@Autowired
-	@Value('${tfs.project:#{null}}')
+	@Value('${tfs.project:none}')
 	String tfsProject
 	
 	@Autowired
-	@Value('${tfs.collection:#{null}}')
-	private Optional<String> tfsCollection;
+	@Value('${tfs.collection:}')
+	private String tfsCollection;
 
 	@Autowired
 	FileManagementService fileManagementService
@@ -31,11 +31,7 @@ class AttachmentManagementService implements IAttachments {
 	 */
 	public def sendAttachment(def info) {
 		File file = info.file
-		String collection = ''
-		if (tfsCollection.isPresent()) {
-			collection = tfsCollection.get()
-		}
-		return fileManagementService.uploadAttachment(collection, this.tfsProject, this.tfsProject, file)
+		return fileManagementService.uploadAttachment(tfsCollection, this.tfsProject, this.tfsProject, file)
 	}
 
 }

@@ -7,7 +7,6 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.DefaultApplicationArguments
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +20,6 @@ import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
-import com.zions.common.services.test.DataGenerationService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
@@ -46,16 +44,12 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
-
+	
 	@Autowired
 	ClmWorkItemManagementService clmWorkItemManagementService
 
 	@Autowired
 	CacheWorkitemAttachments underTest
-	
-	@Autowired
-	DataGenerationService dataGenerationService
-
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
@@ -95,34 +89,54 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 	}
 
 	@Test
-	def 'execute ApplicationArguments success flow.' () {
+	def 'execute ApplicationArguments exception flow.' () {
 		given: 'Stub with Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 		//def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)
 		
 		and:
-		def workItems = dataGenerationService.generate('/testdata/mbworkitemquery.xml')
-		//clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
 		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
-		and:
-		//attachmentsManagementService.cacheWorkItemAttachments(_)
+		//underTest.clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
 		
 		and:
 		//clmWorkItemManagementService.nextPage(_) >> workItems
-		//attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
+		//underTest.attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
 
 		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
 		then: ''
-		result == null
+		thrown NullPointerException
 	}
+	
+	/*@Test
+	def 'execute ApplicationArguments success flow.' () {
+		given: 'Stub with Application Arguments'
+		String[] args = loadArgs()
+		def appArgs = new DefaultApplicationArguments(args)
+		def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)
+		
+		and:
+		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
+		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		//underTest.clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+		
+		and:
+		//clmWorkItemManagementService.nextPage(_) >> workItems
+		//underTest.attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
+
+		when: 'calling of method under test (validate)'
+		def result = uTest.execute(appArgs)
+
+		then: ''
+		result == null
+	}*/
 }
 
 @TestConfiguration
 @Profile("test")
-@ComponentScan(["com.zions.common.services.test"])
 @PropertySource("classpath:test.properties")
 class CacheWorkitemAttachmentsTestConfig {
 	def factory = new DetachedMockFactory()
@@ -134,7 +148,8 @@ class CacheWorkitemAttachmentsTestConfig {
 	
 	@Bean
 	AttachmentsManagementService attachmentsManagementService() {
-		return  factory.Mock(AttachmentsManagementService)
+		//return new AttachmentsManagementService()
+		return factory.Mock(AttachmentsManagementService)
 	}
 	
 	@Bean
@@ -144,14 +159,12 @@ class CacheWorkitemAttachmentsTestConfig {
 	
 	@Bean
 	ClmWorkItemManagementService clmWorkItemManagementService() {
-		return  factory.Mock(ClmWorkItemManagementService)
+		//return new ClmWorkItemManagementService()
+		return factory.Mock(ClmWorkItemManagementService)
 	}
 	
-	@Bean
-	DataGenerationService dataGenerationService() {
-		return new DataGenerationService();
-	}
-
+	/*@Autowired
+	RtcRepositoryClient rtcRepositoryClient*/
 	
 	@Autowired
 	AttachmentsManagementService attachmentsManagementService

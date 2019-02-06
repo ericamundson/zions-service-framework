@@ -30,12 +30,16 @@ class ClmRequirementsFileManagementService {
 
 	public def cacheRequirementFile(def ritem) {
 		def item
-		String type = ritem.getTfsWorkitemType()
-		String id = "${ritem.getID()}-${type}"
+		String id = ritem.getCacheID()
 
-		String aurl = ritem.getFileHref()
-		def result = clmRequirementsManagementService.getContent(aurl)
-		String filename = ritem.getTitle()
+		def result = clmRequirementsManagementService.getContent(ritem.getFileHref())
+		String contentDisp = "${result.headers.'Content-Disposition'}"
+		def start = contentDisp.indexOf('filename=')+10
+		def end = contentDisp.indexOf('";')
+		String filename = null
+		if (start > 0 && end > 0 && end > start) {
+				filename = contentDisp.substring(start,end)
+		}
 
 		if (filename != null) {
 			def file = cacheManagementService.saveBinaryAsAttachment(result.data, filename, id)
