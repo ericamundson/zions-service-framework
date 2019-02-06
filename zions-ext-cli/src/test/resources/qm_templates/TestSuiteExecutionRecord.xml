@@ -1,0 +1,20 @@
+<witd:WITD application='Work item type editor' version='1.0' xmlns:witd='http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef'>
+  <WORKITEMTYPE name='TestSuiteExecutionRecord'>
+    <DESCRIPTION>general work item starter</DESCRIPTION>
+    <FIELDS>
+      <FIELD name='identifier' refname='identifier' type='string' />
+      <FIELD name='team-area' refname='team-area' type='' />
+      <FIELD name='webId' refname='webId' type='int' />
+      <FIELD name='title' refname='title' type='string' />
+      <FIELD name='description' refname='description' type='string' />
+      <FIELD name='creationDate' refname='creationDate' type='dateTime' />
+      <FIELD name='updated' refname='updated' type='dateTime' />
+      <FIELD name='creator' refname='creator' type='anyURI' />
+      <FIELD name='owner' refname='owner' type='anyURI' />
+      <FIELD name='weight' refname='weight' type='int' />
+      <FIELD name='estimate' refname='estimate' type='long' />
+      <FIELD name='timeSpent' refname='timeSpent' type='long' />
+      <FIELD name='priority' refname='priority' type='string' />
+    </FIELDS>
+  </WORKITEMTYPE>
+</witd:WITD>
