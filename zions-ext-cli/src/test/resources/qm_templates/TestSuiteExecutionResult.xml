@@ -1,0 +1,67 @@
+<witd:WITD application='Work item type editor' version='1.0' xmlns:witd='http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef'>
+  <WORKITEMTYPE name='TestSuiteExecutionResult'>
+    <DESCRIPTION>general work item starter</DESCRIPTION>
+    <FIELDS>
+      <FIELD name='identifier' refname='identifier' type='string' />
+      <FIELD name='team-area' refname='team-area' type='' />
+      <FIELD name='webId' refname='webId' type='int' />
+      <FIELD name='processState' refname='processState' type='anyURI' />
+      <FIELD name='title' refname='title' type='string' />
+      <FIELD name='description' refname='description' type='string' />
+      <FIELD name='updated' refname='updated' type='dateTime' />
+      <FIELD name='state' refname='state' type='anyURI' />
+      <FIELD name='creator' refname='creator' type='anyURI' />
+      <FIELD name='owner' refname='owner' type='anyURI' />
+      <FIELD name='locked' refname='locked' type='boolean' />
+      <FIELD name='rollupResult' refname='rollupResult' type='boolean' />
+      <FIELD name='approvals' refname='approvals' type='anyURI' />
+      <FIELD name='variables' refname='variables' type='string' />
+      <FIELD name='sequentialExecution' refname='sequentialExecution' type='boolean' />
+      <FIELD name='passVariables' refname='passVariables' type='boolean' />
+      <FIELD name='haltOnFailure' refname='haltOnFailure' type='boolean' />
+      <FIELD name='weight' refname='weight' type='int' />
+      <FIELD name='pointspassed' refname='pointspassed' type='int' />
+      <FIELD name='pointsfailed' refname='pointsfailed' type='int' />
+      <FIELD name='pointsattempted' refname='pointsattempted' type='int' />
+      <FIELD name='pointsblocked' refname='pointsblocked' type='int' />
+      <FIELD name='pointsinconclusive' refname='pointsinconclusive' type='int' />
+      <FIELD name='pointspermfailed' refname='pointspermfailed' type='int' />
+      <FIELD name='pointsdeferred' refname='pointsdeferred' type='int' />
+      <FIELD name='scriptStepCount' refname='scriptStepCount' type='int' />
+      <FIELD name='scriptStepCountPassed' refname='scriptStepCountPassed' type='int' />
+      <FIELD name='scriptStepCountFailed' refname='scriptStepCountFailed' type='int' />
+      <FIELD name='scriptStepCountAttempted' refname='scriptStepCountAttempted' type='int' />
+      <FIELD name='scriptStepCountBlocked' refname='scriptStepCountBlocked' type='int' />
+      <FIELD name='scriptStepCountInconclusive' refname='scriptStepCountInconclusive' type='int' />
+      <FIELD name='scriptStepCountPermFailed' refname='scriptStepCountPermFailed' type='int' />
+      <FIELD name='scriptStepCountDeferred' refname='scriptStepCountDeferred' type='int' />
+      <FIELD name='testcasestotal' refname='testcasestotal' type='int' />
+      <FIELD name='testcasespassed' refname='testcasespassed' type='int' />
+      <FIELD name='testcasesfailed' refname='testcasesfailed' type='int' />
+      <FIELD name='testcasesblocked' refname='testcasesblocked' type='int' />
+      <FIELD name='testcasesinconclusive' refname='testcasesinconclusive' type='int' />
+      <FIELD name='testcasesinprogress' refname='testcasesinprogress' type='int' />
+      <FIELD name='testcasesnotstarted' refname='testcasesnotstarted' type='int' />
+      <FIELD name='testcasesincomplete' refname='testcasesincomplete' type='int' />
+      <FIELD name='testcasespartiallyblocked' refname='testcasespartiallyblocked' type='int' />
+      <FIELD name='testcaseserror' refname='testcaseserror' type='int' />
+      <FIELD name='testcasespermfailed' refname='testcasespermfailed' type='int' />
+      <FIELD name='testcasesdeferred' refname='testcasesdeferred' type='int' />
+      <FIELD name='testcasespaused' refname='testcasespaused' type='int' />
+      <FIELD name='starttime' refname='starttime' type='dateTime' />
+      <FIELD name='endtime' refname='endtime' type='dateTime' />
+      <FIELD name='pausedTime' refname='pausedTime' type='long' />
+      <FIELD name='totalRunTime' refname='totalRunTime' type='long' />
+      <FIELD name='actualRunTime' refname='actualRunTime' type='long' />
+      <FIELD name='suiteelements' refname='suiteelements' type='anyURI' />
+      <FIELD name='suitescriptelement' refname='suitescriptelement' type='anyURI' />
+      <FIELD name='isCurrent' refname='isCurrent' type='boolean' />
+      <FIELD name='stateid' refname='stateid' type='string' />
+      <FIELD name='esignatures' refname='esignatures' type='string' />
+      <FIELD name='testsuitestateatexecution' refname='testsuitestateatexecution' type='anyURI' />
+      <FIELD name='testplanstateatexecution' refname='testplanstateatexecution' type='anyURI' />
+      <FIELD name='file' refname='file' type='string' />
+      <FIELD name='markerAny' refname='markerAny' type='string' />
+    </FIELDS>
+  </WORKITEMTYPE>
+</witd:WITD>

@@ -24,7 +24,7 @@ public class ReleaseManagementService {
 	private boolean useAdoTemplate
 	
 	@Autowired
-	@Value('${tfs.release.generic.name:}')
+	@Value('${tfs.release.generic.name:dev}')
 	private String genericTemplateName
 	
 	@Autowired
