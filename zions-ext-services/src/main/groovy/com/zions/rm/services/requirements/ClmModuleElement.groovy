@@ -10,7 +10,6 @@ class ClmModuleElement extends ClmArtifact {
 	def collectionArtifacts
 	
 	public ClmModuleElement(String in_title, String in_baseURI, int in_depth, String in_format, String in_isHeading, String in_about) {
-		// TODO Auto-generated constructor stub
 		super(in_title, in_format, in_about)
 		baseArtifactURI = in_baseURI
 		depth = in_depth

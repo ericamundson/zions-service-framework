@@ -8,14 +8,14 @@ class DetailsOfGapHandler extends RmBaseAttributeHandler {
 	@Override
 	public String getFieldName() {
 		// TODO Auto-generated method stub
-		return 'Details Of Gap'
+		return 'Details of Gap'
 	}
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
 		// TODO Auto-generated method stub
 		if (val == null) {
-			return '<div></div>'
+			return val
 		} else {
 			return "<div>${val}</div>"
 		}

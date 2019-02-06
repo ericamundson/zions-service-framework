@@ -62,9 +62,10 @@ class ClmRequirementsManagementService {
 			def moduleAttributeMap = [:]
 			def orderedArtifacts = []
 			
-			// Extract module title
+			// Extract module title, format, about
 			String moduleTitle = module.title
-			moduleAttributeMap.put("title", moduleTitle)
+			String moduleFormat = module.format
+			String moduleAbout = module.about
 			
 			// Extract module attributes and members
 			module.children().each { child ->
@@ -99,7 +100,7 @@ class ClmRequirementsManagementService {
 			
 			
 			// Add module to result list
-			ClmRequirementsModule iModule = new ClmRequirementsModule(moduleType, moduleAttributeMap,orderedArtifacts)
+			ClmRequirementsModule iModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, moduleAttributeMap,orderedArtifacts)
 			modules.add(iModule)
 		}
 		return modules

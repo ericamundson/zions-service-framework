@@ -2,14 +2,13 @@ package com.zions.rm.services.requirements
 
 class ClmArtifact {
 	String about
-	String artifactType
 	String format
 	String tfsWorkitemType
 	def attributeMap
 	def links
 	public ClmArtifact(String in_title, String in_format, String in_about) {
 		attributeMap = [:]
-		attributeMap.put("title", in_title)
+		setTitle(in_title) // Needs to be in attributeMap because it will map over to ADO attribute
 		about = in_about
 		format = in_format
 	}
@@ -18,6 +17,12 @@ class ClmArtifact {
 	}
 	public String getTitle() {
 		return attributeMap.'title'
+	}
+	public void setArtifactType(String in_type) {
+		attributeMap.'Artifact Type' = in_type
+	}
+	public String getArtifactType() {
+		return attributeMap.'Artifact Type'
 	}
 	public String getID() {
 		return attributeMap.'Identifier'
@@ -30,5 +35,8 @@ class ClmArtifact {
 	}
 	public void setDescription(String in_desc) {
 		attributeMap.'Primary Text' = in_desc
+	}
+	public String getDescription() {
+		return attributeMap.'Primary Text'
 	}
 }

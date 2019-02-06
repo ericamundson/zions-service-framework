@@ -93,7 +93,7 @@ class SmartDocManagementService {
 		String jsonString = '['
 		def i = iStart
 		def iStartDepth = module.orderedArtifacts[iStart].getDepth()
-		while(i < module.orderedArtifacts.size() - 1 && module.orderedArtifacts[i].getDepth() >= iStartDepth) {
+		while(i < module.orderedArtifacts.size() && module.orderedArtifacts[i].getDepth() >= iStartDepth) {
 			def artifact = module.orderedArtifacts[i]
 			if (!artifact.isDeleted) {
 				String id = artifact.getCacheID()
@@ -104,7 +104,7 @@ class SmartDocManagementService {
 				if (jsonString[jsonString.size()-1] == '}') {
 					jsonString = jsonString + ',' + '\n'
 				}
-				if (module.orderedArtifacts[i+1].getDepth() > module.orderedArtifacts[i].getDepth()) {
+				if (i < module.orderedArtifacts.size() - 1 && module.orderedArtifacts[i+1].getDepth() > module.orderedArtifacts[i].getDepth()) {
 					def wiDetails = getWorkitemDetails(i+1, module)
 					jsonString = jsonString + """{"id":"${cacheWI.id}","linkType":"Related","links":${wiDetails.detailString}}"""
 					i = wiDetails.index	
