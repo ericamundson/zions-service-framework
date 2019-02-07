@@ -1,0 +1,313 @@
+{
+	"options": [{
+			"enabled": true,
+			"definition": {
+				"id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+			},
+			"inputs": {
+				"branchFilters": "[\"+refs/heads/*\"]",
+				"additionalFields": "{}"
+			}
+		}, {
+			"enabled": false,
+			"definition": {
+				"id": "a9db38f9-9fdc-478c-b0f9-464221e58316"
+			},
+			"inputs": {
+				"workItemType": "2021121",
+				"assignToRequestor": "true",
+				"additionalFields": "{}"
+			}
+		}
+	],
+	"triggers": [{
+			"branchFilters": ["+refs/heads/master", "+refs/heads/release/*", "+refs/heads/feature/IFB*"],
+			"pathFilters": [],
+			"batchChanges": false,
+			"maxConcurrentBuildsPerBranch": 1,
+			"pollingInterval": 0,
+			"triggerType": 2
+		}
+	],
+	"variables": {
+		"system.debug": {
+			"value": "false",
+			"allowOverride": true
+		}
+	},
+	"retentionRules": [{
+			"branches": ["+refs/heads/*"],
+			"artifacts": [],
+			"artifactTypesToDelete": ["FilePath", "SymbolStore"],
+			"daysToKeep": 10,
+			"minimumToKeep": 1,
+			"deleteBuildRecord": true,
+			"deleteTestResults": true
+		}
+	],
+	"properties": {},
+	"tags": [],
+	"_links": {
+		"self": {
+			"href": "https://dev.azure.com/ZionsETO/344d4a70-f0d4-4b64-a725-4b2e321dd473/_apis/build/Definitions/188?revision=1"
+		},
+		"web": {
+			"href": "https://dev.azure.com/ZionsETO/344d4a70-f0d4-4b64-a725-4b2e321dd473/_build/definition?definitionId=188"
+		},
+		"editor": {
+			"href": "https://dev.azure.com/ZionsETO/344d4a70-f0d4-4b64-a725-4b2e321dd473/_build/designer?id=188&_a=edit-build-definition"
+		},
+		"badge": {
+			"href": "https://dev.azure.com/ZionsETO/344d4a70-f0d4-4b64-a725-4b2e321dd473/_apis/build/status/188"
+		}
+	},
+	"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+	"comment": "Import template",
+	"jobAuthorizationScope": 1,
+	"jobTimeoutInMinutes": 60,
+	"jobCancelTimeoutInMinutes": 5,
+	"process": {
+		"phases": [{
+				"steps": [{
+						"environment": {},
+						"enabled": true,
+						"continueOnError": false,
+						"alwaysRun": false,
+						"displayName": "Get new version and tag",
+						"timeoutInMinutes": 0,
+						"condition": "succeeded()",
+						"task": {
+							"id": "218eff04-a485-4087-b005-e1f04527654d",
+							"versionSpec": "2.*",
+							"definitionType": "task"
+						},
+						"inputs": {
+							"OutputVariable": "build.buildnumber",
+							"InitialVersionPrefix": "1.0.0",
+							"MasterBranchQualifier": "",
+							"ReleaseBranchQualifier": "",
+							"TagFormat": "beforeBuildId",
+							"WriteTag": "true"
+						}
+					}, {
+						"environment": {},
+						"enabled": true,
+						"continueOnError": false,
+						"alwaysRun": true,
+						"displayName": "Maven: versions:set",
+						"timeoutInMinutes": 0,
+						"condition": "succeededOrFailed()",
+						"task": {
+							"id": "ac4ee482-65da-4485-a532-7b085873e532",
+							"versionSpec": "2.*",
+							"definitionType": "task"
+						},
+						"inputs": {
+							"mavenPOMFile": "$(Parameters.mavenPOMFile)",
+							"goals": "versions:set",
+							"options": "-DnewVersion=$(Buildtag) -DgenerateBackupPoms=false -Dmaven.repo.local=$(Build.BinariesDirectory)/.m2",
+							"publishJUnitResults": "false",
+							"testResultsFiles": "**/TEST-*.xml",
+							"testRunTitle": "",
+							"codeCoverageTool": "None",
+							"classFilter": "",
+							"classFilesDirectories": "",
+							"srcDirectories": "",
+							"failIfCoverageEmpty": "false",
+							"javaHomeSelection": "JDKVersion",
+							"jdkVersion": "default",
+							"jdkUserInputPath": "",
+							"jdkArchitecture": "x64",
+							"mavenVersionSelection": "Default",
+							"mavenPath": "",
+							"mavenSetM2Home": "false",
+							"mavenOpts": "-Xmx1024m",
+							"mavenFeedAuthenticate": "true",
+							"sqAnalysisEnabled": "false",
+							"sqMavenPluginVersionChoice": "latest",
+							"checkstyleAnalysisEnabled": "false",
+							"pmdAnalysisEnabled": "false",
+							"findbugsAnalysisEnabled": "false"
+						}
+					}, {
+						"environment": {},
+						"enabled": true,
+						"continueOnError": false,
+						"alwaysRun": false,
+						"displayName": "Maven: clean deploy",
+						"timeoutInMinutes": 0,
+						"condition": "succeeded()",
+						"task": {
+							"id": "ac4ee482-65da-4485-a532-7b085873e532",
+							"versionSpec": "2.*",
+							"definitionType": "task"
+						},
+						"inputs": {
+							"mavenPOMFile": "$(Parameters.mavenPOMFile)",
+							"goals": "clean package",
+							"options": "-Dmaven.repo.local=$(Build.BinariesDirectory)/.m2",
+							"publishJUnitResults": "false",
+							"testResultsFiles": "**/TEST-*.xml",
+							"testRunTitle": "",
+							"codeCoverageTool": "None",
+							"classFilter": "",
+							"classFilesDirectories": "",
+							"srcDirectories": "",
+							"failIfCoverageEmpty": "false",
+							"javaHomeSelection": "JDKVersion",
+							"jdkVersion": "default",
+							"jdkUserInputPath": "",
+							"jdkArchitecture": "x64",
+							"mavenVersionSelection": "Default",
+							"mavenPath": "",
+							"mavenSetM2Home": "false",
+							"mavenOpts": "-Xmx1024m",
+							"mavenFeedAuthenticate": "true",
+							"sqAnalysisEnabled": "false",
+							"sqMavenPluginVersionChoice": "latest",
+							"checkstyleAnalysisEnabled": "false",
+							"pmdAnalysisEnabled": "false",
+							"findbugsAnalysisEnabled": "false"
+						}
+					}, {
+						"environment": {},
+						"enabled": true,
+						"continueOnError": false,
+						"alwaysRun": true,
+						"displayName": "Copy Files to: $(build.artifactstagingdirectory)",
+						"timeoutInMinutes": 0,
+						"condition": "succeededOrFailed()",
+						"task": {
+							"id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+							"versionSpec": "2.*",
+							"definitionType": "task"
+						},
+						"inputs": {
+							"SourceFolder": "$(build.sourcesdirectory)",
+							"Contents": "**/*.jar",
+							"TargetFolder": "$(build.artifactstagingdirectory)",
+							"CleanTargetFolder": "false",
+							"OverWrite": "false",
+							"flattenFolders": "false"
+						}
+					}, {
+						"environment": {},
+						"enabled": true,
+						"continueOnError": false,
+						"alwaysRun": true,
+						"displayName": "Publish Artifact: drop",
+						"timeoutInMinutes": 0,
+						"condition": "succeededOrFailed()",
+						"task": {
+							"id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+							"versionSpec": "1.*",
+							"definitionType": "task"
+						},
+						"inputs": {
+							"PathtoPublish": "$(build.artifactstagingdirectory)",
+							"ArtifactName": "drop",
+							"ArtifactType": "Container",
+							"TargetPath": "",
+							"Parallel": "false",
+							"ParallelCount": "8"
+						}
+					}
+				],
+				"name": "Build",
+				"refName": "Phase_1",
+				"condition": "succeeded()",
+				"target": {
+					"executionOptions": {
+						"type": 0
+					},
+					"allowScriptsAuthAccessOption": false,
+					"type": 1
+				},
+				"jobAuthorizationScope": 1,
+				"jobCancelTimeoutInMinutes": 1
+			}
+		],
+		"type": 1
+	},
+	"repository": {
+		"properties": {
+			"cleanOptions": "0",
+			"labelSources": "0",
+			"labelSourcesFormat": "$(build.buildNumber)",
+			"reportBuildStatus": "true",
+			"gitLfsSupport": "false",
+			"skipSyncSource": "false",
+			"checkoutNestedSubmodules": "false",
+			"fetchDepth": "0"
+		},
+		"id": "13e3d2da-c900-4e73-a226-fe2db1d9d47c",
+		"type": "TfsGit",
+		"name": "DTS",
+		"url": "https://ZionsETO@dev.azure.com/ZionsETO/DTS/_git/DTS",
+		"defaultBranch": "refs/heads/master",
+		"clean": "false",
+		"checkoutSubmodules": false
+	},
+	"processParameters": {
+		"inputs": [{
+				"aliases": [],
+				"options": {},
+				"properties": {},
+				"name": "mavenPOMFile",
+				"label": "Maven POM file",
+				"defaultValue": "pom.xml",
+				"required": true,
+				"type": "filePath",
+				"helpMarkDown": ""
+			}
+		]
+	},
+	"quality": 1,
+	"authoredBy": {
+		"displayName": "James Mcnabb",
+		"url": "https://app.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/f7feffde-340f-6aa4-82d5-143793ea9a16",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.ZjdmZWZmZGUtMzQwZi03YWE0LTgyZDUtMTQzNzkzZWE5YTE2"
+			}
+		},
+		"id": "f7feffde-340f-6aa4-82d5-143793ea9a16",
+		"uniqueName": "james.mcnabb@zionsbancorp.com",
+		"imageUrl": "https://dev.azure.com/ZionsETO/_api/_common/identityImage?id=f7feffde-340f-6aa4-82d5-143793ea9a16",
+		"descriptor": "aad.ZjdmZWZmZGUtMzQwZi03YWE0LTgyZDUtMTQzNzkzZWE5YTE2"
+	},
+	"drafts": [],
+	"queue": {
+		"_links": {
+			"self": {
+				"href": "https://dev.azure.com/ZionsETO/_apis/build/Queues/156"
+			}
+		},
+		"id": 156,
+		"name": "On-Prem Production",
+		"url": "https://dev.azure.com/ZionsETO/_apis/build/Queues/156",
+		"pool": {
+			"id": 11,
+			"name": "On-Prem Production"
+		}
+	},
+	"id": 188,
+	"name": "template-maven-release",
+	"url": "https://dev.azure.com/ZionsETO/344d4a70-f0d4-4b64-a725-4b2e321dd473/_apis/build/Definitions/188?revision=1",
+	"uri": "vstfs:///Build/Definition/188",
+	"path": "\\templates",
+	"type": 2,
+	"queueStatus": 0,
+	"revision": 1,
+	"createdDate": "2019-02-05T14:58:47.443Z",
+	"project": {
+		"id": "344d4a70-f0d4-4b64-a725-4b2e321dd473",
+		"name": "Sandbox",
+		"description": "A place to try stuff w/o hurting others!",
+		"url": "https://dev.azure.com/ZionsETO/_apis/projects/344d4a70-f0d4-4b64-a725-4b2e321dd473",
+		"state": 1,
+		"revision": 450,
+		"visibility": 0,
+		"lastUpdateTime": "2019-01-29T20:17:24.843Z"
+	}
+}

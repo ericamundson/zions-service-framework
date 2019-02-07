@@ -136,7 +136,7 @@ public class ReleaseManagementService {
 			//env.owner = teamData
 		}
 		template.triggers.each { trigger ->
-			if ("${trigger.triggerType}" == "artifactSource") {
+			if ("${trigger.triggerType}" == "artifactSource" || "${trigger.triggerType}" == "1") {
 				trigger.artifactAlias = "_${buildDef.name}"
 			}
 		}
@@ -205,7 +205,7 @@ public class ReleaseManagementService {
 	def writeReleaseDefinition(collection, project, template) {
 		log.debug("ReleaseManagementService::writeReleaseDefinition -- Saving Release Definition with name ${template.name}")
 		def body = new JsonBuilder(template).toPrettyString()
-		//log.debug("ReleaseManagementService::writeReleaseDefinition -- Request body = ${body}")
+		log.debug("ReleaseManagementService::writeReleaseDefinition --> ${body}")
 
 		def releaseUri = getReleaseApiUrl(collection, project)
 		log.debug("ReleaseManagementService::writeReleaseDefinition -- URI = ${releaseUri}/definitions")

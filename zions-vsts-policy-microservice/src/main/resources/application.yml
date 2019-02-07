@@ -30,10 +30,12 @@ tfs:
   url: https://zionseto.visualstudio.com
   user: svc-cloud-vsbuildagent@zionsbancorporation.onmicrosoft.com
   token: i7lgdocpaar45qlx3wbmr5bfros6j6jhuxbjc7b5twucufn2w43a
+  project: dummy
+  collection:
   build:
-    queue: default
+    queue: On-Prem Production
     use:
-      template: true
+      template: false
     generic:
       name: generic
     properties:

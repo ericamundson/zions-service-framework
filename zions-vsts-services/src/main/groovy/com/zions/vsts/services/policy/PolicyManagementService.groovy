@@ -45,8 +45,14 @@ public class PolicyManagementService {
 	
 	private java.util.Properties branchProps
 
-	private static final String ENFORCE_BUILD_POLICY = "enforce-build-policy"
-
+	private static final String ENFORCE_BUILD_VALIDATION = "enforce-build-validation"
+	private static final String ENFORCE_MIN_APPROVERS = "enforce-minimum-approvers"
+	private static final String ENFORCE_LINKED_WI = "enforce-linked-workitems"
+	private static final String ENFORCE_COMMENT_RES = "enforce-comment-resolution"
+	private static final String ENFORCE_MERGE_STRATEGY = "enforce-merge-strategy"
+	private static final String NUM_MIN_APPROVERS = "num-min-reviewers"
+	private static final int DEFAULT_NUM_APPROVERS = 1
+	
 	public PolicyManagementService() {
 	}
 
@@ -67,24 +73,63 @@ public class PolicyManagementService {
 	}
 
 	public def ensurePolicies(def collection, def repoData, def branchName) {
-		def branch = "${branchName}".substring("refs/heads/".length())
-		log.debug("PolicyManagementService::ensurePolicies -- Get build properties for branch ${branch}")
-		this.branchProps = null
-		def buildPropertiesFile = codeManagementService.getBuildPropertiesFile(collection, repoData.project, repoData, buildPropsFileName, branch)
-		if (buildPropertiesFile != null) {
-			// load properties from file
-			String fileContent = buildPropertiesFile.toString()
-			this.branchProps = new java.util.Properties()
-			this.branchProps.load(new java.io.StringBufferInputStream(fileContent))
+		boolean enforceBuildValidation = true
+		boolean enforceMinimumApprovers = true
+		boolean enforceLinkedWorkItems = true
+		boolean enforceMergeStrategy = true
+		boolean enforceCommentResolution = true
+
+		this.loadProperties(collection, repoData, branchName)
+		// if we're dealing with an 'IFB' branch, check for custom branch build / policy configuration
+		if (branchName.toLowerCase().startsWith("refs/heads/ifb")) {
+			// See if branch participates in policy enforcement
+			if (this.branchProps != null) {
+				String enforcementFlag = this.branchProps.getProperty(ENFORCE_BUILD_VALIDATION)
+				if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
+					enforceBuildValidation = false
+				}
+				enforcementFlag = this.branchProps.getProperty(ENFORCE_MIN_APPROVERS)
+				if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
+					enforceMinimumApprovers = false
+				}
+				enforcementFlag = this.branchProps.getProperty(ENFORCE_LINKED_WI)
+				if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
+					enforceLinkedWorkItems = false
+				}
+				enforcementFlag = this.branchProps.getProperty(ENFORCE_MERGE_STRATEGY)
+				if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
+					enforceMergeStrategy = false
+				}
+				enforcementFlag = this.branchProps.getProperty(ENFORCE_COMMENT_RES)
+				if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
+					enforceCommentResolution = false
+				}
+			}
+		}
+		
+		log.debug("PolicyManagementService::ensurePolicies -- Build validation policy enforced = "+enforceBuildValidation)
+		log.debug("PolicyManagementService::ensurePolicies -- Minimum approvers policy enforced = "+enforceMinimumApprovers)
+		log.debug("PolicyManagementService::ensurePolicies -- Linked work items policy enforced = "+enforceLinkedWorkItems)
+		log.debug("PolicyManagementService::ensurePolicies -- Merge strategy policy enforced = "+enforceMergeStrategy)
+		log.debug("PolicyManagementService::ensurePolicies -- Comment resolution policy enforced = "+enforceCommentResolution)
+		if (enforceBuildValidation) {
+			// first create the CI build validation policy
+			ensureBuildPolicy(collection, repoData, branchName)
+		}
+		// create other policies ...
+		if (enforceMinimumApprovers) {
+			ensureMinimumApproversPolicy(collection, repoData, branchName)
+		}
+		if (enforceLinkedWorkItems) {
+			ensureLinkedWorkItemsPolicy(collection, repoData, branchName)
+		}
+		if (enforceMergeStrategy) {
+			ensureMergeStrategyPolicy(collection, repoData, branchName)
+		}
+		if (enforceCommentResolution) {
+			ensureCommentResolutionPolicy(collection, repoData, branchName)
 		}
 
-		// first create the CI build validation policy
-		ensureBuildPolicy(collection, repoData, branchName)
-		// create other policies ...
-		ensureMinimumApproversPolicy(collection, repoData, branchName)
-		ensureLinkedWorkItemsPolicy(collection, repoData, branchName)
-		ensureMergeStrategyPolicy(collection, repoData, branchName)
-		ensureCommentResolutionPolicy(collection, repoData, branchName)
 	}
 	/**
 	 *  This method creates and applies the CI build policy for validating code merges for new pull requests.
@@ -93,15 +138,6 @@ public class PolicyManagementService {
 	 *  @return Response
 	 */
 	public def ensureBuildPolicy(def collection, def repoData, def branchName) {
-		
-		// See if branch participates in build policy enforcement
-		if (this.branchProps != null) {
-			String enforceBuildPolicy = this.branchProps.getProperty("enforce-build-policy")
-			if (enforceBuildPolicy != null && !enforceBuildPolicy.equalsIgnoreCase("true")) {
-				log.debug("PolicyManagementService::ensureBuildPolicy -- Branch opted OUT of build policy enforcement ...")
-				return
-			}
-		}
 		
 		// get the CI build
 		def projectData = repoData.project
@@ -177,57 +213,88 @@ public class PolicyManagementService {
 		return result
 	}
 
-public def ensureMinimumApproversPolicy(def collection, def repoData, def branchName) {
-	def projectData = repoData.project
-	log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- ")
-	def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-	    type: [id: "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd"],
-	    settings:[minimumApproverCount: 1, creatorVoteCounts: false, allowDownvotes: false, resetOnSourcePush: true,
-			scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+	public def ensureMinimumApproversPolicy(def collection, def repoData, def branchName) {
+		def projectData = repoData.project
+		def numMinApprovers = DEFAULT_NUM_APPROVERS
+		if (this.branchProps != null) {
+			String tempNum = this.branchProps.getProperty(NUM_MIN_APPROVERS)
+			if (tempNum != null && isNumeric(tempNum)) {
+				numMinApprovers = Integer.parseInt(tempNum)
+				// must have at least 1 approver
+				if (numMinApprovers < DEFAULT_NUM_APPROVERS) numMinApprovers = DEFAULT_NUM_APPROVERS
+				log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- Number of minimum approvers = ${numMinApprovers}")
+			}
+		}
+		log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- ")
+		def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
+		    type: [id: "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd"],
+		    settings:[minimumApproverCount: numMinApprovers, creatorVoteCounts: false, allowDownvotes: false, resetOnSourcePush: true,
+				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+			]
 		]
-	]
-	def res = createPolicy(collection, projectData, policy)
-	log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- result = "+res)
-}
-
-public def ensureLinkedWorkItemsPolicy(def collection, def repoData, def branchName) {
-	def projectData = repoData.project
-	log.debug("PolicyManagementService::ensureLinkedWorkItemsPolicy -- ")
-	def policy = [id: -4, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-	    type: [id: "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e"],
-	    settings:[
-			scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+		def res = createPolicy(collection, projectData, policy)
+		log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- result = "+res)
+	}
+	
+	public def ensureLinkedWorkItemsPolicy(def collection, def repoData, def branchName) {
+		def projectData = repoData.project
+		log.debug("PolicyManagementService::ensureLinkedWorkItemsPolicy -- ")
+		def policy = [id: -4, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
+		    type: [id: "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e"],
+		    settings:[
+				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+			]
 		]
-	]
-	def res = createPolicy(collection, projectData, policy)
-	log.debug("PolicyManagementService::ensureLinkedWorkItemsPolicy -- result = "+res)
-}
-
-public def ensureMergeStrategyPolicy(def collection, def repoData, def branchName) {
-	def projectData = repoData.project
-	log.debug("PolicyManagementService::ensureMergeStrategyPolicy -- ")
-	def policy = [id: -5, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-	    type: [id: "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab"],
-	    settings:[useSquashMerge: false,
-			scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+		def res = createPolicy(collection, projectData, policy)
+		log.debug("PolicyManagementService::ensureLinkedWorkItemsPolicy -- result = "+res)
+	}
+	
+	public def ensureMergeStrategyPolicy(def collection, def repoData, def branchName) {
+		def projectData = repoData.project
+		log.debug("PolicyManagementService::ensureMergeStrategyPolicy -- ")
+		def policy = [id: -5, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
+		    type: [id: "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab"],
+		    settings:[useSquashMerge: false,
+				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+			]
 		]
-	]
-	def res = createPolicy(collection, projectData, policy)
-	log.debug("PolicyManagementService::ensureMergeStrategyPolicy -- result = "+res)
-}
-
-public def ensureCommentResolutionPolicy(def collection, def repoData, def branchName) {
-	def projectData = repoData.project
-	log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- ")
-	def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-	    type: [id: "c6a1889d-b943-4856-b76f-9e46bb6b0df2"],
-	    settings:[
-			scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+		def res = createPolicy(collection, projectData, policy)
+		log.debug("PolicyManagementService::ensureMergeStrategyPolicy -- result = "+res)
+	}
+	
+	public def ensureCommentResolutionPolicy(def collection, def repoData, def branchName) {
+		def projectData = repoData.project
+		log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- ")
+		def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
+		    type: [id: "c6a1889d-b943-4856-b76f-9e46bb6b0df2"],
+		    settings:[
+				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+			]
 		]
-	]
-	def res = createPolicy(collection, projectData, policy)
-	log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- result = "+res)
-}
+		def res = createPolicy(collection, projectData, policy)
+		log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- result = "+res)
+	}
 
+	private loadProperties(def collection, def repoData, def branchName) {
+		def branch = "${branchName}".substring("refs/heads/".length())
+		log.debug("PolicyManagementService::loadProperties -- Get build properties for branch ${branch}")
+		this.branchProps = null
+		def buildPropertiesFile = codeManagementService.getBuildPropertiesFile(collection, repoData.project, repoData, buildPropsFileName, branch)
+		if (buildPropertiesFile != null) {
+			// load properties from file
+			String fileContent = buildPropertiesFile.toString()
+			this.branchProps = new java.util.Properties()
+			this.branchProps.load(new java.io.StringBufferInputStream(fileContent))
+		}
+	}
+
+	private static boolean isNumeric(String strNum) {
+		try {
+			double d = Double.parseDouble(strNum);
+		} catch (NumberFormatException | NullPointerException nfe) {
+			return false;
+		}
+		return true;
+	}
 }
 
