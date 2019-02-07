@@ -48,7 +48,7 @@ public class BuildManagementService {
 
 	@Autowired
 	MemberManagementService memberManagementService
-
+	
 	public BuildManagementService() {
 	}
 
@@ -114,7 +114,6 @@ public class BuildManagementService {
 				codeManagementService.ensureDeployManifest(collection, projectData, repo)
 				def bd = ensureBuild(collection, projectData, repo, buildType, 'CI', folder)
 				ensureBuild(collection, projectData, repo, buildType, 'Release', folder)
-				
 			}
 		}
 	}
@@ -137,8 +136,8 @@ public class BuildManagementService {
 				log.error("BuildManagementService::ensureBuildsForBranch -- CI build template not found.")
 				//return null
 			} else {
-				log.debug("BuildManagementService::ensureBuildsForBranch -- Found Build Template")
-	
+				log.debug("BuildManagementService::ensureBuildsForBranch -- Using CI build template ${buildTemplate.name}")
+
 				// make sure build folder is available for the repo
 				createBuildFolder(collection, projectData, "${repo.name}")
 				buildFolderCreated = true
@@ -170,6 +169,7 @@ public class BuildManagementService {
 				// Not returning null here and stopping since the CI build was created so let's go ahead and create the build validation policy
 				//return null
 			} else {
+				log.debug("BuildManagementService::ensureBuildsForBranch -- Using Release build template ${buildTemplate.name}")
 				// make sure build folder is available for the repo
 				if (!buildFolderCreated) {
 					createBuildFolder(collection, projectData, folder)
@@ -270,24 +270,33 @@ public class BuildManagementService {
 		def bDef = null
 		// if we found a valid build type, try to load the build template from ADO project first
 		if (templateName != null) {
-			//if (this.useTfsTemplate) {
 			log.debug("BuildManagementService::getBuildTemplate -- Loading ADO build template: "+templateName)
+			// first try to load the template from ADO project templates
 			bDef = getTemplate(collection, project, templateName)
 			if (bDef == null) {
+				// no ADO project template found so load from resource file
 				log.debug("BuildManagementService::getBuildTemplate -- Using local resource file.  File name: "+ templateName)
 				bDef = getResource(buildType.toString().toLowerCase(), buildStage, templateName)
+				if (bDef == null) {
+					// no resource found matching template name so try to load generic ADO project template
+					log.debug("BuildManagementService::getBuildTemplate -- Build template "+templateName+" not found. Loading generic template from ADO project ...")
+					bDef = getTemplate(collection, project, "template-"+this.genericTemplateName+"-"+buildStage)
+					if (bDef == null) {
+						// no ADO project generic template found so load from generic resource
+						log.debug("BuildManagementService::getBuildTemplate -- ADO generic template "+templateName+" not found. Loading generic template template-"+this.genericTemplateName+"-"+buildStage + " from resources ...")
+						bDef = getResource(buildType.toString().toLowerCase(), buildStage, "template-"+this.genericTemplateName+"-"+buildStage)
+						if (bDef == null) {
+							log.debug("BuildManagementService::getBuildTemplate -- No usable build definition template was found. No build will be created.")
+						} else {
+							// indicate we're using a resource file
+							this.useTfsTemplate = false
+						}
+					}
+				} else {
+					// indicate we're using a resource file
+					this.useTfsTemplate = false
+				}
 			}
-		}
-		if (bDef == null) {
-			log.debug("BuildManagementService::getBuildTemplate -- Build template "+templateName+" not found. Loading generic template from ADO project ...")
-			bDef = getTemplate(collection, project, "template-"+this.genericTemplateName+"-"+buildStage)
-		}
-		if (bDef == null) {
-			log.debug("BuildManagementService::getBuildTemplate -- ADO generic template "+templateName+" not found. Loading generic template template-"+this.genericTemplateName+"-"+buildStage + " from resources ...")
-			bDef = getResource(buildType.toString().toLowerCase(), buildStage, "template-"+this.genericTemplateName+"-"+buildStage)
-		}
-		if (bDef == null) {
-			log.debug("BuildManagementService::getBuildTemplate -- No usable build definition template was found. No build will be created.")
 		}
 		return bDef
 	}
@@ -414,12 +423,15 @@ public class BuildManagementService {
 		bDef.repository.url = "${repo.url}"
 		bDef.repository.defaultBranch = "${repo.defaultBranch}"
 		bDef.retentionSettings = getRetentionSettings(collection)
-		def queueData = getQueue(collection, project, "${this.queue}")
-		log.debug("BuildManagementService::createBuildDefinition - Queue = ${queueData}")
-		if (queueData != null) {
-			bDef.queue = queueData
-			bDef.process.phases.each { phase ->
-				phase.target.queue = queueData
+		// if using a resource (json) file as the template ensure the correct agent queue 
+		if (!this.useTfsTemplate) {
+			def queueData = getQueue(collection, project, "${this.queue}")
+			log.debug("BuildManagementService::createBuildDefinition - Queue = ${queueData}")
+			if (queueData != null) {
+				bDef.queue = queueData
+				bDef.process.phases.each { phase ->
+					phase.target.queue = queueData
+				}
 			}
 		}
 		//def memberData = memberManagementService.getMember(collection, 'z091182')
