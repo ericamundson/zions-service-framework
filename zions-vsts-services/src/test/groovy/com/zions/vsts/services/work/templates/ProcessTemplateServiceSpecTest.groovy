@@ -406,6 +406,135 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		resultTwo == null
 	}
 	
+	@Test
+	def 'ensureWitFieldLayout success flow' () {
+		given:
+		def wit = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
+		def layout = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
+		genericRestClient.get(_) >> layout
+		
+		def pages = new JsonSlurper().parseText(getClass().getResource('/testdata/page.json').text)
+		genericRestClient.post(_) >> pages
+		
+		def witFieldChange = new JsonSlurper().parseText(getClass().getResource('/testdata/witfieldchange.json').text)
+		def field = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		//new XmlSlurper().parse(new File('./src/test/resources/testdata/witfieldchange.xml'))
+		
+		when:
+		def result = underTest.ensureWitFieldLayout('', 'DigitalBanking', wit, field, witFieldChange)
+		
+		then:
+		result == null
+	}	
+	
+	@Test
+	def 'createWITGroup success flow' () {
+		given:
+		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
+		genericRestClient.post(_) >> out
+		
+		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		def externalPage = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		
+		when:
+		def result = underTest.createWITGroup('', '', wit, externalPage, '', '')
+		
+		then:
+		result != null
+	}
+	
+	@Test
+	def 'createWITPage success flow' () {
+		given:
+		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
+		genericRestClient.post(_) >> out
+		
+		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		
+		when:
+		def result = underTest.createWITPage('', '', wit, '')
+		
+		then:
+		result != null
+	}
+	
+	@Test
+	def 'createField success flow' () {
+		given:
+		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
+		genericRestClient.post(_) >> out
+		
+		def witFieldChange = new JsonSlurper().parseText(getClass().getResource('/testdata/witfieldchange.json').text)
+		
+		when:
+		def result = underTest.createField('', '', witFieldChange, '')
+		
+		then:
+		result != null
+	}
+	
+	@Test
+	def 'addGroup success flow' () {
+		given:
+		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
+		genericRestClient.post(_) >> out
+		
+		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		
+		when:
+		def result = underTest.addGroup('', '', wit, 123, 12, 'gName')
+		
+		then:
+		result != null
+	}
+	
+	@Test
+	def 'addControl success flow' () {
+		given:
+		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
+		genericRestClient.post(_) >> out
+		
+		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		def controlData = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		
+		when:
+		def result = underTest.addControl('', '', wit, 123, controlData)
+		
+		then:
+		result == null
+	}
+	
+	@Test
+	def 'addWITField success flow' () {
+		given:
+		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
+		genericRestClient.post(_) >> out
+		
+		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		def controlData = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		
+		when:
+		def result = underTest.addWITField('', '', 'wrefName', '') 
+		
+		then:
+		result != null
+	}
+	
+	@Test
+	def 'getWITField success flow' () {
+		given:
+		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
+		genericRestClient.post(_) >> out
+		
+		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		def field = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		
+		when:
+		def result = underTest.getWITField('', '', wit, field)
+		
+		then:
+		result == null
+	}
 }
 
 @TestConfiguration

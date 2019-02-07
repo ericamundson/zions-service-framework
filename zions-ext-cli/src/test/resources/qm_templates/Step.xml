@@ -1,0 +1,15 @@
+<witd:WITD application='Work item type editor' version='1.0' xmlns:witd='http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef'>
+  <WORKITEMTYPE name='Step'>
+    <DESCRIPTION>general work item starter</DESCRIPTION>
+    <FIELDS>
+      <FIELD name='identifier' refname='identifier' type='string' />
+      <FIELD name='team-area' refname='team-area' type='' />
+      <FIELD name='title' refname='title' type='string' />
+      <FIELD name='description' refname='description' type='richtext' />
+      <FIELD name='expectedResult' refname='expectedResult' type='richtext' />
+      <FIELD name='updated' refname='updated' type='dateTime' />
+      <FIELD name='position' refname='position' type='int' />
+      <FIELD name='comment' refname='comment' type='string' />
+    </FIELDS>
+  </WORKITEMTYPE>
+</witd:WITD>
