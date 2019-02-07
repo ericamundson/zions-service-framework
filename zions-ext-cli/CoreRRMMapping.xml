@@ -6,6 +6,25 @@
 		<wit name="Track Build Item"/>
 		<wit name="Retrospective"/>
 	</exclude>
+	<wit source="Functional Spec" target="Document" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<!-- 
+		<field source="modifiedByHandler" target="System.ChangedBy"/>
+		<field source="modifiedHandler" target="System.ChangedDate"/> -->
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="documentTypeHandler" target="Custom.DocumentType"/>
+		<excluded>
+			<field name="Identifier"/>
+			<field name="Review Counter"/>
+			<field name="Status"/>
+		</excluded>
+		<newfields>
+		</newfields>
+	</wit>
+	
 	<wit source="Default" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>

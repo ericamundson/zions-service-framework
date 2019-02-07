@@ -47,7 +47,7 @@ class SmartDocManagementService {
 		String domain = ""
 		String userPassword = ""
 		def index = 0
-		def wiDetails = getWorkitemDetails(0, module)
+		String wiDetails = """{"id":"${getVstsID(module)}","linkType":"","links":${getWorkitemDetails(0, module).detailString}}"""
 		body = """
 			{
 			"userId": "${mrGenericRestClient.getUserid()}",
@@ -65,8 +65,8 @@ class SmartDocManagementService {
 			"docName": "$docTitle",
 			"templateName": "$mrTemplate",
 			"folder": "$mrFolder",
-			"autoRootCreation": true,
-			"workItemDetails": ${wiDetails.detailString}
+			"autoRootCreation": false,
+			"workItemDetails": ${wiDetails}
 			}
 			"""
 			println(body)
@@ -96,21 +96,16 @@ class SmartDocManagementService {
 		while(i < module.orderedArtifacts.size() && module.orderedArtifacts[i].getDepth() >= iStartDepth) {
 			def artifact = module.orderedArtifacts[i]
 			if (!artifact.isDeleted) {
-				String id = artifact.getCacheID()
-				def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
-				if (cacheWI == null) {
-					throw new FileNotFoundException(id)
-				}
 				if (jsonString[jsonString.size()-1] == '}') {
 					jsonString = jsonString + ',' + '\n'
 				}
 				if (i < module.orderedArtifacts.size() - 1 && module.orderedArtifacts[i+1].getDepth() > module.orderedArtifacts[i].getDepth()) {
 					def wiDetails = getWorkitemDetails(i+1, module)
-					jsonString = jsonString + """{"id":"${cacheWI.id}","linkType":"Related","links":${wiDetails.detailString}}"""
+					jsonString = jsonString + """{"id":"${getVstsID(artifact)}","linkType":"Related","links":${wiDetails.detailString}}"""
 					i = wiDetails.index	
 				}
 				else {
-					jsonString = jsonString + """{"id":"${cacheWI.id}","linkType":"Related"}"""
+					jsonString = jsonString + """{"id":"${getVstsID(artifact)}","linkType":"Related"}"""
 					i++
 				}
 			}
@@ -118,6 +113,17 @@ class SmartDocManagementService {
 				i++
 			}
 		}
+		
+
 		return new WorkItemDetails(jsonString + ']',i)
+	}
+	
+	private String getVstsID(def artifact) {
+		String id = artifact.getCacheID()
+		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
+		if (cacheWI == null) {
+			throw new FileNotFoundException(id)
+		}
+		return cacheWI.id
 	}
 }

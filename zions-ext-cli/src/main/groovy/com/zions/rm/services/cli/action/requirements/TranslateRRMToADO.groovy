@@ -214,8 +214,18 @@ class TranslateRRMToADO implements CliAction {
 				if (errCount > 0) {
 					println("*** ERROR: Skipping module '${module.getTitle()}' due to $errCount errors")
 				}
-					
-				// Iterate through all module elements 
+				
+				// Add Module artifact to ChangeList (to create Document)
+				def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module, memberMap)
+				def aid = module.getCacheID()
+				changes.each { key, val ->
+					String idkey = "${aid}"
+					idMap[count] = idkey
+					changeList.add(val)
+					count++		
+				}
+							
+				// Iterate through all module elements and add them to changeList
 				int it = 0 // we have to use our own "it" since Groovy won't allow an implicit "it" to be incremented
 				while(errCount == 0) {
 
@@ -236,14 +246,13 @@ class TranslateRRMToADO implements CliAction {
 						module.orderedArtifacts[it].incrementDepth(1)
 					}
 					if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
-						def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
-						def aid = module.orderedArtifacts[it].getCacheID()
+						changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
+						aid = module.orderedArtifacts[it].getCacheID()
 						changes.each { key, val ->
 							String idkey = "${aid}"
 							idMap[count] = idkey
 							changeList.add(val)
 							count++
-							
 						}
 					}
 					else {
@@ -255,6 +264,7 @@ class TranslateRRMToADO implements CliAction {
 					it++
 				}
 				
+
 
 				// Create work items and SmartDoc container in Azure DevOps
 				if (changeList.size() > 0) {
