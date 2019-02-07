@@ -78,29 +78,32 @@ public class PolicyManagementService {
 		boolean enforceLinkedWorkItems = true
 		boolean enforceMergeStrategy = true
 		boolean enforceCommentResolution = true
-		
+
 		this.loadProperties(collection, repoData, branchName)
-		// See if branch participates in build policy enforcement
-		if (this.branchProps != null) {
-			String enforcementFlag = this.branchProps.getProperty(ENFORCE_BUILD_VALIDATION)
-			if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
-				enforceBuildValidation = false
-			}
-			enforcementFlag = this.branchProps.getProperty(ENFORCE_MIN_APPROVERS)
-			if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
-				enforceMinimumApprovers = false
-			}
-			enforcementFlag = this.branchProps.getProperty(ENFORCE_LINKED_WI)
-			if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
-				enforceLinkedWorkItems = false
-			}
-			enforcementFlag = this.branchProps.getProperty(ENFORCE_MERGE_STRATEGY)
-			if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
-				enforceMergeStrategy = false
-			}
-			enforcementFlag = this.branchProps.getProperty(ENFORCE_COMMENT_RES)
-			if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
-				enforceCommentResolution = false
+		// if we're dealing with an 'IFB' branch, check for custom branch build / policy configuration
+		if (branchName.toLowerCase().startsWith("refs/heads/ifb")) {
+			// See if branch participates in policy enforcement
+			if (this.branchProps != null) {
+				String enforcementFlag = this.branchProps.getProperty(ENFORCE_BUILD_VALIDATION)
+				if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
+					enforceBuildValidation = false
+				}
+				enforcementFlag = this.branchProps.getProperty(ENFORCE_MIN_APPROVERS)
+				if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
+					enforceMinimumApprovers = false
+				}
+				enforcementFlag = this.branchProps.getProperty(ENFORCE_LINKED_WI)
+				if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
+					enforceLinkedWorkItems = false
+				}
+				enforcementFlag = this.branchProps.getProperty(ENFORCE_MERGE_STRATEGY)
+				if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
+					enforceMergeStrategy = false
+				}
+				enforcementFlag = this.branchProps.getProperty(ENFORCE_COMMENT_RES)
+				if (enforcementFlag != null && !enforcementFlag.equalsIgnoreCase("true")) {
+					enforceCommentResolution = false
+				}
 			}
 		}
 		
@@ -217,6 +220,8 @@ public class PolicyManagementService {
 			String tempNum = this.branchProps.getProperty(NUM_MIN_APPROVERS)
 			if (tempNum != null && isNumeric(tempNum)) {
 				numMinApprovers = Integer.parseInt(tempNum)
+				// must have at least 1 approver
+				if (numMinApprovers < DEFAULT_NUM_APPROVERS) numMinApprovers = DEFAULT_NUM_APPROVERS
 				log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- Number of minimum approvers = ${numMinApprovers}")
 			}
 		}

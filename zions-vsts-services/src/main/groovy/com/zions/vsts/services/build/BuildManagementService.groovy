@@ -268,19 +268,23 @@ public class BuildManagementService {
 			}
 		}
 		def bDef = null
-		// if we found a valid build type, try to load the build template
+		// if we found a valid build type, try to load the build template from ADO project first
 		if (templateName != null) {
-			if (this.useTfsTemplate) {
-				log.debug("BuildManagementService::getBuildTemplate -- Loading ADO build template: "+templateName)
-				bDef = getTemplate(collection, project, templateName)
-			} else {
+			//if (this.useTfsTemplate) {
+			log.debug("BuildManagementService::getBuildTemplate -- Loading ADO build template: "+templateName)
+			bDef = getTemplate(collection, project, templateName)
+			if (bDef == null) {
 				log.debug("BuildManagementService::getBuildTemplate -- Using local resource file.  File name: "+ templateName)
 				bDef = getResource(buildType.toString().toLowerCase(), buildStage, templateName)
 			}
 		}
 		if (bDef == null) {
-			log.debug("BuildManagementService::getBuildTemplate -- Build template "+templateName+" not found. Loading generic template ...")
+			log.debug("BuildManagementService::getBuildTemplate -- Build template "+templateName+" not found. Loading generic template from ADO project ...")
 			bDef = getTemplate(collection, project, "template-"+this.genericTemplateName+"-"+buildStage)
+		}
+		if (bDef == null) {
+			log.debug("BuildManagementService::getBuildTemplate -- ADO generic template "+templateName+" not found. Loading generic template template-"+this.genericTemplateName+"-"+buildStage + " from resources ...")
+			bDef = getResource(buildType.toString().toLowerCase(), buildStage, "template-"+this.genericTemplateName+"-"+buildStage)
 		}
 		if (bDef == null) {
 			log.debug("BuildManagementService::getBuildTemplate -- No usable build definition template was found. No build will be created.")
