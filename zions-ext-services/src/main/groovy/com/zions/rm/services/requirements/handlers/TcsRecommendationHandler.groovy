@@ -14,7 +14,7 @@ class TcsRecommendationHandler extends RmBaseAttributeHandler {
 	@Override
 	public Object formatValue(Object val, Object itemData) {
 		if (val == null) {
-			return '<div></div>'
+			return val
 		} else {
 			return "<div>${val}</div>"
 		}

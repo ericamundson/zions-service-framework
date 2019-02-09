@@ -1,20 +1,14 @@
 package com.zions.rm.services.requirements
 
-class ClmRequirementsModule {
-	// Define attributes for title, attributes and members
-	String artifactType
-	def attributeMap
+class ClmRequirementsModule  extends ClmArtifact {
 	def orderedArtifacts
-	public ClmRequirementsModule(String in_type, def in_attributes, def in_artifacts) {
-		// TODO Auto-generated constructor stub
+	public ClmRequirementsModule(in_title, in_format, in_about, String in_type, def in_attributes, def in_artifacts) {
+		super(in_title, in_format, in_about)
 		artifactType = in_type
-		attributeMap = in_attributes
+		attributeMap << in_attributes // Add to base Artifact attributes
 		orderedArtifacts = in_artifacts
 	}	
 	
-	def getTitle() {
-		attributeMap.'title'
-	}
 	
 	def checkForDuplicate(def index) {
 		def id = this.orderedArtifacts[index].getID()
