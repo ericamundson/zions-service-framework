@@ -11,7 +11,7 @@ class CacheManagementService implements ICacheManagementService {
 	
 	
 	//@Autowired
-	@Value('${cache.location:}')
+	@Value('${cache.location:cache}')
 	String cacheLocation
 
 	public CacheManagementService(String cacheLocation) {

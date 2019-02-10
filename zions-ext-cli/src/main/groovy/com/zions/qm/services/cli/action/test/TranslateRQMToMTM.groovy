@@ -287,8 +287,7 @@ class TranslateRQMToMTM implements CliAction {
 //					def os = resultFile.newDataOutputStream()
 //					os << resultsxml
 //					os.close()
-					def changes = clmTestItemManagementService.getChanges(tfsProject, configuration, memberMap)
-					changes.each { key, val ->
+					clmTestItemManagementService.processForChanges(tfsProject, configuration, memberMap) { key, val ->
 						def oconfig = testManagementService.sendPlanChanges(collection, tfsProject, val, id)
 					}
 				}
@@ -307,12 +306,7 @@ class TranslateRQMToMTM implements CliAction {
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			while (true) {
 				//TODO: ccmWorkManagementService.resetNewId()
-				def changeList = []
-				def pidMap = [:]
-				def idMap = [:]
-				int count = 0
-				int pcount = 0
-				def pChangeList = []
+				ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 				def idKeyMap = [:]
 				def filtered = filtered(testItems, wiFilter)
 				clmTestItemManagementService.resetNewId()
@@ -327,10 +321,13 @@ class TranslateRQMToMTM implements CliAction {
 //					os.close()
 					
 					
-					def changes = clmTestItemManagementService.getChanges(tfsProject, testplan, memberMap)
 					def plan = null
-					changes.each { key, val ->
-						plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
+					clmTestItemManagementService.processForChanges(tfsProject, testplan, memberMap) { String key, def val ->
+						if (key.endsWith(' WI')) {
+							clManager.add("${id}-${key}", val)
+						} else {
+							plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
+						}
 					}
 					
 					testplan.testsuite.each { testsuiteRef ->
@@ -339,10 +336,13 @@ class TranslateRQMToMTM implements CliAction {
 						int tsid = Integer.parseInt(testsuite.webId.text())
 						String idtype = "${tsid}-testsuite"
 						if (!idKeyMap.containsKey(idtype)) {
-							def tschanges = clmTestItemManagementService.getChanges(tfsProject, testsuite, memberMap, null, null, plan)
-							tschanges.each { key, val ->
-								String idkey = "${tsid}-${key}"
-								def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
+							clmTestItemManagementService.processForChanges(tfsProject, testsuite, memberMap, null, null, plan) { key, val ->
+								if (key.endsWith(' WI')) {
+									clManager.add("${tsid}-${key}", val)
+								} else {
+									String idkey = "${tsid}-${key}"
+									def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
+								}
 							}
 							idKeyMap[idtype] = idtype
 						}
@@ -352,12 +352,9 @@ class TranslateRQMToMTM implements CliAction {
 							int aid = Integer.parseInt(testcase.webId.text())
 							String aidtype = "${aid}-testcase"
 							if (!idKeyMap.containsKey(aidtype)) {
-								def tcchanges = clmTestItemManagementService.getChanges(tfsProject, testcase, memberMap)
-								tcchanges.each { key, val ->
+								clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
 									String idkey = "${aid}-${key}"
-									idMap[count] = idkey
-									changeList.add(val)
-									count++
+									clManager.add("${aid}-${key}", val)
 									
 								}
 								idKeyMap[aidtype] = aidtype
@@ -375,13 +372,8 @@ class TranslateRQMToMTM implements CliAction {
 //						os.close()
 						String idtype = "${aid}-testcase"
 						if (!idKeyMap.containsKey(idtype)) {
-							def tcchanges = clmTestItemManagementService.getChanges(tfsProject, testcase, memberMap)
-							tcchanges.each { key, val ->
-								String idkey = "${aid}-${key}"
-								idMap[count] = idkey
-								changeList.add(val)
-								count++
-								
+							clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+								clManager.add("${aid}-${key}", val)
 							}
 							idKeyMap[idtype] = idtype
 						}
@@ -394,9 +386,7 @@ class TranslateRQMToMTM implements CliAction {
 //						count++
 //					}
 				}
-				if (changeList.size() > 0) {
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-				}
+				clManager.flush();
 				def nextLink = testItems.'**'.find { node ->
 					
 					node.name() == 'link' && node.@rel == 'next'
@@ -470,9 +460,10 @@ class TranslateRQMToMTM implements CliAction {
 							String tcwebId = "${testcase.webId.text()}"
 							def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 							executionresults.each { result ->
-								def resultData = clmTestItemManagementService.getChanges(tfsProject, result, memberMap, resultMap, testcase)
-								String rwebId = "${result.webId.text()}-Result"
-								testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+								clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData -> 
+									String rwebId = "${result.webId.text()}-Result"
+									testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+								}
 							}
 						}
 					}
@@ -482,9 +473,10 @@ class TranslateRQMToMTM implements CliAction {
 						String tcwebId = "${testcase.webId.text()}"
 						def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 						executionresults.each { result ->
-							def resultData = clmTestItemManagementService.getChanges(tfsProject, result, memberMap, resultMap, testcase)
-							String rwebId = "${result.webId.text()}-Result"
-							testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+							clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
+								String rwebId = "${result.webId.text()}-Result"
+								testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+							}
 						}
 					}
 				}
@@ -503,9 +495,7 @@ class TranslateRQMToMTM implements CliAction {
 			//def linkMapping = processTemplateService.getLinkMapping(mapping)
 			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery, project)
 			while (true) {
-				def changeList = []
-				def idMap = [:]
-				int count = 0
+				ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 				def filtered = filtered(testItems, wiFilter)
 				filtered.each { testItem ->
 					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
@@ -521,9 +511,7 @@ class TranslateRQMToMTM implements CliAction {
 							def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
 							def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
 							if (wiChanges != null) {
-								idMap[count] = "${id}"
-								changeList.add(wiChanges)
-								count++
+								clManager.add(id, wiChanges)
 							}
 						}
 					}
@@ -533,9 +521,7 @@ class TranslateRQMToMTM implements CliAction {
 						def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)		
 						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
 						if (wiChanges != null) {
-							idMap[count] = "${id}"
-							changeList.add(wiChanges)
-							count++
+							clManager.add(id, wiChanges)
 						}
 						String tcwebId = "${testcase.webId.text()}"
 						def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
@@ -548,9 +534,7 @@ class TranslateRQMToMTM implements CliAction {
 						}
 					}
 				}
-				if (changeList.size() > 0) {
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-				}
+				clManager.flush()
 				def nextLink = testItems.'**'.find { node ->
 					
 					node.name() == 'link' && node.@rel == 'next'
@@ -607,4 +591,35 @@ class TranslateRQMToMTM implements CliAction {
 
 
 
+}
+
+class ChangeListManager {
+	def changeList = []
+	def idMap = [:]
+	def count = 0
+	WorkManagementService workManagementService
+	String collection
+	String project
+	ChangeListManager(String collection, String project, WorkManagementService workManagementService) {
+		this.workManagementService = workManagementService
+		this.collection = collection
+		this.project = project
+	}
+	
+	def add(String key, def item) {
+		if (count == 200) {
+			flush()
+		}
+		changeList.push(item)
+		idMap[count] = key
+		count++
+	}
+	
+	def flush() {
+		if (count == 0) return;
+		workManagementService.batchWIChanges(collection, project, changeList, idMap)
+		changeList = []
+		idMap = [:]
+		count = 0
+	}
 }

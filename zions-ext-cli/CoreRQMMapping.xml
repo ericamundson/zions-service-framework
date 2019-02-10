@@ -1,5 +1,5 @@
 <witmapping>
-	<wit source="testplan"  target="Test Plan" translateUnmappedFields="false">
+	<wit source="testplan"  target="Test Plan" translateUnmappedFields="false" notWorkItem="true">
 		<field source="nameHandler" target="name"/>
 		<field source="descriptionHandler" target="description"/>
 		<field source="planOwnerHandler" target="owner"/>
@@ -7,24 +7,24 @@
 			<defaultvalue target="Active"/>
 		</field>
 		<field source="planBlankHandler" target="area">
-			<defaultvalue target="DigitalBanking\OB"/>
+			<defaultvalue target="FutureCore\Test"/>
 		</field>
 		<field source="blankHandler" target="iteration">
-			<defaultvalue target="DigitalBanking"/>		
+			<defaultvalue target="FutureCore"/>		
 		</field>
 	</wit>
-	<wit source="testsuite"  target="Test Suite" translateUnmappedFields="false">
-		<field source="nameHandler" target="System.Title"/>
-		<field source="descriptionHandler" target="System.Description"/>
-		<field source="planOwnerHandler" target="System.AssignedTo"/>
-		<field source="stateHandler" target="System.State">
-			<defaultvalue target="In Planning"/>
+	<wit source="testsuite"  target="Test Suite" translateUnmappedFields="false" notWorkItem="true">
+		<field source="nameHandler" target="name"/>
+		<field source="descriptionHandler" target="description"/>
+		<field source="planOwnerHandler" target="owner"/>
+		<field source="stateHandler" target="state">
+			<defaultvalue target="Active"/>
 		</field>
 		<field source="planBlankHandler" target="area">
-			<defaultvalue target="DigitalBanking\OB"/>
+			<defaultvalue target="FutureCore\Test"/>
 		</field>
 		<field source="blankHandler" target="iteration">
-			<defaultvalue target="DigitalBanking"/>		
+			<defaultvalue target="FutureCore"/>		
 		</field>
 	</wit>
 	<wit source="testcase"  target="Test Case" translateUnmappedFields="false">
@@ -36,10 +36,10 @@
 			<defaultvalue target="Design"/>
 		</field>
 		<field source="blankHandler" target="System.AreaPath">
-			<defaultvalue target="DigitalBanking\OB"/>
+			<defaultvalue target="FutureCore\Test"/>
 		</field>
 		<field source="blankHandler" target="System.IterationPath">
-			<defaultvalue target="DigitalBanking"/>		
+			<defaultvalue target="FutureCore"/>		
 		</field>
 		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
 	</wit>

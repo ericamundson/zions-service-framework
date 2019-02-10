@@ -75,15 +75,14 @@ class WorkManagementService {
 	def getWorkItem(String collection, String project, String id) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def query = [query: aquery]
-		String body = new JsonBuilder(query).toPrettyString()
-		def result = genericRestClient.post(
+		//def query = [query: aquery]
+		//String body = new JsonBuilder(query).toPrettyString()
+		def result = genericRestClient.get(
 			requestContentType: ContentType.JSON,
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
-			body: body,
 			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0-preview.2']
+			query: ['api-version': '5.0']
 			)
 		return result
 
@@ -205,5 +204,8 @@ class WorkManagementService {
 	
 
 	
+	
 
 }
+
+

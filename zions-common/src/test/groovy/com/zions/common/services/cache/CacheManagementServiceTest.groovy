@@ -5,12 +5,13 @@ import static org.junit.Assert.*
 import groovy.json.JsonSlurper
 
 import com.zions.common.services.rest.IGenericRestClient
-
+import com.zions.common.services.test.DataGenerationService
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
@@ -23,6 +24,9 @@ public class CacheManagementServiceTest extends Specification {
 
 	@Autowired
 	CacheManagementService underTest
+	
+	@Autowired
+	DataGenerationService dataGenerationService
 
 	@Test
 	def 'saveBinaryAsAttachment for project name success flow.'(){
@@ -40,7 +44,7 @@ public class CacheManagementServiceTest extends Specification {
 	@Test
 	def 'saveToCache for project name success flow.'(){
 
-		def data = new JsonSlurper().parseText(getClass().getResource('/testdata/TestPlanT_Cache.json').text)
+		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
 		when: 'calling of method under test (data)'
 		def keyname = underTest.saveToCache( data ,'','')
@@ -52,7 +56,7 @@ public class CacheManagementServiceTest extends Specification {
 	@Test
 	def 'getFromCache for project name success flow.'(){
 
-		def data = new JsonSlurper().parseText(getClass().getResource('/testdata/TestPlanT_Cache.json').text)
+		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
 		when: 'calling of method under test (getFromCache)'
 		def keyname = underTest.getFromCache( '','')
@@ -64,6 +68,7 @@ public class CacheManagementServiceTest extends Specification {
 
 @TestConfiguration
 @Profile("test")
+@ComponentScan(["com.zions.common.services.test"])
 @PropertySource("classpath:test.properties")
 class CacheManagementServiceTestConfig {
 	def factory = new DetachedMockFactory()
@@ -76,5 +81,10 @@ class CacheManagementServiceTestConfig {
 	@Bean
 	CacheManagementService underTest() {
 		return new CacheManagementService(cacheLocation)
+	}
+	
+	@Bean
+	DataGenerationService dataGenerationService() {
+		return new DataGenerationService()
 	}
 }

@@ -75,30 +75,24 @@ public class ClmTestItemManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	def getChanges(String project, def qmItemData, def memberMap, def resultMap = null, def testCase = null, def parent = null) {
+	void processForChanges(String project, def qmItemData, def memberMap, def resultMap = null, def testCase = null, def parent = null, Closure closure) {
 		def maps = getTestMaps(qmItemData)
 		def outItems = [:]
 		maps.each { map ->
+			def item = null;
 			if ("${map.target}" == 'Result') {
-				def item = generateExecutionData(qmItemData, map, project, memberMap, resultMap, testCase)
-				if (item != null) {
-					outItems["${map.target}"] = item
-				}
+				item = generateExecutionData(qmItemData, map, project, memberMap, resultMap, testCase)
 
 			} else if ("${map.target}" == 'Configuration') {
-				def item = generateConfigurationData(qmItemData, map, project, memberMap)
-				if (item != null) {
-					outItems["${map.target}"] = item
-				}
+				item = generateConfigurationData(qmItemData, map, project, memberMap)
 
-			}else {
-				def item = generateItemData(qmItemData, map, project, memberMap, parent)
-				if (item != null) {
-					outItems["${map.target}"] = item
-				}
+			} else {
+				item = generateItemData(qmItemData, map, project, memberMap, parent)
 			}
+			String key = "${map.target}"
+			closure(key, item)
 		}
-		return outItems
+		//return outItems
 	}
 	
 	/**
@@ -231,7 +225,7 @@ public class ClmTestItemManagementService {
 		map.fields.each { field ->
 			def fieldData = getFieldData(qmItemData, id, field, memberMap, cacheWI, map)
 			if (fieldData != null) {
-				if (type != 'Test Case') {
+				if (type != 'Test Case' && !type.endsWith(' WI')) {
 					if (fieldData.value != null) {
 						wiData.body["${field.target}"] = fieldData.value
 					}
