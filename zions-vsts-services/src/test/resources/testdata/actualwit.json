@@ -1,0 +1,19 @@
+{
+			"referenceName": "DTSTest.EnhancementRequest",
+			"name": "Enhancement Request",
+			"description": "Translated work item 'Enhancement Request' from external system.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.EnhancementRequest",
+			"customization": "system",
+			"color": "9eefdf",
+			"icon": "icon_clipboard",
+			"isDisabled": false,
+			"inherits": null,
+			"WORKITEMTYPE": {
+				"FIELDS":{
+					"FIELD":[
+						{"refName":"refname1", "type":"type1"},
+						{"refName":"refname1", "type":"type2"}
+					]
+				}
+			}
+}

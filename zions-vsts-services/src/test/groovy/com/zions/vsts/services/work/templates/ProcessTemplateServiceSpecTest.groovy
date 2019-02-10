@@ -128,7 +128,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 	}
 	*/
 	def 'getField success flow.'() {
-		given: 
+		given:
 		String json = this.getClass().getResource('/testdata/repos.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
@@ -270,7 +270,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		def wit= [:]
 		def defaultWit = [:]
 		def layout = [:]
-		def pages = [:] 
+		def pages = [:]
 		layout << pages
 		defaultWit << layout
 		
@@ -425,7 +425,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		
 		then:
 		result == null
-	}	
+	}
 	
 	@Test
 	def 'createWITGroup success flow' () {
@@ -514,7 +514,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		def controlData = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
 		
 		when:
-		def result = underTest.addWITField('', '', 'wrefName', '') 
+		def result = underTest.addWITField('', '', 'wrefName', '')
 		
 		then:
 		result != null
@@ -534,6 +534,105 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		
 		then:
 		result == null
+	}
+	
+	@Test
+	def 'createWorkitemTemplate success flow' () {
+		given: 'project management service getProject stub'
+		def processTemplateId = new JsonSlurper().parseText(getClass().getResource('/testdata/project.json').text)
+		projectManagementService.getProjectProperty(_, _, _) >> processTemplateId
+		
+		and:
+		def projectData = new JsonSlurper().parseText(getClass().getResource('/testdata/project.json').text)
+		projectManagementService.getProject(_, _) >> projectData
+		
+		and: 'azure rest client http get stub'
+		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/dfprocessfields.json').text)
+		1 * genericRestClient.get(_) >> out
+		
+		and:
+		def rwits = new JsonSlurper().parseText(getClass().getResource('/testdata/workitemtypes.json').text)
+		4 * genericRestClient.get(_) >> rwits
+		
+		and:
+		def outPost = new JsonSlurper().parseText(getClass().getResource('/testdata/dfprocessfields.json').text)
+		genericRestClient.post(_) >> out
+		
+		/*and:
+		def rwits2 = new JsonSlurper().parseText(getClass().getResource('/testdata/workitemtypes.json').text)
+		//3 * genericRestClient.get(_) >> rwits2
+		
+		def actualwit = new JsonSlurper().parseText(getClass().getResource('/testdata/actualwit.json').text)
+		//1 * genericRestClient.get(_) >> actualwit*/
+		
+		when:
+		def result = underTest.createWorkitemTemplate('', 'DigitalBanking', 'Enhancement Request')
+		
+		then:
+		true
+	}
+	
+	@Test
+	def 'addGroupWithControl success flow' () {
+		given:
+		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		def externalPage =  new JsonSlurper().parseText('{"id":1234}')
+		def field = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		and:
+		def outPost = new JsonSlurper().parseText(getClass().getResource('/testdata/dfprocessfields.json').text)
+		genericRestClient.post(_) >> outPost
+		
+		when:
+		def result = underTest.addGroupWithControl('', '', wit, externalPage, field, 'section')
+		
+		then:
+		true
+	}
+	
+	@Test
+	def 'ensureWitField success flow' () {
+		given:
+		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		def witFieldChange = new JsonSlurper().parseText(getClass().getResource('/testdata/witfieldchange.json').text)
+		
+		String json = this.getClass().getResource('/testdata/processfields.json').text
+		JsonSlurper js = new JsonSlurper()
+		def out = js.parseText(json)
+		genericRestClient.get(_) >> out
+		
+		def outPost = new JsonSlurper().parseText(getClass().getResource('/testdata/page.json').text)
+		genericRestClient.post(_) >> outPost
+		
+		when:
+		def result = underTest.ensureWitField('', 'DigitialBanking', wit, witFieldChange)
+		
+		then:
+		true
+	}
+	
+	@Test
+	def 'requiresField success flow' () {
+		given:
+		def field = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
+		def witMapping = new XmlSlurper().parse(new File(testMappingFileName))
+		when:
+		def result = underTest.requiresField(field, witMapping)
+		then:
+		result == true
+	}
+	
+	@Test
+	def 'addUnmappedFields exception flow' () {
+		given:
+		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/actualwit.json').text)
+		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
+		def witMap = [:]
+		
+		when:
+		def result = underTest.addUnmappedFields(witMap, wit, mapping)
+		
+		then:
+		thrown MissingFieldException
 	}
 }
 
