@@ -21,7 +21,7 @@
 		}
 	],
 	"triggers": [{
-			"branchFilters": ["+refs/heads/master", "+refs/heads/release/*", "+refs/heads/feature/IFB*"],
+			"branchFilters": ["+refs/heads/master", "+refs/heads/release/*", "+refs/heads/ifb*", "+refs/heads/IFB*"],
 			"pathFilters": [],
 			"batchChanges": false,
 			"maxConcurrentBuildsPerBranch": 1,
