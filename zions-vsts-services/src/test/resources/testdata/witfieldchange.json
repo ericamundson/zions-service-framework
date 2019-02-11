@@ -1,0 +1,11 @@
+{
+	"page" : "Details",
+	"section" : "Section1",
+	"group": "Description",
+	"refName" : "Done",
+	"suggestedValues" : [
+		{"id" : 12},
+		{"id" : 13},
+		{"id" : 14}	
+	]
+}
