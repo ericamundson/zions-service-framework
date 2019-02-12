@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.DefaultApplicationArguments
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
@@ -201,6 +202,7 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 
 @TestConfiguration
 @Profile("test")
+@ComponentScan(["com.zions.clm.services.cli.action.work.query", "com.zions.common.services.restart"])
 @PropertySource("classpath:test.properties")
 class TranslateRTCWorkToVSTSWorkSTestConfig {
 	def mockFactory = new DetachedMockFactory()

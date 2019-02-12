@@ -26,15 +26,15 @@ import groovyx.net.http.ContentType
 public class BuildManagementService {
 	
 	@Autowired
-	@Value('${tfs.build.use.template}')
+	@Value('${tfs.build.use.template:false}')
 	private boolean useTfsTemplate
 	
 	@Autowired
-	@Value('${tfs.build.generic.name}')
+	@Value('${tfs.build.generic.name:none}')
 	private String genericTemplateName
 	
 	@Autowired
-	@Value('${tfs.build.queue}')
+	@Value('${tfs.build.queue:Default}')
 	private String queue
 
 	@Autowired

@@ -1,5 +1,5 @@
 {
-	"id": "integerGenerator",
+	"id": "{{integerGenerator}}",
 	"name": "12-2016 QA Test Plan",
 	"url": "https://dev.azure.com/eto-dev/DigitalBanking/_apis/test/Plans/23086",
 	"project": {

@@ -12,6 +12,7 @@ import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
+import com.zions.common.services.restart.IRestartManagementService
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
 import com.zions.qm.services.test.ClmTestItemManagementService
 import com.zions.qm.services.test.ClmTestManagementService
@@ -96,6 +97,7 @@ import groovy.xml.XmlUtil
  * TranslateRQMToMTM -->  com.zions.vsts.services.admin.member.MemberManagementService: @Autowired memberManagementService
  * TranslateRQMToMTM --> com.zions.vsts.services.test.TestManagementService: @Autowired TestManagementService
  * TranslateRQMToMTM --> com.zions.clm.services.attachments.ClmAttachmentsManagementService: @Autowired clmAttachmentsManagementService
+ * TranslateRQMToMTM --> com.zions.common.services.restart.IRestartManagementService: @Autowired restartManagementService
  * @enduml
  * 
  * @startuml TranslateRQMToMTM_sequence_diagram.png
@@ -105,7 +107,9 @@ import groovy.xml.XmlUtil
  * alt include.update has 'clean'
  * 	TranslateRQMToMTM -> TestManagementService: cleanupTestItems(collection, tfsProject, areaPath)
  * end
- *  alt include.update has 'configuration'
+ * TranslateRQMToMTM -> "IRestartManagementService:restartManagementService" as restartManagementService: processPhases
+ * group restartManagmentService.processPhases closure phase, items ->
+ *  alt phase == 'configuration'
  *  	TranslateRQMToMTM -> MemberManagementService: get member map
  *  	TranslateRQMToMTM -> ClmTestManagementService: get configuration via query
  *  	loop each { configuration }
@@ -114,7 +118,7 @@ import groovy.xml.XmlUtil
  *  		TranslateRQMToMTM -> TestManagementService: send configuration changes
  *  	end
  *  end
- *  alt include.update has 'data'
+ *  alt phase == 'data'
  *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
  *  TranslateRQMToMTM -> MemberManagementService: get member map
  *  TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
@@ -136,7 +140,7 @@ import groovy.xml.XmlUtil
  *  end
  *  TranslateRQMToMTM -> WorkManagementService: send list of changes to wi batch.
  *  end
- *  alt include.update has 'links'
+ *  alt phase == 'links'
  *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
  *  TranslateRQMToMTM -> MemberManagementService: get member map
  *  TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
@@ -153,7 +157,7 @@ import groovy.xml.XmlUtil
  *  	TranslateRQMToMTM -> TestManagementService: setParent of list of test case to test plan
  *  end
  *  end
- *  alt include.update has 'execution'
+ *  alt phase == 'execution'
  *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
  *  TranslateRQMToMTM -> MemberManagementService: get member map
  *  TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
@@ -171,13 +175,13 @@ import groovy.xml.XmlUtil
  *  	loop each { test case of test plan}
  *  		TranslateRQMToMTM -> CLMTestManagementService: get execution results for test case of this plan
  *  		loop each execution result
- 				TranslateRQMToMTM -> ClmTestItemManagementService: ensure test result data for testcase
+ TranslateRQMToMTM -> ClmTestItemManagementService: ensure test result data for testcase
  *  			TranslateRQMToMTM -> TestManagmentService: send test result data
  *  		end
  *  	end
  *  end
  *  end
- *  alt include.update has 'attachments'
+ *  alt phase == 'attachments'
  *  	TranslateRQMToMTM -> MemberManagementService: get member map
  *  	TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
  *  	loop each { test plans }
@@ -188,6 +192,7 @@ import groovy.xml.XmlUtil
  *  			end
  *  		end
  *  	end
+ *  end
  *  end
  * @enduml
  *
@@ -208,14 +213,17 @@ class TranslateRQMToMTM implements CliAction {
 	ClmTestItemManagementService clmTestItemManagementService;
 	@Autowired
 	MemberManagementService memberManagementService;
-//	@Autowired
-//	AttachmentsManagementService attachmentsManagementService
+	//	@Autowired
+	//	AttachmentsManagementService attachmentsManagementService
 	@Autowired
 	FileManagementService fileManagementService;
 	@Autowired
 	TestManagementService testManagementService;
 	@Autowired
 	ClmTestAttachmentManagementService clmAttachmentManagementService
+
+	@Autowired
+	IRestartManagementService restartManagementService
 
 	public TranslateRQMToMTM() {
 	}
@@ -256,307 +264,217 @@ class TranslateRQMToMTM implements CliAction {
 			testManagementService.cleanupTestItems(collection, tfsProject, areaPath)
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
-		//refresh.
-		if (includes['refresh'] != null) {
-			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery)
-			while (true) {
-				def changeList = []
-				def filtered = filtered(testItems, wiFilter)
-				filtered.each { testitem ->
-					int id = Integer.parseInt(testitem.id.text())
-					changeList.add(id)
-				}
-				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
-				def rel = testItems.@rel
-				if ("${rel}" != 'next') break
-					testItems = clmTestManagementService.nextPage(testItems.@href)
-			}
-		}
-		//translate test platform configurations.
-		if (includes['configurations'] != null) {
-			def mappingData = testMappingManagementService.mappingData
-			def configItems = clmTestManagementService.getConfigurationsViaQuery(wiQuery, project)
-			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-			while (true) {
-				configItems.entry.each { testItem ->
-					def configuration = clmTestManagementService.getTestItem(testItem.id.text())
-					//int id = Integer.parseInt(configuration.webId.text())
-					def id = "${configuration.name.text()}-Configuration"
-//					String resultsxml = XmlUtil.serialize(configuration)
-//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/configurationT.xml")
-//					def os = resultFile.newDataOutputStream()
-//					os << resultsxml
-//					os.close()
-					def changes = clmTestItemManagementService.getChanges(tfsProject, configuration, memberMap)
-					changes.each { key, val ->
-						def oconfig = testManagementService.sendPlanChanges(collection, tfsProject, val, id)
-					}
-				}
-				def nextLink = configItems.'**'.find { node ->
-					
-					node.name() == 'link' && node.@rel == 'next'
-				}
-				if (nextLink == null) break
-				configItems = clmTestManagementService.nextPage(nextLink.@href)
-			}
-		}
-		//translate work data.
-		if (includes['data'] != null) {
-			def mappingData = testMappingManagementService.mappingData
-			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery, project)
-			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-			while (true) {
-				//TODO: ccmWorkManagementService.resetNewId()
-				def changeList = []
-				def pidMap = [:]
-				def idMap = [:]
-				int count = 0
-				int pcount = 0
-				def pChangeList = []
-				def idKeyMap = [:]
-				def filtered = filtered(testItems, wiFilter)
-				clmTestItemManagementService.resetNewId()
-				filtered.each { testItem ->
-					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
-					int id = Integer.parseInt(testplan.webId.text())
-					//Generate test data
-//					String itemXml = XmlUtil.serialize(testplan)
-//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/testplan${id}.xml")
-//					def os = resultFile.newDataOutputStream()
-//					os << itemXml
-//					os.close()
-					
-					
-					def changes = clmTestItemManagementService.getChanges(tfsProject, testplan, memberMap)
-					def plan = null
-					changes.each { key, val ->
-						plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
-					}
-					
-					testplan.testsuite.each { testsuiteRef ->
-						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
-						String tsXml = XmlUtil.serialize(testsuite)
-						int tsid = Integer.parseInt(testsuite.webId.text())
-						String idtype = "${tsid}-testsuite"
-						if (!idKeyMap.containsKey(idtype)) {
-							def tschanges = clmTestItemManagementService.getChanges(tfsProject, testsuite, memberMap, null, null, plan)
-							tschanges.each { key, val ->
-								String idkey = "${tsid}-${key}"
-								def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
-							}
-							idKeyMap[idtype] = idtype
+		def mappingData = testMappingManagementService.mappingData
+		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+		if (includes['phases'] != null) {
+			restartManagementService.processPhases { phase, items ->
+				//translate test platform configurations.
+				if (phase == 'configurations') {
+					items.each { testItem ->
+						def configuration = clmTestManagementService.getTestItem(testItem.id.text())
+						//int id = Integer.parseInt(configuration.webId.text())
+						def id = "${configuration.name.text()}-Configuration"
+						//					String resultsxml = XmlUtil.serialize(configuration)
+						//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/configurationT.xml")
+						//					def os = resultFile.newDataOutputStream()
+						//					os << resultsxml
+						//					os.close()
+						clmTestItemManagementService.processForChanges(tfsProject, configuration, memberMap) { key, val ->
+							def oconfig = testManagementService.sendPlanChanges(collection, tfsProject, val, id)
 						}
-						testsuite.testcase.each { testcaseRef ->
-							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-							String tcXml = XmlUtil.serialize(testcase)
-							int aid = Integer.parseInt(testcase.webId.text())
-							String aidtype = "${aid}-testcase"
-							if (!idKeyMap.containsKey(aidtype)) {
-								def tcchanges = clmTestItemManagementService.getChanges(tfsProject, testcase, memberMap)
-								tcchanges.each { key, val ->
-									String idkey = "${aid}-${key}"
-									idMap[count] = idkey
-									changeList.add(val)
-									count++
-									
-								}
-								idKeyMap[aidtype] = aidtype
-							}
-						}	
 					}
-					testplan.testcase.each { testcaseRef ->
-						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-						int aid = Integer.parseInt(testcase.webId.text())
-						// generate test data
-//						String testcasexml = XmlUtil.serialize(testcase)
-//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
-//						os = resultFile.newDataOutputStream()
-//						os << testcasexml
-//						os.close()
-						String idtype = "${aid}-testcase"
-						if (!idKeyMap.containsKey(idtype)) {
-							def tcchanges = clmTestItemManagementService.getChanges(tfsProject, testcase, memberMap)
-							tcchanges.each { key, val ->
-								String idkey = "${aid}-${key}"
-								idMap[count] = idkey
-								changeList.add(val)
-								count++
-								
+				}
+				//translate work data.
+				if (phase == 'data') {
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+					def idKeyMap = [:]
+					clmTestItemManagementService.resetNewId()
+					items.each { testItem ->
+						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
+						int id = Integer.parseInt(testplan.webId.text())
+						//Generate test data
+						//					String itemXml = XmlUtil.serialize(testplan)
+						//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/testplan${id}.xml")
+						//					def os = resultFile.newDataOutputStream()
+						//					os << itemXml
+						//					os.close()
+
+
+						def plan = null
+						clmTestItemManagementService.processForChanges(tfsProject, testplan, memberMap) { String key, def val ->
+							if (key.endsWith(' WI')) {
+								clManager.add("${id}-${key}", val)
+							} else {
+								plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
 							}
-							idKeyMap[idtype] = idtype
 						}
 
-					}
-					// TODO: def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
-//					if (wiChanges != null) {
-//						idMap[count] = "${id}"
-//						changeList.add(wiChanges)
-//						count++
-//					}
-				}
-				if (changeList.size() > 0) {
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-				}
-				def nextLink = testItems.'**'.find { node ->
-					
-					node.name() == 'link' && node.@rel == 'next'
-				}
-				if (nextLink == null) break
-				testItems = clmTestManagementService.nextPage(nextLink.@href)
-			}
-		}
-		//		workManagementService.testBatchWICreate(collection, tfsProject)
-		//apply work links
-		if (includes['links'] != null) {
-			def itemMapping = testMappingManagementService.getMappingData()
-			//def linkMapping = processTemplateService.getLinkMapping(mapping)
-			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery, project)
-			while (true) {
-				def changeList = []
-				def idMap = [:]
-				int count = 0
-				def filtered = filtered(testItems, wiFilter)
-				filtered.each { testItem ->
-					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
-					String itemXml = XmlUtil.serialize(testplan)
-					String webId = "${testplan.webId.text()}"
-					testplan.testsuite.each { testsuiteRef ->
-						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
-						def tcs = []
-						testsuite.testcase.each { testcaseRef ->
+						testplan.testsuite.each { testsuiteRef ->
+							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+							String tsXml = XmlUtil.serialize(testsuite)
+							int tsid = Integer.parseInt(testsuite.webId.text())
+							String idtype = "${tsid}-testsuite"
+							if (!idKeyMap.containsKey(idtype)) {
+								clmTestItemManagementService.processForChanges(tfsProject, testsuite, memberMap, null, null, plan) { key, val ->
+									if (key.endsWith(' WI')) {
+										clManager.add("${tsid}-${key}", val)
+									} else {
+										String idkey = "${tsid}-${key}"
+										def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
+									}
+								}
+								idKeyMap[idtype] = idtype
+							}
+							testsuite.testcase.each { testcaseRef ->
+								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+								String tcXml = XmlUtil.serialize(testcase)
+								int aid = Integer.parseInt(testcase.webId.text())
+								String aidtype = "${aid}-testcase"
+								if (!idKeyMap.containsKey(aidtype)) {
+									clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+										String idkey = "${aid}-${key}"
+										clManager.add("${aid}-${key}", val)
+
+									}
+									idKeyMap[aidtype] = aidtype
+								}
+							}
+						}
+						testplan.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+							int aid = Integer.parseInt(testcase.webId.text())
+							// generate test data
+							//						String testcasexml = XmlUtil.serialize(testcase)
+							//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
+							//						os = resultFile.newDataOutputStream()
+							//						os << testcasexml
+							//						os.close()
+							String idtype = "${aid}-testcase"
+							if (!idKeyMap.containsKey(idtype)) {
+								clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+									clManager.add("${aid}-${key}", val)
+								}
+								idKeyMap[idtype] = idtype
+							}
+
+						}
+						// TODO: def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
+						//					if (wiChanges != null) {
+						//						idMap[count] = "${id}"
+						//						changeList.add(wiChanges)
+						//						count++
+						//					}
+					}
+					clManager.flush();
+				}
+				//		workManagementService.testBatchWICreate(collection, tfsProject)
+				//apply work links
+				if (phase == 'links') {
+					items.each { testItem ->
+						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
+						String itemXml = XmlUtil.serialize(testplan)
+						String webId = "${testplan.webId.text()}"
+						testplan.testsuite.each { testsuiteRef ->
+							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+							def tcs = []
+							testsuite.testcase.each { testcaseRef ->
+								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+								tcs.add(testcase)
+							}
+							testManagementService.setParent(testsuite, tcs, mappingData)
+						}
+						def tcs = []
+						testplan.testcase.each { testcaseRef ->
+							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+							String tcitemXml = XmlUtil.serialize(testcase)
+							String tcwebId = "${testcase.webId.text()}"
 							tcs.add(testcase)
 						}
-						testManagementService.setParent(testsuite, tcs, itemMapping)
+						testManagementService.setParent(testplan, tcs, mappingData)
 					}
-					def tcs = []
-					testplan.testcase.each { testcaseRef ->
-						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-						String tcitemXml = XmlUtil.serialize(testcase)
-						String tcwebId = "${testcase.webId.text()}"
-						tcs.add(testcase)
-					}
-					testManagementService.setParent(testplan, tcs, itemMapping)
 				}
-				def nextLink = testItems.'**'.find { node ->
-					
-					node.name() == 'link' && node.@rel == 'next'
-				}
-				if (nextLink == null) break
-				testItems = clmTestManagementService.nextPage(nextLink.@href)
-			}
-		}
-		
-		if (includes['execution'] != null) {
-			def itemMapping = testMappingManagementService.getMappingData()
-			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-			//def linkMapping = processTemplateService.getLinkMapping(mapping)
-			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery, project)
-			while (true) {
-				def changeList = []
-				def idMap = [:]
-				int count = 0
-				def filtered = filtered(testItems, wiFilter)
-				filtered.each { testItem ->
-					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
-					String itemXml = XmlUtil.serialize(testplan)
-					String webId = "${testplan.webId.text()}"
-					String parentHref = "${testItem.id.text()}"
-					def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
-					testplan.testsuite.each { testsuiteRef ->
-						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
-						testsuite.testcase.each { testcaseRef ->
+
+				if (phase == 'execution') {
+					//def linkMapping = processTemplateService.getLinkMapping(mapping)
+					items.each { testItem ->
+						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
+						String itemXml = XmlUtil.serialize(testplan)
+						String webId = "${testplan.webId.text()}"
+						String parentHref = "${testItem.id.text()}"
+						def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
+						testplan.testsuite.each { testsuiteRef ->
+							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+							testsuite.testcase.each { testcaseRef ->
+								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+								String tcwebId = "${testcase.webId.text()}"
+								def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
+								executionresults.each { result ->
+									clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
+										String rwebId = "${result.webId.text()}-Result"
+										testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+									}
+								}
+							}
+						}
+						testplan.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+							String tcitemXml = XmlUtil.serialize(testcase)
 							String tcwebId = "${testcase.webId.text()}"
 							def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 							executionresults.each { result ->
-								def resultData = clmTestItemManagementService.getChanges(tfsProject, result, memberMap, resultMap, testcase)
-								String rwebId = "${result.webId.text()}-Result"
-								testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+								clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
+									String rwebId = "${result.webId.text()}-Result"
+									testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+								}
 							}
 						}
 					}
-					testplan.testcase.each { testcaseRef ->
-						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-						String tcitemXml = XmlUtil.serialize(testcase)
-						String tcwebId = "${testcase.webId.text()}"
-						def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
-						executionresults.each { result ->
-							def resultData = clmTestItemManagementService.getChanges(tfsProject, result, memberMap, resultMap, testcase)
-							String rwebId = "${result.webId.text()}-Result"
-							testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
-						}
-					}
 				}
-				def nextLink = testItems.'**'.find { node ->
-					
-					node.name() == 'link' && node.@rel == 'next'
-				}
-				if (nextLink == null) break
-				testItems = clmTestManagementService.nextPage(nextLink.@href)
-			}
-		}
 
-		if (includes['attachments'] != null) {
-			def itemMapping = testMappingManagementService.getMappingData()
-			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-			//def linkMapping = processTemplateService.getLinkMapping(mapping)
-			def testItems = clmTestManagementService.getTestPlansViaQuery(wiQuery, project)
-			while (true) {
-				def changeList = []
-				def idMap = [:]
-				int count = 0
-				def filtered = filtered(testItems, wiFilter)
-				filtered.each { testItem ->
-					def testplan = clmTestManagementService.getTestItem(testItem.id.text())
-					String itemXml = XmlUtil.serialize(testplan)
-					String webId = "${testplan.webId.text()}"
-					String parentHref = "${testItem.id.text()}"
-					def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
-					testplan.testsuite.each { testsuiteRef ->
-						def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
-						testsuite.testcase.each { testcaseRef ->
+				if (phase == 'attachments') {
+					//def linkMapping = processTemplateService.getLinkMapping(mapping)
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+					def idKeyMap = [:]
+					clmTestItemManagementService.resetNewId()
+					items.each { testItem ->
+						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
+						String itemXml = XmlUtil.serialize(testplan)
+						String webId = "${testplan.webId.text()}"
+						String parentHref = "${testItem.id.text()}"
+						def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
+						testplan.testsuite.each { testsuiteRef ->
+							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+							testsuite.testcase.each { testcaseRef ->
+								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+								String id = "${testcase.webId.text()}-Test Case"
+								def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
+								def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+								if (wiChanges != null) {
+									clManager.add(id, wiChanges)
+								}
+							}
+						}
+						testplan.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 							String id = "${testcase.webId.text()}-Test Case"
 							def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
 							def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
 							if (wiChanges != null) {
-								idMap[count] = "${id}"
-								changeList.add(wiChanges)
-								count++
+								clManager.add(id, wiChanges)
+							}
+							String tcwebId = "${testcase.webId.text()}"
+							def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
+							executionresults.each { result ->
+								def cacheData = []
+								def rfiles = clmAttachmentManagementService.cacheTestItemAttachments(result)
+								if (rfiles.size() > 0) {
+									def attResult = testManagementService.ensureResultAttachments(collection, tfsProject, rfiles, testcase, resultMap)
+								}
 							}
 						}
 					}
-					testplan.testcase.each { testcaseRef ->
-						def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-						String id = "${testcase.webId.text()}-Test Case"
-						def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)		
-						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-						if (wiChanges != null) {
-							idMap[count] = "${id}"
-							changeList.add(wiChanges)
-							count++
-						}
-						String tcwebId = "${testcase.webId.text()}"
-						def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
-						executionresults.each { result ->
-							def cacheData = []
-							def rfiles = clmAttachmentManagementService.cacheTestItemAttachments(result)
-							if (rfiles.size() > 0) {
-								def attResult = testManagementService.ensureResultAttachments(collection, tfsProject, rfiles, testcase, resultMap)
-							}	
-						}
-					}
+					clManager.flush()
 				}
-				if (changeList.size() > 0) {
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-				}
-				def nextLink = testItems.'**'.find { node ->
-					
-					node.name() == 'link' && node.@rel == 'next'
-				}
-				if (nextLink == null) break
-				testItems = clmTestManagementService.nextPage(nextLink.@href)
 			}
 		}
 		//extract & apply attachments.
@@ -575,9 +493,7 @@ class TranslateRQMToMTM implements CliAction {
 		if (this.filterMap[filter] != null) {
 			return this.filterMap[filter].filter(items)
 		}
-		return items.entry.findAll { ti ->
-			true
-		}
+		return items.entry.findAll { ti -> true }
 	}
 
 	def loadTestTypes(def templateDir) {
@@ -607,4 +523,35 @@ class TranslateRQMToMTM implements CliAction {
 
 
 
+}
+
+class ChangeListManager {
+	def changeList = []
+	def idMap = [:]
+	def count = 0
+	WorkManagementService workManagementService
+	String collection
+	String project
+	ChangeListManager(String collection, String project, WorkManagementService workManagementService) {
+		this.workManagementService = workManagementService
+		this.collection = collection
+		this.project = project
+	}
+
+	def add(String key, def item) {
+		if (count == 200) {
+			flush()
+		}
+		changeList.push(item)
+		idMap[count] = key
+		count++
+	}
+
+	def flush() {
+		if (count == 0) return;
+		workManagementService.batchWIChanges(collection, project, changeList, idMap)
+		changeList = []
+		idMap = [:]
+		count = 0
+	}
 }

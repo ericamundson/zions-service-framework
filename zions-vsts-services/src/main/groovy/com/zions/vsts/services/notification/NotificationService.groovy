@@ -21,7 +21,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 @Slf4j
 public class NotificationService {
 	@Autowired
-	@Value('${email.recipient.address}')
+	@Value('${email.recipient.address:}')
 	private String recipientEmailAddress
 	
     @Autowired

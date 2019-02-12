@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonBuilder
@@ -31,7 +32,10 @@ class WorkManagementService {
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
 	
-	@Value('${id.tracking.field}')
+	@Autowired
+	ICheckpointManagementService checkpointManagementService
+	
+	@Value('${id.tracking.field:}')
 	private String idTrackingField
 
 	public WorkManagementService() {
@@ -72,6 +76,22 @@ class WorkManagementService {
 
 	}
 	
+	def getWorkItem(String collection, String project, String id) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		//def query = [query: aquery]
+		//String body = new JsonBuilder(query).toPrettyString()
+		def result = genericRestClient.get(
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
+			//headers: [Accept: 'application/json'],
+			query: ['api-version': '5.0']
+			)
+		return result
+
+	}
+
 	def deleteWorkitem(String url) {
 		def result = genericRestClient.delete(
 			uri: url,
@@ -167,6 +187,7 @@ class WorkManagementService {
 		if (result != null) {
 			cacheResult(result, bidMap)
 		} else {
+			checkpointManagementService.addLogentry("Batch request failed!")
 			log.error("Batch request failed!")
 		}
 
@@ -181,6 +202,7 @@ class WorkManagementService {
 			} else {
 				def issue = new JsonSlurper().parseText(resp.body)
 				log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+				checkpointManagementService.addLogentry("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
 			}
 			count++
 		}
@@ -188,5 +210,8 @@ class WorkManagementService {
 	
 
 	
+	
 
 }
+
+
