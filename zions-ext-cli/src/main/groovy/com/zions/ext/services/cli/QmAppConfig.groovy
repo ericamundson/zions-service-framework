@@ -7,6 +7,10 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.restart.CheckpointManagementService
+import com.zions.common.services.restart.ICheckpointManagementService
+import com.zions.common.services.restart.IRestartManagementService
+import com.zions.common.services.restart.RestartManagementService
 import com.zions.ext.services.cli.action.rest.RestClient
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
@@ -22,7 +26,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("qm")
-@ComponentScan(["com.zions.qm.services","com.zions.vsts.services"])
+@ComponentScan(["com.zions.qm.services","com.zions.vsts.services", "com.zions.common.services.restart"])
 public class QmAppConfig {
 	@Autowired
 	@Value('${clm.url}') 

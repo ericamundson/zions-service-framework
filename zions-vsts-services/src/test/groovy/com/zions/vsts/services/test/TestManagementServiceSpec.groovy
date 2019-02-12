@@ -390,7 +390,7 @@ class TestManagementServiceSpec extends Specification {
 
 @TestConfiguration
 @Profile("test")
-@ComponentScan(["com.zions.common.services.test", "com.zions.vsts.services.test"])
+@ComponentScan(["com.zions.common.services.test", "com.zions.vsts.services.test", "com.zions.common.services.restart"])
 @PropertySource("classpath:test.properties")
 class TestManagementServiceSpecConfig {
 	def mockFactory = new DetachedMockFactory()

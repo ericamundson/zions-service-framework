@@ -5,6 +5,7 @@ import static org.junit.Assert.*
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
@@ -43,6 +44,9 @@ class WorkManagementServiceSpecTest extends Specification {
 	
 	@Autowired
 	ICacheManagementService cacheManagmentService
+	
+	@Autowired
+	ICheckpointManagementService checkpointManagementService
 	
 	def "Injected services are mocks"() {
 		expect:
@@ -121,6 +125,7 @@ class WorkManagementServiceSpecTest extends Specification {
 
 @TestConfiguration
 @Profile("test")
+@ComponentScan("com.zions.common.services.restart")
 @PropertySource("classpath:test.properties")
 class WorkManagementServiceConfig {
 	def mockFactory = new DetachedMockFactory()

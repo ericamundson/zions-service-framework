@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonBuilder
@@ -30,6 +31,9 @@ class WorkManagementService {
 		
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
+	
+	@Autowired
+	ICheckpointManagementService checkpointManagementService
 	
 	@Value('${id.tracking.field:}')
 	private String idTrackingField
@@ -183,6 +187,7 @@ class WorkManagementService {
 		if (result != null) {
 			cacheResult(result, bidMap)
 		} else {
+			checkpointManagementService.addLogentry("Batch request failed!")
 			log.error("Batch request failed!")
 		}
 
@@ -197,6 +202,7 @@ class WorkManagementService {
 			} else {
 				def issue = new JsonSlurper().parseText(resp.body)
 				log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+				checkpointManagementService.addLogentry("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
 			}
 			count++
 		}

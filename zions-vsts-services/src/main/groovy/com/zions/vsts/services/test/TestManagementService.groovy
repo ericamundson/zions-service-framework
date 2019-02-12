@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import groovy.json.JsonBuilder
@@ -70,6 +71,9 @@ public class TestManagementService {
 	ICacheManagementService cacheManagementService
 	
 	@Autowired
+	ICheckpointManagementService checkpointManagementService
+	
+	@Autowired
 	WorkManagementService workManagementService
 	
 	public TestManagementService() {
@@ -101,6 +105,9 @@ public class TestManagementService {
 		}
 //		if (result != null) {
 //			cacheManagementService.saveToCache(result, id, ICacheManagementService.RESULT_DATA)
+//		}
+//		if (result == null) {
+//			checkpointManagementService.addLogentry("Unable to save test result with id:  ${id}")
 //		}
 		return result
 	}
@@ -196,6 +203,8 @@ public class TestManagementService {
 			if (wi) {
 				cacheManagementService.saveToCache(wi, "${id} WI", ICacheManagementService.WI_DATA)
 			}
+		} else {
+			checkpointManagementService.addLogentry("Unable to save data for ${dataType} with id:  ${id}")
 		}
 		return result
 	}
