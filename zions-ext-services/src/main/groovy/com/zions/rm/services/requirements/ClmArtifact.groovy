@@ -4,11 +4,16 @@ class ClmArtifact {
 	String about
 	String format
 	String tfsWorkitemType
+	String fileHref
 	def attributeMap
+	def collectionArtifacts
 	def links
 	public ClmArtifact(String in_title, String in_format, String in_about) {
 		attributeMap = [:]
-		setTitle(in_title) // Needs to be in attributeMap because it will map over to ADO attribute
+		collectionArtifacts = []
+		if (in_title != null) {
+			setTitle(in_title) // Needs to be in attributeMap because it will map over to ADO attribute
+		}
 		about = in_about
 		format = in_format
 	}

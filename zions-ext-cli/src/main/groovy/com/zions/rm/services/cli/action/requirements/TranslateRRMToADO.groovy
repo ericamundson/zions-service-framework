@@ -232,7 +232,7 @@ class TranslateRRMToADO implements CliAction {
 					// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
 					if (module.orderedArtifacts[it].isHeading() && 
 						it < module.orderedArtifacts.size()-1 && 
-						module.orderedArtifacts[it+1].isToIncorporateTitle()) {
+						isToIncorporateTitle(module,it+1)) {
 						
 						module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
 						module.orderedArtifacts[it].setIsDeleted(true)
@@ -267,7 +267,7 @@ class TranslateRRMToADO implements CliAction {
 
 
 				// Create work items and SmartDoc container in Azure DevOps
-				if (changeList.size() > 0) {
+				if (changeList.size() > 0 && errCount == 0) {
 					// Process work item changes in Azure DevOps
 					println("${getCurTimestamp()} - Processing work item changes...")
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
@@ -285,6 +285,7 @@ class TranslateRRMToADO implements CliAction {
 						println("SmartDoc creation succeeded. Result: ${result.result}")
 					}
 					
+					
 					// Upload Attachments to Azure DevOps
 					println("${getCurTimestamp()} - Uploading attachments...")
 					changeList.clear()
@@ -298,9 +299,13 @@ class TranslateRRMToADO implements CliAction {
 							String id = artifact.getCacheID()
 							def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
 							if (wiChanges != null) {
+								def url = "${wiChanges.body[1].value.url}"
+								def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
+								wiChanges.body.add(change)
 								idMap[count] = "${id}"
 								changeList.add(wiChanges)
 								count++
+						
 							}
 							
 						}
@@ -321,6 +326,27 @@ class TranslateRRMToADO implements CliAction {
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
 	
+	boolean isToIncorporateTitle(def module, def indexOfElementToCheck) {
+		// This function is dependent upon the type of module
+		String artifactType = module.orderedArtifacts[indexOfElementToCheck].getArtifactType()
+		String moduleType = module.getArtifactType()
+		boolean shouldMerge = false 
+		if ((moduleType == 'Functional Spec') &&
+			   (artifactType == 'Supporting Material' ||
+				artifactType == 'Scope' ||
+				artifactType == 'Out of Scope' ||
+				artifactType == 'Assumption' ||
+				artifactType == 'Issue' )) {
+			shouldMerge = true 
+		}
+		else if ((moduleType == 'UI Spec') &&
+			   (artifactType == 'Supporting Material' ||
+				artifactType == 'Screen Change' ))	{
+			shouldMerge = true 
+		}
+		return shouldMerge
+	}
+
 	def getCurTimestamp() {
 		new Date().format( 'yyyy/MM/dd HH:MM' )
 	}

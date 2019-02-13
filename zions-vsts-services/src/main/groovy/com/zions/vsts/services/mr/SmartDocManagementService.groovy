@@ -47,7 +47,7 @@ class SmartDocManagementService {
 		String domain = ""
 		String userPassword = ""
 		def index = 0
-		String wiDetails = """{"id":"${getVstsID(module)}","linkType":"","links":${getWorkitemDetails(0, module).detailString}}"""
+		String wiDetails = """[{"id":"${getVstsID(module)}","linkType":"","links":${getWorkitemDetails(0, module).detailString}}]"""
 		body = """
 			{
 			"userId": "${mrGenericRestClient.getUserid()}",
