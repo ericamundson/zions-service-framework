@@ -3,6 +3,8 @@ package com.zions.qm.services.test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import com.zions.common.services.rest.IGenericRestClient
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 
@@ -22,12 +24,82 @@ class ClmTestManagementService {
 		
 	}
 	
+	public def getCustomAttributes(String projectName, String type)
+	{
+		
+		Map<String, String> typeMap = ['Test Case': 'TEST_CASE', 'Test Suite': 'TEST_SUITE', 'Test Plan': 'TEST_PLAN']
+		String scope = typeMap[type]
+//		uriBuilder.addParameter("scope", 'TEST_CASE')
+//		uriBuilder.addParameter("resolveValues", 'false')
+//		uriBuilder.addParameter("isNotPurged", 'true')
+//		uriBuilder.addParameter("processAreaUUID", paId)
+		
+//
+		def pa = getProjectArea(projectName)
+		if (pa != null) {
+			String url = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService/customAttributesDTO"
+			def result = qmGenericRestClient.get( uri: url,
+				headers: [Accept: 'text/json'],
+				query: [scope: scope, resolveValues: false, isNotPurged: true, processAreaUUID: pa.itemId])
+			def ca = new JsonSlurper().parse(result)
+			return ca
+		}
+		return null
+	}
+	
+	public def getCategories(String projectName, String type)
+	{
+		Map<String, String> typeMap = ['Test Case': 'TestCase', 'Test Suite': 'TestSuite', 'Test Plan': 'TestPlan']
+		String itemType = typeMap[type]
+//		uriBuilder.addParameter("scope", 'TEST_CASE')
+//		uriBuilder.addParameter("resolveValues", 'false')
+//		uriBuilder.addParameter("isNotPurged", 'true')
+//		uriBuilder.addParameter("processAreaUUID", paId)
+		
+//
+		def pa = getProjectArea(projectName)
+		if (pa != null) {
+			String url = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.planning.common.service.rest.ICategoryTypeRestService/categoryTypesDTO"
+			def result = qmGenericRestClient.get( uri: url,
+				headers: [accept: 'text/json'],
+				query: [itemType: itemType, resolveCategories: true, includeGlobal: false, isNotPurged: true, processAreaUUID: pa.itemId])
+			def categories = new JsonSlurper().parse(result)
+			return categories
+		}
+		return null
+	}
+
 	def getTestItem(String uri) {
 		def result = qmGenericRestClient.get(
 			uri: uri,
 			headers: [Accept: 'text/xml'] );
 		return result
 	
+	}
+	
+	def getProjectArea(String name) {
+		def thepa = null
+		String url = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.team.process.internal.service.web.IProcessWebUIService/allProjectAreas"
+		def pasStream = qmGenericRestClient.get( uri: url,
+			//contentType: ContentType.XML,
+			headers: [Accept: 'text/json'],
+			query: [userId: this.qmGenericRestClient.userid])
+		def pas = new JsonSlurper().parse(pasStream)
+		String json = new JsonBuilder(pas).toPrettyString()
+//			URIBuilder uriBuilder = new URIBuilder(url);
+//			uriBuilder.addParameter("hideArchivedProjects", 'true')
+//			uriBuilder.addParameter("owningApplicationKey", "JTS-Sentinel-Id")
+//			uriBuilder.addParameter("pageNum", ""+ pageNum)
+//			uriBuilder.addParameter("pageSize", "" + pageSize)
+//			HttpGet httpget = new HttpGet(uriBuilder.build());
+//			httpget.setHeader("accept", "text/json");
+
+		pas.'soapenv:Body'.response.returnValue.values.each { pa ->
+			if ("${pa.summary}" == name) {
+				thepa = pa
+			}
+		}
+		return thepa;
 	}
 	
 	def getContent(String uri) {

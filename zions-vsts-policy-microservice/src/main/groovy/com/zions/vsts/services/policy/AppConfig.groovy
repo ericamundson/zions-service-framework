@@ -10,6 +10,7 @@ import org.springframework.core.io.ClassPathResource
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.cache.CacheManagementService
+import com.zions.vsts.services.attachments.AttachmentManagementService
 
 @Configuration
 @ComponentScan("com.zions.vsts.services")
@@ -22,6 +23,11 @@ public class AppConfig {
 	@Bean
 	CommandManagementService commandManagementService() {
 		return new CommandManagementService();
+	}
+
+	@Bean
+	AttachmentManagementService attachmentManagementService() {
+		return new AttachmentManagementService();
 	}
 
 	@Autowired

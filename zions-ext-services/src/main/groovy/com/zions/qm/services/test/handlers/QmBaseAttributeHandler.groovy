@@ -41,13 +41,13 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: aValue]
 		if (cacheCheck && wiCache != null) {
 			String type = "${itemMap.target}"
-			if (type != 'Test Case') {
-				def cVal = wiCache."${fieldMap.target}"
+			if (type == 'Test Case' || type.endsWith(' WI')) {
+				String cVal = wiCache.fields."${fieldMap.target}"
 				if ("${cVal}" == "${retVal.value}") {
 					return null
 				}
 			} else {
-				String cVal = wiCache.fields."${fieldMap.target}"
+				def cVal = wiCache."${fieldMap.target}"
 				if ("${cVal}" == "${retVal.value}") {
 					return null
 				}

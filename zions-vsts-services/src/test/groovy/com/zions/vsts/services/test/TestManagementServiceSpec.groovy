@@ -17,6 +17,7 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
+import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.WorkManagementServiceConfig
 import groovy.json.JsonSlurper
 import spock.lang.Specification
@@ -30,6 +31,9 @@ class TestManagementServiceSpec extends Specification {
 	
 	@Autowired(required=true)
 	private ProjectManagementService projectManagmentService;
+	
+	@Autowired
+	WorkManagementService workManagementService;
 
 	@Autowired
 	ICacheManagementService cacheManagementService
@@ -138,6 +142,10 @@ class TestManagementServiceSpec extends Specification {
 		def plan = dataGenerationService.generate('/testdata/TestPlan.json')
 		1 * genericRestClient.post(_) >> plan
 		
+		and: 'ensure stub of get work item.'
+		def wi = dataGenerationService.generate('/testdata/wiDataT.json')
+		1 * workManagementService.getWorkItem(_,_,_) >> wi
+
 		when: 'Run method under test sendPlanChanges'
 		boolean success = true
 		try {
@@ -156,6 +164,10 @@ class TestManagementServiceSpec extends Specification {
 		and: 'ensure stub of post call'
 		def plan = dataGenerationService.generate('/testdata/TestPlan.json')
 		1 * genericRestClient.patch(_) >> plan
+		
+		and: 'ensure stub of get work item.'
+		def wi = dataGenerationService.generate('/testdata/wiDataT.json')
+		1 * workManagementService.getWorkItem(_,_,_) >> wi
 		
 		when: 'Run method under test sendPlanChanges'
 		boolean success = true
@@ -378,7 +390,7 @@ class TestManagementServiceSpec extends Specification {
 
 @TestConfiguration
 @Profile("test")
-@ComponentScan(["com.zions.common.services.test", "com.zions.vsts.services.test"])
+@ComponentScan(["com.zions.common.services.test", "com.zions.vsts.services.test", "com.zions.common.services.restart"])
 @PropertySource("classpath:test.properties")
 class TestManagementServiceSpecConfig {
 	def mockFactory = new DetachedMockFactory()
@@ -398,6 +410,11 @@ class TestManagementServiceSpecConfig {
 		return mockFactory.Mock(ICacheManagementService)
 	}
 	
+	@Bean
+	WorkManagementService workManagementService() {
+		return mockFactory.Mock(WorkManagementService)
+	}
+
 	@Bean
 	TestManagementService underTest() {
 		return new TestManagementService()

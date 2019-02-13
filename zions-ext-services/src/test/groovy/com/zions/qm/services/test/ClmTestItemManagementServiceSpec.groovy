@@ -56,7 +56,8 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		}
 
 		when: 'call method under test (getChanges).'
-		def changedata = underTest.getChanges('DigitalBanking', testplan, teamMap)
+		underTest.processForChanges('DigitalBanking', testplan, teamMap) { 
+			key, item -> }
 
 		then: 'ensure change data'
 		true
@@ -82,8 +83,8 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		}
 		
 		when: 'call method under test (getChanges).'
-		def changedata = underTest.getChanges('DigitalBanking', testsuite, teamMap, null, null, testplan)
-
+		underTest.processForChanges('DigitalBanking', testsuite, teamMap, null, null, testplan) { 
+			key, item -> }
 		then: 'ensure change data'
 		true
 	}
@@ -107,7 +108,8 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		}
 
 		when: 'call method under test (getChanges).'
-		def changedata = underTest.getChanges('DigitalBanking', testcase, teamMap)
+		underTest.processForChanges('DigitalBanking', testcase, teamMap) { 
+			key, item -> }
 
 		then: 'ensure change data'
 		true
@@ -131,7 +133,8 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		}
 
 		when: 'call method under test (getChanges).'
-		def changedata = underTest.getChanges('DigitalBanking', configuration, teamMap)
+		underTest.processForChanges('DigitalBanking', configuration, teamMap) { 
+			key, item -> }
 
 		then: 'ensure change data'
 		true
@@ -173,7 +176,8 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		}
 
 		when: 'call method under test (getChanges).'
-		def changedata = underTest.getChanges('DigitalBanking', outItems[0], teamMap, tcMap, testcase)
+		underTest.processForChanges('DigitalBanking', outItems[0], teamMap, tcMap, testcase) { 
+			key, item -> }
 
 		then: 'ensure change data'
 		true

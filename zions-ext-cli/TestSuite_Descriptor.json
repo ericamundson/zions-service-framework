@@ -1,0 +1,13 @@
+[
+    {
+        "name": "Board_New_Loan:_Commercial",
+        "displayName": "Board New Loan: Commercial",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    }
+]

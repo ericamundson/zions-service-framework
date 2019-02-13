@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component
 class CacheManagementService implements ICacheManagementService {
 	
 	
-	@Autowired
-	@Value('${cache.location}')
+	//@Autowired
+	@Value('${cache.location:cache}')
 	String cacheLocation
 
 	public CacheManagementService(String cacheLocation) {
