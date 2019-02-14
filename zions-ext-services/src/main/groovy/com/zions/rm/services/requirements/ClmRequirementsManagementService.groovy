@@ -48,7 +48,7 @@ class ClmRequirementsManagementService {
 	@Autowired
 	IGenericRestClient rmGenericRestClient
 	
-	def queryForModules(String projectURI, String query ) {
+	def queryForModules(String projectURI, String query) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?" + query;
 		if (query == null || query.length() == 0 || "${query}" == 'none') {  // if no query provided, then at least restrict to the project area
 			uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?projectURI=" + projectURI;
@@ -93,6 +93,10 @@ class ClmRequirementsManagementService {
 							if (format == "Text") {
 								// Get artifact details (attributes and links) from DNG
 								getTextArtifact(artifact)
+								// If artifact has embedded collection, add collection members to the module
+								if (shouldAddCollectionsToModule(moduleType) && artifact.collectionArtifacts != null) {
+									orderedArtifacts << artifact.collectionArtifacts
+								}
 							}
 							else {
 								getNonTextArtifact(artifact)
@@ -108,6 +112,10 @@ class ClmRequirementsManagementService {
 			modules.add(iModule)
 		}
 		return modules
+	}
+	
+	boolean shouldAddCollectionsToModule(String moduleType) {
+		return (moduleType == 'UI Spec')
 	}
 	
 	def nextPage(String url) {
@@ -160,6 +168,7 @@ class ClmRequirementsManagementService {
 					if (collectionIndex > -1) { // Embedded Collection, parse all member hrefs for that collection
 						memberHrefs = parseCollectionHrefs(richTextBody)
 					}
+					
 					// Check to see if this artifact has an embedded collection in "minimized" mode					
 					collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimised')
 					if (collectionIndex > -1) { // Minimized Collection, get href for the collection artifact
@@ -240,8 +249,8 @@ class ClmRequirementsManagementService {
 	}
 	private def getCollectionArtifacts(def in_artifact, def memberHrefs) {
 		memberHrefs.each { memberHref -> 
-			def artifact = new ClmArtifact(null,null,memberHref)
-			
+			def artifact = new ClmModuleElement(null,null,in_artifact.getDepth()+1,null,'false',memberHref)
+
 			in_artifact.collectionArtifacts << getTextArtifact(artifact)
 		}
 	}
