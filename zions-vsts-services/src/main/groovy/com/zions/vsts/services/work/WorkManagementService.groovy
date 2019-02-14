@@ -32,7 +32,7 @@ class WorkManagementService {
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
 	
-	@Autowired
+	@Autowired(required=false)
 	ICheckpointManagementService checkpointManagementService
 	
 	@Value('${id.tracking.field:}')
@@ -187,7 +187,9 @@ class WorkManagementService {
 		if (result != null) {
 			cacheResult(result, bidMap)
 		} else {
-			checkpointManagementService.addLogentry("Batch request failed!")
+			if (checkpointManagementService != null) {
+				checkpointManagementService.addLogentry("Batch request failed!")
+			}
 			log.error("Batch request failed!")
 		}
 
@@ -202,7 +204,9 @@ class WorkManagementService {
 			} else {
 				def issue = new JsonSlurper().parseText(resp.body)
 				log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
-				checkpointManagementService.addLogentry("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+				if (checkpointManagementService != null) {
+					checkpointManagementService.addLogentry("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+				}
 			}
 			count++
 		}
