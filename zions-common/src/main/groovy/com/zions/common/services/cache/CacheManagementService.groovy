@@ -83,4 +83,25 @@ class CacheManagementService implements ICacheManagementService {
 
 	}
 
+	@Override
+	public void clear() {
+		File file = new File(this.cacheLocation)
+		file.deleteDir();
+		
+	}
+
+	@Override
+	public boolean exists(Object id) {
+		File cacheItem = new File("${this.cacheLocation}${File.separator}${id}");
+
+		return cacheItem.exists();
+	}
+
+
+	void deleteById(String id) {
+		if (exists(id)) {
+			File cacheItem = new File("${this.cacheLocation}${File.separator}${id}");
+			cacheItem.deleteDir();
+		}
+	}
 }

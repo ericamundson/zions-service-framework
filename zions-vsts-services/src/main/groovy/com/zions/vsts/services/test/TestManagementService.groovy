@@ -70,7 +70,7 @@ public class TestManagementService {
 	@Autowired
 	ICacheManagementService cacheManagementService
 	
-	@Autowired
+	@Autowired(required=false)
 	ICheckpointManagementService checkpointManagementService
 	
 	@Autowired
@@ -204,7 +204,9 @@ public class TestManagementService {
 				cacheManagementService.saveToCache(wi, "${id} WI", ICacheManagementService.WI_DATA)
 			}
 		} else {
-			checkpointManagementService.addLogentry("Unable to save data for ${dataType} with id:  ${id}")
+			if (checkpointManagementService) {
+				checkpointManagementService.addLogentry("Unable to save data for ${dataType} with id:  ${id}")
+			}
 		}
 		return result
 	}
