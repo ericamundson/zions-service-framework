@@ -43,4 +43,14 @@ interface ICacheManagementService {
 	 */
 	def saveBinaryAsAttachment(ByteArrayInputStream result, String name, String id);
 	
+	/**
+	 * Clear cached
+	 */
+	void clear();
+	
+	void deleteById(String id);
+	/**
+	 * Check to see if element exists
+	 */
+	boolean exists(def key)
 }

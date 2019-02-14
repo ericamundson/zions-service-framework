@@ -98,9 +98,9 @@ class RestartManagementService implements IRestartManagementService {
 			if (checkpoint == null || checkpoint.phase == phase) {
 				remaining = true
 				if (checkpoint != null) {
-					while (url != checkpoint.url) {
-						url = "${items.@href}"
-						items = queryHandler.nextPage(url)
+					while (url != checkpoint.pageUrl) {
+						url = queryHandler.getPageUrl()
+						items = queryHandler.nextPage()
 						
 					}
 				}
@@ -133,7 +133,7 @@ class RestartManagementService implements IRestartManagementService {
 	 * @return filtered result.
 	 */
 	def filtered(def items, String filter) {
-		if (this.filterMap[filter] != null) {
+		if (this.filterMap != null && this.filterMap[filter] != null) {
 			return this.filterMap[filter].filter(items)
 		}
 		return items.entry.findAll { ti ->

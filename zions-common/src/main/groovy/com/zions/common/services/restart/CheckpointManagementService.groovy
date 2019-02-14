@@ -17,7 +17,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 	@Value('${cache.location:}')
 	String cacheLocation
 	
-	@Autowired
+	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
 	
 	private int idCounter = 0
@@ -26,7 +26,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 	
 	private Checkpoint currentCheckpoint;
 	
-	private void resetIdCounter() {
+	public void resetIdCounter() {
 		idCounter = 0;
 	}
 
@@ -62,8 +62,8 @@ class CheckpointManagementService implements ICheckpointManagementService {
 		if (key == 'last') {
 			int i = 0
 			while (true) {
-				File cacheLoc = new File("${cacheLocation}/${i}-${CACHE_TYPE}")
-				if (!cacheLoc.exists()) {
+				
+				if (!cacheManagementService.exists("${i}-${CACHE_TYPE}")) {
 					currentCheckpoint = loadCheckpoint(i-1)
 					if (currentCheckpoint != null) {
 						idCounter = currentCheckpoint.checkpointId
@@ -76,8 +76,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 		} else if (key == 'priorToLogEntries') {
 			int i = 0
 			while (true) {
-				File cacheLoc = new File("${cacheLocation}/${i}-${CACHE_TYPE}")
-				if (!cacheLoc.exists()) {
+				if (!cacheManagementService.exists("${i}-${CACHE_TYPE}")) {
 					currentCheckpoint = loadCheckpoint(i-1)
 					if (currentCheckpoint != null) {
 						idCounter = currentCheckpoint.checkpointId
@@ -107,6 +106,19 @@ class CheckpointManagementService implements ICheckpointManagementService {
 		return currentCheckpoint
 	}
 	
+	void clear() {
+		int counter = 0
+		while (true) {
+			if (cacheManagementService.exists("${i}-${CACHE_TYPE}")) {
+				cacheManagementService.deleteById("${i}-${CACHE_TYPE}")
+			} else {
+				break;
+			}
+		}
+		currentCheckpoint = null;
+		idCounter = 0;
+	}
+	
 	private Checkpoint loadCheckpoint(int id) {
 		def cpMap = cacheManagementService.getFromCache("${id}-${CACHE_TYPE}", CACHE_TYPE)
 		if (cpMap == null) {
@@ -126,4 +138,6 @@ class CheckpointManagementService implements ICheckpointManagementService {
 		return new Checkpoint(cpMap)
 
 	}
+	
+	
 }
