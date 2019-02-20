@@ -1,0 +1,14 @@
+bootJar {
+	enabled = true
+	/*mainClassName = 'com.zions.content.services.AppConfig'*/
+	mainClassName = 'com.zions.vsts.services.build.BuildApplication'
+	baseName = 'zions-content-microservice'
+	version =  "${version}"
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+	compile project(':zions-vsts-services')
+	compile project(':zions-common')
+}
