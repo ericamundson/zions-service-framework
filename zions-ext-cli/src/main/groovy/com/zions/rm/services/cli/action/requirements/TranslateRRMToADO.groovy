@@ -206,7 +206,7 @@ class TranslateRRMToADO implements CliAction {
 				// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
 				def errCount = 0
 				module.orderedArtifacts.each { artifact ->
-					if (artifact.isHeading() && artifact.getArtifactType() != 'Heading' ) {
+					if (artifact.getIsHeading() && artifact.getArtifactType() != 'Heading' ) {
 						println("*** ERROR: Artifact #${artifact.getID()} has inconsistent row type in module ${module.getTitle()}")
 						errCount++
 					}
@@ -230,7 +230,7 @@ class TranslateRRMToADO implements CliAction {
 				while(errCount == 0) {
 
 					// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
-					if (module.orderedArtifacts[it].isHeading() && 
+					if (module.orderedArtifacts[it].getIsHeading() && 
 						it < module.orderedArtifacts.size()-1 && 
 						isToIncorporateTitle(module,it+1)) {
 						
@@ -238,7 +238,7 @@ class TranslateRRMToADO implements CliAction {
 						module.orderedArtifacts[it].setIsDeleted(true)
 						it++  // Skip Heading artifact 
 					}
-					else if (module.orderedArtifacts[it].isHeading()) {
+					else if (module.orderedArtifacts[it].getIsHeading()) {
 						module.orderedArtifacts[it].setDescription("") // If simple heading, remove duplicate description
 					}
 					else if (it > 0 && module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[it-1].getDepth()){ 

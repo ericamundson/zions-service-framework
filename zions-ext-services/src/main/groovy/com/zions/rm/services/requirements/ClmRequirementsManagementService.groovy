@@ -94,8 +94,12 @@ class ClmRequirementsManagementService {
 								// Get artifact details (attributes and links) from DNG
 								getTextArtifact(artifact)
 								// If artifact has embedded collection, add collection members to the module
-								if (shouldAddCollectionsToModule(moduleType) && artifact.collectionArtifacts != null) {
-									orderedArtifacts << artifact.collectionArtifacts
+								if (shouldAddCollectionsToModule(moduleType) && artifact.collectionArtifacts != null && artifact.collectionArtifacts.size > 0) {
+									artifact.setDescription(null)  // blank out Description content
+									artifact.setArtifactType('Supporting Material')  // Collection container should now be just a Section in the module
+									artifact.collectionArtifacts.each { ca ->
+										orderedArtifacts.add(ca)
+									}
 								}
 							}
 							else {
@@ -149,6 +153,7 @@ class ClmRequirementsManagementService {
 					
 		// Extract artifact attributes
 		result.children().each { artifact ->
+			in_artifact.setTitle("${artifact.title}")
 			artifact.children().each { child ->
 				String iName = child.name()
 				if (iName == "collaboration" ) {
@@ -249,7 +254,7 @@ class ClmRequirementsManagementService {
 	}
 	private def getCollectionArtifacts(def in_artifact, def memberHrefs) {
 		memberHrefs.each { memberHref -> 
-			def artifact = new ClmModuleElement(null,null,in_artifact.getDepth()+1,null,'false',memberHref)
+			def artifact = new ClmModuleElement(null,null,in_artifact.getDepth(),null,'false',memberHref)
 
 			in_artifact.collectionArtifacts << getTextArtifact(artifact)
 		}

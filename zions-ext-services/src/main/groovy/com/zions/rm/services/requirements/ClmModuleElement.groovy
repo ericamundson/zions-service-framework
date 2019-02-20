@@ -18,12 +18,8 @@ class ClmModuleElement extends ClmArtifact {
 		isDuplicate = false  // Assume false until checkDuplicate has been run
 
 	}
-	
-	public boolean isHeading() {
-		return isHeading;
-	}
 
-		public incrementDepth(def incr) {
+	public incrementDepth(def incr) {
 		this.depth = this.depth + incr
 	}
 }

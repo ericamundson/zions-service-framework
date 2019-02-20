@@ -85,7 +85,46 @@
 		<newfields>
 		</newfields>
 	</wit>
-		
+
+	<wit source="Screen Field Configuration" target="Entity" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<!-- 
+		<field source="modifiedByHandler" target="System.ChangedBy"/>
+		<field source="modifiedHandler" target="System.ChangedDate"/> -->
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="uiTransNumHandler" target="Custom.TransactionNum"/>
+		<field source="uiOriginalTagNameHandler" target="Custom.OriginalTagName"/>
+		<field source="uiTagNameHandler" target="Custom.TagName"/>
+		<field source="uiRevisedFieldNameHandler" target="Custom.RevisedName"/>
+		<field source="uiFieldFormatHandler" target="Custom.Format"/>
+		<field source="uiFieldTypeHandler" target="Custom.FieldType"/>
+		<field source="uiFieldDisplayHandler" target="Custom.Display"/>
+		<field source="uiMandatoryHandler" target="Custom.Mandatory"/>
+		<field source="uiValidationHandler" target="Custom.Validation"/>
+		<field source="uiTabNameHandler" target="Custom.TabName"/>
+		<field source="uiGroupNumHandler" target="Custom.GroupNum"/>
+		<field source="uiGroupNameHandler" target="Custom.GroupName"/>
+		<field source="uiPositionHandler" target="Custom.Position"/>
+		<field source="uiValuesHandler" target="Custom.Values"/>
+		<field source="uiRevisedFieldValuesHandler" target="Custom.RevisedValues"/>
+		<field source="uiDefaultValueHandler" target="Custom.DefaultValue"/>
+		<field source="uiTooltipHandler" target="Custom.Tooltip"/>
+		<field source="fsDocumentNumHandler" target="Custom.DocumentNum"/>
+		<field source="uiRemarksHandler" target="Custom.Remarks"/>
+		<excluded>
+			<field name="Identifier"/>
+			<field name="Review Counter"/>
+			<field name="Status"/>
+		</excluded>
+		<newfields>
+		</newfields>
+	</wit>
+			
 	<wit source="Heading" target="Section" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
@@ -131,7 +170,7 @@
 		<field source="vendorIdHandler" target="Custom.VendorID"/>
 		<field source="gapNoGapHandler" target="Custom.GapNoGap"/>
 		<field source="detailsOfGapHandler" target="Custom.DetailsofGap"/>
-		<field source="tcsRecommendationHandler" target="Custom.TCSRecommendations"/>
+		<field source="vendorRecommendationHandler" target="Custom.VendorRecommendation"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>

@@ -67,6 +67,16 @@ abstract class RmBaseAttributeHandler implements IFieldHandler {
 		return retVal;
 	}
 	
+	protected String toHtml(def value) {
+		if (value == null || value == '' || value == ' ') {
+			return null
+		}
+		else {
+			return "<div>${value.replace('\r\n','<br>').replace('\n','<br>')}</div>"
+		}
+	}
+	
+	
 	abstract String getFieldName()
 	
 	abstract def formatValue(def val, def itemData)
