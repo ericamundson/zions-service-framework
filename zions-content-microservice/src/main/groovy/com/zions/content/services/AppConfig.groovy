@@ -8,14 +8,7 @@ import org.springframework.context.annotation.Configuration
 import com.zions.common.services.cli.action.CliAction
 
 @Configuration
-@ComponentScan("com.zions.vsts.services")
+@ComponentScan("com.zions.content.services")
 public class AppConfig {
-	Map<String, CliAction> actions;
 	
-	@Bean
-	public Map<String, CliAction> actionsMap() {
-		if (actions == null)
-			actions = [:];
-		return actions;
-	}
 }
