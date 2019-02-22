@@ -4,11 +4,16 @@ class ClmArtifact {
 	String about
 	String format
 	String tfsWorkitemType
+	String fileHref
 	def attributeMap
+	def collectionArtifacts
 	def links
 	public ClmArtifact(String in_title, String in_format, String in_about) {
 		attributeMap = [:]
-		setTitle(in_title) // Needs to be in attributeMap because it will map over to ADO attribute
+		collectionArtifacts = []
+		if (in_title != null) {
+			setTitle(in_title) // Needs to be in attributeMap because it will map over to ADO attribute
+		}
 		about = in_about
 		format = in_format
 	}
@@ -28,7 +33,7 @@ class ClmArtifact {
 		return attributeMap.'Identifier'
 	}
 	public String getCacheID() {
-		"${this.getID()}-${this.getTfsWorkitemType()}"
+		"${this.getID()}-Requirement"
 	}
 	public String setID(in_id) {
 		attributeMap.'Identifier' = in_id
