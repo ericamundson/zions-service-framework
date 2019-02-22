@@ -17,9 +17,15 @@ class BaseQueryHandler implements IQueryHandler {
 	@Value('${qm.query:}')
 	String qmQuery
 	
+	@Value('${qm.tc.query:}')
+	String qmTcQuery
+
 	@Value('${clm.projectArea:}')
 	String projectName
 	
+	@Value('${item.filter:allFilter}')
+	private String itemFilter
+
 	def currentItems
 	
 	public def getItems() {
@@ -58,6 +64,18 @@ class BaseQueryHandler implements IQueryHandler {
 		if (nextLink == null) return null
 		currentItems = clmTestManagementService.nextPage(nextLink.@href)
 		return currentItems
+	}
+
+	
+	public String getFilterName() {
+		// TODO Auto-generated method stub
+		return this.filterName;
+	}
+	
+	public Date modifiedDate(Object item) {
+		String sDate = "${item.updated.text()}"
+		
+		return new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
 	}
 
 }

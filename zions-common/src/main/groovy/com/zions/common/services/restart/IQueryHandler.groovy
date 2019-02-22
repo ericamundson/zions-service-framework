@@ -5,4 +5,6 @@ interface IQueryHandler {
 	String initialUrl()
 	String getPageUrl()
 	def nextPage()
+	String getFilterName();
+	Date modifiedDate(def item)
 }
