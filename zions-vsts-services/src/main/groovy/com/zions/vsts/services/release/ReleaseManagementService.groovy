@@ -55,7 +55,6 @@ public class ReleaseManagementService {
 		repos.each { repo ->
 			ensureRelease(collection, projectData, repo,  template, xldEndpoint, folder, team)
 		}
-
 	}
 	
 	public def ensureRelease(collection, projectData, repo, template, xldEndpoint, folder, team) {
@@ -74,21 +73,23 @@ public class ReleaseManagementService {
 		def releaseDef = getRelease(collection, projectData, "${repo.name}")
 		if (releaseDef == null) {
 			log.debug("ReleaseManagementService::ensureReleaseForBuild -- Did NOT find an existing release definition for ${repo.name}")
-			def template = null
 			if (templateName == null) {
 				templateName = this.genericTemplateName
 			}
-			// retrieve the template release definition
-			if (this.useAdoTemplate) {
-				log.debug("ReleaseManagementService::ensureReleaseForBuild -- Loading ADO release template: " + templateName)
-				template = getRelease(collection, projectData, templateName)
-			} else {
-				log.debug("ReleaseManagementService::ensureReleaseForBuild -- Using local resource file.  File name: "+ templateName)
+			def template = null
+			// first check for ADO template release definition
+			log.debug("ReleaseManagementService::ensureReleaseForBuild -- Loading ADO release template: " + templateName)
+			template = getRelease(collection, projectData, templateName)
+			if (template == null) {
+				log.debug("ReleaseManagementService::ensureReleaseForBuild -- ADO Template release definition not found for project ${projectData.name}")
+				log.debug("ReleaseManagementService::ensureReleaseForBuild -- Using resource file.  File name: "+ templateName + ".json")
 				template = getTemplateAsResource(templateName)
+				// indicate we're using a resource file
+				this.useAdoTemplate = false
 			}
 
 			if (template == null) {
-				log.debug("ReleaseManagementService::ensureReleaseForBuild -- Template release definition not found for project ${projectData.name}")
+				log.debug("ReleaseManagementService::ensureReleaseForBuild -- No usable template found. Unable to create release definition")
 				return null
 			}
 
@@ -140,11 +141,13 @@ public class ReleaseManagementService {
 				trigger.artifactAlias = "_${buildDef.name}"
 			}
 		}
-		def queueData = buildManagementService.getQueue(collection, project, "${buildManagementService.queue}")
-		if (queueData != null) {
-			template.environments.each { env ->
-				env.deployPhases.each { phase ->
-					phase.deploymentInput.queueId = queueData.id
+		if (!this.useAdoTemplate) {
+			def queueData = buildManagementService.getQueue(collection, project, "${buildManagementService.queue}")
+			if (queueData != null) {
+				template.environments.each { env ->
+					env.deployPhases.each { phase ->
+						phase.deploymentInput.queueId = queueData.id
+					}
 				}
 			}
 		}
