@@ -130,7 +130,7 @@ import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
  * @enduml
  */
 @Component
-class TranslateRRMToADO implements CliAction {
+class TranslateRmModulesToADO implements CliAction {
 	@Autowired
 	private Map<String, IFilter> filterMap;
 	@Autowired
@@ -150,7 +150,7 @@ class TranslateRRMToADO implements CliAction {
 	@Autowired
 	ClmRequirementsFileManagementService rmFileManagementService
 	
-	public TranslateRRMToADO() {
+	public TranslateRmModulesToADO() {
 	}
 
 	public def execute(ApplicationArguments data) {
@@ -189,141 +189,134 @@ class TranslateRRMToADO implements CliAction {
 		//refresh.
 		if (includes['refresh'] != null) {
 		}
-		//translate work data.
-		if (includes['data'] != null) {
-			// Get field mappings, target members map and RM modules to translate to ADO
-			println('Getting Mapping Data...')
-			def mappingData = rmMappingManagementService.mappingData
-			println('Getting ADO Project Members...')
-			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-			println("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
-			def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
-			def changeList = []
-			def idMap = [:]
-			int count = 0
-			modules.each { module ->
-				println("${getCurTimestamp()} - Processing Module: ${module.getTitle()} (${count + 1} of ${modules.size()}) ...")
-				// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
-				def errCount = 0
-				module.orderedArtifacts.each { artifact ->
-					if (artifact.getIsHeading() && artifact.getArtifactType() != 'Heading' ) {
-						println("*** ERROR: Artifact #${artifact.getID()} has inconsistent row type in module ${module.getTitle()}")
-						errCount++
-					}
-				}
-				if (errCount > 0) {
-					println("*** ERROR: Skipping module '${module.getTitle()}' due to $errCount errors")
-				}
-				
-				// Add Module artifact to ChangeList (to create Document)
-				def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module, memberMap)
-				def aid = module.getCacheID()
-				changes.each { key, val ->
-					String idkey = "${aid}"
-					idMap[count] = idkey
-					changeList.add(val)
-					count++		
-				}
-							
-				// Iterate through all module elements and add them to changeList
-				int it = 0 // we have to use our own "it" since Groovy won't allow an implicit "it" to be incremented
-				while(errCount == 0) {
 
-					// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
-					if (module.orderedArtifacts[it].getIsHeading() && 
-						it < module.orderedArtifacts.size()-1 && 
-						isToIncorporateTitle(module,it+1)) {
-						
-						module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
-						module.orderedArtifacts[it].setIsDeleted(true)
-						it++  // Skip Heading artifact 
-					}
-					else if (module.orderedArtifacts[it].getIsHeading()) {
-						module.orderedArtifacts[it].setDescription("") // If simple heading, remove duplicate description
-					}
-					else if (it > 0 && module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[it-1].getDepth()){ 
-						// For all other content, increment the depth if not already incremented so as to preserve outline numbering from DOORS
-						module.orderedArtifacts[it].incrementDepth(1)
-					}
-					if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
-						changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
-						aid = module.orderedArtifacts[it].getCacheID()
-						changes.each { key, val ->
-							String idkey = "${aid}"
-							idMap[count] = idkey
-							changeList.add(val)
-							count++
-						}
-					}
-					else {
-						println("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
-					}
-					if (it >= module.orderedArtifacts.size() - 1) {
-						break
-					}
-					it++
+		// Get field mappings, target members map and RM modules to translate to ADO
+		println('Getting Mapping Data...')
+		def mappingData = rmMappingManagementService.mappingData
+		println('Getting ADO Project Members...')
+		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+		println("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
+		def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
+		def changeList = []
+		def idMap = [:]
+		int count = 0
+		modules.each { module ->
+			println("${getCurTimestamp()} - Processing Module: ${module.getTitle()} (${count + 1} of ${modules.size()}) ...")
+			// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
+			def errCount = 0
+			module.orderedArtifacts.each { artifact ->
+				if (artifact.getIsHeading() && artifact.getArtifactType() != 'Heading' ) {
+					println("*** ERROR: Artifact #${artifact.getID()} has inconsistent row type in module ${module.getTitle()}")
+					errCount++
 				}
-				
-
-
-				// Create work items and SmartDoc container in Azure DevOps
-				if (changeList.size() > 0 && errCount == 0) {
-					// Process work item changes in Azure DevOps
-					println("${getCurTimestamp()} - Processing work item changes...")
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-					
-					// Create the SmartDoc
-					println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
-					def result = smartDocManagementService.createSmartDoc(module, collection, mrTfsUrl, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
-					if (result == null) {
-						println("SmartDoc creation returned null")
-					}
-					else if (result.error != null && result.error.code != "null") {
-						println("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
-					}
-					else {
-						println("SmartDoc creation succeeded. Result: ${result.result}")
-					}
-					
-					
-					// Upload Attachments to Azure DevOps
-					println("${getCurTimestamp()} - Uploading attachments...")
-					changeList.clear()
-					idMap.clear()
-					count = 0
-					module.orderedArtifacts.each { artifact ->
-						if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
-							def files = []
-							files[0] = rmFileManagementService.cacheRequirementFile(artifact)
-							
-							String id = artifact.getCacheID()
-							def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-							if (wiChanges != null) {
-								def url = "${wiChanges.body[1].value.url}"
-								def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
-								wiChanges.body.add(change)
-								idMap[count] = "${id}"
-								changeList.add(wiChanges)
-								count++
-						
-							}
-							
-						}
-					}
-					if (changeList.size() > 0) {
-						// Associate attachments to work items in Azure DevOps
-						println("${getCurTimestamp()} - Associating attachments to work items...")
-						workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-					}
-				}
-				
-
 			}
-			println("Processing completed")
+			if (errCount > 0) {
+				println("*** ERROR: Skipping module '${module.getTitle()}' due to $errCount errors")
+				return // goes to next module
+			}
+			
+			// Add Module artifact to ChangeList (to create Document)
+			def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module, memberMap)
+			def aid = module.getCacheID()
+			changes.each { key, val ->
+				String idkey = "${aid}"
+				idMap[count] = idkey
+				changeList.add(val)
+				count++		
+			}
+						
+			// Iterate through all module elements and add them to changeList
+			def ubound = module.orderedArtifacts.size() - 1
+			0.upto(ubound, {
+
+				// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
+				if (module.orderedArtifacts[it].getIsHeading() && 
+					it < module.orderedArtifacts.size()-1 && 
+					isToIncorporateTitle(module,it+1)) {
+					
+					module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
+					module.orderedArtifacts[it].setIsDeleted(true)
+					return  // Skip Heading artifact 
+				}
+				else if (module.orderedArtifacts[it].getIsHeading()) {
+					module.orderedArtifacts[it].setDescription("") // If simple heading, remove duplicate description
+				}
+				else if (it > 0 && module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[it-1].getDepth()){ 
+					// For all other content, increment the depth if not already incremented so as to preserve outline numbering from DOORS
+					module.orderedArtifacts[it].incrementDepth(1)
+				}
+				if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
+					changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
+					aid = module.orderedArtifacts[it].getCacheID()
+					changes.each { key, val ->
+						String idkey = "${aid}"
+						idMap[count] = idkey
+						changeList.add(val)
+						count++
+					}
+				}
+				else {
+					println("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
+				}
+			})
+			
+
+
+			// Create work items and SmartDoc container in Azure DevOps
+			if (changeList.size() > 0 && errCount == 0) {
+				// Process work item changes in Azure DevOps
+				println("${getCurTimestamp()} - Processing work item changes...")
+				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+				
+				// Create the SmartDoc
+				println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
+				def result = smartDocManagementService.createSmartDoc(module, collection, mrTfsUrl, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
+				if (result == null) {
+					println("SmartDoc creation returned null")
+				}
+				else if (result.error != null && result.error.code != "null") {
+					println("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
+				}
+				else {
+					println("SmartDoc creation succeeded. Result: ${result.result}")
+				}
+				
+				
+				// Upload Attachments to Azure DevOps
+				println("${getCurTimestamp()} - Uploading attachments...")
+				changeList.clear()
+				idMap.clear()
+				count = 0
+				module.orderedArtifacts.each { artifact ->
+					if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
+						def files = []
+						files[0] = rmFileManagementService.cacheRequirementFile(artifact)
+						
+						String id = artifact.getCacheID()
+						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+						if (wiChanges != null) {
+							def url = "${wiChanges.body[1].value.url}"
+							def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
+							wiChanges.body.add(change)
+							idMap[count] = "${id}"
+							changeList.add(wiChanges)
+							count++
+					
+						}
+						
+					}
+				}
+				if (changeList.size() > 0) {
+					// Associate attachments to work items in Azure DevOps
+					println("${getCurTimestamp()} - Associating attachments to work items...")
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+				}
+			}
+			
 
 		}
+		println("Processing completed")
 
-		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
 	
 	boolean isToIncorporateTitle(def module, def indexOfElementToCheck) {
