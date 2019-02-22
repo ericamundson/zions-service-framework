@@ -20,6 +20,7 @@ import com.zions.qm.services.metadata.QmMetadataManagementService
 import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.test.TestManagementService
+import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
@@ -285,7 +286,32 @@ class TranslateRQMToMTM implements CliAction {
 					}
 				}
 				//translate work data.
-				if (phase == 'data') {
+				if (phase == 'testcase') {
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+					def idKeyMap = [:]
+					clmTestItemManagementService.resetNewId()
+					items.each { testItem ->
+						def testcase = clmTestManagementService.getTestItem(testItem.id.text())
+						int aid = Integer.parseInt(testcase.webId.text())
+						// generate test data
+						//						String testcasexml = XmlUtil.serialize(testcase)
+						//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
+						//						os = resultFile.newDataOutputStream()
+						//						os << testcasexml
+						//						os.close()
+						String idtype = "${aid}-testcase"
+						if (!idKeyMap.containsKey(idtype)) {
+							clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+								clManager.add("${aid}-${key}", val)
+							}
+							idKeyMap[idtype] = idtype
+						}
+
+					}
+					clManager.flush();
+				//translate work data.
+				}
+				if (phase == 'plan') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					def idKeyMap = [:]
 					clmTestItemManagementService.resetNewId()
@@ -325,39 +351,41 @@ class TranslateRQMToMTM implements CliAction {
 								}
 								idKeyMap[idtype] = idtype
 							}
-							testsuite.testcase.each { testcaseRef ->
-								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-								String tcXml = XmlUtil.serialize(testcase)
-								int aid = Integer.parseInt(testcase.webId.text())
-								String aidtype = "${aid}-testcase"
-								if (!idKeyMap.containsKey(aidtype)) {
-									clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-										String idkey = "${aid}-${key}"
-										clManager.add("${aid}-${key}", val)
-
-									}
-									idKeyMap[aidtype] = aidtype
-								}
-							}
+							// Moved to testcase phase
+//							testsuite.testcase.each { testcaseRef ->
+//								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+//								String tcXml = XmlUtil.serialize(testcase)
+//								int aid = Integer.parseInt(testcase.webId.text())
+//								String aidtype = "${aid}-testcase"
+//								if (!idKeyMap.containsKey(aidtype)) {
+//									clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+//										String idkey = "${aid}-${key}"
+//										clManager.add("${aid}-${key}", val)
+//
+//									}
+//									idKeyMap[aidtype] = aidtype
+//								}
+//							}
 						}
-						testplan.testcase.each { testcaseRef ->
-							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-							int aid = Integer.parseInt(testcase.webId.text())
-							// generate test data
-							//						String testcasexml = XmlUtil.serialize(testcase)
-							//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
-							//						os = resultFile.newDataOutputStream()
-							//						os << testcasexml
-							//						os.close()
-							String idtype = "${aid}-testcase"
-							if (!idKeyMap.containsKey(idtype)) {
-								clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-									clManager.add("${aid}-${key}", val)
-								}
-								idKeyMap[idtype] = idtype
-							}
-
-						}
+						// Moved to testcase phase
+//						testplan.testcase.each { testcaseRef ->
+//							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+//							int aid = Integer.parseInt(testcase.webId.text())
+//							// generate test data
+//							//						String testcasexml = XmlUtil.serialize(testcase)
+//							//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
+//							//						os = resultFile.newDataOutputStream()
+//							//						os << testcasexml
+//							//						os.close()
+//							String idtype = "${aid}-testcase"
+//							if (!idKeyMap.containsKey(idtype)) {
+//								clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+//									clManager.add("${aid}-${key}", val)
+//								}
+//								idKeyMap[idtype] = idtype
+//							}
+//
+//						}
 						// TODO: def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
 						//					if (wiChanges != null) {
 						//						idMap[count] = "${id}"
@@ -525,33 +553,3 @@ class TranslateRQMToMTM implements CliAction {
 
 }
 
-class ChangeListManager {
-	def changeList = []
-	def idMap = [:]
-	def count = 0
-	WorkManagementService workManagementService
-	String collection
-	String project
-	ChangeListManager(String collection, String project, WorkManagementService workManagementService) {
-		this.workManagementService = workManagementService
-		this.collection = collection
-		this.project = project
-	}
-
-	def add(String key, def item) {
-		if (count == 200) {
-			flush()
-		}
-		changeList.push(item)
-		idMap[count] = key
-		count++
-	}
-
-	def flush() {
-		if (count == 0) return;
-		workManagementService.batchWIChanges(collection, project, changeList, idMap)
-		changeList = []
-		idMap = [:]
-		count = 0
-	}
-}

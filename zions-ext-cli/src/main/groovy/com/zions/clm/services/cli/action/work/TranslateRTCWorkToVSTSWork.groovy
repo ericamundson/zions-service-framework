@@ -14,6 +14,7 @@ import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
 import com.zions.common.services.restart.IRestartManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
+import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
@@ -219,22 +220,16 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 
 			restartManagementService.processPhases { phase, items ->
 				if (phase == 'workdata') {
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					ccmWorkManagementService.resetNewId()
-					def changeList = []
-					def idMap = [:]
-					int count = 0
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id.text())
 						def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
 						if (wiChanges != null) {
-							idMap[count] = "${id}"
-							changeList.add(wiChanges)
-							count++
+							clManager.add("${id}", wiChanges)
 						}
 					}
-					if (changeList.size() > 0) {
-						workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-					}
+					clManager.flush();
 					//				def rel = workItems.@rel
 					//				if ("${rel}" != 'next') break
 					//					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
@@ -243,41 +238,29 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				//		workManagementService.testBatchWICreate(collection, tfsProject)
 				//apply work links
 				if (phase == 'worklinks') {
-					def changeList = []
-					def idMap = [:]
-					int count = 0
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id.text())
 						def wiChanges = ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping)
 						if (wiChanges != null) {
-							idMap[count] = "${id}"
-							changeList.add(wiChanges)
-							count++
+							clManager.add("${id}", wiChanges)
 						}
 					}
-					if (changeList.size() > 0) {
-						workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-					}
+					clManager.flush();
 				}
 
 				//extract & apply attachments.
 				if (phase == 'attachments') {
-					def changeList = []
-					def idMap = [:]
-					int count = 0
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id.text())
 						def files = attachmentsManagementService.cacheWorkItemAttachments(id)
 						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
 						if (wiChanges != null) {
-							idMap[count] = "${id}"
-							changeList.add(wiChanges)
-							count++
+							clManager.add("${id}",wiChanges)
 						}
 					}
-					if (changeList.size() > 0) {
-						workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-					}
+					clManager.flush()
 				}
 			}
 		}

@@ -36,6 +36,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 		cp.checkpointId = idCounter
 		cp.phase = phase
 		cp.pageUrl = pageUrl
+		cp.timeStamp = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 		currentCheckpoint = cp
 		cacheManagementService.saveToCache(cp, "${idCounter}-${CACHE_TYPE}", CACHE_TYPE)
 		idCounter++
@@ -59,7 +60,27 @@ class CheckpointManagementService implements ICheckpointManagementService {
 
 	@Override
 	public Checkpoint selectCheckpoint(String key) {
-		if (key == 'last') {
+		if (key == 'update') {
+			int i = 0
+			while (true) {
+				
+				if (!cacheManagementService.exists("${i}-${CACHE_TYPE}")) {
+					return currentCheckpoint;
+				}
+				Checkpoint cp = loadCheckpoint(i)
+				if (cp.phase == 'update') {
+					if (currentCheckpoint != null) {
+						currentCheckpoint = cp
+						idCounter = currentCheckpoint.checkpointId
+						idCounter++
+					}
+					return currentCheckpoint;
+
+				}
+				i++
+			}
+
+		} else if (key == 'last') {
 			int i = 0
 			while (true) {
 				
@@ -125,7 +146,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 			idCounter = 0;
 			return null
 		}
-		return new Checkpoint(cpMap)
+		return new Checkpoint(cpMap )
 
 	}
 
@@ -135,7 +156,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 			idCounter = 0;
 			return null
 		}
-		return new Checkpoint(cpMap)
+		return new Checkpoint(cpMap )
 
 	}
 	

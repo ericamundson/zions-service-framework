@@ -37,8 +37,6 @@ class RestartManagementService implements IRestartManagementService {
 	@Autowired(required=false)
 	private Map<String, IFilter> filterMap;
 	
-	@Value('${item.filter:allFilter}')
-	private String itemFilter
 	
 	@Autowired
 	ICheckpointManagementService checkpointManagementService
@@ -88,6 +86,7 @@ class RestartManagementService implements IRestartManagementService {
 	public Object processPhases(Closure closure) {
 		Checkpoint checkpoint = checkpointManagementService.selectCheckpoint(selectedCheckpoint);
 		String[] phases = includePhases.split(',')
+		checkpointManagementService.addCheckpoint('none', 'update')
 		// Move to checkpoint
 		boolean remaining = false
 		phases.each { String phase ->
@@ -95,6 +94,7 @@ class RestartManagementService implements IRestartManagementService {
 			IQueryHandler queryHandler = queryHandlers[handlerName]
 			def items = queryHandler.getItems()
 			String url = queryHandler.initialUrl();
+			String filterName = queryHandler.filterName
 			if (checkpoint == null || checkpoint.phase == phase) {
 				remaining = true
 				if (checkpoint != null) {
@@ -109,7 +109,10 @@ class RestartManagementService implements IRestartManagementService {
 				log.info("Starting ${phase}")
 				while (true) {
 				
-					def inItems = filtered(items, itemFilter);
+					def inItems = filtered(items, filterName);
+//					if (selectedCheckpoint == 'update') {
+//						inItems = filterForUpdate(inItems, checkpoint)
+//					}
 					checkpointManagementService.addCheckpoint(phase, url)
 					
 					// process integration logic
@@ -123,6 +126,16 @@ class RestartManagementService implements IRestartManagementService {
 			}
 		}
 		return null
+	}
+	
+	def filterForUpdate(def items, Checkpoint cp, IQueryHandler qHandler) {
+		Date startDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", cp.timeStamp)
+		
+		def outItems = items.findAll { item ->
+			Date iDate = qHandler.modifiedDate(item)
+			iDate >= startDate
+		}
+		return outItems;
 	}
 	
 	/**

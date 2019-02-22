@@ -17,7 +17,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 /**
- * Application main for all command-line actions.  Without mongodb integration.
+ * Application main for all command-line actions. With mongodb integration.
  * 
  * <p><b>Design:</b></p>
  * <img src="CliApplication.png"/>
@@ -35,9 +35,9 @@ import org.springframework.context.annotation.Bean;
  * ApplicationRunner <|.. CliApplication
  * @enduml
  */
-@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration])
+@SpringBootApplication
 @Slf4j
-public class CliApplication implements ApplicationRunner {
+public class DBCliApplication implements ApplicationRunner {
 	@Autowired
 	private Map<String, CliAction> actionsMap;
 	
@@ -46,7 +46,7 @@ public class CliApplication implements ApplicationRunner {
 	 * @param args - command-line arguments
 	 */
 	static public void main(String[] args) {
-		SpringApplication app = new SpringApplication(CliApplication.class);
+		SpringApplication app = new SpringApplication(DBCliApplication.class);
 		app.setBannerMode(Banner.Mode.OFF);
 		
 		app.run(args);

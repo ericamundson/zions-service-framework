@@ -1,9 +1,13 @@
 package com.zions.qm.services.cli.action.test.query
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class ConfigurationsQueryHandler extends BaseQueryHandler {
+	@Value('${configuration.item.filter:allFilter}')
+	String cItemFitler
+	
 	public def getItems() {
 		currentItems = clmTestManagementService.getConfigurationsViaQuery('', projectName)
 		return currentItems
@@ -22,4 +26,10 @@ class ConfigurationsQueryHandler extends BaseQueryHandler {
 		}
 		return uri
 	}
+	
+	public String getFilterName() {
+		// TODO Auto-generated method stub
+		return this.cItemFitler;
+	}
+
 }
