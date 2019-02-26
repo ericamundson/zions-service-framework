@@ -6,6 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+/**
+ * Handle work rollup calculations.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class RollupManagementService {
 	
@@ -15,7 +21,18 @@ class RollupManagementService {
 	@Value('${tfs.collection:}')
 	String collection
 	
+	public RollupManagementService() {
+		
+	}
+	
 
+	/**
+	 * Rollup a specfic work item's work data.
+	 * 
+	 * @param id - id of work item to rollup.
+	 * @param parentRollup - flag to handle parent rollup.  Future for Task changes.
+	 * @param project - related project to work items.
+	 */
 	void rollup(String id, boolean parentRollup, String project) {
 		def wi = workManagementService.getWorkItem(collection, project, id)
 		String pCat = workManagementService.getCategory(collection, project, wi)

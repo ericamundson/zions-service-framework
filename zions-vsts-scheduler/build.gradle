@@ -1,0 +1,12 @@
+bootJar {
+	enabled = true
+	mainClassName = 'com.zions.vsts.services.scheduling.SchedulerApplication'
+	archiveName = 'zions-vsts-scheduler.jar'
+	version =  "${version}"
+}
+
+dependencies {
+	compile project(':zions-vsts-services')
+	compile project(':zions-common')
+	
+}

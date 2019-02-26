@@ -29,7 +29,7 @@ class WorkManagementService {
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
 		
-	@Autowired(required=true)
+	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
 	
 	@Autowired(required=false)
