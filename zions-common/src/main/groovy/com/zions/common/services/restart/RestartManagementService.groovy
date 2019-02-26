@@ -52,7 +52,7 @@ class RestartManagementService implements IRestartManagementService {
 	 * @startuml
 	 * participant "RestartManagementService:this" as this
 	 * participant "Closure:closure" as closure
-	 * participant "CheckpointManagementService:checkpointManagementService" as c
+	 * participant "CheckpointManagementService:checkpointManagementService" as checkpointManagementService
 	 * participant "String[]:phases" as phases
 	 * 
 	 * this -> checkpointManagementService: selectCheckpoint(this.selectedCheckpoint):checkpoint
@@ -72,7 +72,10 @@ class RestartManagementService implements IRestartManagementService {
 	 * alt remaining == true
 	 * loop true
 	 * this -> this: filtered(filterName)
-	 * this -> checkPointManagementService:addCheckpoint(phase, url)
+	 * alt selectedCheckpoint == 'update'
+	 * this -> this: filterForUpdate(items) : items
+	 * end
+	 * this -> checkpointManagementService:addCheckpoint(phase, url)
 	 * this -> closure: call(phase, items)
 	 * this -> queryHandler: nextPage(url) : items
 	 * alt items == null
@@ -86,7 +89,7 @@ class RestartManagementService implements IRestartManagementService {
 	public Object processPhases(Closure closure) {
 		Checkpoint checkpoint = checkpointManagementService.selectCheckpoint(selectedCheckpoint);
 		String[] phases = includePhases.split(',')
-		checkpointManagementService.addCheckpoint('none', 'update')
+		checkpointManagementService.addCheckpoint('update', 'none')
 		// Move to checkpoint
 		boolean remaining = false
 		phases.each { String phase ->
@@ -110,9 +113,9 @@ class RestartManagementService implements IRestartManagementService {
 				while (true) {
 				
 					def inItems = filtered(items, filterName);
-//					if (selectedCheckpoint == 'update') {
-//						inItems = filterForUpdate(inItems, checkpoint)
-//					}
+					if (selectedCheckpoint == 'update') {
+						inItems = filterForUpdate(inItems, checkpoint)
+					}
 					checkpointManagementService.addCheckpoint(phase, url)
 					
 					// process integration logic
