@@ -53,7 +53,13 @@ class BaseQueryHandler implements IQueryHandler {
 			node.name() == 'link' && node.@rel == 'next'
 		}
 		if (nextLink == null) return null
-		return nextLink.@href
+
+		String aUrl = nextLink.@href
+		String outUrl = aUrl
+		if (aUrl.indexOf('&page=') > -1) {
+			outUrl = aUrl.substring(0, aUrl.indexOf('?')+1) + aUrl.substring(aUrl.indexOf('&page=')+1)
+		}
+		return outUrl
 	}
 
 	public Object nextPage() {
@@ -75,7 +81,8 @@ class BaseQueryHandler implements IQueryHandler {
 	public Date modifiedDate(Object item) {
 		String sDate = "${item.updated.text()}"
 		
-		return new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
+		return new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", sDate);
 	}
+
 
 }

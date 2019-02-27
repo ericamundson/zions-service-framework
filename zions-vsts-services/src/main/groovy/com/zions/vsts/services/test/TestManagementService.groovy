@@ -260,6 +260,7 @@ public class TestManagementService {
 				}
 			}
 		}
+		cacheManagementService.clear()
 //		File cacheL = new File(cacheLocation)
 //		cacheL.deleteDir()
 	}
