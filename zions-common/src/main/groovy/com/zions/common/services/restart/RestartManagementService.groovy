@@ -89,7 +89,6 @@ class RestartManagementService implements IRestartManagementService {
 	public Object processPhases(Closure closure) {
 		Checkpoint checkpoint = checkpointManagementService.selectCheckpoint(selectedCheckpoint);
 		String[] phases = includePhases.split(',')
-		checkpointManagementService.addCheckpoint('update', 'none')
 		// Move to checkpoint
 		boolean remaining = false
 		phases.each { String phase ->
@@ -128,6 +127,7 @@ class RestartManagementService implements IRestartManagementService {
 				log.info("Ending ${phase}")
 			}
 		}
+		checkpointManagementService.addCheckpoint('update', 'none')
 		return null
 	}
 	
