@@ -87,11 +87,11 @@ public class BuildManagementService {
 	}
 
 	public def detectBuildType(def collection, def project, def repo) {
-		log.debug("BuildManagementService::detectBuildType -- Calling codeManagementService.listTopLevel ...")
+		log.debug("BuildManagementService::detectBuildType -- Getting top-level source files for repo ${repo.name} ...")
 		def topFiles = codeManagementService.listTopLevel(collection, project, repo)
 		def buildType = BuildType.NONE
 		if (topFiles != null) {
-			log.debug("BuildManagementService::detectBuildType -- Found top-level files ...")
+			log.debug("BuildManagementService::detectBuildType -- Found some top-level files ...")
 			//topFiles.value.each { file ->
 			for (def file in topFiles.value) {
 				def path = file.path
@@ -657,7 +657,6 @@ public class BuildManagementService {
 		String versionTag = latestTag.name.substring("refs/tags/".length())
 		log.debug("BuildManagementService::createInitialBuildTag  -- versionTag = ${versionTag}")
 		def parts = versionTag.tokenize(".")
-		log.debug("BuildManagementService::createInitialBuildTag  -- After split parts size = " + parts.size())
 		def version = parts[0] + '.' + parts[1] + '.' + parts[2]
 		log.debug("BuildManagementService::createInitialBuildTag  -- Version = ${version}")
 		// use IFB branch name as qualifier
@@ -681,7 +680,7 @@ public class BuildManagementService {
 		def commitId = result.objectId
 		log.debug("BuildManagementService::createInitialBuildTag -- Latest tag commit SHA is ${commitId}")
 
-		log.debug("BuildManagementService::createInitialBuildTag -- Creating new release tag ${nTag} ...")
+		log.debug("BuildManagementService::createInitialBuildTag -- Creating initial build tag ${nTag} ...")
 		def resp = "OK"
 		//def gitObject = [ "objectId": "${commitId}" ];
 		def newTag = ["name": "${nTag}", "message": "initial tag", "taggedObject": ["objectId": "${commitId}"]];
