@@ -1,0 +1,10 @@
+com.zions.bb.services.cli.action.code
+com.zions.clm.services.cli.action.member
+com.zions.clm.services.cli.action.planning
+com.zions.clm.services.cli.action.wit
+com.zions.clm.services.cli.action.work
+com.zions.ext.services.cli
+com.zions.ext.services.cli.action.dependency
+com.zions.qm.services.cli.action.metadata
+com.zions.qm.services.cli.action.test
+com.zions.rm.services.cli.action.requirements

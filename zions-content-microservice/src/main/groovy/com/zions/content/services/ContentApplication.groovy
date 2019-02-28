@@ -17,15 +17,22 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 
-@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration])
 
+/* Pull in HTML content from C:\Resources\ and deploy
+ * to localhost using Tomcat on port 8080 * when running as Java Application
+ * author: Michael Angelastro 2/25/19 */
+
+@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration])
 public class ContentApplication {
-	
-	@Autowired
-	static public void main(String[] args) {
-		SpringApplication app = new SpringApplication(ContentApplication.class, args);
+
+
+	public static void main(String[] args) {
+		
+        /*Call AppConfigTest.class to define custom resource path*/
+		
+		SpringApplication app = new SpringApplication(ContentApplication.class);
+		app.run(args);
+				
 
 	}
-	
-	
 }

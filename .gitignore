@@ -2,3 +2,5 @@
 /build/
 **/*.cmapx
 **/*.png
+/bin/
+/.metadata/
