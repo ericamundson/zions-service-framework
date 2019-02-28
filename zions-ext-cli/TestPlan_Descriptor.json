@@ -20,9 +20,10 @@
         ],
         "enumValues": [
             "Ignore - Do Not Report",
+            "PS",
             "Release One",
             "Release OneDOTOne",
-            "Release Three (DPR)",
+            "Release Three",
             "Release Two",
             "Release TwoDOTFive",
             "Release TwoDOTNine",
@@ -39,6 +40,7 @@
         "enumValues": [
             "N/A",
             "PRT",
+            "PS",
             "UAT"
         ]
     },
@@ -52,6 +54,7 @@
         "enumValues": [
             "N/A",
             "PRT",
+            "PS",
             "PSIT",
             "Post ST/CIT",
             "Pre-UAT",

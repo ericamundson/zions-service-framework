@@ -1,8 +1,8 @@
 bootJar {
 	enabled = true
-	mainClassName = 'com.zion.vsts.services.cli.CliApplication'
-	baseName = 'zions-vsts-cli'
-	version =  "${version}"
+	mainClassName = 'com.zions.vsts.services.cli.CliApplication'
+	archiveName = 'zions-vsts-cli.jar'
+	//version =  "${version}"
 }
 
 dependencies {

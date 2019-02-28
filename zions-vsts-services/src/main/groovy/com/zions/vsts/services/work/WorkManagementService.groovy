@@ -29,7 +29,7 @@ class WorkManagementService {
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
 		
-	@Autowired(required=true)
+	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
 	
 	@Autowired(required=false)
@@ -37,6 +37,8 @@ class WorkManagementService {
 	
 	@Value('${id.tracking.field:}')
 	private String idTrackingField
+	
+	private categoriesMap = [:]
 
 	public WorkManagementService() {
 		
@@ -70,12 +72,29 @@ class WorkManagementService {
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/wiql",
 			body: body,
 			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0-preview.2']
+			query: ['api-version': '5.0']
 			)
 		return result
 
 	}
 	
+	def getWorkItems(String collection, String aquery) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def query = [query: aquery]
+		String body = new JsonBuilder(query).toPrettyString()
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/wiql",
+			body: body,
+			//headers: [Accept: 'application/json'],
+			query: ['api-version': '5.0']
+			)
+		return result
+
+	}
+
 	def getWorkItem(String collection, String project, String id) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
@@ -86,10 +105,62 @@ class WorkManagementService {
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
 			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0']
+			query: ['api-version': '5.0', "\$expand": 'All']
 			)
 		return result
 
+	}
+	
+	def getChildren(String collection, String project, String id) {
+		def pwi = getWorkItem(collection, project, id)
+		def childIds = []
+		pwi.relations.each { relation ->
+			String rel = "${relation.rel}"
+			String url = "${relation.url}"
+			if (rel == 'System.LinkTypes.Hierarchy-Forward') {
+				int i = url.lastIndexOf('/');
+				String cid = null
+				if (i != -1) {
+					cid = url.substring(i+1);
+				}
+					
+				//def cwi = getWorkitemViaUrl(rel)
+				
+				childIds.add(cid)
+			}
+		}
+		def children = getListedWorkitems(collection, project, childIds)
+		return children
+	}
+	
+	def getCategories(collection, project) {
+		if (categoriesMap.size() == 0) {
+			def eproject = URLEncoder.encode(project, 'utf-8')
+			eproject = eproject.replace('+', '%20')
+			//def query = [query: aquery]
+			//String body = new JsonBuilder(query).toPrettyString()
+			def result = genericRestClient.get(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitemtypecategories",
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '5.0']
+				)
+			result.value.each { cat ->
+				String catName = "${cat.name}"
+				cat.workItemTypes.each { wis -> 
+					String typeName = "${wis.name}"
+					categoriesMap[typeName] = catName
+				}
+			}
+		}
+		return categoriesMap
+	}
+	
+	String getCategory(String collection, String project, def wi) {
+		String witype = "${wi.fields.'System.WorkItemType'}"
+		def catMap = getCategories(collection, project)
+		return catMap[witype]
 	}
 
 	def deleteWorkitem(String url) {
@@ -121,6 +192,17 @@ class WorkManagementService {
 			cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
 			count++
 		}
+	}
+	
+	def getWorkitemViaUrl(String url) {
+		def result = genericRestClient.get(
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri: url,
+			//headers: [Accept: 'application/json'],
+			query: ['api-version': '5.0']
+			)
+		return result
 	}
 	
 	def getListedWorkitems(def collection, def project, def vstsIds) {
@@ -193,6 +275,20 @@ class WorkManagementService {
 			log.error("Batch request failed!")
 		}
 
+	}
+	
+	public updateWorkItem(collection, project, id, data) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def body = new JsonBuilder(data).toPrettyString()
+		def result = genericRestClient.patch(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
+			body: body,
+			query: ['api-version': '5.0', bypassRules:true],
+			headers: ['Content-Type': 'application/json-patch+json']
+			
+			)
 	}
 	
 	def cacheResult(result, idMap) {

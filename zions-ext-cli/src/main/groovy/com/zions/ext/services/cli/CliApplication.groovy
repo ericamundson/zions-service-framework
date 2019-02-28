@@ -17,7 +17,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 /**
- * Application main for all command-line actions.
+ * Application main for all command-line actions.  Without mongodb integration.
  * 
  * <p><b>Design:</b></p>
  * <img src="CliApplication.png"/>

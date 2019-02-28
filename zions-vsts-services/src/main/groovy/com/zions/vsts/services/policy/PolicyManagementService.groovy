@@ -81,7 +81,7 @@ public class PolicyManagementService {
 
 		this.loadProperties(collection, repoData, branchName)
 		// if we're dealing with an 'IFB' branch, check for custom branch build / policy configuration
-		if (branchName.toLowerCase().startsWith("refs/heads/ifb")) {
+		if (branchName.toLowerCase().startsWith("refs/heads/ifb") || branchName.toLowerCase().startsWith("refs/heads/feature/ifb")) {
 			// See if branch participates in policy enforcement
 			if (this.branchProps != null) {
 				String enforcementFlag = this.branchProps.getProperty(ENFORCE_BUILD_VALIDATION)
@@ -105,6 +105,8 @@ public class PolicyManagementService {
 					enforceCommentResolution = false
 				}
 			}
+			// need to establish an initial build tag for ifb branch
+			buildManagementService.ensureInitialTag(collection, repoData.project, repoData, branchName)
 		}
 		
 		log.debug("PolicyManagementService::ensurePolicies -- Build validation policy enforced = "+enforceBuildValidation)

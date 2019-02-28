@@ -74,7 +74,7 @@ class RestClient implements CliAction {
 
 		}
 		File ofile = new File(responseFileName)
-		if (!ofile.exists()) return null;
+		//if (!ofile.exists()) return null;
 		if (resultProtocol == 'json' && result != null) {
 			String json = new JsonBuilder(result).toPrettyString()
 			def os = ofile.newDataOutputStream()

@@ -2,5 +2,4 @@
 /build/
 **/*.cmapx
 **/*.png
-/bin/
-/.metadata/
+/gitPublish/

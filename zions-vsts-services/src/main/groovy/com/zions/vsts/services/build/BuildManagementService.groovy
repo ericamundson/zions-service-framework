@@ -55,6 +55,15 @@ public class BuildManagementService {
 	public def provideTag(def buildData) {
 	}
 	
+	public def ensureInitialTag(def collection, def project, def repo, def branchName) {
+		// get tags and sort in reverse order to get latest tag / version
+		def latestTag = getLatestTag(collection, project, repo)
+		if (latestTag != null) {
+			log.debug("BuildManagementService::ensureInitialTag -- Latest tag = ${latestTag.name}")
+			createInitialBuildTag(collection, project, repo, latestTag, branchName)
+		}
+	}
+	
 	def ensureBuildFolder(def collection, def project, String folder) {
 		def projectData = projectManagementService.getProject(collection, project, true)
 		return createBuildFolder(collection, projectData, folder)
@@ -78,11 +87,11 @@ public class BuildManagementService {
 	}
 
 	public def detectBuildType(def collection, def project, def repo) {
-		log.debug("BuildManagementService::detectBuildType -- Calling codeManagementService.listTopLevel ...")
+		log.debug("BuildManagementService::detectBuildType -- Getting top-level source files for repo ${repo.name} ...")
 		def topFiles = codeManagementService.listTopLevel(collection, project, repo)
 		def buildType = BuildType.NONE
 		if (topFiles != null) {
-			log.debug("BuildManagementService::detectBuildType -- Found top-level files ...")
+			log.debug("BuildManagementService::detectBuildType -- Found some top-level files ...")
 			//topFiles.value.each { file ->
 			for (def file in topFiles.value) {
 				def path = file.path
@@ -611,6 +620,82 @@ public class BuildManagementService {
 			log.debug("BuildManagementService::getResource -- Exception caught reading resource with name ${filename}.json not found. Returning NULL ...")
 		}
 		return template
+	}
+
+	private def getLatestTag(def collection, def project, def repo) {
+		log.debug("BuildManagementService::getLatestTag for project ${project.name} and repo ${repo.name}")
+		def query = ['filter':'tags', 'api-version':'4.1']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/refs",
+			query: query,
+		)
+		if (result.count == 0) {
+			log.debug("BuildManagementService::getLatestTag -- No tags found for project ${project.name} and repo ${repo.name}")
+			return null
+		}
+		def lastTagIdx = result.count - 1
+		return result.value[lastTagIdx]
+	
+		// parse tag name
+		/*
+		def outtags = [];
+		for (def tag in result.value) {		
+			def tagName = tag.name;
+			tagName = tagName.substring("refs/tags/".length(), tagName.length());
+			outtags.push(tagName);
+		}
+	
+		// find the latest tag
+		def latestTag  = tagName
+		
+		return latestTag
+		*/
+	}
+
+	private def createInitialBuildTag(def collection, def project, def repo, def latestTag, def branchName) {
+		String versionTag = latestTag.name.substring("refs/tags/".length())
+		log.debug("BuildManagementService::createInitialBuildTag  -- versionTag = ${versionTag}")
+		def parts = versionTag.tokenize(".")
+		def version = parts[0] + '.' + parts[1] + '.' + parts[2]
+		log.debug("BuildManagementService::createInitialBuildTag  -- Version = ${version}")
+		// use IFB branch name as qualifier
+		def begIdx = -1
+		if (branchName.toLowerCase().startsWith("refs/heads/ifb/")) {
+			begIdx = "refs/heads/ifb/".length()
+		} else {
+			begIdx = "refs/heads/feature/ifb/".length()
+		}
+		def qualifier = branchName.substring(begIdx)
+		log.debug("BuildManagementService::createInitialBuildTag  -- qualifier = ${qualifier}")
+		def nTag = version + "-" + qualifier + "-00000";
+		log.debug("BuildManagementService::createInitialBuildTag  -- New Tag = ${nTag}")
+		// get the commit to which to apply the tag
+		def query = ['api-version':'5.0-preview.1']
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/annotatedtags/${latestTag.objectId}",
+				query: query,
+				)
+		def commitId = result.objectId
+		log.debug("BuildManagementService::createInitialBuildTag -- Latest tag commit SHA is ${commitId}")
+
+		log.debug("BuildManagementService::createInitialBuildTag -- Creating initial build tag ${nTag} ...")
+		def resp = "OK"
+		//def gitObject = [ "objectId": "${commitId}" ];
+		def newTag = ["name": "${nTag}", "message": "initial tag", "taggedObject": ["objectId": "${commitId}"]];
+		def body = new JsonBuilder(newTag).toPrettyString()
+		def tRes = genericRestClient.post(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/annotatedtags",
+			body: body,
+			headers: [Accept: 'application/json;api-version=5.0-preview.1']
+		)
+		if (tRes == null) {
+			log.error("BuildManagementService::createInitialBuildTag -- Unable to create new Git tag.")
+			resp == "FAILED"
+		}
+		return resp;
 	}
 }
 

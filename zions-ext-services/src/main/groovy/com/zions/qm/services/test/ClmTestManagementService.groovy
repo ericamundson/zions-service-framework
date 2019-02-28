@@ -70,6 +70,7 @@ class ClmTestManagementService {
 	}
 
 	def getTestItem(String uri) {
+		uri = uri.replace(' ', '+')
 		def result = qmGenericRestClient.get(
 			uri: uri,
 			headers: [Accept: 'text/xml'] );
@@ -138,6 +139,23 @@ class ClmTestManagementService {
 		return result
 	}
 	
+	def getTestCaseViaQuery(String query, String projectName) {
+		def encoded = URLEncoder.encode(query, 'UTF-8')
+		encoded = encoded.replace('+', '%20')
+		def project = URLEncoder.encode(projectName, 'UTF-8')
+		//project = project.replace('+', '%20')
+
+		String uri = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/testcase?fields=" + encoded;
+		if (query == null || query.length() == 0 || "${query}" == 'none') {
+			uri = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/testcase";
+			
+		}
+		def result = qmGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/xml'] );
+		return result
+	}
+
 	def getConfigurationsViaQuery(String query, String projectName) {
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
