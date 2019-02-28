@@ -17,6 +17,11 @@ class ClmArtifact {
 		about = in_about
 		format = in_format
 	}
+	public ClmArtifact(String in_about) {
+		attributeMap = [:]
+		collectionArtifacts = []
+		about = in_about
+	}
 	public void setTitle(String in_title) {
 		attributeMap.'title' = in_title
 	}

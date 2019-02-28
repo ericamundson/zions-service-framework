@@ -10,6 +10,9 @@ import groovy.util.slurpersupport.NodeChild
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 
+import java.nio.charset.StandardCharsets
+import org.apache.commons.io.IOUtils
+
 /**
  * Handles queries into DNG to navigate object structure of DNG.
  * 
@@ -118,6 +121,29 @@ class ClmRequirementsManagementService {
 		return modules
 	}
 	
+	def queryForArtifacts(String projectURI, String oslcNS, String oslcSelect, String oslcWhere) {
+		String uri = this.rmGenericRestClient.clmUrl + "/rm/views?oslc.query=&projectURL=" + this.rmGenericRestClient.clmUrl + "/rm/process/project-areas/" + projectURI + 
+					oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl);
+
+		uri = uri.replace('<','%3C').replace('>', '%3E')
+		def result = rmGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
+		String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+		return new XmlSlurper().parseText(xml)
+	}
+	/*
+
+	def queryForArtifacts(String projectURI, String oslcNS, String oslcSelect, String oslcWhere) {
+		String query = "&projectURL=" + this.rmGenericRestClient.clmUrl + "/rm/process/project-areas/" + projectURI +
+					oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl);
+		String uri = this.rmGenericRestClient.clmUrl + "/rm/views?oslc.query=" + URLEncoder.encode(query, 'UTF-8')
+		def result = rmGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
+		return result
+	}
+	*/
 	boolean shouldAddCollectionsToModule(String moduleType) {
 		return (moduleType == 'UI Spec')
 	}
@@ -145,7 +171,7 @@ class ClmRequirementsManagementService {
 		return emailAddress
 	}
 	
-	private def getTextArtifact(def in_artifact) {
+	def getTextArtifact(def in_artifact) {
 		
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.about.replace("resources/", "publish/text?resourceURI="),
@@ -209,7 +235,7 @@ class ClmRequirementsManagementService {
 		}
 		return memberHrefs
 	}
-	private def getNonTextArtifact(def in_artifact) {
+	def getNonTextArtifact(def in_artifact) {
 		
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.about.replace("resources/", "publish/resources?resourceURI="),
