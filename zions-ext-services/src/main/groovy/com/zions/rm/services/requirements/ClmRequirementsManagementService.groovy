@@ -174,7 +174,7 @@ class ClmRequirementsManagementService {
 	def getTextArtifact(def in_artifact) {
 		
 		def result = rmGenericRestClient.get(
-				uri: in_artifact.about.replace("resources/", "publish/text?resourceURI="),
+				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
 				headers: [Accept: 'application/xml'] );
 					
 		// Extract artifact attributes
@@ -238,11 +238,12 @@ class ClmRequirementsManagementService {
 	def getNonTextArtifact(def in_artifact) {
 		
 		def result = rmGenericRestClient.get(
-				uri: in_artifact.about.replace("resources/", "publish/resources?resourceURI="),
+				uri: in_artifact.getAbout().replace("resources/", "publish/resources?resourceURI="),
 				headers: [Accept: 'application/xml'] );
 					
 		// Extract artifact attributes
 		result.children().each { artifact ->
+			in_artifact.setTitle("${artifact.title}")
 			artifact.children().each { child ->
 				String iName = child.name()
 				if (iName == "collaboration" ) {

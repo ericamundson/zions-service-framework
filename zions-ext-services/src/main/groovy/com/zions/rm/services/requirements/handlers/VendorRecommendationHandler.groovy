@@ -13,11 +13,7 @@ class VendorRecommendationHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
-		if (val == null) {
-			return val
-		} else {
-			return "<div>${val}</div>"
-		}
+		return toHtml(val)
 	}
 
 }
