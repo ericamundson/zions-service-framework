@@ -1,6 +1,6 @@
 bootJar {
 	enabled = true
-	mainClassName = 'com.zion.vsts.services.cli.DBCliApplication'
+	mainClassName = 'com.zion.vsts.services.cli.CliApplication'
 	archiveName = 'zions-ext-cli.jar'
 	//version =  null
 }
