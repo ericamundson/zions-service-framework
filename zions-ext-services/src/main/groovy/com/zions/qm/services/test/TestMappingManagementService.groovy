@@ -23,7 +23,7 @@ class TestMappingManagementService {
 		}
 		def xmlMappingData = new XmlSlurper().parse(new File(testMappingFileName))
 		xmlMappingData.wit.each { tType ->
-			def map = [source: tType.@source, target: tType.@target, fields: []]
+			def map = [source: tType.@source, target: tType.@target, fields: [], excluded: []]
 			tType.field.each { field ->
 				def ofield = [source: field.@source, target: field.@target, defaultValue: null, values:[]]
 				field.'value'.each { aValue ->
@@ -34,6 +34,10 @@ class TestMappingManagementService {
 					ofield.defaultValue = dValue.@target
 				}
 				map.fields.add(ofield)
+			}
+			tType.excluded.field.each { field -> 
+				String fName = "${field.@name}"
+				map.excluded.add(fName) 
 			}
 			this.mappingDataInfo.add(map)
 		}

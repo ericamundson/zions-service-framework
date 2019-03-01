@@ -20,19 +20,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan("com.zions.content.services")
 @EnableWebMvc
 public class AppConfig implements WebMvcConfigurer {
-	
+
 	@Value('${doc.resource.locations:none}')
-    String resourceLocations
+	String resourceLocations
 
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		
-			 registry
-			  .addResourceHandler("/doc/**")
-			  .addResourceLocations("${resourceLocations}");
-			  
-			  /* registry.addResourceHandler("/doc/**")
-			   .addResourceLocations("file:///C:/Resources/");*/
-		}
-	};
-	
-	
+
+		registry
+				.addResourceHandler("/doc/**")
+				.addResourceLocations("${resourceLocations}");
+
+		/* registry.addResourceHandler("/doc/**")
+		 .addResourceLocations("file:///C:/Resources/");*/
+	}
+}
+
+
