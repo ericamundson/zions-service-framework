@@ -75,7 +75,7 @@ public class ClmGenericRestClient extends AGenericRestClient {
 		delegate = new RESTClient(clmUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
-		setProxy();
+		//setProxy();
 		init();
 	}
 
