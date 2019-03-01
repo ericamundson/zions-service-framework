@@ -21,13 +21,16 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 	TestMappingManagementService testMappingManagementService
 
 	def descMap = [:]
+	
+	public CustomAttributesHandler() {
+	}
 
 	public String getQmFieldName() {
 		// TODO Auto-generated method stub
 		return 'none'
 	}
 	
-	def getDescMap() {
+	def initDescMap() {
 		if (descMap.size()>0) return descMap
 		String[] types = ['Test Case', 'Test Suite', 'Test Plan']
 		def mapping = testMappingManagementService.mappingData
@@ -84,6 +87,7 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 		def wiCache = data.cacheWI
 		def memberMap = data.memberMap
 		def itemMap = data.itemMap
+		initDescMap()
 		
 		String name = getQmFieldName()
 		def aValue = itemData."${name}".text()
@@ -114,8 +118,14 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 		aValue.'values'.each { val -> 
 			String fieldName = descMap[val.name].fieldName
 			if (fieldName) {
-				def aField = [op:'add', path:"/fields/${fieldName}", value: val.value]
-				retVal.push(aField)
+				def aField = getExisting(retVal, fieldName)
+				if (!aField) {
+					aField = [op:'add', path:"/fields/${fieldName}", value: val.value]
+					retVal.push(aField)
+				} else {
+					String oval = "${aField.value};${val.value}"
+					aField.'value' = oval
+				}
 			}
 		}
 		
@@ -134,6 +144,15 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 			}
 		}
 		return retVal;
+	}
+	
+	def getExisting(retVal, fieldName) {
+		String path = "/field/${fieldName}"
+		def exist = retVal.find { ele ->
+			String apath = "${ele.path}"
+			apath == path
+		}
+		return exist
 	}
 	
 	def addCADescriptors(ca, outDesc, tfsAreaPath, excluded) {
@@ -176,5 +195,11 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 			}
 		}
 	}
+	
+	static String toCamelCase( String text) {
+		text = text.replaceAll( "(_)([A-Za-z0-9])", { Object[] it -> it[2].toUpperCase() } )
+		return text
+	}
+
 
 }
