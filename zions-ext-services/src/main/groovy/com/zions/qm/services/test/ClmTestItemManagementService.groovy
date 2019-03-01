@@ -230,7 +230,7 @@ public class ClmTestItemManagementService {
 						wiData.body["${field.target}"] = fieldData.value
 					}
 				} else {
-					if (fieldData.value != null) {
+					if (!(fieldData instanceof List)) {
 						wiData.body.add(fieldData)
 					} else {
 						fieldData.each { fData ->

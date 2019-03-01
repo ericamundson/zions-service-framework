@@ -238,27 +238,31 @@ public class TestManagementService {
 	public def cleanupTestItems(String collection, String project, String teamArea) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wis = getTestWorkItems(collection, project, teamArea)
-		wis.workItems.each { wi ->
-			def twi = getWorkItem(wi.url)
-			if (twi != null) {
-				String type = "${twi.fields.'System.WorkItemType'}"
-				if (type == 'Test Plan') {
-					String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/testplan/plans/${wi.id}"
-					genericRestClient.delete(
-						uri: url,
-						contentType: ContentType.JSON,
-						query: [destroy: true, 'api-version': '5.0-preview.1']
-						)
-				} else if (type == 'Test Case'){
-					String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/test/testcases/${wi.id}"
-					genericRestClient.delete(
-						uri: url,
-						contentType: ContentType.JSON,
-						query: [destroy: true, 'api-version': '5.0-preview.1']
-						)
-	
+		while (true) {
+			wis.workItems.each { wi ->
+				def twi = getWorkItem(wi.url)
+				if (twi != null) {
+					String type = "${twi.fields.'System.WorkItemType'}"
+					if (type == 'Test Plan') {
+						String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/testplan/plans/${wi.id}"
+						genericRestClient.delete(
+							uri: url,
+							contentType: ContentType.JSON,
+							query: [destroy: true, 'api-version': '5.0-preview.1']
+							)
+					} else if (type == 'Test Case'){
+						String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/test/testcases/${wi.id}"
+						genericRestClient.delete(
+							uri: url,
+							contentType: ContentType.JSON,
+							query: [destroy: true, 'api-version': '5.0-preview.1']
+							)
+		
+					}
 				}
 			}
+			wis = getTestWorkItems(collection, project, teamArea)
+			if (!wis || wis.size() == 0) break;
 		}
 		cacheManagementService.clear()
 //		File cacheL = new File(cacheLocation)
@@ -403,7 +407,7 @@ public class TestManagementService {
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/wiql",
 			body: body,
 			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0-preview.2']
+			query: ['api-version': '5.0-preview.2', '$top': 1000]
 			)
 		return result
 	}
