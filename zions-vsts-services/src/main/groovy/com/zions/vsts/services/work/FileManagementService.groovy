@@ -60,6 +60,17 @@ class FileManagementService {
 	    }
 	}
 	
+	private def encodeBytes( Object data ) throws UnsupportedEncodingException {
+	    if ( data instanceof File ) {
+	        def entity = new org.apache.http.entity.ByteArrayEntity( (File) data, "application/json" );
+	        entity.setContentType( "application/json" );
+	        return entity
+	    } else {
+	        throw new IllegalArgumentException( 
+	            "Don't know how to encode ${data.class.name} as a zip file" );
+	    }
+	}
+	
 	/**
 	 * Adds files to ADO, Then returns DTO's to send to associate attachments to work item.
 	 * 
@@ -97,6 +108,7 @@ class FileManagementService {
 		return null
 	}
 	
+	
 	private boolean linkExists(cacheWI, file) {
 		String fileName = "${file.name}"
 		def link = cacheWI.relations.find { rel ->
@@ -120,6 +132,24 @@ class FileManagementService {
 			requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/attachments",
 			body: file,
+			query: ['api-version': '5.0-preview.3', uploadType: 'Simple', areaPath: earea, fileName: efilename]
+			
+			)
+		genericRestClient.delegate.encoder.'application/json' = currentEncoder
+		return result
+	}
+	
+	public def uploadAttachment(collection, project, area, byte[] bytes) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def currentEncoder = genericRestClient.delegate.encoder.'application/json'
+		genericRestClient.delegate.encoder.'application/json' = this.&encodeBytes
+		def efilename = URLEncoder.encode(file.name, 'utf-8').replace('+', '%20')
+		def earea = URLEncoder.encode(area, 'utf-8').replace('+', '%20')
+		def result = genericRestClient.rateLimitPost(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/attachments",
+			body: bytes,
 			query: ['api-version': '5.0-preview.3', uploadType: 'Simple', areaPath: earea, fileName: efilename]
 			
 			)

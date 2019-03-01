@@ -8,4 +8,5 @@ class Checkpoint {
 	String pageUrl
 	int checkpointId
 	def logEntries = []
+	String timeStamp
 }

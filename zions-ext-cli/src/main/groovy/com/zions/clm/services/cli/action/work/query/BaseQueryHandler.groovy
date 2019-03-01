@@ -12,6 +12,9 @@ class BaseQueryHandler implements IQueryHandler {
 	@Autowired
 	ClmWorkItemManagementService clmWorkItemManagementService
 	
+	@Value('${item.filter:allFilter}')
+	private String itemFilter
+
 	@Autowired
 	IGenericRestClient clmGenericRestClient
 
@@ -46,6 +49,17 @@ class BaseQueryHandler implements IQueryHandler {
 		if ("${rel}" != 'next') return null
 		currentItems = clmWorkItemManagementService.nextPage(currentItems.@href)
 		return currentItems
+	}
+
+	public String getFilterName() {
+		// TODO Auto-generated method stub
+		return this.itemFilter;
+	}
+
+	public Date modifiedDate(Object item) {
+		String sDate = "${item.modified.text()}"
+		
+		return new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
 	}
 
 }

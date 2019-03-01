@@ -68,7 +68,7 @@ public class PolicyEndPoint {
 	    	collectionName = collectionUrl.substring(serverUrl.length(), collectionUrl.length()-1)
     	} catch (err) {
     		// collection name is not available for VSTS
-    		log.info("In PolicyEndPoint::getCollectionName - Caught error: ${err.message}")
+    		log.info("PolicyEndPoint - No collection name when ADO event trapped: ${err.message}")
     	}
     	return collectionName
     }

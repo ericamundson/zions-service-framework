@@ -1,0 +1,703 @@
+[
+    {
+        "name": "Active",
+        "displayName": "Active",
+        "fieldName": "Custom.TestActive",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "No",
+            "Yes"
+        ]
+    },
+    {
+        "name": "Active",
+        "displayName": "Active",
+        "fieldName": "Custom.TestActive",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Active",
+            "Deferred",
+            "Retired"
+        ]
+    },
+    {
+        "name": "Affiliate_Used",
+        "displayName": "Affiliate Used",
+        "fieldName": "Custom.TestAffiliateUsed",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "008 - Farmer Mac",
+            "101 - ZFN (Zions First National Bank)",
+            "113 - VBC (Vectra Bank of Colorado)",
+            "116 - NBA (National Bank of Arizona)",
+            "118 - NSB (Nevada State Bank)",
+            "140 - CBT (California Bank and Trust)",
+            "175 - ABT (Amegy Bank of Texas)",
+            "176 - AMC (Amegy Mortgage Company)"
+        ]
+    },
+    {
+        "name": "Automation_Status",
+        "displayName": "RQM Automation Status",
+        "fieldName": "Custom.TestAutomationStatus",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Automation Accepted",
+            "Descoped for Automation",
+            "No",
+            "Ready",
+            "Under Review",
+            "Yes"
+        ]
+    },
+    {
+        "name": "Board_New_Loan:_Commercial",
+        "displayName": "Board New Loan: Commercial",
+        "fieldName": "Custom.TestBoardNewLoan:Commercial",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Business_Approved",
+        "displayName": "Business Approved",
+        "fieldName": "Custom.TestBusinessApproved",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "No",
+            "Rejected",
+            "Yes"
+        ]
+    },
+    {
+        "name": "Compliance_Related",
+        "displayName": "Compliance Related",
+        "fieldName": "Custom.TestComplianceRelated",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "N/A",
+            "Regulatory Only",
+            "SOX & Regulatory",
+            "SOX Only"
+        ]
+    },
+    {
+        "name": "Continuation_-_Day",
+        "displayName": "Continuation - Day",
+        "fieldName": "Custom.TestContinuation_-Day",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08",
+            "09",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31"
+        ]
+    },
+    {
+        "name": "Continuation_-_Month",
+        "displayName": "Continuation - Month",
+        "fieldName": "Custom.TestContinuation_-Month",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "01 - January",
+            "02 - February",
+            "03 - March",
+            "04 - April",
+            "05 - May",
+            "06 - June",
+            "07 - July",
+            "08 - August",
+            "09 - September",
+            "10 - October",
+            "11 - November",
+            "12 - December"
+        ]
+    },
+    {
+        "name": "Continuation_-_Year",
+        "displayName": "Continuation - Year",
+        "fieldName": "Custom.TestContinuation_-Year",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025",
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+        ]
+    },
+    {
+        "name": "Data_Migration_Impact",
+        "displayName": "Data Migration Impact",
+        "fieldName": "Custom.TestDataMigrationImpact",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Both",
+            "Created Data",
+            "Migrated Data"
+        ]
+    },
+    {
+        "name": "Deferred_Execution",
+        "displayName": "Deferred Execution",
+        "fieldName": "Custom.TestDeferredExecution",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Compliance",
+            "Functionality In Question",
+            "Interface Required",
+            "Joint: - Testing",
+            "Migrated Data Required",
+            "Parameter Change Required",
+            "Release 1 \u2013 Not In Current Code",
+            "Release 1 \u2013 Not in Current Code \u2013 7/31",
+            "Release 1 \u2013 Not in Current Code \u2013 9/30",
+            "Release 2 Functionality",
+            "Release 3 Functionality",
+            "Report Testing",
+            "Waiting for Change Request"
+        ]
+    },
+    {
+        "name": "Enviroment",
+        "displayName": "Enviroment",
+        "fieldName": "Custom.TestEnviroment",
+        "attributeType": "Multiselect",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Data Migration",
+            "Disaster Recovery",
+            "N/A",
+            "Operational Data Store",
+            "Parameter Environment",
+            "Performance",
+            "Production",
+            "SITa",
+            "SITb",
+            "Staging",
+            "Training",
+            "UATa",
+            "UATb"
+        ]
+    },
+    {
+        "name": "Execution_Planning",
+        "displayName": "Execution Planning",
+        "fieldName": "Custom.TestExecutionPlanning",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "No Assigned Status",
+            "Re-Execute - Internal Review",
+            "Re-Execute - Requirement Change",
+            "Test Case Update - Internal Review",
+            "Test Case Update - Requirement Change",
+            "Test Script Update - Internal Review",
+            "Test Script Update - Requirement Change"
+        ]
+    },
+    {
+        "name": "Finance_Impact",
+        "displayName": "Finance Impact",
+        "fieldName": "Custom.TestFinanceImpact",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "No",
+            "Yes"
+        ]
+    },
+    {
+        "name": "Release",
+        "displayName": "Release",
+        "fieldName": "Custom.TestRelease",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Ignore - Do Not Report",
+            "PS",
+            "Release One",
+            "Release OneDOTOne",
+            "Release Three",
+            "Release Two",
+            "Release TwoDOTFive",
+            "Release TwoDOTNine",
+            "Release TwoDOTTwo"
+        ]
+    },
+    {
+        "name": "Reporting_Group",
+        "displayName": "Reporting Group",
+        "fieldName": "Custom.TestReportingGroup",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "N/A",
+            "PRT",
+            "PS",
+            "UAT"
+        ]
+    },
+    {
+        "name": "Reporting_Type",
+        "displayName": "Reporting Type",
+        "fieldName": "Custom.TestReportingType",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "N/A",
+            "PRT",
+            "PS",
+            "PSIT",
+            "Post ST/CIT",
+            "Pre-UAT",
+            "ST/CIT",
+            "SxS",
+            "UAT"
+        ]
+    },
+    {
+        "name": "Run_Calendar",
+        "displayName": "Run Calendar",
+        "fieldName": "Custom.TestRunCalendar",
+        "attributeType": "Multiselect",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Anniversary Date",
+            "Bi Monthly",
+            "Billing Date",
+            "Capitalization Date",
+            "Day Mode - Fast",
+            "Day Mode - Slow",
+            "End of Day",
+            "End of Month",
+            "End of Quarter",
+            "End of Term",
+            "End of Year",
+            "Escrow Periodic Analysis Date",
+            "Maturity Billing",
+            "Multiple EOD",
+            "Multiple End of Month",
+            "Multiple End of Year",
+            "N/A",
+            "Night Mode",
+            "On Demand",
+            "Payment Due Date",
+            "System Interest Reserve / Rollover Date",
+            "Weekly"
+        ]
+    },
+    {
+        "name": "Test_Team",
+        "displayName": "Test Team",
+        "fieldName": "Custom.TestTestTeam",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "BaNCS Product: Test",
+            "Business Unit: CDA",
+            "Business Unit: ELO",
+            "Business Unit: EML",
+            "Business Unit: RLC",
+            "Business Unit: Secondary",
+            "Business Unit: UAT Triage",
+            "Data Migration: Test",
+            "EIM: EDW Test",
+            "Finance: EDW",
+            "Finance: Evolv",
+            "Finance: Evolv - TI",
+            "Finance: FAH",
+            "Finance: Financial Accounting Hub",
+            "Finance: Frontier",
+            "Finance: Loan Operations",
+            "Finance: ODS",
+            "Finance: Recon",
+            "Interfaces: BaNCS Test",
+            "Interfaces: Tier 2",
+            "Interfaces: UAT",
+            "N/A",
+            "NFR: Test",
+            "ODS Data",
+            "R2R",
+            "Reports: BaNCS Test",
+            "Reports: ODS Test",
+            "Rollout",
+            "SNF: Test",
+            "UAT",
+            "zzArchived:",
+            "zzArchived: Data Team",
+            "zzArchived: Finance",
+            "zzArchived: Finance: BaNCS",
+            "zzArchived: Finance: Hyperion",
+            "zzArchived: Finance: R2R"
+        ]
+    },
+    {
+        "name": "Test_Type",
+        "displayName": "Test Type",
+        "fieldName": "Custom.TestTestType",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Data Staging",
+            "Data Test",
+            "Functional Test",
+            "Integration Test",
+            "Interface Batch Test",
+            "NFR Test",
+            "Other",
+            "Production Validation",
+            "Regression Test",
+            "Smoke Test",
+            "User Acceptance Test",
+            "Web Services Test"
+        ]
+    },
+    {
+        "name": "UAT_Groups",
+        "displayName": "UAT Groups",
+        "fieldName": "Custom.TestUATGroups",
+        "attributeType": "Multiselect",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "Affiliate Ops",
+            "CIF",
+            "CLS/AS",
+            "CLS/QA",
+            "Collections",
+            "Contact Center",
+            "Escrow",
+            "General Audience",
+            "N/A",
+            "Underwriter"
+        ]
+    },
+    {
+        "name": "Vendor_Priority",
+        "displayName": "Vendor Priority",
+        "fieldName": "Custom.TestVendorPriority",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "High"
+        ]
+    },
+    {
+        "name": "Workstream",
+        "displayName": "Workstream",
+        "fieldName": "Custom.TestWorkstream",
+        "attributeType": "Multiselect",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            "CIF",
+            "Compliance & Regulatory",
+            "Deposits: AOP",
+            "Deposits: CIF",
+            "Deposits: DDA",
+            "Deposits: Exceptions",
+            "Deposits: IRA",
+            "Deposits: Payments",
+            "Deposits: Relationship Pricing",
+            "Deposits: TD",
+            "Deposits: Teller",
+            "EDW",
+            "Finance",
+            "Finance:- BaNCS",
+            "Finance:- EDW",
+            "Finance:- Evolv",
+            "Finance:- Financial Accounting Hub",
+            "Finance:- Frontier",
+            "Finance:- General Ledger",
+            "Finance:- Hyperion",
+            "Finance:- ODS",
+            "General",
+            "Integration",
+            "Interface",
+            "Lending Common",
+            "Lending: Common",
+            "Lending: Construction",
+            "Lending: General",
+            "Lending: Retail",
+            "Lending: Securitization",
+            "Lending: Syndication",
+            "Migration",
+            "NFR",
+            "Non-FutureCORE",
+            "ODS",
+            "Relationship Pricing",
+            "Reporting",
+            "Rollout",
+            "Teller",
+            "Testing",
+            "Zions Legacy QA:- AFIN",
+            "Zions Legacy QA:- APPRO",
+            "Zions Legacy QA:- Account Recon",
+            "Zions Legacy QA:- BLMB",
+            "Zions Legacy QA:- Bulk Transaction and Reversal (BTTR)",
+            "Zions Legacy QA:- CMS",
+            "Zions Legacy QA:- COD1",
+            "Zions Legacy QA:- Convey Tax Port",
+            "Zions Legacy QA:- Credit Bureau",
+            "Zions Legacy QA:- DPCL",
+            "Zions Legacy QA:- Deluxe ",
+            "Zions Legacy QA:- EDWS",
+            "Zions Legacy QA:- Electronic Report Delivery (ERDF)",
+            "Zions Legacy QA:- FMAC",
+            "Zions Legacy QA:- FileNet",
+            "Zions Legacy QA:- Financial Accounting Hub -ORGL",
+            "Zions Legacy QA:- Force Placed Insurance/Southwest",
+            "Zions Legacy QA:- Frontier",
+            "Zions Legacy QA:- Letters of Credit",
+            "Zions Legacy QA:- Loan File Tracking System(LFTR)",
+            "Zions Legacy QA:- Mass Maintenance (MMNT)",
+            "Zions Legacy QA:- Norkom",
+            "Zions Legacy QA:- ODS (REPT)",
+            "Zions Legacy QA:- Online Banking",
+            "Zions Legacy QA:- PEPP(ACH)",
+            "Zions Legacy QA:- Payment Coupons",
+            "Zions Legacy QA:- Primatics (Loan Accounting Engine)",
+            "Zions Legacy QA:- RCIF",
+            "Zions Legacy QA:- RCVY",
+            "Zions Legacy QA:- RLPR",
+            "Zions Legacy QA:- Risk Management",
+            "Zions Legacy QA:- SBAL",
+            "Zions Legacy QA:- STKY",
+            "Zions Legacy QA:- Servicemembers Civil Relief Act (SCRA)",
+            "Zions Legacy QA:- Statements and Notices",
+            "Zions Legacy QA:- Super MICR",
+            "Zions Legacy QA:- TIBK",
+            "Zions Legacy QA:- Transaction Gateway",
+            "Zions Legacy QA:- Viewpoint"
+        ]
+    },
+    {
+        "name": "Automated_TC_Name",
+        "displayName": "Automated TC Name",
+        "fieldName": "Custom.TestAutomatedTCName",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Execution_Count",
+        "displayName": "Execution Count",
+        "fieldName": "Custom.TestExecutionCount",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Risk_Model__RE__Calculation",
+        "displayName": "Risk Model (RE) Calculation",
+        "fieldName": "Custom.TestRiskModelRECalculation",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "_k5J38USxEeiuULVYIY76YA",
+        "displayName": "TCG Category 1",
+        "fieldName": "Custom.TestTCGCategory1",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "_k5l80ESxEeiuULVYIY76YA",
+        "displayName": "TCG Category 2",
+        "fieldName": "Custom.TestTCGCategory2",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "_k4meUUSxEeiuULVYIY76YA",
+        "displayName": "Test Case Group",
+        "fieldName": "Custom.TestTestCaseGroup",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Test_Case_Important_Level",
+        "displayName": "Test Case Important Level",
+        "fieldName": "Custom.TestTestCaseImportantLevel",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Test_Case_Risk",
+        "displayName": "Test Case Risk",
+        "fieldName": "Custom.TestTestCaseRisk",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Unresolved_Defect_Count",
+        "displayName": "Unresolved Defect Count",
+        "fieldName": "Custom.TestUnresolvedDefectCount",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Vendor_TC_Name",
+        "displayName": "Vendor TC Name",
+        "fieldName": "Custom.TestVendorTCName",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    },
+    {
+        "name": "Vendor_TC_Name",
+        "displayName": "Vendor TC Name",
+        "fieldName": "Custom.TestVendorTCName",
+        "attributeType": "Text",
+        "areaPathsFilter": [
+            "FutureCore"
+        ],
+        "enumValues": [
+            
+        ]
+    }
+]

@@ -20,6 +20,7 @@ import com.zions.qm.services.metadata.QmMetadataManagementService
 import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.test.TestManagementService
+import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
@@ -87,6 +88,7 @@ import groovy.xml.XmlUtil
  * package com.zions.vsts.services.work {
  *  TranslateRQMToMTM --> WorkManagementService: @Autowired workManagementService
  *  TranslateRQMToMTM --> FileManagementService: @Autowired fileManagementService
+ *  TranslateRQMToMTM --> ChangeListManager: clManager
  * }
  * TranslateRQMToMTM --> com.zions.qm.services.metadata.QmMetadataManagementService: @Autowired qmMetadataManagementService
  * package com.zions.qm.services.test {
@@ -107,43 +109,35 @@ import groovy.xml.XmlUtil
  * alt include.update has 'clean'
  * 	TranslateRQMToMTM -> TestManagementService: cleanupTestItems(collection, tfsProject, areaPath)
  * end
+ *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
+ *  TranslateRQMToMTM -> MemberManagementService: get member map
  * TranslateRQMToMTM -> "IRestartManagementService:restartManagementService" as restartManagementService: processPhases
  * group restartManagmentService.processPhases closure phase, items ->
  *  alt phase == 'configuration'
- *  	TranslateRQMToMTM -> MemberManagementService: get member map
- *  	TranslateRQMToMTM -> ClmTestManagementService: get configuration via query
  *  	loop each { configuration }
  *  		TranslateRQMToMTM -> ClmTestManagementService: get configuration details
  *  		TranslateRQMToMTM -> ClmTestItemManagementService: get data changes
  *  		TranslateRQMToMTM -> TestManagementService: send configuration changes
  *  	end
  *  end
- *  alt phase == 'data'
- *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
- *  TranslateRQMToMTM -> MemberManagementService: get member map
- *  TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
+ *  alt phase == 'testcase'
+ *  	loop each test case
+ *  		TranslateRQMToMTM -> ClmTestItemManagementService: get work item data changes
+ *  		TranslateRQMToMTM -> "ChangeListManager:clManager": add 'Test Case' work item changes
+ *  	end
+ *  TranslateRQMToMTM -> "ChangeListManager:clManager": flush.
+ *  end
+ *  alt phase == 'plan'
  *  loop each { testplan object structure }
  *  	TranslateRQMToMTM -> ClmTestItemManagementService: get data changes
  *  	TranslateRQMToMTM -> TestManagementService: sent plan and suite changes
  *  	loop each test suite of test plan
  *  		TranslateRQMToMTM -> ClmTestItemManagementService: get data changes
  *  		TranslateRQMToMTM -> TestManagementService: sent plan and suite changes
- *  		loop each test case of test suite
- *  			TranslateRQMToMTM -> ClmTestItemManagementService: get work item data changes
- *  			TranslateRQMToMTM -> List: add 'Test Case' work item changes
- *  		end
- *  	end
- *  	loop each test case of test plan
- *  		TranslateRQMToMTM -> ClmTestItemManagementService: get work item data changes
- *  		TranslateRQMToMTM -> List: add 'Test Case' work item changes
  *  	end
  *  end
- *  TranslateRQMToMTM -> WorkManagementService: send list of changes to wi batch.
  *  end
  *  alt phase == 'links'
- *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
- *  TranslateRQMToMTM -> MemberManagementService: get member map
- *  TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
  *  loop each { testplan object structure }
  *  	loop each testsuite for testplan
  *  		loop each test case for test suite
@@ -158,9 +152,6 @@ import groovy.xml.XmlUtil
  *  end
  *  end
  *  alt phase == 'execution'
- *  TranslateRQMToMTM -> TestMappingManagementService: get field mapping
- *  TranslateRQMToMTM -> MemberManagementService: get member map
- *  TranslateRQMToMTM -> ClmTestManagementService: get test plans via query
  *  loop each { testplan object structure }
  *  	TranslateRQMToMTM -> TestManagmentService: ensure test runs for test plan
  *  	loop each { test suite }
@@ -188,10 +179,12 @@ import groovy.xml.XmlUtil
  *  		loop each test suite
  *  			loop each test case
  *  				TranslateRQMToMTM -> ClmTestItemManagementService: get attachment changes for test case
- *  						
+ *  				
+ *  				TranslateRQMToMTM -> "ChangeListManager:clManager": add attachment changes 		
  *  			end
  *  		end
  *  	end
+ *  	TranslateRQMToMTM -> "ChangeListManager:clManager":flush.
  *  end
  *  end
  * @enduml
@@ -284,8 +277,33 @@ class TranslateRQMToMTM implements CliAction {
 						}
 					}
 				}
+				//translate test case work data.
+				if (phase == 'testcase') {
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+					def idKeyMap = [:]
+					clmTestItemManagementService.resetNewId()
+					items.each { testItem ->
+						def testcase = clmTestManagementService.getTestItem(testItem.id.text())
+						int aid = Integer.parseInt(testcase.webId.text())
+						// generate test data
+						//						String testcasexml = XmlUtil.serialize(testcase)
+						//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
+						//						os = resultFile.newDataOutputStream()
+						//						os << testcasexml
+						//						os.close()
+						String idtype = "${aid}-testcase"
+						if (!idKeyMap.containsKey(idtype)) {
+							clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+								clManager.add("${aid}-${key}", val)
+							}
+							idKeyMap[idtype] = idtype
+						}
+
+					}
+					clManager.flush();
 				//translate work data.
-				if (phase == 'data') {
+				}
+				if (phase == 'plans') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					def idKeyMap = [:]
 					clmTestItemManagementService.resetNewId()
@@ -325,45 +343,7 @@ class TranslateRQMToMTM implements CliAction {
 								}
 								idKeyMap[idtype] = idtype
 							}
-							testsuite.testcase.each { testcaseRef ->
-								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-								String tcXml = XmlUtil.serialize(testcase)
-								int aid = Integer.parseInt(testcase.webId.text())
-								String aidtype = "${aid}-testcase"
-								if (!idKeyMap.containsKey(aidtype)) {
-									clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-										String idkey = "${aid}-${key}"
-										clManager.add("${aid}-${key}", val)
-
-									}
-									idKeyMap[aidtype] = aidtype
-								}
-							}
 						}
-						testplan.testcase.each { testcaseRef ->
-							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-							int aid = Integer.parseInt(testcase.webId.text())
-							// generate test data
-							//						String testcasexml = XmlUtil.serialize(testcase)
-							//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
-							//						os = resultFile.newDataOutputStream()
-							//						os << testcasexml
-							//						os.close()
-							String idtype = "${aid}-testcase"
-							if (!idKeyMap.containsKey(idtype)) {
-								clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-									clManager.add("${aid}-${key}", val)
-								}
-								idKeyMap[idtype] = idtype
-							}
-
-						}
-						// TODO: def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
-						//					if (wiChanges != null) {
-						//						idMap[count] = "${id}"
-						//						changeList.add(wiChanges)
-						//						count++
-						//					}
 					}
 					clManager.flush();
 				}
@@ -394,7 +374,7 @@ class TranslateRQMToMTM implements CliAction {
 					}
 				}
 
-				if (phase == 'execution') {
+				if (phase == 'executions') {
 					//def linkMapping = processTemplateService.getLinkMapping(mapping)
 					items.each { testItem ->
 						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
@@ -525,33 +505,3 @@ class TranslateRQMToMTM implements CliAction {
 
 }
 
-class ChangeListManager {
-	def changeList = []
-	def idMap = [:]
-	def count = 0
-	WorkManagementService workManagementService
-	String collection
-	String project
-	ChangeListManager(String collection, String project, WorkManagementService workManagementService) {
-		this.workManagementService = workManagementService
-		this.collection = collection
-		this.project = project
-	}
-
-	def add(String key, def item) {
-		if (count == 200) {
-			flush()
-		}
-		changeList.push(item)
-		idMap[count] = key
-		count++
-	}
-
-	def flush() {
-		if (count == 0) return;
-		workManagementService.batchWIChanges(collection, project, changeList, idMap)
-		changeList = []
-		idMap = [:]
-		count = 0
-	}
-}

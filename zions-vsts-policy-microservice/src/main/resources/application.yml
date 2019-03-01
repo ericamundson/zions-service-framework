@@ -23,11 +23,11 @@ spring:
 # TFS connection properties
 tfs:
 # test
-#  url: https://eto-dev.visualstudio.com
+#  url: https://dev.azure.com/eto-dev
 #  user: z091556
 #  token: emjfvuveeugbljidpareidxmya5zdvugt3gqp5ptidakh52ekq3q
 # prod
-  url: https://zionseto.visualstudio.com
+  url: https://dev.azure.com/ZionsETO
   user: svc-cloud-vsbuildagent@zionsbancorporation.onmicrosoft.com
   token: i7lgdocpaar45qlx3wbmr5bfros6j6jhuxbjc7b5twucufn2w43a
   project: dummy

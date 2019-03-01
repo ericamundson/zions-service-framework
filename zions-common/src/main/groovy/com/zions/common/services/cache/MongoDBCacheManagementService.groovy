@@ -10,6 +10,12 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 
+/**
+ * MongoDB store for ADO cached items.
+ * 
+ * @author z091182
+ *
+ */
 class MongoDBCacheManagementService implements ICacheManagementService {
 	@Autowired(required=false)
 	MongoTemplate mongoTemplate
@@ -19,8 +25,16 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	
 	
 	@Autowired
-	@Value('${db.project:testcache}')
+	@Value('${db.project:coredev}')
 	String dbProject
+	
+	@Value('${cache.location:cache}')
+	String cacheLocation
+	
+	public MongoDBCacheManagementService() {
+		
+	}
+
 
 	@Override
 	public Object getFromCache(Object id, String type) {
@@ -46,8 +60,32 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 
 	@Override
 	public Object saveBinaryAsAttachment(ByteArrayInputStream result, String name, String id) {
-		// TODO Auto-generated method stub
-		return null
+		try {
+			File cacheDir = new File(this.cacheLocation)
+			if (!cacheDir.exists()) {
+				cacheDir.mkdir();
+			}
+			
+			File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
+			if (!wiDir.exists()) {
+				wiDir.mkdir()
+			}
+			File attachmentDir = new File("${this.cacheLocation}${File.separator}${id}${File.separator}attachments")
+			if (!attachmentDir.exists()) {
+				attachmentDir.mkdir()
+			}
+			File save = new File("${this.cacheLocation}${File.separator}${id}${File.separator}attachments${File.separator}${name}");
+			if (!save.exists()) {
+				DataOutputStream os = save.newDataOutputStream()
+				os << result.bytes
+				os.close()
+			}
+			return save
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
 	}
 
 	@Override

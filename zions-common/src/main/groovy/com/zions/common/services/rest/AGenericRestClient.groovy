@@ -163,6 +163,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		HttpResponseDecorator resp = delegate.patch(oinput)
 		
 		if (resp.status != 200) {
+			log.debug("GenericRestClient::patch -- Warning. Status: "+resp.getStatusLine());
 			return null;
 		}
 		if (withHeader) {

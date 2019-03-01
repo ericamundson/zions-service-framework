@@ -1,15 +1,31 @@
 {
     "requestContentType": "application/json",
     "contentType": "application/json",
-    "uri": "https://dev.azure.com/eto-dev/DigitalBanking/_apis/test/Runs/149/results",
+    "uri": "https://dev.azure.com/eto-dev/_apis/wit/workitems/22098",
     "query": {
-        "api-version": "5.0-preview.2"
+        "api-version": "5.0"
     },
     "body": [
-        {
-            "testCaseReferenceId": 25333,
-            "priority": 2,
-            "outcome": "Passed"
-        }
-    ]
+    {
+        "op": "test",
+        "path": "/rev",
+        "value": 5
+    },
+    {
+        "op": "add",
+        "path": "/fields/Custom.RollupEstimate",
+        "value": 0
+    },
+    {
+        "op": "add",
+        "path": "/fields/Custom.RollupRemaining",
+        "value": 0
+    },
+    {
+        "op": "add",
+        "path": "/fields/Custom.RollupCompleted",
+        "value": 0
+    }
+]
+    
 }
