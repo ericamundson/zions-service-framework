@@ -1,8 +1,8 @@
 bootJar {
 	enabled = true
 	mainClassName = 'com.zions.content.services.ContentApplication'
-	baseName = 'zions-content-microservice'
-	version =  "${version}"
+	archiveName = 'zions-content-microservice.jar'
+	//version =  "${version}"
 }
 
 dependencies {

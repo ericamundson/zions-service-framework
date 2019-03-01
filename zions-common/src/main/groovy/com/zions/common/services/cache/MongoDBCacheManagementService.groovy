@@ -25,11 +25,15 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	
 	
 	@Autowired
-	@Value('${db.project:testcache}')
+	@Value('${db.project:coredev}')
 	String dbProject
 	
 	@Value('${cache.location:cache}')
 	String cacheLocation
+	
+	public MongoDBCacheManagementService() {
+		
+	}
 
 
 	@Override

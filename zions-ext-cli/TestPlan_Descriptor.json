@@ -2,6 +2,7 @@
     {
         "name": "Active",
         "displayName": "Active",
+        "fieldName": "Custom.TestActive",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -14,6 +15,7 @@
     {
         "name": "Release",
         "displayName": "Release",
+        "fieldName": "Custom.TestRelease",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -33,6 +35,7 @@
     {
         "name": "Reporting_Group",
         "displayName": "Reporting Group",
+        "fieldName": "Custom.TestReportingGroup",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -47,6 +50,7 @@
     {
         "name": "Reporting_Type",
         "displayName": "Reporting Type",
+        "fieldName": "Custom.TestReportingType",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
