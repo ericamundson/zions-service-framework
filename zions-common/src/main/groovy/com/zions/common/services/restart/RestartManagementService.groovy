@@ -37,8 +37,6 @@ class RestartManagementService implements IRestartManagementService {
 	@Autowired(required=false)
 	private Map<String, IFilter> filterMap;
 	
-	@Value('${item.filter:allFilter}')
-	private String itemFilter
 	
 	@Autowired
 	ICheckpointManagementService checkpointManagementService
@@ -54,7 +52,7 @@ class RestartManagementService implements IRestartManagementService {
 	 * @startuml
 	 * participant "RestartManagementService:this" as this
 	 * participant "Closure:closure" as closure
-	 * participant "CheckpointManagementService:checkpointManagementService" as c
+	 * participant "CheckpointManagementService:checkpointManagementService" as checkpointManagementService
 	 * participant "String[]:phases" as phases
 	 * 
 	 * this -> checkpointManagementService: selectCheckpoint(this.selectedCheckpoint):checkpoint
@@ -74,7 +72,10 @@ class RestartManagementService implements IRestartManagementService {
 	 * alt remaining == true
 	 * loop true
 	 * this -> this: filtered(filterName)
-	 * this -> checkPointManagementService:addCheckpoint(phase, url)
+	 * alt selectedCheckpoint == 'update'
+	 * this -> this: filterForUpdate(items) : items
+	 * end
+	 * this -> checkpointManagementService:addCheckpoint(phase, url)
 	 * this -> closure: call(phase, items)
 	 * this -> queryHandler: nextPage(url) : items
 	 * alt items == null
@@ -95,6 +96,7 @@ class RestartManagementService implements IRestartManagementService {
 			IQueryHandler queryHandler = queryHandlers[handlerName]
 			def items = queryHandler.getItems()
 			String url = queryHandler.initialUrl();
+			String filterName = queryHandler.filterName
 			if (checkpoint == null || checkpoint.phase == phase) {
 				remaining = true
 				if (checkpoint != null) {
@@ -109,7 +111,10 @@ class RestartManagementService implements IRestartManagementService {
 				log.info("Starting ${phase}")
 				while (true) {
 				
-					def inItems = filtered(items, itemFilter);
+					def inItems = filtered(items, filterName);
+					if (selectedCheckpoint == 'update') {
+						inItems = filterForUpdate(inItems, checkpoint)
+					}
 					checkpointManagementService.addCheckpoint(phase, url)
 					
 					// process integration logic
@@ -122,7 +127,18 @@ class RestartManagementService implements IRestartManagementService {
 				log.info("Ending ${phase}")
 			}
 		}
+		checkpointManagementService.addCheckpoint('update', 'none')
 		return null
+	}
+	
+	def filterForUpdate(def items, Checkpoint cp, IQueryHandler qHandler) {
+		Date startDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", cp.timeStamp)
+		
+		def outItems = items.findAll { item ->
+			Date iDate = qHandler.modifiedDate(item)
+			iDate >= startDate
+		}
+		return outItems;
 	}
 	
 	/**

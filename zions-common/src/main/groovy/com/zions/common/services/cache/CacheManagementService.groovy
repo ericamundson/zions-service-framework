@@ -6,6 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+/**
+ * File system store for cached ADO items.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class CacheManagementService implements ICacheManagementService {
 	

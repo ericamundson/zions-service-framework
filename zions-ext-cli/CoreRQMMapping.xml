@@ -42,6 +42,13 @@
 			<defaultvalue target="FutureCore"/>		
 		</field>
 		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
+		<excluded>
+			<field name="Execution_Count"/>
+			<field name="Risk_Model__RE__Calculation"/>
+			<field name="Test_Case_Risk"/>
+			<field name="Unresolved_Defect_Count"/>
+			<field name="Test_Case_Important_Level"/>
+		</excluded>
 	</wit>
 	<wit source="executionresult"  target="Result" translateUnmappedFields="false">
 		<field source="resultIdHandler" target="id"/>

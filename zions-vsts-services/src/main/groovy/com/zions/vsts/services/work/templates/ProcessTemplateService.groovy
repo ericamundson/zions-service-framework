@@ -38,19 +38,19 @@ public class ProcessTemplateService  {
 	private ProjectManagementService projectManagementService;
 	
 	@Autowired
-	@Value('${type.map.resource}')
+	@Value('${type.map.resource:}')
 	private String typeMapFileName
 	
 	@Autowired
-	@Value('${name.map.resource}')
+	@Value('${name.map.resource:}')
 	private String nameMapFileName
 
 	@Autowired
-	@Value('${default.wit.name}')
+	@Value('${default.wit.name:Task}')
 	private String defaultWITName
 	
 	@Autowired
-	@Value('${external.name}')
+	@Value('${external.name:Attributes}')
 	private String externalName
 	
 	private def fields = null

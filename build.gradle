@@ -94,7 +94,7 @@ allprojects {
 	
 	gitPublish {
 		// where to publish to (repo must exist)
-		repoUri = 'https://ericamundson@github.com/ericamundson/ericamundson.github.io.git'
+		repoUri = 'https://z091182@dev.azure.com/ZionsETO/DTS/_git/zions-service-framework-doc'
 		// (or 'https://github.com/ajoberstar/test-repo.git', depending on authentication)
 	
 		// branch will be created if it doesn't exist

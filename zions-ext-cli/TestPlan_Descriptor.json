@@ -2,6 +2,7 @@
     {
         "name": "Active",
         "displayName": "Active",
+        "fieldName": "Custom.TestActive",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -14,15 +15,17 @@
     {
         "name": "Release",
         "displayName": "Release",
+        "fieldName": "Custom.TestRelease",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
         ],
         "enumValues": [
             "Ignore - Do Not Report",
+            "PS",
             "Release One",
             "Release OneDOTOne",
-            "Release Three (DPR)",
+            "Release Three",
             "Release Two",
             "Release TwoDOTFive",
             "Release TwoDOTNine",
@@ -32,6 +35,7 @@
     {
         "name": "Reporting_Group",
         "displayName": "Reporting Group",
+        "fieldName": "Custom.TestReportingGroup",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -39,12 +43,14 @@
         "enumValues": [
             "N/A",
             "PRT",
+            "PS",
             "UAT"
         ]
     },
     {
         "name": "Reporting_Type",
         "displayName": "Reporting Type",
+        "fieldName": "Custom.TestReportingType",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -52,6 +58,7 @@
         "enumValues": [
             "N/A",
             "PRT",
+            "PS",
             "PSIT",
             "Post ST/CIT",
             "Pre-UAT",

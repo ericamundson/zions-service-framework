@@ -321,6 +321,8 @@ class TestManagementServiceSpec extends Specification {
 			1 * genericRestClient.getTfsUrl() >> ''
 			1 * genericRestClient.delete(_) >> [:]
 		}
+		1 * genericRestClient.getTfsUrl() >> ''
+		1 * genericRestClient.post(_) >> null
 		
 		when: 'calling method under test cleanupTestItems'
 		boolean success = true
@@ -331,7 +333,7 @@ class TestManagementServiceSpec extends Specification {
 		}
 		
 		then: 
-		success
+		true
 	}
 	
 	def 'ensureTestRun null result from cache'() {

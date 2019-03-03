@@ -3,6 +3,7 @@ package com.zions.ext.services.cli
 import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
@@ -14,6 +15,8 @@ import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.vsts.services.attachments.AttachmentManagementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -37,6 +40,10 @@ public class CLMAppConfig {
 	
 	@Bean 
 	ICacheManagementService cacheManagementService() {
+		String bootClass = this.findBootClass()
+		if (bootClass.indexOf('DBCliApplication') > -1) {
+			return new MongoDBCacheManagementService()
+		}
 		return new CacheManagementService(cacheLocation)
 	}
 	
@@ -54,5 +61,13 @@ public class CLMAppConfig {
 //	IAttachments attachmentsService() {
 //		return new AttachmentManagementService();
 //	}
+	@Autowired
+	private ApplicationContext context;
+
+	public String findBootClass() {
+		Map<String, Object> annotatedBeans = context.getBeansWithAnnotation(SpringBootApplication.class);
+		return annotatedBeans.isEmpty() ? null : annotatedBeans.values().toArray()[0].getClass().getName();
+	}
+
 
 }

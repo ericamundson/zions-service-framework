@@ -32,6 +32,9 @@ class RestartManagementServiceSpec extends Specification {
 		Checkpoint cp = new Checkpoint([checkpointId: 0, pageUrl: 'http://theUrl', phase: 'test', logEntries:[]])
 		1 * checkpointManagementService.selectCheckpoint(_) >> cp
 		
+		and: 'stub checkpoint management service addCheckpoint'
+		1 * checkpointManagementService.addCheckpoint(_, _)
+
 		and: 'stub query handler getItems'
 		1 * testQueryHandler.getItems() >> [url: 'https://stuff']
 		
@@ -123,6 +126,18 @@ class TestQueryHandler implements IQueryHandler {
 
 	@Override
 	public Object nextPage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFilterName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Date modifiedDate(Object item) {
 		// TODO Auto-generated method stub
 		return null;
 	}

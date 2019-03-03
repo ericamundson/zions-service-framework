@@ -2,6 +2,7 @@
     {
         "name": "Active",
         "displayName": "Active",
+        "fieldName": "Custom.TestActive",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -14,7 +15,8 @@
     },
     {
         "name": "Automation_Status",
-        "displayName": "Automation Status",
+        "displayName": "RQM Automation Status",
+        "fieldName": "Custom.TestAutomationStatus",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -31,6 +33,7 @@
     {
         "name": "Business_Approved",
         "displayName": "Business Approved",
+        "fieldName": "Custom.TestBusinessApproved",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -44,6 +47,7 @@
     {
         "name": "Compliance_Related",
         "displayName": "Compliance Related",
+        "fieldName": "Custom.TestComplianceRelated",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -58,6 +62,7 @@
     {
         "name": "Data_Migration_Impact",
         "displayName": "Data Migration Impact",
+        "fieldName": "Custom.TestDataMigrationImpact",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -71,6 +76,7 @@
     {
         "name": "Enviroment",
         "displayName": "Enviroment",
+        "fieldName": "Custom.TestEnviroment",
         "attributeType": "Multiselect",
         "areaPathsFilter": [
             "FutureCore"
@@ -94,6 +100,7 @@
     {
         "name": "Execution_Planning",
         "displayName": "Execution Planning",
+        "fieldName": "Custom.TestExecutionPlanning",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -111,6 +118,7 @@
     {
         "name": "Finance_Impact",
         "displayName": "Finance Impact",
+        "fieldName": "Custom.TestFinanceImpact",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -123,6 +131,7 @@
     {
         "name": "Run_Calendar",
         "displayName": "Run Calendar",
+        "fieldName": "Custom.TestRunCalendar",
         "attributeType": "Multiselect",
         "areaPathsFilter": [
             "FutureCore"
@@ -155,6 +164,7 @@
     {
         "name": "Test_Team",
         "displayName": "Test Team",
+        "fieldName": "Custom.TestTestTeam",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -201,6 +211,7 @@
     {
         "name": "Test_Type",
         "displayName": "Test Type",
+        "fieldName": "Custom.TestTestType",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -223,6 +234,7 @@
     {
         "name": "UAT_Groups",
         "displayName": "UAT Groups",
+        "fieldName": "Custom.TestUATGroups",
         "attributeType": "Multiselect",
         "areaPathsFilter": [
             "FutureCore"
@@ -243,6 +255,7 @@
     {
         "name": "Vendor_Priority",
         "displayName": "Vendor Priority",
+        "fieldName": "Custom.TestVendorPriority",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
             "FutureCore"
@@ -254,6 +267,7 @@
     {
         "name": "Workstream",
         "displayName": "Workstream",
+        "fieldName": "Custom.TestWorkstream",
         "attributeType": "Multiselect",
         "areaPathsFilter": [
             "FutureCore"
@@ -343,28 +357,7 @@
     {
         "name": "Automated_TC_Name",
         "displayName": "Automated TC Name",
-        "attributeType": "Text",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            
-        ]
-    },
-    {
-        "name": "Execution_Count",
-        "displayName": "Execution Count",
-        "attributeType": "Text",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            
-        ]
-    },
-    {
-        "name": "Risk_Model__RE__Calculation",
-        "displayName": "Risk Model (RE) Calculation",
+        "fieldName": "Custom.TestAutomatedTCName",
         "attributeType": "Text",
         "areaPathsFilter": [
             "FutureCore"
@@ -376,6 +369,7 @@
     {
         "name": "_k5J38USxEeiuULVYIY76YA",
         "displayName": "TCG Category 1",
+        "fieldName": "Custom.TestTCGCategory1",
         "attributeType": "Text",
         "areaPathsFilter": [
             "FutureCore"
@@ -387,6 +381,7 @@
     {
         "name": "_k5l80ESxEeiuULVYIY76YA",
         "displayName": "TCG Category 2",
+        "fieldName": "Custom.TestTCGCategory2",
         "attributeType": "Text",
         "areaPathsFilter": [
             "FutureCore"
@@ -398,39 +393,7 @@
     {
         "name": "_k4meUUSxEeiuULVYIY76YA",
         "displayName": "Test Case Group",
-        "attributeType": "Text",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            
-        ]
-    },
-    {
-        "name": "Test_Case_Important_Level",
-        "displayName": "Test Case Important Level",
-        "attributeType": "Text",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            
-        ]
-    },
-    {
-        "name": "Test_Case_Risk",
-        "displayName": "Test Case Risk",
-        "attributeType": "Text",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            
-        ]
-    },
-    {
-        "name": "Unresolved_Defect_Count",
-        "displayName": "Unresolved Defect Count",
+        "fieldName": "Custom.TestTestCaseGroup",
         "attributeType": "Text",
         "areaPathsFilter": [
             "FutureCore"
@@ -442,6 +405,7 @@
     {
         "name": "Vendor_TC_Name",
         "displayName": "Vendor TC Name",
+        "fieldName": "Custom.TestVendorTCName",
         "attributeType": "Text",
         "areaPathsFilter": [
             "FutureCore"

@@ -36,6 +36,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 		cp.checkpointId = idCounter
 		cp.phase = phase
 		cp.pageUrl = pageUrl
+		cp.timeStamp = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 		currentCheckpoint = cp
 		cacheManagementService.saveToCache(cp, "${idCounter}-${CACHE_TYPE}", CACHE_TYPE)
 		idCounter++
@@ -59,7 +60,25 @@ class CheckpointManagementService implements ICheckpointManagementService {
 
 	@Override
 	public Checkpoint selectCheckpoint(String key) {
-		if (key == 'last') {
+		if (key == 'update') {
+			int i = 0
+			while (true) {
+				
+				if (!cacheManagementService.exists("${i}-${CACHE_TYPE}")) {
+					return currentCheckpoint;
+				}
+				Checkpoint cp = loadCheckpoint(i)
+				if (cp.phase == 'update') {
+					currentCheckpoint = cp
+					//idCounter = currentCheckpoint.checkpointId
+					idCounter = 0
+					return currentCheckpoint;
+
+				}
+				i++
+			}
+
+		} else if (key == 'last') {
 			int i = 0
 			while (true) {
 				
@@ -67,7 +86,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 					currentCheckpoint = loadCheckpoint(i-1)
 					if (currentCheckpoint != null) {
 						idCounter = currentCheckpoint.checkpointId
-						idCounter++
+						//idCounter++
 					}
 					return currentCheckpoint;
 				}
@@ -80,7 +99,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 					currentCheckpoint = loadCheckpoint(i-1)
 					if (currentCheckpoint != null) {
 						idCounter = currentCheckpoint.checkpointId
-						idCounter++
+						//idCounter++
 					}
 					return currentCheckpoint;
 				}  
@@ -89,7 +108,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 					currentCheckpoint = loadCheckpoint(i-1)
 					if (currentCheckpoint != null) {
 						idCounter = currentCheckpoint.checkpointId
-						idCounter++
+						//idCounter++
 					}
 					return currentCheckpoint;
 
@@ -101,7 +120,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 		currentCheckpoint = loadCheckpoint(key)
 		if (currentCheckpoint != null) {
 			idCounter = currentCheckpoint.checkpointId
-			idCounter++
+			//idCounter++
 		}
 		return currentCheckpoint
 	}
@@ -125,7 +144,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 			idCounter = 0;
 			return null
 		}
-		return new Checkpoint(cpMap)
+		return new Checkpoint(cpMap )
 
 	}
 
@@ -135,7 +154,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 			idCounter = 0;
 			return null
 		}
-		return new Checkpoint(cpMap)
+		return new Checkpoint(cpMap )
 
 	}
 	
