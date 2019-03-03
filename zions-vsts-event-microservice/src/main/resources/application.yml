@@ -1,0 +1,46 @@
+# levels for loggers, e.g. "logging.level.org.springframework=DEBUG" (TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF)
+logging:
+  level:
+     org:
+       springframework: WARN
+     com:
+       zions:
+         vsts: DEBUG
+
+#spring boot logging configuration
+  file: eventforwarder.log
+
+#use spring boot whitelabel error page to see in browser client if you encounter a server error
+error:
+  whitelabel:
+    enabled: true
+
+#disable spring boot's auto-configuration for Apache Velocity
+spring:
+  velocity:
+    enabled: false
+
+# TFS connection properties
+tfs:
+# test
+#  url: https://dev.azure.com/eto-dev
+#  user: z091556
+#  token: emjfvuveeugbljidpareidxmya5zdvugt3gqp5ptidakh52ekq3q
+# prod
+  url: https://dev.azure.com/ZionsETO
+  user: svc-cloud-vsbuildagent@zionsbancorporation.onmicrosoft.com
+  token: i7lgdocpaar45qlx3wbmr5bfros6j6jhuxbjc7b5twucufn2w43a
+
+# Specify port for Tomcat (default = 8080)
+server:
+  port: 9000
+
+# Spring actuator
+endpoints:
+  enabled: false
+  
+#disable the automatic adding of the `X-Application-Context` HTTP header
+management:
+  add-application-context-header: false
+
+  
