@@ -193,81 +193,102 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 		println("${getCurTimestamp()} - Querying DNG Base Artifacts ...")
 		def results = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
-		def changeList = []
-		def uploadedArtifacts = []
-		def idMap = [:]
-		int count = 0		
-		results.Description.children().each { item ->
-			String modified = item.Requirement.modified
-			String identifier = item.Requirement.identifier
-			String formatString = item.Requirement.ArtifactFormat.@'rdf:resource'
-			String format = formatString.substring(formatString.lastIndexOf('#') + 1)
-			String about = "${item.Requirement.@'rdf:about'}"
-			ClmArtifact artifact = new ClmArtifact(about)
-			if (format == 'Text') {
-				clmRequirementsManagementService.getTextArtifact(artifact)
+		// Continue until all pages have been processed
+		def page = 1
+		while (true) {
+			def changeList = []
+			def uploadedArtifacts = []
+			def idMap = [:]
+			int count = 0		
+			results.Description.children().each { item ->
+				if (item.Requirement != '') {
+					def artifact = getItemChanges(tfsProject, item, memberMap)
+					def aid = artifact.getCacheID()
+					artifact.changes.each { key, val ->
+						String idkey = "${aid}"
+						idMap[count] = idkey
+						changeList.add(val)
+						count++		
+					}
+					
+					// If uploaded artifact, save for attachment processing
+					if (artifact.getFormat() == 'WrapperResource') {
+						uploadedArtifacts.add(artifact)
+					}
+				}
 			}
-			else if (format == 'WrapperResource'){
-				clmRequirementsManagementService.getNonTextArtifact(artifact)
+			println("${getCurTimestamp()} - $count Base Artifacts were retrieved")
+			
+			// Create work items in Azure DevOps
+			if (changeList.size() > 0) {
+				// Process work item changes in Azure DevOps
+				println("${getCurTimestamp()} - Processing work item changes...")
+				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+			}
+			
+			// Upload Attachments to Azure DevOps
+			println("${getCurTimestamp()} - Uploading attachments...")
+			changeList.clear()
+			idMap.clear()
+			count = 0
+			uploadedArtifacts.each { artifact ->
+				def files = []
+				files[0] = rmFileManagementService.cacheRequirementFile(artifact)
+				
+				String id = artifact.getCacheID()
+				def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+				if (wiChanges != null) {
+					def url = "${wiChanges.body[1].value.url}"
+					def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
+					wiChanges.body.add(change)
+					idMap[count] = "${id}"
+					changeList.add(wiChanges)
+					count++
+				}
+			}
+			println("${getCurTimestamp()} - $count Attachments were uploaded")
+			if (changeList.size() > 0) {
+				// Associate attachments to work items in Azure DevOps
+				println("${getCurTimestamp()} - Associating attachments to work items...")
+				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+			}
+			
+			// Process next page
+			String nextUrl = "${results.ResponseInfo.nextPage.@'rdf:resource'}"
+			if (nextUrl != '') {
+				page++
+				println("${getCurTimestamp()} - Retrieving page ${page}...")
+				results = clmRequirementsManagementService.nextPage(nextUrl)
 			}
 			else {
-				println("WARNING: Unsupported format of $format for artifact id: $identifier")
+				break
 			}
-			def changes = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
-			def aid = artifact.getCacheID()
-			changes.each { key, val ->
-				String idkey = "${aid}"
-				idMap[count] = idkey
-				changeList.add(val)
-				count++		
-			}
+		}
 			
-			// If uploaded artifact, save for attachment processing
-			if (artifact.getFormat() == 'WrapperResource') {
-				uploadedArtifacts.add(artifact)
-			}
-		}
-		println("${getCurTimestamp()} - $count Base Artifacts were retrieved")
-		
-		
-		// Create work items in Azure DevOps
-		if (changeList.size() > 0) {
-			// Process work item changes in Azure DevOps
-			println("${getCurTimestamp()} - Processing work item changes...")
-			workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-		}
-		
-		// Upload Attachments to Azure DevOps
-		println("${getCurTimestamp()} - Uploading attachments...")
-		changeList.clear()
-		idMap.clear()
-		count = 0
-		uploadedArtifacts.each { artifact ->
-			def files = []
-			files[0] = rmFileManagementService.cacheRequirementFile(artifact)
-			
-			String id = artifact.getCacheID()
-			def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-			if (wiChanges != null) {
-				def url = "${wiChanges.body[1].value.url}"
-				def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
-				wiChanges.body.add(change)
-				idMap[count] = "${id}"
-				changeList.add(wiChanges)
-				count++
-			}
-		}
-		println("${getCurTimestamp()} - $count Attachments were uploaded")
-		if (changeList.size() > 0) {
-			// Associate attachments to work items in Azure DevOps
-			println("${getCurTimestamp()} - Associating attachments to work items...")
-			workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-		}
-		
 		println("Processing completed")
 
 	}
-	
+
+	def getItemChanges(String project, def rmItemData, def memberMap) {
+
+		String modified = rmItemData.Requirement.modified
+		String identifier = rmItemData.Requirement.identifier
+		String formatString = rmItemData.Requirement.ArtifactFormat.@'rdf:resource'
+		String format = formatString.substring(formatString.lastIndexOf('#') + 1)
+		String about = "${rmItemData.Requirement.@'rdf:about'}"
+		ClmArtifact artifact = new ClmArtifact('', format, about)
+		if (format == 'Text') {
+			clmRequirementsManagementService.getTextArtifact(artifact)
+		}
+		else if (format == 'WrapperResource'){
+			clmRequirementsManagementService.getNonTextArtifact(artifact)
+		}
+		else {
+			println("WARNING: Unsupported format of $format for artifact id: $identifier")
+		}
+		artifact.setChanges(clmRequirementsItemManagementService.getChanges(project, artifact, memberMap))
+		return artifact
+	}
 
 	def getCurTimestamp() {
 		new Date().format( 'yyyy/MM/dd HH:MM' )
@@ -283,7 +304,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'oslc.namespaces', 'oslc.select', 'oslc.where', 'rm.filter', 'mr.url','tfs.oAuthToken']
+		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'clm.pageSize', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'oslc.namespaces', 'oslc.select', 'oslc.where', 'rm.filter', 'mr.url','tfs.oAuthToken']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

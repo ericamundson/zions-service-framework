@@ -7,19 +7,16 @@ class ClmArtifact {
 	def attributeMap
 	def collectionArtifacts
 	def links
+	def changes
 	public ClmArtifact(String in_title, String in_format, String in_about) {
 		attributeMap = [:]
 		collectionArtifacts = []
+		changes = [:]
 		if (in_title != null) {
 			setTitle(in_title) // Needs to be in attributeMap because it will map over to ADO attribute
 		}
 		this.setAbout(in_about)
 		format = in_format
-	}
-	public ClmArtifact(String in_about) {
-		attributeMap = [:]
-		collectionArtifacts = []
-		this.setAbout(in_about)
 	}
 	public void setAbout(String in_about) {
 		attributeMap.'about' = in_about

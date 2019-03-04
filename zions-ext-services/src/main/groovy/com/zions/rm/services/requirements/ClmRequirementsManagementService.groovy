@@ -49,6 +49,10 @@ class ClmRequirementsManagementService {
 	String clmUrl
 	
 	@Autowired
+	@Value('${clm.pageSize}')
+	String clmPageSize
+	
+	@Autowired
 	IGenericRestClient rmGenericRestClient
 	
 	def queryForModules(String projectURI, String query) {
@@ -123,33 +127,28 @@ class ClmRequirementsManagementService {
 	
 	def queryForArtifacts(String projectURI, String oslcNS, String oslcSelect, String oslcWhere) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/views?oslc.query=&projectURL=" + this.rmGenericRestClient.clmUrl + "/rm/process/project-areas/" + projectURI + 
-					oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl);
+					oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl) + "&oslc.pageSize=${clmPageSize}";
 
 		uri = uri.replace('<','%3C').replace('>', '%3E')
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
 		String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+//		println(xml)
 		return new XmlSlurper().parseText(xml)
 	}
-	/*
-
-	def queryForArtifacts(String projectURI, String oslcNS, String oslcSelect, String oslcWhere) {
-		String query = "&projectURL=" + this.rmGenericRestClient.clmUrl + "/rm/process/project-areas/" + projectURI +
-					oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl);
-		String uri = this.rmGenericRestClient.clmUrl + "/rm/views?oslc.query=" + URLEncoder.encode(query, 'UTF-8')
+	
+	public def nextPage(url) {
 		def result = rmGenericRestClient.get(
-				uri: uri,
-				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
-		return result
+			uri: url,
+			headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
+		String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+//		println(xml)
+		return new XmlSlurper().parseText(xml)
 	}
-	*/
+
 	boolean shouldAddCollectionsToModule(String moduleType) {
 		return (moduleType == 'UI Spec')
-	}
-	
-	def nextPage(String url) {
-		
 	}
 	
 	def getMemberEmail(String url) {

@@ -74,13 +74,13 @@ class ClmRequirementsItemManagementService {
 	public ClmRequirementsItemManagementService() {
 		// TODO Auto-generated constructor stub
 	}
-
-	def getChanges(String project, def rmItemData, def memberMap, def runData = null) {
-		String type = rmItemData.getArtifactType()
+	
+	def getChanges(String project, def artifact, def memberMap, def runData = null) {
+		String type = artifact.getArtifactType()
 		def maps = getReqMaps(type)
 		def outItems = [:]
 		maps.each { map ->
-			def item = generateItemData(rmItemData, map, project, memberMap)
+			def item = generateItemData(artifact, map, project, memberMap)
 			if (item != null) {
 				outItems["${map.target}"] = item
 			}
