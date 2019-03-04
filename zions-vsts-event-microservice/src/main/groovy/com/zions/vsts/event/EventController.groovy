@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate
 import groovy.util.logging.Slf4j
 import groovy.json.JsonSlurper
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
@@ -28,7 +29,7 @@ import org.apache.commons.codec.binary.Base64;
 @Slf4j
 public class EventController {
 
-	private Map services = new HashMap<String,Map>()
+	private Map services = new HashMap<String,List>()
 
 	//@Autowired
 	//private HttpServletRequest request
@@ -42,28 +43,30 @@ public class EventController {
 	public ResponseEntity forwardADOEvent(@RequestBody String body, HttpMethod method, HttpServletRequest request) throws URISyntaxException {
 		log.debug("EventController::forwardADOEvent - Request body:\n"+body)
 		def eventData = new JsonSlurper().parseText(body)
-		// handle multiple service mappings fo ra single event type
+		// handle multiple service mappings for a single event type
 		//def serviceDetails = getServiceDetails("${eventData.eventType}")
-		java.util.List svcMappings = this.services.get("${eventData.eventType}")
-		if (svcMappings != null) {
-			RegisteredService registeredSvc = null
-			for (java.util.ListIterator<RegisteredService> iter = svcMappings.listIterator(); iter.hasNext(); ) {
-				regSvc = iter.next()
-				String svcName = regSvc.serviceName
-				// TODO: if there are multiple mappings for same event type / serviceName, round robin the requests
-				log.debug("Create URI for target service: "+request.getRequestURI())
-				URI uri = new URI("${regSvc.protocol}", null, "${regSvc.serverUrl}", regSvc.port, request.getRequestURI(), request.getQueryString(), null)
-				RestTemplate restTemplate = new RestTemplate()
-				log.debug("Forward request to target service ...")
-				ResponseEntity<String> respEntity = restTemplate.exchange(uri, method, new HttpEntity<String>(body, createHeaders(request)), String.class)
-				return respEntity
-				//return ResponseEntity.ok(HttpStatus.OK)
-			}
+		String eventType = "${eventData.eventType}"
+		List svcMappings = this.services.get(eventType)
+		if (svcMappings == null) {
+			// Did not find a valid service mapping for which to forward the request
+			def errMessage = "No service mappings for event type: ${eventData.eventType}. Unable to forward the request."
+			log.error("${errMessage}")
+			return new ResponseEntity<String>("${errMessage}", HttpStatus.UNPROCESSABLE_ENTITY)
 		}
-		// Did not find a valid service mapping for which to forward the request
-		def errMessage = "No service mappings for event type: ${eventData.eventType}. Unable to forward the request."
-		log.error("${errMessage}")
-		return new ResponseEntity<String>("${errMessage}", HttpStatus.UNPROCESSABLE_ENTITY)
+		log.debug("Found service mappings for event ${eventData.eventType}")
+		for (java.util.ListIterator<RegisteredService> iter = svcMappings.listIterator(); iter.hasNext(); ) {
+			RegisteredService regSvc = iter.next()
+			String svcName = regSvc.serviceName
+			log.debug("Mapping is for " + svcName + " service")
+			// TODO: if there are multiple mappings for same event type / serviceName, round robin the requests
+			log.debug("Create URI for target service: "+request.getRequestURI())
+			URI uri = new URI("${regSvc.protocol}", null, "${regSvc.serverUrl}", regSvc.port, request.getRequestURI(), request.getQueryString(), null)
+			RestTemplate restTemplate = new RestTemplate()
+			log.debug("Forward request to target service ...")
+			ResponseEntity<String> respEntity = restTemplate.exchange(uri, method, new HttpEntity<String>(body, createHeaders(request)), String.class)
+			return respEntity
+			//return ResponseEntity.ok(HttpStatus.OK)
+		}
 	}
 
     /**
@@ -102,7 +105,7 @@ public class EventController {
 
     private def getServiceDetails(String eventType) {
 		log.debug("In getServiceDetails - eventType = "+eventType)
-		java.util.List svcMappings = this.services.get(eventType)
+		List svcMappings = this.services.get(eventType)
 		if (svcMappings == null) {
 			return null
 		}
