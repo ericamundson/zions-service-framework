@@ -3,17 +3,18 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 
 @Component
-class DetailsOfGapHandler extends RmBaseAttributeHandler {
-
+class artifactTypeHandler extends RmBaseAttributeHandler {
+	static int SIZE = 255
+	
 	@Override
 	public String getFieldName() {
 		// TODO Auto-generated method stub
-		return 'Details of Gap'
+		return 'Artifact Type'
 	}
 
 	@Override
-	public Object formatValue(Object val, Object itemData) {
-		return toHtml(val)
+	public Object formatValue(Object value, Object itemData) {
+		return "${value}";
 	}
 
 }

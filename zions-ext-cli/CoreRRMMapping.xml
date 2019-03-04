@@ -17,6 +17,9 @@
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="documentTypeHandler" target="Custom.DocumentType"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
@@ -36,6 +39,9 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="documentTypeHandler" target="Custom.DocumentType"/>
 		<excluded>
 			<field name="Identifier"/>
@@ -57,6 +63,9 @@
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
@@ -77,6 +86,9 @@
 		<field source="nfrTypeHandler" target="Custom.NFRType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
@@ -97,6 +109,9 @@
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="uiTransNumHandler" target="Custom.TransactionNum"/>
 		<field source="uiOriginalTagNameHandler" target="Custom.OriginalTagName"/>
 		<field source="uiTagNameHandler" target="Custom.TagName"/>
@@ -135,6 +150,9 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
@@ -154,6 +172,9 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
@@ -174,6 +195,9 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
@@ -189,6 +213,10 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
@@ -205,6 +233,10 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
@@ -222,6 +254,9 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
@@ -238,6 +273,9 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
@@ -254,6 +292,9 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
 			<field name="Review Counter"/>
