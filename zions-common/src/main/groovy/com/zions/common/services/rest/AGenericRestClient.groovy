@@ -83,7 +83,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		}
 		//log.debug("GenericRestClient::get -- URI after checkBlankCollection: "+oinput.uri)
 		HttpResponseDecorator resp = delegate.get(oinput)
-		
+		if (resp.data == null) {
+			log.debug("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
+		}
+
 		if (withHeader) {
 			def headerMap = [:]
 			resp.allHeaders.each { Header header ->
