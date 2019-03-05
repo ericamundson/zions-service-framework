@@ -1,21 +1,28 @@
 package com.zions.rm.services.requirements
 
 class ClmArtifact {
-	String about
 	String format
 	String tfsWorkitemType
 	String fileHref
 	def attributeMap
 	def collectionArtifacts
 	def links
+	def changes
 	public ClmArtifact(String in_title, String in_format, String in_about) {
 		attributeMap = [:]
 		collectionArtifacts = []
+		changes = [:]
 		if (in_title != null) {
 			setTitle(in_title) // Needs to be in attributeMap because it will map over to ADO attribute
 		}
-		about = in_about
+		this.setAbout(in_about)
 		format = in_format
+	}
+	public void setAbout(String in_about) {
+		attributeMap.'about' = in_about
+	}
+	public String getAbout() {
+		return attributeMap.'about'
 	}
 	public void setTitle(String in_title) {
 		attributeMap.'title' = in_title

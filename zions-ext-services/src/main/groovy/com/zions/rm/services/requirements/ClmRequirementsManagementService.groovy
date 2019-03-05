@@ -10,6 +10,9 @@ import groovy.util.slurpersupport.NodeChild
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 
+import java.nio.charset.StandardCharsets
+import org.apache.commons.io.IOUtils
+
 /**
  * Handles queries into DNG to navigate object structure of DNG.
  * 
@@ -44,6 +47,10 @@ class ClmRequirementsManagementService {
 	@Autowired
 	@Value('${clm.url}')
 	String clmUrl
+	
+	@Autowired
+	@Value('${clm.pageSize}')
+	String clmPageSize
 	
 	@Autowired
 	IGenericRestClient rmGenericRestClient
@@ -118,12 +125,30 @@ class ClmRequirementsManagementService {
 		return modules
 	}
 	
-	boolean shouldAddCollectionsToModule(String moduleType) {
-		return (moduleType == 'UI Spec')
+	def queryForArtifacts(String projectURI, String oslcNS, String oslcSelect, String oslcWhere) {
+		String uri = this.rmGenericRestClient.clmUrl + "/rm/views?oslc.query=&projectURL=" + this.rmGenericRestClient.clmUrl + "/rm/process/project-areas/" + projectURI + 
+					oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl) + "&oslc.pageSize=${clmPageSize}";
+
+		uri = uri.replace('<','%3C').replace('>', '%3E')
+		def result = rmGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
+		String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+//		println(xml)
+		return new XmlSlurper().parseText(xml)
 	}
 	
-	def nextPage(String url) {
-		
+	public def nextPage(url) {
+		def result = rmGenericRestClient.get(
+			uri: url,
+			headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
+		String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+//		println(xml)
+		return new XmlSlurper().parseText(xml)
+	}
+
+	boolean shouldAddCollectionsToModule(String moduleType) {
+		return (moduleType == 'UI Spec')
 	}
 	
 	def getMemberEmail(String url) {
@@ -145,10 +170,10 @@ class ClmRequirementsManagementService {
 		return emailAddress
 	}
 	
-	private def getTextArtifact(def in_artifact) {
+	def getTextArtifact(def in_artifact) {
 		
 		def result = rmGenericRestClient.get(
-				uri: in_artifact.about.replace("resources/", "publish/text?resourceURI="),
+				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
 				headers: [Accept: 'application/xml'] );
 					
 		// Extract artifact attributes
@@ -209,14 +234,15 @@ class ClmRequirementsManagementService {
 		}
 		return memberHrefs
 	}
-	private def getNonTextArtifact(def in_artifact) {
+	def getNonTextArtifact(def in_artifact) {
 		
 		def result = rmGenericRestClient.get(
-				uri: in_artifact.about.replace("resources/", "publish/resources?resourceURI="),
+				uri: in_artifact.getAbout().replace("resources/", "publish/resources?resourceURI="),
 				headers: [Accept: 'application/xml'] );
 					
 		// Extract artifact attributes
 		result.children().each { artifact ->
+			in_artifact.setTitle("${artifact.title}")
 			artifact.children().each { child ->
 				String iName = child.name()
 				if (iName == "collaboration" ) {

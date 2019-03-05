@@ -8,7 +8,7 @@ logging:
          vsts: DEBUG
 
 #spring boot logging configuration
-  file: policymanagement.log
+  file: eventforwarder.log
 
 #use spring boot whitelabel error page to see in browser client if you encounter a server error
 error:
@@ -30,25 +30,10 @@ tfs:
   url: https://dev.azure.com/ZionsETO
   user: svc-cloud-vsbuildagent@zionsbancorporation.onmicrosoft.com
   token: i7lgdocpaar45qlx3wbmr5bfros6j6jhuxbjc7b5twucufn2w43a
-  project: dummy
-  collection:
-  build:
-    queue: On-Prem Production
-    use:
-      template: true
-    generic:
-      name: generic
-    properties:
-      file: dts-re-build.properties
-  release:
-    use:
-      template: false
-    generic:
-      name: template-release
 
 # Specify port for Tomcat (default = 8080)
 server:
-  port: 9091
+  port: 9000
 
 # Spring actuator
 endpoints:
@@ -57,50 +42,5 @@ endpoints:
 #disable the automatic adding of the `X-Application-Context` HTTP header
 management:
   add-application-context-header: false
-
-# spring mail properties
-spring:
-  mail:
-    host:  outboundrelay.cs.zionsbank.com
-    port:  25
-    properties:
-      mail:
-        smtp:
-          connectiontimeout:  5000
-          timeout:  5000
-          writetimeout:  5000
-
-email:
-  recipient:
-    address: SCMTeam@zionsbancorp.com
-
-# type map placeholder
-type:
-  map:
-    resource:  dummy.json
-  
-name:
-  map:
-    resource:  namedummy.json
-    
-external:
-  name: External
-
-default:
-  wit:
-    name: Feature
-    
-cache:
-  location: .\cache
-  
-id:
-  tracking:
-    field: dummy
-# Event registration properties
-reg:
-# test
-  url: http://utmvti0192:9000
-  user: svc-cloud-vsbuildagent
-  password: sRt2?t3U
 
   

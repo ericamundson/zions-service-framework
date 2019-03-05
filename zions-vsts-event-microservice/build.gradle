@@ -1,0 +1,12 @@
+bootJar {
+	enabled = true
+	mainClassName = 'com.zions.vsts.event.EventApplication'
+	baseName = 'zions-vsts-event'
+	version =  "${version}"
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+	compile project(':zions-common')
+}
