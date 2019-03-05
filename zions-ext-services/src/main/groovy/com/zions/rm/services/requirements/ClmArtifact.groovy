@@ -51,4 +51,17 @@ class ClmArtifact {
 	public String getDescription() {
 		return attributeMap.'Primary Text'
 	}
+	public void setWhereUsed(def lookup) {
+		def whereUsedHtml = null
+		def usedReferences = lookup.'**'.findAll { p ->
+			"${p.name()}" == this.getID()
+		}
+		usedReferences.each { ref ->
+			
+		}
+		attributeMap.'Where Used' = whereUsedHtml
+	}
+	public String getWhereUsed() {
+		return attributeMap.'Where Used'
+	}
 }

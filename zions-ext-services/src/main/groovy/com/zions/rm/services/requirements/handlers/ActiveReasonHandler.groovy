@@ -3,7 +3,7 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 
 @Component
-class StateHandler extends RmBaseAttributeHandler {
+class ActiveReasonHandler extends RmBaseAttributeHandler {
 	
 	@Override
 	public String getFieldName() {
@@ -13,16 +13,10 @@ class StateHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		if (value == 'Draft' || value == 'Ready for Review' || value == 'Ready for Stakeholder Approval') {
-			return value
-		}
-		else if (value == 'TCS Reviewed' || value == 'TCS Reviewed with Changes' || value == 'Zions Reviewed' ||
+		if (value == 'TCS Reviewed' || value == 'TCS Reviewed with Changes' || value == 'Zions Reviewed' ||
 			     value == 'Zions Reviewed with Changes' || value == 'Large Team Review w/ Changes' || value == 'Parked' ||
 				 value == 'Approved' || value == 'Solution Approved') {
-			return 'Active'
-		}
-		else if (value == 'Duplicate' || value == 'Delete' || value == 'Rejected' || value == 'Deprecated' || value == 'Stakeholder Approved') {
-			return 'Closed'
+			return value
 		}
 		else {
 			return null

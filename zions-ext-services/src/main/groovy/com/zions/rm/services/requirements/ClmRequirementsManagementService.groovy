@@ -133,20 +133,42 @@ class ClmRequirementsManagementService {
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
-		String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
-//		println(xml)
-		return new XmlSlurper().parseText(xml)
+		if (result != null) {
+			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+			return new XmlSlurper().parseText(xml)
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public def nextPage(url) {
 		def result = rmGenericRestClient.get(
 			uri: url,
 			headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
-		String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
-//		println(xml)
-		return new XmlSlurper().parseText(xml)
+		if (result != null) {
+			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+			return new XmlSlurper().parseText(xml)
+		}
+		else {
+			return null;
+		}
 	}
 
+	def queryForWhereUsed() {
+		String uri = this.rmGenericRestClient.clmUrl + "/rs/query/11126/dataservice?report=11099&limit=-1&basicAuthenticationEnabled=true"
+		def result = rmGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/rdf+xml'] );
+		if (result != null) {
+			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+			return new XmlSlurper().parseText(xml)
+		}
+		else {
+			return null;
+		}
+	}
+	
 	boolean shouldAddCollectionsToModule(String moduleType) {
 		return (moduleType == 'UI Spec')
 	}
