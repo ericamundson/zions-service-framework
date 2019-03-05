@@ -1,4 +1,4 @@
-{ "Result": {
+ {
 		"method":"patch",
 	    "requestContentType": "application/json",
 	    "contentType": "application/json",
@@ -14,4 +14,3 @@
 	        }
 	    ]
 	}
-}

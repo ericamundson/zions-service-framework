@@ -301,7 +301,7 @@ class TranslateRQMToMTM implements CliAction {
 
 					}
 					clManager.flush();
-				//translate work data.
+					//translate work data.
 				}
 				if (phase == 'plans') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
@@ -340,6 +340,23 @@ class TranslateRQMToMTM implements CliAction {
 										String idkey = "${tsid}-${key}"
 										def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
 									}
+								}
+								idKeyMap[idtype] = idtype
+							}
+						}
+						testplan.testcase.each { testcaseRef ->
+							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+							int aid = Integer.parseInt(testcase.webId.text())
+							// generate test data
+							//						String testcasexml = XmlUtil.serialize(testcase)
+							//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
+							//						os = resultFile.newDataOutputStream()
+							//						os << testcasexml
+							//						os.close()
+							String idtype = "${aid}-testcase"
+							if (!idKeyMap.containsKey(idtype)) {
+								def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+									clManager.add("${aid}-${key}",val)
 								}
 								idKeyMap[idtype] = idtype
 							}

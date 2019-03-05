@@ -89,8 +89,8 @@ public class TestManagementService {
 	 * @param id cache identity
 	 * @return ADO test result representation 
 	 */
-	public def sendResultChanges(String collection, String project, def inexecutionResult, String id) {
-		def executionResult = inexecutionResult.Result
+	public def sendResultChanges(String collection, String project, def executionResult, String id) {
+		//def executionResult = inexecutionResult.Result
 		String method = "${executionResult.method}"
 		executionResult.remove('method')
 		def result = null

@@ -75,7 +75,7 @@ class BaseQueryHandler implements IQueryHandler {
 	
 	public String getFilterName() {
 		// TODO Auto-generated method stub
-		return this.filterName;
+		return this.itemFilter;
 	}
 	
 	public Date modifiedDate(Object item) {

@@ -90,7 +90,9 @@ public class ClmTestItemManagementService {
 				item = generateItemData(qmItemData, map, project, memberMap, parent)
 			}
 			String key = "${map.target}"
-			closure(key, item)
+			if (item) {
+				closure(key, item)
+			}
 		}
 		//return outItems
 	}
@@ -189,6 +191,10 @@ public class ClmTestItemManagementService {
 		String id = "${qmItemData.webId.text()}-${map.target}"
 		def cacheWI = null
 		if (type == 'Test Case' || type.endsWith(' WI')) {
+			if (type.endsWith(' WI')) {
+				String atype = "${map.target}".substring(0, type.length()-3)
+				etype = URLEncoder.encode(atype, 'utf-8').replace('+', '%20')
+			}
 			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			if (cacheWI != null) {
