@@ -90,7 +90,7 @@ class FileManagementService {
 			files.each { fileItem ->
 				File file = fileItem.file
 				
-				if (!linkExists(cacheWI, file)) {
+				if (file && !linkExists(cacheWI, file)) {
 					def area = cacheWI.fields.'System.AreaPath'
 					def uploadData = uploadAttachment(collection, project, area, file)
 					if (uploadData != null) {

@@ -1,19 +1,5 @@
 [
-    {
-        "name": "Active",
-        "displayName": "Active",
-        "fieldName": "Custom.TestActive",
-        "attributeType": "Enumeration",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "Active",
-            "Deferred",
-            "Retired"
-        ]
-    },
-    {
+     {
         "name": "Automation_Status",
         "displayName": "RQM Automation Status",
         "fieldName": "Custom.TestAutomationStatus",

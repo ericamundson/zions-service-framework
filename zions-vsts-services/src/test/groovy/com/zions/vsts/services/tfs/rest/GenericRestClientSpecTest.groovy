@@ -32,7 +32,7 @@ class GenericRestClientSpecTest extends Specification {
 		given: 'make delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.get(_) >> resp
-		1* resp.getData() >> [stuff: 'stuff']
+		2* resp.getData() >> [stuff: 'stuff']
 		
 		when: 'call method under test'
 		def result = genericRestClient.get(
@@ -52,7 +52,7 @@ class GenericRestClientSpecTest extends Specification {
 		given: 'make delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.get(_) >> resp
-		1* resp.getData() >> null
+		2* resp.getData() >> null
 		
 		when: 'call method under test'
 		def result = genericRestClient.get(
