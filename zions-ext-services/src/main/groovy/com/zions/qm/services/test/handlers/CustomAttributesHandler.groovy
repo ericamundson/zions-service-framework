@@ -115,16 +115,18 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 		def retVal = []
 		String mapVal = new JsonBuilder(aValue).toString()
 		retVal.push([op:'add', path:"/fields/${fieldMap.target}", value: mapVal])
-		aValue.'values'.each { val -> 
-			String fieldName = descMap[val.name].fieldName
-			if (fieldName) {
-				def aField = getExisting(retVal, fieldName)
-				if (!aField) {
-					aField = [op:'add', path:"/fields/${fieldName}", value: val.value]
-					retVal.push(aField)
-				} else {
-					String oval = "${aField.value};${val.value}"
-					aField.'value' = oval
+		aValue.'values'.each { val ->
+			if (descMap[val.name]) {
+				String fieldName = descMap[val.name].fieldName
+				if (fieldName) {
+					def aField = getExisting(retVal, fieldName)
+					if (!aField) {
+						aField = [op:'add', path:"/fields/${fieldName}", value: val.value]
+						retVal.push(aField)
+					} else {
+						String oval = "${aField.value};${val.value}"
+						aField.'value' = oval
+					}
 				}
 			}
 		}

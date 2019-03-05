@@ -90,7 +90,9 @@ public class ClmTestItemManagementService {
 				item = generateItemData(qmItemData, map, project, memberMap, parent)
 			}
 			String key = "${map.target}"
-			closure(key, item)
+			if (item) {
+				closure(key, item)
+			}
 		}
 		//return outItems
 	}
