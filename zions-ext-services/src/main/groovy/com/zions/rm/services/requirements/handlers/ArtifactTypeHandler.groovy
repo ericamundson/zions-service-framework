@@ -3,7 +3,7 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 
 @Component
-class artifactTypeHandler extends RmBaseAttributeHandler {
+class ArtifactTypeHandler extends RmBaseAttributeHandler {
 	static int SIZE = 255
 	
 	@Override

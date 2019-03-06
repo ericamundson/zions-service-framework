@@ -12,9 +12,7 @@ class ClmArtifact {
 		attributeMap = [:]
 		collectionArtifacts = []
 		changes = [:]
-		if (in_title != null) {
-			setTitle(in_title) // Needs to be in attributeMap because it will map over to ADO attribute
-		}
+		setTitle(in_title)
 		this.setAbout(in_about)
 		format = in_format
 	}
@@ -54,14 +52,24 @@ class ClmArtifact {
 	public void setWhereUsed(def lookup) {
 		def whereUsedHtml = null
 		def usedReferences = lookup.'**'.findAll { p ->
-			"${p.name()}" == this.getID()
+			"${p.name()}" == 'REFERENCE_ID' && "${p}" == this.getID()
 		}
-		usedReferences.each { ref ->
-			
+		if (usedReferences.size() > 0) {
+			whereUsedHtml = '<div>'
+			usedReferences.each { ref ->
+				whereUsedHtml = whereUsedHtml + "<a href=${ref.parent().URL2}>${ref.parent().MODULE_NAME}</a><br>"
+			}
+			whereUsedHtml = whereUsedHtml + '</div>'
 		}
 		attributeMap.'Where Used' = whereUsedHtml
 	}
 	public String getWhereUsed() {
 		return attributeMap.'Where Used'
+	}
+	public void setBaseArtifactURI(String in_uri) {
+		attributeMap.'Base Artifact URI' = in_uri
+	}
+	public String getBaseArtifactURI() {
+		return attributeMap.'Base Artifact URI'
 	}
 }

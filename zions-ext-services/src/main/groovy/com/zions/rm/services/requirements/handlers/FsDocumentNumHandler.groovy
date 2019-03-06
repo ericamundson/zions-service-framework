@@ -3,7 +3,7 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 
 @Component
-class fsDocumentNumHandler extends RmBaseAttributeHandler {
+class FsDocumentNumHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public String getFieldName() {

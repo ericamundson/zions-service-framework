@@ -4,13 +4,12 @@ class ClmModuleElement extends ClmArtifact {
 	boolean isHeading
 	boolean isDuplicate
 	int depth
-	String baseArtifactURI
 	boolean isDeleted
 
 	
 	public ClmModuleElement(String in_title, String in_baseURI, int in_depth, String in_format, String in_isHeading, String in_about) {
 		super(in_title, in_format, in_about)
-		baseArtifactURI = in_baseURI
+		this.setBaseArtifactURI(in_baseURI)
 		depth = in_depth
 
 		isHeading = (in_isHeading == "true")
