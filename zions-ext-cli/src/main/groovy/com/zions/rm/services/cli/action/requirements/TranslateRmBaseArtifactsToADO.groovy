@@ -191,6 +191,12 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		def mappingData = rmMappingManagementService.mappingData
 		println('Getting ADO Project Members...')
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+		println("${getCurTimestamp()} - Querying for Where Used Lookup ...")
+		def whereUsed = clmRequirementsManagementService.queryForWhereUsed()
+		if (whereUsed == null) {
+			println('***Error retrieving "Where Used" lookup.  Check the log for details')
+			return
+		}
 		println("${getCurTimestamp()} - Querying DNG Base Artifacts ...")
 		def results = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
 		// Continue until all pages have been processed
@@ -202,7 +208,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			int count = 0		
 			results.Description.children().each { item ->
 				if (item.Requirement != '') {
-					def artifact = getItemChanges(tfsProject, item, memberMap)
+					def artifact = getItemChanges(tfsProject, item, memberMap, whereUsed)
 					def aid = artifact.getCacheID()
 					artifact.changes.each { key, val ->
 						String idkey = "${aid}"
@@ -269,7 +275,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 
 	}
 
-	def getItemChanges(String project, def rmItemData, def memberMap) {
+	def getItemChanges(String project, def rmItemData, def memberMap, def whereUsed) {
 
 		String modified = rmItemData.Requirement.modified
 		String identifier = rmItemData.Requirement.identifier
@@ -286,6 +292,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		else {
 			println("WARNING: Unsupported format of $format for artifact id: $identifier")
 		}
+		artifact.setWhereUsed(whereUsed)
 		artifact.setChanges(clmRequirementsItemManagementService.getChanges(project, artifact, memberMap))
 		return artifact
 	}

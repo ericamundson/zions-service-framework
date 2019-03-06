@@ -55,6 +55,9 @@ class ClmRequirementsManagementService {
 	@Autowired
 	IGenericRestClient rmGenericRestClient
 	
+	@Autowired
+	IGenericRestClient rmBGenericRestClient
+	
 	def queryForModules(String projectURI, String query) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?" + query;
 		if (query == null || query.length() == 0 || "${query}" == 'none') {  // if no query provided, then at least restrict to the project area
@@ -83,7 +86,7 @@ class ClmRequirementsManagementService {
 				String iName = child.name()
 				if (iName == "collaboration" ) {
 					// Set artifact type and attributes
-					moduleType = parseArtifactAttributes(child, moduleAttributeMap )
+					moduleType = parseCollaborationAttributes(child, moduleAttributeMap )
 				}
 				else if (iName == "moduleContext") {
 					def kk = 0
@@ -133,20 +136,36 @@ class ClmRequirementsManagementService {
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
-		String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
-//		println(xml)
-		return new XmlSlurper().parseText(xml)
+		if (result != null) {
+			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+			return new XmlSlurper().parseText(xml)
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public def nextPage(url) {
 		def result = rmGenericRestClient.get(
 			uri: url,
 			headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
-		String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
-//		println(xml)
-		return new XmlSlurper().parseText(xml)
+		if (result != null) {
+			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+			return new XmlSlurper().parseText(xml)
+		}
+		else {
+			return null;
+		}
 	}
 
+	def queryForWhereUsed() {
+		String uri = this.rmBGenericRestClient.clmUrl + "/rs/query/11126/dataservice?report=11099&limit=-1&basicAuthenticationEnabled=true"
+		def result = rmBGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/rdf+xml'] );
+		return result;
+	}
+	
 	boolean shouldAddCollectionsToModule(String moduleType) {
 		return (moduleType == 'UI Spec')
 	}
@@ -177,13 +196,13 @@ class ClmRequirementsManagementService {
 				headers: [Accept: 'application/xml'] );
 					
 		// Extract artifact attributes
-		result.children().each { artifact ->
-			in_artifact.setTitle("${artifact.title}")
-			artifact.children().each { child ->
+		result.children().each { artifactNode ->
+			parseTopLevelAttributes(artifactNode, in_artifact)
+			artifactNode.children().each { child ->
 				String iName = child.name()
 				if (iName == "collaboration" ) {
 					// Set artifact type and attributes
-					String artifactType = parseArtifactAttributes( child, in_artifact.attributeMap)
+					String artifactType = parseCollaborationAttributes( child, in_artifact.attributeMap)
 					in_artifact.setArtifactType(artifactType)
 				}
 				else if (iName == "content") {
@@ -241,13 +260,13 @@ class ClmRequirementsManagementService {
 				headers: [Accept: 'application/xml'] );
 					
 		// Extract artifact attributes
-		result.children().each { artifact ->
-			in_artifact.setTitle("${artifact.title}")
-			artifact.children().each { child ->
+		result.children().each { artifactNode ->
+			parseTopLevelAttributes(artifactNode, in_artifact)
+			artifactNode.children().each { child ->
 				String iName = child.name()
 				if (iName == "collaboration" ) {
 					// Set artifact type and attributes
-					String artifactType = parseArtifactAttributes( child, in_artifact.attributeMap)
+					String artifactType = parseCollaborationAttributes( child, in_artifact.attributeMap)
 					in_artifact.setArtifactType(artifactType)
 				}
 				else if (iName == "wrappedResourceURI") {
@@ -285,7 +304,22 @@ class ClmRequirementsManagementService {
 			in_artifact.collectionArtifacts << getTextArtifact(artifact)
 		}
 	}
-	private String parseArtifactAttributes(NodeChild in_rootCollaborationNode, Map out_attributeMap ) {
+	
+	private void parseTopLevelAttributes(def artifactNode, def in_artifact) {
+		in_artifact.setTitle("${artifactNode.title}")
+		if (in_artifact.getBaseArtifactURI() == null || in_artifact.getBaseArtifactURI() == ''){
+			String core = "${artifactNode.core}"
+			if (core == null || core == '') {
+				in_artifact.setBaseArtifactURI(in_artifact.getAbout())
+			}
+			else { 
+				// then this is a module element and we need to set the base 
+				in_artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}/rm/resources/${core}")
+			}
+		}
+	}
+	
+	private String parseCollaborationAttributes(NodeChild in_rootCollaborationNode, Map out_attributeMap ) {
 		// Declare type as return argument
 		String artifactType
 		

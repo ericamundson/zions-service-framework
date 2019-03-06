@@ -1,5 +1,6 @@
 package com.zions.ext.services.cli
 
+import com.zions.clm.services.rest.ClmBGenericRestClient
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.common.services.attachments.IAttachments
@@ -26,7 +27,15 @@ public class RmAppConfig {
 	@Autowired
 	@Value('${clm.url}') 
 	String clmUrl
-
+	
+	@Autowired
+	@Value('${clm.user}')
+	String clmUser
+	
+	@Autowired
+	@Value('${clm.password}')
+	String clmPassword
+	
 	@Autowired
 	@Value('${mr.url}')
 	String mrUrl
@@ -65,6 +74,11 @@ public class RmAppConfig {
 	@Bean
 	IGenericRestClient mrGenericRestClient() {
 		return new MrGenericRestClient(mrUrl, tfsUserid)
+	}
+	
+	@Bean
+	IGenericRestClient rmBGenericRestClient() {
+		return new ClmBGenericRestClient(clmUrl, clmUser, clmPassword)
 	}
 	
 	@Bean

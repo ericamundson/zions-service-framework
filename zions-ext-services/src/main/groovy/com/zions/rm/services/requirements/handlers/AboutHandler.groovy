@@ -3,18 +3,18 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 
 @Component
-class artifactTypeHandler extends RmBaseAttributeHandler {
+class AboutHandler extends RmBaseAttributeHandler {
 	static int SIZE = 255
 	
 	@Override
 	public String getFieldName() {
 		// TODO Auto-generated method stub
-		return 'Artifact Type'
+		return 'Base Artifact URI'
 	}
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		return "${value}";
+		return "<div><a href=${value} target=\"_blank\">DNG Artifact ${itemData.getID()}</a></div>"
 	}
 
 }

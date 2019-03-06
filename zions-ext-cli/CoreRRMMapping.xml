@@ -16,9 +16,12 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="documentTypeHandler" target="Custom.DocumentType"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
-		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>	
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
@@ -39,8 +42,11 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="documentTypeHandler" target="Custom.DocumentType"/>
 		<excluded>
@@ -52,19 +58,22 @@
 		</newfields>
 	</wit>
 	
-	<wit source="Default" target="Functional Requirement" translateUnmappedFields="false">
+	<wit source="Default" target="PlaceHolder" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<!-- 
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
 		<field source="modifiedByHandler" target="System.ChangedBy"/>
 		<field source="modifiedHandler" target="System.ChangedDate"/> -->
 		<field source="creatorHandler" target="System.CreatedBy"/>
-		<field source="frTypeHandler" target="Custom.FunctionalType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
@@ -86,8 +95,11 @@
 		<field source="nfrTypeHandler" target="Custom.NFRType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
@@ -109,8 +121,11 @@
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="uiTransNumHandler" target="Custom.TransactionNum"/>
 		<field source="uiOriginalTagNameHandler" target="Custom.OriginalTagName"/>
@@ -150,8 +165,11 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
@@ -172,8 +190,11 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
@@ -195,8 +216,11 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
@@ -214,8 +238,11 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
@@ -234,8 +261,11 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
@@ -254,8 +284,11 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
@@ -273,8 +306,11 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
@@ -292,8 +328,11 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<excluded>
 			<field name="Identifier"/>
