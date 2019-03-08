@@ -49,11 +49,12 @@ public class EventController {
 		List svcMappings = this.services.get(eventType)
 		if (svcMappings == null) {
 			// Did not find a valid service mapping for which to forward the request
-			def errMessage = "No service mappings for event type: ${eventData.eventType}. Unable to forward the request."
+			def errMessage = "No service mappings for event type: ${eventData.eventType}"
 			log.error("${errMessage}")
 			return new ResponseEntity<String>("${errMessage}", HttpStatus.UNPROCESSABLE_ENTITY)
 		}
 		log.debug("Found service mappings for event ${eventData.eventType}")
+		ResponseEntity<String> resp = ResponseEntity.ok(HttpStatus.OK)
 		for (java.util.ListIterator<RegisteredService> iter = svcMappings.listIterator(); iter.hasNext(); ) {
 			RegisteredService regSvc = iter.next()
 			String svcName = regSvc.serviceName
@@ -63,10 +64,14 @@ public class EventController {
 			URI uri = new URI("${regSvc.protocol}", null, "${regSvc.serverUrl}", regSvc.port, request.getRequestURI(), request.getQueryString(), null)
 			RestTemplate restTemplate = new RestTemplate()
 			log.debug("Forward request to target service ...")
-			ResponseEntity<String> respEntity = restTemplate.exchange(uri, method, new HttpEntity<String>(body, createHeaders(request)), String.class)
-			return respEntity
-			//return ResponseEntity.ok(HttpStatus.OK)
+			resp = restTemplate.exchange(uri, method, new HttpEntity<String>(body, createHeaders(request)), String.class)
+			// at least log the failure
+			if (!resp.getStatusCode().equals(HttpStatus.OK)) {
+				log.error("EventController::forwardADOEvent -- Failed. Status: "+resp.getStatusLine());
+			}
 		}
+		return resp
+		//return ResponseEntity.ok(HttpStatus.OK)
 	}
 
     /**
@@ -137,7 +142,8 @@ public class EventController {
     }
 
 	private String registerServiceMapping(RegisteredService svc, String eventType) {
-		log.debug("In registerServiceMapping - eventType = "+eventType)
+		String svcName = svc.serviceName
+		log.debug("In registerServiceMapping - eventType = ${eventType} and service = ${svcName}")
 		// generate a unique for the service mapping
 		svc.id = generateUUID()
 		java.util.List svcMappings = this.services.get(eventType)
@@ -146,7 +152,7 @@ public class EventController {
 		}
 		svcMappings.add(svc)
 		this.services.put(eventType, svcMappings)
-		log.debug("Registered service for event type ${eventType}")
+		log.debug("Registered ${svcName} service for event type ${eventType}")
 		return svc.id
 	}
 
