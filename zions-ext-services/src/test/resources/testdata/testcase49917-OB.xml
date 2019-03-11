@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Mobile+and+Online+Banking+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/Step_5_-_Run_BCI_Load,_Part_1</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/Step_5_-_Run_BCI_Load,_Part_1?stylesheet=true"/>
+  <ns2:webId>49917</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">Step 5 - Run BCI Load, Part 1</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">This is a multi-step process.  There are 4 separate jobs to be run to accomplish this step.   Each of the 4 separate jobs need to be run for each account type, except ILA.  We don't run this for ILA's on Staging.
+
+The files can be found at /app/dailybatch/bcifiles
+
+To run the job replace '&lt;Bank&gt;' with the bank code: abt, nba, nsb, vbc, zfnb or cbt. Replace &lt;Account Type&gt; with DDASAV, CRL, CDIRA, or COML
+
+If the job fails do the following before attempting to run again:
+Look at the logs/job data to determine why it failed.  Get with a developer to help you find and fix the problem.
+Go to /app/dailybatch/bcifiles/&lt;Bank&gt;/&lt;Account Type&gt;.  For each Account Type of each bank you'll see 4 folders: BALS, CLOSE, PRODCODES &amp; TRANS
+Open the 'BALPOST' file in each folder for editing
+On the first line of each file you'll see a time stamp - change that timestamp value by 1.  For example, if the timestamp is 20150716013516, change it to 20150716013517.  Keep in mind that time stamps roll over to 00 at 59.
+Save the file, then move on to the next one
+Repeat this process for each bank, account type &amp; folder (BALS, CLOSE, PRODCODES &amp; TRANS) - yeah, it's a pain.
+Delete the sym links - see instructions in the Preconditions below.
+
+Preconditions:
+ Steps 1-4 need to be complete (and run successfully) before this step can be run.
+
+Make sure there are no 'sym link' files open in /s1env/shares/zions/s1batch/data before you start. If there are, it means a job is either currently running, or got hung up in a previous run.  If they exist from a previous run just delete them.</ns3:description>
+  <ns2:creationDate>2016-11-04T19:44:11.625Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2016-11-28T22:05:39.232Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/rationalmigration">rationalmigration</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/rationalmigration">rationalmigration</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/priority/literal.priority.120">literal.priority.120</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Automated" value="No"/>
+  <ns2:category term="Component" value="OB-Host Data Batch"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>0</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testscript/Step_5_-_Run_BCI_Load,_Part_1"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.default"/>
+</ns2:testcase>

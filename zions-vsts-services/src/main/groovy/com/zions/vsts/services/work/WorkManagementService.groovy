@@ -44,6 +44,55 @@ class WorkManagementService {
 		
 	}
 	
+	def refresh(String collection, String project) {
+		int i = 0;
+		def ids = []
+		def keys = []
+		def wis = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
+		wis.each { key, wi -> 
+			if (i == 200) {
+				def result = batchGet(collection, project, ids)
+				int k = 0
+				result.value.each { owi ->
+					cacheManagementService.saveToCache(owi, keys[k], ICacheManagementService.WI_DATA)
+					k++
+				}
+				ids = []
+				keys = []
+				i = 0
+			}
+			ids.push(wi.id)
+			keys.push(key)
+			i++
+		}
+		if (ids.size()>0) {
+			def result = batchGet(collection, project, ids)
+			int k = 0
+			result.value.each { owi ->
+				cacheManagementService.saveToCache(owi, keys[k], ICacheManagementService.WI_DATA)
+				k++
+			}
+
+		}
+	}
+	
+	def batchGet(String collection, String project, def ids) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def query = ['$expand': 'all', ids:ids]
+		String body = new JsonBuilder(query).toPrettyString()
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/workitemsbatch",
+			body: body,
+			//headers: [Accept: 'application/json'],
+			query: ['api-version': '5.0']
+			)
+		return result
+
+	}
+	
 	def clean(String collection, String project, String query) {
 		def wis = getWorkItems(collection, project, query)
 		def changelist = []
@@ -296,6 +345,7 @@ class WorkManagementService {
 		result.value.each { resp ->
 			if ("${resp.code}" == '200') {
 				def wi = new JsonSlurper().parseText(resp.body)
+				String id = idMap[count]
 				cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
 			} else {
 				def issue = new JsonSlurper().parseText(resp.body)

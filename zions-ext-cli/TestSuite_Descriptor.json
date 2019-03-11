@@ -1,14 +1,29 @@
 [
     {
-        "name": "Board_New_Loan:_Commercial",
-        "displayName": "Board New Loan: Commercial",
-        "fieldName": "Custom.TestBoardNewLoan:Commercial",
+        "name": "Function",
+        "displayName": "Function",
+        "fieldName": "Custom.TestFunction",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
-            "FutureCore"
+            "DigitalBanking"
         ],
         "enumValues": [
             
+        ]
+    },
+    {
+        "name": "Test_Phase",
+        "displayName": "Test Phase",
+        "fieldName": "Custom.TestTestPhase",
+        "attributeType": "Enumeration",
+        "areaPathsFilter": [
+            "DigitalBanking"
+        ],
+        "enumValues": [
+            "Developer Test",
+            "Integration Test",
+            "Performance & Service Level Test",
+            "User Acceptance Test"
         ]
     }
 ]

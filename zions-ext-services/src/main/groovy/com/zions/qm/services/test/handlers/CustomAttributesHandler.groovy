@@ -68,11 +68,13 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 			catMap["${name}"].push(avalue)
 		}
 		catMap.each { key, vals -> 
+			def desc = descMap[key]
 			def catData = [name: key, value: vals.join(';')]
 			outData.push(catData)
 		}
 		itemData.customAttributes.customAttribute.each { att ->
 			String name = "${att.identifier.text()}"
+			def desc = descMap[name]
 			String avalue = "${att.value.text()}"
 			def caData = [name: name, value: avalue]
 			outData.push(caData)
@@ -113,8 +115,18 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 //			}
 //		}
 		def retVal = []
-		String mapVal = new JsonBuilder(aValue).toString()
-		retVal.push([op:'add', path:"/fields/${fieldMap.target}", value: mapVal])
+		if (aValue != null) {
+			def oValues = aValue.'values'.findAll { aVal ->
+				def desc = descMap[aVal.name]
+				!desc || !desc.fieldName
+				
+			}
+			if (oValues && oValues.size()>0) {
+				def nValue = [values: oValues]
+				String mapVal = new JsonBuilder(nValue).toString()
+				retVal.push([op:'add', path:"/fields/${fieldMap.target}", value: mapVal])
+			}
+		}
 		aValue.'values'.each { val ->
 			if (descMap[val.name]) {
 				String fieldName = descMap[val.name].fieldName
@@ -130,7 +142,10 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 				}
 			}
 		}
-		
+		def eId = "RQM-${itemData.webId.text()}"
+		def aField = [op:'add', path:"/fields/Custom.ExternalID", value: eId]
+		retVal.push(aField)
+
 		if (cacheCheck && wiCache != null) {
 			boolean changed = false
 			retVal.each { rVal ->

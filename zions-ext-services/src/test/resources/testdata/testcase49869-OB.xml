@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Mobile+and+Online+Banking+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/CRL/REDDI_Account_Transactions</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/CRL/REDDI_Account_Transactions?stylesheet=true"/>
+  <ns2:webId>49869</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">CRL/REDDI Account Transactions</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">Verify that the account transactions displayed for a CRL or REDDI account are correct.
+
+ This is applicable for POLB and BOLB.
+ This is applicable for all affiliates.
+ This is common code.
+
+ CRL or REDDI</ns3:description>
+  <ns2:creationDate>2016-11-04T19:43:43.096Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2017-03-07T17:40:20.858Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/rationalmigration">rationalmigration</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/rationalmigration">rationalmigration</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/priority/literal.priority.120">literal.priority.120</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Tag" value="Account Activity"/>
+  <ns2:category term="Automated" value="Yes"/>
+  <ns2:category term="Component" value="OB-Accounts"/>
+  <ns2:category term="Test Phase" value="Regression"/>
+  <ns2:category term="Affiliate" value="CBT"/>
+  <ns2:category term="Affiliate" value="NBA"/>
+  <ns2:category term="Affiliate" value="NSB"/>
+  <ns2:category term="Affiliate" value="VBC"/>
+  <ns2:category term="Affiliate" value="ZFNB"/>
+  <ns2:category term="Affiliate" value="ABT"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>0</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testscript/CRL/REDDI_Account_Transactions"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.default"/>
+</ns2:testcase>

@@ -399,7 +399,7 @@ public class ProcessTemplateService  {
 		
 	}
 	
-	def ensureWitField(collection, project, wit, witFieldChange) {
+	def ensureWitField(collection, project, wit, witFieldChange, boolean updateLayout = false) {
 		String refName = "${witFieldChange.refName}"
 		def field = queryForField(collection, project, witFieldChange.refName)
 		if (field == null) {
@@ -417,7 +417,7 @@ public class ProcessTemplateService  {
 		if (witField == null || "${field.referenceName}" != "${witField.referenceName}") {
 			witField = addWITField(collection, project, wit.referenceName, field.referenceName)
 		}
-		if (witField != null) {
+		if (witField != null && updateLayout) {
 			def layout = ensureWitFieldLayout(collection, project, wit, field, witFieldChange)
 		}
 		
