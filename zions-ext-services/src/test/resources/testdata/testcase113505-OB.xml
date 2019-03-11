@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Mobile+and+Online+Banking+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/11795</ns3:identifier>
+  <ns4:team-area xmlns:ns4="http://jazz.net/xmlns/prod/jazz/process/0.6/">
+    <ns4:url>https://clm.cs.zionsbank.com/qm/process/project-areas/_VdmoMFmxEea4DNHMyk7tfg/team-areas/_v2xZEBjgEeiII__DDzI-gA</ns4:url>
+  </ns4:team-area>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/11795?stylesheet=true"/>
+  <ns2:webId>113505</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">1.3.QA.01 SET Enrollment (Select Service)-all affiliates</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">The following informational text shall be displayed.  
+
+
+ !What you'll need
+
+
+•Zions Bank ATM or Visa® Debit card number and PIN
+
+•Last four (4) digits of your Social Security Number 
+
+•Date and amount of your last deposit 
+
+(Business customers must visit a branch to enroll) 
+
+ 
+
+ Select your service 
+
+ 
+ Online Banking &amp; Mobile Banking 
+ Direct Connect* (Quicken or QuickBooks connection) 
+ Direct Connect with Bill Pay* (Quicken or QuickBooks connection, plus, pay bills 
+
+ *Fees, if applicable, are set forth in the Fee Schedule for your deposit accounts. Your current fee schedule is available in our Affiliate Bank Agreement Center.
+
+ 
+
+ 
+
+Preconditions:
+OB Should be available. SET should be available</ns3:description>
+  <ns2:creationDate>2018-02-23T21:42:48.444Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2018-03-03T23:31:39.131Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.underreview">com.ibm.rqm.planning.common.underreview</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/svc-rtcmigration">svc-rtcmigration</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">unassigned</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/priority/literal.priority.120">literal.priority.120</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Automated" value="Yes"/>
+  <ns2:category term="Component" value="SET: Common Test Cases for SET"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>3</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testscript/11795"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.default"/>
+</ns2:testcase>

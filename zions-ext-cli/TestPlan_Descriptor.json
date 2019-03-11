@@ -1,15 +1,14 @@
 [
     {
-        "name": "Active",
-        "displayName": "Active",
-        "fieldName": "Custom.TestActive",
+        "name": "Product",
+        "displayName": "Product",
+        "fieldName": "Custom.TestProduct",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
-            "FutureCore"
+            "DigitalBanking"
         ],
         "enumValues": [
-            "No",
-            "Yes"
+            
         ]
     },
     {
@@ -18,53 +17,10 @@
         "fieldName": "Custom.TestRelease",
         "attributeType": "Enumeration",
         "areaPathsFilter": [
-            "FutureCore"
+            "DigitalBanking"
         ],
         "enumValues": [
-            "Ignore - Do Not Report",
-            "PS",
-            "Release One",
-            "Release OneDOTOne",
-            "Release Three",
-            "Release Two",
-            "Release TwoDOTFive",
-            "Release TwoDOTNine",
-            "Release TwoDOTTwo"
-        ]
-    },
-    {
-        "name": "Reporting_Group",
-        "displayName": "Reporting Group",
-        "fieldName": "Custom.TestReportingGroup",
-        "attributeType": "Enumeration",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "N/A",
-            "PRT",
-            "PS",
-            "UAT"
-        ]
-    },
-    {
-        "name": "Reporting_Type",
-        "displayName": "Reporting Type",
-        "fieldName": "Custom.TestReportingType",
-        "attributeType": "Enumeration",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "N/A",
-            "PRT",
-            "PS",
-            "PSIT",
-            "Post ST/CIT",
-            "Pre-UAT",
-            "ST/CIT",
-            "SxS",
-            "UAT"
+            
         ]
     }
 ]

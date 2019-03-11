@@ -1,31 +1,10 @@
 {
     "requestContentType": "application/json",
-    "contentType": "application/json",
-    "uri": "https://dev.azure.com/eto-dev/_apis/wit/workitems/22098",
+    "uri": "https://clm.cs.zionsbank.com/rs/query/11126/dataservice",
     "query": {
-        "api-version": "5.0"
-    },
-    "body": [
-    {
-        "op": "test",
-        "path": "/rev",
-        "value": 5
-    },
-    {
-        "op": "add",
-        "path": "/fields/Custom.RollupEstimate",
-        "value": 0
-    },
-    {
-        "op": "add",
-        "path": "/fields/Custom.RollupRemaining",
-        "value": 0
-    },
-    {
-        "op": "add",
-        "path": "/fields/Custom.RollupCompleted",
-        "value": 0
+        "report": "11099",
+        "limit": "-1",
+        "basicAuthenticationEnabled": "true"
     }
-]
     
 }

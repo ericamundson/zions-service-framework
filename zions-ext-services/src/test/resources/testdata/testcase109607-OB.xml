@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Mobile+and+Online+Banking+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:109607</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:109607?stylesheet=true"/>
+  <ns2:webId>109607</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">CL Advance Validate Signers - Not Allowed</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">Online Banking shall not allow an advance from a commercial loan if the TO account does not have the same signers on the commercial loan.
+
+Requirements: For Advances, the signers on the loan account and the destination account are validated to make sure there is one or more signers on both and that the relationship on the destination account is valid.
+
+Note this rule can override the relationship rule that a guarantor can not make an advance when Multi-Party Agreements are in place.
+
+For example:
+
+Company A is what the customer logs in under, and Company A is a GUARANTOR to CLA1 and BORROWER on CLA2.  Company A is PRIN OWNER on DDA1, and IBUSER on DDA2.
+
+Company B has its accounts linked to Company A via IBUSER/IBVIEW, and is BORROWER on CLA1.  Company B is PRIN OWNER on DDA2.
+
+Expected results:
+
+Logging in under Company A, a user (with proper entitlements):
+
+Should be able to Transfer from DDA1 to CLA1.
+Should be able to Transfer from DDA1 to CLA2.
+Should be able to Transfer from DDA2 to CLA1.
+Should be able to Transfer from DDA2 to CLA2.
+Should NOT be able to Transfer from CLA1 to DDA1.
+Should be able to Transfer from CLA1 to DDA2.
+Should NOT be able to Transfer from CLA2 to DDA2.
+Should be able to Transfer from CLA2 to DDA1.
+So even though the company being logged in under is Guarantor to CLA1, a user under that profile can Advance from CLA1 to DDA2 because the signer rule shows that the ownership matches between those two accounts.</ns3:description>
+  <ns2:creationDate>2018-01-20T04:19:47.293Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2018-02-01T21:11:54.290Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z004421">z004421</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">unassigned</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/priority/literal.priority.101">literal.priority.101</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Affiliate" value="CBT"/>
+  <ns2:category term="Affiliate" value="NBA"/>
+  <ns2:category term="Affiliate" value="NSB"/>
+  <ns2:category term="Affiliate" value="VBC"/>
+  <ns2:category term="Affiliate" value="ZFNB"/>
+  <ns2:category term="Affiliate" value="ABT"/>
+  <ns2:category term="Component" value="OB-Internal Transfers"/>
+  <ns2:category term="Component" value="OB-Accounts"/>
+  <ns2:category term="Tag" value="FCR2"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>0</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:80377"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.default"/>
+</ns2:testcase>

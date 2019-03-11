@@ -53,4 +53,11 @@ interface ICacheManagementService {
 	 * Check to see if element exists
 	 */
 	boolean exists(def key)
+	
+	/**
+	 * Return all of type
+	 * @param type
+	 * @return
+	 */
+	def getAllOfType(String type)
 }
