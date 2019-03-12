@@ -26,11 +26,11 @@ class ExportWIT implements CliAction {
 		} catch (e) {}
 		String project = data.getOptionValues('tfs.project')[0]
 		String workItemName = data.getOptionValues('tfs.workitem.names')[0]
+		def outFile = data.getOptionValues('export.dir')[0];
 		if ("${workItemName}" == 'all') {
 			def wits = processTemplateService.getWorkItemTypes(collection, project)
 			wits.value.each { wit -> 
 				def witChanges = processTemplateService.translateWitChanges(collection, project, "${wit.name}")
-				def outFile = data.getOptionValues('export.dir')[0];
 				File oFile = new File("${outFile}/${wit.name}.json");
 				def w = oFile.newWriter();
 				w << new JsonBuilder(witChanges).toPrettyString()
@@ -41,7 +41,6 @@ class ExportWIT implements CliAction {
 			String[] witNames = data.getOptionValues('tfs.workitem.names')[0].split(',')
 			witNames.each { name -> 
 				def witChanges = processTemplateService.translateWitChanges(collection, project, "${name}")
-				def outFile = data.getOptionValues('export.dir')[0];
 				File oFile = new File("${outFile}/${name}.json");
 				def w = oFile.newWriter();
 				w << new JsonBuilder(witChanges).toPrettyString()
