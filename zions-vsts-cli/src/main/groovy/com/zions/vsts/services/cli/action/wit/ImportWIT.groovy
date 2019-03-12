@@ -8,33 +8,40 @@ import org.springframework.stereotype.Component
 
 import com.zions.common.services.cli.action.CliAction
 import com.zions.vsts.services.work.templates.ProcessTemplateService
+import groovy.json.JsonSlurper
 
 @Component
 class ImportWIT implements CliAction {
+	@Autowired
 	ProcessTemplateService processTemplateService
 	
 	@Autowired
-	public ImportWIT(ProcessTemplateService processTemplateService) {
-		this.processTemplateService = processTemplateService
+	public ImportWIT() {
 	}
 
 	@Override
 	public def execute(ApplicationArguments data) {
-		String collection = data.getOptionValues('tfs.collection')[0]
+		String collection = ""
+		try {
+			collection = data.getOptionValues('tfs.collection')[0]
+		} catch (e) {}
 		String project = data.getOptionValues('tfs.project')[0]
-		String workItemName = data.getOptionValues('tfs.workitem.name')[0]
-		String inFile = data.getOptionValues('in.file.name')[0]
-		String body = new File(inFile).text
-		def template = processTemplateService.updateWorkitemTemplate(collection, project, workItemName, body)
-		if (template == null) {
-			throw new Exception('Unable to update WIT');
+		String exportDirName = data.getOptionValues('export.dir')[0]
+		File exportDir = new File(exportDirName) 
+		def wits = []
+		exportDir.eachFile { file ->
+			if (file.name.endsWith('.json')) {
+				def witChanges = new JsonSlurper().parse(file)
+				wits.add(witChanges)
+			}
 		}
+		processTemplateService.ensureWITChanges(collection, project, wits, true)
 		return null;
 	}
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.collection', 'tfs.token', 'tfs.project', 'tfs.workitem.name','in.file.name']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'export.dir']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
