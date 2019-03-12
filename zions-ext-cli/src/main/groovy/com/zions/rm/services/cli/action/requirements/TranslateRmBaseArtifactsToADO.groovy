@@ -194,6 +194,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		println("${getCurTimestamp()} - Querying for Where Used Lookup ...")
 		def whereUsed = clmRequirementsManagementService.queryForWhereUsed()
 		if (whereUsed == null) {
+			whereUsed = [:]
 			println('***Error retrieving "Where Used" lookup.  Check the log for details')
 			return
 		}
