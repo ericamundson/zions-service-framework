@@ -223,6 +223,48 @@ public class ProcessTemplateService  {
 		
 	}
 	
+	def translateWitChanges(collection, project, String wiName) {
+		def wit = getWIT(collection, project, wiName)
+		def fields = getWorkitemTemplateFields(collection, project, wiName)
+		def layout = getWITLayout(collection, project, wit)
+		
+		def witChanges = [ensureType: wiName, ensureFields: []]
+		
+		def fieldMap = [:]
+		fields.'value'.each { field ->
+			def fieldDetails = getField(collection, project, field.referenceName)
+			String type = 'string'
+			if (fieldDetails) {
+				type = "${fieldDetails.type}".trim()
+			}
+			def cField = [name: "${field.name}", refName:"${field.referenceName}", type: type, helpText: "${field.description}", page: null, section: null, group: null,suggestedValues:[]]
+			field.allowedValues.each { value ->
+				cField.suggestedValues.add(value) 
+			}
+			fieldMap["${field.referenceName}"] = cField
+			//witChanges.ensureFields.add(cField)
+		}
+		
+		layout.pages.each { page ->
+			page.sections.each { section ->
+				section.groups.each { group ->
+					group.controls.each { control ->
+						def cfield = fieldMap["${control.id}"]
+						if (cfield) {
+							cfield.page = "${page.label}"
+							cfield.section = "${section.id}"
+							cfield.group = "${group.label}"
+						}
+					}
+				}
+			}
+		}
+		fieldMap.each { key, cfield -> 
+			witChanges.ensureFields.add(cfield)
+		}
+		return witChanges
+	}
+	
 	def getLinkMapping(mapping) {
 		def linkMapping = [:]
 		mapping.links.link.each { link -> 
@@ -335,6 +377,7 @@ public class ProcessTemplateService  {
 		return witChanges
 	}
 	
+	
 	boolean requiresField(field, witMapping) {
 		boolean reqField = true
 		if ("${witMapping.@translateUnmappedFields}" == 'false') {
@@ -386,20 +429,20 @@ public class ProcessTemplateService  {
 	}
 	
 	
-	def ensureWITChanges(def collection , def project, def changes) {
+	def ensureWITChanges(def collection , def project, def changes, boolean updateLayout = false) {
 		changes.each { witChange -> 
 			def witName = witChange.ensureType
 			def wit = ensureWit(collection, project, witName)
 			wit = getWIT(collection, project, witName)
 			
 			witChange.ensureFields.each { witFieldChange ->
-				ensureWitField(collection, project, wit, witFieldChange)
+				ensureWitField(collection, project, wit, witFieldChange, updateLayout)
 			}
 		}
 		
 	}
 	
-	def ensureWitField(collection, project, wit, witFieldChange) {
+	def ensureWitField(collection, project, wit, witFieldChange, boolean updateLayout = false) {
 		String refName = "${witFieldChange.refName}"
 		def field = queryForField(collection, project, witFieldChange.refName)
 		if (field == null) {
@@ -417,7 +460,7 @@ public class ProcessTemplateService  {
 		if (witField == null || "${field.referenceName}" != "${witField.referenceName}") {
 			witField = addWITField(collection, project, wit.referenceName, field.referenceName)
 		}
-		if (witField != null) {
+		if (witField != null && updateLayout) {
 			def layout = ensureWitFieldLayout(collection, project, wit, field, witFieldChange)
 		}
 		
@@ -425,22 +468,23 @@ public class ProcessTemplateService  {
 	
 	def ensureWitFieldLayout(collection, project, wit, field, witFieldChange) {
 		def layout = getWITLayout(collection, project, wit)
-		def externalPage = layout.pages.find { page ->
+		if (witFieldChange.page == null) return
+		def changePage = layout.pages.find { page ->
 			"${page.label}" == "${witFieldChange.page}"
 		}
-		if (externalPage == null) {
-			externalPage = createWITPage(collection, project, wit, "${witFieldChange.page}")
+		if (changePage == null) {
+			changePage = createWITPage(collection, project, wit, "${witFieldChange.page}")
 		}
-		def externalGroup = externalPage.sections.find { section ->
+		def externalGroup = changePage.sections.find { section ->
 				"${section.id}" == "${witFieldChange.section}"
 			}.groups.find { group ->
 				"${group.label}" == "${witFieldChange.group}"
 			}
 		if ("${witFieldChange.type}" == 'html' && externalGroup == null) {
-			this.addGroupWithControl(collection, project, wit, externalPage, field, "${witFieldChange.section}")
+			this.addGroupWithControl(collection, project, wit, changePage, field, "${witFieldChange.section}")
 		} else if ("${witFieldChange.type}" != 'html') {
 			if (externalGroup == null) {
-				externalGroup = createWITGroup(collection, project, wit, externalPage, witFieldChange.group, witFieldChange.section)
+				externalGroup = createWITGroup(collection, project, wit, changePage, witFieldChange.group, witFieldChange.section)
 			}
 			def control = externalGroup.controls.find { control ->
 				"${control.id}" == "${field.referenceName}"
@@ -544,6 +588,7 @@ public class ProcessTemplateService  {
 			)
 		return result
 	}
+	
 	def createField(collection, project, witFieldChange, pickList) {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
 		def pickId = null

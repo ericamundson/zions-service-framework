@@ -29,7 +29,8 @@ import org.apache.commons.codec.binary.Base64;
 @Slf4j
 public class EventController {
 
-	private Map services = new HashMap<String,List>()
+	private Map services = new HashMap<String,Map>()
+	private Map lastUsed = new HashMap<String,Integer>()
 
 	//@Autowired
 	//private HttpServletRequest request
@@ -46,27 +47,31 @@ public class EventController {
 		// handle multiple service mappings for a single event type
 		//def serviceDetails = getServiceDetails("${eventData.eventType}")
 		String eventType = "${eventData.eventType}"
-		List svcMappings = this.services.get(eventType)
+		Map svcMappings = this.services.get(eventType)
 		if (svcMappings == null) {
-			// Did not find a valid service mapping for which to forward the request
-			def errMessage = "No service mappings for event type: ${eventData.eventType}. Unable to forward the request."
-			log.error("${errMessage}")
-			return new ResponseEntity<String>("${errMessage}", HttpStatus.UNPROCESSABLE_ENTITY)
+			// No services mapped for this event type
+			def message = "No service mappings for event type: ${eventData.eventType}"
+			log.error("${message}")
+			return new ResponseEntity<String>("${message}", HttpStatus.OK)
 		}
 		log.debug("Found service mappings for event ${eventData.eventType}")
-		for (java.util.ListIterator<RegisteredService> iter = svcMappings.listIterator(); iter.hasNext(); ) {
-			RegisteredService regSvc = iter.next()
-			String svcName = regSvc.serviceName
-			log.debug("Mapping is for " + svcName + " service")
-			// TODO: if there are multiple mappings for same event type / serviceName, round robin the requests
-			log.debug("Create URI for target service: "+request.getRequestURI())
+		ResponseEntity<String> resp = ResponseEntity.ok(HttpStatus.OK)
+		svcMappings.each { svcType, pool ->
+			RegisteredService regSvc = getServiceDetails(svcType, pool)
+			//String svcType = regSvc.serviceType
+			log.debug("Mapping is for " + svcType + " service")
+			log.debug("Create URI for target service ${regSvc.serverUrl}:${regSvc.port}"+request.getRequestURI())
 			URI uri = new URI("${regSvc.protocol}", null, "${regSvc.serverUrl}", regSvc.port, request.getRequestURI(), request.getQueryString(), null)
 			RestTemplate restTemplate = new RestTemplate()
 			log.debug("Forward request to target service ...")
-			ResponseEntity<String> respEntity = restTemplate.exchange(uri, method, new HttpEntity<String>(body, createHeaders(request)), String.class)
-			return respEntity
-			//return ResponseEntity.ok(HttpStatus.OK)
+			resp = restTemplate.exchange(uri, method, new HttpEntity<String>(body, createHeaders(request)), String.class)
+			// at least log the failure
+			if (!resp.getStatusCode().equals(HttpStatus.OK)) {
+				log.error("EventController::forwardADOEvent -- Failed. Status: "+resp.getStatusLine());
+			}
 		}
+		return resp
+		//return ResponseEntity.ok(HttpStatus.OK)
 	}
 
     /**
@@ -79,7 +84,7 @@ public class EventController {
 		log.debug("EventController::registerServiceForEvent - Request body:\n"+body)
 		def serviceData = new JsonSlurper().parseText(body)
 		RegisteredService svc = new RegisteredService()
-		svc.serviceName = "${serviceData.serviceName}"
+		svc.serviceType = "${serviceData.serviceType}"
 		svc.serverUrl = "${serviceData.serverUrl}"
 		svc.port = new Integer("${serviceData.port}").intValue()
 		svc.protocol = "${serviceData.protocol}"
@@ -96,26 +101,32 @@ public class EventController {
 	public ResponseEntity unregisterServiceForEvent(@RequestBody String body) {
 		log.debug("EventController::unregisterServiceForEvent - Request body:\n"+body)
 		def serviceData = new JsonSlurper().parseText(body)
-		String status = unregisterServiceMapping("${serviceData.svcUUID}", "${serviceData.eventType}")
+		String status = unregisterServiceMapping("${serviceData.svcUUID}", "${serviceData.eventType}", "${serviceData.serviceType}")
 		if (status != "ok") {
 			return new ResponseEntity<String>(status, HttpStatus.NOT_FOUND)
 		}
 		return new ResponseEntity<String>("OK", HttpStatus.OK)
 	}
 
-    private def getServiceDetails(String eventType) {
-		log.debug("In getServiceDetails - eventType = "+eventType)
-		List svcMappings = this.services.get(eventType)
-		if (svcMappings == null) {
-			return null
+    private def getServiceDetails(String serviceType, List svcMappings) {
+		int numMappings = svcMappings.size()
+		int lastIdx = this.lastUsed.get(serviceType)
+		log.debug("getServiceDetails:: Last index for service ${serviceType} = "+lastIdx)
+		if (numMappings == 1) {
+			log.debug("getServiceDetails:: Found a single mapping for event type ${serviceType}")
+			lastIdx = 0
+		} else {
+			// if there are multiple mappings for same event type / serviceType, round robin the requests
+			lastIdx++
+			if (lastIdx >= numMappings) {
+				// reset index to beginning
+				lastIdx = 0
+			}
 		}
-		RegisteredService registeredSvc = null
-		for (java.util.ListIterator<RegisteredService> iter = svcMappings.listIterator(); iter.hasNext(); ) {
-			registeredSvc = iter.next()
-			String svcName = registeredSvc.serviceName
-			// TODO: if there are multiple mappings for same event type / serviceName, round robin the requests
-			
-		}
+		RegisteredService registeredSvc = svcMappings.get(lastIdx)
+		// set as last and return
+		this.lastUsed.put(serviceType, lastIdx)
+		log.debug("getServiceDetails:: Return service mapping ${registeredSvc.id} for service ${serviceType}")
     	return registeredSvc
     }
 
@@ -128,7 +139,7 @@ public class EventController {
 			java.util.Enumeration theHdrs = request.getHeaders(hdrName)
 			while (theHdrs.hasMoreElements()) {
 				String hdrValue = theHdrs.nextElement()
-				log.debug("Setting " + hdrName + " header to: " + hdrValue)
+				//log.debug("Setting " + hdrName + " header to: " + hdrValue)
 				requestHeaders.set(hdrName,hdrValue);
 			}
 		}
@@ -137,37 +148,55 @@ public class EventController {
     }
 
 	private String registerServiceMapping(RegisteredService svc, String eventType) {
-		log.debug("In registerServiceMapping - eventType = "+eventType)
+		String svcType = svc.serviceType
+		log.debug("In registerServiceMapping - eventType = ${eventType} and service = ${svcType}")
 		// generate a unique for the service mapping
 		svc.id = generateUUID()
-		java.util.List svcMappings = this.services.get(eventType)
+		Map svcMappings = this.services.get(eventType)
+		List svcPool = null
 		if (svcMappings == null) {
-			svcMappings = new java.util.ArrayList()
+			svcMappings = new HashMap()
+			svcPool = new java.util.ArrayList()
+			svcMappings.put(svcType, svcPool)
+		} else {
+			svcPool = svcMappings.get(svcType)
+			if (svcPool == null) {
+				svcPool = new java.util.ArrayList()
+				svcMappings.put(svcType, svcPool)
+			}
 		}
-		svcMappings.add(svc)
+		svcPool.add(svc)
 		this.services.put(eventType, svcMappings)
-		log.debug("Registered service for event type ${eventType}")
+		// initialize last used pointer for service type
+		if (this.lastUsed.get(svcType) == null) {
+			this.lastUsed.put(svcType, -1)
+		}
+		log.debug("Registered ${svcType} service for event type ${eventType}")
 		return svc.id
 	}
 
-	private String unregisterServiceMapping(String svcId, String eventType) {
+	private String unregisterServiceMapping(String svcId, String eventType, String svcType) {
 		log.debug("In unregisterServiceMapping - eventType = "+eventType+" service ID = " + svcId)
 		String status = "Not found"
-		java.util.List svcMappings = this.services.get(eventType)
-		if (svcMappings != null) {
-			def mappingFound = false
-			for (java.util.ListIterator<RegisteredService> iter = svcMappings.listIterator(); iter.hasNext(); ) {
-				RegisteredService registeredSvc = iter.next()
-				if (registeredSvc.id == svcId) {
-					iter.remove()
-					mappingFound = true
-					break
+		Map eventMap = this.services.get(eventType)
+		if (eventMap != null) {
+			List svcPool = eventMap.get(svcType)
+			if (svcPool != null) {
+				def mappingFound = false
+				for (java.util.ListIterator<RegisteredService> iter = svcPool.listIterator(); iter.hasNext(); ) {
+					RegisteredService registeredSvc = iter.next()
+					if (registeredSvc.id == svcId) {
+						iter.remove()
+						mappingFound = true
+						break
+					}
 				}
-			}
-			if (mappingFound) {
-				this.services.put(eventType, svcMappings)
-				log.debug("Unegistered service for event type " + eventType)
-				status = "ok"
+				if (mappingFound) {
+					//this.services.put(eventType, svcMappings)
+					// TODO: Need to check index here and adjust lastUsed pointer if necessary
+					log.debug("Unegistered service for event type ${eventType} and service ${svcType}")
+					status = "ok"
+				}
 			}
 		}
 		return status
@@ -180,7 +209,7 @@ public class EventController {
 
 	class RegisteredService {
 		String id
-		String serviceName
+		String serviceType
 		String protocol
 		String serverUrl
 		int port

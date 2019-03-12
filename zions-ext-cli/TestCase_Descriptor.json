@@ -1,403 +1,183 @@
 [
-     {
-        "name": "Automation_Status",
-        "displayName": "RQM Automation Status",
-        "fieldName": "Custom.TestAutomationStatus",
-        "attributeType": "Enumeration",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "Automation Accepted",
-            "Descoped for Automation",
-            "No",
-            "Ready",
-            "Under Review",
-            "Yes"
-        ]
-    },
     {
-        "name": "Business_Approved",
-        "displayName": "Business Approved",
-        "fieldName": "Custom.TestBusinessApproved",
-        "attributeType": "Enumeration",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "No",
-            "Rejected",
-            "Yes"
-        ]
-    },
-    {
-        "name": "Compliance_Related",
-        "displayName": "Compliance Related",
-        "fieldName": "Custom.TestComplianceRelated",
-        "attributeType": "Enumeration",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "N/A",
-            "Regulatory Only",
-            "SOX & Regulatory",
-            "SOX Only"
-        ]
-    },
-    {
-        "name": "Data_Migration_Impact",
-        "displayName": "Data Migration Impact",
-        "fieldName": "Custom.TestDataMigrationImpact",
-        "attributeType": "Enumeration",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "Both",
-            "Created Data",
-            "Migrated Data"
-        ]
-    },
-    {
-        "name": "Enviroment",
-        "displayName": "Enviroment",
-        "fieldName": "Custom.TestEnviroment",
+        "name": "Affiliate",
+        "displayName": "Affiliate",
+        "fieldName": "Custom.TestAffiliate",
         "attributeType": "Multiselect",
         "areaPathsFilter": [
-            "FutureCore"
+            "DigitalBanking"
         ],
         "enumValues": [
-            "Data Migration",
-            "Disaster Recovery",
-            "N/A",
-            "Operational Data Store",
-            "Parameter Environment",
-            "Performance",
-            "Production",
-            "SITa",
-            "SITb",
-            "Staging",
-            "Training",
-            "UATa",
-            "UATb"
+            "ABT",
+            "CBT",
+            "NBA",
+            "NSB",
+            "VBC",
+            "ZFNB"
         ]
     },
     {
-        "name": "Execution_Planning",
-        "displayName": "Execution Planning",
-        "fieldName": "Custom.TestExecutionPlanning",
-        "attributeType": "Enumeration",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "No Assigned Status",
-            "Re-Execute - Internal Review",
-            "Re-Execute - Requirement Change",
-            "Test Case Update - Internal Review",
-            "Test Case Update - Requirement Change",
-            "Test Script Update - Internal Review",
-            "Test Script Update - Requirement Change"
-        ]
-    },
-    {
-        "name": "Finance_Impact",
-        "displayName": "Finance Impact",
-        "fieldName": "Custom.TestFinanceImpact",
-        "attributeType": "Enumeration",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "No",
-            "Yes"
-        ]
-    },
-    {
-        "name": "Run_Calendar",
-        "displayName": "Run Calendar",
-        "fieldName": "Custom.TestRunCalendar",
+        "name": "Automated",
+        "displayName": "Automated",
+        "fieldName": "Custom.TestAutomated",
         "attributeType": "Multiselect",
         "areaPathsFilter": [
-            "FutureCore"
+            "DigitalBanking"
         ],
         "enumValues": [
-            "Anniversary Date",
-            "Bi Monthly",
-            "Billing Date",
-            "Capitalization Date",
-            "Day Mode - Fast",
-            "Day Mode - Slow",
-            "End of Day",
-            "End of Month",
-            "End of Quarter",
-            "End of Term",
-            "End of Year",
-            "Escrow Periodic Analysis Date",
-            "Maturity Billing",
-            "Multiple EOD",
-            "Multiple End of Month",
-            "Multiple End of Year",
-            "N/A",
-            "Night Mode",
-            "On Demand",
-            "Payment Due Date",
-            "System Interest Reserve / Rollover Date",
-            "Weekly"
+            "&nbsp;</p>",
+            "<p>For Personal Checking and MMDA Accounts Zelle should be available.</p>",
+            "<p>Login to OB Personal for NSB Bank<br />",
+            "Complete a transaction to send money<br />",
+            "No",
+            "The processing Fee for NSB Instant and Standard is $0<br />",
+            "Yes",
+            "select Zelle<br />"
         ]
     },
     {
-        "name": "Test_Team",
-        "displayName": "Test Team",
-        "fieldName": "Custom.TestTestTeam",
-        "attributeType": "Enumeration",
+        "name": "Component",
+        "displayName": "Component",
+        "fieldName": "Custom.TestComponent",
+        "attributeType": "Multiselect",
         "areaPathsFilter": [
-            "FutureCore"
+            "DigitalBanking"
         ],
         "enumValues": [
-            "BaNCS Product: Test",
-            "Business Unit: CDA",
-            "Business Unit: ELO",
-            "Business Unit: EML",
-            "Business Unit: RLC",
-            "Business Unit: Secondary",
-            "Business Unit: UAT Triage",
-            "Data Migration: Test",
-            "EIM: EDW Test",
-            "Finance: EDW",
-            "Finance: Evolv",
-            "Finance: Evolv - TI",
-            "Finance: FAH",
-            "Finance: Financial Accounting Hub",
-            "Finance: Frontier",
-            "Finance: Loan Operations",
-            "Finance: ODS",
-            "Finance: Recon",
-            "Interfaces: BaNCS Test",
-            "Interfaces: Tier 2",
-            "Interfaces: UAT",
-            "N/A",
-            "NFR: Test",
-            "ODS Data",
-            "R2R",
-            "Reports: BaNCS Test",
-            "Reports: ODS Test",
-            "Rollout",
-            "SNF: Test",
-            "UAT",
-            "zzArchived:",
-            "zzArchived: Data Team",
-            "zzArchived: Finance",
-            "zzArchived: Finance: BaNCS",
-            "zzArchived: Finance: Hyperion",
-            "zzArchived: Finance: R2R"
+            "13.01 Eligible Funding Accounts",
+            "13.02 Zelle Access for Minors",
+            "14 Time Out and Log Out",
+            "16.04 Business Transaction Report Requirements",
+            "2.01 Single Sign On",
+            "3.10 Zelle Instant - Typically Within Minutes",
+            "3.10.1 Standard (Next-Day and (3-Day)",
+            "3.10.2 Stop Payment Fee.",
+            "3.11 Charity Directory",
+            "3.13 Next day cutoff time",
+            "3.15.2.1 Transaction fees",
+            "3.3 Personal Account Type",
+            "3.6.1 Logout URL",
+            "3.8.1 keep alive config",
+            "4.0 Real Time Updates",
+            "4.1 Customer Service Information",
+            "4.1.1 In Scope",
+            "4.3 Footer",
+            "4.5 Impact to Other Systems.",
+            "4.5 Masking",
+            "4.5.1 Acct Display Left *4",
+            "4.5.2 External Acct Display",
+            "4.6 Assumptions and Dependencies",
+            "4.6.1 Host Account Display",
+            "4.6.1.0 Institution Name",
+            "4.6.1.1 Account Description",
+            "4.6.1.2 Account Number",
+            "4.8 Payment Categories",
+            "5 Terms of Service",
+            "5.3 Payment Frequency",
+            "5.4.3 Processing Fee",
+            "7.06 Fees on Account Statements",
+            "8.01 Non-Funded Accounts",
+            "8.1 Routing #",
+            "Auto Enrollment",
+            "Branch Enrollment Tool JBOSS (BET)",
+            "Branding Amegy",
+            "Branding CB&T",
+            "Branding NBA",
+            "Branding NSB",
+            "Branding VBC",
+            "Branding Zions",
+            "Direct Connect* (Quicken\u00ae or QuickBooks\u00ae connection",
+            "Free payments to affiliates?",
+            "JBOSS Testing External Phase 2 June 2018",
+            "JBOSS Testing External Phase 2 June 2019",
+            "JBOSS Testing External Phase 2 June 2020",
+            "JBOSS Testing External Phase 2 June 2021",
+            "JBOSS Testing External Phase 2 June 2022",
+            "JBOSS Testing External Phase 2 June 2023",
+            "JBOSS Testing External Phase 2 June 2026",
+            "JBOSS Testing External Phase 2 June 2035",
+            "JBOSS Testing External Phase 2 June 2036",
+            "JBOSS Testing External Phase 2 June 2037",
+            "JBOSS Testing External Phase 2 June 2038",
+            "JBOSS Testing External Phase 2 June 2039",
+            "JBOSS Testing External Phase 2 June 2040",
+            "JBOSS Testing External Phase 2 June 2041",
+            "JBOSS Testing External Phase 2 June 2042",
+            "OB- BET",
+            "OB-Accounts",
+            "OB-Admin tab",
+            "OB-CCOnline",
+            "OB-COBRA",
+            "OB-External Transfers",
+            "OB-FAST",
+            "OB-Host Data Batch",
+            "OB-IB Admin",
+            "OB-Internal Transfers",
+            "OB-My Bank",
+            "OB-Payments",
+            "OB-PopMoney Test cases",
+            "OB-SAM",
+            "OB-SET",
+            "OB-Services tab",
+            "OB-VIP Exceptions",
+            "OB-Wires eSignature",
+            "OB-Workflow App",
+            "OB-Zelle",
+            "SET Q- test cases.",
+            "SET: Common Test Cases for SET",
+            "SET: Direct Connect with Bill Pay* Quicken\u00ae or QuickBooks\u00ae connection plus",
+            "SET: Online Banking & Mobile Banking",
+            "Single Sign On (SSO)",
+            "ZAP",
+            "ZELLE TAB"
         ]
     },
     {
-        "name": "Test_Type",
-        "displayName": "Test Type",
-        "fieldName": "Custom.TestTestType",
-        "attributeType": "Enumeration",
+        "name": "Tag",
+        "displayName": "Tag",
+        "fieldName": "Custom.TestTag",
+        "attributeType": "Multiselect",
         "areaPathsFilter": [
-            "FutureCore"
+            "DigitalBanking"
         ],
         "enumValues": [
-            "Data Staging",
-            "Data Test",
-            "Functional Test",
+            "4.6.2. Recipient Name",
+            "Account Activity",
+            "BET - Branch Enrollment Tool",
+            "Batch Job",
+            "Bill Pay",
+            "COBRA",
+            "EAP/OOBA",
+            "FAST",
+            "FCR2",
+            "FDR",
+            "IB Admin",
+            "OB Wires",
+            "S1 OLB",
+            "SAM",
+            "SET - Self Enrollment Tool",
+            "Stop Payments",
+            "Transfers - External Account",
+            "Transfers - Internal (LAP/ CC/ Friend)",
+            "Wires",
+            "eStatements/eNotices"
+        ]
+    },
+    {
+        "name": "Test_Phase",
+        "displayName": "Test Phase",
+        "fieldName": "Custom.TestTestPhase",
+        "attributeType": "Multiselect",
+        "areaPathsFilter": [
+            "DigitalBanking"
+        ],
+        "enumValues": [
+            "Developer Test",
             "Integration Test",
-            "Interface Batch Test",
-            "NFR Test",
-            "Other",
-            "Production Validation",
-            "Regression Test",
-            "Smoke Test",
-            "User Acceptance Test",
-            "Web Services Test"
-        ]
-    },
-    {
-        "name": "UAT_Groups",
-        "displayName": "UAT Groups",
-        "fieldName": "Custom.TestUATGroups",
-        "attributeType": "Multiselect",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "Affiliate Ops",
-            "CIF",
-            "CLS/AS",
-            "CLS/QA",
-            "Collections",
-            "Contact Center",
-            "Escrow",
-            "General Audience",
-            "N/A",
-            "Underwriter"
-        ]
-    },
-    {
-        "name": "Vendor_Priority",
-        "displayName": "Vendor Priority",
-        "fieldName": "Custom.TestVendorPriority",
-        "attributeType": "Enumeration",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "High"
-        ]
-    },
-    {
-        "name": "Workstream",
-        "displayName": "Workstream",
-        "fieldName": "Custom.TestWorkstream",
-        "attributeType": "Multiselect",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            "CIF",
-            "Compliance & Regulatory",
-            "Deposits: AOP",
-            "Deposits: CIF",
-            "Deposits: DDA",
-            "Deposits: Exceptions",
-            "Deposits: IRA",
-            "Deposits: Payments",
-            "Deposits: Relationship Pricing",
-            "Deposits: TD",
-            "Deposits: Teller",
-            "EDW",
-            "Finance",
-            "Finance:- BaNCS",
-            "Finance:- EDW",
-            "Finance:- Evolv",
-            "Finance:- Financial Accounting Hub",
-            "Finance:- Frontier",
-            "Finance:- General Ledger",
-            "Finance:- Hyperion",
-            "Finance:- ODS",
-            "General",
-            "Integration",
-            "Interface",
-            "Lending Common",
-            "Lending: Common",
-            "Lending: Construction",
-            "Lending: General",
-            "Lending: Retail",
-            "Lending: Securitization",
-            "Lending: Syndication",
-            "Migration",
-            "NFR",
-            "Non-FutureCORE",
-            "ODS",
-            "Relationship Pricing",
-            "Reporting",
-            "Rollout",
-            "Teller",
-            "Testing",
-            "Zions Legacy QA:- AFIN",
-            "Zions Legacy QA:- APPRO",
-            "Zions Legacy QA:- Account Recon",
-            "Zions Legacy QA:- BLMB",
-            "Zions Legacy QA:- Bulk Transaction and Reversal (BTTR)",
-            "Zions Legacy QA:- CMS",
-            "Zions Legacy QA:- COD1",
-            "Zions Legacy QA:- Convey Tax Port",
-            "Zions Legacy QA:- Credit Bureau",
-            "Zions Legacy QA:- DPCL",
-            "Zions Legacy QA:- Deluxe ",
-            "Zions Legacy QA:- EDWS",
-            "Zions Legacy QA:- Electronic Report Delivery (ERDF)",
-            "Zions Legacy QA:- FMAC",
-            "Zions Legacy QA:- FileNet",
-            "Zions Legacy QA:- Financial Accounting Hub -ORGL",
-            "Zions Legacy QA:- Force Placed Insurance/Southwest",
-            "Zions Legacy QA:- Frontier",
-            "Zions Legacy QA:- Letters of Credit",
-            "Zions Legacy QA:- Loan File Tracking System(LFTR)",
-            "Zions Legacy QA:- Mass Maintenance (MMNT)",
-            "Zions Legacy QA:- Norkom",
-            "Zions Legacy QA:- ODS (REPT)",
-            "Zions Legacy QA:- Online Banking",
-            "Zions Legacy QA:- PEPP(ACH)",
-            "Zions Legacy QA:- Payment Coupons",
-            "Zions Legacy QA:- Primatics (Loan Accounting Engine)",
-            "Zions Legacy QA:- RCIF",
-            "Zions Legacy QA:- RCVY",
-            "Zions Legacy QA:- RLPR",
-            "Zions Legacy QA:- Risk Management",
-            "Zions Legacy QA:- SBAL",
-            "Zions Legacy QA:- STKY",
-            "Zions Legacy QA:- Servicemembers Civil Relief Act (SCRA)",
-            "Zions Legacy QA:- Statements and Notices",
-            "Zions Legacy QA:- Super MICR",
-            "Zions Legacy QA:- TIBK",
-            "Zions Legacy QA:- Transaction Gateway",
-            "Zions Legacy QA:- Viewpoint"
-        ]
-    },
-    {
-        "name": "Automated_TC_Name",
-        "displayName": "Automated TC Name",
-        "fieldName": "Custom.TestAutomatedTCName",
-        "attributeType": "Text",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            
-        ]
-    },
-    {
-        "name": "_k5J38USxEeiuULVYIY76YA",
-        "displayName": "TCG Category 1",
-        "fieldName": "Custom.TestTCGCategory1",
-        "attributeType": "Text",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            
-        ]
-    },
-    {
-        "name": "_k5l80ESxEeiuULVYIY76YA",
-        "displayName": "TCG Category 2",
-        "fieldName": "Custom.TestTCGCategory2",
-        "attributeType": "Text",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            
-        ]
-    },
-    {
-        "name": "_k4meUUSxEeiuULVYIY76YA",
-        "displayName": "Test Case Group",
-        "fieldName": "Custom.TestTestCaseGroup",
-        "attributeType": "Text",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            
-        ]
-    },
-    {
-        "name": "Vendor_TC_Name",
-        "displayName": "Vendor TC Name",
-        "fieldName": "Custom.TestVendorTCName",
-        "attributeType": "Text",
-        "areaPathsFilter": [
-            "FutureCore"
-        ],
-        "enumValues": [
-            
+            "Performance & Service Level Test",
+            "Regression",
+            "System",
+            "User Acceptance Test"
         ]
     }
 ]

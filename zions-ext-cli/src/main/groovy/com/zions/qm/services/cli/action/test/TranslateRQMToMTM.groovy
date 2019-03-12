@@ -25,6 +25,7 @@ import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
+import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 
 /**
@@ -191,6 +192,7 @@ import groovy.xml.XmlUtil
  *
  */
 @Component
+@Slf4j
 class TranslateRQMToMTM implements CliAction {
 	@Autowired
 	private Map<String, IFilter> filterMap;
@@ -255,6 +257,10 @@ class TranslateRQMToMTM implements CliAction {
 		}
 		if (includes['clean'] != null) {
 			testManagementService.cleanupTestItems(collection, tfsProject, areaPath)
+			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
+		}
+		if (includes['refresh'] != null) {
+			workManagementService.refresh(collection, tfsProject)
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
 		def mappingData = testMappingManagementService.mappingData
@@ -347,16 +353,17 @@ class TranslateRQMToMTM implements CliAction {
 						testplan.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 							int aid = Integer.parseInt(testcase.webId.text())
-							// generate test data
-							//						String testcasexml = XmlUtil.serialize(testcase)
-							//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
-							//						os = resultFile.newDataOutputStream()
-							//						os << testcasexml
-							//						os.close()
+							 //generate test data
+							String testcasexml = XmlUtil.serialize(testcase)
+							def resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}-OB.xml")
+							def os = resultFile.newDataOutputStream()
+							os << testcasexml
+							os.close()
 							String idtype = "${aid}-testcase"
 							if (!idKeyMap.containsKey(idtype)) {
 								def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-									clManager.add("${aid}-${key}",val)
+									String tid = "${aid}-${key}".toString()
+									clManager.add(tid,val)
 								}
 								idKeyMap[idtype] = idtype
 							}

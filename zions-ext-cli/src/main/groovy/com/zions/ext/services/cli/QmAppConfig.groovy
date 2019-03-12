@@ -31,21 +31,17 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 @Profile("qm")
 @ComponentScan(["com.zions.qm.services","com.zions.vsts.services", "com.zions.common.services.restart"])
 public class QmAppConfig {
-	@Autowired
-	@Value('${clm.url}') 
+	@Value('${clm.url:}') 
 	String clmUrl
 	
-	@Autowired
-	@Value('${clm.user}') 
+	@Value('${clm.user:}') 
 	String userid 
 	
-	@Autowired
 	@Value('${clm.password}') 
 	String password
 	
 	
-	@Autowired
-	@Value('${cache.location}')
+	@Value('${cache.location:}')
 	String cacheLocation
 
 	@Bean
@@ -55,10 +51,6 @@ public class QmAppConfig {
 	
 	@Bean 
 	ICacheManagementService cacheManagementService() {
-		String bootClass = this.findBootClass()
-		if (bootClass.indexOf('DBCliApplication') > -1) {
-			return new MongoDBCacheManagementService()
-		}
 		return new CacheManagementService(cacheLocation)
 	}
 	
@@ -84,16 +76,4 @@ public class QmAppConfig {
 	}
 	
 
-//	@Bean
-//	IAttachments attachmentsService() {
-//		return new AttachmentManagementService();
-//	}
-	
-	@Autowired
-	private ApplicationContext context;
-
-	public String findBootClass() {
-		Map<String, Object> annotatedBeans = context.getBeansWithAnnotation(SpringBootApplication.class);
-		return annotatedBeans.isEmpty() ? null : annotatedBeans.values().toArray()[0].getClass().getName();
-	}
 }

@@ -29,9 +29,17 @@
 	</wit>
 	<wit source="testcase"  target="Test Case" translateUnmappedFields="false">
 		<field source="nameHandler" target="System.Title"/>
+		<field source="testCasePriorityHandler" target="Microsoft.VSTS.Common.Priority">
+			<defaultvalue target="4"/>
+			<value source="0" target="1"/>
+			<value source="1" target="2"/>
+			<value source="2" target="3"/>
+		</field>
 		<field source="testCaseDescriptionHandler" target="System.Description"/>
 		<field source="ownerHandler" target="System.AssignedTo"/>
 		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
+		<field source="preconditionHandler" target="Custom.PreCondition"/>
+		<field source="postconditionHandler" target="Custom.PostCondition"/>
 		<field source="stateHandler" target="System.State">
 			<defaultvalue target="Design"/>
 		</field>
@@ -48,6 +56,19 @@
 			<field name="Test_Case_Risk"/>
 			<field name="Unresolved_Defect_Count"/>
 			<field name="Test_Case_Important_Level"/>
+			<field name="Active"/>
+			<field name="Environment"/>
+			<field name="UAT_Groups"/>
+			<field name="Vendor_Priority"/>
+			<field name="Workstream"/>
+			<field name="Business_Approval"/>
+			<field name="Execution_Planning"/>
+			<field name="Automated_TC_Name"/>
+			<field name="_k5J38USxEeiuULVYIY76YA"/>
+			<field name="_k5l80ESxEeiuULVYIY76YA"/>
+			<field name="_k4meUUSxEeiuULVYIY76YA"/>
+			<field name="Vendor_TC_Name"/>
+			<field name="Test_Team"/>
 		</excluded>
 	</wit>
 	<wit source="executionresult"  target="Result" translateUnmappedFields="false">

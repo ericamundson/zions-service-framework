@@ -35,6 +35,21 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 					}
 				}
 				aValue = val
+			} else if (aValue instanceof Integer) {
+				String val = "${aValue}"
+				if (fieldMap.defaultValue != null) {
+					val = "${fieldMap.defaultValue}"
+				}
+				if (fieldMap.values.size() > 0) {
+	
+					fieldMap.values.each { aval ->
+						if ("${aValue}" == "${aval.source}") {
+							val = "${aval.target}"
+							return
+						}
+					}
+				}
+				aValue = Integer.parseInt(val)
 			}
 		}
 

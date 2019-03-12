@@ -37,13 +37,12 @@ public class CLMAppConfig {
 	JavaMailSender sender() {
 		return new JavaMailSenderImpl()
 	}
-	
+
+	@Value('${cache.type:file}')
+	String cacheType
+
 	@Bean 
 	ICacheManagementService cacheManagementService() {
-		String bootClass = this.findBootClass()
-		if (bootClass.indexOf('DBCliApplication') > -1) {
-			return new MongoDBCacheManagementService()
-		}
 		return new CacheManagementService(cacheLocation)
 	}
 	
@@ -61,13 +60,6 @@ public class CLMAppConfig {
 //	IAttachments attachmentsService() {
 //		return new AttachmentManagementService();
 //	}
-	@Autowired
-	private ApplicationContext context;
-
-	public String findBootClass() {
-		Map<String, Object> annotatedBeans = context.getBeansWithAnnotation(SpringBootApplication.class);
-		return annotatedBeans.isEmpty() ? null : annotatedBeans.values().toArray()[0].getClass().getName();
-	}
 
 
 }

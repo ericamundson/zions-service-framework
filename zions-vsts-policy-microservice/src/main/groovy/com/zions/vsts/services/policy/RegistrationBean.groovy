@@ -1,5 +1,6 @@
 package com.zions.vsts.services.policy
 
+import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
@@ -21,7 +22,8 @@ import org.springframework.context.event.EventListener
 public class RegistrationBean {
 
 	private String regUrl
-
+	private int myPort
+	
 	private RESTClient rc
 
 	private svcId = ""
@@ -29,8 +31,10 @@ public class RegistrationBean {
 	@Autowired
 	public RegistrationBean(@Value('${reg.url}') String regUrl,
 			@Value('${reg.user}') String regUsername, 
-			@Value('${reg.password}') String regPassword) {
+			@Value('${reg.password}') String regPassword,
+			@Value('${server.port}') String strPort) {
 		this.regUrl = regUrl
+		this.myPort = Integer.parseInt(strPort)
 		rc = new RESTClient(regUrl)
 		String auth = "$regUsername:$regPassword".bytes.encodeBase64()
 		rc.headers['Authorization'] = 'Basic ' + auth
@@ -38,8 +42,9 @@ public class RegistrationBean {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void registerAppAsService() {
-	    log.debug("In registerAppAsService after Policy service startup")
-		def regObj = [eventType: "git.push", serviceName: "policy", protocol: "http", serverUrl: "utmvti0192", port: 9091]
+		def localhostname = java.net.InetAddress.getLocalHost().getHostName();
+	    log.debug("In registerAppAsService after Policy service startup. Hostname = ${localhostname}")
+		def regObj = [eventType: "git.push", serviceType: "policy", protocol: "http", serverUrl: "${localhostname}", port: myPort]
 		def body = new JsonBuilder(regObj).toPrettyString()
 		log.debug("Registration URL is: ${regUrl}/register")
 		def resp = rc.post(
@@ -62,15 +67,16 @@ public class RegistrationBean {
 		doUnregister()
 	}
 
-	@EventListener(ContextStoppedEvent.class)
+//	@EventListener(ContextStoppedEvent.class)
+    @PreDestroy
 	public void unregisterOnStop() {
 	    log.debug("In unregisterAppAsService after Policy service context is stopped or closed")
 		doUnregister()
 	}
 
-	private void doUnregister() {
+	public void doUnregister() {
 	    log.debug("In unregisterAppAsService after Policy service context is stopped or closed")
-		def unregObj = [eventType: "git.push", svcUUID: this.svcId]
+		def unregObj = [eventType: "git.push", serviceType: "policy", svcUUID: this.svcId]
 		def body = new JsonBuilder(unregObj).toPrettyString()
 		//log.debug("Registration URL is: ${regUrl}/register")
 		def resp = rc.post(
