@@ -65,7 +65,7 @@ public class CLMDBAppConfig {
 	@Value('${spring.data.mongodb.host:utmsdev0598}')
 	String dbHost
 
-	@Value('${spring.data.mongodb.host:adomigration_dev}')
+	@Value('${spring.data.mongodb.database:adomigration_dev}')
 	String database
 
 	@Bean
