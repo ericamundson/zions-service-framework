@@ -40,6 +40,7 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	public Object getFromCache(Object id, String type) {
 		// TODO Auto-generated method stub
 		CacheItem ci = repository.findByProjectAndKeyAndType(dbProject, id, type)
+		if (ci == null) return null
 		String json = ci.json
 		def jMap = new JsonSlurper().parseText(json)
 		return jMap
