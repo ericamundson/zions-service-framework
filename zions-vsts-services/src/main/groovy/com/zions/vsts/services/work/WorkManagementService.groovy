@@ -307,7 +307,6 @@ class WorkManagementService {
 	
 	private doPost(collection, tfsProject, bchangeList, bidMap) {
 		def body = new JsonBuilder(bchangeList).toPrettyString()
-		println(body)
 		def result = genericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/\$batch",

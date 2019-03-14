@@ -1,6 +1,7 @@
 package com.zions.ext.services.cli
 
 import com.mongodb.MongoClient
+import com.zions.clm.services.rest.ClmBGenericRestClient
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.common.services.attachments.IAttachments
@@ -31,7 +32,15 @@ public class RmDBAppConfig {
 	@Autowired
 	@Value('${clm.url}') 
 	String clmUrl
-
+	
+	@Autowired
+	@Value('${clm.user}')
+	String clmUser
+	
+	@Autowired
+	@Value('${clm.password}')
+	String clmPassword
+	
 	@Autowired
 	@Value('${mr.url}')
 	String mrUrl
@@ -70,6 +79,11 @@ public class RmDBAppConfig {
 	@Bean
 	IGenericRestClient mrGenericRestClient() {
 		return new MrGenericRestClient(mrUrl, tfsUserid)
+	}
+	
+	@Bean
+	IGenericRestClient rmBGenericRestClient() {
+		return new ClmBGenericRestClient(clmUrl, clmUser, clmPassword)
 	}
 	
 	@Bean

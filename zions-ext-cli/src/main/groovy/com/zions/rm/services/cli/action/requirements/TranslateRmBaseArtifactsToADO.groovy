@@ -20,6 +20,7 @@ import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
+import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import com.zions.rm.services.requirements.ClmArtifact
 import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
@@ -130,6 +131,7 @@ import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
  * @enduml
  */
 @Component
+@Slf4j
 class TranslateRmBaseArtifactsToADO implements CliAction {
 	@Autowired
 	private Map<String, IFilter> filterMap;
@@ -187,18 +189,21 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		}
 
 		// Get field mappings, target members map and RM artifacts to translate to ADO
-		println('Getting Mapping Data...')
+		log.info('Getting Mapping Data...')
 		def mappingData = rmMappingManagementService.mappingData
-		println('Getting ADO Project Members...')
+		log.info('Getting ADO Project Members...')
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-		println("${getCurTimestamp()} - Querying for Where Used Lookup ...")
+		log.info("Querying for Where Used Lookup ...")
 		def whereUsed = clmRequirementsManagementService.queryForWhereUsed()
 		if (whereUsed == null) {
 			whereUsed = [:]
-			println('***Error retrieving "Where Used" lookup.  Check the log for details')
+			log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
 			return
 		}
-		println("${getCurTimestamp()} - Querying DNG Base Artifacts ...")
+		else {
+			log.info("${whereUsed.children().size()} 'where used' records were retrieved")
+		}
+		log.info("Querying DNG Base Artifacts ...")
 		def results = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
 		// Continue until all pages have been processed
 		def page = 1
@@ -224,17 +229,17 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					}
 				}
 			}
-			println("${getCurTimestamp()} - $count Base Artifacts were retrieved")
+			log.info("$count Base Artifacts were retrieved")
 			
 			// Create work items in Azure DevOps
 			if (changeList.size() > 0) {
 				// Process work item changes in Azure DevOps
-				println("${getCurTimestamp()} - Processing work item changes...")
+				log.info("Processing work item changes...")
 				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 			}
 			
 			// Upload Attachments to Azure DevOps
-			println("${getCurTimestamp()} - Uploading attachments...")
+			log.info("Uploading attachments...")
 			changeList.clear()
 			idMap.clear()
 			count = 0
@@ -253,10 +258,10 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					count++
 				}
 			}
-			println("${getCurTimestamp()} - $count Attachments were uploaded")
+			log.info("$count Attachments were uploaded")
 			if (changeList.size() > 0) {
 				// Associate attachments to work items in Azure DevOps
-				println("${getCurTimestamp()} - Associating attachments to work items...")
+				log.info("Associating attachments to work items...")
 				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 			}
 			
@@ -264,7 +269,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			String nextUrl = "${results.ResponseInfo.nextPage.@'rdf:resource'}"
 			if (nextUrl != '') {
 				page++
-				println("${getCurTimestamp()} - Retrieving page ${page}...")
+				log.info("Retrieving page ${page}...")
 				results = clmRequirementsManagementService.nextPage(nextUrl)
 			}
 			else {
@@ -272,7 +277,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 		}
 			
-		println("Processing completed")
+		log.info("Processing completed")
 
 	}
 
@@ -291,15 +296,11 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			clmRequirementsManagementService.getNonTextArtifact(artifact)
 		}
 		else {
-			println("WARNING: Unsupported format of $format for artifact id: $identifier")
+			log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
 		}
 		artifact.setWhereUsed(whereUsed)
 		artifact.setChanges(clmRequirementsItemManagementService.getChanges(project, artifact, memberMap))
 		return artifact
-	}
-
-	def getCurTimestamp() {
-		new Date().format( 'yyyy/MM/dd HH:MM' )
 	}
 	
 	def filtered(def items, String filter) {
