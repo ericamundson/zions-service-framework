@@ -1,0 +1,15 @@
+bootJar {
+	enabled = false
+}
+jar {
+	enabled = true
+}
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+	compile("org.springframework:spring-websocket")
+	compile("org.springframework:spring-messaging")
+
+	
+	compile project(':zions-vsts-services')
+	compile project(':zions-common')
+}

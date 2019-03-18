@@ -18,8 +18,6 @@ import org.springframework.context.annotation.Bean;
 @Slf4j
 public class BuildApplication {
 	
-	@Autowired
-	private Map<String, CliAction> actionsMap;
 	
 	static public void main(String[] args) {
 		SpringApplication app = new SpringApplication(BuildApplication.class);
@@ -27,6 +25,4 @@ public class BuildApplication {
 		
 		app.run(args);
 	}
-	
-	
 }
