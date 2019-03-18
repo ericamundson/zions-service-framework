@@ -182,6 +182,25 @@ class WorkManagementService {
 		return children
 	}
 	
+	def getParent(String collection, String project, def cwi) {
+		//def cwi = getWorkItem(collection, project, id)
+		def childIds = []
+		def parent = null
+		cwi.relations.each { relation ->
+			String rel = "${relation.rel}"
+			String url = "${relation.url}"
+			if (rel == 'System.LinkTypes.Hierarchy-Reverse') {
+					
+				parent = getWorkitemViaUrl(url)
+				return
+				
+				
+			}
+		}
+		//def children = getListedWorkitems(collection, project, childIds)
+		return parent
+	}
+
 	def getCategories(collection, project) {
 		if (categoriesMap.size() == 0) {
 			def eproject = URLEncoder.encode(project, 'utf-8')

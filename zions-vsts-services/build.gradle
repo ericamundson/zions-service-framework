@@ -5,6 +5,10 @@ jar {
 	enabled = true
 }
 dependencies {
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+	compile("org.springframework:spring-websocket")
+	compile("org.springframework:spring-messaging")
+
 	compile project(':zions-common')
 	compile 'org.springframework.boot:spring-boot-starter-mail'
 	compile 'javax.mail:javax.mail-api'
