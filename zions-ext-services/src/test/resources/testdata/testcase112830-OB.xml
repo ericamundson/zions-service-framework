@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Mobile+and+Online+Banking+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:112830</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:112830?stylesheet=true"/>
+  <ns2:webId>112830</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">CL Access and Transaction Rules</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">For Commercial Loans sourced by BaNCS the customer's view and transaction access rights are controlled by the Channel Access Flag and Channel Access Apply Flag. These are maintained and managed by BaNCS
+
+The Channel Access field (values F,N,O,T or V) defines the access rights at the Product level.
+
+Channel Access Flag Values:
+
+F: Debits &amp; view only
+N: No access allowed
+O: All access allowed
+T: Credits &amp; view only
+V: View only access
+
+The Channel Access flag is a static parameter for a product and the BaNCS system enforces standard Product access rights across all Affiliate banks.
+
+For further granularity, based on dynamic rules, an additional access flag (ChannelAccessApply) is also provided at the account level by BaNCS. This flag further restricts access in specific cases e.g. Matured Line of Credit. 
+
+1: NO Access
+2: View Only – No Transactions
+3: View and Make Advances
+4: View and Make Payments
+5: ALL Access – View, Payments &amp; Advances
+
+The second level flag is an override that is intended to be more restrictive than Channel Access Flag.
+
+Online Banking (batch and real-time) will look at both flags and apply the MOST RESTRICTIVE when determining the customer access.
+
+For the details of the rules implemented by BaNCS reference the linked excel file 'Channel Access Apply Rules.xls' (source:  BaNCS OB Batch Extract File Interface Specification: IOF-223-OLBK-01-B06 CL Interface)
+
+These rules cover the following situations:
+
+Contingent Account (e.g. Letter of Credit)
+Participation purchased or syndication member
+Fully Charged Off Loan
+Rate Options
+Loan is “Blocked” (e.g. fraud suspect)
+Loan is assigned to SAG (Special Assets Group)(Without Conditional Approval)
+Loan is Paid Off
+Matured Term Loan (with a balloon)(Without Conditional Approval)
+Matured Line of Credit(Without Conditional Approval)
+Line of Credit becomes Matured  (With Conditional Approval)
+Line of Credit becomes &gt; 30 Days Past Due (With Conditional Approval)
+Loan assigned a PD Grade of 12 or more (With Conditional Approval)
+Loan Placed on Non-Accrual (With Conditional Approval)
+Matured Term Loan (with a balloon)  (With Conditional Approval)
+Loan is in Bankruptcy
+Term Loans
+Non-Revolving Lines of Credit
+Budget Enabled” loans – e.g. construction lines of credit
+Certain Government Program Loans – e.g. SBA, USDA, EXIM Excludes SBA Express
+Borrowing Base Loans
+Syndicated Agented Loans
+Line of Credit moves into Term Phase
+Freeze placed on a Line of Credit
+Loan placed into Loss Mitigation
+Line of Credit becomes &gt; 30 Days Past Due (Without Conditional Approval)
+Loan assigned a PD Grade of 12 or more (Without Conditional Approval)
+Loan Placed on Non-Accrual (Without Conditional Approval)
+Line of Credit becomes Matured  (Without Conditional Approval)
+Loan is assigned to SAG (Special Assets Group)(With Conditional Approval)</ns3:description>
+  <ns2:creationDate>2018-02-23T06:50:17.887Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2018-02-23T06:50:18.628Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z004421">z004421</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">unassigned</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/priority/literal.priority.101">literal.priority.101</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Affiliate" value="ABT"/>
+  <ns2:category term="Affiliate" value="CBT"/>
+  <ns2:category term="Affiliate" value="NBA"/>
+  <ns2:category term="Affiliate" value="NSB"/>
+  <ns2:category term="Affiliate" value="VBC"/>
+  <ns2:category term="Affiliate" value="ZFNB"/>
+  <ns2:category term="Component" value="OB-Accounts"/>
+  <ns2:category term="Component" value="OB-Internal Transfers"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>0</ns2:scriptStepCount>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.default"/>
+</ns2:testcase>

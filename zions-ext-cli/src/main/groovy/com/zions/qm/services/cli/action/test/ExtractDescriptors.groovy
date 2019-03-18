@@ -32,7 +32,6 @@ public class ExtractDescriptors implements CliAction {
 		String project = data.getOptionValues('clm.projectArea')[0]
 		String tfsAreaPath = data.getOptionValues('tfs.areaPath')[0]
 		String tfsProject = data.getOptionValues('tfs.project')[0]
-		def wit = processTemplateService.getWIT('', tfsProject, holderWit)
 		def mapping = testMappingManagementService.mappingData
 		def allDesc = []
 		types.each { type ->
@@ -49,17 +48,17 @@ public class ExtractDescriptors implements CliAction {
 			this.addCatDescriptors(cats, outDesc, tfsAreaPath, excluded) 
 			def ca = clmTestManagementService.getCustomAttributes(project, type)
 			addCADescriptors(ca, outDesc, tfsAreaPath, excluded)
-			outDesc.each { allDesc << it }
+//			def wit = processTemplateService.getWIT('', tfsProject, type)
+//			def changes = getChanges(outDesc)
+//			changes.each { change ->
+//				processTemplateService.ensureWitField('', tfsProject, wit, change)
+//				
+//			}
 			String fName = type.replace(' ', '')
 			File desc = new File("${fName}_Descriptor.json")
 			def os = desc.newDataOutputStream()
 			os << new JsonBuilder(outDesc).toPrettyString()
 			os.close()
-		}
-		def changes = getChanges(allDesc)
-		changes.each { change ->
-			processTemplateService.ensureWitField('', tfsProject, wit, change)
-			
 		}
 		return null;
 	}

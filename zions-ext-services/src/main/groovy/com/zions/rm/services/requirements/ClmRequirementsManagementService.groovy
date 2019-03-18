@@ -330,7 +330,15 @@ class ClmRequirementsManagementService {
 	}
 	
 	private void parseTopLevelAttributes(def artifactNode, def in_artifact) {
-		in_artifact.setTitle("${artifactNode.title}")
+		String title = "${artifactNode.title}"
+		if (title == '') {
+			title= "${artifactNode.description}"
+		}
+		if (title == '') {
+			title= "<blank title>"
+		}
+		in_artifact.setTitle(title)
+		
 		if (in_artifact.getBaseArtifactURI() == null || in_artifact.getBaseArtifactURI() == ''){
 			String core = "${artifactNode.core}"
 			if (core == null || core == '') {

@@ -1,5 +1,6 @@
 package com.zions.common.services.cache
 
+import groovy.io.FileType
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
@@ -94,6 +95,21 @@ class CacheManagementService implements ICacheManagementService {
 		File file = new File(this.cacheLocation)
 		file.deleteDir();
 		
+	}
+	
+	public def getAllOfType(String type) {
+		File cDir = new File(cacheLocation)
+		def wis = [:]
+		cDir.eachFileRecurse(FileType.FILES) { File file ->
+			String name = file.name
+			if (name.startsWith(type)) {
+				File p = file.parentFile
+				String key = p.name
+				def wi = new JsonSlurper().parse(file)
+				wis[key] = wi
+			}
+		}
+		return wis
 	}
 
 	@Override
