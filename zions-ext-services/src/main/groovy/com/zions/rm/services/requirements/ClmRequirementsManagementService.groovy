@@ -138,7 +138,6 @@ class ClmRequirementsManagementService {
 				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
 		if (result != null) {
 			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
-			println "artifact xml: " + xml
 			return new XmlSlurper().parseText(xml)
 		}
 		else {

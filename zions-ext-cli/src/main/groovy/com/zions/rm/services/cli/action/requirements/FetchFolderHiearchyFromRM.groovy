@@ -184,10 +184,10 @@ class FetchFolderHiearchyFromRM implements CliAction {
 		return folderUriList
 	}
 	
-	def getDebugTestResults() {
-		File sandboxFile = new File("C:\\rmfoldercache\\rmfolderreturn.xml")
-		return new XmlSlurper().parseText(sandboxFile.text)
-	}
+//	def getDebugTestResults() {
+//		File sandboxFile = new File("C:\\rmfoldercache\\rmfolderreturn.xml")
+//		return new XmlSlurper().parseText(sandboxFile.text)
+//	}
 
 	def getItemChanges(String project, def rmItemData, def memberMap, def whereUsed) {
 
