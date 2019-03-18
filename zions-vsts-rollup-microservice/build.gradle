@@ -1,11 +1,20 @@
 bootJar {
 	enabled = true
-	mainClassName = 'com.zions.content.services.ContentApplication'
+	mainClassName = 'com.zions.content.services.RollupApplication'
 	archiveName = 'zions-vsts-rollup-microservice.jar'
 	//version =  "${version}"
 }
 
 dependencies {
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+	compile("org.springframework:spring-websocket")
+	compile("org.springframework:spring-messaging")
+	
+    compile("org.webjars:webjars-locator-core")
+    compile("org.webjars:sockjs-client:1.0.2")
+    compile("org.webjars:stomp-websocket:2.3.3")
+    compile("org.webjars:bootstrap:3.3.7")
+	
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
 	compile project(':zions-vsts-services')
