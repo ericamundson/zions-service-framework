@@ -82,8 +82,8 @@ class FetchFolderHiearchyFromRM implements CliAction {
 		def folderUris = []
 		topLevelFolders.each { parent ->
 			//DEBUG: uncomment addAll getnestedfolders and comment add(parent) to return to normal
-			//folderUris.addAll(getNestedFolders(parent))
-			folderUris.add(parent)
+			folderUris.addAll(getNestedFolders(parent))
+			//folderUris.add(parent)
 		}
 		println("${getCurTimestamp()} - Retrieved all folders ...")
 		//def results = clmRequirementsManagementService.queryForFolders("https://clm.cs.zionsbank.com/rm/folders/_mxVp8L1REeS5FIAyBUGhBQ")
@@ -164,31 +164,28 @@ class FetchFolderHiearchyFromRM implements CliAction {
 	//recursively get all child folders of a parent
 	def getNestedFolders(String parentUri) {
 		def folderUriList = []
-		//def testresults = clmRequirementsManagementService.queryForWhereUsed()
-		//REMOVE COMMENT WHEN WORKING //def results = clmRequirementsManagementService.queryForFolders(parentUri)
+		folderUriList.add(parentUri)
+		def results = clmRequirementsManagementService.queryForFolders(parentUri)
 //debug only:
-		testresults = getDebugTestResults()
-		
+		//def results = getDebugTestResults()	
 //end debug
-		println testresults.toString()
-		//assert that the results are valid/have a 200 response (test for null maybe)
+		
+		log.debug(results.toString())
+		//may need to assert that the results are valid/have a 200 response
+//		if (results.Description.children().size() > 0) {
 		results.Description.children().each { member ->
-			println "value: ${item.value}"
-			// this is probably wrong
-			def folderUri = item.folder.about
-			println("${getCurTimestamp()} - about to retrieve children of " + folderUri)
+			def folderUri = member.folder.@'rdf:about'.text()
+			log.debug("${getCurTimestamp()} - about to retrieve children of " + folderUri)
 			//recurse this function to get children
 			folderUriList.add(getNestedFolders(folderUri))
-			//add this level of the function, could use a check on folderUriList to exclude mid-level folders I guess
-			folderUriList.add(folderUri)
-			println("${getCurTimestamp()} - retrieved children of " + folderUri)
+			log.debug("${getCurTimestamp()} - retrieved children of " + folderUri)
 		}
-		folderUriList.add(parentUri)
+//		} else {  }
 		return folderUriList
 	}
 	
 	def getDebugTestResults() {
-		File sandboxFile = new File('C:\rmfoldercache\rmfolderreturn.xml')
+		File sandboxFile = new File("C:\\rmfoldercache\\rmfolderreturn.xml")
 		return new XmlSlurper().parseText(sandboxFile.text)
 	}
 
