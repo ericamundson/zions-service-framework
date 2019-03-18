@@ -153,9 +153,9 @@ class ClmRequirementsManagementService {
 		println("Querying folder: " + uri)
 		def result = rmGenericRestClient.get(
 				uri: uri,
-				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
+				headers: [Accept: 'application/xml', 'OSLC-Core-Version': '2.0'] );
 		if (result != null) {
-//			//println("result: " + result)
+			println("result: " + result)
 			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
 			println("XML returned as: " + xml)
 			return new XmlSlurper().parseText(xml)
