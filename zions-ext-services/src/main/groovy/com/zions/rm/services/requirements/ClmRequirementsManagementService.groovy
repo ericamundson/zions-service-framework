@@ -138,7 +138,31 @@ class ClmRequirementsManagementService {
 				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
 		if (result != null) {
 			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+			println "artifact xml: " + xml
 			return new XmlSlurper().parseText(xml)
+		}
+		else {
+			return null;
+		}
+	}
+	
+	def queryForFolders(String folderURI) {
+		String uri = this.rmGenericRestClient.clmUrl + "/rm/folders?oslc.where=public_rm:parent=" + folderURI
+		//String uri = "https://clm.cs.zionsbank.com/rm/folders?oslc.where=public_rm:parent=https://clm.cs.zionsbank.com/rm/folders/_mxVp8L1REeS5FIAyBUGhBQ"
+		//uri = uri.replace('<','%3C').replace('>', '%3E')
+		println("Querying folder: " + uri)
+		def result = rmGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/xml', 'OSLC-Core-Version': '2.0'] );
+		if (result != null) {
+			println("result: " + result)
+			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+			println("XML returned as: " + xml)
+			return new XmlSlurper().parseText(xml)
+//			result.children().each { folderNode ->
+//				println folderNode.name()
+//			}
+//			return result;
 		}
 		else {
 			return null;
