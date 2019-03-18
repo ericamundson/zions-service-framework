@@ -23,8 +23,6 @@ import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.impl.client.ProxyAuthenticationStrategy
 import org.apache.http.ssl.SSLContextBuilder
-import org.apache.tomcat.websocket.Constants
-import org.apache.tomcat.websocket.WsWebSocketContainer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.Resource
@@ -69,6 +67,8 @@ import javax.net.ssl.X509TrustManager
 @Component
 @Slf4j
 abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter {
+    public static final String SSL_CONTEXT_PROPERTY =
+            "org.apache.tomcat.websocket.SSL_CONTEXT";
 	TaskScheduler heartBeatScheduler
 	
 	StompSession session
@@ -228,7 +228,7 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 		  .loadTrustMaterial(trustStrat)
 		  .build();
 		  //NoopHostnameVerifier v
-		wsClient.userProperties.put(Constants.SSL_CONTEXT_PROPERTY, sslContext);
+		wsClient.userProperties.put(SSL_CONTEXT_PROPERTY, sslContext);
 	}
 
 

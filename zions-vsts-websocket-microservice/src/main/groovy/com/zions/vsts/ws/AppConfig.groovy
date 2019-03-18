@@ -25,8 +25,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 
 
-/* Will set default configs for ContentApplication */
-
+/**
+ *  Will set default configs for ContentApplication 
+ */
 @Configuration
 @ComponentScan("com.zions.vsts.ws")
 @EnableWebSocketMessageBroker

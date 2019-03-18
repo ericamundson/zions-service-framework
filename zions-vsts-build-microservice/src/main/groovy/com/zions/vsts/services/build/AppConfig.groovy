@@ -1,60 +1,53 @@
 package com.zions.vsts.services.build
 
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
-import org.springframework.core.io.ClassPathResource
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.scheduling.TaskScheduler
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
-import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
-import com.zions.common.services.rest.IGenericRestClient
+import com.zions.vsts.services.attachments.AttachmentManagementService
+
+
+
+/* Will set default configs for ContentApplication */
 
 @Configuration
 @ComponentScan("com.zions.vsts.services")
-@EnableWebMvc
-public class AppConfig implements WebMvcConfigurer {
-//        @Bean
-//        public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-//            PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
-//            propertySourcesPlaceholderConfigurer.setLocations(new ClassPathResource("application.properties"));//or application.yml
-//            return propertySourcesPlaceholderConfigurer;
-//        }
-	@Autowired
-	@Value('${cache.location:none}')
-	String cacheLocation
+public class AppConfig  {
 	
-	@Value('${doc.resource.locations:none}')
-	String resourceLocations
-	
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		
-		registry
-		  .addResourceHandler("/doc/**")
-		  .addResourceLocations("${resourceLocations}");
-	 }
 	
 	@Bean
 	JavaMailSender sender() {
 		return new JavaMailSenderImpl()
 	}
-	
-	@Bean 
+
+	@Bean
 	ICacheManagementService cacheManagementService() {
 		return new CacheManagementService(cacheLocation)
 	}
-	
+
 	@Bean
 	CommandManagementService commandManagementService() {
 		return new CommandManagementService();
 	}
-	
+
+	@Bean
+	AttachmentManagementService attachmentManagementService() {
+		return new AttachmentManagementService();
+	}
+
+	@Autowired
+	@Value('${cache.location:cache}')
+	String cacheLocation
+
 }
+
+
