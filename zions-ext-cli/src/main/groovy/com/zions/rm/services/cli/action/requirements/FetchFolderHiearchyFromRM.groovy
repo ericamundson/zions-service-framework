@@ -20,116 +20,16 @@ import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
+import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import com.zions.rm.services.requirements.ClmArtifact
 import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 
 /**
- * Provides command line interaction to synchronize RRM requirements management with ADO.
- * 
- * <p><b>Command-line arguments:</b></p>
- * <ul>
- * 	<li>translateRRMToADO - The action's Spring bean name.</li>
- * <ul>
- * <p><b>The following's command-line format: --name=value</b></p>
- * <ul>
- *  <li>clm.url - CLM url</li>
- *  <li>clm.user - CLM userid</li>
- *  <li>clm.password - (optional) CLM password. It can be hidden in props file.</li>
- *  <li>ccm.projectArea - RQM project area</li>
- *  <li>tfs.url - ADO url</li>
- *  <li>tfs.user - ADO user</li>
- *  <li>tfs.token - ADO PAT</li>
- *  <li>tfs.project - ADO project</li>
- *  <li>tfs.areapath - ADO area path to set Test planning items.</li>
- *  <li>rm.mapping.file - The xml mapping file to enable field data flow.</li>
- *  <li>rm.query - The xpath RQM testplan query.</li>
- *  <li>rm.filter - the name of filter class to used to pair down items that can't be filtered by query.</li>
- *  <li>include.update - Comma delimited list of the phases that will run during execution. E.G. refresh,clean,data,execution,links,attachments</li>
- *  </ul>
- * </ul>
- * 
- * <p><b>Class design:</b></p>
- * <img src="TranslateRRMToADO_class_diagram.png"/>
- * <p><b>Behavior:</b></p>
- * <img src="TranslateRRMToADO_sequence_diagram.png"/>
- * 
- * @author z091182
- * 
- * @startuml TranslateRRMToADO_class_diagram.png
- * 
- * annotation Autowired
- * annotation Component
- * 
- * class Map<? extends String, ? extends IFilter> {
- * 	+ put(key, element)
- * 	+ get(key)
- * .. groovy access/set elements ...
- * 	+ [key] 
- * }
- * 
- * class TranslateRRMToADO {
- * ... TODO: Implement these Spring Components in zions-ext-services project...
- * @Autowired ClmRequirementsItemManagementService clmRequirementsItemManagementService
- * @Autowired ClmRequirementsManagementService clmRequirementsManagementService
- * @Autowired RequirementsMappingManagementService requirementsMappingManagementService
- * 
- * ... TODO: Need to complete implementation of ...
- * 	+validate(ApplicationArguments args)
- * 	+execute(ApplicationArguments args)
- * 	+filtered(def, String)
- * }
- * note left: @Component
- * 
- * CliAction <|-- TranslateRRMToADO
- * TranslateRRMToADO .. Autowired:  Defines class member as injected by Spring
- * TranslateRRMToADO .. Component:  Defines class as Spring Component
- * TranslateRRMToADO --> Map: @Autowired filterMap
- * TranslateRRMToADO --> MemberManagementService: @Autowired memberManagementService
- * TranslateRRMToADO --> FileManagementService: @Autowired fileManagementService
- * TranslateRRMToADO --> WorkManagementService: @Autowired workManagementService
- * @enduml
- * 
- * @startuml TranslateRRMToADO_sequence_diagram.png
- * participant CLI
- * CLI -> TranslateRRMToADO: validate arguments
- * CLI -> TranslateRRMToADO: execute
- * alt include.update has 'clean'
- * 	TranslateRRMToADO -> WorkManagementService: clean
- * end
- * alt include.update has 'data'
- *  TranslateRRMToADO -> RequirementsMappingManagementService: get field mapping
- *  TranslateRRMToADO -> MemberManagementService: get member map
- *  TranslateRRMToADO -> ClmRequirementsManagementService: get modules via query
- *  loop each { modules object structure }
- *  	TranslateRRMToADO -> ClmRequirementsItemManagementService: get changes
- *  	TranslateRRMToADO -> List: add changes
- *  end
- *  TranslateRRMToADO -> WorkManagementService: send list of changes
- * end
- * alt include.update has 'links'
- *  TranslateRRMToADO -> RequirementsMappingManagementService: get field mapping
- *  TranslateRRMToADO -> MemberManagementService: get member map
- *  TranslateRRMToADO -> ClmRequirementsManagementService: get modules via query
- *  loop each { modules object structure }
- *  	TranslateRRMToADO -> ClmRequirementsItemManagementService: get link changes
- *  	TranslateRRMToADO -> List: add changes
- *  end
- *  TranslateRRMToADO -> WorkManagementService: send list of changes
- * end
- * alt include.update has 'attachments'
- *  TranslateRRMToADO -> RequirementsMappingManagementService: get field mapping
- *  TranslateRRMToADO -> MemberManagementService: get member map
- *  TranslateRRMToADO -> ClmRequirementsManagementService: get modules via query
- *  loop each { modules object structure }
- *  	TranslateRRMToADO -> ClmRequirementsItemManagementService: get attachment changes
- *  	TranslateRRMToADO -> List: add changes
- *  end
- *  TranslateRmBaseArtifactsToADO -> WorkManagementService: send list of changes
- * end
- * @enduml
+* forked from TranslateRMBaseArtifactsToADO
  */
 @Component
+@Slf4j
 class FetchFolderHiearchyFromRM implements CliAction {
 	@Autowired
 	private Map<String, IFilter> filterMap;
@@ -161,14 +61,14 @@ class FetchFolderHiearchyFromRM implements CliAction {
 //				includes[item] = item
 //			}
 //		} catch (e) {}
-//		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
+		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
 //		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
-//		String oslcNs = data.getOptionValues('oslc.namespaces')[0]
-//		String oslcSelect = data.getOptionValues('oslc.select')[0]
-//		String oslcWhere = data.getOptionValues('oslc.where')[0]
+		String oslcNs = data.getOptionValues('oslc.namespaces')[0]
+		String oslcSelect = data.getOptionValues('oslc.select')[0]
+		String oslcWhere = data.getOptionValues('oslc.where')[0]
 //		String rmFilter = data.getOptionValues('rm.filter')[0]
 //		String collection = ""
-		
+		String outputFile = data.getOptionValues('output.file')[0]
 		def topLevelFolders = []
 		//bit wordy but want to see where I break it
 		try {
@@ -176,6 +76,48 @@ class FetchFolderHiearchyFromRM implements CliAction {
 			topLevelFolders.addAll(includeList.split(','))
 		} catch (e) {}
 		
+
+		println("${getCurTimestamp()} - Querying DNG Folders from list of parents ...")
+		//For every input parent folder, we should get all child folders and add them to a list
+		def folderUris = []
+		topLevelFolders.each { parent ->
+			//DEBUG: uncomment addAll getnestedfolders and comment add(parent) to return to normal
+			folderUris.addAll(getNestedFolders(parent))
+			//folderUris.add(parent)
+		}
+		println("${getCurTimestamp()} - Retrieved all folders ...")
+		//def results = clmRequirementsManagementService.queryForFolders("https://clm.cs.zionsbank.com/rm/folders/_mxVp8L1REeS5FIAyBUGhBQ")
+		
+		//get all requirements in each folder and write a csv
+		File oFile = new File(outputFile)
+		if (!oFile.createNewFile()) { 
+			oFile.write("Id,Release\n"); //create or blank out file
+		}
+		def requirementIds = []
+		folderUris.each { folderUri ->
+			
+			def idList = getArtifactIDList(projectURI, oslcNs, oslcSelect, oslcWhere, folderUri)			
+				idList.each { id ->
+				oFile.append(id + ",\"Deposits\"\n")
+			}
+		}
+			
+		println("Processing completed")
+
+	}
+	
+	public def getArtifactIDList(projectURI, oslcNs, oslcSelect, oslcWhere, folderUri) {
+		def artifactIDs = []
+		oslcWhere = oslcWhere.replace('ztargetfolder',folderUri)
+//		
+//		def includes = [:]
+//		try {
+//			String includeList = data.getOptionValues('include.update')[0]
+//			def includeItems = includeList.split(',')
+//			includeItems.each { item ->
+//				includes[item] = item
+//			}
+//		} catch (e) {}
 //		File mFile = new File(mappingFile)
 //		
 //		def mapping = new XmlSlurper().parseText(mFile.text)
@@ -185,131 +127,67 @@ class FetchFolderHiearchyFromRM implements CliAction {
 //		if (includes['refresh'] != null) {
 //		}
 
-		println("${getCurTimestamp()} - Querying DNG Folders from list of parents ...")
-		//For every input parent folder, we should get all child folders and add them to a list
-		def folderUris = []
-		topLevelFolders.each { parent ->
-			folderUris.add(getNestedFolders(parent))
-			folderUris.add(parent)
-		}
-		println("${getCurTimestamp()} - Retrieved all folders ...")
-		//def results = clmRequirementsManagementService.queryForFolders("https://clm.cs.zionsbank.com/rm/folders/_mxVp8L1REeS5FIAyBUGhBQ")
-		
-		
+		log.info("Querying DNG Artifacts Within Folder")
+		def results = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
 		// Continue until all pages have been processed
 		def page = 1
 		while (true) {
-			def changeList = []
-			def uploadedArtifacts = []
-			def idMap = [:]
 			int count = 0
-			println results.Description.size();		
-//			results.Description.children().each { item ->
-//				
-//				println "value: ${item.value}"
-//				println("${getCurTimestamp()} - $count folders were retrieved")
-////				if (item.Folder != '') {
-////					def artifact = getItemChanges(tfsProject, item, memberMap, whereUsed)
-////					def aid = artifact.getCacheID()
-////					artifact.changes.each { key, val ->
-////						String idkey = "${aid}"
-////						idMap[count] = idkey
-////						changeList.add(val)
-////						count++		
-////					}
-////					
-////					// If uploaded artifact, save for attachment processing
-////					if (artifact.getFormat() == 'WrapperResource') {
-////						uploadedArtifacts.add(artifact)
-////					}
-////				}
-//			}
-				
-			// Create work items in Azure DevOps
-//			if (changeList.size() > 0) {
-//				// Process work item changes in Azure DevOps
-//				println("${getCurTimestamp()} - Processing work item changes...")
-//				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-//			}
+			if (results.Description.children().size() > 0 ) {
+	
+			results.Description.children().each { member ->
+				artifactIDs.add(member.children().identifier.text())
+				//log.info(mem.text())
+			}
+			//artifactIDs = results.depthFirst.findAll{ it.name() == "identifier"}
+			log.info("$artifactIDs.size() Base Artifacts were retrieved")
 			
-			// Upload Attachments to Azure DevOps
-//			println("${getCurTimestamp()} - Uploading attachments...")
-//			changeList.clear()
-//			idMap.clear()
-//			count = 0
-//			uploadedArtifacts.each { artifact ->
-//				def files = []
-//				files[0] = rmFileManagementService.cacheRequirementFile(artifact)
-//				
-//				String id = artifact.getCacheID()
-//				def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-//				if (wiChanges != null) {
-//					def url = "${wiChanges.body[1].value.url}"
-//					def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
-//					wiChanges.body.add(change)
-//					idMap[count] = "${id}"
-//					changeList.add(wiChanges)
-//					count++
-//				}
-//			}
-//			println("${getCurTimestamp()} - $count Attachments were uploaded")
-//			if (changeList.size() > 0) {
-//				// Associate attachments to work items in Azure DevOps
-//				println("${getCurTimestamp()} - Associating attachments to work items...")
-//				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-//			}
-//			
-//			// Process next page
-//			String nextUrl = "${results.ResponseInfo.nextPage.@'rdf:resource'}"
-//			if (nextUrl != '') {
-//				page++
-//				println("${getCurTimestamp()} - Retrieving page ${page}...")
-//				results = clmRequirementsManagementService.nextPage(nextUrl)
-//			}
-//			else {
-//				break
-//			}
+			// Process next page
+			String nextUrl = "${results.ResponseInfo.nextPage.@'rdf:resource'}"
+			if (nextUrl != '') {
+				page++
+				log.info("Retrieving page ${page}...")
+				results = clmRequirementsManagementService.nextPage(nextUrl)
+			}
+			else {
+				return artifactIDs
+			}
+			
+			}
+			
 		}
-			
-		println("Processing completed")
+		
+		log.info("Retrieved all artifacts in folder: " + folderUri)
 
 	}
 	
 	//recursively get all child folders of a parent
 	def getNestedFolders(String parentUri) {
 		def folderUriList = []
+		folderUriList.add(parentUri)
 		def results = clmRequirementsManagementService.queryForFolders(parentUri)
-		results.Description.children().each { member ->
+//debug only:
+		//def results = getDebugTestResults()	
+//end debug
 		
-			println "value: ${item.value}"
-			// this is probably wrong
-			def folderUri = item.folder.about
-			println("${getCurTimestamp()} - about to retrieve children of " + folderUri)
+		log.debug(results.toString())
+		//may need to assert that the results are valid/have a 200 response
+//		if (results.Description.children().size() > 0) {
+		results.Description.children().each { member ->
+			def folderUri = member.folder.@'rdf:about'.text()
+			log.debug("${getCurTimestamp()} - about to retrieve children of " + folderUri)
 			//recurse this function to get children
 			folderUriList.add(getNestedFolders(folderUri))
-			//add this level of the function, could use a check on folderUriList to exclude mid-level folders I guess
-			folderUriList.add(folderUri)
-			println("${getCurTimestamp()} - retrieved children of " + folderUri)
-		////				if (item.Folder != '') {
-		////					def artifact = getItemChanges(tfsProject, item, memberMap, whereUsed)
-		////					def aid = artifact.getCacheID()
-		////					artifact.changes.each { key, val ->
-		////						String idkey = "${aid}"
-		////						idMap[count] = idkey
-		////						changeList.add(val)
-		////						count++
-		////					}
-		////
-		////					// If uploaded artifact, save for attachment processing
-		////					if (artifact.getFormat() == 'WrapperResource') {
-		////						uploadedArtifacts.add(artifact)
-		////					}
-		////				}
+			log.debug("${getCurTimestamp()} - retrieved children of " + folderUri)
 		}
+//		} else {  }
 		return folderUriList
-		
-		
 	}
+	
+//	def getDebugTestResults() {
+//		File sandboxFile = new File("C:\\rmfoldercache\\rmfolderreturn.xml")
+//		return new XmlSlurper().parseText(sandboxFile.text)
+//	}
 
 	def getItemChanges(String project, def rmItemData, def memberMap, def whereUsed) {
 
