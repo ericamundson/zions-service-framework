@@ -22,8 +22,9 @@ import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 
 /**
- * ReST Controller for forwarding Azure DevOps events.
- * @author James McNabb
+ * ReST Controller for forwarding Azure DevOps through subscriptions via websockets.
+ * 
+ * @author Eric Amundson
  * 
  */
 @RestController
@@ -38,7 +39,7 @@ public class EventController {
 	//private HttpServletRequest request
 
     /**
-     * Parse event type from request body and forward the request to the appropriate service. 
+     * Parse event type from request body and publish to subscribed clients. 
      *  
      * @return
      */
