@@ -7,6 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+/**
+ * Handles rollup calculations of work data from Task to Feature work item types.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 @Slf4j
 class RollupMicroService extends AbstractWebSocketMicroService {
@@ -17,8 +23,14 @@ class RollupMicroService extends AbstractWebSocketMicroService {
 	@Autowired
 	public RollupMicroService(@Value('${websocket.url:}') websocketUrl) {
 		super(websocketUrl)
+		
 	}
 
+	/**
+	 * Perform rollup calculations.
+	 * 
+	 * @see com.zions.vsts.services.ws.client.AbstractWebSocketMicroService#processADOData(java.lang.Object)
+	 */
 	@Override
 	public Object processADOData(Object adoData) {
 		log.info("Entering RollupMicroService:: processADOData")

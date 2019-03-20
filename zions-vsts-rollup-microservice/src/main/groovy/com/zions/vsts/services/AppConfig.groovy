@@ -25,7 +25,7 @@ import com.zions.vsts.services.attachments.AttachmentManagementService
 /* Will set default configs for ContentApplication */
 
 @Configuration
-@ComponentScan("com.zions.vsts.services")
+@ComponentScan(["com.zions.vsts.services","com.zions.common.services.logging"])
 public class AppConfig  {
 	
 	
