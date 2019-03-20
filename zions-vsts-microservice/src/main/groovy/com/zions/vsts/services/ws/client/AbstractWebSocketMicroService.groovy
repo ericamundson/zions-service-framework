@@ -75,6 +75,7 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 	String websocketUrl
 	WebSocketStompClient stompClient
 	
+	
 	@Autowired
 	public AbstractWebSocketMicroService(@Value('${websocket.url:}') websocketUrl) {
 		this.websocketUrl = websocketUrl
@@ -120,7 +121,7 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 		return new RestTemplate(factory);
 	}
 	
-	def startCheck() {
+	private def startCheck() {
 		Runnable check = new Runnable() {
 			public void run() {
 				while (true) {
@@ -140,7 +141,7 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 
 	}
 	
-	def connect() {
+	public def connect() {
 		StandardWebSocketClient client = new StandardWebSocketClient();
 		setupSSL(client);
 		List<Transport> webSocketTransports = Arrays.asList(new WebSocketTransport(client),  new RestTemplateXhrTransport(getRestTemplate()));
@@ -199,7 +200,7 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 			log.error("Transport fail", exception)
 	}
 		
-	public void setupSSL(HttpClientBuilder clientBuilder)
+	void setupSSL(HttpClientBuilder clientBuilder)
 			throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException{
        TrustStrategy trustStrat = new TrustStrategy(){
             public boolean isTrusted(X509Certificate[] chain, String authtype)
@@ -216,7 +217,7 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 	
 	}
 	
-	public void setupSSL(StandardWebSocketClient wsClient)
+    void setupSSL(StandardWebSocketClient wsClient)
 	throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException{
       TrustStrategy trustStrat = new TrustStrategy(){
             public boolean isTrusted(X509Certificate[] chain, String authtype)

@@ -6,6 +6,8 @@ jar {
 }
 
 dependencies {
+	compile("org.springframework.boot:spring-boot-starter-aop")
+
 	compile project(':zions-common-data')
-	
+
 }
