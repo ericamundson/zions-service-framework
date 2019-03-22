@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.zions.clm.services.rest.ClmGenericRestClient;
+import com.zions.common.services.link.Cache
+import com.zions.common.services.link.LinkInfo
+import com.zions.common.services.link.Module
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.xml.MarkupBuilder
 import groovy.xml.XmlUtil
@@ -76,6 +79,11 @@ public class ClmWorkItemManagementService {
 //		o << new groovy.xml.StreamingMarkupBuilder().bindNode(result) as String
 //		o.close()
 		return result
+	}
+	
+	@Cache(module = Module.CCM)
+	public List<LinkInfo> getAllLinks(String id, Date timeStamp, def data) {
+		return new ArrayList<LinkInfo>()
 	}
 	
 	public def nextPage(url) {

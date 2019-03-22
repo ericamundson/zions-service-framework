@@ -12,6 +12,8 @@ class CacheItem {
 	
 	String project
 	
+	String module
+	
 	String key
 	
 	String type

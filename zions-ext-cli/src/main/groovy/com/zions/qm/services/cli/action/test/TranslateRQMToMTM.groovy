@@ -326,7 +326,7 @@ class TranslateRQMToMTM implements CliAction {
 
 						def plan = null
 						clmTestItemManagementService.processForChanges(tfsProject, testplan, memberMap) { String key, def val ->
-							if (key.endsWith(' WI')) {
+							if (key.endsWith('WI')) {
 								clManager.add("${id}-${key}", val)
 							} else {
 								plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
