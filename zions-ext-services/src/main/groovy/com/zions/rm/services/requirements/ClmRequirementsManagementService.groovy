@@ -364,10 +364,13 @@ class ClmRequirementsManagementService {
 				artifactType = objTypeAttr['{http://jazz.net/xmlns/alm/rm/attribute/v0.1}name']
 				
 				// Get custom attributes
+				String multiValueAttrName = null
+				String multiValueAttrVal = null
 				attr.objectType.children().each { custAttr ->
 					def attributes = custAttr.nodeIterator().next()?.attributes()
 					String custAttrName =  attributes["{http://jazz.net/xmlns/alm/rm/attribute/v0.1}name"]
 					String custAttrIsEnum = attributes["{http://jazz.net/xmlns/alm/rm/attribute/v0.1}isEnumeration"]
+					String custAttrIsMultiValued = attributes["{http://jazz.net/xmlns/alm/rm/attribute/v0.1}isMultiValued"]
 					String custAttrLiteralName = attributes["{http://jazz.net/xmlns/alm/rm/attribute/v0.1}literalName"]
 					String custAttrValue = attributes["{http://jazz.net/xmlns/alm/rm/attribute/v0.1}value"]
 					String custAttrVal
@@ -377,8 +380,35 @@ class ClmRequirementsManagementService {
 					else {
 						 custAttrVal = custAttrValue
 					}
-					out_attributeMap.put(custAttrName, custAttrVal)
+					if (custAttrIsMultiValued == 'true') {
+						if (multiValueAttrName == null) { // First instance of this attribute
+							multiValueAttrName = "${custAttrName}"
+							multiValueAttrVal = "${custAttrVal}"
+						}
+						else if (multiValueAttrName == custAttrName){ // More values for same attribute
+							multiValueAttrVal = multiValueAttrVal + ';' + "${custAttrVal}"
+						}
+						else { // New multivalue attr with previous one to save
+							out_attributeMap.put(multiValueAttrName, multiValueAttrVal)
+							multiValueAttrName = "${custAttrName}"
+							multiValueAttrVal = "${custAttrVal}"
+						}
+					}
+					else { // single value attribute
+						if (multiValueAttrName != null) {  // Save pending multivalue attribute
+							out_attributeMap.put(multiValueAttrName, multiValueAttrVal)
+							multiValueAttrName = null
+							multiValueAttrVal = null
+						}
+						out_attributeMap.put(custAttrName, custAttrVal)
+						
+					}
 				}
+				// Add any pending multiValue attribute
+				if (multiValueAttrName != null) {  // Save pending multivalue attribute
+					out_attributeMap.put(multiValueAttrName, multiValueAttrVal)
+				}
+
 			}
 		}
 		

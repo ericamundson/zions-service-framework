@@ -14,7 +14,12 @@ class ReleaseHandler extends RmBaseAttributeHandler {
 	@Override
 	public Object formatValue(Object val, Object itemData) {
 		// TODO Auto-generated method stub
-		return val
+		if (val == 'Not Assigned') {
+			return null
+		}
+		else {
+			return val
+		}
 	}
 
 }
