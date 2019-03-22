@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<launchConfiguration type="org.codehaus.groovy.eclipse.groovyConsoleLaunchConfiguration">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/zions-vsts-cli/src/main/groovy/com/zions/vsts/services/cli/CliApplication.groovy"/>
 </listAttribute>
@@ -7,10 +7,9 @@
 <listEntry value="1"/>
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="importWIT --tfs.url=https://dev.azure.com/DTSDemo  --tfs.user=v070339 --tfs.token=&quot;ahv4wcu7cqnbnz7c6refxp2o2evh3phlqyead7ogbw72ohxqessa&quot; --tfs.project=&quot;FutureCore Sandbox&quot; --export.dir=c:\eto-dev_wits2 --default.wit.name=Task --logging.level.com.zions.common.services.rest.AGenericRestClient=DEBUG --logging.file=c:\\rmtestcache\\rm.log"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="exportWIT --tfs.url=https://dev.azure.com/eto-dev  --tfs.user=z091182 --tfs.token=&quot;pzyybyd3zq5kzbdpkn4e656i6d3b7zfe43tms5s3v35gsifdngoq&quot; --tfs.project=&quot;FutureCore&quot; --export.dir=c:\eto-dev_wits --tfs.workitem.names=&quot;Feature Requirement,Functional Requirement,Non Functional Requirement,Business Requirement,Entity,Document,Mockup,Diagram,Section,PlaceHolder&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dproxy.Host=172.18.4.115 -Dproxy.Port=8080 -Dproxy.User=z091182 -Dproxy.Password=4878Middy"/>
-<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-vsts-services}"/>
 </launchConfiguration>
