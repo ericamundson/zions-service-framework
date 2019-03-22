@@ -20,7 +20,10 @@ class CacheManagementService implements ICacheManagementService {
 	//@Autowired
 	@Value('${cache.location:cache}')
 	String cacheLocation
-
+	
+	@Value('${cache.module:CCM}')
+	String cacheModule
+	
 	public CacheManagementService(String cacheLocation) {
 		this.cacheLocation = cacheLocation
 	}
@@ -63,11 +66,15 @@ class CacheManagementService implements ICacheManagementService {
 		if (!cacheDir.exists()) {
 			cacheDir.mkdir();
 		}
-		File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
+		File mDir = new File("${this.cacheLocation}${File.separator}${cacheModule}")
+		if (!mDir.exists()) {
+			mDir.mkdir()
+		}
+		File wiDir = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}")
 		if (!wiDir.exists()) {
 			wiDir.mkdir()
 		}
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}${type}.json");
+		File cacheData = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}${type}.json");
 		def w  = cacheData.newDataOutputStream()
 		w << new JsonBuilder(data).toPrettyString()
 		w.close()
@@ -81,7 +88,7 @@ class CacheManagementService implements ICacheManagementService {
 	 * @return
 	 */
 	def getFromCache(def id, String type) {
-		File cacheData = new File("${this.cacheLocation}${File.separator}${id}${File.separator}${type}.json");
+		File cacheData = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}${type}.json");
 		if (cacheData.exists()) {
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)
@@ -90,6 +97,22 @@ class CacheManagementService implements ICacheManagementService {
 
 	}
 
+	/**
+	 * Check cache for work item state.
+	 *
+	 * @param id
+	 * @return
+	 */
+	def getFromCache(def id, String module, String type) {
+		File cacheData = new File("${this.cacheLocation}${File.separator}${module}${File.separator}${id}${File.separator}${type}.json");
+		if (cacheData.exists()) {
+			JsonSlurper s = new JsonSlurper()
+			return s.parse(cacheData)
+		}
+		return null
+
+	}
+	
 	@Override
 	public void clear() {
 		File file = new File(this.cacheLocation)
@@ -114,7 +137,7 @@ class CacheManagementService implements ICacheManagementService {
 
 	@Override
 	public boolean exists(Object id) {
-		File cacheItem = new File("${this.cacheLocation}${File.separator}${id}");
+		File cacheItem = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}");
 
 		return cacheItem.exists();
 	}
@@ -122,7 +145,7 @@ class CacheManagementService implements ICacheManagementService {
 
 	void deleteById(String id) {
 		if (exists(id)) {
-			File cacheItem = new File("${this.cacheLocation}${File.separator}${id}");
+			File cacheItem = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}");
 			cacheItem.deleteDir();
 		}
 	}

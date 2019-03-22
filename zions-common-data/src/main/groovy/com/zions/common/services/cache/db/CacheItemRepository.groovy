@@ -9,18 +9,18 @@ import org.springframework.stereotype.Component
 @Component
 interface CacheItemRepository extends MongoRepository<CacheItem, String> {
 	
-	@Query("{ 'project': ?0, 'key': ?1, 'type': ?2}")
-	CacheItem findByProjectAndKeyAndType(String project, String key, String type);
+	@Query("{ 'project': ?0, module: ?1, 'key': ?2, 'type': ?3}")
+	CacheItem findByProjectAndModuleAndKeyAndType(String project, String module, String key, String type);
 	
-	@Query("{ 'project': ?0, 'key': ?1}")
-	List<CacheItem> findByProjectAndKey(String project, String key);
+	@Query("{ 'project': ?0, 'module', ?1, 'key': ?2}")
+	List<CacheItem> findByProjectAndModuleAndKey(String project, String module, String key);
 
-	@Query("{ 'project': ?0, 'type': ?1}")
-	List<CacheItem> findByProjectAndType(String project, String type);
+	@Query("{ 'project': ?0, 'module': ?1, 'type': ?2}")
+	List<CacheItem> findByProjectAndModuleAndType(String project, String module, String type);
 
 	List<CacheItem> deleteByProject(String project);
 	
-	List<CacheItem> deleteByProjectAndKey(String project, key);
+	List<CacheItem> deleteByProjectAndModuleAndKey(String project, String module, String key);
 	
 	Long deleteCacheItemByProject(String project);
 }

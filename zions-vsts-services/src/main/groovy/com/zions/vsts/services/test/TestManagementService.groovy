@@ -201,7 +201,7 @@ public class TestManagementService {
 			
 			def wi = workManagementService.getWorkItem(collection, tfsProject, wid)
 			if (wi) {
-				cacheManagementService.saveToCache(wi, "${id} WI", ICacheManagementService.WI_DATA)
+				cacheManagementService.saveToCache(wi, "${id}", ICacheManagementService.WI_DATA)
 			}
 		} else {
 			if (checkpointManagementService) {
@@ -270,7 +270,7 @@ public class TestManagementService {
 	}
 	
 	public def ensureTestRun(String collection, String project, def planData) {
-		String pid = "${planData.webId.text()}-Test Plan"
+		String pid = "${planData.webId.text()}"
 		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
 		
 		if (runData == null) {
@@ -308,7 +308,7 @@ public class TestManagementService {
 	public def setParent(def parent, def children, def map) {
 		String pname = "${parent.name()}"
 		String ptname = getTargetName(pname, map)
-		String pid = "${parent.webId.text()}-${ptname}"
+		String pid = "${parent.webId.text()}"
 		String type = ICacheManagementService.PLAN_DATA
 		if (pname == 'testsuite') type = ICacheManagementService.SUITE_DATA
 		def parentData = cacheManagementService.getFromCache(pid, type)
@@ -322,7 +322,7 @@ public class TestManagementService {
 				String ctname = getTargetName(cname, map)
 				
 				
-				String cid = "${child.webId.text()}-${ctname}"
+				String cid = "${child.webId.text()}"
 				def childData = cacheManagementService.getFromCache(cid, ICacheManagementService.WI_DATA)
 				if (childData != null) {
 					tcIds.add("${childData.id}")

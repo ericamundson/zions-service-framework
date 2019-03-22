@@ -13,6 +13,7 @@ import com.ibm.team.workitem.common.model.IWorkItem
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.work.handler.IFieldHandler
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
@@ -88,7 +89,7 @@ class CcmWorkManagementService {
 	 * @param linkMapping
 	 * @return
 	 */
-	def getWILinkChanges(id, project, linkMapping) {
+	def getWILinkChanges(String id, String project, linkMapping, List<LinkInfo> links = null) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
@@ -100,7 +101,18 @@ class CcmWorkManagementService {
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
 			linkMapping.each { key, linkMap ->
-				String linkIds = workitemAttributeManager.getStringRepresentation(workItem, workItem.getProjectArea(), "${key}")
+				List<LinkInfo> linkIds = null
+				if (links) {
+					linkIds = getLinks(key, links)
+				} else {
+					String ids = workitemAttributeManager.getStringRepresentation(workItem, workItem.getProjectArea(), "${key}")
+					linkIds = []
+					def idList = ids.split(',')
+					idList.each { rid ->
+						def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'RTC', moduleRelated: 'RTC')
+						linkIds.add(info)
+					}
+				}
 				wiData = generateLinkChanges(wiData, linkIds, key, linkMap, cacheWI)
 			}
 			if (wiData.body.size() == 1) {
@@ -109,6 +121,13 @@ class CcmWorkManagementService {
 			return wiData
 		}
 		return null
+	}
+	
+	List<LinkInfo> getLinks(String type, links) {
+		List<LinkInfo> out = links.findAll { LinkInfo link ->
+			link.type == type
+		}
+		return out
 	}
 	
 	/**
@@ -121,10 +140,12 @@ class CcmWorkManagementService {
 	 * @param cacheWI
 	 * @return
 	 */
-	def generateLinkChanges(def wiData, String linkIds, key, linkMap, cacheWI) {
+	def generateLinkChanges(def wiData, List<LinkInfo> linkIds, key, linkMap, cacheWI) {
 		def linksList = linkIds.split(',')
-		linksList.each { id -> 
-			def linkWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
+		linkIds.each { LinkInfo info -> 
+			String id = info.itemIdRelated
+			String module = info.moduleRelated()
+			def linkWI = cacheManagementService.getFromCache(id, module, ICacheManagementService.WI_DATA)
 			if (linkWI != null) {
 				def linkId = linkWI.id
 				if (!linkExists(cacheWI, linkMap.target, linkId) && "${linkId}" != "${cacheWI.id}") {
@@ -135,6 +156,7 @@ class CcmWorkManagementService {
 		}
 		return wiData
 	}
+	
 	
 	/**
 	 * Check work item cache to see if link exists on work item.
@@ -287,3 +309,5 @@ class CcmWorkManagementService {
 	}
 	
 }
+
+

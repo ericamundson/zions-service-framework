@@ -24,6 +24,15 @@ interface ICacheManagementService {
 	def getFromCache(def id, String type);
 	
 	/**
+	 * Retrieve cached files.
+	 * 
+	 * @param id identity of object to be cached.
+	 * @param type the brand of data being cached.
+	 * @return cached data.
+	 */
+	def getFromCache(def id, String module, String type);
+	
+	/**
 	 * Save data to be cached
 	 * 
 	 * @param data - cache data
