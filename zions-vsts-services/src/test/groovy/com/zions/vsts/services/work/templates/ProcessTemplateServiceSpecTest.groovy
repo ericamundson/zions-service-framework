@@ -424,7 +424,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		def result = underTest.ensureWitFieldLayout('', 'DigitalBanking', wit, field, witFieldChange)
 		
 		then:
-		result == null
+		result != null
 	}
 	
 	@Test
