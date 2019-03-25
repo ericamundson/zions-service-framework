@@ -147,8 +147,9 @@ class ClmRequirementsManagementService {
 	
 	def queryForFolders(String folderURI) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/folders?oslc.where=public_rm:parent=" + folderURI
-		//uri = uri.replace('<','%3C').replace('>', '%3E')
-		println("Querying folder: " + uri)
+		uri = uri.replace('<','%3C').replace('>', '%3E')
+		//uri = URLEncoder.encode(uri,'UTF-8')
+		//println("Querying folder: " + uri)
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/xml', 'OSLC-Core-Version': '2.0'] );
@@ -157,6 +158,7 @@ class ClmRequirementsManagementService {
 			return new XmlSlurper().parseText(xml)
 		}
 		else {
+			log.debug ("failed to query folder: "+ folderURI)
 			return null;
 		}
 	}

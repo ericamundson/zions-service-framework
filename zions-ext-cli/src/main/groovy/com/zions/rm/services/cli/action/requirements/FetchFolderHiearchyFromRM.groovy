@@ -62,7 +62,7 @@ class FetchFolderHiearchyFromRM implements CliAction {
 //			}
 //		} catch (e) {}
 		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
-//		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
+		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
 		String oslcNs = data.getOptionValues('oslc.namespaces')[0]
 		String oslcSelect = data.getOptionValues('oslc.select')[0]
 		String oslcWhere = data.getOptionValues('oslc.where')[0]
@@ -75,27 +75,36 @@ class FetchFolderHiearchyFromRM implements CliAction {
 			String includeList = data.getOptionValues('include.folders')[0]
 			topLevelFolders.addAll(includeList.split(','))
 		} catch (e) {}
-		
+
 
 		println("${getCurTimestamp()} - Querying DNG Folders from list of parents ...")
 		//For every input parent folder, we should get all child folders and add them to a list
 		def folderUris = []
-		topLevelFolders.each { parent ->
-			//DEBUG: uncomment addAll getnestedfolders and comment add(parent) to return to normal
-			folderUris.addAll(getNestedFolders(parent))
-			//folderUris.add(parent)
-		}
-		println("${getCurTimestamp()} - Retrieved all folders ...")
+//		File mFile = new File(mappingFile)
+//		if (!mFile.createNewFile()) {
+//			mFile.write(""); //create or blank out file
+			topLevelFolders.each { parent ->
+				//DEBUG: uncomment addAll getnestedfolders and comment add(parent) to return to normal
+				folderUris.addAll(getNestedFolders(parent))
+//				mFile.write
+				//folderUris.add(parent)
+			}
+			log.info("${getCurTimestamp()} - Retrieved ${folderUris.size()} folders ...")
+//		} else {
+//			folderUris = mFile.readObject()
+//			println("${getCurTimestamp()} - Retrieved folders from cache ...")
+//		}
+
 		//def results = clmRequirementsManagementService.queryForFolders("https://clm.cs.zionsbank.com/rm/folders/_mxVp8L1REeS5FIAyBUGhBQ")
 		
 		//get all requirements in each folder and write a csv
 		File oFile = new File(outputFile)
-		if (!oFile.createNewFile()) { 
-			oFile.write("Id,Release\n"); //create or blank out file
-		}
+		oFile.createNewFile() 
+		oFile.write("Id,Release\n"); //create or blank out file
 		def requirementIds = []
+		
 		folderUris.each { folderUri ->
-			
+			log.info("Querying folder: ${folderUri}")
 			def idList = getArtifactIDList(projectURI, oslcNs, oslcSelect, oslcWhere, folderUri)			
 				idList.each { id ->
 				oFile.append(id + ",\"Deposits\"\n")
@@ -109,34 +118,18 @@ class FetchFolderHiearchyFromRM implements CliAction {
 	public def getArtifactIDList(projectURI, oslcNs, oslcSelect, oslcWhere, folderUri) {
 		def artifactIDs = []
 		oslcWhere = oslcWhere.replace('ztargetfolder',folderUri)
-//		
-//		def includes = [:]
-//		try {
-//			String includeList = data.getOptionValues('include.update')[0]
-//			def includeItems = includeList.split(',')
-//			includeItems.each { item ->
-//				includes[item] = item
-//			}
-//		} catch (e) {}
-//		File mFile = new File(mappingFile)
-//		
-//		def mapping = new XmlSlurper().parseText(mFile.text)
-//		if (includes['clean'] != null) {
-//		}
-//		//refresh.
-//		if (includes['refresh'] != null) {
-//		}
-
-		log.info("Querying DNG Artifacts Within Folder")
+		
+		log.info("Querying DNG Artifacts Within Folder" )
 		def results = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
 		// Continue until all pages have been processed
+		log.debug("Returned from query with $artifactIDs.size()" )
 		def page = 1
 		while (true) {
 			int count = 0
 			if (results.Description.children().size() > 0 ) {
 	
 			results.Description.children().each { member ->
-				artifactIDs.add(member.children().identifier.text())
+				artifactIDs.add("${member.children().identifier.text()}")
 				//log.info(mem.text())
 			}
 			//artifactIDs = results.depthFirst.findAll{ it.name() == "identifier"}
@@ -149,11 +142,9 @@ class FetchFolderHiearchyFromRM implements CliAction {
 				log.info("Retrieving page ${page}...")
 				results = clmRequirementsManagementService.nextPage(nextUrl)
 			}
-			else {
-				return artifactIDs
-			}
 			
 			}
+			return artifactIDs
 			
 		}
 		
@@ -165,6 +156,7 @@ class FetchFolderHiearchyFromRM implements CliAction {
 	def getNestedFolders(String parentUri) {
 		def folderUriList = []
 		folderUriList.add(parentUri)
+		log.info("Added folder $parentUri")
 		def results = clmRequirementsManagementService.queryForFolders(parentUri)
 //debug only:
 		//def results = getDebugTestResults()	
@@ -177,7 +169,7 @@ class FetchFolderHiearchyFromRM implements CliAction {
 			def folderUri = member.folder.@'rdf:about'.text()
 			log.debug("${getCurTimestamp()} - about to retrieve children of " + folderUri)
 			//recurse this function to get children
-			folderUriList.add(getNestedFolders(folderUri))
+			folderUriList.addAll(getNestedFolders(folderUri))
 			log.debug("${getCurTimestamp()} - retrieved children of " + folderUri)
 		}
 //		} else {  }
