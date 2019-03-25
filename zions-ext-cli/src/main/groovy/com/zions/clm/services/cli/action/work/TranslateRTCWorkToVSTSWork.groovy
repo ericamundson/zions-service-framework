@@ -224,6 +224,8 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 					ccmWorkManagementService.resetNewId()
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id.text())
+						String sid = "${workitem.id.text()}"
+						clmWorkItemManagementService.getAllLinks(sid, new Date(), workitem)
 						def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
 						if (wiChanges != null) {
 							clManager.add("${id}", wiChanges)

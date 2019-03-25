@@ -18,19 +18,13 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 
 
-/* Pull in HTML content from C:\Resources\ and deploy
- * to localhost using Tomcat on port 8080 * when running as Java Application
- * author: Michael Angelastro 2/25/19 */
-
 @SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration])
-public class ContentApplication {
+public class RollupApplication {
 
 
 	public static void main(String[] args) {
 		
-        /*Call AppConfigTest.class to define custom resource path*/
-		
-		SpringApplication app = new SpringApplication(ContentApplication.class);
+ 		SpringApplication app = new SpringApplication(RollupApplication.class);
 		app.run(args);
 				
 

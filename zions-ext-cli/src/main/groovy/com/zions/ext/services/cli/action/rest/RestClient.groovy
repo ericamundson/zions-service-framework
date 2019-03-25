@@ -81,7 +81,13 @@ class RestClient implements CliAction {
 			os << json
 			os.close()
 		} else if (resultProtocol == 'xml' && result != null) {
-			String xml = XmlUtil.serialize(result)
+			String xml = ''
+			if (result instanceof ByteArrayInputStream) {
+				byte[] bs = ((ByteArrayInputStream) result).bytes
+				xml = new String(bs, 'utf-8')
+			} else {
+				xml = XmlUtil.serialize(result)
+			}
 			def os = ofile.newDataOutputStream()
 			os << xml
 			os.close();

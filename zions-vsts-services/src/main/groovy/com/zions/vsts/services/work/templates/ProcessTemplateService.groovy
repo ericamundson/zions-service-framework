@@ -254,6 +254,12 @@ public class ProcessTemplateService  {
 							cfield.page = "${page.label}"
 							cfield.section = "${section.id}"
 							cfield.group = "${group.label}"
+						} else {
+							def cField = [name: "${control.label}", refName:"${control.id}", type: '', helpText: 'custom control', page: page.label, section: section.id, group: group.label, control: control]
+							if (control.contribution && control.contribution.contributionId) {
+								fieldMap["${control.id}"] = cField
+								println control.id
+							}
 						}
 					}
 				}
@@ -428,11 +434,24 @@ public class ProcessTemplateService  {
 
 	}
 	
+//	def ensureWITChanges(def collection , def project, def changes, boolean updateLayout = false) {
+//		changes.each { witChange ->
+//			def witName = witChange.ensureType
+//			def wit = ensureWit(collection, project, witName)
+//			wit = getWIT(collection, project, witName)
+//			
+//			witChange.ensureFields.each { witFieldChange ->
+//				ensureWitField(collection, project, wit, witFieldChange, updateLayout)
+//			}
+//		}
+//		
+//	}
+
 	
-	def ensureWITChanges(def collection , def project, def changes, boolean updateLayout = false) {
+	def ensureWITChanges(def collection , def project, def changes, boolean updateLayout = false, boolean clearWIT = false) {
 		changes.each { witChange -> 
 			def witName = witChange.ensureType
-			def wit = ensureWit(collection, project, witName)
+			def wit = ensureWit(collection, project, witName, clearWIT)
 			wit = getWIT(collection, project, witName)
 			
 			witChange.ensureFields.each { witFieldChange ->
@@ -444,6 +463,10 @@ public class ProcessTemplateService  {
 	
 	def ensureWitField(collection, project, wit, witFieldChange, boolean updateLayout = false) {
 		String refName = "${witFieldChange.refName}"
+		if (witFieldChange.control) {
+			def layout = ensureWitFieldLayout(collection, project, wit, null, witFieldChange)
+			return
+		}
 		def field = queryForField(collection, project, witFieldChange.refName)
 		if (field == null) {
 			def pickList = null
@@ -451,6 +474,14 @@ public class ProcessTemplateService  {
 				pickList = createPickList(collection, project, witFieldChange)
 			}
 			field = createField(collection, project, witFieldChange, pickList)
+		} 
+		else {
+			def pickList = null
+			if (witFieldChange.suggestedValues.size() > 0 && field.picklistId) {
+				pickList = updatePickList(collection, project, witFieldChange, field.picklistId)
+			}
+			//field = updateField(collection, project, witFieldChange, pickList, field)
+
 		}
 		if (field == null) {
 			log.error("Unable to create field:  refname: ${witFieldChange.refName}, name: ${witFieldChange.name}")
@@ -487,26 +518,35 @@ public class ProcessTemplateService  {
 				externalGroup = createWITGroup(collection, project, wit, changePage, witFieldChange.group, witFieldChange.section)
 			}
 			def control = externalGroup.controls.find { control ->
-				"${control.id}" == "${field.referenceName}"
+				"${control.id}" == "${witFieldChange.refName}"
 			}
-			if (control == null) {
+			if (control == null && witFieldChange.control) {
+				addExternalControl(collection, project, wit, externalGroup, field, witFieldChange.control)
+			} else if (control == null) {
 				addExternalControl(collection, project, wit, externalGroup, field)
 			}
 		}
 	}
 	
-	def addExternalControl(collection, project, wit, externalGroup, field)
+	def addExternalControl(collection, project, wit, externalGroup, field, control = null)
 	{
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
 		//def controlData = [contribution: null, controls:[], height:null, id:null, inherited:null, isContribution:false, label:groupName, order:null, overridden:null, visible:true]
-		def controlData = [order:null, label:field.name, id: field.referenceName, readOnly: false, visible:true, isContribution: false, controlType:null, metadata:null, inherited:null, overridden:null, watermark:null, height:null]
+		def controlData = null
+		if (control) {
+			controlData = control
+		} else {
+			controlData = [order:null, label:field.name, id: field.referenceName, readOnly: false, visible:true, isContribution: false, controlType:null, metadata:null, inherited:null, overridden:null, watermark:null, height:null]
+		}
+		
+		String groupId = URLEncoder.encode(externalGroup.id, 'utf-8').replace('+', '%20')
 		def body = new JsonBuilder(controlData).toPrettyString()
 		
 		//def pName = URLEncoder.encode(this.processName, 'utf-8').replace('+', '%20')
 		
-		def result = genericRestClient.put(
+		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workItemTypes/${wit.referenceName}/layout/groups/${externalGroup.id}/Controls/${controlData.id}",
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workItemTypes/${wit.referenceName}/layout/groups/${groupId}/Controls/${controlData.id}",
 			body: body,
 			headers: [accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'
 				//referer: "${genericRestClient.getTfsUrl()}/_admin/_process?process-name=${pName}&type-id=${wit.referenceName}&_a=layout"
@@ -545,12 +585,13 @@ public class ProcessTemplateService  {
 
 	def createWITGroup(collection, project, wit, externalPage, name, section = 'Section1') {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
+		String pageId = URLEncoder.encode(externalPage.id, 'utf-8').replace('+', '%20')
 		def groupData = [id: null, label: name, order: null, overridden: null, inherited: null, visible: true, contribution: null, controls: [], isContribution: false]
 		def body = new JsonBuilder(groupData).toPrettyString()
 
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes/${wit.referenceName}/layout/pages/${externalPage.id}/sections/${section}/groups",
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes/${wit.referenceName}/layout/pages/${pageId}/sections/${section}/groups",
 			headers: [accept: 'application/json'],
 			query: ['api-version': '5.0-preview.1'],
 			body: body
@@ -572,6 +613,19 @@ public class ProcessTemplateService  {
 			headers: [accept: 'application/json'],
 			query: ['api-version': '5.0-preview.1'],
 			body: body
+			)
+		return result
+
+	}
+	
+	def deleteWit(collection, project, wit) {
+		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
+		def result = genericRestClient.delete(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes/${wit.referenceName}",
+			headers: [accept: 'application/json'],
+			query: ['api-version': '5.0-preview.2']
+			
 			)
 		return result
 
@@ -611,11 +665,33 @@ public class ProcessTemplateService  {
 			)
 		return result
 	}
-	
+	def updateField(collection, project, witFieldChange, pickList, field) {
+		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
+		def pickId = null
+		def wiData = [id: "${witFieldChange.refName}", name: "${witFieldChange.name}", type: "${witFieldChange.type}", description: "${witFieldChange.helpText}", pickList: null]
+		if (pickList != null) {
+			wiData.pickList = pickList
+		}
+		def body = new JsonBuilder(wiData).toPrettyString()
+		//		File s = new File('defaultwit.json')
+		//		def w = s.newDataOutputStream()
+		//		w << body
+		//		w.close()
+		def result = genericRestClient.patch(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processdefinitions/${processTemplateId}/fields/${witFieldChange.refName}",
+			body: body,
+			headers: [accept: 'application/json'],
+			query: ['api-version': '5.0-preview.1']
+			
+			)
+		return result
+	}
+
 	def createPickList(collection, project, witFieldChange) {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
 		def guid = UUID.randomUUID().toString()
-		def listData = [id: null, name: "picklist_${guid}", type: 'String', url: null, isSuggested: false, 
+		def listData = [id: null, name: "picklist_${guid}", type: 'String', url: null, isSuggested: true, 
 			items: []]
 		witFieldChange.suggestedValues.each { val ->
 			listData.items.add(val)
@@ -636,10 +712,36 @@ public class ProcessTemplateService  {
 		return result
 
 	}
-	
-	def ensureWit(collection, project, name) {
+	def updatePickList(collection, project, witFieldChange, pickListId) {
+		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
+		def guid = UUID.randomUUID().toString()
+		def pickList = [id: pickListId, items: [], isSuggested: true]
+		witFieldChange.suggestedValues.each { val ->
+			pickList.items.add(val)
+		}
+		def body = new JsonBuilder(pickList).toPrettyString()
+		//		File s = new File('defaultwit.json')
+		//		def w = s.newDataOutputStream()
+		//		w << body
+		//		w.close()
+		def result = genericRestClient.put(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/lists/${pickListId}",
+			body: body,
+			headers: [accept: 'application/json'],
+			query: ['api-version': '5.0-preview.1']
+			
+			)
+		return result
+
+	}
+
+	def ensureWit(collection, project, name, boolean clearWIT) {
 		def wit = getWIT(collection, project, name)
-		if (wit == null) {
+		if (clearWIT && wit) {
+			deleteWit(collection, project, wit)
+		}
+		if (wit == null || clearWIT) {
 			wit = createWorkitemTemplate(collection, project, name)
 		}
 		return wit 

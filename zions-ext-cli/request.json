@@ -1,10 +1,12 @@
 {
-    "requestContentType": "application/json",
-    "uri": "https://clm.cs.zionsbank.com/rs/query/11126/dataservice",
+    "contentType": "application/xml",
+    "uri": "https://clm.cs.zionsbank.com/rm/folders",
+    "headers": {
+    	"Accept": "application/rdf+xml",
+    	"OSLC-Core-Version": "2.0"
+    },
     "query": {
-        "report": "11099",
-        "limit": "-1",
-        "basicAuthenticationEnabled": "true"
+        "oslc.where": "public_rm:parent=https://clm.cs.zionsbank.com/rm/folders/_mxVp8L1REeS5FIAyBUGhBQ"
     }
     
 }

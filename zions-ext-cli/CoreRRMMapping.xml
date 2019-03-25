@@ -22,6 +22,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>	
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
 	<wit source="UI Spec" target="Document" translateUnmappedFields="false">
@@ -38,6 +39,7 @@
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="documentTypeHandler" target="Custom.DocumentType"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
 	<wit source="Default" target="PlaceHolder" translateUnmappedFields="false">
@@ -53,6 +55,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
 	<wit source="Data Requirement" target="Functional Requirement" translateUnmappedFields="false">
@@ -69,6 +72,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Functional Requirement" target="Functional Requirement" translateUnmappedFields="false">
@@ -85,6 +89,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Information Requirement" target="Functional Requirement" translateUnmappedFields="false">
@@ -101,6 +106,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Interface Requirement" target="Functional Requirement" translateUnmappedFields="false">
@@ -117,6 +123,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Reporting Requirement" target="Functional Requirement" translateUnmappedFields="false">
@@ -133,6 +140,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Screen Requirement" target="Functional Requirement" translateUnmappedFields="false">
@@ -149,6 +157,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Statement and Notices Requirement" target="Functional Requirement" translateUnmappedFields="false">
@@ -165,6 +174,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Technical Design Requirement" target="Functional Requirement" translateUnmappedFields="false">
@@ -181,6 +191,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Touchpoint Requirement" target="Functional Requirement" translateUnmappedFields="false">
@@ -197,6 +208,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
 	<wit source="Error Messages" target="Functional Requirement" translateUnmappedFields="false">
@@ -213,6 +225,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 		
 	<wit source="Control" target="Functional Requirement" translateUnmappedFields="false">
@@ -229,6 +242,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Interface Change" target="Functional Requirement" translateUnmappedFields="false">
@@ -245,6 +259,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Migration Change" target="Functional Requirement" translateUnmappedFields="false">
@@ -261,6 +276,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Parameter Change" target="Functional Requirement" translateUnmappedFields="false">
@@ -277,6 +293,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Processing Change" target="Functional Requirement" translateUnmappedFields="false">
@@ -293,6 +310,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Report Change" target="Functional Requirement" translateUnmappedFields="false">
@@ -309,6 +327,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 		
 	<wit source="Screen Change" target="Functional Requirement" translateUnmappedFields="false">
@@ -341,6 +360,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
 	<wit source="Documentation Change" target="Non Functional Requirement" translateUnmappedFields="false">
@@ -357,6 +377,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
 	<wit source="System Process Flow" target="Diagram" translateUnmappedFields="false">
@@ -372,6 +393,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
 	<wit source="Screen Field Configuration" target="Entity" translateUnmappedFields="false">
@@ -406,6 +428,7 @@
 		<field source="uiTooltipHandler" target="Custom.Tooltip"/>
 		<field source="fsDocumentNumHandler" target="Custom.DocumentNum"/>
 		<field source="uiRemarksHandler" target="Custom.Remarks"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
 	<wit source="Heading" target="Section" translateUnmappedFields="false">
@@ -422,6 +445,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Supporting Material" target="Section" translateUnmappedFields="false">
@@ -438,6 +462,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Compliance Requirement" target="Section" translateUnmappedFields="false">
@@ -454,6 +479,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Management Overview" target="Section" translateUnmappedFields="false">
@@ -470,6 +496,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Scope" target="Section" translateUnmappedFields="false">
@@ -486,6 +513,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Out of Scope" target="Section" translateUnmappedFields="false">
@@ -502,6 +530,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Input Specification" target="Section" translateUnmappedFields="false">
@@ -518,6 +547,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Output Specification" target="Section" translateUnmappedFields="false">
@@ -534,6 +564,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 		
 	<wit source="Assumption" target="Section" translateUnmappedFields="false">
@@ -550,6 +581,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Affiliate Mappings" target="Mockup" translateUnmappedFields="false">
@@ -566,6 +598,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Report Mockup" target="Mockup" translateUnmappedFields="false">
@@ -582,6 +615,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 		
 	<wit source="Screen Mockup" target="Mockup" translateUnmappedFields="false">
@@ -598,6 +632,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
 	
 	<wit source="Business Requirement" target="Business Requirement" translateUnmappedFields="false">
@@ -617,6 +652,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Subtopic" target="Feature Requirement" translateUnmappedFields="false">
@@ -632,6 +668,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
 	<wit source="Issue" target="Section" translateUnmappedFields="false">
@@ -647,6 +684,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 		
 	<wit source="Scope" target="Section" translateUnmappedFields="false">
@@ -662,6 +700,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Out of Scope" target="Section" translateUnmappedFields="false">
@@ -677,6 +716,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Assumption" target="Section" translateUnmappedFields="false">
@@ -692,6 +732,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	<links>
 	</links>
