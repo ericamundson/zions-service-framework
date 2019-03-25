@@ -19,12 +19,12 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 
 
 @SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration])
-public class ContentApplication {
+public class RollupApplication {
 
 
 	public static void main(String[] args) {
 		
- 		SpringApplication app = new SpringApplication(ContentApplication.class);
+ 		SpringApplication app = new SpringApplication(RollupApplication.class);
 		app.run(args);
 				
 

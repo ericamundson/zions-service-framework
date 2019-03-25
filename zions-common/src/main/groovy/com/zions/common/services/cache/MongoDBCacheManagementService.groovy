@@ -31,6 +31,9 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	@Value('${cache.location:cache}')
 	String cacheLocation
 	
+	@Value('${cache.module:CCM}')
+	String cacheModule
+
 	public MongoDBCacheManagementService() {
 		
 	}
@@ -39,7 +42,17 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	@Override
 	public Object getFromCache(Object id, String type) {
 		// TODO Auto-generated method stub
-		CacheItem ci = repository.findByProjectAndKeyAndType(dbProject, id, type)
+		CacheItem ci = repository.findByProjectAndModuleAndKeyAndType(dbProject, cacheModule, id, type)
+		if (ci == null) return null
+		String json = ci.json
+		def jMap = new JsonSlurper().parseText(json)
+		return jMap
+	}
+	
+	@Override
+	public Object getFromCache(Object id, String module, String type) {
+		// TODO Auto-generated method stub
+		CacheItem ci = repository.findByProjectAndModuleAndKeyAndType(dbProject, module, id, type)
 		if (ci == null) return null
 		String json = ci.json
 		def jMap = new JsonSlurper().parseText(json)
@@ -49,7 +62,7 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	@Override
 	public Object saveToCache(Object data, String id, String type) {
 		// TODO Auto-generated method stubC
-		CacheItem ci = repository.findByProjectAndKeyAndType(dbProject, id, type)
+		CacheItem ci = repository.findByProjectAndModuleAndKeyAndType(dbProject, cacheModule, id, type)
 		String json = new JsonBuilder(data).toPrettyString()
 		if (ci == null) {
 			ci = new CacheItem([project:dbProject, key:id, type:type, json: json])
@@ -99,12 +112,12 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 
 	@Override
 	public boolean exists(Object key) {
-		List<CacheItem> items = repository.findByProjectAndKey(dbProject, key)
+		List<CacheItem> items = repository.findByProjectAndModuleAndKey(dbProject, cacheModule, key)
 		return (items != null && items.size() > 0)
 	}
 	
 	void deleteById(String id) {
-		List<CacheItem> items = repository.deleteByProjectAndKey(dbProject, id)
+		List<CacheItem> items = repository.deleteByProjectAndModuleAndKey(dbProject, cacheModule, id)
 	
 	}
 
@@ -112,7 +125,7 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	@Override
 	public Object getAllOfType(String type) {
 		def wis = [:]
-		List<CacheItem> items = repository.findByProjectAndType(dbProject, type)
+		List<CacheItem> items = repository.findByProjectAndModuleAndType(dbProject, cacheModule, type)
 		
 		items.each { CacheItem item -> 
 			def wi = new JsonSlurper().parseText(item.json)

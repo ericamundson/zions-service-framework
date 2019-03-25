@@ -25,6 +25,18 @@ class RollupManagementService {
 		
 	}
 	
+	def performParentRollup(String id, String project) {
+		def wi = workManagementService.getWorkItem(collection, project, id)
+		String cat = workManagementService.getCategory(collection, project, wi)
+		if (!cat && cat == 'Feature Category') return
+		
+		def parent = workManagementService.getParent(collection,project, wi)
+		if (parent) {
+			String pid = "${parent.id}"
+			rollup(pid, true, project)
+		}
+	}
+	
 
 	/**
 	 * Rollup a specfic work item's work data.
@@ -50,6 +62,9 @@ class RollupManagementService {
 			completed += cd.completed
 		}
 		save(pid, wi, estimate, remaining, completed, project)
+		if (parentRollup) {
+			performParentRollup(pid, project)
+		}
 	}
 	
 	private save(String id, def wi, int estimate, int remaining, int completed, String project) {

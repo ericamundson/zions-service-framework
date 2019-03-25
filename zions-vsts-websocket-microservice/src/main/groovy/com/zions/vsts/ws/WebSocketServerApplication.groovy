@@ -1,7 +1,6 @@
-package com.zions.vsts.services;
+package com.zions.vsts.ws;
 
-import com.zions.common.services.cli.action.CliAction
-import com.zions.vsts.services.work.templates.ProcessTemplateService
+
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
@@ -18,19 +17,19 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 
 
-/* Pull in HTML content from C:\Resources\ and deploy
- * to localhost using Tomcat on port 8080 * when running as Java Application
- * author: Michael Angelastro 2/25/19 */
-
+/**
+ * WebSocket micro-service main class.
+ * 
+ * @author z091182
+ *
+ */
 @SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration])
-public class ContentApplication {
+public class WebSocketServerApplication {
 
 
 	public static void main(String[] args) {
 		
-        /*Call AppConfigTest.class to define custom resource path*/
-		
-		SpringApplication app = new SpringApplication(ContentApplication.class);
+		SpringApplication app = new SpringApplication(WebSocketServerApplication.class);
 		app.run(args);
 				
 
