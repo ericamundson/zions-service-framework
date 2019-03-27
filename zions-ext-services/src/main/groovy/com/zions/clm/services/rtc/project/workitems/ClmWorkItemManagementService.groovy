@@ -30,7 +30,7 @@ public class ClmWorkItemManagementService {
 	@Autowired
 	IGenericRestClient clmGenericRestClient
 	
-	@Autowired
+	@Autowired(required=false)
 	ICheckpointManagementService checkpointManagementService
 
 	public ClmWorkItemManagementService() {

@@ -9,7 +9,7 @@ class QueryTracking implements CacheRequired {
 	String xml
 	
 	void doResult(def result) {
-		xml = new XmlUtil(result).toString()
+		xml = new XmlUtil().serialize(result)
 	}
 	
 	def resultValue() {

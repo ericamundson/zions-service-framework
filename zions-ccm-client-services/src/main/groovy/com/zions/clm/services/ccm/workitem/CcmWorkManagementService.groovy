@@ -93,7 +93,7 @@ class CcmWorkManagementService {
 			return null
 		}
 		def outType = "${wiMap.target}"
-		return generateWIData(workItem, id, project, outType, wiMap, memberMap)
+		return generateWIData(id, workItem.modified(), workItem,  project, outType, wiMap, memberMap).changes
 	}
 	
 	/**
@@ -188,7 +188,8 @@ class CcmWorkManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	def generateWIData(workItem, id, project, type, wiMap, memberMap) {
+	@Cache( elementType = WorkitemChanges)
+	WorkitemChanges generateWIData(id, Date timeStamp, workItem,  project, type, wiMap, memberMap) {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
@@ -222,7 +223,8 @@ class CcmWorkManagementService {
 			return null
 		}
 		//String json = new JsonBuilder(wiData).toPrettyString()
-		return wiData
+		WorkitemChanges data = new WorkitemChanges(changes: wiData)
+		return data
 	}
 		
 	/**

@@ -18,6 +18,7 @@ import com.zions.clm.services.ccm.project.planning.PlanManagementService
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
+import com.zions.clm.services.rtc.project.workitems.QueryTracking
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
 import com.zions.vsts.services.admin.member.MemberManagementService
@@ -96,8 +97,10 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 		//def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)
 		
 		and:
-		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
-		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
+//		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
+//		QueryTracking qt = new QueryTracking()
+//		qt.doResult(workItems)
+		clmWorkItemManagementService.getWorkItemsViaQuery(_,_,_) >> {throw new  NullPointerException() }
 		//underTest.clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
 		
 		and:
