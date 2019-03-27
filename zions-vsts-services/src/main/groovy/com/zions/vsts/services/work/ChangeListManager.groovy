@@ -1,5 +1,14 @@
 package com.zions.vsts.services.work;
 
+import groovy.util.logging.Slf4j
+
+/**
+ * Handles setting up batch of work item changes to ADO.
+ * 
+ * @author z091182
+ *
+ */
+@Slf4j
 class ChangeListManager {
 	def changeList = []
 	def idMap = [:]

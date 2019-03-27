@@ -2,6 +2,7 @@ package com.zions.vsts.services.work.calculations
 
 import com.zions.vsts.services.work.WorkManagementService
 import groovy.transform.Canonical
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component
  *
  */
 @Component
+@Slf4j
 class RollupManagementService {
 	
 	@Autowired

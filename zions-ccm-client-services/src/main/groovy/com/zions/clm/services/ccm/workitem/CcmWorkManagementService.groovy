@@ -2,16 +2,23 @@ package com.zions.clm.services.ccm.workitem
 
 import java.util.Map
 
+import org.eclipse.core.runtime.IProgressMonitor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import com.ibm.team.links.common.IReference
+import com.ibm.team.links.common.registry.IEndPointDescriptor
 import com.ibm.team.repository.client.ITeamRepository
 import com.ibm.team.workitem.client.IWorkItemClient
+import com.ibm.team.workitem.common.IWorkItemCommon
 import com.ibm.team.workitem.common.model.AttributeTypes
 import com.ibm.team.workitem.common.model.IAttribute
 import com.ibm.team.workitem.common.model.IWorkItem
+import com.ibm.team.workitem.common.model.IWorkItemReferences
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
+import com.zions.clm.services.ccm.utils.ReferenceUtil
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.work.handler.IFieldHandler
@@ -58,6 +65,16 @@ class CcmWorkManagementService {
 		newId = -1
 	}
 	
+	IWorkItem getWorkitem(id) {
+		if (id instanceof String) {
+			id = Integer.parseInt(id)
+		}
+		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
+		IWorkItem workItem = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, null);
+		return workItem
+	}
+	
 	/**
 	 * Get the data structure of field changes to create/update VSTS work item.
 	 * 
@@ -68,9 +85,7 @@ class CcmWorkManagementService {
 	 * @return
 	 */
 	def getWIChanges(id, project, translateMapping, memberMap) {
-		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
-		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
-		IWorkItem workItem = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, null);
+		IWorkItem workItem = getWorkitem(id)
 		String type = workitemAttributeManager.getStringRepresentation(workItem, workItem.getProjectArea(), 'workItemType')
 		def wiMap = translateMapping["${type}"]
 		if (wiMap == null) {
@@ -78,7 +93,7 @@ class CcmWorkManagementService {
 			return null
 		}
 		def outType = "${wiMap.target}"
-		return generateWIData(workItem, id, project, outType, wiMap, memberMap)
+		return generateWIData(id, workItem.modified(), workItem,  project, outType, wiMap, memberMap).changes
 	}
 	
 	/**
@@ -89,32 +104,20 @@ class CcmWorkManagementService {
 	 * @param linkMapping
 	 * @return
 	 */
-	def getWILinkChanges(String id, String project, linkMapping, List<LinkInfo> links = null) {
+	def getWILinkChanges(String id, String project, linkMapping) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
 		IWorkItem workItem = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, null);
+		Date modified = workItem.modified()
 		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
-			linkMapping.each { key, linkMap ->
-				List<LinkInfo> linkIds = null
-				if (links) {
-					linkIds = getLinks(key, links)
-				} else {
-					String ids = workitemAttributeManager.getStringRepresentation(workItem, workItem.getProjectArea(), "${key}")
-					linkIds = []
-					def idList = ids.split(',')
-					idList.each { rid ->
-						def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'RTC', moduleRelated: 'RTC')
-						linkIds.add(info)
-					}
-				}
-				wiData = generateLinkChanges(wiData, linkIds, key, linkMap, cacheWI)
-			}
+			List<LinkInfo> info = this.getAllLinks(id, modified, workItem, linkMapping)
+			wiData = generateLinkChanges(wiData, info, linkMapping, cacheWI)
 			if (wiData.body.size() == 1) {
 				return null
 			}
@@ -140,13 +143,14 @@ class CcmWorkManagementService {
 	 * @param cacheWI
 	 * @return
 	 */
-	def generateLinkChanges(def wiData, List<LinkInfo> linkIds, key, linkMap, cacheWI) {
-		def linksList = linkIds.split(',')
-		linkIds.each { LinkInfo info -> 
+	def generateLinkChanges(def wiData, List<LinkInfo> links, linkMapping, cacheWI) {
+		def linksList = links.split(',')
+		links.each { LinkInfo info -> 
 			String id = info.itemIdRelated
 			String module = info.moduleRelated()
 			def linkWI = cacheManagementService.getFromCache(id, module, ICacheManagementService.WI_DATA)
-			if (linkWI != null) {
+			def linkMap = linkMapping[info.type]
+			if (linkWI != null && linkMap) {
 				def linkId = linkWI.id
 				if (!linkExists(cacheWI, linkMap.target, linkId) && "${linkId}" != "${cacheWI.id}") {
 					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap.@target}", url: "${tfsUrl}/_apis/wit/workItems/${linkId}", attributes:[comment: "${linkMap.@source}"]]]
@@ -184,7 +188,8 @@ class CcmWorkManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	def generateWIData(workItem, id, project, type, wiMap, memberMap) {
+	@Cache( elementType = WorkitemChanges)
+	WorkitemChanges generateWIData(id, Date timeStamp, workItem,  project, type, wiMap, memberMap) {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
@@ -218,7 +223,8 @@ class CcmWorkManagementService {
 			return null
 		}
 		//String json = new JsonBuilder(wiData).toPrettyString()
-		return wiData
+		WorkitemChanges data = new WorkitemChanges(changes: wiData)
+		return data
 	}
 		
 	/**
@@ -308,6 +314,38 @@ class CcmWorkManagementService {
 		
 	}
 	
+	IWorkItemCommon getWorkItemCommon() {
+		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		return teamRepository.getClientLibrary(IWorkItemCommon.class)
+	}
+
+
+	@Cache(elementType = LinkInfo)
+	public List<LinkInfo> getAllLinks(String id, Date timeStamp, IWorkItem workItem, linkMapping) {
+		List<LinkInfo> links = new ArrayList<LinkInfo>()
+		linkMapping.each { key, linkMap ->
+			String linkType = ReferenceUtil.getReferenceType(key);
+			String module = 'CCM'
+			if ("${linkMap.@module}".length() > 0) {
+				module = "${linkMap.@module}"
+			}
+			String ids = workitemAttributeManager.getStringRepresentation(workItem, workItem.getProjectArea(), "${key}")
+			String[] idList = ids.split(',')
+			idList.each { String rid ->
+				if (rid && rid.length() > 0) {
+					def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'CCM', moduleRelated: module)				
+					links.add(info)
+				}
+			}
+
+		}
+		return links
+	}
+	
+	IProgressMonitor getMonitor() {
+		return rtcRepositoryClient.getMonitor()
+	}
+
 }
 
 

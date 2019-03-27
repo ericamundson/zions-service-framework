@@ -1,10 +1,11 @@
 package com.zions.common.services.link
 
+import com.zions.common.services.cacheaspect.CacheRequired
+
 import groovy.transform.Canonical
 
 @Canonical
-class LinkInfo {
-	Date timeStamp  //Used to ensure link cache is current.
+class LinkInfo implements CacheRequired {
 	
 	String type  // This won’t always be a URL, but there will be a way to get type.
 	

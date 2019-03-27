@@ -5,6 +5,7 @@ import java.util.Map
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
+import com.ibm.team.workitem.common.model.IWorkItem
 import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
@@ -12,6 +13,8 @@ import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
+import com.zions.common.services.restart.Checkpoint
+import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.common.services.restart.IRestartManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.work.ChangeListManager
@@ -149,6 +152,8 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 
 	@Autowired
 	IRestartManagementService restartManagementService
+	@Autowired(required=false)
+	ICheckpointManagementService checkpointManagementService
 
 	public TranslateRTCWorkToVSTSWork() {
 	}
@@ -198,7 +203,15 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		//refresh.
 		if (includes['refresh'] != null) {
 			log.info("Refreshing cache.")
-			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
+			Checkpoint cp = checkpointManagementService.selectCheckpoint('query')
+			int page=0
+			Date currentTimestamp = new Date()
+			if (cp) {
+				currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.getTimeStamp())
+				
+			}
+			String pageId = "${page}"
+			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(pageId, currentTimestamp, wiQuery).resultValue()
 			while (true) {
 				def changeList = []
 				def filtered = filtered(workItems, wiFilter)
@@ -209,7 +222,9 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
 				def rel = workItems.@rel
 				if ("${rel}" != 'next') break
-					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+				page++
+				pageId = "${page}"
+				workItems = clmWorkItemManagementService.nextPage(pageId, currentTimestamp, workItems.@href).resultValue()
 			}
 		}
 		def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
@@ -225,10 +240,14 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id.text())
 						String sid = "${workitem.id.text()}"
-						clmWorkItemManagementService.getAllLinks(sid, new Date(), workitem)
-						def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
-						if (wiChanges != null) {
-							clManager.add("${id}", wiChanges)
+						IWorkItem ccmWorkitem = ccmWorkManagementService.getWorkitem(sid)
+						Date ts = ccmWorkitem.modified()
+						def links = ccmWorkManagementService.getAllLinks(sid, ts, ccmWorkitem, linkMapping)
+						flowLogging(clManager) {
+							def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
+							if (wiChanges != null) {
+								clManager.add("${id}", wiChanges)
+							}
 						}
 					}
 					clManager.flush();
