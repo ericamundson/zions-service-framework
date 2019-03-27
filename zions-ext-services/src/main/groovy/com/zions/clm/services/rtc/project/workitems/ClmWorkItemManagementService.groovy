@@ -110,6 +110,6 @@ public class ClmWorkItemManagementService {
 			headers: [Accept: 'text/xml'] );
 		QueryTracking qt = new QueryTracking()
 		qt.doResult(result)
-		return result
+		return qt
 	}
 }
