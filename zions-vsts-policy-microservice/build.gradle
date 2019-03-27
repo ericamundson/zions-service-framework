@@ -1,8 +1,8 @@
 bootJar {
 	enabled = true
 	mainClassName = 'com.zions.vsts.services.policy.PolicyApplication'
-	baseName = 'zions-vsts-policy'
-	version =  "${version}"
+	archiveName = 'zions-vsts-policy.jar'
+	//version =  "${version}"
 }
 
 dependencies {

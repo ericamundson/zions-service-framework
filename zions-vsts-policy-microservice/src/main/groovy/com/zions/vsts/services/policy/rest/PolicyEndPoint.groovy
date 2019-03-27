@@ -3,6 +3,8 @@ package com.zions.vsts.services.policy.rest;
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -11,31 +13,37 @@ import groovy.util.logging.Slf4j
 import groovy.json.JsonSlurper
 
 import com.zions.vsts.services.policy.PolicyManagementService;
+import com.zions.vsts.services.ws.client.AbstractWebSocketMicroService
 
 /**
  * ReST Controller for TFS Policy Management service. 
  * @author James McNabb
  * 
  */
-@RestController
+@Component
 @Slf4j
-public class PolicyEndPoint {
+public class PolicyEndPoint extends AbstractWebSocketMicroService {
 
     @Autowired
     private PolicyManagementService policyManagementService;
 
+	@Autowired
+	public PolicyEndPoint(@Value('${websocket.url:}') websocketUrl) {
+		super(websocketUrl)
+	}
+
     /**
      * Create branch policies for new Git branch when created. 
      *  
-     * @param ?? - 
      * @return
      */
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-	public ResponseEntity newBranchCreated(@RequestBody String json) {
-		//log.debug("In PolicyEndPoint - json:\n"+json)
+	@Override
+	public Object processADOData(Object adoData) {
+		//log.debug("In PolicyEndPoint - adoData:\n"+adoData)
 		try {
-			JsonSlurper slurper = new JsonSlurper()
-			def eventData = slurper.parseText(json)
+			//JsonSlurper slurper = new JsonSlurper()
+			//def eventData = slurper.parseText(adoData)
+			def eventData = adoData
 			def changeSet = eventData.resource;
 			changeSet.refUpdates.each { update ->
 				// only protect certain branch types / patterns
@@ -58,6 +66,11 @@ public class PolicyEndPoint {
 			return new ResponseEntity<Object>("${err.message}", HttpStatus.UNPROCESSABLE_ENTITY)
 		}
 		return ResponseEntity.ok(HttpStatus.OK)
+	}
+
+	@Override
+	public String topic() {
+		return 'git.push';
 	}
 
     private def getCollectionName(def containerData) {
