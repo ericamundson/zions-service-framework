@@ -7,6 +7,7 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.logging.FlowInterceptor
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonSlurper
 
@@ -35,7 +36,10 @@ class ImportWIT implements CliAction {
 				wits.add(witChanges)
 			}
 		}
-		processTemplateService.ensureWITChanges(collection, project, wits, true)
+		this.flowLogging([processTemplateService], true, true) {  // Setup flow logging on any processTemplateService call
+			processTemplateService.ensureWITChanges(collection, project, wits, true)
+		}
+		
 		return null;
 	}
 

@@ -9,6 +9,7 @@ import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
 
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 
@@ -37,6 +38,7 @@ import groovyx.net.http.ContentType
  *
  */
 @Component
+@Slf4j
 public class ClmTestItemManagementService {
 	
 	@Autowired

@@ -59,7 +59,7 @@ import org.springframework.stereotype.Component
  *
  */
 @SuppressWarnings("deprecation")
-//@Slf4j
+@Slf4j
 @Component
 public class ClmGenericRestClient extends AGenericRestClient {
 	

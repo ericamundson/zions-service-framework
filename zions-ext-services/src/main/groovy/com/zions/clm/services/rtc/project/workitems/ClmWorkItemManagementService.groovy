@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.zions.clm.services.rest.ClmGenericRestClient;
-import com.zions.common.services.link.Cache
+import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.link.LinkInfo
-import com.zions.common.services.link.Module
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.restart.Checkpoint
+import com.zions.common.services.restart.ICheckpointManagementService
+
+import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
@@ -21,13 +24,33 @@ import groovyx.net.http.ContentType
  *
  */
 @Component
+@Slf4j
 public class ClmWorkItemManagementService {
 
 	@Autowired
 	IGenericRestClient clmGenericRestClient
 	
+	@Autowired
+	ICheckpointManagementService checkpointManagementService
+
 	public ClmWorkItemManagementService() {
 		
+	}
+	
+	def flushQueries(String query) {
+		Checkpoint checkpoint = checkpointManagementService.addCheckpoint('query', 'none')
+;
+		Date ts = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", checkpoint.getTimeStamp())
+		int page = 0
+		QueryTracking qt = this.getWorkItemsViaQuery("${page}", ts, query)
+		def currentItems = qt.resultValue()
+		while (true) {
+			def rel = currentItems.@rel
+			if ("${rel}" != 'next') break
+			page++
+			currentItems = nextPage("${page}", ts, currentItems.@href).resultValue()
+	
+		}
 	}
 	
 	def getContent(String uri) {
@@ -50,9 +73,6 @@ public class ClmWorkItemManagementService {
 	}
 
 	def getWorkItemHistory(int id) {
-		
-		XmlSlurper s
-		
 		def uri = "${this.clmGenericRestClient.clmUrl}/ccm/service/com.ibm.team.workitem.common.internal.rest.IWorkItemRestService/workItemDTO2"
 		def query = [id: id, includeAttributes: false, includeLinks: false, includeApprovals: false, includeHistory: true, includeLinkHistory: true]
 		def result = clmGenericRestClient.get(
@@ -63,8 +83,8 @@ public class ClmWorkItemManagementService {
 		return result
 	}
 	
-
-	public def getWorkItemsViaQuery(String query) {
+	@Cache( elementType = QueryTracking)
+	public QueryTracking getWorkItemsViaQuery(String pageId, Date timeStamp, String query) {
 		//def query = "workitem/workItem[projectArea/name='${project}']/(id)"
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
@@ -78,18 +98,18 @@ public class ClmWorkItemManagementService {
 //		def o = out.newDataOutputStream()
 //		o << new groovy.xml.StreamingMarkupBuilder().bindNode(result) as String
 //		o.close()
-		return result
+		QueryTracking qt = new QueryTracking()
+		qt.doResult(result)
+		return qt
 	}
 	
-	@Cache(module = Module.CCM)
-	public List<LinkInfo> getAllLinks(String id, Date timeStamp, def data) {
-		return new ArrayList<LinkInfo>()
-	}
-	
-	public def nextPage(url) {
+	@Cache( elementType = QueryTracking)
+	public QueryTracking nextPage(String pageId, Date timeStamp, String url) {
 		def result = clmGenericRestClient.get(
 			uri: url,
 			headers: [Accept: 'text/xml'] );
+		QueryTracking qt = new QueryTracking()
+		qt.doResult(result)
 		return result
 	}
 }

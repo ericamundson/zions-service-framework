@@ -1,8 +1,6 @@
-package com.zions.common.services.link
+package com.zions.common.services.cacheaspect
 
 import com.zions.common.services.cache.ICacheManagementService
-import com.zions.common.services.restart.Checkpoint
-import com.zions.common.services.restart.CheckpointManagementService
 
 import groovy.json.JsonBuilder
 import java.lang.reflect.Method
@@ -17,27 +15,26 @@ import org.springframework.stereotype.Component
 
 @Aspect
 @Configuration
-class LinksAspect {
+class CacheAspect {
 	
-	public LinksAspect() {
-		println 'Links aspect running'
+	public CacheAspect() {
+		println 'Cache aspect running'
 	}
 	
 	@Autowired
 	ICacheManagementService cacheManagementService
-	
-	@Autowired(required=false)
-	CheckpointManagementService checkpointManagementService
 
-	@Around('@annotation(com.zions.common.services.link.Cache)')
+	@Around('@annotation(com.zions.common.services.cacheaspect.Cache)')
 	public def around(ProceedingJoinPoint joinPoint) throws Throwable {
 		def args = joinPoint.args
 		def obj = joinPoint.this
 		MethodSignature sig = joinPoint.getSignature()
 		Method method = sig.method
+		
 		Cache cacheAnno = method.getAnnotation(Cache.class)
-		String moduleStr = cacheAnno.module().name()
-		if (args.length < 3) {
+		Class eTypeClass = cacheAnno.elementType()
+		String eType = cacheAnno.elementType().simpleName
+		if (args.length < 2) {
 			return joinPoint.proceed()
 		}
 		if (!(args[0] instanceof String)) {
@@ -46,26 +43,47 @@ class LinksAspect {
 		if (!(args[1] instanceof Date)) {
 			return joinPoint.proceed()
 		}
+		if (!(CacheRequired.class.isAssignableFrom(eTypeClass))) {
+			return joinPoint.proceed()
+		}
 
 		//Checkpoint checkpoint = checkpointManagementService.selectCheckpoint('update')
 		
 		String id = args[0]
+		//sanitize id
+		id = id.replace('\\W+', '')
+		
 		Date ts = args[1]
 		
 		//String moduleStr = "${module}"
-		
-		List<LinkInfo> retVal = cacheManagementService.getFromCache(id, moduleStr)
+		def retVal = cacheManagementService.getFromCache(id, eType)
 		
 		if (!retVal) {
 			retVal = joinPoint.proceed()
-			cacheManagementService.saveToCache(retVal, id, moduleStr)
+			cacheManagementService.saveToCache(retVal, id, eType)
 		} else {
-			List<LinkInfo> lessThan = retVal.findAll { LinkInfo info ->
-				(info.timeStamp.time < ts.time)
-			}
-			if (lessThan.size() > 0) {
-				retVal = joinPoint.proceed()
-				cacheManagementService.saveToCache(retVal, id, moduleStr)	
+			if (retVal instanceof List) {
+				List<CacheRequired> inItems = new ArrayList<CacheRequired>()
+				retVal.each { map -> 
+					def item = eTypeClass.newInstance(map)
+					inItems.add(item)
+				}
+				retVal = inItems
+				List<CacheRequired> lessThan = retVal.findAll { CacheRequired item ->
+					(item.timestampValue().time < ts.time)
+				}
+				if (lessThan.size() > 0) {
+					retVal = joinPoint.proceed()
+					cacheManagementService.saveToCache(retVal, id, eType)	
+				}
+			} else {
+				CacheRequired inItem = eTypeClass.newInstance(retVal)
+				retVal = inItem
+				if (inItem.timestampValue().time < ts.time) {
+					retVal = joinPoint.proceed()
+					cacheManagementService.saveToCache(retVal, id, eType)
+
+				}
 			}
 		}
 		

@@ -5,6 +5,7 @@ import java.util.Map
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
+import com.ibm.team.workitem.common.model.IWorkItem
 import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
@@ -225,10 +226,14 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id.text())
 						String sid = "${workitem.id.text()}"
-						clmWorkItemManagementService.getAllLinks(sid, new Date(), workitem)
-						def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
-						if (wiChanges != null) {
-							clManager.add("${id}", wiChanges)
+						IWorkItem ccmWorkitem = ccmWorkManagementService.getWorkitem(sid)
+						Date ts = ccmWorkitem.modified()
+						def links = ccmWorkManagementService.getAllLinks(sid, ts, ccmWorkitem, linkMapping)
+						flowLogging(clManager) {
+							def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
+							if (wiChanges != null) {
+								clManager.add("${id}", wiChanges)
+							}
 						}
 					}
 					clManager.flush();
