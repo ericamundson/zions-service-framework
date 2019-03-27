@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration
 public class LoggingAspect {
 
 /* Created by Michael Angelastro
- * 3/27/2019 for Zions Service Framework Logging
+ * 03/27/2019 for Zions Service Framework Logging
  * 
  * This is aLogging Aspect for the Loggable annotation that calculates method runtimes
  * for all methods under classes annotated with @Loggable*/

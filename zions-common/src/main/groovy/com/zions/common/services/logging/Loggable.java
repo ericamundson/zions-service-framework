@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /* Author: Michael Angelastro
- * Date: 3/27/2019
+ * Date: 03/27/2019
+ * 
  */
 
 /*Logging annotation to be used at class level
