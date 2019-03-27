@@ -38,7 +38,7 @@ class ClmArtifact {
 		return attributeMap.'Identifier'
 	}
 	public String getCacheID() {
-		"${this.getID()}-Requirement"
+		"${this.getID()}"
 	}
 	public String setID(in_id) {
 		attributeMap.'Identifier' = in_id

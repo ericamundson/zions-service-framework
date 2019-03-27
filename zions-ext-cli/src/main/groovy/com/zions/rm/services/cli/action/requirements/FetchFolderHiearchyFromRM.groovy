@@ -16,14 +16,13 @@ import com.zions.rm.services.requirements.ClmRequirementsItemManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
-import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import com.zions.rm.services.requirements.ClmArtifact
-import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
+
 
 /**
 * forked from TranslateRMBaseArtifactsToADO
@@ -35,18 +34,10 @@ class FetchFolderHiearchyFromRM implements CliAction {
 	private Map<String, IFilter> filterMap;
 	@Autowired
 	MemberManagementService memberManagementService;
-	@Autowired
-	FileManagementService fileManagementService;
-	@Autowired
-	WorkManagementService workManagementService
-	@Autowired 
-	ClmRequirementsItemManagementService clmRequirementsItemManagementService
 	@Autowired 
 	ClmRequirementsManagementService clmRequirementsManagementService
 	@Autowired 
 	RequirementsMappingManagementService rmMappingManagementService
-	@Autowired
-	ClmRequirementsFileManagementService rmFileManagementService
 	
 	public FetchFolderHiearchyFromRM() {
 	}

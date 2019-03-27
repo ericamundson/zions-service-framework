@@ -9,7 +9,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="importWIT --tfs.url=https://dev.azure.com/DTSDemo  --tfs.user=v070339 --tfs.token=&quot;ahv4wcu7cqnbnz7c6refxp2o2evh3phlqyead7ogbw72ohxqessa&quot; --tfs.project=&quot;FutureCore Sandbox&quot; --export.dir=c:\eto-dev_wits2 --default.wit.name=Note --logging.level.com.zions.common.services.rest.AGenericRestClient=DEBUG --logging.file=c:\\rmtestcache\\rm.log"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="importWIT --tfs.url=https://dev.azure.com/eto-dev  --tfs.user=v070339 --tfs.token=&quot;ypfs3hsn4qutiskxsuwk2vcxwgkpzsozojaemu4xckiasbeko4fa&quot; --tfs.project=&quot;FutureCore&quot; --export.dir=c:\DTSDemo_wits --default.wit.name=Note --logging.level.com.zions.common.services.rest.AGenericRestClient=DEBUG --logging.file=c:\\rmtestcache\\rm.log"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dproxy.Host=172.18.4.115 -Dproxy.Port=8080 -Dproxy.User=z091182 -Dproxy.Password=4878Middy"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
