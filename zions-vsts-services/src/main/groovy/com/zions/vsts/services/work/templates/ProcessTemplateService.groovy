@@ -451,6 +451,7 @@ public class ProcessTemplateService  {
 	def ensureWITChanges(def collection , def project, def changes, boolean updateLayout = false, boolean clearWIT = false) {
 		changes.each { witChange -> 
 			def witName = witChange.ensureType
+			log.info("Importing $witName...")
 			def wit = ensureWit(collection, project, witName, clearWIT)
 			wit = getWIT(collection, project, witName)
 			
