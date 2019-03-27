@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-ext-cli/src/main/groovy/com/zions/ext/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="translateRmModulesToADO --clm.url=https://clm.cs.zionsbank.com --clm.user=z091182  --clm.pageSize=10 --tfs.url=https://dev.azure.com --tfs.collection=eto-dev --tfs.user=robert.huet@zionsbancorp.com  --clm.projectAreaUri=_klNSEBNGEeSmasotILOx6w --rm.mapping.file=./CoreRRMMapping.xml --tfs.project=FutureCore --process.name=ZionsAgile --include.update=data --rm.query=&quot;collectionURI=_Z2_j8fQqEeihN7TNly_siw&quot; --rm.filter=allFilter --tfs.areapath=BaNCS\Requirements --mr.url=http://utmvti0190:8026 --mr.tfsUrl=https://dev.azure.com/eto-dev --mr.template=Basic --mr.folder=/ --tfs.oAuthToken=&quot;eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im9PdmN6NU1fN3AtSGpJS2xGWHo5M3VfVjBabyJ9.eyJuYW1laWQiOiIyYmVkZTM1ZC04ZTNjLTZhODQtYjFiOS0wMGQ4OThjZWU5YzEiLCJzY3AiOiJhcHBfdG9rZW4iLCJhdWkiOiJhMDRjNzQ3Ny1iZDk0LTQ3MzYtODZkMC1jY2ViMTMzODg4ZmYiLCJzaWQiOiI0MzJkZTU0Yi0xMzUzLTQzNmYtODg0Mi1hMjRmZTU5M2RlZDgiLCJpc3MiOiJhcHAudnN0b2tlbi52aXN1YWxzdHVkaW8uY29tIiwiYXVkIjoiYXBwLnZzdG9rZW4udmlzdWFsc3R1ZGlvLmNvbXx2c286MDc4YTU1NTEtMmVlNS00MjQ0LTkxZWYtMmZhZTk4ZmEyZjYyIiwibmJmIjoxNTUzNzA2ODI5LCJleHAiOjE1NTM3MTEwMjl9.AMaqV66Af0db8DcoyYY9xLUH3cBnqZ83GggPULI5vazaArIwJKVSyPTF8Dhk29MBLLmEACW9BpFQ4cP0rAqor1v99CTiQSQ0RGr75FtkELZdIQjgaER3cnFwePlSXQRZewGGxWotddHR51zdfsvKi-A6W5U5MuvCsuf7vjNDljZG5DlEIuis4f4xqd2AD6fwoq1nZiwFMNvbEqm19gA2ltGjiQukBEmgceBTwUI-XhVF6Q5KUZFSVwYLHAT0ccFU37DvXXUNQ8Ofr3nXKUGBcNz-Tsr8zPTaM0KirDz4J2Au7v45L03KJ5YgXRzZ_plXZ6ByIcqvEVFOyEJFGH5z3g&quot; --tfs.projectUri={e8bf5f47-4a90-4f95-9aa3-50a64bd9e46f}  --tfs.projectFolder=BaNCS --tfs.isDefaultTeam=true --tfs.teamGuid=e8bf5f47-4a90-4f95-9aa3-50a64bd9e46f --tfs.collectionId=078a5551-2ee5-4244-91ef-2fae98fa2f62"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=rmdb -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=z091182 -Dproxy.Password=4878Middy001"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>

@@ -21,6 +21,7 @@ import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
+import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 
@@ -130,6 +131,7 @@ import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
  * @enduml
  */
 @Component
+@Slf4j
 class TranslateRmModulesToADO implements CliAction {
 	@Autowired
 	private Map<String, IFilter> filterMap;
@@ -191,27 +193,37 @@ class TranslateRmModulesToADO implements CliAction {
 		}
 
 		// Get field mappings, target members map and RM modules to translate to ADO
-		println('Getting Mapping Data...')
+		log.info('Getting Mapping Data...')
 		def mappingData = rmMappingManagementService.mappingData
-		println('Getting ADO Project Members...')
+		log.info('Getting ADO Project Members...')
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-		println("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
+		log.info("Querying for Where Used Lookup ...")
+		def whereUsed = clmRequirementsManagementService.queryForWhereUsed()
+		if (whereUsed == null) {
+			whereUsed = [:]
+			log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
+			return
+		}
+		else {
+			log.info("${whereUsed.children().size()} 'where used' records were retrieved")
+		}
+		log.info("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
 		def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
 		def changeList = []
 		def idMap = [:]
 		int count = 0
 		modules.each { module ->
-			println("${getCurTimestamp()} - Processing Module: ${module.getTitle()} (${count + 1} of ${modules.size()}) ...")
+			log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} (${count + 1} of ${modules.size()}) ...")
 			// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
 			def errCount = 0
 			module.orderedArtifacts.each { artifact ->
 				if (artifact.getIsHeading() && artifact.getArtifactType() != 'Heading' ) {
-					println("*** ERROR: Artifact #${artifact.getID()} has inconsistent row type in module ${module.getTitle()}")
+					log.info("*** ERROR: Artifact #${artifact.getID()} has inconsistent row type in module ${module.getTitle()}")
 					errCount++
 				}
 			}
 			if (errCount > 0) {
-				println("*** ERROR: Skipping module '${module.getTitle()}' due to $errCount errors")
+				log.info("*** ERROR: Skipping module '${module.getTitle()}' due to $errCount errors")
 				return // goes to next module
 			}
 			
@@ -246,6 +258,7 @@ class TranslateRmModulesToADO implements CliAction {
 					module.orderedArtifacts[it].incrementDepth(1)
 				}
 				if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
+					module.orderedArtifacts[it].setWhereUsed(whereUsed)
 					changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
 					aid = module.orderedArtifacts[it].getCacheID()
 					changes.each { key, val ->
@@ -256,7 +269,7 @@ class TranslateRmModulesToADO implements CliAction {
 					}
 				}
 				else {
-					println("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
+					log.info("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
 				}
 			})
 			
@@ -265,25 +278,25 @@ class TranslateRmModulesToADO implements CliAction {
 			// Create work items and SmartDoc container in Azure DevOps
 			if (changeList.size() > 0 && errCount == 0) {
 				// Process work item changes in Azure DevOps
-				println("${getCurTimestamp()} - Processing work item changes...")
+				log.info("${getCurTimestamp()} - Processing work item changes...")
 				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 				
 				// Create the SmartDoc
-				println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
+				log.info("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
 				def result = smartDocManagementService.createSmartDoc(module, collection, mrTfsUrl, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
 				if (result == null) {
-					println("SmartDoc creation returned null")
+					log.info("SmartDoc creation returned null")
 				}
 				else if (result.error != null && result.error.code != "null") {
-					println("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
+					log.info("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
 				}
 				else {
-					println("SmartDoc creation succeeded. Result: ${result.result}")
+					log.info("SmartDoc creation succeeded. Result: ${result.result}")
 				}
 				
 				
 				// Upload Attachments to Azure DevOps
-				println("${getCurTimestamp()} - Uploading attachments...")
+				log.info("${getCurTimestamp()} - Uploading attachments...")
 				changeList.clear()
 				idMap.clear()
 				count = 0
@@ -308,14 +321,14 @@ class TranslateRmModulesToADO implements CliAction {
 				}
 				if (changeList.size() > 0) {
 					// Associate attachments to work items in Azure DevOps
-					println("${getCurTimestamp()} - Associating attachments to work items...")
+					log.info("${getCurTimestamp()} - Associating attachments to work items...")
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 				}
 			}
 			
 
 		}
-		println("Processing completed")
+		log.info("Processing completed")
 
 	}
 	

@@ -102,7 +102,7 @@ class ClmRequirementsManagementService {
 							orderedArtifacts.add(artifact)
 							if (format == "Text") {
 								// Get artifact details (attributes and links) from DNG
-								getTextArtifact(artifact)
+								getTextArtifact(artifact, true)
 								// If artifact has embedded collection, add collection members to the module
 								if (shouldAddCollectionsToModule(moduleType) && artifact.collectionArtifacts != null && artifact.collectionArtifacts.size > 0) {
 									artifact.setDescription(null)  // blank out Description content
@@ -207,7 +207,7 @@ class ClmRequirementsManagementService {
 		return emailAddress
 	}
 	
-	def getTextArtifact(def in_artifact) {
+	def getTextArtifact(def in_artifact, boolean includeCollections = false) {
 		
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
@@ -229,23 +229,25 @@ class ClmRequirementsManagementService {
 					String primaryTextString = new groovy.xml.StreamingMarkupBuilder().bind {mkp.yield richTextBody.children() }
 					in_artifact.setDescription(primaryTextString)
 
-					// Check to see if this artifact has an embedded collection in "showContent" mode
-					def memberHrefs = []
-					def collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent')
-					if (collectionIndex > -1) { // Embedded Collection, parse all member hrefs for that collection
-						memberHrefs = parseCollectionHrefs(richTextBody)
-					}
-					
-					// Check to see if this artifact has an embedded collection in "minimized" mode					
-					collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimised')
-					if (collectionIndex > -1) { // Minimized Collection, get href for the collection artifact
-						String hrefCollection = parseHref(primaryTextString.substring(collectionIndex))
-						memberHrefs = getCollectionMemberHrefs(hrefCollection)
-					}
-					
-					// If there are collection members to be retrieved, then retrieve them
-					if (memberHrefs != null && memberHrefs.size() > 0) {
-						getCollectionArtifacts(in_artifact, memberHrefs)
+					if (includeCollections) {
+						// Check to see if this artifact has an embedded collection in "showContent" mode
+						def memberHrefs = []
+						def collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent')
+						if (collectionIndex > -1) { // Embedded Collection, parse all member hrefs for that collection
+							memberHrefs = parseCollectionHrefs(richTextBody)
+						}
+						
+						// Check to see if this artifact has an embedded collection in "minimized" mode					
+						collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimised')
+						if (collectionIndex > -1) { // Minimized Collection, get href for the collection artifact
+							String hrefCollection = parseHref(primaryTextString.substring(collectionIndex))
+							memberHrefs = getCollectionMemberHrefs(hrefCollection)
+						}
+						
+						// If there are collection members to be retrieved, then retrieve them
+						if (memberHrefs != null && memberHrefs.size() > 0) {
+							getCollectionArtifacts(in_artifact, memberHrefs)
+						}
 					}
 				}
 			}
