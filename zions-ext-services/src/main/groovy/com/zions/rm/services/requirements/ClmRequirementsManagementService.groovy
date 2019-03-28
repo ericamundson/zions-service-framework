@@ -96,9 +96,11 @@ class ClmRequirementsManagementService {
 							String format = contextBinding.format
 							int depth = contextBinding.depth.toInteger()
 							String isHeading = contextBinding.isHeading
-							String baseURI = contextBinding.core
+							String baseUID = contextBinding.core
 							
-							ClmModuleElement artifact = new ClmModuleElement(artifactTitle, baseURI, depth, format, isHeading, about)
+							ClmModuleElement artifact = new ClmModuleElement(artifactTitle, depth, format, isHeading, about)
+							artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}","${baseUID}")
+							
 							orderedArtifacts.add(artifact)
 							if (format == "Text") {
 								// Get artifact details (attributes and links) from DNG
@@ -319,7 +321,7 @@ class ClmRequirementsManagementService {
 	}
 	private def getCollectionArtifacts(def in_artifact, def memberHrefs) {
 		memberHrefs.each { memberHref -> 
-			def artifact = new ClmModuleElement(null,null,in_artifact.getDepth(),null,'false',memberHref)
+			def artifact = new ClmModuleElement(null,in_artifact.getDepth(),null,'false',memberHref)
 
 			in_artifact.collectionArtifacts << getTextArtifact(artifact)
 		}
@@ -342,7 +344,7 @@ class ClmRequirementsManagementService {
 			}
 			else { 
 				// then this is a module element and we need to set the base 
-				in_artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}/rm/resources/${core}")
+				in_artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}","${core}")
 			}
 		}
 	}

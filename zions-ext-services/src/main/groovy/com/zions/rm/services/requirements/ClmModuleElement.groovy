@@ -7,9 +7,8 @@ class ClmModuleElement extends ClmArtifact {
 	boolean isDeleted
 
 	
-	public ClmModuleElement(String in_title, String in_baseURI, int in_depth, String in_format, String in_isHeading, String in_about) {
+	public ClmModuleElement(String in_title, int in_depth, String in_format, String in_isHeading, String in_about) {
 		super(in_title, in_format, in_about)
-		this.setBaseArtifactURI(in_baseURI)
 		depth = in_depth
 
 		isHeading = (in_isHeading == "true")

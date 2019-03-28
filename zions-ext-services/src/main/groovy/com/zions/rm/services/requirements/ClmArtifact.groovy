@@ -69,6 +69,9 @@ class ClmArtifact {
 	public void setBaseArtifactURI(String in_uri) {
 		attributeMap.'Base Artifact URI' = in_uri
 	}
+	public void setBaseArtifactURI(String in_base_uri, String in_uid) {
+		attributeMap.'Base Artifact URI' = "${in_base_uri}/rm/resources/${in_uid}"
+	}
 	public String getBaseArtifactURI() {
 		return attributeMap.'Base Artifact URI'
 	}
