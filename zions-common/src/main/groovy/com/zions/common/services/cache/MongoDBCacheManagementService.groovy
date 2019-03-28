@@ -75,22 +75,26 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	}
 
 	@Override
-	public Object saveBinaryAsAttachment(ByteArrayInputStream result, String name, String id) {
+	def saveBinaryAsAttachment(ByteArrayInputStream result, String name, String id) {
 		try {
 			File cacheDir = new File(this.cacheLocation)
 			if (!cacheDir.exists()) {
 				cacheDir.mkdir();
 			}
-			
-			File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
+			File mDir = new File("${this.cacheLocation}${File.separator}${cacheModule}")
+			if (!mDir.exists()) {
+				mDir.mkdir()
+			}
+	
+			File wiDir = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}")
 			if (!wiDir.exists()) {
 				wiDir.mkdir()
 			}
-			File attachmentDir = new File("${this.cacheLocation}${File.separator}${id}${File.separator}attachments")
+			File attachmentDir = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}attachments")
 			if (!attachmentDir.exists()) {
 				attachmentDir.mkdir()
 			}
-			File save = new File("${this.cacheLocation}${File.separator}${id}${File.separator}attachments${File.separator}${name}");
+			File save = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}attachments${File.separator}${name}");
 			if (!save.exists()) {
 				DataOutputStream os = save.newDataOutputStream()
 				os << result.bytes
@@ -102,6 +106,7 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 		}
+	
 	}
 
 	@Override
