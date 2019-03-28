@@ -12,7 +12,7 @@ interface CacheItemRepository extends MongoRepository<CacheItem, String> {
 	@Query("{ 'project': ?0, module: ?1, 'key': ?2, 'type': ?3}")
 	CacheItem findByProjectAndModuleAndKeyAndType(String project, String module, String key, String type);
 	
-	@Query("{ 'project': ?0, 'module', ?1, 'key': ?2}")
+	@Query("{ 'project': ?0, 'module': ?1, 'key': ?2}")
 	List<CacheItem> findByProjectAndModuleAndKey(String project, String module, String key);
 
 	@Query("{ 'project': ?0, 'module': ?1, 'type': ?2}")

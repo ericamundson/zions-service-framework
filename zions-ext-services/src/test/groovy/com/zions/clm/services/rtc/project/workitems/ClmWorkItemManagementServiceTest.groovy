@@ -42,13 +42,14 @@ public class ClmWorkItemManagementServiceTest extends Specification {
 	def 'getWorkItemsViaQuery success flow.'() {
 		given: "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testplansquery.xml').text)
+		
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
 		when: 'calling of method under test (getTestPlansViaQuery)'
-		def testPlans = underTest.getWorkItemsViaQuery('')
+		QueryTracking qt = underTest.getWorkItemsViaQuery('0',new Date(),'')
 		
 		then: 'validate list of plans'
-		testPlans.entry.size() > 0
+		qt.resultValue().entry.size() > 0
 	}
 	
 	def 'getNextPage success flow.'() {
@@ -57,10 +58,10 @@ public class ClmWorkItemManagementServiceTest extends Specification {
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
 		when: 'calling of method under test (getNextPage)'
-		def testPlans = underTest.nextPage('https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan?token=_TJVcwOKdEeirC8bfvJTPjw&amp;page=1')
+		QueryTracking qt  = underTest.nextPage('1', new Date(), 'https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan?token=_TJVcwOKdEeirC8bfvJTPjw&amp;page=1')
 		
 		then: 'validate list of plans'
-		testPlans.entry.size() > 0
+		qt.resultValue().entry.size() > 0
 	}
 
 }

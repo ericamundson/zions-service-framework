@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 
@@ -15,6 +16,7 @@ import groovyx.net.http.ContentType
  *
  */
 @Component
+@Slf4j
 class ClmTestManagementService {
 	
 	@Autowired

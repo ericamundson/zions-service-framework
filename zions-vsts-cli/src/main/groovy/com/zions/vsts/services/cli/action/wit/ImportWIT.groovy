@@ -7,6 +7,7 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.logging.FlowInterceptor
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
@@ -37,9 +38,15 @@ class ImportWIT implements CliAction {
 				wits.add(witChanges)
 			}
 		}
+
 		log.info('Processing ${wits.size()} WIT import files...')
 		processTemplateService.ensureWITChanges(collection, project, wits, true)
-		log.info('WIT Import Completed!')
+
+		this.flowLogging([processTemplateService], true, true) {  // Setup flow logging on any processTemplateService call
+			processTemplateService.ensureWITChanges(collection, project, wits, true)
+		}
+		log.info('WIT Import Completed!')		
+
 		return null;
 	}
 

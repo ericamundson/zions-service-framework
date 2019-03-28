@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-ext-cli/src/main/groovy/com/zions/ext/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="translateRmModulesToADO --clm.url=https://clm.cs.zionsbank.com --clm.user=z091182  --clm.pageSize=10 --tfs.url=https://dev.azure.com --tfs.collection=DTSDemo --tfs.user=robert.huet@zionsbancorp.com --tfs.token=ahv4wcu7cqnbnz7c6refxp2o2evh3phlqyead7ogbw72ohxqessa --clm.projectAreaUri=_klNSEBNGEeSmasotILOx6w --rm.mapping.file=./CoreRRMMapping.xml --tfs.project=BaNCS --process.name=ZionsAgile --include.update=data --rm.query=&quot;collectionURI=_Z2_j8fQqEeihN7TNly_siw&quot; --rm.filter=allFilter --tfs.areapath=BaNCS\Requirements --mr.url=http://utmvti0190:8026 --mr.template=Basic --mr.folder=/ --tfs.altuser=rbhuet --tfs.altpassword=Asc3ndant --tfs.projectUri={e8bf5f47-4a90-4f95-9aa3-50a64bd9e46f}  --tfs.projectFolder=BaNCS --tfs.isDefaultTeam=true --tfs.teamGuid=ed3918ba-7319-46df-9349-036e49294aaf --tfs.collectionId=078a5551-2ee5-4244-91ef-2fae98fa2f62 --spring.data.mongodb.database=adomigration_test"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=rm -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=z091182 -Dproxy.Password=4878Middy001"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>

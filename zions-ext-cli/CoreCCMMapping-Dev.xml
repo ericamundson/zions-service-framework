@@ -19,7 +19,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\ABT"/>
+			<defaultvalue target="WebCMS\CBT"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -103,7 +103,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\ABT"/>
+			<defaultvalue target="WebCMS\CBT"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -188,7 +188,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\ABT"/>
+			<defaultvalue target="WebCMS\CBT"/>
 		</field>
 		<!--  
 New 	
@@ -294,7 +294,7 @@ Removed
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\ABT"/>
+			<defaultvalue target="WebCMS\CBT"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -381,7 +381,7 @@ Removed
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\ABT"/>
+			<defaultvalue target="WebCMS\CBT"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -449,7 +449,7 @@ Removed
 		</newfields>
 	</wit>
 	<links>
-		<link source="parent" target="System.LinkTypes.Hierarchy-Reverse" module="CCM" targetRefType='id'/>
+		<link source="parent" target="System.LinkTypes.Hierarchy-Reverse"/>
 		<!--  <link source="child" target="System.LinkTypes.Hierarchy-Reverse"/>-->
 		<link source="successor" target="System.LinkTypes.Dependency"/>
 		<link source="duplicate" target="System.LinkTypes.Duplicate-Reverse"/>
@@ -457,6 +457,5 @@ Removed
 		<link source="mentions" target="System.LinkTypes.Related"/>
 		<link source="resolves" target="System.LinkTypes.Related"/>
 		<link source="related" target="System.LinkTypes.Related"/>
-		
 	</links>
 </witmapping>
