@@ -166,16 +166,17 @@ class TranslateRmModulesToADO implements CliAction {
 			}
 		} catch (e) {}
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
-		String mrTfsUrl = data.getOptionValues('mr.tfsUrl')[0]
 		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
 		String tfsUser = data.getOptionValues('tfs.user')[0]
+		String tfsUrl = data.getOptionValues('tfs.url')[0]
 		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
 		String rmQuery = data.getOptionValues('rm.query')[0]
 		String rmFilter = data.getOptionValues('rm.filter')[0]
 		String tfsProjectURI = data.getOptionValues('tfs.projectUri')[0]
 		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
 		String tfsCollectionGUID = data.getOptionValues('tfs.collectionId')[0]
-		String tfsOAuthToken = data.getOptionValues('tfs.oAuthToken')[0]
+		String tfsAltUser = data.getOptionValues('tfs.altuser')[0]
+		String tfsAltPassword = data.getOptionValues('tfs.altpassword')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -283,7 +284,7 @@ class TranslateRmModulesToADO implements CliAction {
 				
 				// Create the SmartDoc
 				log.info("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
-				def result = smartDocManagementService.createSmartDoc(module, collection, mrTfsUrl, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
+				def result = smartDocManagementService.createSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsAltUser, tfsAltPassword, mrTemplate, mrFolder)
 				if (result == null) {
 					log.info("SmartDoc creation returned null")
 				}
@@ -367,7 +368,7 @@ class TranslateRmModulesToADO implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'tfs.oAuthToken', 'rm.mapping.file', 'rm.query', 'rm.filter', 'mr.url', 'mr.tfsUrl', 'mr.template', 'mr.folder']
+		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'tfs.altuser','tfs.altpassword', 'rm.mapping.file', 'rm.query', 'rm.filter', 'mr.url', 'mr.template', 'mr.folder']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
