@@ -1,13 +1,14 @@
 bootJar {
 	enabled = true
 	mainClassName = 'com.zions.vsts.services.policy.PolicyApplication'
-	baseName = 'zions-vsts-policy'
-	version =  "${version}"
+	archiveName = 'zions-vsts-policy.jar'
+	//version =  "${version}"
 }
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-security'
+	compile project(':zions-vsts-microservice')
 	compile project(':zions-vsts-services')
 	compile project(':zions-common')
 }

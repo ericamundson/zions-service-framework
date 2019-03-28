@@ -74,8 +74,7 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 	StompSession session
 	String websocketUrl
 	WebSocketStompClient stompClient
-	
-	
+
 	@Autowired
 	public AbstractWebSocketMicroService(@Value('${websocket.url:}') websocketUrl) {
 		this.websocketUrl = websocketUrl
@@ -86,12 +85,12 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 	
 	private RestTemplate getRestTemplate() {
 		HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-		String proxyHost = System.getProperty("proxy.Host")
+		String proxyHost = System.getProperty("wsproxy.Host")
 		CloseableHttpClient client = null;
 		if (proxyHost != null) {
-			String proxyUser = System.getProperty("proxy.User");
-			String proxyPassword = System.getProperty("proxy.Password");
-			int proxyPort = Integer.parseInt(System.getProperty("proxy.Port"));
+			String proxyUser = System.getProperty("wsproxy.User");
+			String proxyPassword = System.getProperty("wsproxy.Password");
+			int proxyPort = Integer.parseInt(System.getProperty("wsproxy.Port"));
 			CredentialsProvider credentialsProvider = null
 			if (proxyUser != null) {
 				credentialsProvider = new BasicCredentialsProvider();

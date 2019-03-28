@@ -35,9 +35,6 @@ public class EventController {
 	private SimpMessageSendingOperations messagingTemplate;
 
 
-	//@Autowired
-	//private HttpServletRequest request
-
     /**
      * Parse event type from request body and publish to subscribed clients. 
      *  
