@@ -1,4 +1,4 @@
-package com.zions.common.services.logging;
+package com.zions.common.services.logging
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
 /*Logging annotation to be used at class level
  * Loggable annotation for all methods of a class annotated with the @Loggable annotation*/
 
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Loggable {}

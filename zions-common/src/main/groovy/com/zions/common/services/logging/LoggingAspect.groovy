@@ -1,12 +1,14 @@
 package com.zions.common.services.logging
 
+import groovy.util.logging.Slf4j
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Configuration
 
 @Aspect
-@Configuration
+@Slf4j
+
 public class LoggingAspect {
 
 /* Created by Michael Angelastro
@@ -15,8 +17,8 @@ public class LoggingAspect {
  * This is aLogging Aspect for the Loggable annotation that calculates method runtimes
  * for all methods under classes annotated with @Loggable*/
 
-	/*@Around("execution(* com.journaldev.spring.model.Employee.getName())")*/
-	@Around('@annotation(com.zions.common.services.cacheaspect.Cache)') 
+	/*@Around("execution(* com.journaldev.spring.model.Employee.getName())")*/ 
+	@Around('execution (* *(..)) && @within(com.zions.common.services.logging.Loggable)')
 	public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 	    long start = System.currentTimeMillis();
 	 
@@ -24,7 +26,7 @@ public class LoggingAspect {
 	 
 	    long executionTime = System.currentTimeMillis() - start;
 	 
-	    System.out.println(joinPoint.getSignature() + " executed in " + executionTime + "ms");
+	    log.info("${joinPoint.getSignature()} executed in ${executionTime}ms");
 	    return proceed;
 	 }
 	}
