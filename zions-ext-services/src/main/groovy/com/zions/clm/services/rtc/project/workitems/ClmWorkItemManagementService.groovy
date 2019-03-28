@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.zions.clm.services.rest.ClmGenericRestClient;
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.rest.IGenericRestClient
@@ -32,16 +33,18 @@ public class ClmWorkItemManagementService {
 	
 	@Autowired(required=false)
 	ICheckpointManagementService checkpointManagementService
+	
+	@Autowired(required=false)
+	ICacheManagementService cacheManagementService
+
 
 	public ClmWorkItemManagementService() {
 		
 	}
 	
 	def flushQueries(String query) {
-		Checkpoint checkpoint = checkpointManagementService.addCheckpoint('query', 'none')
-;
-		Date ts = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", checkpoint.getTimeStamp())
-		int page = 0
+		Date ts = new Date()
+		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
 		QueryTracking qt = this.getWorkItemsViaQuery("${page}", ts, query)
 		def currentItems = qt.resultValue()
 		while (true) {

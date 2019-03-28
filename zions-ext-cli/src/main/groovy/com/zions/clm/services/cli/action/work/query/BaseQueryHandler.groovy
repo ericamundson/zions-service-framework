@@ -2,6 +2,7 @@ package com.zions.clm.services.cli.action.work.query
 
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.QueryTracking
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.Checkpoint
 import com.zions.common.services.restart.ICheckpointManagementService
@@ -16,7 +17,7 @@ class BaseQueryHandler implements IQueryHandler {
 	ClmWorkItemManagementService clmWorkItemManagementService
 	
 	@Autowired
-	ICheckpointManagementService checkpointManagementService
+	ICacheManagementService cacheManagementService
 
 	@Value('${item.filter:allFilter}')
 	private String itemFilter
@@ -37,10 +38,10 @@ class BaseQueryHandler implements IQueryHandler {
 	int page = 0
 	
 	public def getItems() {
-		Checkpoint cp = checkpointManagementService.selectCheckpoint('query')
+		def cp = cacheManagementService.getFromCache('query', 'QueryStart')
 		page=0
 		if (cp) {
-			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.getTimeStamp())
+			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
 			
 		}
 		String pageId = "${page}"
