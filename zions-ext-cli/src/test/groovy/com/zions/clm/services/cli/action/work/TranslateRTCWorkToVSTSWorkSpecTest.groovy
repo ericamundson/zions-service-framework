@@ -21,6 +21,7 @@ import com.zions.clm.services.ccm.workitem.WorkitemAttributeManager
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
+import com.zions.clm.services.rtc.project.workitems.QueryTracking
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.query.IFilter
 import com.zions.common.services.rest.IGenericRestClient
@@ -163,7 +164,9 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 		
 		and:
 		def wititems = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
-		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> wititems
+		QueryTracking qt = new QueryTracking()
+		qt.doResult(wititems)
+		clmWorkItemManagementService.getWorkItemsViaQuery(_,_,_) >> qt
 		
 		and:
 		def wiwChanges  = [value: ["{\"id\":\"123\", \"somejson\": \"morejson\"}"]]

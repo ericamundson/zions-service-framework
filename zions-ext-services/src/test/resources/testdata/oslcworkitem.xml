@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:oslc_cmx="http://open-services.net/ns/cm-x#"
+	xmlns:acc="http://open-services.net/ns/core/acc#"
+	xmlns:rtc_cm="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/"
+	xmlns:oslc_pl="http://open-services.net/ns/pl#"
+	xmlns:process="http://jazz.net/ns/process#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:rtc_ext="http://jazz.net/xmlns/prod/jazz/rtc/ext/1.0/"
+	xmlns:oslc="http://open-services.net/ns/core#"
+	xmlns:acp="http://jazz.net/ns/acp#"
+	xmlns:oslc_cm="http://open-services.net/ns/cm#">
+	<oslc_cm:ChangeRequest
+		rdf:about="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/189758?oslc.properties=">
+		<rtc_cm:plannedFor
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/iterations/_tz3HQIoMEeiMOvUi9G3fqw" />
+		<oslc:shortId
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#string">189758</oslc:shortId>
+		<oslc_cmx:project
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/projectareas/_TofgQPfREeOpj9QcDboLoA" />
+		<dcterms:identifier
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#string">189758</dcterms:identifier>
+		<rtc_cm:com.ibm.team.workitem.linktype.textualReference.textuallyReferenced
+			rdf:ID="n0"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/194107" />
+		<oslc_cm:relatedTestCase rdf:ID="n1"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_gFUvkeo5EeWSXPAepUatNg" />
+		<oslc_cm:approved
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</oslc_cm:approved>
+		<oslc:shortTitle rdf:parseType="Literal">Task 189758
+		</oslc:shortTitle>
+		<rtc_ext:com.ibm.team.workitem.attribute.recordimpact
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</rtc_ext:com.ibm.team.workitem.attribute.recordimpact>
+		<process:iteration
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/process/iterations/_tz3HQIoMEeiMOvUi9G3fqw" />
+		<rtc_cm:timeSheet
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/workitems/_eoZW0CMkEemfs4kl9vzyQw/rtc_cm:timeSheet" />
+		<process:teamArea
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/process/team-areas/_D8Jq8FXpEeew1txg4LOAjg" />
+		<rtc_cm:subscribers
+			rdf:resource="https://clm.cs.zionsbank.com/jts/users/z093987" />
+		<rtc_ext:com.ibm.team.workitem.tasktype2
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/enumerations/_TofgQPfREeOpj9QcDboLoA/com.zion.workitem.adoptionitem.tasktype/com.zion.workitem.adoptionitem.tasktype.literal.l10" />
+		<dcterms:type
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Task</dcterms:type>
+		<dcterms:title rdf:parseType="Literal">Automation Acceptance:
+			FS-SYN-002/700-426/BREAKAGE-FEE-SHARE/ Automatic Breakage Fee
+			Charging and sharing when account under Part Purchase - With
+			Servicing arrangement</dcterms:title>
+		<rtc_cm:type
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/types/_TofgQPfREeOpj9QcDboLoA/task" />
+		<rtc_cm:subscribers
+			rdf:resource="https://clm.cs.zionsbank.com/jts/users/v071708" />
+		<oslc_cmx:severity
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/enumerations/_TofgQPfREeOpj9QcDboLoA/severity/severity.literal.l1" />
+		<dcterms:creator
+			rdf:resource="https://clm.cs.zionsbank.com/jts/users/z094441" />
+		<acp:accessControl
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/access-control/_TofgQPfREeOpj9QcDboLoA" />
+		<dcterms:created
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-01-28T17:45:54.018Z</dcterms:created>
+		<rtc_ext:com.ibm.team.workitem.tasktype4
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/enumerations/_TofgQPfREeOpj9QcDboLoA/com.ibm.team.workitem.triagetab.tasktype/com.ibm.team.workitem.triagetab.tasktype.literal.l9" />
+		<oslc_cm:verified
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</oslc_cm:verified>
+		<rtc_cm:com.ibm.team.workitem.linktype.textualReference.textuallyReferenced
+			rdf:ID="n2"
+			rdf:resource="http://onecorp.zbc.internal/eto/techreadiness/tech/Private%20Documents%20%20readiness%20team/Forms/AllItems.aspx?RootFolder=%2Feto%2Ftechreadiness%2Ftech%2FPrivate%20Documents%20%20readiness%20team%2FTest%2FProduct%20Testing%2FRelease%202%2FR2%20Regression_Automation_Results%2FStructureFolder%2FStructureFolder&amp;View=%7BFD659969-5B2D-458F-B644-6D9DA8C3FC5B%7D" />
+		<dcterms:modified
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-03-21T14:14:15.976Z</dcterms:modified>
+		<oslc:discussedBy
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/workitems/_eoZW0CMkEemfs4kl9vzyQw/rtc_cm:comments" />
+		<rtc_cm:com.ibm.team.workitem.linktype.attachment.attachment
+			rdf:ID="n3"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemOid/com.ibm.team.workitem.Attachment/_SUEQcUXsEemXnY3IUEqZTA" />
+		<acc:accessContext
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/acclist#_TofgQPfREeOpj9QcDboLoA" />
+		<rtc_cm:state
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/workflows/_TofgQPfREeOpj9QcDboLoA/states/com.ibm.team.workitem.taskWorkflow/2" />
+		<oslc_cm:status
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#string">In Progress</oslc_cm:status>
+		<rtc_ext:archived
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</rtc_ext:archived>
+		<oslc:instanceShape
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/shapes/workitems/_eoZW0CMkEemfs4kl9vzyQw" />
+		<oslc:serviceProvider
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/contexts/_TofgQPfREeOpj9QcDboLoA/workitems/services" />
+		<rtc_cm:teamArea
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/teamareas/_D8Jq8FXpEeew1txg4LOAjg" />
+		<rtc_ext:com.zions.workitem.attribute.requestedfor
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/iterations/_vuv3T0QFEeew1txg4LOAjg" />
+		<rtc_cm:filedAgainst
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemOid/com.ibm.team.workitem.Category/_j1Xp0FXqEeew1txg4LOAjg" />
+		<dcterms:subject
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></dcterms:subject>
+		<oslc_cm:closed
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</oslc_cm:closed>
+		<rtc_cm:resolvedBy
+			rdf:resource="https://clm.cs.zionsbank.com/jts/users/unassigned" />
+		<rtc_cm:modifiedBy
+			rdf:resource="https://clm.cs.zionsbank.com/jts/users/z094441" />
+		<oslc_cm:fixed
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</oslc_cm:fixed>
+		<rtc_ext:com.zions.workitem.attributes.task.paramimpact
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/enumerations/_TofgQPfREeOpj9QcDboLoA/com.zions.enumerations.parameterimpact/com.zions.enumerations.parameterimpact.literal.l2" />
+		<process:projectArea
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/process/project-areas/_TofgQPfREeOpj9QcDboLoA" />
+		<oslc_pl:schedule
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/workitems/_eoZW0CMkEemfs4kl9vzyQw/schedule" />
+		<rtc_ext:com.ibm.team.workitem.attribute.taskcomplexity
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/enumerations/_TofgQPfREeOpj9QcDboLoA/impact/impact.literal.l5" />
+		<dcterms:contributor
+			rdf:resource="https://clm.cs.zionsbank.com/jts/users/v071708" />
+		<oslc_cm:inprogress
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</oslc_cm:inprogress>
+		<oslc_cmx:priority
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/enumerations/_TofgQPfREeOpj9QcDboLoA/priority/priority.literal.l01" />
+		<oslc_cm:reviewed
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</oslc_cm:reviewed>
+		<rtc_cm:repository
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/repository" />
+		<rtc_ext:contextId
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#string">_TofgQPfREeOpj9QcDboLoA</rtc_ext:contextId>
+		<rtc_cm:com.ibm.team.workitem.linktype.attachment.attachment
+			rdf:ID="n4"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemOid/com.ibm.team.workitem.Attachment/_mgcRISMkEemfs4kl9vzyQw" />
+		<dcterms:description rdf:parseType="Literal">Review and
+			accept automation script: FS-SYN-002/700-426/BREAKAGE-FEE-SHARE/
+			Automatic Breakage Fee Charging and sharing when account under Part
+			Purchase - With Servicing arrangement</dcterms:description>
+		<rtc_ext:com.ibm.team.workitem.tasktype5
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/enumerations/_TofgQPfREeOpj9QcDboLoA/com.ibm.team.workitem.task.dmimpact/com.ibm.team.workitem.task.dmimpact.literal.l13" />
+		<rtc_cm:estimate
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#long">21600000</rtc_cm:estimate>
+		<rtc_cm:subscribers
+			rdf:resource="https://clm.cs.zionsbank.com/jts/users/z094441" />
+		<rtc_cm:com.ibm.team.workitem.linktype.attachment.attachment
+			rdf:ID="n5"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemOid/com.ibm.team.workitem.Attachment/_oM0q4UpqEemLBK1GDGxcEA" />
+		<rtc_cm:progressTracking
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/oslc/workitems/_eoZW0CMkEemfs4kl9vzyQw/progressTracking" />
+	</oslc_cm:ChangeRequest>
+	<rdf:Description rdf:about="#n2">
+		<dcterms:title>LINK</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n3">
+		<dcterms:title>106282:
+			32368_SYNBIF_VerifyRateOptionFeeBreakage_20190313175157.htm
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n4">
+		<dcterms:title>103625:
+			32368_SYNBIF_VerifyRateOptionFeeBreakage_20190114125628.htm
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n5">
+		<dcterms:title>106612:
+			32368_SYNBIF_VerifyRateOptionFeeBreakage_20190318094735.htm
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n1">
+		<dcterms:title>32368: FS-SYN-002/700-426/BREAKAGE-FEE-SHARE/ Automatic
+			Breakage Fee Charging and sharing when account under Part Purchase -
+			With Servicing arrangement...</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n0">
+		<dcterms:title>194107: March Patch Regression : TestCase # 29847 :
+			System is not giving the correct Error Message when SETL Account
+			Linked to Arrangement</dcterms:title>
+	</rdf:Description>
+</rdf:RDF>

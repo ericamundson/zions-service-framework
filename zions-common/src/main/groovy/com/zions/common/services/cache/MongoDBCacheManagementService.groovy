@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
+import org.springframework.stereotype.Component
 
 /**
  * MongoDB store for ADO cached items.
@@ -16,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Query
  * @author z091182
  *
  */
+@Component
 class MongoDBCacheManagementService implements ICacheManagementService {
 	@Autowired(required=false)
 	MongoTemplate mongoTemplate

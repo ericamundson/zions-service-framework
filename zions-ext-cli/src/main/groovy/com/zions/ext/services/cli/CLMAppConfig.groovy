@@ -26,7 +26,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("clm")
-@ComponentScan(["com.zions.vsts.services","com.zions.clm.services", "com.zions.common.services.restart", "com.zions.common.services.link"])
+@ComponentScan(["com.zions.vsts.services","com.zions.clm.services", "com.zions.common.services.restart", "com.zions.common.services.cacheaspect"])
 public class CLMAppConfig {
 	
 	@Autowired
