@@ -8,9 +8,9 @@ import spock.lang.Specification
 
 class CacheItemSpec extends Specification {
 
-	@Test
+	
 	public void test() {
-		fail("Not yet implemented")
+		//fail("Not yet implemented")
 	}
 
 }

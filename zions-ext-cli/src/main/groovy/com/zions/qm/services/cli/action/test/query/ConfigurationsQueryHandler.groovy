@@ -1,5 +1,7 @@
 package com.zions.qm.services.cli.action.test.query
 
+import com.zions.common.services.cacheaspect.CacheInterceptor
+import com.zions.qm.services.test.ConfigurationQueryData
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
@@ -9,7 +11,16 @@ class ConfigurationsQueryHandler extends BaseQueryHandler {
 	String cItemFitler
 	
 	public def getItems() {
-		currentItems = clmTestManagementService.getConfigurationsViaQuery('', projectName)
+		def cp = cacheManagementService.getFromCache('query', 'QueryStart')
+		page=0
+		if (cp) {
+			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
+			
+		}
+		String pageId = "${page}"
+		new CacheInterceptor() {}.provideCaching(clmTestManagementService, pageId, currentTimestamp, ConfigurationQueryData) {
+			currentItems = clmTestManagementService.getConfigurationsViaQuery('', projectName)
+		}
 		return currentItems
 	}
 	public String initialUrl() {
@@ -31,5 +42,20 @@ class ConfigurationsQueryHandler extends BaseQueryHandler {
 		// TODO Auto-generated method stub
 		return this.cItemFitler;
 	}
+	
+	public Object nextPage() {
+		def nextLink = currentItems.'**'.find { node ->
+	
+			node.name() == 'link' && node.@rel == 'next'
+		}
+		if (nextLink == null) return null
+		this.page++
+		String pageId = "${page}"
+		new CacheInterceptor() {}.provideCaching(clmTestManagementService, pageId, currentTimestamp, ConfigurationQueryData) {
+			currentItems = clmTestManagementService.nextPage(nextLink.@href)
+		}
+		return currentItems
+	}
+
 
 }

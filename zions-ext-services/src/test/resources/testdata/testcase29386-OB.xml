@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/FS_SYN_004_548</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/FS_SYN_004_548?stylesheet=true"/>
+  <ns2:webId>29386</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">FS-SYN-004/700-005/Counterparty/Capturing Multiple Bank Settlement Records When Creating the Counterparty record</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">The system must be able to capture multiple Settlement Method Records for a Syndication/Participation Bank, each with the following information: a. Remittance Mode (Check, ACH, Wire Transfer, Internal DDA) b. Beneficiary Account Number (for internal or external account or wire) c. Beneficiary Bank Routing Number d. Beneficiary Account Name e. Intermediary Bank Name f. Intermediary Bank Routing Number g. To Further Credit h. Swift Code.
+
+Note: Wire Transfer is deferred functionality for Release 2.0</ns3:description>
+  <ns2:creationDate>2016-02-18T17:57:42.242Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2019-02-15T14:57:10.128Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v003610">v003610</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070383">v070383</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.170">literal.priority.170</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Data Migration Impact" value="Both"/>
+  <ns2:category term="Test Team" value="BaNCS Product: Test"/>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Vendor Priority" value="High"/>
+  <ns2:category term="Workstream" value="Lending: Syndication"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="Run Calendar" value="Day Mode - Fast"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Compliance Related" value="N/A"/>
+  <ns2:category term="Automation Status" value="Automation Accepted"/>
+  <ns2:category term="Test Type" value="Regression Test"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>3</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/FS_SYN_004_548"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:relatedChangeRequest summary="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/147941" rel="trackedBy" href="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/147941"/>
+  <ns2:customAttributes>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>Vendor_TC_Name</ns2:identifier>
+      <ns2:name>Vendor TC Name</ns2:name>
+      <ns2:value>R2_TCS_SYN_004_700_005_SCNR2_TC1</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>_k4meUUSxEeiuULVYIY76YA</ns2:identifier>
+      <ns2:name>Test Case Group</ns2:name>
+      <ns2:value>FS-SYN-004 Counter Party &amp; Master Setup</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>_k5J38USxEeiuULVYIY76YA</ns2:identifier>
+      <ns2:name>TCG Category 1</ns2:name>
+      <ns2:value>Syndication</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>Automated_TC_Name</ns2:identifier>
+      <ns2:name>Automated TC Name</ns2:name>
+      <ns2:value>VerifyCapturingMultipleBankSettlementRecordsSYNTest
+</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+  </ns2:customAttributes>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">Must have an active Counterparty record
+</tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition extensionDisplayName="RQM-KEY-TC-POST-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">NA</tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition>
+</ns2:testcase>

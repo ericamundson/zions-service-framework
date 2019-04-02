@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:36467</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:36467?stylesheet=true"/>
+  <ns2:webId>36467</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">FS-IRA-007/2.9.1/Ability to display an error message when a user tries to link a closed customer account as a fee charging account in the IRA annual fee setup/create screen/Positive</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">System must display an error message that is "The fee charging account should be active" when a user tries to link a closed customer account as a fee charging account in the IRA annual fee setup/create screen.
+Success Criteria: System displays the error message that is "The fee charging account should be active"</ns3:description>
+  <ns2:creationDate>2016-06-03T00:26:59.552Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2016-11-11T16:14:13.185Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070382">v070382</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070382">v070382</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.101">literal.priority.101</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Run Calendar" value="Day Mode - Fast"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Compliance Related" value="N/A"/>
+  <ns2:category term="Workstream" value="Deposits: IRA"/>
+  <ns2:category term="Test Type" value="Functional Test"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="Test Team" value="BaNCS Product: Test"/>
+  <ns2:category term="Automation Status" value="No"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>0</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:32677"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:copiedFrom href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:36463"/>
+  <ns2:copiedRoot href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:36281"/>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:div>
+        <tag0:div>
+          <tag0:p style="margin: 0.83em 0px;">
+            <tag0:span style="line-height: 24px;">User :  Authorized User</tag0:span>
+          </tag0:p>
+          <tag0:p style="margin: 0.83em 0px;">
+            <tag0:span style="line-height: 24px;">Customer : Any</tag0:span>
+            <tag0:br/>
+            <tag0:span style="line-height: 24px;">Product : IRA</tag0:span>
+            <tag0:br/>
+            <tag0:span style="line-height: 24px;">Account : Any</tag0:span>
+            <tag0:br/>
+            <tag0:span style="line-height: 24px;">Screen: IRA Annual Fee Create</tag0:span>
+          </tag0:p>
+          <tag0:p style="margin: 0.83em 0px;">
+            <tag0:span style="line-height: 24px;">Two or more accounts has been created under same plan</tag0:span>
+          </tag0:p>
+          <tag0:p style="margin: 0.83em 0px;">
+            <tag0:span style="line-height: 24px;">One of customer's account must be closed</tag0:span>
+          </tag0:p>
+          <tag0:p style="margin: 0.83em 0px;">
+            <tag0:span style="line-height: 24px;">Annual IRA fee has been defined at the plan level</tag0:span>
+          </tag0:p>
+          <tag0:div> </tag0:div>
+        </tag0:div>
+      </tag0:div>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+</ns2:testcase>

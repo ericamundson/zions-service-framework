@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:nodeID="A0">
+    <rdf:subject rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ"/>
+    <rdf:predicate rdf:resource="http://open-services.net/ns/qm#relatedChangeRequest"/>
+    <rdf:object rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/47"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">47: Failing Test Case "Raw Server Sizing for TCS BaNCS Branch User Channel Application" when executing Test Execution Record "Raw Server Sizing for TCS BaNCS Branch User Channel Application_Undefined"</dcterms:title>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A1">
+    <rdf:subject rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ"/>
+    <rdf:predicate rdf:resource="http://open-services.net/ns/qm#validatesRequirementCollection"/>
+    <rdf:object rdf:resource="https://clm.cs.zionsbank.com/rm/resources/_qYeCEmEiEeS1cZ-PNoZIug"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">3345: Phase Zero NFR REQ Collection</dcterms:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_ksvyACxOEeePA8rcrNBEJA">
+    <rqm_qm:action xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Set the edit capability to "Locked".</rqm_qm:action>
+    <rqm_qm:comment xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Locking</rqm_qm:comment>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">E-Signature_3</dcterms:title>
+    <dcterms:created xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-04-28T20:09:23.998Z</dcterms:created>
+    <dcterms:creator xmlns:dcterms="http://purl.org/dc/terms/" rdf:resource="https://clm.cs.zionsbank.com/jts/users/z080876"/>
+    <process:projectArea xmlns:process="http://jazz.net/ns/process#" rdf:resource="https://clm.cs.zionsbank.com/qm/process/project-areas/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc:serviceProvider xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/services.xml"/>
+    <oslc:instanceShape xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/shape/resource/com.ibm.rqm.planning.VersionedTestPlan#E-Signature"/>
+    <rdf:type rdf:resource="http://jazz.net/ns/qm/rqm#E-Signature"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#com.ibm.rqm.defects.web.RmColLinks">
+    <dcterms:identifier xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">com.ibm.rqm.defects.web.RmColLinks</dcterms:identifier>
+    <dcterms:description xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">RQM-KEY-RM-COL-SECTION-DESC</dcterms:description>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">RQM-KEY-RM-COL-SECTION-TITLE</dcterms:title>
+    <rqm_qm:content xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">&lt;div xmlns="http://www.w3.org/1999/xhtml" xmlns:st1="urn:schemas-microsoft-com:office:smarttags" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml"&gt;[]&lt;/div&gt;</rqm_qm:content>
+    <process:projectArea xmlns:process="http://jazz.net/ns/process#" rdf:resource="https://clm.cs.zionsbank.com/qm/process/project-areas/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc:serviceProvider xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/services.xml"/>
+    <oslc:instanceShape xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/shape/resource/com.ibm.rqm.planning.VersionedTestPlan#RichTextSection"/>
+    <rdf:type rdf:resource="http://jazz.net/ns/qm/rqm#RichTextSection"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_AfqgwDWOEeehM7vhP1XSog">
+    <rqm_qm:action xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Set the edit capability to "Locked".</rqm_qm:action>
+    <rqm_qm:comment xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Locking</rqm_qm:comment>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">E-Signature_5</dcterms:title>
+    <dcterms:created xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-05-10T14:36:09.29Z</dcterms:created>
+    <dcterms:creator xmlns:dcterms="http://purl.org/dc/terms/" rdf:resource="https://clm.cs.zionsbank.com/jts/users/z080876"/>
+    <process:projectArea xmlns:process="http://jazz.net/ns/process#" rdf:resource="https://clm.cs.zionsbank.com/qm/process/project-areas/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc:serviceProvider xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/services.xml"/>
+    <oslc:instanceShape xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/shape/resource/com.ibm.rqm.planning.VersionedTestPlan#E-Signature"/>
+    <rdf:type rdf:resource="http://jazz.net/ns/qm/rqm#E-Signature"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_Gx2gcF98EeiO4Y61j2uJAg">
+    <rqm_qm:action xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Set the edit capability to "Locked".</rqm_qm:action>
+    <rqm_qm:comment xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Locking</rqm_qm:comment>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">E-Signature_7</dcterms:title>
+    <dcterms:created xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-05-24T17:58:47.031Z</dcterms:created>
+    <dcterms:creator xmlns:dcterms="http://purl.org/dc/terms/" rdf:resource="https://clm.cs.zionsbank.com/jts/users/z080876"/>
+    <process:projectArea xmlns:process="http://jazz.net/ns/process#" rdf:resource="https://clm.cs.zionsbank.com/qm/process/project-areas/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc:serviceProvider xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/services.xml"/>
+    <oslc:instanceShape xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/shape/resource/com.ibm.rqm.planning.VersionedTestPlan#E-Signature"/>
+    <rdf:type rdf:resource="http://jazz.net/ns/qm/rqm#E-Signature"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_2-XksCxNEeePA8rcrNBEJA">
+    <rqm_qm:action xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Set the edit capability to "Unlocked".</rqm_qm:action>
+    <rqm_qm:comment xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Unlocking</rqm_qm:comment>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">E-Signature_2</dcterms:title>
+    <dcterms:created xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-04-28T20:04:17.145Z</dcterms:created>
+    <dcterms:creator xmlns:dcterms="http://purl.org/dc/terms/" rdf:resource="https://clm.cs.zionsbank.com/jts/users/z080876"/>
+    <process:projectArea xmlns:process="http://jazz.net/ns/process#" rdf:resource="https://clm.cs.zionsbank.com/qm/process/project-areas/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc:serviceProvider xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/services.xml"/>
+    <oslc:instanceShape xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/shape/resource/com.ibm.rqm.planning.VersionedTestPlan#E-Signature"/>
+    <rdf:type rdf:resource="http://jazz.net/ns/qm/rqm#E-Signature"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ">
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_Z9ivsFubEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_j6RggUsyEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_S-jv0JILEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_1NTFkFubEeSBMKsl2QbLJQ"/>
+    <dcterms:contributor xmlns:dcterms="http://purl.org/dc/terms/" rdf:resource="https://clm.cs.zionsbank.com/jts/users/unassigned"/>
+    <oslc_qm:validatesRequirementCollection xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/rm/resources/_qYeCEmEiEeS1cZ-PNoZIug"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_aTUmUD3qEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_EjnksZIVEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_4-rIUU5cEeSBMKsl2QbLJQ"/>
+    <acp:accessControl xmlns:acp="http://jazz.net/ns/acp#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/accessControl/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_X6ZFYE_YEeSBMKsl2QbLJQ"/>
+    <dcterms:identifier xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ</dcterms:identifier>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_7K27oE_TEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_kjYcEVuSEeSBMKsl2QbLJQ"/>
+    <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-05-24T17:58:47.041Z</dcterms:modified>
+    <acc:accessContext xmlns:acc="http://open-services.net/ns/core/acc#" rdf:resource="https://clm.cs.zionsbank.com/qm/acclist#_aC9CQPfREeOd1div3hxkJQ"/>
+    <rqm_qm:eSignature xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_NiuwsLWMEeWPCNWl3a2YOQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_On6lUC1mEeSd1div3hxkJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_Rcqw0E_UEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_Am5tsJKoEeSBMKsl2QbLJQ"/>
+    <rqm_process:hasWorkflowState xmlns:rqm_process="http://jazz.net/xmlns/prod/jazz/rqm/process/1.0/" rdf:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.zions.workflow.testplan/com.zions.workflow.testplan.state.s0"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_G2jpMFlVEeSBMKsl2QbLJQ"/>
+    <rqm_qm:eSignature xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_9p9H0F97EeiO4Y61j2uJAg"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_d-dLIVlQEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_fGCx8JH-EeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_INUZoEskEeSBMKsl2QbLJQ"/>
+    <oslc_qm:runsOnTestEnvironment xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rational.test.lm.AssetConfiguration/_1qvkJfQ5EeSY07pl-wLd9w"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_qIVxEVugEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_BnnRMFucEeSBMKsl2QbLJQ"/>
+    <rdf:type rdf:resource="http://open-services.net/ns/qm#TestPlan"/>
+    <rqm_process:hasPriority xmlns:rqm_process="http://jazz.net/xmlns/prod/jazz/rqm/process/1.0/" rdf:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.101"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_3MOpYcODEeSoTanGbIrECA"/>
+    <rqm_qm:eSignature xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_2-XksCxNEeePA8rcrNBEJA"/>
+    <oslc:instanceShape xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/shape/resource/com.ibm.rqm.planning.VersionedTestPlan"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_U92l8FlTEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_IKZ9UT3jEeSBMKsl2QbLJQ"/>
+    <rqm_qm:eSignature xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_AfqgwDWOEeehM7vhP1XSog"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_UDaEgU5eEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_JRoMAVubEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_IY7V8D3tEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_PMfzgVuREeSBMKsl2QbLJQ"/>
+    <rqm_qm:richTextSection xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#com.ibm.rqm.defects.web.RmColLinks"/>
+    <rqm_qm:eSignature xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_xruw8CxOEeePA8rcrNBEJA"/>
+    <dcterms:relation xmlns:dcterms="http://purl.org/dc/terms/" rdf:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/_aC9CQPfREeOd1div3hxkJQ/testplan/urn:com.ibm.rqm:testplan:1"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_taSFoVCtEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_KKEWMC4EEeSd1div3hxkJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_h4piIFiHEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_JCaZYVudEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_thAzwFiEEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_mRnX4UsdEeSBMKsl2QbLJQ"/>
+    <process:projectArea xmlns:process="http://jazz.net/ns/process#" rdf:resource="https://clm.cs.zionsbank.com/qm/process/project-areas/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ztF9YC4EEeSd1div3hxkJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_nrlNAFubEeSBMKsl2QbLJQ"/>
+    <rqm_qm:eSignature xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_Gx2gcF98EeiO4Y61j2uJAg"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ysEJkEshEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_VZbRwJH1EeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_h3hV8FuWEeSBMKsl2QbLJQ"/>
+    <rqm_qm:isLocked xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</rqm_qm:isLocked>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_d44Y0VCjEeSBMKsl2QbLJQ"/>
+    <rqm_qm:category xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/category/urn:com.ibm.rqm:category:_akb-svfREeOd1div3hxkJQ"/>
+    <rqm_qm:template xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testplan/com.ibm.rqm.planning.templates.testplan.template_1400002740007"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_1WaoQJH0EeSBMKsl2QbLJQ"/>
+    <rqm_qm:shortIdentifier xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1</rqm_qm:shortIdentifier>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_Ln2KkFudEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_Qf37YFubEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_h2p-EFiHEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_F3SGUFPrEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_4aujQZHzEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_uB_4EUsqEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_us2UgVuUEeSBMKsl2QbLJQ"/>
+    <rqm_qm:eSignature xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_ksvyACxOEeePA8rcrNBEJA"/>
+    <oslc:serviceProvider xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/services.xml"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_aL7fEFudEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_cBXFMFPSEeSBMKsl2QbLJQ"/>
+    <dcterms:creator xmlns:dcterms="http://purl.org/dc/terms/" rdf:resource="https://clm.cs.zionsbank.com/jts/users/z080876"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_7xs5UZKnEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_Q1vr0FSXEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_nuXyUJIBEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_C04SIJHtEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_p2kBEk5ZEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ZEyCQC1lEeSd1div3hxkJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_Fea-4ZH7EeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_zWpWoUssEeSBMKsl2QbLJQ"/>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Phase Zero - Release One Test Plan</dcterms:title>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_1y5Y0JIIEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_Lp5hEJKoEeSBMKsl2QbLJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_nzCkAZIOEeSBMKsl2QbLJQ"/>
+    <oslc:shortId xmlns:oslc="http://open-services.net/ns/core#" rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</oslc:shortId>
+    <oslc_qm:relatedChangeRequest xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/47"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_13LksC1nEeSd1div3hxkJQ"/>
+    <oslc_qm:usesTestCase xmlns:oslc_qm="http://open-services.net/ns/qm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_sgGvQFoXEeSBMKsl2QbLJQ"/>
+    <rqm_qm:containsTestSuite xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestSuite/_Ni1f0cNUEeSoTanGbIrECA"/>
+    <dcterms:created xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-08-07T16:36:32.723Z</dcterms:created>
+    <dcterms:description xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#string"/>
+    <rqm_qm:platformCoverage xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#PlatformCoverage/1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_9p9H0F97EeiO4Y61j2uJAg">
+    <rqm_qm:action xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Set the edit capability to "Unlocked".</rqm_qm:action>
+    <rqm_qm:comment xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Unlocking</rqm_qm:comment>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">E-Signature_6</dcterms:title>
+    <dcterms:created xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-05-24T17:57:45.804Z</dcterms:created>
+    <dcterms:creator xmlns:dcterms="http://purl.org/dc/terms/" rdf:resource="https://clm.cs.zionsbank.com/jts/users/z080876"/>
+    <process:projectArea xmlns:process="http://jazz.net/ns/process#" rdf:resource="https://clm.cs.zionsbank.com/qm/process/project-areas/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc:serviceProvider xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/services.xml"/>
+    <oslc:instanceShape xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/shape/resource/com.ibm.rqm.planning.VersionedTestPlan#E-Signature"/>
+    <rdf:type rdf:resource="http://jazz.net/ns/qm/rqm#E-Signature"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#PlatformCoverage/1">
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Platform Coverage 1</dcterms:title>
+    <rqm_lm:testAdapter xmlns:rqm_lm="http://jazz.net/ns/qm/rqm/labmanagement#" rdf:resource="http://jazz.net/ns/qm/rqm/labmanagement#SoftwareInstall/HP+LoadRunner"/>
+    <rqm_lm:browser xmlns:rqm_lm="http://jazz.net/ns/qm/rqm/labmanagement#" rdf:resource="http://jazz.net/ns/qm/rqm/labmanagement#SoftwareInstall/Internet+Explorer"/>
+    <rqm_lm:testAdapter xmlns:rqm_lm="http://jazz.net/ns/qm/rqm/labmanagement#" rdf:resource="http://jazz.net/ns/qm/rqm/labmanagement#SoftwareInstall/Rational+Functional+Tester"/>
+    <process:projectArea xmlns:process="http://jazz.net/ns/process#" rdf:resource="https://clm.cs.zionsbank.com/qm/process/project-areas/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc:serviceProvider xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/services.xml"/>
+    <oslc:instanceShape xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/shape/resource/com.ibm.rational.test.lm.AssetConfiguration#PlatformCoverage"/>
+    <rdf:type rdf:resource="http://jazz.net/ns/qm/rqm#PlatformCoverage"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_xruw8CxOEeePA8rcrNBEJA">
+    <rqm_qm:action xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Set the edit capability to "Unlocked".</rqm_qm:action>
+    <rqm_qm:comment xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Unlocking</rqm_qm:comment>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">E-Signature_4</dcterms:title>
+    <dcterms:created xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-04-28T20:10:51.131Z</dcterms:created>
+    <dcterms:creator xmlns:dcterms="http://purl.org/dc/terms/" rdf:resource="https://clm.cs.zionsbank.com/jts/users/z080876"/>
+    <process:projectArea xmlns:process="http://jazz.net/ns/process#" rdf:resource="https://clm.cs.zionsbank.com/qm/process/project-areas/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc:serviceProvider xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/services.xml"/>
+    <oslc:instanceShape xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/shape/resource/com.ibm.rqm.planning.VersionedTestPlan#E-Signature"/>
+    <rdf:type rdf:resource="http://jazz.net/ns/qm/rqm#E-Signature"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestPlan/__Ybi0B5QEeSd1div3hxkJQ#ESignatureRecord/_NiuwsLWMEeWPCNWl3a2YOQ">
+    <rqm_qm:action xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Set the edit capability to "Locked".</rqm_qm:action>
+    <rqm_qm:comment xmlns:rqm_qm="http://jazz.net/ns/qm/rqm#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Locking Test Plan</rqm_qm:comment>
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">E-Signature_1</dcterms:title>
+    <dcterms:created xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2016-01-07T22:15:51.354Z</dcterms:created>
+    <dcterms:creator xmlns:dcterms="http://purl.org/dc/terms/" rdf:resource="https://clm.cs.zionsbank.com/jts/users/z080876"/>
+    <process:projectArea xmlns:process="http://jazz.net/ns/process#" rdf:resource="https://clm.cs.zionsbank.com/qm/process/project-areas/_aC9CQPfREeOd1div3hxkJQ"/>
+    <oslc:serviceProvider xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/services.xml"/>
+    <oslc:instanceShape xmlns:oslc="http://open-services.net/ns/core#" rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/shape/resource/com.ibm.rqm.planning.VersionedTestPlan#E-Signature"/>
+    <rdf:type rdf:resource="http://jazz.net/ns/qm/rqm#E-Signature"/>
+  </rdf:Description>
+</rdf:RDF>

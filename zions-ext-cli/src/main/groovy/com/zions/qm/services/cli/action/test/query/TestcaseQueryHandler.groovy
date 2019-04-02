@@ -1,5 +1,7 @@
 package com.zions.qm.services.cli.action.test.query
 
+import com.zions.common.services.cacheaspect.CacheInterceptor
+import com.zions.qm.services.test.TestCaseQueryData
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
@@ -9,7 +11,16 @@ class TestcaseQueryHandler extends BaseQueryHandler {
 	String tcItemFitler
 	
 	public def getItems() {
-		currentItems = clmTestManagementService.getTestCaseViaQuery(this.qmTcQuery, projectName)
+		def cp = cacheManagementService.getFromCache('query', 'QueryStart')
+		page=0
+		if (cp) {
+			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
+			
+		}
+		String pageId = "${page}"
+		new CacheInterceptor() {}.provideCaching(clmTestManagementService, pageId, currentTimestamp, TestCaseQueryData) {
+			currentItems = clmTestManagementService.getTestCaseViaQuery(this.qmTcQuery, projectName)
+		}
 		return currentItems
 	}
 	public String initialUrl() {
@@ -32,5 +43,18 @@ class TestcaseQueryHandler extends BaseQueryHandler {
 		return this.tcItemFitler;
 	}
 
+	public Object nextPage() {
+		def nextLink = currentItems.'**'.find { node ->
 	
+			node.name() == 'link' && node.@rel == 'next'
+		}
+		if (nextLink == null) return null
+		this.page++
+		String pageId = "${page}"
+		new CacheInterceptor() {}.provideCaching(clmTestManagementService, pageId, currentTimestamp, TestCaseQueryData) {
+			currentItems = clmTestManagementService.nextPage(nextLink.@href)
+		}
+		return currentItems
+	}
+
 }

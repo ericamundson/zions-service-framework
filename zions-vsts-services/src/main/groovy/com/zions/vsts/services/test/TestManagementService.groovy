@@ -10,6 +10,7 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import groovyx.net.http.ContentType
 
 /**
@@ -60,6 +61,7 @@ import groovyx.net.http.ContentType
  * 
  */
 @Component
+@Slf4j
 public class TestManagementService {
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
@@ -103,9 +105,10 @@ public class TestManagementService {
 		} else if (method == 'patch') {
 			result = genericRestClient.patch(executionResult)
 		}
-//		if (result != null) {
-//			cacheManagementService.saveToCache(result, id, ICacheManagementService.RESULT_DATA)
-//		}
+		if (result != null) {
+			def eResult = getResult(nuri)
+			cacheManagementService.saveToCache(eResult, id, ICacheManagementService.RESULT_DATA)
+		}
 //		if (result == null) {
 //			checkpointManagementService.addLogentry("Unable to save test result with id:  ${id}")
 //		}
@@ -262,7 +265,7 @@ public class TestManagementService {
 				}
 			}
 			wis = getTestWorkItems(collection, project, teamArea)
-			if (!wis || wis.size() == 0) break;
+			if (!wis || wis.workItems.size() == 0) break;
 		}
 		cacheManagementService.clear()
 //		File cacheL = new File(cacheLocation)
@@ -370,6 +373,14 @@ public class TestManagementService {
 		return tcMap
 
 	}
+	private def getResult(String uri) {
+		def result = genericRestClient.get(
+			uri: uri,
+			contentType: ContentType.JSON,
+			query: [destroy: true, 'api-version': '5.0-preview.3']
+			)
+		return result
+	}
 
 	private String getTestChangeType(def change) {
 		String type = ICacheManagementService.PLAN_DATA
@@ -399,7 +410,7 @@ public class TestManagementService {
 	private def getTestWorkItems(String collection, String project, String teamArea) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def query = [query: "Select [System.Id], [System.Title] From WorkItems Where ([System.WorkItemType] = 'Test Plan'  OR [System.WorkItemType] = 'Test Case') AND [System.AreaPath] = '${teamArea}'"]
+		def query = [query: "Select [System.Id], [System.Title] From WorkItems Where ([System.WorkItemType] = 'Test Plan'  OR [System.WorkItemType] = 'Test Case') AND [System.AreaPath] = '${teamArea}' AND [Custom.ExternalID] <> ''"]
 		String body = new JsonBuilder(query).toPrettyString()
 		def result = genericRestClient.post(
 			requestContentType: ContentType.JSON,

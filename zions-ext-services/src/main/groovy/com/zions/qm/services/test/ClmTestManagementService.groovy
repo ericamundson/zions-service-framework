@@ -1,7 +1,12 @@
 package com.zions.qm.services.test
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+
+import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cacheaspect.CacheInterceptor
+import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
@@ -21,10 +26,21 @@ class ClmTestManagementService {
 	
 	@Autowired
 	IGenericRestClient qmGenericRestClient
+	@Autowired(required=false)
+	ICacheManagementService cacheManagementService
+	
+	@Value('${qm.query:}')
+	String qmQuery
+	
+	@Value('${qm.tc.query:}')
+	String qmTcQuery
+
 
 	public ClmTestManagementService() {
 		
 	}
+	
+	
 	
 	public def getCustomAttributes(String projectName, String type)
 	{
@@ -121,6 +137,62 @@ class ClmTestManagementService {
 		}
 		def outData = [filename: filename, data: result.data]
 		return outData
+
+	}
+	
+	def flushQueries(String projectName) {
+		Date ts = new Date()
+		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+		int page = 0
+		
+		def planData
+		new CacheInterceptor() {}.provideCaching(this, "${page}", ts, TestPlanQueryData) {
+			planData = this.getTestPlansViaQuery(qmQuery, projectName)
+		}
+		while (true) {
+			def nextLink = planData.'**'.find { node ->
+				node.name() == 'link' && node.@rel == 'next'
+			}
+			if (nextLink == null) break
+			page++
+			new CacheInterceptor() {}.provideCaching(this, "${page}", ts, TestPlanQueryData) {
+				planData = this.nextPage(nextLink.@href)
+			}
+		}
+		
+		
+		
+		page = 0
+		def configData 
+		new CacheInterceptor() {}.provideCaching(this, "${page}", ts, ConfigurationQueryData) {
+			configData = this.getConfigurationsViaQuery('', projectName)
+		}
+		while (true) {
+			def nextLink = configData.'**'.find { node ->
+				node.name() == 'link' && node.@rel == 'next'
+			}
+			if (nextLink == null) break
+			page++
+			new CacheInterceptor() {}.provideCaching(this, "${page}", ts, ConfigurationQueryData) {
+				configData = this.nextPage(nextLink.@href)
+			}
+		}
+		
+		page = 0
+		def testcaseData
+		new CacheInterceptor() {}.provideCaching(this, "${page}", ts, TestCaseQueryData) {
+			testcaseData = this.getTestCaseViaQuery(qmTcQuery, projectName)
+		}
+		while (true) {
+			def nextLink = testcaseData.'**'.find { node ->
+				node.name() == 'link' && node.@rel == 'next'
+			}
+			if (nextLink == null) break
+			page++
+			new CacheInterceptor() {}.provideCaching(this, "${page}", ts, TestCaseQueryData) {
+				testcaseData = this.nextPage(nextLink.@href)
+			}
+		}
 
 	}
 
@@ -223,6 +295,45 @@ class ClmTestManagementService {
 			uri: url,
 			headers: [Accept: 'application/xml'] );
 		return result
+	}
+
+}
+
+class ConfigurationQueryData implements CacheWData {
+	String data
+	
+	void doData(def result) {
+		data = new XmlUtil().serialize(result)
+	}
+	
+	def dataValue() {
+		return new XmlSlurper().parseText(data)
+	}
+
+}
+
+class TestCaseQueryData implements CacheWData {
+	String data
+	
+	void doData(def result) {
+		data = new XmlUtil().serialize(result)
+	}
+	
+	def dataValue() {
+		return new XmlSlurper().parseText(data)
+	}
+
+}
+
+class TestPlanQueryData implements CacheWData {
+	String data
+	
+	void doData(def result) {
+		data = new XmlUtil().serialize(result)
+	}
+	
+	def dataValue() {
+		return new XmlSlurper().parseText(data)
 	}
 
 }

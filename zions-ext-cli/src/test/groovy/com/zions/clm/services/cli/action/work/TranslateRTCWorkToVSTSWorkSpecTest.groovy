@@ -165,8 +165,8 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 		and:
 		def wititems = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
 		QueryTracking qt = new QueryTracking()
-		qt.doResult(wititems)
-		clmWorkItemManagementService.getWorkItemsViaQuery(_,_,_) >> qt
+		qt.doData(wititems)
+		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> wititems
 		
 		and:
 		def wiwChanges  = [value: ["{\"id\":\"123\", \"somejson\": \"morejson\"}"]]

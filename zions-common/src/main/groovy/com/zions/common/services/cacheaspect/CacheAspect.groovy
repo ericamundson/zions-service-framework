@@ -60,9 +60,24 @@ class CacheAspect {
 		
 		if (!retVal) {
 			retVal = joinPoint.proceed()
-			cacheManagementService.saveToCache(retVal, id, eType)
+			if (CacheWData.class.isAssignableFrom(eTypeClass)) {
+				CacheWData data = eTypeClass.newInstance()
+				data.doData(retVal)
+				cacheManagementService.saveToCache(data, id, eType)
+			} else {			
+				cacheManagementService.saveToCache(retVal, id, eType)
+			}
 		} else {
-			if (retVal instanceof List) {
+			if (CacheWData.class.isAssignableFrom(eTypeClass)) {
+				CacheWData data = eTypeClass.newInstance(retVal)
+				retVal = data.dataValue()
+				if (data.timeStamp.time < ts.time) {
+					retVal = joinPoint.proceed()
+					CacheWData indata = eTypeClass.newInstance()
+					indata.doData(retVal)
+					cacheManagementService.saveToCache(indata, id, eType)
+				}
+			} else if (retVal instanceof List) {
 				List<CacheRequired> inItems = new ArrayList<CacheRequired>()
 				retVal.each { map -> 
 					def item = eTypeClass.newInstance(map)

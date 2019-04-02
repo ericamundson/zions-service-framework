@@ -36,9 +36,9 @@ class ImportWIT implements CliAction {
 				wits.add(witChanges)
 			}
 		}
-		this.flowLogging([processTemplateService], true, true) {  // Setup flow logging on any processTemplateService call
+		//this.flowLogging([processTemplateService], true, true) {  // Setup flow logging on any processTemplateService call
 			processTemplateService.ensureWITChanges(collection, project, wits, true)
-		}
+		//}
 		
 		return null;
 	}

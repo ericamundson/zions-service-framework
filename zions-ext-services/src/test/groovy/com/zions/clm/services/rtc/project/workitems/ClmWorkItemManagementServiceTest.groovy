@@ -46,10 +46,10 @@ public class ClmWorkItemManagementServiceTest extends Specification {
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
 		when: 'calling of method under test (getTestPlansViaQuery)'
-		QueryTracking qt = underTest.getWorkItemsViaQuery('0',new Date(),'')
+		def data = underTest.getWorkItemsViaQuery('')
 		
 		then: 'validate list of plans'
-		qt.resultValue().entry.size() > 0
+		data.entry.size() > 0
 	}
 	
 	def 'getNextPage success flow.'() {
@@ -58,10 +58,10 @@ public class ClmWorkItemManagementServiceTest extends Specification {
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
 		when: 'calling of method under test (getNextPage)'
-		QueryTracking qt  = underTest.nextPage('1', new Date(), 'https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan?token=_TJVcwOKdEeirC8bfvJTPjw&amp;page=1')
+		def data  = underTest.nextPage('https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan?token=_TJVcwOKdEeirC8bfvJTPjw&amp;page=1')
 		
 		then: 'validate list of plans'
-		qt.resultValue().entry.size() > 0
+		data.entry.size() > 0
 	}
 
 }

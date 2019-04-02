@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:27624</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:27624?stylesheet=true"/>
+  <ns2:webId>27624</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">FS-TD-003/3.2.4/Validate penalty calculation logic - simple interest calculation.</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">At the account level, when penalty calculation logic is set to simple interest then the following calculation must take place: 
+
+Penalty Amount = (Amount x Number of penalty days x Interest Rate) / 365 
+
+In case of partial redemption, Amount = (Redemption amount – Capitalized Unpaid Interest)
+
+In case of full redemption, Amount = (Current Balance – Capitalized Unpaid Interest)
+
+For example, let us take the case of $50,000 being partially redeemed from a term deposit account where the capitalized unpaid interest is zero. The rate of interest is 1% and the interest penalty is 60 days. 
+
+Penalty Amount = (50,000 x 60 x 0.01) / 365 = $82.19
+
+Success Criteria: Penalty amount is $82.19</ns3:description>
+  <ns2:creationDate>2016-02-17T18:27:26.591Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2018-04-19T22:02:12.911Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070424">v070424</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070382">v070382</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.101">literal.priority.101</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Test Team" value="BaNCS Product: Test"/>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Workstream" value="Deposits: TD"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="Run Calendar" value="Day Mode - Fast"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Compliance Related" value="N/A"/>
+  <ns2:category term="Automation Status" value="No"/>
+  <ns2:category term="Test Type" value="Functional Test"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>3</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:21998"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:div>
+        <tag0:div>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">Product: TD/CD<tag0:br/>User: Authorized<tag0:br/>Screen: Partial Redemption Screen</tag0:p>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">
+            <tag0:br/>-The CD account must not have reached maturity.<tag0:br/>-account must noy have crossed the grace days<tag0:br/>-CD must have the term left<tag0:br/>-Penalty Calculation method must be defined as Simple at the Product Level<tag0:br/>-Penalty routine code must be attached<tag0:br/>-grace days must be define already at the product level<tag0:br/>-Withdrawal amount is $50,000<tag0:br/>-Capitalized unpaid interest is zero.<tag0:br/>-Rate of interest is 1%<tag0:br/>-Interest penalty days: 60 days</tag0:p>
+        </tag0:div>
+      </tag0:div>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+</ns2:testcase>

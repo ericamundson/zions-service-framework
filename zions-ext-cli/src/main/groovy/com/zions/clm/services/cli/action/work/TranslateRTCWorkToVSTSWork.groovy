@@ -10,8 +10,13 @@ import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
+import com.zions.clm.services.rtc.project.workitems.QueryTracking
 import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
+import com.zions.common.services.cache.CacheInterceptorService
+import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.logging.FlowInterceptor
 import com.zions.common.services.query.IFilter
 import com.zions.common.services.restart.Checkpoint
 import com.zions.common.services.restart.ICheckpointManagementService
@@ -149,11 +154,15 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 	AttachmentsManagementService attachmentsManagementService
 	@Autowired
 	FileManagementService fileManagementService
+//	@Autowired(required=false)
+//	CacheInterceptorService cacheInterceptorService
 
 	@Autowired
 	IRestartManagementService restartManagementService
 	@Autowired(required=false)
 	ICheckpointManagementService checkpointManagementService
+	@Autowired(required=false)
+	ICacheManagementService cacheManagementService
 
 	public TranslateRTCWorkToVSTSWork() {
 	}
@@ -203,7 +212,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		//refresh.
 		if (includes['refresh'] != null) {
 			log.info("Refreshing cache.")
-			Checkpoint cp = checkpointManagementService.selectCheckpoint('query')
+			Checkpoint cp = cacheManagementService.getFromCache('query', 'QueryStart')
 			int page=0
 			Date currentTimestamp = new Date()
 			if (cp) {
@@ -211,7 +220,10 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				
 			}
 			String pageId = "${page}"
-			def workItems = clmWorkItemManagementService.getWorkItemsViaQuery(pageId, currentTimestamp, wiQuery).resultValue()
+			def workItems
+			new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
+				workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
+			}
 			while (true) {
 				def changeList = []
 				def filtered = filtered(workItems, wiFilter)
@@ -224,15 +236,20 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				if ("${rel}" != 'next') break
 				page++
 				pageId = "${page}"
-				workItems = clmWorkItemManagementService.nextPage(pageId, currentTimestamp, workItems.@href).resultValue()
+				new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
+					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+				}
 			}
+		}
+		if (includes['flushQueries'] != null) {
+			clmWorkItemManagementService.flushQueries(wiQuery)
 		}
 		def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 		def linkMapping = processTemplateService.getLinkMapping(mapping)
 		//translate work data.
 		if (includes['phases'] != null) {
-
+			//cacheManagementService.deleteByType('LinkInfo')
 			restartManagementService.processPhases { phase, items ->
 				if (phase == 'workdata') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
@@ -243,12 +260,12 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 						IWorkItem ccmWorkitem = ccmWorkManagementService.getWorkitem(sid)
 						Date ts = ccmWorkitem.modified()
 						def links = ccmWorkManagementService.getAllLinks(sid, ts, ccmWorkitem, linkMapping)
-						flowLogging(clManager) {
+						//new FlowInterceptor() {}.flowLogging(clManager) {
 							def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
 							if (wiChanges != null) {
 								clManager.add("${id}", wiChanges)
 							}
-						}
+						//}
 					}
 					clManager.flush();
 					//				def rel = workItems.@rel

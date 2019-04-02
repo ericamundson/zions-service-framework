@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:80568</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:80568?stylesheet=true"/>
+  <ns2:webId>80568</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">Copy of FS-CIF-010/PSA-SCR-012/Standalone Tickler Inquiry/Required elements/Basic functionality/Positive</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">The user must be able to use a standalone search tool for Ticklers which contains all of the appropriate search-driven types. This screen must have the following basic elements:
+
+Title = Tickler Search
+Label = Tickler Search
+Dropdown = Tickler Inquiry Criteria
+Button = Submit
+Button = Reset
+
+The Tickler Inquiry Criteria dropdown must contain the following values:
+
+1: Entity Driven Search (default)
+2: User-ID/Group-ID Driven Search
+3: Tickler Category and Type Driven Search
+
+Depending on what the user selects from that dropdown, the fields and options below must change accordingly.
+
+The default functionality must contain the fields for the Entity Driven Search. These are:
+
+Tickler Inquiry Criteria
+Entity Number
+Entity Number Search button
+Status
+Entity Type
+Informational
+
+These must function as per the test case for that particular search type: FS-CIF-010/PSA-LON-019-023/FS-CIF-010-ADD-005/Standalone Tickler Inquiry/Entity-Driven search/Positive
+
+If the user selects 2: User-ID/Group-ID Driven Search, the fields must be switched to:
+
+User ID
+User ID Search button
+Action Due Date - From
+Status
+Group ID
+Action Due Date - To
+Informational
+
+The functionality must be as per the test case for that particular search type: FS-CIF-010/PSA-LON-019-024/FS-CIF-010-ADD-005/Standalone Tickler Inquiry/User ID or Group ID driven search/Positive
+
+If the user selects 3: Tickler Category and Type Driven Search, the fields must be switched to:
+
+Entity Type
+Tickler Category
+Tickler Category Search button
+Status
+Tickler Type (read only)
+Informational
+
+The functionality must be as per the test case for that particular search type: FS-CIF-010/PSA-LON-019-025/Standalone Tickler Inquiry/FS-CIF-010-ADD-005/Tickler Category and Type Driven Search/Positive
+
+Regardless of the type of search performed, the results must be accurate, and must be sorted based on action due date and entity type and number. 
+
+Entity type must be sorted as follows:
+
+CIF
+LON
+COL
+LIM
+INS
+DEP
+
+When a user has successfully searched for a ticker(s), the following items must be displayed:
+
+Grid Title = Entity Type
+Grid Title = Entity Nbr
+Grid Title = Tickler Category
+Grid Title = Tickler Type
+Grid Title = Tickler Title
+Grid Title = User ID
+Grid Title = Group ID
+Grid Title = Status
+Grid Title = Action Due Date
+Grid Title = Details
+
+Under each of the Grid Titles, the following items must be displayed:
+
+Text Field = Entity Type
+Text Field = Entity Nbr
+Text Field = Tickler Category
+Text Field = Tickler Type
+Text Field = Tickler Title
+Text Field = User ID
+Text Field = Group ID
+Text Field = Status
+Date = Action Due Date
+Hyperlink = Details
+
+If the user has searched for ticklers using the Entity-based search, then to the bottom right of the screen there must be a  Hyperlink = Create Tickler
+
+When the user clicks on the Details hyperlink for a Tickler, the Tickler screen must be opened. When the user clicks on the Create Tickler hyperlink, the Create Tickler screen for the particular type of entity searched for must be opened.</ns3:description>
+  <ns2:creationDate>2017-11-22T20:41:32.215Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2019-02-15T14:52:19.151Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v071715">v071715</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070040">v070040</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.150">literal.priority.150</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Data Migration Impact" value="Both"/>
+  <ns2:category term="Test Team" value="BaNCS Product: Test"/>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Workstream" value="CIF"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Run Calendar" value="Day Mode - Fast"/>
+  <ns2:category term="Compliance Related" value="N/A"/>
+  <ns2:category term="Automation Status" value="Yes"/>
+  <ns2:category term="Test Type" value="Functional Test"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>0</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:75213"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:copiedFrom href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/FS-CIF-002_55"/>
+  <ns2:copiedRoot href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/FS-CIF-002_55"/>
+  <ns2:customAttributes>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>Vendor_TC_Name</ns2:identifier>
+      <ns2:name>Vendor TC Name</ns2:name>
+      <ns2:value>Release One Test Plan</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>Automated_TC_Name</ns2:identifier>
+      <ns2:name>Automated TC Name</ns2:name>
+      <ns2:value>VerifyAllRequiredElementsStandAloneTicklerInquiryTest</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>_k4meUUSxEeiuULVYIY76YA</ns2:identifier>
+      <ns2:name>Test Case Group</ns2:name>
+      <ns2:value>R1</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>_k5J38USxEeiuULVYIY76YA</ns2:identifier>
+      <ns2:name>TCG Category 1</ns2:name>
+      <ns2:value>Consumer Regression</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>_k5l80ESxEeiuULVYIY76YA</ns2:identifier>
+      <ns2:name>TCG Category 2</ns2:name>
+      <ns2:value/>
+      <ns2:description/>
+    </ns2:customAttribute>
+  </ns2:customAttributes>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:div>
+        <tag0:div>User :  Any<tag0:br/>Customer :  None<tag0:br/>Product : Any<tag0:br/>Account : Any<tag0:br/>Data  - Screen : None<tag0:br/>Data - Interfaces : Standalone Tickler Search screen<tag0:br/>Predecessory Test Case Linkage: NA<tag0:br/>APPRO - No<tag0:br/>Credit Lead - No</tag0:div>
+      </tag0:div>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition extensionDisplayName="RQM-KEY-TC-POST-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:div>
+        <tag0:div>Successor Test Case Linkage :  NA<tag0:br/>Data  - Interfaces : NA<tag0:br/>Data - Report : NA<tag0:br/>Data Cleanup : NA<tag0:br/>Success Criteria : The user can open the screen. The fields exist, and the values are correct. The functionality is correct. The results are accurate.</tag0:div>
+      </tag0:div>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition>
+  <ns2:com.ibm.rqm.planning.editor.section.testCaseNotes extensionDisplayName="RQM-KEY-TC-NOTES-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">This is the actual screen alignment test case for the Standalone Tickler search screen. For this one, we just need to verify that the screen itself is correct, and that the results are sorted correctly, etc., since we've done all the major functionality testing in the business requirement test case for each type of search. I've tried to split these up a little so this is easier for you, but still doesn't add too many test cases. Feel free to hate me, however, if necessary.</tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCaseNotes>
+</ns2:testcase>

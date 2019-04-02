@@ -2,6 +2,10 @@ package com.zions.clm.services.cli.action.work.query
 
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.QueryTracking
+import com.zions.common.services.cache.CacheInterceptorService
+import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cacheaspect.CacheInterceptor
+import com.zions.common.services.logging.FlowInterceptor
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.Checkpoint
 import com.zions.common.services.restart.ICheckpointManagementService
@@ -16,9 +20,9 @@ class BaseQueryHandler implements IQueryHandler {
 	ClmWorkItemManagementService clmWorkItemManagementService
 	
 	@Autowired
-	ICheckpointManagementService checkpointManagementService
-
-	@Value('${item.filter:allFilter}')
+	ICacheManagementService cacheManagementService
+	
+	@Value('${wi.filter:allFilter}')
 	private String itemFilter
 
 	@Autowired
@@ -37,14 +41,16 @@ class BaseQueryHandler implements IQueryHandler {
 	int page = 0
 	
 	public def getItems() {
-		Checkpoint cp = checkpointManagementService.selectCheckpoint('query')
+		def cp = cacheManagementService.getFromCache('query', 'QueryStart')
 		page=0
 		if (cp) {
-			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.getTimeStamp())
+			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
 			
 		}
 		String pageId = "${page}"
-		currentItems = clmWorkItemManagementService.getWorkItemsViaQuery(pageId, currentTimestamp, wiQuery).resultValue()
+		new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
+			currentItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
+		}
 		return currentItems
 	}
 
@@ -66,7 +72,9 @@ class BaseQueryHandler implements IQueryHandler {
 		if ("${rel}" != 'next') return null
 		page++
 		String pageId = "${page}"
-		currentItems = clmWorkItemManagementService.nextPage(pageId, currentTimestamp, currentItems.@href).resultValue()
+		new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
+			currentItems = clmWorkItemManagementService.nextPage(currentItems.@href)
+		}
 		return currentItems
 	}
 

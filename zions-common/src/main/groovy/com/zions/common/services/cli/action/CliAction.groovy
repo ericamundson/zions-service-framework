@@ -9,18 +9,18 @@ import org.springframework.boot.ApplicationArguments
  * @author z091182
  * TODO: Add api to implement output of documentation of command line.
  */
-trait CliAction implements FlowInterceptor {
+interface CliAction {
 	/**
 	 * Execute command line with provided arguments
 	 * @param args
 	 * @return
 	 */
-	abstract def execute(ApplicationArguments args);
+	def execute(ApplicationArguments args);
 	/**
 	 * Validate command line arguments
 	 * @param args
 	 * @return
 	 * @throws Exception
 	 */
-	abstract def validate(ApplicationArguments args) throws Exception;
+	def validate(ApplicationArguments args) throws Exception;
 }

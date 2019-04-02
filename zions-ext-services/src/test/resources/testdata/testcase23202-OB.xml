@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:23202</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:23202?stylesheet=true"/>
+  <ns2:webId>23202</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">FS-TD-002/PSA-TD-001-021/Ability to allow account type changes on IRA accounts to an other IRA account type/Positive</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">System must allow a user to change account type on IRA accounts to an other IRA account.
+
+Success Criteria : System does allow a user to change account type on IRA accounts to an other IRA account.</ns3:description>
+  <ns2:creationDate>2015-10-23T16:58:36.862Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2018-04-19T22:02:12.911Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070382">v070382</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070382">v070382</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.101">literal.priority.101</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:approvals>
+    <ns2:approvalDescriptor>
+      <ns2:id>0</ns2:id>
+      <ns2:name>Artifact Review</ns2:name>
+      <ns2:approvalType>com.ibm.team.workitem.approvalType.review</ns2:approvalType>
+      <ns2:archived>false</ns2:archived>
+      <ns2:approval>
+        <ns2:approvalOwner xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070424">v070424</ns2:approvalOwner>
+        <ns2:approvalStatus>com.ibm.team.workitem.approvalState.pending</ns2:approvalStatus>
+      </ns2:approval>
+    </ns2:approvalDescriptor>
+  </ns2:approvals>
+  <ns2:category term="Data Migration Impact" value="Created Data"/>
+  <ns2:category term="Test Team" value="BaNCS Product: Test"/>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Workstream" value="Deposits: TD"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="Run Calendar" value="Day Mode - Fast"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Compliance Related" value="N/A"/>
+  <ns2:category term="Automation Status" value="No"/>
+  <ns2:category term="Test Type" value="Functional Test"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>3</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:17434"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:copiedFrom href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:23201"/>
+  <ns2:copiedRoot href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:23198"/>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:p style="background: white; line-height: 18pt;" dir="ltr"> <tag0:span style="font-size: 9pt;">
+          <tag0:span style="font-family: Arial, Helvetica, sans-serif;">
+            <tag0:span style="color: black;">User :  Any</tag0:span>
+          </tag0:span>
+        </tag0:span>
+      </tag0:p>
+      <tag0:p style="background: white; line-height: 18pt;" dir="ltr">
+        <tag0:span style="font-size: 9pt;">
+          <tag0:span style="font-family: Arial, Helvetica, sans-serif;">
+            <tag0:span style="color: black;">Customer : Any</tag0:span>
+          </tag0:span>
+        </tag0:span>
+      </tag0:p>
+      <tag0:p style="background: white; line-height: 18pt;" dir="ltr">
+        <tag0:span style="font-size: 9pt;">
+          <tag0:span style="font-family: Arial, Helvetica, sans-serif;">
+            <tag0:span style="color: black;">Product : IRA</tag0:span>
+          </tag0:span>
+        </tag0:span>
+      </tag0:p>
+      <tag0:p style="background: white; line-height: 18pt;" dir="ltr">
+        <tag0:span style="font-size: 9pt;">
+          <tag0:span style="font-family: Arial, Helvetica, sans-serif;">
+            <tag0:span style="color: black;">Account : N/A</tag0:span>
+          </tag0:span>
+        </tag0:span>
+      </tag0:p>
+      <tag0:p style="background: white; line-height: 18pt;" dir="ltr">
+        <tag0:span style="font-size: 9pt;">
+          <tag0:span style="font-family: Arial, Helvetica, sans-serif;">
+            <tag0:span style="color: black;">Data  - Screen : None</tag0:span>
+          </tag0:span>
+        </tag0:span>
+      </tag0:p>
+      <tag0:p style="background: white; line-height: 18pt;" dir="ltr">
+        <tag0:span style="font-size: 9pt;">
+          <tag0:span style="font-family: Arial, Helvetica, sans-serif;">
+            <tag0:span style="color: black;">Data - Interfaces : N/A</tag0:span>
+          </tag0:span>
+        </tag0:span>
+      </tag0:p>
+      <tag0:p style="background: white; line-height: 18pt;" dir="ltr">
+        <tag0:span style="font-size: 9pt;">
+          <tag0:span style="font-family: Arial, Helvetica, sans-serif;">
+            <tag0:span style="color: black;">Predecessor Test Case Linkage: </tag0:span>
+          </tag0:span>
+        </tag0:span>FS-TD-002/PSA-TD-001-021/Ability to not allow account type changes on IRA accounts to any other account type/Positive</tag0:p>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition extensionDisplayName="RQM-KEY-TC-POST-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:p dir="ltr">
+        <tag0:span style="font-size: medium;">
+          <tag0:span style="font-family: calibri;">Successor Test Case Linkage :  NA</tag0:span>
+        </tag0:span>
+      </tag0:p>
+      <tag0:p dir="ltr">
+        <tag0:span style="font-size: medium;">
+          <tag0:span style="font-family: calibri;">Data  - Interfaces : NA</tag0:span>
+        </tag0:span>
+      </tag0:p>
+      <tag0:p dir="ltr">
+        <tag0:span style="font-size: medium;">
+          <tag0:span style="font-family: calibri;">Data - Report : NA</tag0:span>
+        </tag0:span>
+      </tag0:p>
+      <tag0:p dir="ltr">
+        <tag0:span style="font-size: medium;">
+          <tag0:span style="font-family: calibri;">Data Cleanup : NA</tag0:span>
+        </tag0:span>
+      </tag0:p>
+      <tag0:p dir="ltr"> </tag0:p>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition>
+  <ns2:com.ibm.rqm.planning.editor.section.testCaseNotes extensionDisplayName="RQM-KEY-TC-NOTES-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:div>
+        <tag0:div>
+          <tag0:strong>IRA===&gt;IRA = Allowed</tag0:strong>
+          <tag0:br/>IRA===&gt;Any other account type = Not allowed</tag0:div>
+      </tag0:div>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCaseNotes>
+</ns2:testcase>
