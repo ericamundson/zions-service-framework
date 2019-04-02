@@ -44,7 +44,14 @@ class ClmArtifact {
 		attributeMap.'Identifier' = in_id
 	}
 	public void setDescription(String in_desc) {
-		attributeMap.'Primary Text' = in_desc
+		// If this is a Heading, use Primary Text for the Title (this is a weird thing modules do)
+		if (this.isHeading && in_desc != '') {
+			this.setTitle(stripTags(in_desc))
+		}
+		
+		attributeMap.'Primary Text' = in_desc			
+
+
 	}
 	public String getDescription() {
 		return attributeMap.'Primary Text'
@@ -74,5 +81,16 @@ class ClmArtifact {
 	}
 	public String getBaseArtifactURI() {
 		return attributeMap.'Base Artifact URI'
+	}
+	public boolean hasEmbeddedImage() {
+		if (this.getDescription() == null) {
+			return false
+		}
+		else {
+			return (this.getDescription().indexOf('<img ') > -1)
+		}
+	}
+	private String stripTags(String input) {
+	    return input.replaceAll("\\<.*?>","").replaceAll('&#xa0;', '').replaceAll('&amp;', '&')
 	}
 }
