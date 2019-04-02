@@ -17,6 +17,7 @@ trait FlowInterceptor implements Interceptor {
 		obj.metaClass =  proxy
 		c.call()
 		obj.metaClass = cMetaClass
+		proxy.interceptor = null
 //		proxy.use(closure)
 	}
 	def flowLogging(List<Object> objs,  boolean logging = true, boolean showData = false, Closure c) {
@@ -38,7 +39,11 @@ trait FlowInterceptor implements Interceptor {
 	}
 
 	Object beforeInvoke(def obj, String methodName, Object[] args) {
-		def hasLogProp = obj.properties['log']
+		boolean hasLogProp = false
+		try {
+		 def log = obj.log
+		 hasLogProp = true
+		} catch (e) {}
 		if (hasLogProp && logging) {
 			StringWriter sb = new StringWriter();
 			PrintWriter pw = new PrintWriter(sb);
@@ -82,7 +87,11 @@ trait FlowInterceptor implements Interceptor {
 		}
 	}
 	Object afterInvoke(Object obj, String methodName, Object[] args, Object result) {
-		def hasLogProp = obj.properties['log']
+		boolean hasLogProp = false
+		try {
+		 def log = obj.log
+		 hasLogProp = true
+		} catch (e) {}
 		if (hasLogProp && logging) {
 			StringWriter sb = new StringWriter();
 			PrintWriter pw = new PrintWriter(sb);

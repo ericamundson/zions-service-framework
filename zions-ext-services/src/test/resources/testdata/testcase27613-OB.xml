@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:27613</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:27613?stylesheet=true"/>
+  <ns2:webId>27613</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">FS-TD-003/PSA-TD-001-065/If user chooses "Withdrawal  without Penalty" then penalty must not be charged.</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">At the account level, at the time of partial withdrawal if the user chooses the option "Yes" ("Withdrawal without penalty") from the "Waive Penalty field then  the system must not charge the penalty.system automatically makes the penalty amount to ZERO. 
+
+Success Criteria: System makes the penalty amount to ZERO and no penalty is charged against the account.</ns3:description>
+  <ns2:creationDate>2016-02-17T17:39:36.814Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2018-04-19T22:02:12.911Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070424">v070424</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070382">v070382</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.101">literal.priority.101</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Test Team" value="BaNCS Product: Test"/>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Workstream" value="Deposits: TD"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="Run Calendar" value="Day Mode - Slow"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Compliance Related" value="N/A"/>
+  <ns2:category term="Automation Status" value="No"/>
+  <ns2:category term="Test Type" value="Functional Test"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>3</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:21988"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:div>
+        <tag0:div>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">Product: TD/CD<tag0:br/>User: System<tag0:br/>Screen: Partial Redemption Screen</tag0:p>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">-The CD account must not have reached maturity.<tag0:br/>-Draw from current balance : Y:Yes</tag0:p>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">-Interest penalty days: 60 days</tag0:p>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">-Current balance must be $50,040.00</tag0:p>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">Capitalized Unpaid Interest $20.00</tag0:p>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">Interest Rate at the Account level is 1%</tag0:p>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">-Penalty Calculation method must be defined as Simple at the Product Level<tag0:br/>-Penalty routine code must be attached</tag0:p>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">CD.Penalty Amount = (Amount x Number of penalty days x Interest Rate) / 365 this formula is being used to calculate the penalty.</tag0:p>
+          <tag0:p style="margin: 0.83em 0px;" dir="ltr">Penalty Amount = (50,000 x 60 x 0.01) / 365 = $82.19.</tag0:p>
+        </tag0:div>
+      </tag0:div>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+</ns2:testcase>

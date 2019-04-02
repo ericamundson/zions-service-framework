@@ -15,6 +15,7 @@ import com.ibm.team.workitem.common.model.AttributeTypes
 import com.ibm.team.workitem.common.model.IAttribute
 import com.ibm.team.workitem.common.model.IWorkItem
 import com.ibm.team.workitem.common.model.IWorkItemReferences
+import com.zions.clm.services.ccm.client.CcmGenericRestClient
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.utils.ReferenceUtil
 import com.zions.common.services.cache.ICacheManagementService
@@ -25,6 +26,8 @@ import com.zions.common.services.work.handler.IFieldHandler
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
+import groovy.xml.XmlUtil
+import groovyx.net.http.ContentType
 
 /**
  * Provides behavior to process RTC work items in a form to be used to translate to VSTS work items.
@@ -54,6 +57,9 @@ class CcmWorkManagementService {
 	@Autowired
 	@Value('${tfs.url}')
 	String tfsUrl
+	
+	@Autowired(required=false)
+	CcmGenericRestClient ccmGenericRestClient
 
 	int newId = -1
 	
@@ -104,7 +110,7 @@ class CcmWorkManagementService {
 	 * @param linkMapping
 	 * @return
 	 */
-	def getWILinkChanges(String id, String project, linkMapping) {
+	def getWILinkChanges(int id, String project, linkMapping) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
@@ -144,10 +150,10 @@ class CcmWorkManagementService {
 	 * @return
 	 */
 	def generateLinkChanges(def wiData, List<LinkInfo> links, linkMapping, cacheWI) {
-		def linksList = links.split(',')
+		//def linksList = links.split(',')
 		links.each { LinkInfo info -> 
 			String id = info.itemIdRelated
-			String module = info.moduleRelated()
+			String module = info.moduleRelated
 			def linkWI = cacheManagementService.getFromCache(id, module, ICacheManagementService.WI_DATA)
 			def linkMap = linkMapping[info.type]
 			if (linkWI != null && linkMap) {
@@ -333,13 +339,60 @@ class CcmWorkManagementService {
 			String[] idList = ids.split(',')
 			idList.each { String rid ->
 				if (rid && rid.length() > 0) {
-					def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'CCM', moduleRelated: module)				
-					links.add(info)
+					rid = resolveId(rid, module)
+					//log.info("Related ID for work item (${id}):  ${module} ${rid}")
+					if (rid != null) {
+						def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'CCM', moduleRelated: module)				
+						links.add(info)
+					}
 				}
 			}
 
 		}
 		return links
+	}
+	
+	String resolveId(String cId, String module) {
+		String id = null
+		if (cId.startsWith('http')) {
+			try {
+				String url = cId
+				def result = ccmGenericRestClient.get(
+				contentType: ContentType.XML,
+				uri: cId,
+				headers: [Accept: 'application/rdf+xml'] );
+				if (!result) {
+					return null
+				}
+				if (module == 'QM') {
+					def identifier = result.'**'.find { node ->
+				
+						node.name() == 'shortId'
+					}
+//					String xml = new XmlUtil().serialize(result)
+//					File outXml = new File('clm.xml')
+//					def os = outXml.newDataOutputStream()
+//					os << xml
+//					os.close()
+					id = "${identifier.text()}"
+				} else if (module == 'RM') {
+					def identifier = result.'**'.find { node ->
+				
+						node.name() == 'identifier'
+					}
+//					String xml = new XmlUtil().serialize(result)
+//					File outXml = new File('clm.xml')
+//					def os = outXml.newDataOutputStream()
+//					os << xml
+//					os.close()
+
+					id = "${identifier.text()}"
+				}
+			} catch (e) {}
+		} else {
+			id = cId
+		}
+		return id
 	}
 	
 	IProgressMonitor getMonitor() {

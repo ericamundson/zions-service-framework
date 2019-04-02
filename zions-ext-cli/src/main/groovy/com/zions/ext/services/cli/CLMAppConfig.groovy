@@ -1,6 +1,7 @@
 package com.zions.ext.services.cli
 
 import com.zions.common.services.attachments.IAttachments
+import com.zions.common.services.cache.CacheInterceptorService
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cache.MongoDBCacheManagementService
@@ -46,6 +47,11 @@ public class CLMAppConfig {
 		return new CacheManagementService(cacheLocation)
 	}
 	
+	@Bean
+	CacheInterceptorService cacheInterceptorService() {
+		return new CacheInterceptorService()
+	}
+
 	@Bean
 	CommandManagementService commandManagementService() {
 		return new CommandManagementService();

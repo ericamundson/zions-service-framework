@@ -26,7 +26,7 @@ class PlanBlankHandler implements IFieldHandler {
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: [name:aValue]]
 		if (wiCache != null) {
 			String type = "${itemMap.target}"
-			if (type != 'Test Case') {
+			if (type != 'Test Case'  && !type.endsWith(' WI')) {
 				def cVal = wiCache."${fieldMap.target}"
 				if ("${cVal}" == "${retVal.value}") {
 					return null

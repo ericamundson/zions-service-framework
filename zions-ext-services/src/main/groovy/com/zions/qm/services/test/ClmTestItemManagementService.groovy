@@ -115,7 +115,7 @@ public class ClmTestItemManagementService {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def exData = [:]
-		String id = "${qmItemData.webId.text()}}"
+		String id = "${qmItemData.webId.text()}"
 		def cacheResult = getResultData(resultMap, testCase)
 		if (!cacheResult) return null
 		String runId = "${cacheResult.testRun.id}"
@@ -179,7 +179,7 @@ public class ClmTestItemManagementService {
 	}
 
 	private def getResultData(def resultMap, def testCase) {
-		String rqmId = "${testCase.webId.text()}-Test Case"
+		String rqmId = "${testCase.webId.text()}"
 		def adoTestCase = cacheManagementService.getFromCache(rqmId, ICacheManagementService.WI_DATA)
 		if (adoTestCase == null) return null
 		return resultMap["${adoTestCase.id}"]

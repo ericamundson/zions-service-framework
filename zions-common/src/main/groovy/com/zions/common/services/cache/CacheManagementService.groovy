@@ -119,13 +119,13 @@ class CacheManagementService implements ICacheManagementService {
 	
 	@Override
 	public void clear() {
-		File file = new File(this.cacheLocation)
+		File file = new File("${this.cacheLocation}${File.separator}${cacheModule}")
 		file.deleteDir();
 		
 	}
 	
 	public def getAllOfType(String type) {
-		File cDir = new File(cacheLocation)
+		File cDir = new File("${this.cacheLocation}${File.separator}${cacheModule}")
 		def wis = [:]
 		cDir.eachFileRecurse(FileType.FILES) { File file ->
 			String name = file.name
@@ -152,5 +152,18 @@ class CacheManagementService implements ICacheManagementService {
 			File cacheItem = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}");
 			cacheItem.deleteDir();
 		}
+	}
+
+	@Override
+	public void deleteByType(String type) {
+		File cDir = new File("${this.cacheLocation}${File.separator}${cacheModule}")
+		cDir.eachFileRecurse(FileType.FILES) { File file ->
+			String name = file.name
+			String cname = "${type}.json" 
+			if (name.startsWith(cname)) {
+				file.delete()
+			}
+		}
+		
 	}
 }

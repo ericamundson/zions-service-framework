@@ -1,9 +1,11 @@
 package com.zions.clm.services.rtc.project.workitems;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import com.zions.common.services.cacheaspect.CacheInterceptor
 import org.springframework.stereotype.Component;
 
 import com.zions.clm.services.rest.ClmGenericRestClient;
+import com.zions.common.services.cache.CacheInterceptorService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.link.LinkInfo
@@ -36,7 +38,7 @@ public class ClmWorkItemManagementService {
 	
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
-
+	
 
 	public ClmWorkItemManagementService() {
 		
@@ -45,13 +47,19 @@ public class ClmWorkItemManagementService {
 	def flushQueries(String query) {
 		Date ts = new Date()
 		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
-		QueryTracking qt = this.getWorkItemsViaQuery("${page}", ts, query)
-		def currentItems = qt.resultValue()
+		int page = 0
+		def currentItems
+		new CacheInterceptor() {}.provideCaching(this, "${page}", ts, QueryTracking, ['getWorkItemsViaQuery','nextPage']) {
+			currentItems = this.getWorkItemsViaQuery(query)
+		}
 		while (true) {
 			def rel = currentItems.@rel
 			if ("${rel}" != 'next') break
 			page++
-			currentItems = nextPage("${page}", ts, currentItems.@href).resultValue()
+			new CacheInterceptor() {}.provideCaching(this, "${page}", ts, QueryTracking) {
+				String url = "${currentItems.@href}"
+				currentItems = this.nextPage(url)
+			}
 	
 		}
 	}
@@ -86,8 +94,7 @@ public class ClmWorkItemManagementService {
 		return result
 	}
 	
-	@Cache( elementType = QueryTracking)
-	public QueryTracking getWorkItemsViaQuery(String pageId, Date timeStamp, String query) {
+	public def getWorkItemsViaQuery(String query) {
 		//def query = "workitem/workItem[projectArea/name='${project}']/(id)"
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
@@ -101,18 +108,13 @@ public class ClmWorkItemManagementService {
 //		def o = out.newDataOutputStream()
 //		o << new groovy.xml.StreamingMarkupBuilder().bindNode(result) as String
 //		o.close()
-		QueryTracking qt = new QueryTracking()
-		qt.doResult(result)
-		return qt
+		return result
 	}
 	
-	@Cache( elementType = QueryTracking)
-	public QueryTracking nextPage(String pageId, Date timeStamp, String url) {
+	public def nextPage(String url) {
 		def result = clmGenericRestClient.get(
 			uri: url,
 			headers: [Accept: 'text/xml'] );
-		QueryTracking qt = new QueryTracking()
-		qt.doResult(result)
-		return qt
+		return result
 	}
 }

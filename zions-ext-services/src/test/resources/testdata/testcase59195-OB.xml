@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:59195</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:59195?stylesheet=true"/>
+  <ns2:webId>59195</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">RRZ-TD-618-101-CD Retirement Plan Renewal Notice2 :Negative Scenario/ADR/Account type - MMD/At Product level Pre renewal flag as No</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">These test case will verify that the CD Retirement Plan Renewal Notice 2 is not getting generated  when A Product type is MMD and Product level  pre renewal flag is selected as NO.</ns3:description>
+  <ns2:creationDate>2017-02-14T19:46:11.148Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2019-01-09T10:21:41.195Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070761">v070761</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v071461">v071461</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.160">literal.priority.160</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Test Team" value="SNF: Test"/>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Workstream" value="Zions Legacy QA:- Statements and Notices"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="Run Calendar" value="End of Day"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Business Approved" value="No"/>
+  <ns2:category term="Execution Planning" value="No Assigned Status"/>
+  <ns2:category term="Compliance Related" value="N/A"/>
+  <ns2:category term="Automation Status" value="No"/>
+  <ns2:category term="Test Type" value="Functional Test"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>3</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:55896"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:div>
+        <tag0:div>Verify that test data set up completed as per the pre condition mentioned below:-<tag0:br/>1)<tag0:strong>Account Type should be IRA MMD Account.</tag0:strong>
+          <tag0:br/>2)IRA Plan should be Roth/Educational/SEP/Traditional.<tag0:br/>3)<tag0:strong>At product level, Pre-Renewal Notice Flag should be selected as No</tag0:strong>.<tag0:br/>4)At account level, Pre-renewal flag should be selected as yes<tag0:br/>5)Time account(IRA) selected Should be active.<tag0:br/>6)IRA account should not be matured.<tag0:br/>7)Next Renewal Date for TD should not be zero,i.e.there should be a valid next renewal date.<tag0:br/>8)Current Balance of the account should be greater than 0.<tag0:br/>9)Product level minimum Term .Account Term Check :-Number of days between Issue date/Last renewal date greater of the two and Maturity date/Next renewal date lesser of the two - the result must be greater than the product parameter minimum term<tag0:br/>10)Current Business Date = Next Renewal Date – Pre-Renewal Notice Days.<tag0:br/>12)EOD batch job for "CD Retirement Plan Renewal Notice 2" should be completed successfully.</tag0:div>
+      </tag0:div>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+</ns2:testcase>
