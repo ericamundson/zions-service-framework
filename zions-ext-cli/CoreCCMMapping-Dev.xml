@@ -473,7 +473,7 @@ Removed
 		<link source="related_test_case" target="System.LinkTypes.Related" module="QM"/>
 		<link source="related_test_plan" target="System.LinkTypes.Related" module="QM"/>
 		<link source="tested_by_test_case" target="System.LinkTypes.Related" module="QM"/>
-		<link source="affects_execution_result" target="System.LinkTypes.Related" module="QM"/>
-		<link source="related_execution_record" target="System.LinkTypes.Related" module="QM"/>
+		<link source="affects_execution_result" target="Hyperlink" module="QM"/>
+		<!--  <link source="related_execution_record" target="Hyperlink" module="QM"/> -->
 	</links>
 </witmapping>

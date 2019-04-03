@@ -117,12 +117,13 @@ class CcmWorkManagementService {
 		IWorkItem workItem = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, null);
 		Date modified = workItem.modified()
 		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
+		String sid = "${id}"
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
-			List<LinkInfo> info = this.getAllLinks(id, modified, workItem, linkMapping)
+			List<LinkInfo> info = this.getAllLinks(sid, modified, workItem, linkMapping)
 			wiData = generateLinkChanges(wiData, info, linkMapping, cacheWI)
 			if (wiData.body.size() == 1) {
 				return null
@@ -154,12 +155,28 @@ class CcmWorkManagementService {
 		links.each { LinkInfo info -> 
 			String id = info.itemIdRelated
 			String module = info.moduleRelated
-			def linkWI = cacheManagementService.getFromCache(id, module, ICacheManagementService.WI_DATA)
+			def url = null
 			def linkMap = linkMapping[info.type]
-			if (linkWI != null && linkMap) {
-				def linkId = linkWI.id
-				if (!linkExists(cacheWI, linkMap.target, linkId) && "${linkId}" != "${cacheWI.id}") {
-					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap.@target}", url: "${tfsUrl}/_apis/wit/workItems/${linkId}", attributes:[comment: "${linkMap.@source}"]]]
+			def runId = null
+			def linkId = null
+			if (linkMap) {
+				if (info.type == 'affects_execution_result') {
+					def result = cacheManagementService.getFromCache(id, module, ICacheManagementService.RESULT_DATA)
+					if (result) {
+						runId = result.testRun.id
+						linkId = result.id
+						url = "${tfsUrl}/_TestManagement/Runs?_a=resultSummary&runId=${runId}&resultId=${linkId}"
+					}
+					
+				} else {
+					def linkWI = cacheManagementService.getFromCache(id, module, ICacheManagementService.WI_DATA)
+					if (linkWI) {
+						linkId = linkWI.id
+						url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
+					}
+				}
+				if (linkId && !linkExists(cacheWI, linkMap.target, linkId, runId) && "${linkId}" != "${cacheWI.id}") {
+					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap.@target}", url: url, attributes:[comment: "${linkMap.@source}"]]]
 					wiData.body.add(change)
 				}
 			}
@@ -176,9 +193,13 @@ class CcmWorkManagementService {
 	 * @param linkId
 	 * @return
 	 */
-	boolean linkExists(cacheWI, targetName, linkId) {
+	boolean linkExists(cacheWI, targetName, linkId, String runId = null) {
+		def url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
+		if (runId) {
+			url = "${tfsUrl}/_TestManagement/Runs?_a=resultSummary&runId=${runId}&resultId=${linkId}"
+		}
 		def link = cacheWI.relations.find { rel ->
-			"${rel.rel}" == "${targetName}" && "${tfsUrl}/_apis/wit/workItems/${linkId}" == "${rel.url}"
+			"${rel.rel}" == "${targetName}" && url == "${rel.url}"
 		}
 		return link != null
 	}

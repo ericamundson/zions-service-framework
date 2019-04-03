@@ -2,7 +2,7 @@ package com.zions.ext.services.cli;
 
 import com.zions.clm.services.work.maintenance.service.FixWorkItemIssuesService
 import com.zions.common.services.cli.action.CliAction
-
+import com.zions.vsts.services.settings.SettingsManagementService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
@@ -41,6 +41,9 @@ public class CliApplication implements ApplicationRunner {
 	@Autowired
 	private Map<String, CliAction> actionsMap;
 	
+	@Autowired(required=false)
+	SettingsManagementService settingsManagementService
+	
 	/**
 	 * 
 	 * @param args - command-line arguments
@@ -60,11 +63,18 @@ public class CliApplication implements ApplicationRunner {
 			if (action != null) {
 				try {
 					action.validate(args);
+					if (settingsManagementService) {
+						settingsManagementService.turnOffNotifications('')
+					}
 					action.execute(args);
 				} catch (e) {
 					e.printStackTrace()
 					log.error(e)
 					System.exit(1);
+				} finally {
+					if (settingsManagementService) {
+						settingsManagementService.turnOnNotifications('')
+					}
 				}
 			} else {
 				log.error('No action related to command')

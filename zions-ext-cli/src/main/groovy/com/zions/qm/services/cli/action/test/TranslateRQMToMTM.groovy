@@ -279,7 +279,7 @@ class TranslateRQMToMTM implements CliAction {
 					items.each { testItem ->
 						def configuration = clmTestManagementService.getTestItem(testItem.id.text())
 						//int id = Integer.parseInt(configuration.webId.text())
-						def id = "${configuration.name.text()}-Configuration"
+						def id = "${configuration.name.text()}"
 						//					String resultsxml = XmlUtil.serialize(configuration)
 						//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/configurationT.xml")
 						//					def os = resultFile.newDataOutputStream()

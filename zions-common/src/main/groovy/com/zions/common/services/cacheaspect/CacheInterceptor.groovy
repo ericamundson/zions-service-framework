@@ -3,6 +3,13 @@ package com.zions.common.services.cacheaspect
 import com.zions.common.services.cache.ICacheManagementService
 import org.springframework.beans.factory.annotation.Autowired
 
+/**
+ * This trait can be added to any class anonymous or not to enable ability to surround a method call with ability 
+ * to cache return of method with any given ID and Timestamp.
+ * 
+ * @author z091182
+ *
+ */
 trait CacheInterceptor implements Interceptor {
 	
 	
@@ -23,6 +30,17 @@ trait CacheInterceptor implements Interceptor {
 	
 	boolean ignore
 	
+	/**
+	 * This call sets up the ability to cache any specified object (obj) with the ability to cache return.
+	 * 
+	 * @param obj - object to enable caching.
+	 * @param id - ID of object to cache
+	 * @param timestamp - Timestamp to check stale cache
+	 * @param managedType - Must inherit from CacheWData abstract methods must serialize method returns.
+	 * @param methods - method filter.
+	 * @param ignore - turn off and on capability
+	 * @param closure - closure to encapsulate calls to cache.
+	 */
 	void provideCaching(def obj, String id, Date timestamp, Class managedType, List<String> methods= null, boolean ignore = false, Closure closure) {
 		this.id = id
 		eType = managedType.simpleName
