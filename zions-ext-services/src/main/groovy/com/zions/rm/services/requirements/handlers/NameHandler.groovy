@@ -14,9 +14,16 @@ class NameHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		String outVal = "${value}"
-		if (value.length() > SIZE) {
-			outVal = value.substring(0, SIZE-1)
+		String outVal = null
+		if (value != null && value != '') {
+			outVal = "${value}"
+		}
+		else {
+			outVal = '<blank title>'
+		}
+		// Truncate if too long
+		if (outVal.length() > SIZE) {
+			outVal = outVal.substring(0, SIZE-1)
 		}
 		return outVal;
 	}

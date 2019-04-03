@@ -14,7 +14,6 @@ class ClmModuleElement extends ClmArtifact {
 		isHeading = (in_isHeading == "true")
 		isDeleted = false
 		isDuplicate = false  // Assume false until checkDuplicate has been run
-
 	}
 
 	public incrementDepth(def incr) {

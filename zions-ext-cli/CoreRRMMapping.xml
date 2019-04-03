@@ -655,7 +655,7 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
-	<wit source="Subtopic" target="Feature Requirement" translateUnmappedFields="false">
+	<wit source="Subtopic" target="RM Feature" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>

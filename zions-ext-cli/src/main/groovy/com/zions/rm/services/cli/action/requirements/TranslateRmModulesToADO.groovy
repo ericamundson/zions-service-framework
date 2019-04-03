@@ -212,14 +212,25 @@ class TranslateRmModulesToADO implements CliAction {
 		def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
 		def changeList = []
 		def idMap = [:]
+		int iModule = 1
 		int count = 0
 		modules.each { module ->
-			log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} (${count + 1} of ${modules.size()}) ...")
+			log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} (${iModule++} of ${modules.size()}) ...")
+			module.checkForDuplicates()
 			// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
 			def errCount = 0
 			module.orderedArtifacts.each { artifact ->
-				if (artifact.getIsHeading() && artifact.getArtifactType() != 'Heading' ) {
-					log.info("*** ERROR: Artifact #${artifact.getID()} has inconsistent row type in module ${module.getTitle()}")
+				if ((artifact.getIsHeading() && artifact.getArtifactType() != 'Heading') ||
+					(!artifact.getIsHeading() && artifact.getArtifactType() == 'Heading') ) {
+					log.error("*** ERROR: Artifact #${artifact.getID()} has inconsistent heading row type in module ${module.getTitle()}")
+					errCount++
+				}
+				else if (artifact.getIsHeading() && (artifact.hasEmbeddedImage() || artifact.getFormat() == 'WrapperResource')) {
+					log.error("*** ERROR: Artifact #${artifact.getID()} is heading with image or attachment in module ${module.getTitle()}")
+					errCount++
+				} 
+				else if (artifact.getIsDuplicate()) {
+					log.error("*** ERROR: Artifact #${artifact.getID()} is a duplicate instance in module ${module.getTitle()}.  This is not yet supported in ADO.")
 					errCount++
 				}
 			}
@@ -252,13 +263,13 @@ class TranslateRmModulesToADO implements CliAction {
 					return  // Skip Heading artifact 
 				}
 				else if (module.orderedArtifacts[it].getIsHeading()) {
-					module.orderedArtifacts[it].setDescription("") // If simple heading, remove duplicate description
+					module.orderedArtifacts[it].setDescription('') // If simple heading, remove duplicate description
 				}
 				else if (it > 0 && module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[it-1].getDepth()){ 
 					// For all other content, increment the depth if not already incremented so as to preserve outline numbering from DOORS
 					module.orderedArtifacts[it].incrementDepth(1)
 				}
-				if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
+				if (!module.orderedArtifacts[it].getIsDuplicate()) {  // Only store first occurrence of an artifact in the module
 					module.orderedArtifacts[it].setWhereUsed(whereUsed)
 					changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
 					aid = module.orderedArtifacts[it].getCacheID()
@@ -348,7 +359,8 @@ class TranslateRmModulesToADO implements CliAction {
 		}
 		else if ((moduleType == 'UI Spec') &&
 			   (artifactType == 'Supporting Material' ||
-				artifactType == 'Screen Change' ))	{
+				artifactType == 'Screen Change' ||
+				artifactType == 'User Interface Flow'))	{
 			shouldMerge = true 
 		}
 		return shouldMerge
