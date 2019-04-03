@@ -1,11 +1,16 @@
 package com.zions.rm.services.requirements
 
 
+//import com.ibm.team.workitem.common.model.IWorkItem
+import com.zions.common.services.cacheaspect.Cache
+import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.rest.IGenericRestClient
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+
+import groovy.util.logging.Slf4j
 import groovy.util.slurpersupport.NodeChild
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
@@ -41,7 +46,7 @@ import org.apache.commons.io.IOUtils
  *
  */
 
-
+@Slf4j
 @Component
 class ClmRequirementsManagementService {
 	@Autowired
@@ -87,6 +92,7 @@ class ClmRequirementsManagementService {
 				if (iName == "collaboration" ) {
 					// Set artifact type and attributes
 					moduleType = parseCollaborationAttributes(child, moduleAttributeMap )
+
 				}
 				else if (iName == "moduleContext") {
 					def kk = 0
@@ -214,10 +220,11 @@ class ClmRequirementsManagementService {
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
 				headers: [Accept: 'application/xml'] );
-					
+		//log.print(XmlUtil.serialize(result))
 		// Extract artifact attributes
 		result.children().each { artifactNode ->
 			parseTopLevelAttributes(artifactNode, in_artifact)
+			parseLinksFromArtifactNode(artifactNode, in_artifact)
 			artifactNode.children().each { child ->
 				String iName = child.name()
 				if (iName == "collaboration" ) {
@@ -327,6 +334,13 @@ class ClmRequirementsManagementService {
 		}
 	}
 	
+	private void parseLinksFromArtifactNode(def artifactNode, def in_artifact) {
+		String modified = artifactNode.collaboration.modified
+		String identifier = artifactNode.identifier
+		Date modifiedDate = Date.parse("yyyy-MM-dd'T'hh:mm:ss",modified)
+		in_artifact.setLinks(getAllLinks(identifier, modifiedDate, artifactNode))
+	}
+	
 	private void parseTopLevelAttributes(def artifactNode, def in_artifact) {
 		String title = "${artifactNode.title}"
 		if (title == '') {
@@ -347,6 +361,8 @@ class ClmRequirementsManagementService {
 				in_artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}","${core}")
 			}
 		}
+		
+		
 	}
 	
 	private String parseCollaborationAttributes(NodeChild in_rootCollaborationNode, Map out_attributeMap ) {
@@ -430,6 +446,45 @@ class ClmRequirementsManagementService {
 			contentType: ContentType.BINARY
 			);
 		return result
+
+	}
+	
+	//what we need: artifact id and type, then the link set to look through and get all links
+	//if how we get the type varies we can pass that in from the parent I suppose
+	//if we use datemodified as a parameter as well we can use that to set the cache date
+	@Cache(elementType = LinkInfo)
+	public List<LinkInfo> getAllLinks(String id, Date timeStamp, def artifactNode) {
+		List<LinkInfo> links = new ArrayList<LinkInfo>()
+//		String modified = rmItemData.Requirement.modified
+//		String identifier = rmItemData.Requirement.identifier
+		artifactNode.traceability.links.children().each { link ->
+			//String itemIdCurrent = child.name()
+			String rid = link.identifier //if the target is QM this will be a guid
+			String key = link.title //if we just want the string type of link it's .title, uri to type is .linkType
+			String module = link.relation.text().split('/')[3]
+			if (module == 'qm') {
+				rid = link.alternative
+			}
+			def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'RM', moduleRelated: module)
+			links.add(info)
+		}
+		return links
+		
+//		linkMapping.each { key, linkMap ->
+//			String linkType = ReferenceUtil.getReferenceType(key);
+//			String module = 'CCM'
+//			if ("${linkMap.@module}".length() > 0) {
+//				module = "${linkMap.@module}"
+//			}
+//			String ids = workitemAttributeManager.getStringRepresentation(workItem, workItem.getProjectArea(), "${key}")
+//			String[] idList = ids.split(',')
+//			idList.each { String rid ->
+//				if (rid && rid.length() > 0) {
+//					def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'CCM', moduleRelated: module)
+//					links.add(info)
+//				}
+//			}
+//
 
 	}
 }

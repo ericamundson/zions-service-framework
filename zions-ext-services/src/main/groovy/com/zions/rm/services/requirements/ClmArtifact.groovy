@@ -49,6 +49,9 @@ class ClmArtifact {
 	public String getDescription() {
 		return attributeMap.'Primary Text'
 	}
+	public void setLinks(def linklist) {
+		links = linklist
+	}
 	public void setWhereUsed(def lookup) {
 		def whereUsedHtml = null
 		def usedReferences = lookup.'**'.findAll { p ->
