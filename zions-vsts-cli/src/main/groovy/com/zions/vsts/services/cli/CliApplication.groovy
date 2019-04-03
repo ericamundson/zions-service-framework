@@ -1,6 +1,7 @@
 package com.zions.vsts.services.cli;
 
 import com.zions.common.services.cli.action.CliAction
+import com.zions.vsts.services.settings.SettingsManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 
 import groovy.util.logging.Slf4j
@@ -23,6 +24,10 @@ public class CliApplication implements ApplicationRunner {
 	@Autowired
 	private Map<String, CliAction> actionsMap;
 	
+	@Autowired(required=false)
+	SettingsManagementService settingsManagementService
+
+	
 	static public void main(String[] args) {
 		SpringApplication app = new SpringApplication(CliApplication.class);
 		app.setBannerMode(Banner.Mode.OFF);
@@ -38,11 +43,18 @@ public class CliApplication implements ApplicationRunner {
 			if (action != null) {
 				try {
 					action.validate(args);
+					if (settingsManagementService) {
+						settingsManagementService.turnOffNotifications('')
+					}
 					action.execute(args);
 				} catch (e) {
 					e.printStackTrace()
 					log.error(e)
 					System.exit(1);
+				} finally {
+					if (settingsManagementService) {
+						settingsManagementService.turnOnNotifications('')
+					}
 				}
 			} else {
 				log.error('No action related to command')

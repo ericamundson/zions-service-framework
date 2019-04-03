@@ -26,7 +26,9 @@ public class AttachmentsManagementService {
 	
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
-	
+	@Value('${cache.module:CCM}')
+	String cacheModule
+
 	String cacheLocation
 	
 	/**
@@ -59,8 +61,8 @@ public class AttachmentsManagementService {
 			IAttachment attachment = (IAttachment) auditableClient.resolveAuditable((IAttachmentHandle) attachHandle,
 				IAttachment.DEFAULT_PROFILE, null);
 			def file = saveAttachment(attachment, id);
-			def item = [file: file, comment: "Added attachment ${file.name}"]
 			if (file != null) {
+				def item = [file: file, comment: "Added attachment ${file.name}"]
 				files.add(item)
 			}
 		}	
@@ -74,16 +76,20 @@ public class AttachmentsManagementService {
 			if (!cacheDir.exists()) {
 				cacheDir.mkdir();
 			}
-			
-			File wiDir = new File("${this.cacheLocation}${File.separator}${id}")
+			File mDir = new File("${this.cacheLocation}${File.separator}${cacheModule}")
+			if (!mDir.exists()) {
+				mDir.mkdir()
+			}
+
+			File wiDir = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}")
 			if (!wiDir.exists()) {
 				wiDir.mkdir()
 			}
-			File attachmentDir = new File("${this.cacheLocation}${File.separator}${id}${File.separator}attachments")
+			File attachmentDir = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}attachments")
 			if (!attachmentDir.exists()) {
 				attachmentDir.mkdir()
 			}
-			File save = new File("${this.cacheLocation}${File.separator}${id}${File.separator}attachments${File.separator}${attachment.getName()}");
+			File save = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}attachments${File.separator}${attachment.getName()}");
 			
 			OutputStream out = save.newDataOutputStream()
 			try {

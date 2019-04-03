@@ -51,6 +51,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	@Override
 	def setProxy() {
 		String proxyHost = System.getProperty("proxy.Host")
+		if (proxyHost == null) {
+			loadFromEnv()
+			proxyHost = System.getProperty("proxy.Host")
+		}
 		if (proxyHost != null) {
 			String proxyPort = System.getProperty("proxy.Port")
 			String proxyUser = System.getProperty("proxy.User")
@@ -63,6 +67,17 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			delegate.setProxy(proxyHost, Integer.parseInt(proxyPort), 'http')
 			
 		}
+	}
+	
+	def loadFromEnv() {
+		String host = System.getenv('proxy.Host')
+		if (host) { System.setProperty('proxy.Host', host) }
+		String port = System.getenv('proxy.Port')
+		if (port) { System.setProperty('proxy.Port', port) }
+		String user = System.getenv('proxy.User')
+		if (user) { System.setProperty('proxy.User', user) }
+		String password = System.getenv('proxy.Password')
+		if (password) { System.setProperty('proxy.Password', password) }
 	}
 	
 	

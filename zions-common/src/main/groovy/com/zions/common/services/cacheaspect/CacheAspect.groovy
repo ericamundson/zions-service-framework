@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component
 class CacheAspect {
 	
 	public CacheAspect() {
-		println 'Cache aspect running'
+		//println 'Cache aspect running'
 	}
 	
 	@Autowired
