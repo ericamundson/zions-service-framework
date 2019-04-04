@@ -79,16 +79,21 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		}
 		
 		// Next process all tables, adding border info to <td> tags
+		addBorderStyle('th', htmlData)
+		addBorderStyle('td', htmlData)
+
+		return htmlData
+
+	}
+	
+	def addBorderStyle(String tag, def htmlData) {
 		def tds = htmlData.'**'.findAll { p ->
-			"${p.name()}" == 'td'
+			"${p.name()}" == "${tag}"
 		}
 		tds.each { td ->
 			String style = td.@style
 			td.@style = style + ';border:1px solid black'
-		}
-		
-		return htmlData
-
+		}		
 	}
 
 }

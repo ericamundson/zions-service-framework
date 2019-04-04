@@ -45,7 +45,7 @@ class ClmArtifact {
 	}
 	public void setDescription(String in_desc) {
 		// If this is a Heading, use Primary Text for the Title (this is a weird thing modules do)
-		if (this.isHeading && in_desc != '') {
+		if (this.getArtifactType() == 'Heading' && in_desc != '') {
 			this.setTitle(stripTags(in_desc))
 		}
 		
@@ -55,20 +55,6 @@ class ClmArtifact {
 	}
 	public String getDescription() {
 		return attributeMap.'Primary Text'
-	}
-	public void setWhereUsed(def lookup) {
-		def whereUsedHtml = null
-		def usedReferences = lookup.'**'.findAll { p ->
-			"${p.name()}" == 'REFERENCE_ID' && "${p}" == this.getID()
-		}
-		if (usedReferences.size() > 0) {
-			whereUsedHtml = '<div>'
-			usedReferences.each { ref ->
-				whereUsedHtml = whereUsedHtml + "<a href=${ref.parent().URL2}>${ref.parent().MODULE_NAME}</a><br>"
-			}
-			whereUsedHtml = whereUsedHtml + '</div>'
-		}
-		attributeMap.'Where Used' = whereUsedHtml
 	}
 	public String getWhereUsed() {
 		return attributeMap.'Where Used'

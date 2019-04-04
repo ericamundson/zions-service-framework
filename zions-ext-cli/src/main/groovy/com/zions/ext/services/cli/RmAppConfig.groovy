@@ -22,7 +22,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("rm")
-@ComponentScan(["com.zions.rm.services","com.zions.vsts.services","com.zions.ext.services", "com.zions.common.services.cacheaspect"])
+@ComponentScan(["com.zions.rm.services","com.zions.vsts.services","com.zions.ext.services", "com.zions.common.services.restart", "com.zions.common.services.cacheaspect"])
 public class RmAppConfig {
 	@Autowired
 	@Value('${clm.url}') 

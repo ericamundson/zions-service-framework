@@ -199,14 +199,11 @@ class TranslateRmModulesToADO implements CliAction {
 		log.info('Getting ADO Project Members...')
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 		log.info("Querying for Where Used Lookup ...")
-		def whereUsed = clmRequirementsManagementService.queryForWhereUsed()
-		if (whereUsed == null) {
-			whereUsed = [:]
-			log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
-			return
+		if (clmRequirementsManagementService.queryForWhereUsed()) {
+			log.info("'where used' records were retrieved")
 		}
 		else {
-			log.info("${whereUsed.children().size()} 'where used' records were retrieved")
+			log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
 		}
 		log.info("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
 		def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
@@ -270,7 +267,6 @@ class TranslateRmModulesToADO implements CliAction {
 					module.orderedArtifacts[it].incrementDepth(1)
 				}
 				if (!module.orderedArtifacts[it].getIsDuplicate()) {  // Only store first occurrence of an artifact in the module
-					module.orderedArtifacts[it].setWhereUsed(whereUsed)
 					changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
 					aid = module.orderedArtifacts[it].getCacheID()
 					changes.each { key, val ->

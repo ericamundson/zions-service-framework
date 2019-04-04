@@ -1,6 +1,8 @@
 package com.zions.rm.services.requirements
 
 
+import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.rest.IGenericRestClient
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -57,6 +59,9 @@ class ClmRequirementsManagementService {
 	
 	@Autowired
 	IGenericRestClient rmBGenericRestClient
+	
+	@Autowired(required=true)
+	ICacheManagementService cacheManagementService
 	
 	def queryForModules(String projectURI, String query) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?" + query;
@@ -147,6 +152,7 @@ class ClmRequirementsManagementService {
 		}
 	}
 	
+	
 	def queryForFolders(String folderURI) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/folders?oslc.where=public_rm:parent=" + folderURI
 		uri = uri.replace('<','%3C').replace('>', '%3E')
@@ -177,17 +183,34 @@ class ClmRequirementsManagementService {
 			return null;
 		}
 	}
-
+	
 	def queryForWhereUsed() {
 		String uri = this.rmBGenericRestClient.clmUrl + "/rs/query/11126/dataservice?report=11099&limit=-1&basicAuthenticationEnabled=true"
-		def result = rmBGenericRestClient.get(
+		def results = rmBGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/rdf+xml'] );
-		return result;
+		if (results != null) {
+			def prevID = null
+			def linkInfoList = []
+			results.children().each { p ->
+				def id = "${p.REFERENCE_ID}"
+				if (prevID != null && id != prevID) { // Save whereUsed for this id
+					cacheManagementService.saveToCache(linkInfoList, id, 'whereUsedData')
+					linkInfoList.clear()
+				}
+				linkInfoList.add(new LinkInfo(type: "${p.MODULE_NAME}", itemIdCurrent: id, itemIdRelated: "${p.URL2}", moduleCurrent: 'RM', moduleRelated: 'RM'))
+				
+				prevID = id
+			}
+			return true
+		}
+		else {
+			return false
+		}
 	}
 	
 	boolean shouldAddCollectionsToModule(String moduleType) {
-		return (moduleType == 'UI Spec')
+		return (moduleType == 'UI Spec' || moduleType == 'Functional Spec')
 	}
 	
 	def getMemberEmail(String url) {
@@ -209,7 +232,7 @@ class ClmRequirementsManagementService {
 		return emailAddress
 	}
 	
-	def getTextArtifact(def in_artifact, boolean includeCollections = false) {
+	def getTextArtifact(def in_artifact, boolean includeCollections) {
 		
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
@@ -237,13 +260,15 @@ class ClmRequirementsManagementService {
 						def collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent')
 						if (collectionIndex > -1) { // Embedded Collection, parse all member hrefs for that collection
 							memberHrefs = parseCollectionHrefs(richTextBody)
+							in_artifact.setDescription('') // Remove description, since it is now redundant
 						}
 						
-						// Check to see if this artifact has an embedded collection in "minimized" mode					
+						// Check to see if this artifact has an embedded collection in "minimized" mode
 						collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimised')
 						if (collectionIndex > -1) { // Minimized Collection, get href for the collection artifact
 							String hrefCollection = parseHref(primaryTextString.substring(collectionIndex))
 							memberHrefs = getCollectionMemberHrefs(hrefCollection)
+
 						}
 						
 						// If there are collection members to be retrieved, then retrieve them
@@ -258,6 +283,7 @@ class ClmRequirementsManagementService {
 		return in_artifact
 
 	}
+
 	private String parseHref(String inString) {
 		def hrefIndex = inString.indexOf('href=')
 		String href = inString.substring(hrefIndex + 6)
@@ -292,7 +318,7 @@ class ClmRequirementsManagementService {
 					in_artifact.setArtifactType(artifactType)
 				}
 				else if (iName == "wrappedResourceURI") {
-					// Set primary text 
+					// Set primary text
 					String primaryText = "<div>Uploaded Attachment</div>"
 					in_artifact.setDescription(primaryText)
 					String hRef = "${child}"
@@ -304,26 +330,26 @@ class ClmRequirementsManagementService {
 		return in_artifact
 
 	}
-	private void getCollectionMemberHrefs(String collectionHref) {
+	private def getCollectionMemberHrefs(String collectionHref) {
 		def result = rmGenericRestClient.get(
 				uri: collectionHref.replace("resources/", "publish/collections?resourceURI="),
 				headers: [Accept: 'application/xml'] );
 		
 		def memberHrefs = []
 		def links = result.'**'.findAll { p ->
-			"${p.name()}" == 'relation' //&& "${p.parent.name}" == 'Link'
+			"${p.name()}" == 'Link' && "${p.@type}" == 'Link' && p.title == 'Unknown Link Type'
 		}
 		links.each { link ->
-			memberHrefs.add("${link}")
+			memberHrefs.add("${link.relation}")
 		}
 		
-		return
+		return memberHrefs
 	}
 	private def getCollectionArtifacts(def in_artifact, def memberHrefs) {
-		memberHrefs.each { memberHref -> 
+		memberHrefs.each { memberHref ->
 			def artifact = new ClmModuleElement(null,in_artifact.getDepth(),null,'false',memberHref)
 
-			in_artifact.collectionArtifacts << getTextArtifact(artifact)
+			in_artifact.collectionArtifacts << getTextArtifact(artifact,false)
 		}
 	}
 	
@@ -342,8 +368,8 @@ class ClmRequirementsManagementService {
 			if (core == null || core == '') {
 				in_artifact.setBaseArtifactURI(in_artifact.getAbout())
 			}
-			else { 
-				// then this is a module element and we need to set the base 
+			else {
+				// then this is a module element and we need to set the base
 				in_artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}","${core}")
 			}
 		}
@@ -432,4 +458,8 @@ class ClmRequirementsManagementService {
 		return result
 
 	}
+	
+	
+	
+	
 }

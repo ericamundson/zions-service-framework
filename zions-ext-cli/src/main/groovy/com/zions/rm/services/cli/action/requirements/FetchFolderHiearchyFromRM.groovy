@@ -181,7 +181,7 @@ class FetchFolderHiearchyFromRM implements CliAction {
 		String about = "${rmItemData.Requirement.@'rdf:about'}"
 		ClmArtifact artifact = new ClmArtifact('', format, about)
 		if (format == 'Text') {
-			clmRequirementsManagementService.getTextArtifact(artifact)
+			clmRequirementsManagementService.getTextArtifact(artifact,false)
 		}
 		else if (format == 'WrapperResource'){
 			clmRequirementsManagementService.getNonTextArtifact(artifact)
