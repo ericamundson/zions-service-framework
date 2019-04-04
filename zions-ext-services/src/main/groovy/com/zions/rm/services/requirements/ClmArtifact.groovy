@@ -56,6 +56,9 @@ class ClmArtifact {
 	public String getDescription() {
 		return attributeMap.'Primary Text'
 	}
+	public void setLinks(def linklist) {
+		links = linklist
+	}
 	public String getWhereUsed() {
 		return attributeMap.'Where Used'
 	}
