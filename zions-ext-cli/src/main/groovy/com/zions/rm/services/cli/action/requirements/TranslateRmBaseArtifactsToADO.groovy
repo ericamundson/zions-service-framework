@@ -5,11 +5,16 @@ import java.util.Map
 import org.apache.ivy.core.module.descriptor.ModuleDescriptor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
+import com.zions.clm.services.rtc.project.workitems.QueryTracking
 import org.springframework.stereotype.Component
 import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
+import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
+import com.zions.common.services.restart.Checkpoint
+import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.common.services.restart.IRestartManagementService
 import com.zions.qm.services.metadata.QmMetadataManagementService
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
@@ -17,6 +22,7 @@ import com.zions.rm.services.requirements.ClmRequirementsItemManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
+import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
@@ -152,6 +158,10 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	ClmRequirementsFileManagementService rmFileManagementService
 	@Autowired
 	IRestartManagementService restartManagementService
+	@Autowired(required=false)
+	ICheckpointManagementService checkpointManagementService
+	@Autowired(required=false)
+	ICacheManagementService cacheManagementService
 	
 	public TranslateRmBaseArtifactsToADO() {
 	}
@@ -187,8 +197,8 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		def mapping = new XmlSlurper().parseText(mFile.text)
 		if (includes['clean'] != null) {
 		}
-		//refresh.
-		if (includes['refresh'] != null) {
+		//legacy stuff.
+		if (includes['deprecated'] != null) {
 			// Get field mappings, target members map and RM artifacts to translate to ADO
 			log.info('Getting Mapping Data...')
 			def mappingData = rmMappingManagementService.mappingData
@@ -277,6 +287,38 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				
 			log.info("Processing completed")
 		}
+		// Refresh cached list of CLM artifacts to migrate to ADO
+		if (includes['refresh'] != null) {
+			log.info("Refreshing cache.")
+			Checkpoint cp = cacheManagementService.getFromCache('query', 'QueryStart')
+			int page=0
+			Date currentTimestamp = new Date()
+			if (cp) {
+				currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.getTimeStamp())
+				
+			}
+			String pageId = "${page}"
+			def artifacts
+			new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, QueryTracking) {
+				artifacts = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
+			}
+			while (true) {
+				def changeList = []
+//				def filtered = filtered(workItems, wiFilter)
+				artifacts.Description.children().each { itemData ->
+					int id = Integer.parseInt("${itemData.Requirement.identifier}")
+					changeList.add(id)
+				}
+				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
+				String nextUrl = "${artifacts.ResponseInfo.nextPage.@'rdf:resource'}"
+				if (nextUrl == '') break
+				page++
+				pageId = "${page}"
+				new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, QueryTracking) {
+					artifacts = clmRequirementsManagementService.nextPage(nextUrl)
+				}
+			}
+		}
 		if (includes['phases'] != null) {
 			
 			restartManagementService.processPhases { phase, items ->
@@ -289,10 +331,33 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					}
 				}
 
-				if (phase == 'query_artifacts') {
-				}
-
 				if (phase == 'process_artifacts') {
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+					clmRequirementsItemManagementService.resetNewId()
+					items.each { rmItem ->
+						String sid = "${rmItem.Requirement.identifier}"
+						int id = Integer.parseInt(sid)
+						String formatString = rmItem.Requirement.ArtifactFormat.@'rdf:resource'
+						String format = formatString.substring(formatString.lastIndexOf('#') + 1)
+						String about = "${rmItem.Requirement.@'rdf:about'}"
+						ClmArtifact artifact = new ClmArtifact('', format, about)
+						if (format == 'Text') {
+							clmRequirementsManagementService.getTextArtifact(artifact,false)
+						}
+						else if (format == 'WrapperResource'){
+							clmRequirementsManagementService.getNonTextArtifact(artifact)
+						}
+						else {
+							log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
+						}
+						//new FlowInterceptor() {}.flowLogging(clManager) {
+							def wiChanges = clmRequirementsItemManagementService.getChanges(project, artifact, memberMap)
+							if (wiChanges != null) {
+								clManager.add("${id}", wiChanges)
+							}
+						//}
+					}
+					clManager.flush();
 				}
 			}
 		}
