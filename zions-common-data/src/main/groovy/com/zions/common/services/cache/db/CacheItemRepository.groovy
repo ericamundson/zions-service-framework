@@ -18,9 +18,11 @@ interface CacheItemRepository extends MongoRepository<CacheItem, String> {
 	@Query("{ 'project': ?0, 'module': ?1, 'type': ?2}")
 	List<CacheItem> findByProjectAndModuleAndType(String project, String module, String type);
 
-	List<CacheItem> deleteByProject(String project);
+	List<CacheItem> deleteByProjectAndModule(String project, String module);
 	
 	List<CacheItem> deleteByProjectAndModuleAndKey(String project, String module, String key);
 	
-	Long deleteCacheItemByProject(String project);
+	Long deleteCacheItemByProjectAndModule(String project, String module);
+	
+	Long deleteCacheItemByProjectAndModuleAndType(String project, String module, String type);
 }

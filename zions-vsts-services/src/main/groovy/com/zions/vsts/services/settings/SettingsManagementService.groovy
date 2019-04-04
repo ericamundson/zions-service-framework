@@ -14,6 +14,8 @@ class SettingsManagementService {
 
 	
 	def turnOffNotifications(collection) {
+		String url = "${genericRestClient.getTfsUrl()}"
+		if (!url.toLowerCase().endsWith('zionseto')) return
 		def req = [defaultGroupDeliveryPreference:-1]
 		String body = new JsonBuilder(req).toPrettyString()
 		def result = genericRestClient.patch(
@@ -29,6 +31,8 @@ class SettingsManagementService {
 	}
 	
 	def turnOnNotifications(collection) {
+		String url = "${genericRestClient.getTfsUrl()}"
+		if (!url.toLowerCase().endsWith('zionseto')) return
 		def req = [defaultGroupDeliveryPreference:2]
 		String body = new JsonBuilder(req).toPrettyString()
 		def result = genericRestClient.patch(

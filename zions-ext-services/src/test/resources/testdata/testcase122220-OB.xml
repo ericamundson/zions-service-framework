@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:122220</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:122220?stylesheet=true"/>
+  <ns2:webId>122220</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">FS-TD-004/CR_29444/Verify that on Rate-(Special Rate) screen should have the following fields.</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">On Rate-(Special Rate)Screen must have the following fields on the screen with the mentioned validation;
+Effective Interest Rate: Read only
+Product Rate: Read only.
+Tier Type : This will be a read only field which will display the tier type applicable for the account, viz., Amount Tier, Term Tier or Amount/Term Tier
+Rate Type: This will be a read only field which will display the value of the field in the account viz., Fixed or Variable.
+Rate Change Type: This value captured in this field will be either Fixed or a Variance, which defines the rate keyed in the next field New Rate/Variance is a set-rate on the account or a variance over the product rate.
+Rollover Flag:  This is an existing field which allows the user to define whether the changed rate at the account level will be taken forward on renewal or the interest rate is picked up from the product again on renewal.
+New Rate/Variance:  This field can be updated by the user with a set rate or a variance over the product rate.
+APY : This field displays the new APY based on the account level rate changes as above.
+Effective Date:  This field defines the date on which the changes made will be effective and will be either the current system date or a date in the future.
+
+
+Success Criteria :Rate-(Special Rate )Screen should have the above mentioned fields with the mentioned field validation.</ns3:description>
+  <ns2:creationDate>2018-05-16T09:38:18.377Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2018-05-16T09:51:02.498Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.underreview">com.ibm.rqm.planning.common.underreview</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v071727">v071727</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v071727">v071727</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.101">literal.priority.101</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Test Team" value="BaNCS Product: Test"/>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Workstream" value="Deposits: TD"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="Run Calendar" value="Day Mode - Fast"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Execution Planning" value="No Assigned Status"/>
+  <ns2:category term="Compliance Related" value="N/A"/>
+  <ns2:category term="Automation Status" value="No"/>
+  <ns2:category term="Test Type" value="Functional Test"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>3</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:92249"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:relatedChangeRequest summary="29444: FS-TD-004-Interest Setup - NBC to NBL UI Rework Changes" rel="trackedBy" href="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/29444"/>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:p dir="ltr">Pre-Condition :</tag0:p>
+      <tag0:p dir="ltr">User :Authorized User</tag0:p>
+      <tag0:p dir="ltr">Product :TD/CD</tag0:p>
+      <tag0:p dir="ltr">Account :TD/CD</tag0:p>
+      <tag0:p dir="ltr">Screen : Rate-Special Rate screen(Change Rate screen)</tag0:p>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition extensionDisplayName="RQM-KEY-TC-POST-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:p dir="ltr">Post Condition:NA</tag0:p>
+      <tag0:p dir="ltr">Data Clean Up Step.</tag0:p>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition>
+</ns2:testcase>

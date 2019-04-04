@@ -42,9 +42,9 @@ class ImportWIT implements CliAction {
 		log.info('Processing ${wits.size()} WIT import files...')
 		processTemplateService.ensureWITChanges(collection, project, wits, true)
 
-		this.flowLogging([processTemplateService], true, true) {  // Setup flow logging on any processTemplateService call
-			processTemplateService.ensureWITChanges(collection, project, wits, true)
-		}
+		//this.flowLogging([processTemplateService], true, true) {  // Setup flow logging on any processTemplateService call
+		//	processTemplateService.ensureWITChanges(collection, project, wits, true)
+		//}
 		log.info('WIT Import Completed!')		
 
 		return null;

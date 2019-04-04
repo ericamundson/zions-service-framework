@@ -37,7 +37,7 @@ class PerformRollup implements CliAction {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		//String query = "Select [System.Id] From WorkItems Where [System.WorkItemType] = 'Feature'"
-		settingsManagementService.turnOffNotifications(collection)
+		//settingsManagementService.turnOffNotifications(collection)
 		def projects = projectManagementService.getProjects(collection)
 		projects.value.each { project ->
 			String query = "Select [System.Id] From WorkItems Where [System.TeamProject] = '${project.name}' and [System.WorkItemType] = 'Feature'"
@@ -47,7 +47,7 @@ class PerformRollup implements CliAction {
 				rollupManagementService.rollup(id, false, project.name)
 			}
 		}
-		settingsManagementService.turnOnNotifications(collection)
+		//settingsManagementService.turnOnNotifications(collection)
 		return null
 	}
 

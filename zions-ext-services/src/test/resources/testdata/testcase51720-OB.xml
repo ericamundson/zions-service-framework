@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:51720</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:51720?stylesheet=true"/>
+  <ns2:webId>51720</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">FS-LON-035-ADD-596/2.8.26/Commercial Child Loan account validation/Creation of more than one commercial child loans under the same Master LOC</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">1) The system must NOT allow the creation of MORE THAN ONE TYPE of child account. 
+2) If the user has created a child loan and wants to create another type of child account like Rate Option or Construction Child or Commercial Child loan, then system must NOT allow it. 
+3)The system must ALLOW the creation of SAME TYPE of child loan account linked to the same Master Loan account</ns3:description>
+  <ns2:creationDate>2016-11-30T23:28:35.144Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2019-02-15T14:57:10.128Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v071072">v071072</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v071072">v071072</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.170">literal.priority.170</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Test Team" value="BaNCS Product: Test"/>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Workstream" value="Lending: Common"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="Run Calendar" value="Day Mode - Fast"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Compliance Related" value="N/A"/>
+  <ns2:category term="Automation Status" value="Automation Accepted"/>
+  <ns2:category term="Test Type" value="Regression Test"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>7</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:48412"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:relatedChangeRequest summary="66754: FS-LON-035-ADD-596: System showing error &quot;No message to display&quot; when changing combined billing flag from N to Y" rel="trackedBy" href="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/66754"/>
+  <ns2:relatedChangeRequest summary="66548: FS-LON-035-ADD-596: Payment start date coming different from master loan account after LOC payment instruction set up at both accounts" rel="trackedBy" href="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/66548"/>
+  <ns2:relatedChangeRequest summary="158737: TC # 51720: FS-LON-035-ADD-596/2.8.26: Need to change in Manual Script" rel="trackedBy" href="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/158737"/>
+  <ns2:customAttributes>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>_k4meUUSxEeiuULVYIY76YA</ns2:identifier>
+      <ns2:name>Test Case Group</ns2:name>
+      <ns2:value>FS-LON-035 Common Loan Fn - 2</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>_k5J38USxEeiuULVYIY76YA</ns2:identifier>
+      <ns2:name>TCG Category 1</ns2:name>
+      <ns2:value>Common Lending</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+    <ns2:customAttribute type="MEDIUM_STRING" required="false">
+      <ns2:identifier>Automated_TC_Name</ns2:identifier>
+      <ns2:name>Automated TC Name</ns2:name>
+      <ns2:value>ValidateMoreChildLoanUnderSameMasterLOCTest
+</ns2:value>
+      <ns2:description/>
+    </ns2:customAttribute>
+  </ns2:customAttributes>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">Commercial Master LOC and 1 Commercial Child loan already created </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition extensionDisplayName="RQM-KEY-TC-POST-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">N/A</tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition>
+</ns2:testcase>

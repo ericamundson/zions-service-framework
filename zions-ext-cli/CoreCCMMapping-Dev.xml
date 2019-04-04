@@ -19,7 +19,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\CBT"/>
+			<defaultvalue target="FutureCore\Work"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -30,19 +30,21 @@
 			<value source="Invalid" target="Removed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="WebCMS"/>
+			<defaultvalue target="FutureCore"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<value source="High" target="1"/>
-			<value source="Medium" target="2"/>
-			<value source="Low" target="3"/>
+			<defaultvalue target="2"/>
+			<value source="P1 - Show Stopper" target="1"/>
+			<value source="P2 - Must Have" target="1"/>
+			<value source="P3 - Should Have" target="2"/>
+			<value source="P4 - Could Have" target="3"/>
 			<value source="Unassigned" target="4"/>			
 		</field>
 		<field source="internalSeverity" target="Microsoft.VSTS.Common.Severity">
 			<defaultvalue target="Low"/>
-			<value source="Blocker" target="High"/>
-			<value source="Critical" target="High"/>
-			<value source="Major" target="Medium"/>
+			<value source="S1 - Blocker - Application Crashes, Loss of Data, or Data Corruption" target="High"/>
+			<value source="S2 - Critical - None or Unacceptable Workaround, Major Feature Failure" target="High"/>
+			<value source="	S3 - Major - Acceptable Workaround" target="Medium"/>
 		</field>
 		<!-- 
 		<field source="modifiedBy" target="System.ChangedBy"/>
@@ -103,7 +105,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\CBT"/>
+			<defaultvalue target="FutureCore\Work"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -114,12 +116,14 @@
 			<value source="Invalid" target="Removed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="WebCMS"/>
+			<defaultvalue target="FutureCore"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<value source="High" target="1"/>
-			<value source="Medium" target="2"/>
-			<value source="Low" target="3"/>
+			<defaultvalue target="2"/>
+			<value source="P1 - Show Stopper" target="1"/>
+			<value source="P2 - Must Have" target="1"/>
+			<value source="P3 - Should Have" target="2"/>
+			<value source="P4 - Could Have" target="3"/>
 			<value source="Unassigned" target="4"/>			
 		</field>
 		<field source="internalSeverity" target="Microsoft.VSTS.Common.Severity">
@@ -188,7 +192,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\CBT"/>
+			<defaultvalue target="FutureCore\Work"/>
 		</field>
 		<!--  
 New 	
@@ -221,19 +225,21 @@ Removed
 			<value source="Invalid" target="Removed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="WebCMS"/>
+			<defaultvalue target="FutureCore"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<value source="High" target="1"/>
-			<value source="Medium" target="2"/>
-			<value source="Low" target="3"/>
+			<defaultvalue target="2"/>
+			<value source="P1 - Show Stopper" target="1"/>
+			<value source="P2 - Must Have" target="1"/>
+			<value source="P3 - Should Have" target="2"/>
+			<value source="P4 - Could Have" target="3"/>
 			<value source="Unassigned" target="4"/>			
 		</field>
 		<field source="internalSeverity" target="Microsoft.VSTS.Common.Severity">
 			<defaultvalue target="Low"/>
-			<value source="Blocker" target="High"/>
-			<value source="Critical" target="High"/>
-			<value source="Major" target="Medium"/>
+			<value source="S1 - Blocker - Application Crashes, Loss of Data, or Data Corruption" target="High"/>
+			<value source="S2 - Critical - None or Unacceptable Workaround, Major Feature Failure" target="High"/>
+			<value source="	S3 - Major - Acceptable Workaround" target="Medium"/>
 		</field>
 		<!-- 
 		<field source="modifiedBy" target="System.ChangedBy"/>
@@ -294,7 +300,7 @@ Removed
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\CBT"/>
+			<defaultvalue target="FutureCore\Work"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -305,19 +311,21 @@ Removed
 			<value source="Invalid" target="Removed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="WebCMS"/>
+			<defaultvalue target="FutureCore"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<value source="High" target="1"/>
-			<value source="Medium" target="2"/>
-			<value source="Low" target="3"/>
+			<defaultvalue target="2"/>
+			<value source="P1 - Show Stopper" target="1"/>
+			<value source="P2 - Must Have" target="1"/>
+			<value source="P3 - Should Have" target="2"/>
+			<value source="P4 - Could Have" target="3"/>
 			<value source="Unassigned" target="4"/>			
 		</field>
 		<field source="internalSeverity" target="Microsoft.VSTS.Common.Severity">
 			<defaultvalue target="Low"/>
-			<value source="Blocker" target="High"/>
-			<value source="Critical" target="High"/>
-			<value source="Major" target="Medium"/>
+			<value source="S1 - Blocker - Application Crashes, Loss of Data, or Data Corruption" target="High"/>
+			<value source="S2 - Critical - None or Unacceptable Workaround, Major Feature Failure" target="High"/>
+			<value source="	S3 - Major - Acceptable Workaround" target="Medium"/>
 		</field>
 		<!-- 
 		<field source="modifiedBy" target="System.ChangedBy"/>
@@ -361,10 +369,10 @@ Removed
 		<newfields>
 		</newfields>
 	</wit>
-	<wit source="Defect"  target="Anomaly" translateUnmappedFields="false">
+	<wit source="Anomaly"  target="Anomaly" translateUnmappedFields="false">
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="blankHandler" target="Custom.Classification">
-			<defaultvalue target="Defect"/>
+			<defaultvalue target="Anomaly"/>
 		</field>
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
@@ -381,7 +389,7 @@ Removed
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="WebCMS\CBT"/>
+			<defaultvalue target="FutureCore\Work"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -392,19 +400,21 @@ Removed
 			<value source="Invalid" target="Removed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="WebCMS"/>
+			<defaultvalue target="FutureCore"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<value source="High" target="1"/>
-			<value source="Medium" target="2"/>
-			<value source="Low" target="3"/>
+			<defaultvalue target="2"/>
+			<value source="P1 - Show Stopper" target="1"/>
+			<value source="P2 - Must Have" target="1"/>
+			<value source="P3 - Should Have" target="2"/>
+			<value source="P4 - Could Have" target="3"/>
 			<value source="Unassigned" target="4"/>			
 		</field>
 		<field source="internalSeverity" target="Microsoft.VSTS.Common.Severity">
 			<defaultvalue target="Low"/>
-			<value source="Blocker" target="High"/>
-			<value source="Critical" target="High"/>
-			<value source="Major" target="Medium"/>
+			<value source="S1 - Blocker - Application Crashes, Loss of Data, or Data Corruption" target="High"/>
+			<value source="S2 - Critical - None or Unacceptable Workaround, Major Feature Failure" target="High"/>
+			<value source="	S3 - Major - Acceptable Workaround" target="Medium"/>
 		</field>
 		<!-- 
 		<field source="modifiedBy" target="System.ChangedBy"/>
@@ -457,5 +467,13 @@ Removed
 		<link source="mentions" target="System.LinkTypes.Related"/>
 		<link source="resolves" target="System.LinkTypes.Related"/>
 		<link source="related" target="System.LinkTypes.Related"/>
+		<link source="implements_requirement" target="System.LinkTypes.Related" module="RM"/>
+		<link source="affects_requirement" target="System.LinkTypes.Related" module="RM"/>
+		<link source="tracks_requirement" target="System.LinkTypes.Related" module="RM"/>
+		<link source="related_test_case" target="System.LinkTypes.Related" module="QM"/>
+		<link source="related_test_plan" target="System.LinkTypes.Related" module="QM"/>
+		<link source="tested_by_test_case" target="System.LinkTypes.Related" module="QM"/>
+		<link source="affects_execution_result" target="Hyperlink" module="QM"/>
+		<!--  <link source="related_execution_record" target="Hyperlink" module="QM"/> -->
 	</links>
 </witmapping>

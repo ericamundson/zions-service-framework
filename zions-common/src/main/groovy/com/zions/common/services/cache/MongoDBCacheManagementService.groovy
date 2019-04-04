@@ -113,7 +113,7 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	public void clear() {
 //		Criteria c = Criteria.where('project').is(dbProject)
 //		mongoTemplate.remove(new Query(c), CacheItem.class)
-		repository.deleteCacheItemByProject(dbProject)
+		repository.deleteCacheItemByProjectAndModule(dbProject, cacheModule)
 
 	}
 
@@ -139,6 +139,13 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 			wis[item.key] = wi
 		}
 		return wis;
+	}
+
+
+	@Override
+	public void deleteByType(String type) {
+		Long i = repository.deleteCacheItemByProjectAndModuleAndType(project, cacheModule, type)
+		
 	}
 
 

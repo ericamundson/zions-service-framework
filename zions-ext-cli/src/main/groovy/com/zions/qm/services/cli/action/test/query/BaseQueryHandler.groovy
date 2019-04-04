@@ -3,14 +3,22 @@ package com.zions.qm.services.cli.action.test.query
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.IQueryHandler
 import com.zions.qm.services.test.ClmTestManagementService
+import com.zions.qm.services.test.TestPlanQueryData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+
+import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cacheaspect.CacheInterceptor
+
 
 class BaseQueryHandler implements IQueryHandler {
 	
 	@Autowired
 	ClmTestManagementService clmTestManagementService
 	
+	@Autowired(required=false)
+	ICacheManagementService cacheManagementService
+
 	@Autowired
 	IGenericRestClient qmGenericRestClient
 
@@ -28,8 +36,21 @@ class BaseQueryHandler implements IQueryHandler {
 
 	def currentItems
 	
+	int page = 0
+	
+	Date currentTimestamp
+	
 	public def getItems() {
-		currentItems = clmTestManagementService.getTestPlansViaQuery(qmQuery, projectName)
+		def cp = cacheManagementService.getFromCache('query', 'QueryStart')
+		page=0
+		if (cp) {
+			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
+			
+		}
+		String pageId = "${page}"
+		new CacheInterceptor() {}.provideCaching(clmTestManagementService, pageId, currentTimestamp, TestPlanQueryData) {
+			currentItems = clmTestManagementService.getTestPlansViaQuery(qmQuery, projectName)
+		}
 		return currentItems
 	}
 
@@ -68,7 +89,11 @@ class BaseQueryHandler implements IQueryHandler {
 			node.name() == 'link' && node.@rel == 'next'
 		}
 		if (nextLink == null) return null
-		currentItems = clmTestManagementService.nextPage(nextLink.@href)
+		this.page++
+		String pageId = "${page}"
+		new CacheInterceptor() {}.provideCaching(clmTestManagementService, pageId, currentTimestamp, TestPlanQueryData) {
+			currentItems = clmTestManagementService.nextPage(nextLink.@href)
+		}
 		return currentItems
 	}
 

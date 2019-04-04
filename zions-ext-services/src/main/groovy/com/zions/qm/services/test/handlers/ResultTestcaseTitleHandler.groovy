@@ -19,7 +19,7 @@ class ResultTestcaseTitleHandler extends QmBaseAttributeHandler {
 		def outVal = null
 		def itemData = data.itemData
 		String title = "${itemData.title.text()}"
-		return outVal;
+		return title;
 	}
 
 }

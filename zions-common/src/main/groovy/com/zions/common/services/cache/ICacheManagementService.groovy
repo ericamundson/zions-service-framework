@@ -58,6 +58,8 @@ interface ICacheManagementService {
 	void clear();
 	
 	void deleteById(String id);
+	
+	void deleteByType(String type);
 	/**
 	 * Check to see if element exists
 	 */

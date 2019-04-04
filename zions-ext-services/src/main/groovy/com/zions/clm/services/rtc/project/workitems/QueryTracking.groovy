@@ -1,19 +1,20 @@
 package com.zions.clm.services.rtc.project.workitems
 
 import com.zions.common.services.cacheaspect.CacheRequired
+import com.zions.common.services.cacheaspect.CacheWData
 import groovy.transform.Canonical
 import groovy.xml.XmlUtil
 
 @Canonical
-class QueryTracking implements CacheRequired {
-	String xml
+class QueryTracking implements CacheWData {
+	String data
 	
-	void doResult(def result) {
-		xml = new XmlUtil().serialize(result)
+	void doData(def result) {
+		data = new XmlUtil().serialize(result)
 	}
 	
-	def resultValue() {
-		return new XmlSlurper().parseText(xml)
+	def dataValue() {
+		return new XmlSlurper().parseText(data)
 	}
 
 }

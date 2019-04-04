@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:50349</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:50349?stylesheet=true"/>
+  <ns2:webId>50349</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">FS-TEL-005/3.2.3.1/Verify Hard Stop or OK message display/client code notification reset when user tabs out of another acount filed on IRA Contribution Transaction Screen</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">For transactions identified in Appendix 2, the system will run Client Code Inquiry Validations only when  a.Customer is selected (based on customer/non-customer indicator selected)
+b.User tabs out of an account field identified for corresponding teller transaction listed in Appendix 2.
+
+2.As part of the Client Code Inquiry validations, the system will inquire the following fields present at the primary customer level of the accounts identified for respective teller transactions in Appendix 2. 
+a.VIP Service Group
+
+? If a value is present in this field a notification will be presented.
+The section within the Teller transaction screen in which the Client Code notification will be displayed is indicated in section 4.1. This notification will be reset when user tabs out of another account field mentioned in Appendix 2 or when the system encounters a Hard Stop or OK message.
+
+Success Criteria: System must display Hard Stop or OK message when user tab out of another account field on IRA Contribution Transaction Screen</ns3:description>
+  <ns2:creationDate>2016-11-08T16:21:23.604Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2016-11-16T23:56:35.306Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070811">v070811</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070811">v070811</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.101">literal.priority.101</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Run Calendar" value="Day Mode - Fast"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Compliance Related" value="N/A"/>
+  <ns2:category term="Workstream" value="Deposits: Teller"/>
+  <ns2:category term="Test Type" value="Functional Test"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="Test Team" value="BaNCS Product: Test"/>
+  <ns2:category term="Automation Status" value="No"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>0</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:46929"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:div>
+        <tag0:div>Product: Any<tag0:br/>User: Authorized User<tag0:br/>Screen: IRA Contribution Transaction<tag0:br/>-Conductor of the transaction must be a customer<tag0:br/>-Set up Condition for Account as "Undeliverable Mail = 1 Returned Mail" client code Inquiry message<tag0:br/>-System must present at the primary customer level of the account for respective IRA Contribution Transaction</tag0:div>
+      </tag0:div>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+</ns2:testcase>

@@ -6,6 +6,7 @@ logging:
      com:
        zions:
          vsts: DEBUG
+         common: DEBUG
 
 #spring boot logging configuration
   file: policymanagement.log
@@ -89,18 +90,26 @@ external:
 default:
   wit:
     name: Feature
-    
+
 cache:
   location: .\cache
-  
+
 id:
   tracking:
     field: dummy
 # Event registration properties
-reg:
+websocket:
 # test
-  url: http://utmvti0192:9000
-  user: svc-cloud-vsbuildagent
-  password: sRt2?t3U
+#  url: ws://utmvti0192:9000/ws
+# prod
+  url: ws://utlxa1846:9000/ws
+
+# The path to the keystore containing the certificate
+http:
+  client:
+    ssl:
+      trust-store: classpath:keystore/zionsws.p12
+# The password used to generate the certificate
+      trust-store-password: changeit
 
   

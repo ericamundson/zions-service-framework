@@ -11,6 +11,7 @@ import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementServ
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.logging.FlowInterceptor
 import com.zions.common.services.query.IFilter
 import com.zions.common.services.restart.IRestartManagementService
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
@@ -240,7 +241,7 @@ class TranslateRQMToMTM implements CliAction {
 		String project = data.getOptionValues('clm.projectArea')[0]
 		String templateDir = data.getOptionValues('qm.template.dir')[0]
 		String mappingFile = data.getOptionValues('test.mapping.file')[0]
-		String wiQuery = data.getOptionValues('qm.query')[0]
+		String qmQuery = data.getOptionValues('qm.query')[0]
 		String wiFilter = data.getOptionValues('qm.filter')[0]
 		String collection = ""
 		try {
@@ -256,11 +257,17 @@ class TranslateRQMToMTM implements CliAction {
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
 		if (includes['clean'] != null) {
-			testManagementService.cleanupTestItems(collection, tfsProject, areaPath)
+			new FlowInterceptor() {}.flowLogging(testManagementService) {
+				testManagementService.cleanupTestItems(collection, tfsProject, areaPath)
+			}
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
-		if (includes['refresh'] != null) {
-			workManagementService.refresh(collection, tfsProject)
+//		if (includes['refresh'] != null) {
+//			workManagementService.refresh(collection, tfsProject)
+//			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
+//		}
+		if (includes['flushQueries'] != null) {
+			clmTestManagementService.flushQueries(project)
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
 		def mappingData = testMappingManagementService.mappingData
@@ -272,7 +279,7 @@ class TranslateRQMToMTM implements CliAction {
 					items.each { testItem ->
 						def configuration = clmTestManagementService.getTestItem(testItem.id.text())
 						//int id = Integer.parseInt(configuration.webId.text())
-						def id = "${configuration.name.text()}-Configuration"
+						def id = "${configuration.name.text()}"
 						//					String resultsxml = XmlUtil.serialize(configuration)
 						//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/configurationT.xml")
 						//					def os = resultFile.newDataOutputStream()
@@ -300,7 +307,7 @@ class TranslateRQMToMTM implements CliAction {
 						String idtype = "${aid}-testcase"
 						if (!idKeyMap.containsKey(idtype)) {
 							clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-								clManager.add("${aid}-${key}", val)
+								clManager.add("${aid}", val)
 							}
 							idKeyMap[idtype] = idtype
 						}
@@ -327,9 +334,9 @@ class TranslateRQMToMTM implements CliAction {
 						def plan = null
 						clmTestItemManagementService.processForChanges(tfsProject, testplan, memberMap) { String key, def val ->
 							if (key.endsWith('WI')) {
-								clManager.add("${id}-${key}", val)
+								clManager.add("${id}", val)
 							} else {
-								plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
+								plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}")
 							}
 						}
 
@@ -341,10 +348,10 @@ class TranslateRQMToMTM implements CliAction {
 							if (!idKeyMap.containsKey(idtype)) {
 								clmTestItemManagementService.processForChanges(tfsProject, testsuite, memberMap, null, null, plan) { key, val ->
 									if (key.endsWith(' WI')) {
-										clManager.add("${tsid}-${key}", val)
+										clManager.add("${tsid}", val)
 									} else {
-										String idkey = "${tsid}-${key}"
-										def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
+										String idkey = "${tsid}"
+										def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}")
 									}
 								}
 								idKeyMap[idtype] = idtype
@@ -362,7 +369,7 @@ class TranslateRQMToMTM implements CliAction {
 							String idtype = "${aid}-testcase"
 							if (!idKeyMap.containsKey(idtype)) {
 								def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-									String tid = "${aid}-${key}".toString()
+									String tid = "${aid}".toString()
 									clManager.add(tid,val)
 								}
 								idKeyMap[idtype] = idtype
@@ -414,7 +421,7 @@ class TranslateRQMToMTM implements CliAction {
 								def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 								executionresults.each { result ->
 									clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
-										String rwebId = "${result.webId.text()}-Result"
+										String rwebId = "${result.webId.text()}"
 										testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
 									}
 								}
@@ -427,7 +434,7 @@ class TranslateRQMToMTM implements CliAction {
 							def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 							executionresults.each { result ->
 								clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
-									String rwebId = "${result.webId.text()}-Result"
+									String rwebId = "${result.webId.text()}"
 									testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
 								}
 							}
@@ -450,7 +457,7 @@ class TranslateRQMToMTM implements CliAction {
 							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
 							testsuite.testcase.each { testcaseRef ->
 								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-								String id = "${testcase.webId.text()}-Test Case"
+								String id = "${testcase.webId.text()}"
 								def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
 								def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
 								if (wiChanges != null) {
@@ -460,7 +467,7 @@ class TranslateRQMToMTM implements CliAction {
 						}
 						testplan.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-							String id = "${testcase.webId.text()}-Test Case"
+							String id = "${testcase.webId.text()}"
 							def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
 							def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
 							if (wiChanges != null) {

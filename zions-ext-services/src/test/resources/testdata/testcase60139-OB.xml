@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testcase xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:60139</ns3:identifier>
+  <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:60139?stylesheet=true"/>
+  <ns2:webId>60139</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">FS-LON-048/PSA-LON-001-082/Calculated MAPR field must be displayed on billing statement/Positive</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">If the MLA-Covered Borrower flag = Y:Yes, the Calculated MAPR field must display the system-calculated account-level MAPR on the billing statement. If the MLA-Covered Borrower flag = N:No or A:Not Applicable, however, the field must display 0.</ns3:description>
+  <ns2:creationDate>2017-03-01T21:32:26.139Z</ns2:creationDate>
+  <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2019-02-18T20:38:31.533Z</ns5:updated>
+  <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns5:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070040">v070040</ns3:creator>
+  <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070040">v070040</ns5:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:weight>100</ns2:weight>
+  <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.200">literal.priority.200</ns2:priority>
+  <ns2:suspect>false</ns2:suspect>
+  <ns2:category term="Test Team" value="BaNCS Product: Test"/>
+  <ns2:category term="Active" value="Active"/>
+  <ns2:category term="Workstream" value="Compliance &amp; Regulatory"/>
+  <ns2:category term="Workstream" value="Lending: Common"/>
+  <ns2:category term="Enviroment" value="N/A"/>
+  <ns2:category term="Business Approved" value="No"/>
+  <ns2:category term="UAT Groups" value="N/A"/>
+  <ns2:category term="Run Calendar" value="Billing Date"/>
+  <ns2:category term="Execution Planning" value="No Assigned Status"/>
+  <ns2:category term="Compliance Related" value="Regulatory Only"/>
+  <ns2:category term="Automation Status" value="Ready"/>
+  <ns2:category term="Test Type" value="Regression Test"/>
+  <ns2:variables/>
+  <ns2:scriptStepCount>0</ns2:scriptStepCount>
+  <ns2:testscript href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testscript/urn:com.ibm.rqm:testscript:56857"/>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testcase/com.ibm.rqm.planning.templates.testcase.template_1400002869302"/>
+  <ns2:relatedChangeRequest summary="49185: R1.1 Tracking - for CR#930 - R1.1 Enhancements for Military Lending Act (MLA)" rel="trackedBy" href="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/49185"/>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition extensionDisplayName="RQM-KEY-TC-PRE-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+      <tag0:p dir="ltr">User: None<tag0:br/>
+Customer :  Two existing customers with pre-existing loans. One loan must have MLA-Covered Borrower = Y:Yes. The second loan must have MLA-Covered Borrower = N:No or A:Not Applicable.<tag0:br/>
+Product : MLA-Eligible loan<tag0:br/>
+Account : LON<tag0:br/>
+Data  - Screen : Billing / Inquiry<tag0:br/>
+Data - Interfaces : NA<tag0:br/>
+Predecessory Test Case Linkage: NA<tag0:br/>
+APPRO - No<tag0:br/>
+Credit Lead - No</tag0:p>
+    </tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePreCondition>
+  <ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition extensionDisplayName="RQM-KEY-TC-POST-COND-TITLE">
+    <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">Successor Test Case Linkage :  NA<tag0:br/>
+Data  - Interfaces : NA<tag0:br/>
+Data - Report : NA<tag0:br/>
+Data Cleanup : NA<tag0:br/>
+Success Criteria : If the MLA-Covered Borrower flag = Y:Yes, the Calculated MAPR field displays the appropriate account-level MAPR on the billing statement. If the MLA-Covered Borrower flag = N:No, the field displays 0.</tag0:div>
+  </ns2:com.ibm.rqm.planning.editor.section.testCasePostCondition>
+</ns2:testcase>
