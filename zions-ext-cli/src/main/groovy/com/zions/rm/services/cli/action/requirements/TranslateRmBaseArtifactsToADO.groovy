@@ -306,9 +306,20 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				def changeList = []
 //				def filtered = filtered(workItems, wiFilter)
 				artifacts.Description.children().each { itemData ->
-					int id = Integer.parseInt("${itemData.Requirement.identifier}")
-					changeList.add(id)
+					String sid = "${itemData.Requirement.identifier}"
+					if (sid != '' && sid != null) {
+						int id
+						try {
+							id = Integer.parseInt("${itemData.Requirement.identifier}")
+						}
+						catch (NumberFormatException e) { 
+							log.error("NumberFormatException trying to parse identifier: ${itemData.Requirement.identifier}")
+							return
+						}
+						changeList.add(id)
+					}
 				}
+				log.info("Refreshing cache for ${changeList.size()} artifacts.")
 				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
 				String nextUrl = "${artifacts.ResponseInfo.nextPage.@'rdf:resource'}"
 				if (nextUrl == '') break
@@ -319,19 +330,19 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				}
 			}
 		}
+		if (includes['whereused'] != null) {
+			log.info("fetching 'where used' lookup records")
+			if (clmRequirementsManagementService.queryForWhereUsed()) {
+				log.info("'where used' records were retrieved")
+			}
+			else {
+				log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
+			}			
+		}
 		if (includes['phases'] != null) {
-			
+			log.info("Processing artifacts")
 			restartManagementService.processPhases { phase, items ->
-				if (phase == 'query_whereused') {
-					if (clmRequirementsManagementService.queryForWhereUsed()) {
-						log.info("'where used' records were retrieved")
-					}
-					else {
-						log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
-					}
-				}
-
-				if (phase == 'process_artifacts') {
+				if (phase == 'workdata') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					clmRequirementsItemManagementService.resetNewId()
 					items.each { rmItem ->
