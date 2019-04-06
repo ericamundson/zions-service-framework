@@ -3,6 +3,7 @@ package com.zions.rm.services.requirements
 
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
+import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.rest.IGenericRestClient
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component
 import groovy.util.slurpersupport.NodeChild
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
+import groovy.transform.Canonical
 import groovy.util.logging.Slf4j
 import java.nio.charset.StandardCharsets
 import org.apache.commons.io.IOUtils
@@ -492,4 +494,20 @@ class ClmRequirementsManagementService {
 	}
 	
 	
+}
+
+//This class is used by the CacheInterceptor to store the direct query results; there are similar identical classes for both CCM and QM.
+//I am unsure if the classname is why they are different and that has some impact on how the data is stored in the cache,
+//but for consistancy's sake we are making a new data class in the same manner as ClmTestManagementService
+class RequirementQueryData implements CacheWData {
+	String data
+	
+	void doData(def result) {
+		data = new XmlUtil().serialize(result)
+	}
+	
+	def dataValue() {
+		return new XmlSlurper().parseText(data)
+	}
+
 }
