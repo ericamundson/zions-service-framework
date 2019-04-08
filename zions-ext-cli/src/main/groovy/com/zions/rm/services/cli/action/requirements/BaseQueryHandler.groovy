@@ -9,6 +9,7 @@ import com.zions.common.services.restart.Checkpoint
 import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.common.services.restart.IQueryHandler
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
+import com.zions.rm.services.requirements.RequirementQueryData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 
@@ -42,8 +43,6 @@ class BaseQueryHandler implements IQueryHandler {
 	String oslcWhere
 	@Value('${rm.filter:}')
 	String rmFilter
-	
-	@Autowired
 	@Value('${clm.pageSize}')
 	String clmPageSize
 	
@@ -71,7 +70,7 @@ class BaseQueryHandler implements IQueryHandler {
 	}
 
 	public String initialUrl() {
-		String rmquery = oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl);
+		String rmquery = oslcNs + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl);
 		def encoded = URLEncoder.encode(rmquery, 'UTF-8')
 		encoded = encoded.replace('<','%3C').replace('>', '%3E')
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/views?oslc.query=&projectURL=" + this.rmGenericRestClient.clmUrl + "/rm/process/project-areas/" + projectURI + encoded + "&oslc.pageSize=${clmPageSize}"
@@ -88,19 +87,19 @@ class BaseQueryHandler implements IQueryHandler {
 	//storing it because I have some fear that invoking getPageUrl twice might double skip page
 	//probably unfounded but it can't hurt to save it
 	public Object nextPage() {
-		String nextUrl = getPageUrl
+		String nextUrl = this.getPageUrl()
 		if (nextUrl == null) return null
 		page++
 		String pageId = "${page}"
-		new CacheInterceptor() {}.provideCaching(clmRequirementsmManagementService, pageId, currentTimestamp, RequirementQueryData) {
-			currentItems = clmRequirementsmManagementService.nextPage(nextUrl)
+		new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, RequirementQueryData) {
+			currentItems = clmRequirementsManagementService.nextPage(nextUrl)
 		}
 		return currentItems
 	}
 
 	public String getFilterName() {
 		// TODO Auto-generated method stub
-		return this.itemFilter;
+		return this.rmFilter;
 	}
 
 	public Date modifiedDate(Object item) {

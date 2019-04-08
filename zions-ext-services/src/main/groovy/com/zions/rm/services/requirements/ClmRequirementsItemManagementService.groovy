@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
-import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
+import com.zions.rm.services.requirements.RequirementQueryData
 
 import groovy.json.JsonSlurper
 import groovy.xml.XmlUtil

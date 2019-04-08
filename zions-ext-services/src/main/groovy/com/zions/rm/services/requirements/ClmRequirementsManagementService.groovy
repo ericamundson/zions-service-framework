@@ -28,7 +28,7 @@ import org.apache.commons.io.IOUtils
  * 
  * @startuml
  * 
- * annotation Component
+ * annotation Componentsdfdsasd
  * annotation Autowired
  * 
  * class ClmRequirementsManagementService {
