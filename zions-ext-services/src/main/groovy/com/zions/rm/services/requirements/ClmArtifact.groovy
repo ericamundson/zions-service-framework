@@ -38,30 +38,26 @@ class ClmArtifact {
 		return attributeMap.'Identifier'
 	}
 	public String getCacheID() {
-		"${this.getID()}-Requirement"
+		"${this.getID()}"
 	}
 	public String setID(in_id) {
 		attributeMap.'Identifier' = in_id
 	}
 	public void setDescription(String in_desc) {
-		attributeMap.'Primary Text' = in_desc
+		// If this is a Heading, use Primary Text for the Title (this is a weird thing modules do)
+		if (this.getArtifactType() == 'Heading' && in_desc != '') {
+			this.setTitle(stripTags(in_desc))
+		}
+		
+		attributeMap.'Primary Text' = in_desc			
+
+
 	}
 	public String getDescription() {
 		return attributeMap.'Primary Text'
 	}
-	public void setWhereUsed(def lookup) {
-		def whereUsedHtml = null
-		def usedReferences = lookup.'**'.findAll { p ->
-			"${p.name()}" == 'REFERENCE_ID' && "${p}" == this.getID()
-		}
-		if (usedReferences.size() > 0) {
-			whereUsedHtml = '<div>'
-			usedReferences.each { ref ->
-				whereUsedHtml = whereUsedHtml + "<a href=${ref.parent().URL2}>${ref.parent().MODULE_NAME}</a><br>"
-			}
-			whereUsedHtml = whereUsedHtml + '</div>'
-		}
-		attributeMap.'Where Used' = whereUsedHtml
+	public void setLinks(def linklist) {
+		links = linklist
 	}
 	public String getWhereUsed() {
 		return attributeMap.'Where Used'
@@ -69,7 +65,21 @@ class ClmArtifact {
 	public void setBaseArtifactURI(String in_uri) {
 		attributeMap.'Base Artifact URI' = in_uri
 	}
+	public void setBaseArtifactURI(String in_base_uri, String in_uid) {
+		attributeMap.'Base Artifact URI' = "${in_base_uri}/rm/resources/${in_uid}"
+	}
 	public String getBaseArtifactURI() {
 		return attributeMap.'Base Artifact URI'
+	}
+	public boolean hasEmbeddedImage() {
+		if (this.getDescription() == null) {
+			return false
+		}
+		else {
+			return (this.getDescription().indexOf('<img ') > -1)
+		}
+	}
+	private String stripTags(String input) {
+	    return input.replaceAll("\\<.*?>","").replaceAll('&#xa0;', '').replaceAll('&amp;', '&')
 	}
 }

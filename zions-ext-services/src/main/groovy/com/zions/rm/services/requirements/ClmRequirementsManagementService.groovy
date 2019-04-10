@@ -1,6 +1,10 @@
 package com.zions.rm.services.requirements
 
 
+import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cacheaspect.Cache
+import com.zions.common.services.cacheaspect.CacheWData
+import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.rest.IGenericRestClient
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,7 +13,8 @@ import org.springframework.stereotype.Component
 import groovy.util.slurpersupport.NodeChild
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
-
+import groovy.transform.Canonical
+import groovy.util.logging.Slf4j
 import java.nio.charset.StandardCharsets
 import org.apache.commons.io.IOUtils
 
@@ -23,7 +28,7 @@ import org.apache.commons.io.IOUtils
  * 
  * @startuml
  * 
- * annotation Component
+ * annotation Componentsdfdsasd
  * annotation Autowired
  * 
  * class ClmRequirementsManagementService {
@@ -41,7 +46,7 @@ import org.apache.commons.io.IOUtils
  *
  */
 
-
+@Slf4j
 @Component
 class ClmRequirementsManagementService {
 	@Autowired
@@ -57,6 +62,9 @@ class ClmRequirementsManagementService {
 	
 	@Autowired
 	IGenericRestClient rmBGenericRestClient
+	
+	@Autowired(required=true)
+	ICacheManagementService cacheManagementService
 	
 	def queryForModules(String projectURI, String query) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?" + query;
@@ -96,13 +104,15 @@ class ClmRequirementsManagementService {
 							String format = contextBinding.format
 							int depth = contextBinding.depth.toInteger()
 							String isHeading = contextBinding.isHeading
-							String baseURI = contextBinding.core
+							String baseUID = contextBinding.core
 							
-							ClmModuleElement artifact = new ClmModuleElement(artifactTitle, baseURI, depth, format, isHeading, about)
+							ClmModuleElement artifact = new ClmModuleElement(artifactTitle, depth, format, isHeading, about)
+							artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}","${baseUID}")
+							
 							orderedArtifacts.add(artifact)
 							if (format == "Text") {
 								// Get artifact details (attributes and links) from DNG
-								getTextArtifact(artifact)
+								getTextArtifact(artifact, true)
 								// If artifact has embedded collection, add collection members to the module
 								if (shouldAddCollectionsToModule(moduleType) && artifact.collectionArtifacts != null && artifact.collectionArtifacts.size > 0) {
 									artifact.setDescription(null)  // blank out Description content
@@ -145,6 +155,25 @@ class ClmRequirementsManagementService {
 		}
 	}
 	
+	
+	def queryForFolders(String folderURI) {
+		String uri = this.rmGenericRestClient.clmUrl + "/rm/folders?oslc.where=public_rm:parent=" + folderURI
+		uri = uri.replace('<','%3C').replace('>', '%3E')
+		//uri = URLEncoder.encode(uri,'UTF-8')
+		//println("Querying folder: " + uri)
+		def result = rmGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/xml', 'OSLC-Core-Version': '2.0'] );
+		if (result != null) {
+			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
+			return new XmlSlurper().parseText(xml)
+		}
+		else {
+			log.debug ("failed to query folder: "+ folderURI)
+			return null;
+		}
+	}
+	
 	public def nextPage(url) {
 		def result = rmGenericRestClient.get(
 			uri: url,
@@ -157,17 +186,34 @@ class ClmRequirementsManagementService {
 			return null;
 		}
 	}
-
+	
 	def queryForWhereUsed() {
 		String uri = this.rmBGenericRestClient.clmUrl + "/rs/query/11126/dataservice?report=11099&limit=-1&basicAuthenticationEnabled=true"
-		def result = rmBGenericRestClient.get(
+		def results = rmBGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/rdf+xml'] );
-		return result;
+		if (results != null) {
+			def prevID = null
+			def linkInfoList = []
+			results.children().each { p ->
+				def id = "${p.REFERENCE_ID}"
+				if (prevID != null && id != prevID) { // Save whereUsed for this id
+					cacheManagementService.saveToCache(linkInfoList, id, 'whereUsedData')
+					linkInfoList.clear()
+				}
+				linkInfoList.add(new LinkInfo(type: "${p.MODULE_NAME}", itemIdCurrent: id, itemIdRelated: "${p.URL2}", moduleCurrent: 'RM', moduleRelated: 'RM'))
+				
+				prevID = id
+			}
+			return true
+		}
+		else {
+			return false
+		}
 	}
 	
 	boolean shouldAddCollectionsToModule(String moduleType) {
-		return (moduleType == 'UI Spec')
+		return (moduleType == 'UI Spec' || moduleType == 'Functional Spec')
 	}
 	
 	def getMemberEmail(String url) {
@@ -189,7 +235,7 @@ class ClmRequirementsManagementService {
 		return emailAddress
 	}
 	
-	def getTextArtifact(def in_artifact) {
+	def getTextArtifact(def in_artifact, boolean includeCollections) {
 		
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
@@ -198,6 +244,7 @@ class ClmRequirementsManagementService {
 		// Extract artifact attributes
 		result.children().each { artifactNode ->
 			parseTopLevelAttributes(artifactNode, in_artifact)
+			parseLinksFromArtifactNode(artifactNode, in_artifact)
 			artifactNode.children().each { child ->
 				String iName = child.name()
 				if (iName == "collaboration" ) {
@@ -211,23 +258,27 @@ class ClmRequirementsManagementService {
 					String primaryTextString = new groovy.xml.StreamingMarkupBuilder().bind {mkp.yield richTextBody.children() }
 					in_artifact.setDescription(primaryTextString)
 
-					// Check to see if this artifact has an embedded collection in "showContent" mode
-					def memberHrefs = []
-					def collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent')
-					if (collectionIndex > -1) { // Embedded Collection, parse all member hrefs for that collection
-						memberHrefs = parseCollectionHrefs(richTextBody)
-					}
-					
-					// Check to see if this artifact has an embedded collection in "minimized" mode					
-					collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimised')
-					if (collectionIndex > -1) { // Minimized Collection, get href for the collection artifact
-						String hrefCollection = parseHref(primaryTextString.substring(collectionIndex))
-						memberHrefs = getCollectionMemberHrefs(hrefCollection)
-					}
-					
-					// If there are collection members to be retrieved, then retrieve them
-					if (memberHrefs != null && memberHrefs.size() > 0) {
-						getCollectionArtifacts(in_artifact, memberHrefs)
+					if (includeCollections) {
+						// Check to see if this artifact has an embedded collection in "showContent" mode
+						def memberHrefs = []
+						def collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent')
+						if (collectionIndex > -1) { // Embedded Collection, parse all member hrefs for that collection
+							memberHrefs = parseCollectionHrefs(richTextBody)
+							in_artifact.setDescription('') // Remove description, since it is now redundant
+						}
+						
+						// Check to see if this artifact has an embedded collection in "minimized" mode
+						collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimised')
+						if (collectionIndex > -1) { // Minimized Collection, get href for the collection artifact
+							String hrefCollection = parseHref(primaryTextString.substring(collectionIndex))
+							memberHrefs = getCollectionMemberHrefs(hrefCollection)
+
+						}
+						
+						// If there are collection members to be retrieved, then retrieve them
+						if (memberHrefs != null && memberHrefs.size() > 0) {
+							getCollectionArtifacts(in_artifact, memberHrefs)
+						}
 					}
 				}
 			}
@@ -236,6 +287,7 @@ class ClmRequirementsManagementService {
 		return in_artifact
 
 	}
+
 	private String parseHref(String inString) {
 		def hrefIndex = inString.indexOf('href=')
 		String href = inString.substring(hrefIndex + 6)
@@ -262,6 +314,7 @@ class ClmRequirementsManagementService {
 		// Extract artifact attributes
 		result.children().each { artifactNode ->
 			parseTopLevelAttributes(artifactNode, in_artifact)
+			parseLinksFromArtifactNode(artifactNode, in_artifact)
 			artifactNode.children().each { child ->
 				String iName = child.name()
 				if (iName == "collaboration" ) {
@@ -270,7 +323,7 @@ class ClmRequirementsManagementService {
 					in_artifact.setArtifactType(artifactType)
 				}
 				else if (iName == "wrappedResourceURI") {
-					// Set primary text 
+					// Set primary text
 					String primaryText = "<div>Uploaded Attachment</div>"
 					in_artifact.setDescription(primaryText)
 					String hRef = "${child}"
@@ -282,27 +335,34 @@ class ClmRequirementsManagementService {
 		return in_artifact
 
 	}
-	private void getCollectionMemberHrefs(String collectionHref) {
+	private def getCollectionMemberHrefs(String collectionHref) {
 		def result = rmGenericRestClient.get(
 				uri: collectionHref.replace("resources/", "publish/collections?resourceURI="),
 				headers: [Accept: 'application/xml'] );
 		
 		def memberHrefs = []
 		def links = result.'**'.findAll { p ->
-			"${p.name()}" == 'relation' //&& "${p.parent.name}" == 'Link'
+			"${p.name()}" == 'Link' && "${p.@type}" == 'Link' && p.title == 'Unknown Link Type'
 		}
 		links.each { link ->
-			memberHrefs.add("${link}")
+			memberHrefs.add("${link.relation}")
 		}
 		
-		return
+		return memberHrefs
 	}
 	private def getCollectionArtifacts(def in_artifact, def memberHrefs) {
-		memberHrefs.each { memberHref -> 
-			def artifact = new ClmModuleElement(null,null,in_artifact.getDepth(),null,'false',memberHref)
+		memberHrefs.each { memberHref ->
+			def artifact = new ClmModuleElement(null,in_artifact.getDepth(),null,'false',memberHref)
 
-			in_artifact.collectionArtifacts << getTextArtifact(artifact)
+			in_artifact.collectionArtifacts << getTextArtifact(artifact,false)
 		}
+	}
+	
+	private void parseLinksFromArtifactNode(def artifactNode, def in_artifact) {
+		String modified = artifactNode.collaboration.modified
+		String identifier = artifactNode.identifier
+		Date modifiedDate = Date.parse("yyyy-MM-dd'T'hh:mm:ss",modified)
+		in_artifact.setLinks(getAllLinks(identifier, modifiedDate, artifactNode))
 	}
 	
 	private void parseTopLevelAttributes(def artifactNode, def in_artifact) {
@@ -320,9 +380,9 @@ class ClmRequirementsManagementService {
 			if (core == null || core == '') {
 				in_artifact.setBaseArtifactURI(in_artifact.getAbout())
 			}
-			else { 
-				// then this is a module element and we need to set the base 
-				in_artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}/rm/resources/${core}")
+			else {
+				// then this is a module element and we need to set the base
+				in_artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}","${core}")
 			}
 		}
 	}
@@ -348,10 +408,13 @@ class ClmRequirementsManagementService {
 				artifactType = objTypeAttr['{http://jazz.net/xmlns/alm/rm/attribute/v0.1}name']
 				
 				// Get custom attributes
+				String multiValueAttrName = null
+				String multiValueAttrVal = null
 				attr.objectType.children().each { custAttr ->
 					def attributes = custAttr.nodeIterator().next()?.attributes()
 					String custAttrName =  attributes["{http://jazz.net/xmlns/alm/rm/attribute/v0.1}name"]
 					String custAttrIsEnum = attributes["{http://jazz.net/xmlns/alm/rm/attribute/v0.1}isEnumeration"]
+					String custAttrIsMultiValued = attributes["{http://jazz.net/xmlns/alm/rm/attribute/v0.1}isMultiValued"]
 					String custAttrLiteralName = attributes["{http://jazz.net/xmlns/alm/rm/attribute/v0.1}literalName"]
 					String custAttrValue = attributes["{http://jazz.net/xmlns/alm/rm/attribute/v0.1}value"]
 					String custAttrVal
@@ -361,8 +424,35 @@ class ClmRequirementsManagementService {
 					else {
 						 custAttrVal = custAttrValue
 					}
-					out_attributeMap.put(custAttrName, custAttrVal)
+					if (custAttrIsMultiValued == 'true') {
+						if (multiValueAttrName == null) { // First instance of this attribute
+							multiValueAttrName = "${custAttrName}"
+							multiValueAttrVal = "${custAttrVal}"
+						}
+						else if (multiValueAttrName == custAttrName){ // More values for same attribute
+							multiValueAttrVal = multiValueAttrVal + ';' + "${custAttrVal}"
+						}
+						else { // New multivalue attr with previous one to save
+							out_attributeMap.put(multiValueAttrName, multiValueAttrVal)
+							multiValueAttrName = "${custAttrName}"
+							multiValueAttrVal = "${custAttrVal}"
+						}
+					}
+					else { // single value attribute
+						if (multiValueAttrName != null) {  // Save pending multivalue attribute
+							out_attributeMap.put(multiValueAttrName, multiValueAttrVal)
+							multiValueAttrName = null
+							multiValueAttrVal = null
+						}
+						out_attributeMap.put(custAttrName, custAttrVal)
+						
+					}
 				}
+				// Add any pending multiValue attribute
+				if (multiValueAttrName != null) {  // Save pending multivalue attribute
+					out_attributeMap.put(multiValueAttrName, multiValueAttrVal)
+				}
+
 			}
 		}
 		
@@ -380,4 +470,44 @@ class ClmRequirementsManagementService {
 		return result
 
 	}
+	
+	//what we need: artifact id and type, then the link set to look through and get all links
+	//if how we get the type varies we can pass that in from the parent I suppose
+	//if we use datemodified as a parameter as well we can use that to set the cache date
+	@Cache(elementType = LinkInfo)
+	public List<LinkInfo> getAllLinks(String id, Date timeStamp, def artifactNode) {
+		List<LinkInfo> links = new ArrayList<LinkInfo>()
+//		String modified = rmItemData.Requirement.modified
+//		String identifier = rmItemData.Requirement.identifier
+		artifactNode.traceability.links.children().each { link ->
+			//String itemIdCurrent = child.name()
+			String rid = link.identifier //if the target is QM this will be a guid
+			String key = link.title //if we just want the string type of link it's .title, uri to type is .linkType
+			String module = link.relation.text().split('/')[3]
+			if (module == 'qm') {
+				rid = link.alternative
+			}
+			def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'RM', moduleRelated: module)
+			links.add(info)
+		}
+		return links
+	}
+	
+	
+}
+
+//This class is used by the CacheInterceptor to store the direct query results; there are similar identical classes for both CCM and QM.
+//I am unsure if the classname is why they are different and that has some impact on how the data is stored in the cache,
+//but for consistancy's sake we are making a new data class in the same manner as ClmTestManagementService
+class RequirementQueryData implements CacheWData {
+	String data
+	
+	void doData(def result) {
+		data = new XmlUtil().serialize(result)
+	}
+	
+	def dataValue() {
+		return new XmlSlurper().parseText(data)
+	}
+
 }

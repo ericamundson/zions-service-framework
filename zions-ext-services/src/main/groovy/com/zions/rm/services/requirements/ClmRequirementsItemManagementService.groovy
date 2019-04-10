@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
-import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
+import com.zions.rm.services.requirements.RequirementQueryData
 
 import groovy.json.JsonSlurper
 import groovy.xml.XmlUtil
@@ -96,7 +96,7 @@ class ClmRequirementsItemManagementService {
 		def etype = URLEncoder.encode("${map.target}", 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-		String id = "${rmItemData.getID()}-${map.target}"
+		String id = "${rmItemData.getCacheID()}"
 		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 		if (cacheWI != null) {
 			def cid = cacheWI.id

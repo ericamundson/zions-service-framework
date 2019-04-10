@@ -202,7 +202,7 @@ class GenericRestClientSpecTest extends Specification {
 		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.post(_) >> resp
-		1* resp.getStatus() >> 400
+		2* resp.getStatus() >> 400
 		
 		when: 'call method under test'
 		def result = genericRestClient.post(

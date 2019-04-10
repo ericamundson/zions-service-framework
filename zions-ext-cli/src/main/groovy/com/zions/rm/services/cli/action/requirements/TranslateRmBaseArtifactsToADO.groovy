@@ -5,17 +5,24 @@ import java.util.Map
 import org.apache.ivy.core.module.descriptor.ModuleDescriptor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
+import com.zions.clm.services.rtc.project.workitems.QueryTracking
 import org.springframework.stereotype.Component
 import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
+import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
+import com.zions.common.services.restart.Checkpoint
+import com.zions.common.services.restart.ICheckpointManagementService
+import com.zions.common.services.restart.IRestartManagementService
 import com.zions.qm.services.metadata.QmMetadataManagementService
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
 import com.zions.rm.services.requirements.ClmRequirementsItemManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
+import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
@@ -149,6 +156,12 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	RequirementsMappingManagementService rmMappingManagementService
 	@Autowired
 	ClmRequirementsFileManagementService rmFileManagementService
+	@Autowired
+	IRestartManagementService restartManagementService
+	@Autowired(required=false)
+	ICheckpointManagementService checkpointManagementService
+	@Autowired(required=false)
+	ICacheManagementService cacheManagementService
 	
 	public TranslateRmBaseArtifactsToADO() {
 	}
@@ -184,104 +197,188 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		def mapping = new XmlSlurper().parseText(mFile.text)
 		if (includes['clean'] != null) {
 		}
-		//refresh.
+		//legacy stuff.
+//		if (includes['deprecated'] != null) {
+//			// Get field mappings, target members map and RM artifacts to translate to ADO
+//			log.info('Getting Mapping Data...')
+//			def mappingData = rmMappingManagementService.mappingData
+//			log.info('Getting ADO Project Members...')
+//			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+//			log.info("Querying for Where Used Lookup ...")
+//			if (clmRequirementsManagementService.queryForWhereUsed()) {
+//				log.info("'where used' records were retrieved")
+//			}
+//			else {
+//				log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
+//			}
+//			log.info("Querying DNG Base Artifacts ...")
+//			def results = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
+//			// Continue until all pages have been processed
+//			def page = 1
+//			while (true) {
+//				def changeList = []
+//				def uploadedArtifacts = []
+//				def idMap = [:]
+//				int count = 0		
+//				results.Description.children().each { item ->
+//					if (item.Requirement != '') {
+//						def artifact = getItemChanges(tfsProject, item, memberMap)
+//						def aid = artifact.getCacheID()
+//						artifact.changes.each { key, val ->
+//							String idkey = "${aid}"
+//							idMap[count] = idkey
+//							changeList.add(val)
+//							count++		
+//						}
+//						
+//						// If uploaded artifact, save for attachment processing
+//						if (artifact.getFormat() == 'WrapperResource') {
+//							uploadedArtifacts.add(artifact)
+//						}
+//					}
+//				}
+//				log.info("$count Base Artifacts were retrieved")
+//				
+//				// Create work items in Azure DevOps
+//				if (changeList.size() > 0) {
+//					// Process work item changes in Azure DevOps
+//					log.info("Processing work item changes...")
+//					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+//				}
+//				
+//				// Upload Attachments to Azure DevOps
+//				log.info("Uploading attachments...")
+//				changeList.clear()
+//				idMap.clear()
+//				count = 0
+//				uploadedArtifacts.each { artifact ->
+//					def files = []
+//					files[0] = rmFileManagementService.cacheRequirementFile(artifact)
+//					
+//					String id = artifact.getCacheID()
+//					def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+//					if (wiChanges != null) {
+//						def url = "${wiChanges.body[1].value.url}"
+//						def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
+//						wiChanges.body.add(change)
+//						idMap[count] = "${id}"
+//						changeList.add(wiChanges)
+//						count++
+//					}
+//				}
+//				log.info("$count Attachments were uploaded")
+//				if (changeList.size() > 0) {
+//					// Associate attachments to work items in Azure DevOps
+//					log.info("Associating attachments to work items...")
+//					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+//				}
+//				
+//				// Process next page
+//				String nextUrl = "${results.ResponseInfo.nextPage.@'rdf:resource'}"
+//				if (nextUrl != '') {
+//					page++
+//					log.info("Retrieving page ${page}...")
+//					results = clmRequirementsManagementService.nextPage(nextUrl)
+//				}
+//				else {
+//					break
+//				}
+//			}
+//				
+//			log.info("Processing completed")
+//		}
+		// Refresh cached list of CLM artifacts to migrate to ADO
 		if (includes['refresh'] != null) {
-		}
-
-		// Get field mappings, target members map and RM artifacts to translate to ADO
-		log.info('Getting Mapping Data...')
-		def mappingData = rmMappingManagementService.mappingData
-		log.info('Getting ADO Project Members...')
-		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-		log.info("Querying for Where Used Lookup ...")
-		def whereUsed = clmRequirementsManagementService.queryForWhereUsed()
-		if (whereUsed == null) {
-			whereUsed = [:]
-			log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
-			return
-		}
-		else {
-			log.info("${whereUsed.children().size()} 'where used' records were retrieved")
-		}
-		log.info("Querying DNG Base Artifacts ...")
-		def results = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
-		// Continue until all pages have been processed
-		def page = 1
-		while (true) {
-			def changeList = []
-			def uploadedArtifacts = []
-			def idMap = [:]
-			int count = 0		
-			results.Description.children().each { item ->
-				if (item.Requirement != '') {
-					def artifact = getItemChanges(tfsProject, item, memberMap, whereUsed)
-					def aid = artifact.getCacheID()
-					artifact.changes.each { key, val ->
-						String idkey = "${aid}"
-						idMap[count] = idkey
-						changeList.add(val)
-						count++		
-					}
-					
-					// If uploaded artifact, save for attachment processing
-					if (artifact.getFormat() == 'WrapperResource') {
-						uploadedArtifacts.add(artifact)
-					}
-				}
-			}
-			log.info("$count Base Artifacts were retrieved")
-			
-			// Create work items in Azure DevOps
-			if (changeList.size() > 0) {
-				// Process work item changes in Azure DevOps
-				log.info("Processing work item changes...")
-				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-			}
-			
-			// Upload Attachments to Azure DevOps
-			log.info("Uploading attachments...")
-			changeList.clear()
-			idMap.clear()
-			count = 0
-			uploadedArtifacts.each { artifact ->
-				def files = []
-				files[0] = rmFileManagementService.cacheRequirementFile(artifact)
+			log.info("Refreshing cache.")
+			Checkpoint cp = cacheManagementService.getFromCache('query', 'QueryStart')
+			int page=0
+			Date currentTimestamp = new Date()
+			if (cp) {
+				currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.getTimeStamp())
 				
-				String id = artifact.getCacheID()
-				def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-				if (wiChanges != null) {
-					def url = "${wiChanges.body[1].value.url}"
-					def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
-					wiChanges.body.add(change)
-					idMap[count] = "${id}"
-					changeList.add(wiChanges)
-					count++
+			}
+			String pageId = "${page}"
+			def artifacts
+			new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, RequirementQueryData) {
+				artifacts = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
+			}
+			while (true) {
+				def changeList = []
+//				def filtered = filtered(workItems, wiFilter)
+				artifacts.Description.children().each { itemData ->
+					String sid = "${itemData.Requirement.identifier}"
+					if (sid != '' && sid != null) {
+						int id
+						try {
+							id = Integer.parseInt("${itemData.Requirement.identifier}")
+						}
+						catch (NumberFormatException e) { 
+							log.error("NumberFormatException trying to parse identifier: ${itemData.Requirement.identifier}")
+							return
+						}
+						changeList.add(id)
+					}
+				}
+				log.info("Refreshing cache for ${changeList.size()} artifacts.")
+				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
+				String nextUrl = "${artifacts.ResponseInfo.nextPage.@'rdf:resource'}"
+				if (nextUrl == '') break
+				page++
+				pageId = "${page}"
+				//stores entire result page in cache I believe
+				new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, QueryTracking) {
+					artifacts = clmRequirementsManagementService.nextPage(nextUrl)
 				}
 			}
-			log.info("$count Attachments were uploaded")
-			if (changeList.size() > 0) {
-				// Associate attachments to work items in Azure DevOps
-				log.info("Associating attachments to work items...")
-				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-			}
-			
-			// Process next page
-			String nextUrl = "${results.ResponseInfo.nextPage.@'rdf:resource'}"
-			if (nextUrl != '') {
-				page++
-				log.info("Retrieving page ${page}...")
-				results = clmRequirementsManagementService.nextPage(nextUrl)
+		}
+		if (includes['whereused'] != null) {
+			log.info("fetching 'where used' lookup records")
+			if (clmRequirementsManagementService.queryForWhereUsed()) {
+				log.info("'where used' records were retrieved")
 			}
 			else {
-				break
+				log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
+			}			
+		}
+		if (includes['phases'] != null) {
+			log.info("Processing artifacts")
+			restartManagementService.processPhases { phase, items ->
+				if (phase == 'workdata') {
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+					clmRequirementsItemManagementService.resetNewId()
+					items.each { rmItem ->
+						String sid = "${rmItem.Requirement.identifier}"
+						int id = Integer.parseInt(sid)
+						String formatString = rmItem.Requirement.ArtifactFormat.@'rdf:resource'
+						String format = formatString.substring(formatString.lastIndexOf('#') + 1)
+						String about = "${rmItem.Requirement.@'rdf:about'}"
+						ClmArtifact artifact = new ClmArtifact('', format, about)
+						if (format == 'Text') {
+							clmRequirementsManagementService.getTextArtifact(artifact,false)
+						}
+						else if (format == 'WrapperResource'){
+							clmRequirementsManagementService.getNonTextArtifact(artifact)
+						}
+						else {
+							log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
+						}
+						//new FlowInterceptor() {}.flowLogging(clManager) {
+							def wiChanges = clmRequirementsItemManagementService.getChanges(project, artifact, memberMap)
+							if (wiChanges != null) {
+								clManager.add("${id}", wiChanges)
+							}
+						//}
+					}
+					clManager.flush();
+				}
 			}
 		}
-			
-		log.info("Processing completed")
+
+
 
 	}
 
-	def getItemChanges(String project, def rmItemData, def memberMap, def whereUsed) {
+	def getItemChanges(String project, def rmItemData, def memberMap) {
 
 		String modified = rmItemData.Requirement.modified
 		String identifier = rmItemData.Requirement.identifier
@@ -290,7 +387,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		String about = "${rmItemData.Requirement.@'rdf:about'}"
 		ClmArtifact artifact = new ClmArtifact('', format, about)
 		if (format == 'Text') {
-			clmRequirementsManagementService.getTextArtifact(artifact)
+			clmRequirementsManagementService.getTextArtifact(artifact,false)
 		}
 		else if (format == 'WrapperResource'){
 			clmRequirementsManagementService.getNonTextArtifact(artifact)
@@ -298,7 +395,6 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		else {
 			log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
 		}
-		artifact.setWhereUsed(whereUsed)
 		artifact.setChanges(clmRequirementsItemManagementService.getChanges(project, artifact, memberMap))
 		return artifact
 	}
@@ -313,7 +409,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'clm.pageSize', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'oslc.namespaces', 'oslc.select', 'oslc.where', 'rm.filter', 'mr.url','tfs.oAuthToken']
+		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'clm.pageSize', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'oslc.namespaces', 'oslc.select', 'oslc.where', 'rm.filter', 'mr.url']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

@@ -43,14 +43,16 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
 		// Process any embedded images
 		String sId = itemData.getCacheID()
-		def outHtml = processImages(description, sId)
+		def outHtml = processHtml(description, sId)
 		
 		// Return html string, but remove <?xml tag as it causes issues
 		return XmlUtil.asString(outHtml).replace('<?xml version="1.0" encoding="UTF-8"?>\n', '')	
 	}
 	
-	def processImages(String html, String sId) {
+	def processHtml(String html, String sId) {
 		def htmlData = new XmlSlurper().parseText(html)
+		
+		// First move all embedded images to ADO
 		def imgs = htmlData.'**'.findAll { p ->
 			String src = p.@src
 			"${p.name()}" == 'img' && "${src}".startsWith(this.clmUrl)
@@ -73,9 +75,25 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			}
 			else {
 				log.error("Error parsing filename of embedded image in DescriptionHandler.  Artifact ID: $itemId")
-			}		}
+			}		
+		}
+		
+		// Next process all tables, adding border info to <td> tags
+		addBorderStyle('th', htmlData)
+		addBorderStyle('td', htmlData)
+
 		return htmlData
 
+	}
+	
+	def addBorderStyle(String tag, def htmlData) {
+		def tds = htmlData.'**'.findAll { p ->
+			"${p.name()}" == "${tag}"
+		}
+		tds.each { td ->
+			String style = td.@style
+			td.@style = style + ';border:1px solid black'
+		}		
 	}
 
 }

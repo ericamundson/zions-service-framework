@@ -45,7 +45,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 	def 'requirement file attachment main flow'() {
 		given: 'Module Element with wrapped resource file format'
 		String wrappedResourceFilename = 'stuff.txt'
-		def ritem = new ClmModuleElement(wrappedResourceFilename, 'https://...', 1, 'Wrapped Resource', 'false', 'https://...')
+		def ritem = new ClmModuleElement(wrappedResourceFilename, 1, 'Wrapped Resource', 'false', 'https://...')
 		ritem.setID('123456')
 		ritem.setTfsWorkitemType('User Story')
 		

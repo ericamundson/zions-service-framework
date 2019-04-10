@@ -11,7 +11,6 @@ import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
-import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 import com.zions.vsts.services.attachments.AttachmentManagementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -26,7 +25,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("rmdb")
-@ComponentScan(["com.zions.rm.services","com.zions.vsts.services","com.zions.ext.services", "com.zions.common.services.cache.db", "com.zions.common.services.cacheaspect"])
+@ComponentScan(["com.zions.rm.services","com.zions.vsts.services","com.zions.ext.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.cacheaspect"])
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 public class RmDBAppConfig {
 	@Autowired
