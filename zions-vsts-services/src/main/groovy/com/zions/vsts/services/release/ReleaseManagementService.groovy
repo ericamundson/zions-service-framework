@@ -205,6 +205,63 @@ public class ReleaseManagementService {
 		return writeReleaseDefinition(collection, project, template)
 	}
 
+	private def createDRRelease(collection, project, repo, template, buildId) {
+
+		log.debug("ReleaseManagementService::createDRRelease -- Getting DR release build for ${repo.name}. Build ID: "+ buildId)
+		def buildDef = buildManagementService.getBuildById(collection, project, buildId)
+		if (buildDef == null) {
+			log.debug("ReleaseManagementService::createDRRelease -- Unable to retrieve DR release build for ${repo.name}. Returning null ...")
+			return null
+		}
+		// how will we get team data ?? 
+		//def team = ""
+		template.id = -1
+		template.name = repo.name + "-dr"
+		// not using folders
+		template.path = "\\"
+		template.description = "DR Release definition for ${repo.name}"
+		template.artifacts[0].alias = "_${buildDef.name}"
+		template.artifacts[0].definitionReference.artifactSourceDefinitionUrl.id = buildDef._links.web.href
+		template.artifacts[0].definitionReference.definition.id = buildDef.id
+		template.artifacts[0].definitionReference.definition.name = buildDef.name
+		template.artifacts[0].definitionReference.project.id = project.id
+		template.artifacts[0].definitionReference.project.name = project.name
+		template.artifacts[0].definitionReference.sourceId = "${project.id}:${buildDef.id}"
+		// set variables for uDeploy (udclient) task
+		template.environments.each { env ->
+			env.deployPhases.each { phase ->
+				phase.deploymentInput.artifactsDownloadInput.downloadInputs.each { input ->
+					if ("${input.artifactType}" == "Build") {
+						input.alias = "_${buildDef.name}"
+					}
+				}
+				phase.workflowTasks.each { task ->
+					if ("${task.taskId}" == '55049627-78d6-4a04-84e9-e136fd98bf78') {
+						task.inputs.base = "${task.inputs.base}".replace("%alias_name%", "_${buildDef.name}")
+						task.inputs.component = "${repo.name}"
+					}
+				}
+			}
+			//env.owner = teamData
+		}
+		template.triggers.each { trigger ->
+			if ("${trigger.triggerType}" == "artifactSource" || "${trigger.triggerType}" == "1") {
+				trigger.artifactAlias = "_${buildDef.name}"
+			}
+		}
+		// set pool to On-Prem DR, same as DR build def
+		def queueData = buildDef.queue
+		if (queueData != null) {
+			template.environments.each { env ->
+				env.deployPhases.each { phase ->
+					phase.deploymentInput.queueId = queueData.id
+				}
+			}
+		}
+		log.debug("ReleaseManagementService::createReleaseForBuild -- Calling writeReleaseDefinition for ${repo.name} ...")
+		return writeReleaseDefinition(collection, project, template)
+	}
+
 	def writeReleaseDefinition(collection, project, template) {
 		log.debug("ReleaseManagementService::writeReleaseDefinition -- Saving Release Definition with name ${template.name}")
 		def body = new JsonBuilder(template).toPrettyString()
