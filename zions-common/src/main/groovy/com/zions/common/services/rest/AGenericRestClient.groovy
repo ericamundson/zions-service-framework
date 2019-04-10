@@ -211,7 +211,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		}
 		HttpResponseDecorator resp = delegate.post(oinput)
 		//JsonOutput t
-		if (resp.status != 200) {
+		if (resp.status != 200 && resp.status!= 201) {
 			log.debug("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
 		}
 		if (withHeader) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<launchConfiguration type="org.codehaus.groovy.eclipse.groovyConsoleLaunchConfiguration">
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/zions-vsts-cli/src/main/groovy/com/zions/vsts/services/cli/CliApplication.groovy"/>
 </listAttribute>
@@ -7,9 +7,10 @@
 <listEntry value="1"/>
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="migrateWIT --tfs.source.url=https://dev.azure.com/eto-dev  --tfs.source.user=z091182 --tfs.source.token=&quot;pzyybyd3zq5kzbdpkn4e656i6d3b7zfe43tms5s3v35gsifdngoq&quot; --tfs.source.project=&quot;FutureCore&quot; --tfs.workitem.names=&quot;RM Feature,Functional Requirement,Non Functional Requirement&quot; --tfs.target.url=https://dev.azure.com/ericamundson2  --tfs.target.user=z091182 --tfs.target.token=&quot;xwkt3pm7ga3yl47q4tqiyrswcegxuxmdbncrxo57epx77ivm5rza&quot; --tfs.target.project=&quot;FutureCore&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="importWIT --tfs.url=https://dev.azure.com/ZionsETO  --tfs.user=v070339 --tfs.token=&quot;vnfgymavzc7njwt4lxcahf6zlsljfrvogeelo6higd4a6nojlxha&quot; --tfs.project=&quot;BaNCS&quot; --export.dir=c:\eto-dev_wits2 --default.wit.name=Note --logging.level.com.zions.common.services.rest.AGenericRestClient=DEBUG --logging.file=c:\\rmtestcache\\rm.log"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dproxy.Host=172.18.4.115 -Dproxy.Port=8080 -Dproxy.User=z091182 -Dproxy.Password=4878Middy"/>
-<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-vsts-services}"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
 </launchConfiguration>

@@ -21,6 +21,7 @@ import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonBuilder
+import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 
@@ -130,6 +131,7 @@ import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
  * @enduml
  */
 @Component
+@Slf4j
 class TranslateRmModulesToADO implements CliAction {
 	@Autowired
 	private Map<String, IFilter> filterMap;
@@ -164,16 +166,17 @@ class TranslateRmModulesToADO implements CliAction {
 			}
 		} catch (e) {}
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
-		String mrTfsUrl = data.getOptionValues('mr.tfsUrl')[0]
 		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
 		String tfsUser = data.getOptionValues('tfs.user')[0]
+		String tfsUrl = data.getOptionValues('tfs.url')[0]
 		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
 		String rmQuery = data.getOptionValues('rm.query')[0]
 		String rmFilter = data.getOptionValues('rm.filter')[0]
 		String tfsProjectURI = data.getOptionValues('tfs.projectUri')[0]
 		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
 		String tfsCollectionGUID = data.getOptionValues('tfs.collectionId')[0]
-		String tfsOAuthToken = data.getOptionValues('tfs.oAuthToken')[0]
+		String tfsAltUser = data.getOptionValues('tfs.altuser')[0]
+		String tfsAltPassword = data.getOptionValues('tfs.altpassword')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -184,138 +187,156 @@ class TranslateRmModulesToADO implements CliAction {
 		File mFile = new File(mappingFile)
 		
 		def mapping = new XmlSlurper().parseText(mFile.text)
-		if (includes['clean'] != null) {
+		if (includes['whereused'] != null) {
+			log.info("fetching 'where used' lookup records")
+			if (clmRequirementsManagementService.queryForWhereUsed()) {
+				log.info("'where used' records were retrieved")
+			}
+			else {
+				log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
+			}			
 		}
 		//refresh.
-		if (includes['refresh'] != null) {
-		}
-
-		// Get field mappings, target members map and RM modules to translate to ADO
-		println('Getting Mapping Data...')
-		def mappingData = rmMappingManagementService.mappingData
-		println('Getting ADO Project Members...')
-		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-		println("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
-		def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
-		def changeList = []
-		def idMap = [:]
-		int count = 0
-		modules.each { module ->
-			println("${getCurTimestamp()} - Processing Module: ${module.getTitle()} (${count + 1} of ${modules.size()}) ...")
-			// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
-			def errCount = 0
-			module.orderedArtifacts.each { artifact ->
-				if (artifact.getIsHeading() && artifact.getArtifactType() != 'Heading' ) {
-					println("*** ERROR: Artifact #${artifact.getID()} has inconsistent row type in module ${module.getTitle()}")
-					errCount++
-				}
-			}
-			if (errCount > 0) {
-				println("*** ERROR: Skipping module '${module.getTitle()}' due to $errCount errors")
-				return // goes to next module
-			}
-			
-			// Add Module artifact to ChangeList (to create Document)
-			def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module, memberMap)
-			def aid = module.getCacheID()
-			changes.each { key, val ->
-				String idkey = "${aid}"
-				idMap[count] = idkey
-				changeList.add(val)
-				count++		
-			}
-						
-			// Iterate through all module elements and add them to changeList
-			def ubound = module.orderedArtifacts.size() - 1
-			0.upto(ubound, {
-
-				// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
-				if (module.orderedArtifacts[it].getIsHeading() && 
-					it < module.orderedArtifacts.size()-1 && 
-					isToIncorporateTitle(module,it+1)) {
-					
-					module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
-					module.orderedArtifacts[it].setIsDeleted(true)
-					return  // Skip Heading artifact 
-				}
-				else if (module.orderedArtifacts[it].getIsHeading()) {
-					module.orderedArtifacts[it].setDescription("") // If simple heading, remove duplicate description
-				}
-				else if (it > 0 && module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[it-1].getDepth()){ 
-					// For all other content, increment the depth if not already incremented so as to preserve outline numbering from DOORS
-					module.orderedArtifacts[it].incrementDepth(1)
-				}
-				if (!module.checkForDuplicate(it)) {  // Only store first occurrence of an artifact in the module
-					changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
-					aid = module.orderedArtifacts[it].getCacheID()
-					changes.each { key, val ->
-						String idkey = "${aid}"
-						idMap[count] = idkey
-						changeList.add(val)
-						count++
-					}
-				}
-				else {
-					println("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
-				}
-			})
-			
-
-
-			// Create work items and SmartDoc container in Azure DevOps
-			if (changeList.size() > 0 && errCount == 0) {
-				// Process work item changes in Azure DevOps
-				println("${getCurTimestamp()} - Processing work item changes...")
-				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-				
-				// Create the SmartDoc
-				println("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
-				def result = smartDocManagementService.createSmartDoc(module, collection, mrTfsUrl, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsOAuthToken, mrTemplate, mrFolder)
-				if (result == null) {
-					println("SmartDoc creation returned null")
-				}
-				else if (result.error != null && result.error.code != "null") {
-					println("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
-				}
-				else {
-					println("SmartDoc creation succeeded. Result: ${result.result}")
-				}
-				
-				
-				// Upload Attachments to Azure DevOps
-				println("${getCurTimestamp()} - Uploading attachments...")
-				changeList.clear()
-				idMap.clear()
-				count = 0
+		if (includes['phases'] != null) {
+			// Get field mappings, target members map and RM modules to translate to ADO
+			log.info('Getting Mapping Data...')
+			def mappingData = rmMappingManagementService.mappingData
+			log.info('Getting ADO Project Members...')
+			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+			log.info("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
+			def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
+			def changeList = []
+			def idMap = [:]
+			int iModule = 1
+			int count = 0
+			modules.each { module ->
+				log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} (${iModule++} of ${modules.size()}) ...")
+				module.checkForDuplicates()
+				// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
+				def errCount = 0
 				module.orderedArtifacts.each { artifact ->
-					if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
-						def files = []
-						files[0] = rmFileManagementService.cacheRequirementFile(artifact)
-						
-						String id = artifact.getCacheID()
-						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-						if (wiChanges != null) {
-							def url = "${wiChanges.body[1].value.url}"
-							def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
-							wiChanges.body.add(change)
-							idMap[count] = "${id}"
-							changeList.add(wiChanges)
-							count++
-					
-						}
-						
+					if ((artifact.getIsHeading() && artifact.getArtifactType() != 'Heading') ||
+						(!artifact.getIsHeading() && artifact.getArtifactType() == 'Heading') ) {
+						log.error("*** ERROR: Artifact #${artifact.getID()} has inconsistent heading row type in module ${module.getTitle()}")
+						errCount++
+					}
+					else if (artifact.getIsHeading() && (artifact.hasEmbeddedImage() || artifact.getFormat() == 'WrapperResource')) {
+						log.error("*** ERROR: Artifact #${artifact.getID()} is heading with image or attachment in module ${module.getTitle()}")
+						errCount++
+					} 
+					else if (artifact.getIsDuplicate()) {
+						log.error("*** ERROR: Artifact #${artifact.getID()} is a duplicate instance in module ${module.getTitle()}.  This is not yet supported in ADO.")
+						errCount++
 					}
 				}
-				if (changeList.size() > 0) {
-					// Associate attachments to work items in Azure DevOps
-					println("${getCurTimestamp()} - Associating attachments to work items...")
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+				if (errCount > 0) {
+					log.info("*** ERROR: Skipping module '${module.getTitle()}' due to $errCount errors")
+					return // goes to next module
 				}
+				
+				// Add Module artifact to ChangeList (to create Document)
+				def changes = clmRequirementsItemManagementService.getChanges(tfsProject, module, memberMap)
+				def aid = module.getCacheID()
+				changes.each { key, val ->
+					String idkey = "${aid}"
+					idMap[count] = idkey
+					changeList.add(val)
+					count++		
+				}
+							
+				// Iterate through all module elements and add them to changeList
+				def ubound = module.orderedArtifacts.size() - 1
+				0.upto(ubound, {
+	
+					// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
+					if (module.orderedArtifacts[it].getIsHeading() && 
+						it < module.orderedArtifacts.size()-1 && 
+						isToIncorporateTitle(module,it+1)) {
+						
+						module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
+						module.orderedArtifacts[it].setIsDeleted(true)
+						return  // Skip Heading artifact 
+					}
+					else if (module.orderedArtifacts[it].getIsHeading()) {
+						module.orderedArtifacts[it].setDescription('') // If simple heading, remove duplicate description
+					}
+					else if (it > 0 && module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[it-1].getDepth()){ 
+						// For all other content, increment the depth if not already incremented so as to preserve outline numbering from DOORS
+						module.orderedArtifacts[it].incrementDepth(1)
+					}
+					if (!module.orderedArtifacts[it].getIsDuplicate()) {  // Only store first occurrence of an artifact in the module
+						changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
+						aid = module.orderedArtifacts[it].getCacheID()
+						changes.each { key, val ->
+							String idkey = "${aid}"
+							idMap[count] = idkey
+							changeList.add(val)
+							count++
+						}
+					}
+					else {
+						log.info("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
+					}
+				})
+				
+	
+	
+				// Create work items and SmartDoc container in Azure DevOps
+				if (changeList.size() > 0 && errCount == 0) {
+					// Process work item changes in Azure DevOps
+					log.info("${getCurTimestamp()} - Processing work item changes...")
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+					
+					// Create the SmartDoc
+					log.info("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
+					def result = smartDocManagementService.createSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsAltUser, tfsAltPassword, mrTemplate, mrFolder)
+					if (result == null) {
+						log.info("SmartDoc creation returned null")
+					}
+					else if (result.error != null && result.error.code != "null") {
+						log.info("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
+					}
+					else {
+						log.info("SmartDoc creation succeeded. Result: ${result.result}")
+					}
+					
+					
+					// Upload Attachments to Azure DevOps
+					log.info("${getCurTimestamp()} - Uploading attachments...")
+					changeList.clear()
+					idMap.clear()
+					count = 0
+					module.orderedArtifacts.each { artifact ->
+						if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
+							def files = []
+							files[0] = rmFileManagementService.cacheRequirementFile(artifact)
+							
+							String id = artifact.getCacheID()
+							def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+							if (wiChanges != null) {
+								def url = "${wiChanges.body[1].value.url}"
+								def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
+								wiChanges.body.add(change)
+								idMap[count] = "${id}"
+								changeList.add(wiChanges)
+								count++
+						
+							}
+							
+						}
+					}
+					if (changeList.size() > 0) {
+						// Associate attachments to work items in Azure DevOps
+						log.info("${getCurTimestamp()} - Associating attachments to work items...")
+						workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+					}
+				}
+				
+	
 			}
-			
-
+			log.info("Processing completed")
 		}
-		println("Processing completed")
+
 
 	}
 	
@@ -334,7 +355,8 @@ class TranslateRmModulesToADO implements CliAction {
 		}
 		else if ((moduleType == 'UI Spec') &&
 			   (artifactType == 'Supporting Material' ||
-				artifactType == 'Screen Change' ))	{
+				artifactType == 'Screen Change' ||
+				artifactType == 'User Interface Flow'))	{
 			shouldMerge = true 
 		}
 		return shouldMerge
@@ -354,7 +376,7 @@ class TranslateRmModulesToADO implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'tfs.oAuthToken', 'rm.mapping.file', 'rm.query', 'rm.filter', 'mr.url', 'mr.tfsUrl', 'mr.template', 'mr.folder']
+		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'tfs.altuser','tfs.altpassword', 'rm.mapping.file', 'rm.query', 'rm.filter', 'mr.url', 'mr.template', 'mr.folder']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

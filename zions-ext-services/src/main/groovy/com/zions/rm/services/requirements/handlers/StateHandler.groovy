@@ -25,7 +25,7 @@ class StateHandler extends RmBaseAttributeHandler {
 			return 'Closed'
 		}
 		else {
-			return null
+			return 'Draft'
 		}
 	}
 

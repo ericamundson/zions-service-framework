@@ -40,7 +40,7 @@ class SmartDocManagementService {
 		// TODO Auto-generated constructor stub
 	}
 	
-	def createSmartDoc(def module, def collection, def mrTfsUrl, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsOAuthToken, def mrTemplate, def mrFolder) {
+	def createSmartDoc(def module, def tfsUrl, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsAltUser, def tfsAltPassword, def mrTemplate, def mrFolder) {
 		def date = new Date()
 		String body;
 		String docTitle = "${module.getTitle()}-${date.format('yyyyMMddHHmmss')}"
@@ -50,11 +50,10 @@ class SmartDocManagementService {
 		String wiDetails = """[{"id":"${getVstsID(module)}","linkType":"","links":${getWorkitemDetails(0, module).detailString}}]"""
 		body = """
 			{
-			"userId": "${mrGenericRestClient.getUserid()}",
-			"userPassword":"$userPassword",
-			"serverUrl":"$mrTfsUrl",
+			"userId": "$tfsAltUser",
+			"userPassword":"$tfsAltPassword",
+			"serverUrl":"$tfsUrl/$collection",
 			"domain":"$domain",
-			"oAuthAccessToken":"$tfsOAuthToken",
 			"projectUri":"$tfsProjectURI",
 			"projectName":"$tfsProject",
 			"rootFolder":"$tfsProject",
