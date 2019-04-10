@@ -204,7 +204,7 @@ public class TestManagementService {
 			
 			def wi = workManagementService.getWorkItem(collection, tfsProject, wid)
 			if (wi) {
-				cacheManagementService.saveToCache(wi, "${id}", ICacheManagementService.WI_DATA)
+				cacheManagementService.saveToCache(wi, "${id} WI", ICacheManagementService.WI_DATA)
 			}
 		} else {
 			if (checkpointManagementService) {
@@ -247,11 +247,11 @@ public class TestManagementService {
 				if (twi != null) {
 					String type = "${twi.fields.'System.WorkItemType'}"
 					if (type == 'Test Plan') {
-						String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/testplan/plans/${wi.id}"
+						String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/test/plans/${wi.id}"
 						genericRestClient.delete(
 							uri: url,
 							contentType: ContentType.JSON,
-							query: [destroy: true, 'api-version': '5.0-preview.1']
+							query: [destroy: true, 'api-version': '5.0']
 							)
 					} else if (type == 'Test Case'){
 						String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/test/testcases/${wi.id}"
@@ -273,7 +273,7 @@ public class TestManagementService {
 	}
 	
 	public def ensureTestRun(String collection, String project, def planData) {
-		String pid = "${planData.webId.text()}"
+		String pid = "${planData.webId.text()}-Test Plan"
 		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
 		
 		if (runData == null) {
@@ -311,7 +311,7 @@ public class TestManagementService {
 	public def setParent(def parent, def children, def map) {
 		String pname = "${parent.name()}"
 		String ptname = getTargetName(pname, map)
-		String pid = "${parent.webId.text()}"
+		String pid = "${parent.webId.text()}-${ptname}"
 		String type = ICacheManagementService.PLAN_DATA
 		if (pname == 'testsuite') type = ICacheManagementService.SUITE_DATA
 		def parentData = cacheManagementService.getFromCache(pid, type)
@@ -325,7 +325,7 @@ public class TestManagementService {
 				String ctname = getTargetName(cname, map)
 				
 				
-				String cid = "${child.webId.text()}"
+				String cid = "${child.webId.text()}-${ctname}"
 				def childData = cacheManagementService.getFromCache(cid, ICacheManagementService.WI_DATA)
 				if (childData != null) {
 					tcIds.add("${childData.id}")
@@ -410,7 +410,7 @@ public class TestManagementService {
 	private def getTestWorkItems(String collection, String project, String teamArea) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def query = [query: "Select [System.Id], [System.Title] From WorkItems Where ([System.WorkItemType] = 'Test Plan'  OR [System.WorkItemType] = 'Test Case') AND [System.AreaPath] = '${teamArea}' AND [Custom.ExternalID] <> ''"]
+		def query = [query: "Select [System.Id], [System.Title] From WorkItems Where ([System.WorkItemType] = 'Test Plan'  OR [System.WorkItemType] = 'Test Case') AND [System.AreaPath] = '${teamArea}' AND [Custom.ExternalID] CONTAINS 'RQM-'"]
 		String body = new JsonBuilder(query).toPrettyString()
 		def result = genericRestClient.post(
 			requestContentType: ContentType.JSON,
@@ -542,6 +542,7 @@ public class TestManagementService {
 
 	private def getTestPoints(String collection, String project, def planData ) {
 		def retVal = []
+		if (!planData) return retVal
 		String url = "${planData.rootSuite.url}/points"
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,

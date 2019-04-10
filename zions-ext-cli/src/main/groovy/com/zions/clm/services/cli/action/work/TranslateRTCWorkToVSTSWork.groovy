@@ -200,6 +200,10 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
+		String areaPath = ""
+		try {
+			areaPath = data.getOptionValues('tfs.areapath')[0]
+		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
 		File mFile = new File(mappingFile)
 
@@ -243,6 +247,13 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		}
 		if (includes['flushQueries'] != null) {
 			clmWorkItemManagementService.flushQueries(wiQuery)
+		}
+		if (includes['clean'] != null) {
+			String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'RTC-'"
+			if (areaPath.length()>0) {
+				query = "Select [System.Id], [System.Title] From WorkItems Where [System.AreaPath] = '${areaPath}' AND [Custom.ExternalID] CONTAINS 'RTC-'"
+			}
+			workManagementService.clean(collection,tfsProject, query)
 		}
 		def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)

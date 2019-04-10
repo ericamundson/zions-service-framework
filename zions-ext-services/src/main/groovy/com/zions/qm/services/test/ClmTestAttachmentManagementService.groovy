@@ -94,7 +94,7 @@ class ClmTestAttachmentManagementService {
 		def files = []
 		int sCount = 2
 		ts.steps.step.each { step ->
-			String comment = "[TestStep:${sCount}]:"
+			String comment = "[TestStep=${sCount}]:"
 			step.attachment.each { attachment ->
 				String aurl = "${attachment.@href}"
 				def result = clmTestManagementService.getContent(aurl)

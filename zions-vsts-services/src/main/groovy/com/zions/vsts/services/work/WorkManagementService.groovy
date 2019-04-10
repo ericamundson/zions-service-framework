@@ -96,9 +96,14 @@ class WorkManagementService {
 	def clean(String collection, String project, String query) {
 		def wis = getWorkItems(collection, project, query)
 		def changelist = []
-		wis.workItems.each { wi ->
-			deleteWorkitem(wi.url)
+		while (true) {
+			wis.workItems.each { wi ->
+				deleteWorkitem(wi.url)
+			}
+			wis = getWorkItems(collection, project, query)
+			if (!wis || wis.workItems.size() == 0) break;
 		}
+		cacheManagementService.clear()
 	}
 	
 //	def getWorkItem(String url) {
@@ -121,7 +126,7 @@ class WorkManagementService {
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/wiql",
 			body: body,
 			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0']
+			query: ['api-version': '5.0-preview.2', '$top': 1000]
 			)
 		return result
 

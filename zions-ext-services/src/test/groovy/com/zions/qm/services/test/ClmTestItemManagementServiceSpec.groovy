@@ -92,7 +92,7 @@ class ClmTestItemManagementServiceSpec extends Specification {
 	def 'getChanges main flow with test case data'() {
 		given: 'Plan data'
 		//Plan data
-		def testcase = dataGenerationService.generate('/testdata/testcase49884.xml')
+		def testcase = dataGenerationService.generate('/testdata/testcaseT.xml')
 
 		and: 'team map'
 		//Team map
@@ -150,7 +150,7 @@ class ClmTestItemManagementServiceSpec extends Specification {
 			outItems.add(item)
 		}
 		and: 'Test case data'
-		def testcase = dataGenerationService.generate('/testdata/testcase47598.xml')
+		def testcase = dataGenerationService.generate('/testdata/testcaseT.xml')
 
 		and: 'result map data'
 		def result = dataGenerationService.generate('/testdata/resultsMap.json')
