@@ -31,7 +31,8 @@ trait CacheInterceptor implements Interceptor {
 	boolean ignore
 	
 	/**
-	 * This call sets up the ability to cache any specified object (obj) with the ability to cache return.
+	 * This call sets up the ability to cache any specified object (obj) with the ability to cache return 
+	 * from method calls within closure.
 	 * 
 	 * @param obj - object to enable caching.
 	 * @param id - ID of object to cache

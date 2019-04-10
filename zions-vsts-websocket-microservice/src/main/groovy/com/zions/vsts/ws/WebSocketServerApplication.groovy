@@ -15,6 +15,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration
 
 
 /**
@@ -23,7 +24,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
  * @author z091182
  *
  */
-@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration])
+@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration,EmbeddedMongoAutoConfiguration])
 public class WebSocketServerApplication {
 
 

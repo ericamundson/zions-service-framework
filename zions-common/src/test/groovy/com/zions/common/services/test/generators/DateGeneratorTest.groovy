@@ -20,11 +20,11 @@ public class DateGeneratorTest extends Specification {
 	@Test
 	def 'gen test'() {
 	
-	when:
-	def plan = underTest.gen()
-	
-	then:
-	true
+//		when:
+//		def plan = underTest.gen()
+//		
+//		then:
+//		true
 	
 	}
 

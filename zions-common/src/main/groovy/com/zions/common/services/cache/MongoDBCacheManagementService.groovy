@@ -40,7 +40,6 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 		
 	}
 
-
 	@Override
 	public Object getFromCache(Object id, String type) {
 		// TODO Auto-generated method stub

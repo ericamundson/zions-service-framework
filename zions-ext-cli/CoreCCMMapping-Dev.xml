@@ -470,10 +470,10 @@ Removed
 		<link source="implements_requirement" target="System.LinkTypes.Related" module="RM"/>
 		<link source="affects_requirement" target="System.LinkTypes.Related" module="RM"/>
 		<link source="tracks_requirement" target="System.LinkTypes.Related" module="RM"/>
-		<link source="related_test_case" target="System.LinkTypes.Related" module="QM"/>
-		<link source="related_test_plan" target="System.LinkTypes.Related" module="QM"/>
-		<link source="tested_by_test_case" target="System.LinkTypes.Related" module="QM"/>
-		<link source="affects_execution_result" target="Hyperlink" module="QM"/>
+		<link source="related_test_case" target="System.LinkTypes.Related" module="QM" key="Test Case"/>
+		<link source="related_test_plan" target="System.LinkTypes.Related" module="QM" key="Test Plan WI"/>
+		<link source="tested_by_test_case" target="System.LinkTypes.Related" module="QM" key="Test Case"/>
+		<link source="affects_execution_result" target="Hyperlink" module="QM" key="Result"/>
 		<!--  <link source="related_execution_record" target="Hyperlink" module="QM"/> -->
 	</links>
 </witmapping>

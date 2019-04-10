@@ -41,7 +41,11 @@
 		<field source="preconditionHandler" target="Custom.PreCondition"/>
 		<field source="postconditionHandler" target="Custom.PostCondition"/>
 		<field source="stateHandler" target="System.State">
-			<defaultvalue target="Design"/>
+			<defaultvalue target="Ready"/>
+			<value source="com.ibm.rqm.planning.common.new" target="Design"/>
+			<value source="com.ibm.rqm.planning.common.underreview" target="Ready for Peer"/>
+			<value source="com.ibm.rqm.planning.common.retired" target="Closed"/>
+			<value source="com.ibm.rqm.planning.common.approved" target="Ready"/>
 		</field>
 		<field source="blankHandler" target="System.AreaPath">
 			<defaultvalue target="FutureCore\Test"/>

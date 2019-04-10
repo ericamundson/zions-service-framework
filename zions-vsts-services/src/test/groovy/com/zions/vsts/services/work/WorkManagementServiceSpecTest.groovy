@@ -110,6 +110,7 @@ class WorkManagementServiceSpecTest extends Specification {
 		given: 'setup getWorkitems stub'
 		def workitems = new JsonSlurper().parseText(this.getClass().getResource('/testdata/workitemsquery.json').text)		
 		1 *  genericRestClient.post(_) >> workitems
+		1 *  genericRestClient.post(_) >> null
 		
 		and: 'setup deleteWorkitem stub'
 		1* genericRestClient.delete(_) >> null

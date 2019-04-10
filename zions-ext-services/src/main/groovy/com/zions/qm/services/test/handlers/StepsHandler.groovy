@@ -25,6 +25,8 @@ class StepsHandler extends QmBaseAttributeHandler {
 	@Autowired
 	@Value('clm.url')
 	String clmUrl
+	
+	def SPECIAL = ['&nbsp;','&copy;','&reg;','&euro;','&trade;','&larr;','&uarr;','&rarr;','&darr;']
 
 	public String getQmFieldName() {
 		// TODO Auto-generated method stub
@@ -47,43 +49,95 @@ class StepsHandler extends QmBaseAttributeHandler {
 		def teststeps = ts.steps.step
 		if (teststeps.size()> 0) {
 			def writer = new StringWriter()
-			MarkupBuilder stepxml = new MarkupBuilder(writer)
+			MarkupBuilder stepxml = new MarkupBuilder(new IndentPrinter(new PrintWriter(writer), "", false))
 			int sCount = 2
 			stepxml.steps(steps: 0, last: teststeps.size()+1) {
 				teststeps.each { astep ->
 					step(id: sCount, type:'ValidateStep') {
 						if (astep.description.div.size() > 0) {
 							String htmlDoc = XmlUtil.serialize( astep.description.div )
-							htmlDoc = htmlDoc.replace('<?xml version="1.0" encoding="UTF-8"?>', '')
+							//CharMatcher m
+							//htmlDoc = htmlDoc.replaceAll("\\p{Cntrl}", "")
 							htmlDoc = htmlDoc.replace('tag0:', '')
 							htmlDoc = htmlDoc.replace(' xmlns:tag0="http://www.w3.org/1999/xhtml"', '')
 							htmlDoc = htmlDoc.replace(' dir="ltr"', '')
-							htmlDoc = processImages(htmlDoc, id)
+							//htmlDoc = processImages(htmlDoc, id)
+							//htmlDoc = removeHyperlinks(htmlDoc)
+							htmlDoc = htmlDoc.replace('<?xml version="1.0" encoding="UTF-8"?>', '')
+							//htmlDoc = htmlDoc.replaceAll(/&+(\w)+;/,'')
+							//htmlDoc = htmlDoc.replace('&copy;','')
+							//String plainText= Jsoup.parse(htmlDoc).text();
+//							if (htmlDoc.length() == 0) {
+//								htmlDoc = 'n/a'
+//							}
+							htmlDoc = "<DIV><P>${htmlDoc}</P></DIV>"
+//							File action = new File('action.html')
+//							def os = action.newDataOutputStream()
+//							os << htmlDoc
+//							os.close()
+							
 							String html = StringEscapeUtils.escapeHtml(htmlDoc)
-							parameterizedString(isFormatted: 'true') {
+							parameterizedString(isformatted: 'true') {
+								mkp.yieldUnescaped html
+							}
+						} else {
+							String html = StringEscapeUtils.escapeHtml('<DIV><P></P></DIV>')
+							parameterizedString(isformatted: 'true') {
 								mkp.yieldUnescaped html
 							}
 						}
 						if (astep.expectedResult.div.size() > 0) {
 							String htmlDoc = XmlUtil.serialize( astep.expectedResult.div )
-							htmlDoc = htmlDoc.replace('<?xml version="1.0" encoding="UTF-8"?>', '')
+							//htmlDoc = htmlDoc.replaceAll("\\p{Cntrl}", "")
 							htmlDoc = htmlDoc.replace('tag0:', '')
 							htmlDoc = htmlDoc.replace(' xmlns:tag0="http://www.w3.org/1999/xhtml"', '')
 							htmlDoc = htmlDoc.replace(' dir="ltr"', '')
-							htmlDoc = processImages(htmlDoc, id)
+//							htmlDoc = htmlDoc.replaceAll(/&+(\w)+;/,'')
+							//htmlDoc = processImages(htmlDoc, id)
+							//htmlDoc = removeHyperlinks(htmlDoc)
+							htmlDoc = htmlDoc.replace('<?xml version="1.0" encoding="UTF-8"?>', '')
+							//String plainText= Jsoup.parse(htmlDoc).text();
+//							if (htmlDoc.length() == 0) {
+//								htmlDoc = 'n/a'
+//							}
+							htmlDoc = "<DIV><P>${htmlDoc}</P></DIV>"
+//							File action = new File('result.html')
+//							def os = action.newDataOutputStream()
+//							os << htmlDoc
+//							os.close()
 							String html = StringEscapeUtils.escapeHtml(htmlDoc)
-							parameterizedString(isFormatted: 'true') {
+							parameterizedString(isformatted: 'true') {
 								mkp.yieldUnescaped html
 							}
+						} else {
+							String html = StringEscapeUtils.escapeHtml('<DIV><P></P></DIV>')
+							parameterizedString(isformatted: 'true') {
+								mkp.yieldUnescaped html
+							}
+
 						}
+						//description()
 					}
 					sCount++
 				}
 			}
 			String outVal = writer.toString()
+			outVal = outVal.replaceAll("\\p{Cntrl}", "")
+			outVal = clearSpecial(outVal)
+//			outVal = outVal.replace('&nbsp;','')
+//			outVal = outVal.replace('&copy;','')
+			//outVal = outVal.replaceAll("\\s","")
 			return outVal
 		}
 		return null
+	}
+	
+	def clearSpecial(String val) {
+		String out = val
+		SPECIAL.each { sym ->
+			out = out.replace(sym,'')
+		}
+		return out
 	}
 	
 	private def getTestScript(def itemData) {
@@ -94,6 +148,24 @@ class StepsHandler extends QmBaseAttributeHandler {
 			return ts
 		}
 		return null
+	}
+	
+	String removeHyperlinks(String html) {
+		def htmlData = new XmlSlurper().parseText(html)
+		def links = htmlData.'**'.findAll { p ->
+			String href = p.@href
+			"${href}".startsWith('http')
+		}
+		links.each { node ->
+			String href = node.@href
+			node.replaceNode {
+				b("${href}")
+			}
+		}
+		String outHtml = XmlUtil.asString(htmlData)
+		return outHtml
+
+
 	}
 	
 	String processImages(String html, String sId) {
