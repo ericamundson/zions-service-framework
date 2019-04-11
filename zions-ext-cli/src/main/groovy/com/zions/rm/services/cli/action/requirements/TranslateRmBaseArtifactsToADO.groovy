@@ -31,6 +31,7 @@ import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import com.zions.rm.services.requirements.ClmArtifact
 import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
+import com.zions.rm.services.requirements.RequirementQueryData
 
 /**
  * Provides command line interaction to synchronize RRM requirements management with ADO.
@@ -39,7 +40,7 @@ import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
  * <ul>
  * 	<li>translateRRMToADO - The action's Spring bean name.</li>
  * <ul>
- * <p><b>The following's command-line format: --name=value</b></p>
+ * <p><b>The followimodular ng's command-line format: --name=value</b></p>
  * <ul>
  *  <li>clm.url - CLM url</li>
  *  <li>clm.user - CLM userid</li>
@@ -195,6 +196,12 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		File mFile = new File(mappingFile)
 		
 		def mapping = new XmlSlurper().parseText(mFile.text)
+		
+					log.info('Getting Mapping Data...')
+					def mappingData = rmMappingManagementService.mappingData
+					log.info('Getting ADO Project Members...')
+					def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+					log.info("Querying for Where Used Lookup ...")
 		if (includes['clean'] != null) {
 		}
 		//legacy stuff.
@@ -343,7 +350,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		if (includes['phases'] != null) {
 			log.info("Processing artifacts")
 			restartManagementService.processPhases { phase, items ->
-				if (phase == 'workdata') {
+				if (phase == 'requirements') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					clmRequirementsItemManagementService.resetNewId()
 					items.each { rmItem ->
@@ -363,9 +370,10 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
 						}
 						//new FlowInterceptor() {}.flowLogging(clManager) {
-							def wiChanges = clmRequirementsItemManagementService.getChanges(project, artifact, memberMap)
-							if (wiChanges != null) {
-								clManager.add("${id}", wiChanges)
+							def reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
+							if (reqChanges != null) {
+								clManager.add("${id}", reqChanges)
+								log.print "adding changes for requirement ${id}"
 							}
 						//}
 					}
