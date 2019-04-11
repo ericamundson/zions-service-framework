@@ -233,6 +233,7 @@ public class BuildManagementService {
 			ciBldId = build.value[0].id
 			//ciBldName = "${build.name}"
 		}
+		Integer relBldId = -1
 		def relBldName = ""
 		log.debug("BuildManagementService::ensureDRBuilds -- Look for existing DR Release Build for ${repo.name} ...")
 		def build1 = getDRBuild(collection, projectData, repo, 'release')
@@ -248,6 +249,7 @@ public class BuildManagementService {
 				if (relBd == null ) {
 					log.error("BuildManagementService::ensureDRBuilds -- DR Release Build creation failed!")
 				} else {
+					relBldId = Integer.parseInt("${relBd.id}")
 					relBldName = "${relBd.name}"
 					log.debug("BuildManagementService::ensureDRBuilds -- DR Release build created: "+relBldName)
 				}
@@ -258,6 +260,7 @@ public class BuildManagementService {
 		def returnObject = [folderName: buildFolderName,
 							ciBuildId: ciBldId,
 							ciBuildName: ciBldName,
+							releaseBuildId: relBldId,
 							releaseBuildName: relBldName]
 
 		return returnObject

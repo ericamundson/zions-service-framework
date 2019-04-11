@@ -73,7 +73,8 @@ class BaseQueryHandler implements IQueryHandler {
 		page++
 		String pageId = "${page}"
 		new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
-			currentItems = clmWorkItemManagementService.nextPage(currentItems.@href)
+			String url = "${currentItems.@href}"
+			currentItems = clmWorkItemManagementService.nextPage(url)
 		}
 		return currentItems
 	}

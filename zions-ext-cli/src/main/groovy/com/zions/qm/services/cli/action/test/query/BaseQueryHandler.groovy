@@ -38,7 +38,7 @@ class BaseQueryHandler implements IQueryHandler {
 	
 	int page = 0
 	
-	Date currentTimestamp
+	Date currentTimestamp = new Date()
 	
 	public def getItems() {
 		def cp = cacheManagementService.getFromCache('query', 'QueryStart')

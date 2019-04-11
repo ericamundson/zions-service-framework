@@ -183,6 +183,7 @@ allprojects {
 				'org.spockframework:spock-core:1.2-groovy-2.4',
 				'org.spockframework:spock-spring:1.2-groovy-2.4'
 				)
+				
 	}
 }
 

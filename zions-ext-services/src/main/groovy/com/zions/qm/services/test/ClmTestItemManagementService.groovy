@@ -147,7 +147,7 @@ public class ClmTestItemManagementService {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def exData = [:]
-		String id = "${qmItemData.name.text()}"
+		String id = "${qmItemData.name.text()}-${type}"
 		def cacheConfig = cacheManagementService.getFromCache(id, ICacheManagementService.CONFIGURATION_DATA)
 
 		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Configurations", query:['api-version':'5.0-preview.2'], body: []]
@@ -179,7 +179,7 @@ public class ClmTestItemManagementService {
 	}
 
 	private def getResultData(def resultMap, def testCase) {
-		String rqmId = "${testCase.webId.text()}"
+		String rqmId = "${testCase.webId.text()}-Result"
 		def adoTestCase = cacheManagementService.getFromCache(rqmId, ICacheManagementService.WI_DATA)
 		if (adoTestCase == null) return null
 		return resultMap["${adoTestCase.id}"]
@@ -190,7 +190,7 @@ public class ClmTestItemManagementService {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [:]
-		String id = "${qmItemData.webId.text()}"
+		String id = "${qmItemData.webId.text()}-${type}"
 		def cacheWI = null
 		if (type == 'Test Case' || type.endsWith(' WI')) {
 			if (type.endsWith(' WI')) {
