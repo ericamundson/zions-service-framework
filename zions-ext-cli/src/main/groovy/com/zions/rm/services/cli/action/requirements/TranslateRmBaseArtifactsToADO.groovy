@@ -372,7 +372,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 						//new FlowInterceptor() {}.flowLogging(clManager) {
 							def reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
 							if (reqChanges != null) {
-								clManager.add("${id}", reqChanges)
+								reqChanges.each { key, val ->
+									clManager.add("${id}", val)
+								}
 								//log.print "adding changes for requirement ${id}"
 							}
 						//}
