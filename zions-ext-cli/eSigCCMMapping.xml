@@ -29,11 +29,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="eSignature"/>
+			<defaultvalue target="eSignatureCOE"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="eSignature"/>
+			<defaultvalue target="eSignatureCOE"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -111,11 +111,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="eSignature"/>
+			<defaultvalue target="eSignatureCOE"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="eSignature"/>
+			<defaultvalue target="eSignatureCOE"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -196,11 +196,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="eSignature"/>
+			<defaultvalue target="eSignatureCOE"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="eSignature"/>
+			<defaultvalue target="eSignatureCOE"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -287,11 +287,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="eSignature"/>
+			<defaultvalue target="eSignatureCOE"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="eSignature"/>
+			<defaultvalue target="eSignatureCOE"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -367,11 +367,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="eSignature"/>
+			<defaultvalue target="eSignatureCOE"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="eSignature"/>
+			<defaultvalue target="eSignatureCOE"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
