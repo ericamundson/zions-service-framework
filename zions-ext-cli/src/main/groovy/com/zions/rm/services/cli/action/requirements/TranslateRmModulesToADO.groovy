@@ -299,37 +299,7 @@ class TranslateRmModulesToADO implements CliAction {
 					else {
 						log.info("SmartDoc creation succeeded. Result: ${result.result}")
 					}
-					
-					
-					// Upload Attachments to Azure DevOps
-					log.info("${getCurTimestamp()} - Uploading attachments...")
-					changeList.clear()
-					idMap.clear()
-					count = 0
-					module.orderedArtifacts.each { artifact ->
-						if (artifact.getFormat() == 'WrapperResource' && !artifact.getIsDuplicate()) {
-							def files = []
-							files[0] = rmFileManagementService.cacheRequirementFile(artifact)
-							
-							String id = artifact.getCacheID()
-							def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-							if (wiChanges != null) {
-								def url = "${wiChanges.body[1].value.url}"
-								def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
-								wiChanges.body.add(change)
-								idMap[count] = "${id}"
-								changeList.add(wiChanges)
-								count++
-						
-							}
-							
-						}
-					}
-					if (changeList.size() > 0) {
-						// Associate attachments to work items in Azure DevOps
-						log.info("${getCurTimestamp()} - Associating attachments to work items...")
-						workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-					}
+
 				}
 				
 	

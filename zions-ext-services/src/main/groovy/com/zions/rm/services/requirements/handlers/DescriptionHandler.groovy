@@ -3,6 +3,7 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,6 +24,9 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	
 	@Autowired
 	ICacheManagementService cacheManagementService
+	@Autowired
+	
+	ClmRequirementsFileManagementService rmFileManagementService
 	
 	@Autowired
 	@Value('${clm.url}')
@@ -38,15 +42,24 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	public Object formatValue(Object value, Object itemData) {
 		if (value == null || value.length() == 0) return null
 		
-		// strip out all namespace stuff from html
-		String description = "${value}".replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')
-		description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
-		// Process any embedded images
 		String sId = itemData.getCacheID()
-		def outHtml = processHtml(description, sId)
-		
-		// Return html string, but remove <?xml tag as it causes issues
-		return XmlUtil.asString(outHtml).replace('<?xml version="1.0" encoding="UTF-8"?>\n', '')	
+		String outHtml
+		if (itemData.getFormat() == 'WrapperResource') {
+			// For wrapper resource (uploaded file), we need to create our own description with hyperlink to attachment
+			def fileItem = rmFileManagementService.cacheRequirementFile(itemData)
+			def attData = attachmentService.sendAttachment([file:fileItem.file])
+			outHtml = '<div><a href=' + attData.url + '&download=true>Uploaded Attachment</a></div>'
+			itemData.setAdoFileInfo(attData)
+		}
+		else {
+			// strip out all namespace stuff from html
+			String description = "${value}".replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')
+			description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
+			// Process any embedded images
+
+			outHtml = processHtml(description, sId)
+		}
+		return 	outHtml
 	}
 	
 	def processHtml(String html, String sId) {
@@ -82,7 +95,8 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		addBorderStyle('th', htmlData)
 		addBorderStyle('td', htmlData)
 
-		return htmlData
+		// Return html as string, but remove <?xml tag as it causes issues
+		return XmlUtil.asString(htmlData).replace('<?xml version="1.0" encoding="UTF-8"?>\n', '')
 
 	}
 	

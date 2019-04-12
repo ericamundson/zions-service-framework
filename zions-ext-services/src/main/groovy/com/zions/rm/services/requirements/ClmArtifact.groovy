@@ -8,6 +8,7 @@ class ClmArtifact {
 	def collectionArtifacts
 	def links
 	def changes
+	def adoFileInfo
 	public ClmArtifact(String in_title, String in_format, String in_about) {
 		attributeMap = [:]
 		collectionArtifacts = []

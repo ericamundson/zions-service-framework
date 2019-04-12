@@ -122,7 +122,15 @@ class ClmRequirementsItemManagementService {
 				}
 			}
 		}
-
+		
+		// For wrapped resource, associate wrapped file as an attachment (was uploaded by DescriptionHandler)
+		if (rmItemData.getFormat() == 'WrapperResource') {
+			def adoFile = rmItemData.getAdoFileInfo()
+			String comment = "Migrated from Rational DNG"
+			def change = [op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: adoFile.url, attributes:[comment: comment]]]
+			wiData.body.add(change)
+		}
+		
 		if (wiData.body.size() == 1) {
 			return null
 		}
