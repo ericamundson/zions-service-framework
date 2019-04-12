@@ -3,8 +3,10 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.rm.services.requirements.ClmArtifact
 import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
+import com.zions.rm.services.requirements.RequirementsMappingManagementService
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -24,8 +26,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	
 	@Autowired
 	ICacheManagementService cacheManagementService
-	@Autowired
 	
+	@Autowired
+	RequirementsMappingManagementService rmMappingManagementService
+	
+	@Autowired	
 	ClmRequirementsFileManagementService rmFileManagementService
 	
 	@Autowired
@@ -49,7 +54,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			def fileItem = rmFileManagementService.cacheRequirementFile(itemData)
 			def attData = attachmentService.sendAttachment([file:fileItem.file])
 			outHtml = '<div><a href=' + attData.url + '&download=true>Uploaded Attachment</a></div>'
-			itemData.setAdoFileInfo(attData)
+			itemData.adoFileInfo.add(attData)
 		}
 		else {
 			// strip out all namespace stuff from html
@@ -57,12 +62,12 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
 			// Process any embedded images
 
-			outHtml = processHtml(description, sId)
+			outHtml = processHtml(description, sId, itemData)
 		}
 		return 	outHtml
 	}
 	
-	def processHtml(String html, String sId) {
+	def processHtml(String html, String sId, def itemData) {
 		def htmlData = new XmlSlurper().parseText(html)
 		
 		// First move all embedded images to ADO
@@ -88,7 +93,18 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			}
 			else {
 				log.error("Error parsing filename of embedded image in DescriptionHandler.  Artifact ID: $itemId")
-			}		
+			}
+			
+			int wrapNdx = url.indexOf('resourceRevisionURL')
+			if (wrapNdx > 0) {
+				// Need to pull in the attachment for the embedded wrapped resource
+				def about = clmUrl + '/rm/resources/' + url.substring(wrapNdx+74)
+				def wrappedResourceArtifact = new ClmArtifact('','',about)
+				wrappedResourceArtifact = clmRequirementsManagementService.getNonTextArtifact(wrappedResourceArtifact)
+				def fileItem = rmFileManagementService.cacheRequirementFile(wrappedResourceArtifact)
+				def attData = attachmentService.sendAttachment([file:fileItem.file])			
+				itemData.adoFileInfo.add(attData)
+			}
 		}
 		
 		// Next process all tables, adding border info to <td> tags

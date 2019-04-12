@@ -16,6 +16,7 @@ class ClmArtifact {
 		setTitle(in_title)
 		this.setAbout(in_about)
 		format = in_format
+		adoFileInfo = []
 	}
 	public void setAbout(String in_about) {
 		attributeMap.'about' = in_about
