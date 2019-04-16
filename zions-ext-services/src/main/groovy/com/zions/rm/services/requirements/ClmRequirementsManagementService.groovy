@@ -194,14 +194,14 @@ class ClmRequirementsManagementService {
 				headers: [Accept: 'application/rdf+xml'] );
 		if (results != null) {
 			def prevID = null
-			def linkInfoList = []
+			def whereUsedList = []
 			results.children().each { p ->
 				def id = "${p.REFERENCE_ID}"
 				if (prevID != null && id != prevID) { // Save whereUsed for this id
-					cacheManagementService.saveToCache(linkInfoList, id, 'whereUsedData')
-					linkInfoList.clear()
+					cacheManagementService.saveToCache(whereUsedList, prevID, 'whereUsedData')
+					whereUsedList.clear()
 				}
-				linkInfoList.add(new LinkInfo(type: "${p.MODULE_NAME}", itemIdCurrent: id, itemIdRelated: "${p.URL2}", moduleCurrent: 'RM', moduleRelated: 'RM'))
+				whereUsedList.add([name: "${p.MODULE_NAME}", url: "${p.URL2}"])
 				
 				prevID = id
 			}

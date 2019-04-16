@@ -177,7 +177,7 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
-	<wit source="Technical Design Requirement" target="Functional Requirement" translateUnmappedFields="false">
+	<wit source="Technical Requirement" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>

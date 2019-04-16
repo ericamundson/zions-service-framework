@@ -45,7 +45,9 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		if (value == null || value.length() == 0) return null
+		if (value == null || value.length() == 0) {
+			return '<div></div>'
+		}
 		
 		String sId = itemData.getCacheID()
 		String outHtml
@@ -68,8 +70,14 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	}
 	
 	def processHtml(String html, String sId, def itemData) {
-		def htmlData = new XmlSlurper().parseText(html)
-		
+		def htmlData
+		try {
+			htmlData = new XmlSlurper().parseText(html)
+		}
+		catch (Exception e) {
+			log.error("Error parsing description for ID &sId: ${e.getMessage()}")
+			return null
+		}
 		// First move all embedded images to ADO
 		def imgs = htmlData.'**'.findAll { p ->
 			String src = p.@src
