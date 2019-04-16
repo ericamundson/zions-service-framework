@@ -300,38 +300,6 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 		}
 
-
-
-	}
-
-	def getItemChanges(String project, def rmItemData, def memberMap) {
-
-		String modified = rmItemData.Requirement.modified
-		String identifier = rmItemData.Requirement.identifier
-		String formatString = rmItemData.Requirement.ArtifactFormat.@'rdf:resource'
-		String format = formatString.substring(formatString.lastIndexOf('#') + 1)
-		String about = "${rmItemData.Requirement.@'rdf:about'}"
-		ClmArtifact artifact = new ClmArtifact('', format, about)
-		if (format == 'Text') {
-			clmRequirementsManagementService.getTextArtifact(artifact,false)
-		}
-		else if (format == 'WrapperResource'){
-			clmRequirementsManagementService.getNonTextArtifact(artifact)
-		}
-		else {
-			log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
-		}
-		artifact.setChanges(clmRequirementsItemManagementService.getChanges(project, artifact, memberMap))
-		return artifact
-	}
-	
-	def filtered(def items, String filter) {
-		if (this.filterMap[filter] != null) {
-			return this.filterMap[filter].filter(items)
-		}
-		return items.entry.findAll { ti ->
-			true
-		}
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {

@@ -25,7 +25,7 @@ class WhereUsedHandler extends RmBaseAttributeHandler {
 		if (whereUsedList != null) {
 			whereUsedHtml = '<div>'
 			whereUsedList.each { ref ->
-				whereUsedHtml = whereUsedHtml + "<a href=${ref.itemIdRelated}>${ref.type}</a><br>"
+				whereUsedHtml = whereUsedHtml + "<a href=${ref.url}>${ref.name}</a><br>"
 			}			
 			whereUsedHtml = whereUsedHtml + '</div>'
 			
