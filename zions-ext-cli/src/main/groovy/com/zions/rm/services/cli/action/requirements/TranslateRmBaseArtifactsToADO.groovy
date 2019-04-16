@@ -259,14 +259,17 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}			
 		}
 		if (includes['phases'] != null) {
+			
 			log.info("Processing artifacts")
 			restartManagementService.processPhases { phase, items ->
+				log.debug("Entering phase loop")
 				if (phase == 'requirements') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					clmRequirementsItemManagementService.resetNewId()
 					items.each { rmItem ->
 						String sid = "${rmItem.Requirement.identifier}"
 						int id = Integer.parseInt(sid)
+						log.debug("items.each loop for id: ${sid}")
 						String formatString = rmItem.Requirement.ArtifactFormat.@'rdf:resource'
 						String format = formatString.substring(formatString.lastIndexOf('#') + 1)
 						String about = "${rmItem.Requirement.@'rdf:about'}"
@@ -290,7 +293,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							}
 						//}
 					}
+					log.debug("about to flush clmanager")
 					clManager.flush();
+					log.debug("finished flushing clmanager")
 				}
 			}
 		}

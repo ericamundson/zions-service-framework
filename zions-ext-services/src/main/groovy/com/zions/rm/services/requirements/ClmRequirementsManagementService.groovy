@@ -143,6 +143,7 @@ class ClmRequirementsManagementService {
 					oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl) + "&oslc.pageSize=${clmPageSize}";
 
 		uri = uri.replace('<','%3C').replace('>', '%3E')
+		log.debug("queryForArtifacts with uri: ${uri}")
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
@@ -175,6 +176,7 @@ class ClmRequirementsManagementService {
 	}
 	
 	public def nextPage(url) {
+		log.debug("Retrieving next page: ${url}")
 		def result = rmGenericRestClient.get(
 			uri: url,
 			headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
@@ -236,7 +238,7 @@ class ClmRequirementsManagementService {
 	}
 	
 	def getTextArtifact(def in_artifact, boolean includeCollections) {
-		
+		log.debug("Fetching text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
 				headers: [Accept: 'application/xml'] );
@@ -306,7 +308,7 @@ class ClmRequirementsManagementService {
 		return memberHrefs
 	}
 	def getNonTextArtifact(def in_artifact) {
-		
+		log.debug("fetching non-text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/resources?resourceURI="),
 				headers: [Accept: 'application/xml'] );
@@ -499,14 +501,17 @@ class ClmRequirementsManagementService {
 //This class is used by the CacheInterceptor to store the direct query results; there are similar identical classes for both CCM and QM.
 //I am unsure if the classname is why they are different and that has some impact on how the data is stored in the cache,
 //but for consistancy's sake we are making a new data class in the same manner as ClmTestManagementService
+@Slf4j
 class RequirementQueryData implements CacheWData {
 	String data
 	
 	void doData(def result) {
+		log.debug("ReqQueryData serializing result doData")
 		data = new XmlUtil().serialize(result)
 	}
 	
 	def dataValue() {
+		log.debug("ReqQueryData returning serialized result dataValue")
 		return new XmlSlurper().parseText(data)
 	}
 
