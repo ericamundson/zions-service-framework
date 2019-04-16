@@ -101,6 +101,10 @@ class ClmRequirementsItemManagementService {
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+
+			// Add work item type in case it changed
+			def idData = [ op: 'add', path: '/fields/System.WorkItemType', value: "${map.target}"]
+			wiData.body.add(idData)
 		} else {
 			def idData = [ op: 'add', path: '/id', value: newId]
 			newId--
