@@ -238,7 +238,7 @@ class ClmRequirementsManagementService {
 	}
 	
 	def getTextArtifact(def in_artifact, boolean includeCollections) {
-		log.debug("Fetching text artifact")
+		//log.debug("Fetching text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
 				headers: [Accept: 'application/xml'] );
@@ -308,7 +308,7 @@ class ClmRequirementsManagementService {
 		return memberHrefs
 	}
 	def getNonTextArtifact(def in_artifact) {
-		log.debug("fetching non-text artifact")
+		//log.debug("fetching non-text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/resources?resourceURI="),
 				headers: [Accept: 'application/xml'] );

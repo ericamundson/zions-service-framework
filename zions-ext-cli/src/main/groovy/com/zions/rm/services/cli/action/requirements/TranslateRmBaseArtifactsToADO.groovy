@@ -266,10 +266,11 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				if (phase == 'requirements') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					clmRequirementsItemManagementService.resetNewId()
+					log.debug("Getting content of ${items.size()} items")
 					items.each { rmItem ->
 						String sid = "${rmItem.Requirement.identifier}"
 						int id = Integer.parseInt(sid)
-						log.debug("items.each loop for id: ${sid}")
+						//log.debug("items.each loop for id: ${sid}")
 						String formatString = rmItem.Requirement.ArtifactFormat.@'rdf:resource'
 						String format = formatString.substring(formatString.lastIndexOf('#') + 1)
 						String about = "${rmItem.Requirement.@'rdf:about'}"
