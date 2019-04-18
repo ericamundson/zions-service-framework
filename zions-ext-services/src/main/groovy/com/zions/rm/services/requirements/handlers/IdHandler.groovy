@@ -13,7 +13,7 @@ class IdHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		String outVal = "${value}"
+		String outVal = "DNG-${value}"
 		return outVal;
 	}
 

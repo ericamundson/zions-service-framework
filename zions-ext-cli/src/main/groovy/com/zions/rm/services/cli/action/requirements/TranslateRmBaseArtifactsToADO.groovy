@@ -146,15 +146,11 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	@Autowired
 	MemberManagementService memberManagementService;
 	@Autowired
-	FileManagementService fileManagementService;
-	@Autowired
 	WorkManagementService workManagementService
 	@Autowired 
 	ClmRequirementsItemManagementService clmRequirementsItemManagementService
 	@Autowired 
 	ClmRequirementsManagementService clmRequirementsManagementService
-	@Autowired 
-	RequirementsMappingManagementService rmMappingManagementService
 	@Autowired
 	ClmRequirementsFileManagementService rmFileManagementService
 	@Autowired
@@ -180,7 +176,6 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
 		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
 		String tfsUser = data.getOptionValues('tfs.user')[0]
-		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
 		String oslcNs = data.getOptionValues('oslc.namespaces')[0]
 		String oslcSelect = data.getOptionValues('oslc.select')[0]
 		String oslcWhere = data.getOptionValues('oslc.where')[0]
@@ -193,16 +188,16 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
-		File mFile = new File(mappingFile)
 		
-		def mapping = new XmlSlurper().parseText(mFile.text)
-		
-					log.info('Getting Mapping Data...')
-					def mappingData = rmMappingManagementService.mappingData
-					log.info('Getting ADO Project Members...')
-					def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-					log.info("Querying for Where Used Lookup ...")
+		log.info('Getting ADO Project Members...')
+		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+
 		if (includes['clean'] != null) {
+			String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-'"
+			if (areaPath.length()>0) {
+				query = query + " AND [System.AreaPath] = '${areaPath}'"
+			}
+			workManagementService.clean(collection,tfsProject, query)
 		}
 
 		// Refresh cached list migrated ADO work items

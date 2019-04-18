@@ -47,11 +47,7 @@ import groovyx.net.http.ContentType
  *
  */
 @Component
-class ClmRequirementsItemManagementService {
-	@Autowired
-	@Value('${cache.location}')
-	String cacheLocation
-	
+class ClmRequirementsItemManagementService {	
 	@Autowired
 	@Value('${tfs.url}')
 	String tfsUrl
@@ -105,6 +101,7 @@ class ClmRequirementsItemManagementService {
 			// Add work item type in case it changed
 			def idData = [ op: 'add', path: '/fields/System.WorkItemType', value: "${map.target}"]
 			wiData.body.add(idData)
+			rmItemData.setCacheWI(cacheWI)
 		} else {
 			def idData = [ op: 'add', path: '/id', value: newId]
 			newId--
@@ -127,15 +124,12 @@ class ClmRequirementsItemManagementService {
 			}
 		}
 		
-		// For wrapped resource, associate attachments (uploaded by DescriptionHandler)
-		if (rmItemData.adoFileInfo.size() > 0) {
-			String comment = "Migrated from Rational DNG"
-			rmItemData.adoFileInfo.each { adoFile -> 
-				def change = [op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: adoFile.url, attributes:[comment: comment]]]
-				wiData.body.add(change)
-			}
+		// For all new attachments uploaded by DescriptionHandler, add associate to ADO WI
+		rmItemData.adoFileInfo.each { adoFile -> 
+			def change = [op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: adoFile.url, attributes:[comment: adoFile.comment]]]
+			wiData.body.add(change)
 		}
-		
+
 		if (wiData.body.size() == 1) {
 			return null
 		}
