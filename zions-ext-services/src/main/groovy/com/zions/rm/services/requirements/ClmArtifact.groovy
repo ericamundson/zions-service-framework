@@ -9,6 +9,7 @@ class ClmArtifact {
 	def links
 	def changes
 	def adoFileInfo
+	def cacheWI // cached work item from ADO
 	public ClmArtifact(String in_title, String in_format, String in_about) {
 		attributeMap = [:]
 		collectionArtifacts = []

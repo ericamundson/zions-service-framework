@@ -53,10 +53,9 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		String outHtml
 		if (itemData.getFormat() == 'WrapperResource') {
 			// For wrapper resource (uploaded file), we need to create our own description with hyperlink to attachment
-			def fileItem = rmFileManagementService.cacheRequirementFile(itemData)
-			def attData = attachmentService.sendAttachment([file:fileItem.file])
-			outHtml = '<div><a href=' + attData.url + '&download=true>Uploaded Attachment</a></div>'
-			itemData.adoFileInfo.add(attData)
+			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, itemData.getFileHref(),'')
+
+			outHtml = '<div><a href=' + fileItem.url + '&download=true>Uploaded Attachment</a></div>'
 		}
 		else {
 			// strip out all namespace stuff from html
@@ -85,33 +84,18 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		}
 		imgs.each { img ->
 			String url = img.@src
-			def oData = clmRequirementsManagementService.getContent(url)
-			String contentDisp = "${oData.headers.'Content-Disposition'}"
-			String filename = null
-			if (contentDisp != null && contentDisp != 'null') {
-				filename = contentDisp.substring(contentDisp.indexOf('filename=')+10,contentDisp.indexOf('";'))
-			}
-			else {
-				filename = "${img.@alt}".replace(' WrapperResource','')
-			}
-			if (filename != null) {
-				def file = cacheManagementService.saveBinaryAsAttachment(oData.data, filename, sId)
-				def attData = attachmentService.sendAttachment([file:file])
-				img.@src = attData.url
-			}
-			else {
-				log.error("Error parsing filename of embedded image in DescriptionHandler.  Artifact ID: $itemId")
-			}
+			String altFilename = "${img.@alt}".replace(' WrapperResource','') + '.jpeg'
+			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, url, altFilename)
+			img.@src = fileItem.url
 			
+			// If the embedded image was due to an embedded wrapper resource artifact, we want to get the original document attachment
 			int wrapNdx = url.indexOf('resourceRevisionURL')
 			if (wrapNdx > 0) {
 				// Need to pull in the attachment for the embedded wrapped resource
 				def about = clmUrl + '/rm/resources/' + url.substring(wrapNdx+74)
 				def wrappedResourceArtifact = new ClmArtifact('','',about)
 				wrappedResourceArtifact = clmRequirementsManagementService.getNonTextArtifact(wrappedResourceArtifact)
-				def fileItem = rmFileManagementService.cacheRequirementFile(wrappedResourceArtifact)
-				def attData = attachmentService.sendAttachment([file:fileItem.file])			
-				itemData.adoFileInfo.add(attData)
+				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, wrappedResourceArtifact.getFileHref(),'')
 			}
 		}
 		
