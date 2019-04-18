@@ -238,11 +238,11 @@ class ClmRequirementsManagementService {
 	}
 	
 	def getTextArtifact(def in_artifact, boolean includeCollections) {
-		//log.debug("Fetching text artifact")
+		log.debug("Fetching text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
 				headers: [Accept: 'application/xml'] );
-					
+		log.debug("Fetching URI: ${in_artifact.getAbout()}")
 		// Extract artifact attributes
 		result.children().each { artifactNode ->
 			parseTopLevelAttributes(artifactNode, in_artifact)
@@ -285,7 +285,6 @@ class ClmRequirementsManagementService {
 				}
 			}
 		}
-		
 		return in_artifact
 
 	}
@@ -308,7 +307,7 @@ class ClmRequirementsManagementService {
 		return memberHrefs
 	}
 	def getNonTextArtifact(def in_artifact) {
-		//log.debug("fetching non-text artifact")
+		log.debug("fetching non-text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/resources?resourceURI="),
 				headers: [Accept: 'application/xml'] );
@@ -364,6 +363,7 @@ class ClmRequirementsManagementService {
 		String modified = artifactNode.collaboration.modified
 		String identifier = artifactNode.identifier
 		Date modifiedDate = Date.parse("yyyy-MM-dd'T'hh:mm:ss",modified)
+		log.debug("Attempting to find and cache links for ${identifier}")
 		in_artifact.setLinks(getAllLinks(identifier, modifiedDate, artifactNode))
 	}
 	
@@ -372,7 +372,8 @@ class ClmRequirementsManagementService {
 		if (title == '') {
 			title= "${artifactNode.description}"
 		}
-		if (title == '') {
+		//amending this to deal with null titles in addition to blanks
+		if (!title) {
 			title= "<blank title>"
 		}
 		in_artifact.setTitle(title)
@@ -470,7 +471,6 @@ class ClmRequirementsManagementService {
 			contentType: ContentType.BINARY
 			);
 		return result
-
 	}
 	
 	//what we need: artifact id and type, then the link set to look through and get all links
@@ -481,17 +481,21 @@ class ClmRequirementsManagementService {
 		List<LinkInfo> links = new ArrayList<LinkInfo>()
 //		String modified = rmItemData.Requirement.modified
 //		String identifier = rmItemData.Requirement.identifier
+//		if (id == '1570094') {log.print(XmlUtil.serialize(artifactNode))}
 		artifactNode.traceability.links.children().each { link ->
 			//String itemIdCurrent = child.name()
 			String rid = link.identifier //if the target is QM this will be a guid
 			String key = link.title //if we just want the string type of link it's .title, uri to type is .linkType
 			String module = link.relation.text().split('/')[3]
+			log.debug("Found link for Artifact ${id} to ${module} item ${rid}")
 			if (module == 'qm') {
 				rid = link.alternative
 			}
-			def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'RM', moduleRelated: module)
+			def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'rm', moduleRelated: module)
 			links.add(info)
 		}
+		//autowired cache elementtype=linkinfo not functiong as expected, moving on
+		cacheManagementService.saveToCache(links, id, 'LinkInfo')
 		return links
 	}
 	
