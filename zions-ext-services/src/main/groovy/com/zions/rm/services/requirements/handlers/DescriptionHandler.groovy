@@ -3,7 +3,10 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.rm.services.requirements.ClmArtifact
+import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
+import com.zions.rm.services.requirements.RequirementsMappingManagementService
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -25,6 +28,12 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	ICacheManagementService cacheManagementService
 	
 	@Autowired
+	RequirementsMappingManagementService rmMappingManagementService
+	
+	@Autowired	
+	ClmRequirementsFileManagementService rmFileManagementService
+	
+	@Autowired
 	@Value('${clm.url}')
 	String clmUrl
 	
@@ -36,22 +45,38 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		if (value == null || value.length() == 0) return null
+		if (value == null || value.length() == 0) {
+			return '<div></div>'
+		}
 		
-		// strip out all namespace stuff from html
-		String description = "${value}".replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')
-		description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
-		// Process any embedded images
 		String sId = itemData.getCacheID()
-		def outHtml = processHtml(description, sId)
-		
-		// Return html string, but remove <?xml tag as it causes issues
-		return XmlUtil.asString(outHtml).replace('<?xml version="1.0" encoding="UTF-8"?>\n', '')	
+		String outHtml
+		if (itemData.getFormat() == 'WrapperResource') {
+			// For wrapper resource (uploaded file), we need to create our own description with hyperlink to attachment
+			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, itemData.getFileHref(),'')
+
+			outHtml = '<div><a href=' + fileItem.url + '&download=true>Uploaded Attachment</a></div>'
+		}
+		else {
+			// strip out all namespace stuff from html
+			String description = "${value}".replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')
+			description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
+			// Process any embedded images
+
+			outHtml = processHtml(description, sId, itemData)
+		}
+		return 	outHtml
 	}
 	
-	def processHtml(String html, String sId) {
-		def htmlData = new XmlSlurper().parseText(html)
-		
+	def processHtml(String html, String sId, def itemData) {
+		def htmlData
+		try {
+			htmlData = new XmlSlurper().parseText(html)
+		}
+		catch (Exception e) {
+			log.error("Error parsing description for ID &sId: ${e.getMessage()}")
+			return null
+		}
 		// First move all embedded images to ADO
 		def imgs = htmlData.'**'.findAll { p ->
 			String src = p.@src
@@ -59,30 +84,27 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		}
 		imgs.each { img ->
 			String url = img.@src
-			def oData = clmRequirementsManagementService.getContent(url)
-			String contentDisp = "${oData.headers.'Content-Disposition'}"
-			String filename = null
-			if (contentDisp != null && contentDisp != 'null') {
-				filename = contentDisp.substring(contentDisp.indexOf('filename=')+10,contentDisp.indexOf('";'))
+			String altFilename = "${img.@alt}".replace(' WrapperResource','') + '.jpeg'
+			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, url, altFilename)
+			img.@src = fileItem.url
+			
+			// If the embedded image was due to an embedded wrapper resource artifact, we want to get the original document attachment
+			int wrapNdx = url.indexOf('resourceRevisionURL')
+			if (wrapNdx > 0) {
+				// Need to pull in the attachment for the embedded wrapped resource
+				def about = clmUrl + '/rm/resources/' + url.substring(wrapNdx+74)
+				def wrappedResourceArtifact = new ClmArtifact('','',about)
+				wrappedResourceArtifact = clmRequirementsManagementService.getNonTextArtifact(wrappedResourceArtifact)
+				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, wrappedResourceArtifact.getFileHref(),'')
 			}
-			else {
-				filename = "${img.@alt}".replace(' WrapperResource','')
-			}
-			if (filename != null) {
-				def file = cacheManagementService.saveBinaryAsAttachment(oData.data, filename, sId)
-				def attData = attachmentService.sendAttachment([file:file])
-				img.@src = attData.url
-			}
-			else {
-				log.error("Error parsing filename of embedded image in DescriptionHandler.  Artifact ID: $itemId")
-			}		
 		}
 		
 		// Next process all tables, adding border info to <td> tags
 		addBorderStyle('th', htmlData)
 		addBorderStyle('td', htmlData)
 
-		return htmlData
+		// Return html as string, but remove <?xml tag as it causes issues
+		return XmlUtil.asString(htmlData).replace('<?xml version="1.0" encoding="UTF-8"?>\n', '')
 
 	}
 	

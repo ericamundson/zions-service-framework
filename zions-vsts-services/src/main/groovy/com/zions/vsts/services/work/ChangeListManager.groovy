@@ -33,6 +33,7 @@ class ChangeListManager {
 
 	def flush() {
 		if (count == 0) return;
+		log.debug("Flushing ChangeListManager")
 		workManagementService.batchWIChanges(collection, project, changeList, idMap)
 		changeList = []
 		idMap = [:]

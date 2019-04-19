@@ -143,6 +143,7 @@ class ClmRequirementsManagementService {
 					oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl) + "&oslc.pageSize=${clmPageSize}";
 
 		uri = uri.replace('<','%3C').replace('>', '%3E')
+		log.debug("queryForArtifacts with uri: ${uri}")
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
@@ -175,6 +176,7 @@ class ClmRequirementsManagementService {
 	}
 	
 	public def nextPage(url) {
+		log.debug("Retrieving next page: ${url}")
 		def result = rmGenericRestClient.get(
 			uri: url,
 			headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
@@ -194,14 +196,14 @@ class ClmRequirementsManagementService {
 				headers: [Accept: 'application/rdf+xml'] );
 		if (results != null) {
 			def prevID = null
-			def linkInfoList = []
+			def whereUsedList = []
 			results.children().each { p ->
 				def id = "${p.REFERENCE_ID}"
 				if (prevID != null && id != prevID) { // Save whereUsed for this id
-					cacheManagementService.saveToCache(linkInfoList, id, 'whereUsedData')
-					linkInfoList.clear()
+					cacheManagementService.saveToCache(whereUsedList, prevID, 'whereUsedData')
+					whereUsedList.clear()
 				}
-				linkInfoList.add(new LinkInfo(type: "${p.MODULE_NAME}", itemIdCurrent: id, itemIdRelated: "${p.URL2}", moduleCurrent: 'RM', moduleRelated: 'RM'))
+				whereUsedList.add([name: "${p.MODULE_NAME}", url: "${p.URL2}"])
 				
 				prevID = id
 			}
@@ -236,11 +238,11 @@ class ClmRequirementsManagementService {
 	}
 	
 	def getTextArtifact(def in_artifact, boolean includeCollections) {
-		
+		log.debug("Fetching text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
 				headers: [Accept: 'application/xml'] );
-					
+		log.debug("Fetching URI: ${in_artifact.getAbout()}")
 		// Extract artifact attributes
 		result.children().each { artifactNode ->
 			parseTopLevelAttributes(artifactNode, in_artifact)
@@ -283,7 +285,6 @@ class ClmRequirementsManagementService {
 				}
 			}
 		}
-		
 		return in_artifact
 
 	}
@@ -306,7 +307,7 @@ class ClmRequirementsManagementService {
 		return memberHrefs
 	}
 	def getNonTextArtifact(def in_artifact) {
-		
+		log.debug("fetching non-text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/resources?resourceURI="),
 				headers: [Accept: 'application/xml'] );
@@ -362,6 +363,7 @@ class ClmRequirementsManagementService {
 		String modified = artifactNode.collaboration.modified
 		String identifier = artifactNode.identifier
 		Date modifiedDate = Date.parse("yyyy-MM-dd'T'hh:mm:ss",modified)
+		log.debug("Attempting to find and cache links for ${identifier}")
 		in_artifact.setLinks(getAllLinks(identifier, modifiedDate, artifactNode))
 	}
 	
@@ -370,7 +372,8 @@ class ClmRequirementsManagementService {
 		if (title == '') {
 			title= "${artifactNode.description}"
 		}
-		if (title == '') {
+		//amending this to deal with null titles in addition to blanks
+		if (!title) {
 			title= "<blank title>"
 		}
 		in_artifact.setTitle(title)
@@ -468,7 +471,6 @@ class ClmRequirementsManagementService {
 			contentType: ContentType.BINARY
 			);
 		return result
-
 	}
 	
 	//what we need: artifact id and type, then the link set to look through and get all links
@@ -479,17 +481,21 @@ class ClmRequirementsManagementService {
 		List<LinkInfo> links = new ArrayList<LinkInfo>()
 //		String modified = rmItemData.Requirement.modified
 //		String identifier = rmItemData.Requirement.identifier
+//		if (id == '1570094') {log.print(XmlUtil.serialize(artifactNode))}
 		artifactNode.traceability.links.children().each { link ->
 			//String itemIdCurrent = child.name()
 			String rid = link.identifier //if the target is QM this will be a guid
 			String key = link.title //if we just want the string type of link it's .title, uri to type is .linkType
 			String module = link.relation.text().split('/')[3]
+			log.debug("Found link for Artifact ${id} to ${module} item ${rid}")
 			if (module == 'qm') {
 				rid = link.alternative
 			}
-			def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'RM', moduleRelated: module)
+			def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'rm', moduleRelated: module)
 			links.add(info)
 		}
+		//autowired cache elementtype=linkinfo not functiong as expected, moving on
+		cacheManagementService.saveToCache(links, id, 'LinkInfo')
 		return links
 	}
 	
@@ -499,14 +505,17 @@ class ClmRequirementsManagementService {
 //This class is used by the CacheInterceptor to store the direct query results; there are similar identical classes for both CCM and QM.
 //I am unsure if the classname is why they are different and that has some impact on how the data is stored in the cache,
 //but for consistancy's sake we are making a new data class in the same manner as ClmTestManagementService
+@Slf4j
 class RequirementQueryData implements CacheWData {
 	String data
 	
 	void doData(def result) {
+		log.debug("ReqQueryData serializing result doData")
 		data = new XmlUtil().serialize(result)
 	}
 	
 	def dataValue() {
+		log.debug("ReqQueryData returning serialized result dataValue")
 		return new XmlSlurper().parseText(data)
 	}
 

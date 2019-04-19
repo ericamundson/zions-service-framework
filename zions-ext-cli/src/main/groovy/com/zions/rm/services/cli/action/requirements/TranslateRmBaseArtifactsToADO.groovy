@@ -31,6 +31,7 @@ import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import com.zions.rm.services.requirements.ClmArtifact
 import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
+import com.zions.rm.services.requirements.RequirementQueryData
 
 /**
  * Provides command line interaction to synchronize RRM requirements management with ADO.
@@ -39,7 +40,7 @@ import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
  * <ul>
  * 	<li>translateRRMToADO - The action's Spring bean name.</li>
  * <ul>
- * <p><b>The following's command-line format: --name=value</b></p>
+ * <p><b>The followimodular ng's command-line format: --name=value</b></p>
  * <ul>
  *  <li>clm.url - CLM url</li>
  *  <li>clm.user - CLM userid</li>
@@ -145,15 +146,11 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	@Autowired
 	MemberManagementService memberManagementService;
 	@Autowired
-	FileManagementService fileManagementService;
-	@Autowired
 	WorkManagementService workManagementService
 	@Autowired 
 	ClmRequirementsItemManagementService clmRequirementsItemManagementService
 	@Autowired 
 	ClmRequirementsManagementService clmRequirementsManagementService
-	@Autowired 
-	RequirementsMappingManagementService rmMappingManagementService
 	@Autowired
 	ClmRequirementsFileManagementService rmFileManagementService
 	@Autowired
@@ -179,7 +176,6 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
 		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
 		String tfsUser = data.getOptionValues('tfs.user')[0]
-		String mappingFile = data.getOptionValues('rm.mapping.file')[0]
 		String oslcNs = data.getOptionValues('oslc.namespaces')[0]
 		String oslcSelect = data.getOptionValues('oslc.select')[0]
 		String oslcWhere = data.getOptionValues('oslc.where')[0]
@@ -192,102 +188,19 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
-		File mFile = new File(mappingFile)
 		
-		def mapping = new XmlSlurper().parseText(mFile.text)
+		log.info('Getting ADO Project Members...')
+		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+
 		if (includes['clean'] != null) {
+			String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-'"
+			if (areaPath.length()>0) {
+				query = query + " AND [System.AreaPath] = '${areaPath}'"
+			}
+			workManagementService.clean(collection,tfsProject, query)
 		}
-		//legacy stuff.
-//		if (includes['deprecated'] != null) {
-//			// Get field mappings, target members map and RM artifacts to translate to ADO
-//			log.info('Getting Mapping Data...')
-//			def mappingData = rmMappingManagementService.mappingData
-//			log.info('Getting ADO Project Members...')
-//			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-//			log.info("Querying for Where Used Lookup ...")
-//			if (clmRequirementsManagementService.queryForWhereUsed()) {
-//				log.info("'where used' records were retrieved")
-//			}
-//			else {
-//				log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
-//			}
-//			log.info("Querying DNG Base Artifacts ...")
-//			def results = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
-//			// Continue until all pages have been processed
-//			def page = 1
-//			while (true) {
-//				def changeList = []
-//				def uploadedArtifacts = []
-//				def idMap = [:]
-//				int count = 0		
-//				results.Description.children().each { item ->
-//					if (item.Requirement != '') {
-//						def artifact = getItemChanges(tfsProject, item, memberMap)
-//						def aid = artifact.getCacheID()
-//						artifact.changes.each { key, val ->
-//							String idkey = "${aid}"
-//							idMap[count] = idkey
-//							changeList.add(val)
-//							count++		
-//						}
-//						
-//						// If uploaded artifact, save for attachment processing
-//						if (artifact.getFormat() == 'WrapperResource') {
-//							uploadedArtifacts.add(artifact)
-//						}
-//					}
-//				}
-//				log.info("$count Base Artifacts were retrieved")
-//				
-//				// Create work items in Azure DevOps
-//				if (changeList.size() > 0) {
-//					// Process work item changes in Azure DevOps
-//					log.info("Processing work item changes...")
-//					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-//				}
-//				
-//				// Upload Attachments to Azure DevOps
-//				log.info("Uploading attachments...")
-//				changeList.clear()
-//				idMap.clear()
-//				count = 0
-//				uploadedArtifacts.each { artifact ->
-//					def files = []
-//					files[0] = rmFileManagementService.cacheRequirementFile(artifact)
-//					
-//					String id = artifact.getCacheID()
-//					def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-//					if (wiChanges != null) {
-//						def url = "${wiChanges.body[1].value.url}"
-//						def change = [op: 'add', path: '/fields/System.Description', value: '<div><a href=' + url + '&download=true>Uploaded Attachment</a></div>']
-//						wiChanges.body.add(change)
-//						idMap[count] = "${id}"
-//						changeList.add(wiChanges)
-//						count++
-//					}
-//				}
-//				log.info("$count Attachments were uploaded")
-//				if (changeList.size() > 0) {
-//					// Associate attachments to work items in Azure DevOps
-//					log.info("Associating attachments to work items...")
-//					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
-//				}
-//				
-//				// Process next page
-//				String nextUrl = "${results.ResponseInfo.nextPage.@'rdf:resource'}"
-//				if (nextUrl != '') {
-//					page++
-//					log.info("Retrieving page ${page}...")
-//					results = clmRequirementsManagementService.nextPage(nextUrl)
-//				}
-//				else {
-//					break
-//				}
-//			}
-//				
-//			log.info("Processing completed")
-//		}
-		// Refresh cached list of CLM artifacts to migrate to ADO
+
+		// Refresh cached list migrated ADO work items
 		if (includes['refresh'] != null) {
 			log.info("Refreshing cache.")
 			Checkpoint cp = cacheManagementService.getFromCache('query', 'QueryStart')
@@ -341,14 +254,18 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}			
 		}
 		if (includes['phases'] != null) {
+			
 			log.info("Processing artifacts")
 			restartManagementService.processPhases { phase, items ->
-				if (phase == 'workdata') {
+				log.debug("Entering phase loop")
+				if (phase == 'requirements') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					clmRequirementsItemManagementService.resetNewId()
+					log.debug("Getting content of ${items.size()} items")
 					items.each { rmItem ->
 						String sid = "${rmItem.Requirement.identifier}"
 						int id = Integer.parseInt(sid)
+						//log.debug("items.each loop for id: ${sid}")
 						String formatString = rmItem.Requirement.ArtifactFormat.@'rdf:resource'
 						String format = formatString.substring(formatString.lastIndexOf('#') + 1)
 						String about = "${rmItem.Requirement.@'rdf:about'}"
@@ -363,49 +280,22 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
 						}
 						//new FlowInterceptor() {}.flowLogging(clManager) {
-							def wiChanges = clmRequirementsItemManagementService.getChanges(project, artifact, memberMap)
-							if (wiChanges != null) {
-								clManager.add("${id}", wiChanges)
+							def reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
+							if (reqChanges != null) {
+								reqChanges.each { key, val ->
+									clManager.add("${id}", val)
+								}
+								//log.print "adding changes for requirement ${id}"
 							}
 						//}
 					}
+					log.debug("about to flush clmanager")
 					clManager.flush();
+					log.debug("finished flushing clmanager")
 				}
 			}
 		}
 
-
-
-	}
-
-	def getItemChanges(String project, def rmItemData, def memberMap) {
-
-		String modified = rmItemData.Requirement.modified
-		String identifier = rmItemData.Requirement.identifier
-		String formatString = rmItemData.Requirement.ArtifactFormat.@'rdf:resource'
-		String format = formatString.substring(formatString.lastIndexOf('#') + 1)
-		String about = "${rmItemData.Requirement.@'rdf:about'}"
-		ClmArtifact artifact = new ClmArtifact('', format, about)
-		if (format == 'Text') {
-			clmRequirementsManagementService.getTextArtifact(artifact,false)
-		}
-		else if (format == 'WrapperResource'){
-			clmRequirementsManagementService.getNonTextArtifact(artifact)
-		}
-		else {
-			log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
-		}
-		artifact.setChanges(clmRequirementsItemManagementService.getChanges(project, artifact, memberMap))
-		return artifact
-	}
-	
-	def filtered(def items, String filter) {
-		if (this.filterMap[filter] != null) {
-			return this.filterMap[filter].filter(items)
-		}
-		return items.entry.findAll { ti ->
-			true
-		}
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {

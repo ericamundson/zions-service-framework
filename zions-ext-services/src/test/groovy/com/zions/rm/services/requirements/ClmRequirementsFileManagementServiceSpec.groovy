@@ -10,13 +10,12 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.test.DataGenerationService
-import com.zions.qm.services.test.ClmTestAttachmentManagementService
-import com.zions.qm.services.test.ClmTestAttachmentManagementServiceSpecConfig
 import com.zions.qm.services.test.ClmTestManagementService
 import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
@@ -37,6 +36,9 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 	ICacheManagementService cacheManagementService
 	
 	@Autowired
+	IAttachments attachmentService
+	
+	@Autowired
 	RequirementsMappingManagementService requirementsMappingManagementService
 	
 	@Autowired
@@ -48,10 +50,15 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 		def ritem = new ClmModuleElement(wrappedResourceFilename, 1, 'Wrapped Resource', 'false', 'https://...')
 		ritem.setID('123456')
 		ritem.setTfsWorkitemType('User Story')
+		def url = 'https:\\path'
+		def altFilename = 'alt name'
 		
 		and: 'Step of cacheManagementService saveBinaryAsAttachment call'
 		File attFile = new File('attachment.txt')
 		1 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> attFile
+		
+		and: 'Step of attachmentService sendAttachment call'
+		1 * attachmentService.sendAttachment(_) >> [url: 'http://path']
 		
 		and: 'Stub of clmRequirementsManagementService getContent call'
 		String encodedStuff = "Here's some text".bytes.encodeBase64()
@@ -61,7 +68,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 		when: 'Calling method under test cacheRequirementFile'
 		boolean success = true
 		try {
-			underTest.cacheRequirementFile(ritem)
+			underTest.ensureRequirementFileAttachment(ritem,url,altFilename)
 		} catch (e) {
 			success = false
 		}
@@ -90,6 +97,11 @@ class ClmRequirementsFileManagementServiceSpecConfig {
 	@Bean
 	ICacheManagementService cacheManagementService() {
 		return factory.Mock(CacheManagementService)
+	}
+	
+	@Bean
+	IAttachments attachmentService() {
+		return factory.Mock(RmAttachmentManagementServiceSpec)
 	}
 	
 	@Bean

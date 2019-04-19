@@ -8,6 +8,8 @@ class ClmArtifact {
 	def collectionArtifacts
 	def links
 	def changes
+	def adoFileInfo
+	def cacheWI // cached work item from ADO
 	public ClmArtifact(String in_title, String in_format, String in_about) {
 		attributeMap = [:]
 		collectionArtifacts = []
@@ -15,6 +17,7 @@ class ClmArtifact {
 		setTitle(in_title)
 		this.setAbout(in_about)
 		format = in_format
+		adoFileInfo = []
 	}
 	public void setAbout(String in_about) {
 		attributeMap.'about' = in_about
@@ -44,13 +47,16 @@ class ClmArtifact {
 		attributeMap.'Identifier' = in_id
 	}
 	public void setDescription(String in_desc) {
-		// If this is a Heading, use Primary Text for the Title (this is a weird thing modules do)
+		// Convert codes to proper tags
+		in_desc = in_desc.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("&#xa0;", '')
+		// If this is a Heading, use Primary Text for the Title (this is a weird thing DNG modules do)
 		if (this.getArtifactType() == 'Heading' && in_desc != '') {
 			this.setTitle(stripTags(in_desc))
+			attributeMap.'Primary Text' = '' // For appearance in SmartDocs, don't want to duplicate title
 		}
-		
-		attributeMap.'Primary Text' = in_desc			
-
+		else {
+			attributeMap.'Primary Text' = in_desc			
+		}
 
 	}
 	public String getDescription() {
@@ -80,6 +86,6 @@ class ClmArtifact {
 		}
 	}
 	private String stripTags(String input) {
-	    return input.replaceAll("\\<.*?>","").replaceAll('&#xa0;', '').replaceAll('&amp;', '&')
+		return input.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("&amp;", '&').replaceAll("\\<.*?>","")
 	}
 }

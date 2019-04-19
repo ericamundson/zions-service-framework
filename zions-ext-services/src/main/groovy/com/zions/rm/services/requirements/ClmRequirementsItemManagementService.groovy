@@ -47,11 +47,7 @@ import groovyx.net.http.ContentType
  *
  */
 @Component
-class ClmRequirementsItemManagementService {
-	@Autowired
-	@Value('${cache.location}')
-	String cacheLocation
-	
+class ClmRequirementsItemManagementService {	
 	@Autowired
 	@Value('${tfs.url}')
 	String tfsUrl
@@ -101,6 +97,11 @@ class ClmRequirementsItemManagementService {
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+
+			// Add work item type in case it changed
+			def idData = [ op: 'add', path: '/fields/System.WorkItemType', value: "${map.target}"]
+			wiData.body.add(idData)
+			rmItemData.setCacheWI(cacheWI)
 		} else {
 			def idData = [ op: 'add', path: '/id', value: newId]
 			newId--
@@ -121,6 +122,12 @@ class ClmRequirementsItemManagementService {
 					}
 				}
 			}
+		}
+		
+		// For all new attachments uploaded by DescriptionHandler, add associate to ADO WI
+		rmItemData.adoFileInfo.each { adoFile -> 
+			def change = [op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: adoFile.url, attributes:[comment: adoFile.comment]]]
+			wiData.body.add(change)
 		}
 
 		if (wiData.body.size() == 1) {

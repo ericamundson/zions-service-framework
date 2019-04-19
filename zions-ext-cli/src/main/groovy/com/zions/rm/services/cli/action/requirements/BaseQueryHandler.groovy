@@ -10,6 +10,7 @@ import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.common.services.restart.IQueryHandler
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 import com.zions.rm.services.requirements.RequirementQueryData
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value
 //I am kind of thinking TranslateRmBaseArtifacts is like the view,
 //ClmRequirementsManagementService is like the model, and this is the controller
 //still this is how I think it goes down
-
+@Slf4j
 class BaseQueryHandler implements IQueryHandler {
 	
 	@Autowired
@@ -91,9 +92,11 @@ class BaseQueryHandler implements IQueryHandler {
 		if (nextUrl == null) return null
 		page++
 		String pageId = "${page}"
+		log.debug("Retrieving RM page: ${page}")
 		new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, RequirementQueryData) {
 			currentItems = clmRequirementsManagementService.nextPage(nextUrl)
 		}
+		log.debug("Returning RM page: ${page}")
 		return currentItems
 	}
 
