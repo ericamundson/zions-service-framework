@@ -31,7 +31,7 @@ class BaseQueryHandler implements IQueryHandler {
 	@Value('${clm.projectArea:}')
 	String projectName
 	
-	@Value('${item.filter:allFilter}')
+	@Value('${item.filter:qmAllFilter}')
 	private String itemFilter
 
 	def currentItems

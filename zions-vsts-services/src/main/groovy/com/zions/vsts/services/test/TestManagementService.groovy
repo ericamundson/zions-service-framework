@@ -377,7 +377,7 @@ public class TestManagementService {
 		def result = genericRestClient.get(
 			uri: uri,
 			contentType: ContentType.JSON,
-			query: [destroy: true, 'api-version': '5.0-preview.3']
+			query: [destroy: true, 'api-version': '5.0-preview.3',detailsToInclude:'WorkItems']
 			)
 		return result
 	}
@@ -449,7 +449,7 @@ public class TestManagementService {
 			contentType: ContentType.JSON,
 			//requestContentType: ContentType.JSON,
 			uri: tcUrl,
-			query: ['api-version':'5.0-preview.3']
+			query: ['api-version':'5.0']
 			)
 		return result
 	}

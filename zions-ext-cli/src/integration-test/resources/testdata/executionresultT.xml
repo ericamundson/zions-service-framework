@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns2:executionresult
+	xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+	
+	<ns2:projectArea
+		alias="Mobile+and+Online+Banking+%28Quality+Management%29"
+		href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg" />
+	
+	<ns3:identifier
+		xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionresult/urn:com.ibm.rqm:executionresult:86260
+	</ns3:identifier>
+	
+	<ns2:webId>{{idSetter}}</ns2:webId>
+	
+	<ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">{{quoteGenerator}}</ns3:title>
+	
+	<ns2:creationDate>2016-11-09T22:58:51.148Z</ns2:creationDate>
+	
+	<alm:updated xmlns:alm="http://jazz.net/xmlns/alm/v0.1/">2016-11-18T18:56:21.295Z
+	</alm:updated>
+	
+	<alm:state xmlns:alm="http://jazz.net/xmlns/alm/v0.1/">com.ibm.rqm.execution.common.state.passed
+	</alm:state>
+	
+	<ns3:creator
+		xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns:ns3="http://purl.org/dc/elements/1.1/"
+		ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z007474">z007474</ns3:creator>
+	
+	<alm:owner
+		xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns:alm="http://jazz.net/xmlns/alm/v0.1/"
+		ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z007474">z007474</alm:owner>
+	
+	<ns2:locked>false</ns2:locked>
+	
+	<ns2:rollupResult>false</ns2:rollupResult>
+	
+	<ns16:approvalstate
+		xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1"
+		ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testcaseresult.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns16:approvalstate>
+	
+	<ns2:variables />
+	
+	<ns16:machine
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">Local Computer</ns16:machine>
+	
+	<ns16:iterations
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">1</ns16:iterations>
+	
+	<ns16:starttime
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">2016-11-09T22:58:51.148Z</ns16:starttime>
+	
+	<ns16:endtime
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">2016-11-09T23:21:57.059Z</ns16:endtime>
+	
+	<ns16:totalRunTime
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">1385911</ns16:totalRunTime>
+	
+	<ns16:weight
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">1</ns16:weight>
+	
+	<ns16:pointspassed
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">1</ns16:pointspassed>
+	
+	<ns16:pointsfailed
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:pointsfailed>
+	
+	<ns16:pointsattempted
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">1</ns16:pointsattempted>
+	
+	<ns16:pointsblocked
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:pointsblocked>
+	
+	<ns16:pointsinconclusive
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:pointsinconclusive>
+	
+	<ns16:scriptStepCount
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCount>
+	
+	<ns16:scriptStepCountPassed
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountPassed>
+	
+	<ns16:scriptStepCountFailed
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountFailed>
+	
+	<ns16:scriptStepCountAttempted
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountAttempted>
+	
+	<ns16:scriptStepCountBlocked
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountBlocked>
+	
+	<ns16:scriptStepCountInconclusive
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountInconclusive>
+	
+	<ns16:scriptStepCountPermFailed
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountPermFailed>
+	
+	<ns16:scriptStepCountDeferred
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountDeferred>
+	
+	<ns2:stateid>_sfeeIa3AEeakW4AC6FsNdg</ns2:stateid>
+	
+	<ns2:pointspermfailed>0</ns2:pointspermfailed>
+	
+	<ns2:pointsdeferred>0</ns2:pointsdeferred>
+	
+	<ns16:isCurrent
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">true</ns16:isCurrent>
+	
+	<ns16:testcasestateatexecution
+		xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1"
+		ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new
+	</ns16:testcasestateatexecution>
+	
+	<ns16:testplanstateatexecution
+		xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1"
+		ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testplan.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new
+	</ns16:testplanstateatexecution>
+	
+	<ns16:testscriptstateatexecution
+		xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1"
+		ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testscript.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new
+	</ns16:testscriptstateatexecution>
+	
+	<ns16:testedby
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">
+		
+		<ns16:tester
+			xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z007474">z007474</ns16:tester>
+		
+	</ns16:testedby>
+	
+	<ns16:stepResults
+		xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">
+		
+		<ns16:stepResult
+			xmlns:ns1="http://schema.ibm.com/vega/2008/"
+			result="com.ibm.rqm.execution.common.state.passed"
+			ns1:id="_FLAQMKbQEeakW4AC6FsNdg" stepIndex="1"
+			startTime="2016-11-09T23:21:57.059Z"
+			endTime="2016-11-09T23:21:57.059Z"
+			href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionelementresult/_FLAQMKbQEeakW4AC6FsNdg">
+			
+			<ns16:startTime>2016-11-09T23:21:57.059Z</ns16:startTime>
+			
+			<ns16:endTime>2016-11-09T23:21:57.059Z</ns16:endTime>
+			
+			<ns16:result>com.ibm.rqm.execution.common.state.passed</ns16:result>
+			
+			<ns16:expectedResult>
+				
+				<tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">The customer is not required to submit
+					an EAP code for the transfer to complete.</tag0:div>
+				
+			</ns16:expectedResult>
+			
+			<ns16:actualResult>
+				
+				<tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">Validation complete with Zions Retail.
+				</tag0:div>
+				
+			</ns16:actualResult>
+			
+			<ns16:description>
+				
+				<tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">
+					1. In SAM, enable a customer for EAP on a transfer type that is not
+					internal
+					<tag0:br />
+					2. In the UI, enroll the customer in EAP
+					<tag0:br />
+					3. IN the UI, submit an internal transfer for an amount that is
+					greater than the threshold on the EAP enabled transfer type
+				</tag0:div>
+				
+			</ns16:description>
+			
+			<ns16:stepType>com.ibm.rqm.execution.common.elementtype.execution
+			</ns16:stepType>
+			
+			<ns16:tester
+				xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+				ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z007474">z007474</ns16:tester>
+			
+			<ns16:comment />
+			
+			<ns16:compare />
+			
+		</ns16:stepResult>
+		
+	</ns16:stepResults>
+	
+	<ns2:testcase
+		href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/EAP_-_Transfer,_no_code_required,_account" />
+	
+	<ns2:testscript
+		href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testscript/EAP_-_Transfer,_no_code_required,_account" />
+	
+	<ns2:executionworkitem
+		href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionworkitem/urn:com.ibm.rqm:executionworkitem:78715" />
+	
+	<ns2:testplan
+		href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:218" />
+	
+	<ns2:alias type="string">urn:com.ibm.rqm:executionresult:86260
+	</ns2:alias>
+	
+</ns2:executionresult>

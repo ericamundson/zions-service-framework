@@ -22,6 +22,7 @@ import com.zions.common.services.restart.Checkpoint
 import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.common.services.restart.IRestartManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
+import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
@@ -133,11 +134,10 @@ import groovy.util.logging.Slf4j
  *  end
  *  @enduml
  */
-@Component
 @Slf4j
 class TranslateRTCWorkToVSTSWork implements CliAction {
-	@Autowired
-	private Map<String, IFilter> filterMap;
+//	@Autowired
+//	private Map<String, IFilter> filterMap;
 	@Autowired
 	CcmWIMetadataManagementService ccmWIMetadataManagementService;
 	@Autowired
@@ -154,6 +154,8 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 	AttachmentsManagementService attachmentsManagementService
 	@Autowired
 	FileManagementService fileManagementService
+	@Autowired(required=false)
+	TestManagementService testManagementService
 //	@Autowired(required=false)
 //	CacheInterceptorService cacheInterceptorService
 
@@ -268,11 +270,16 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id.text())
 						String sid = "${workitem.id.text()}"
-						IWorkItem ccmWorkitem = ccmWorkManagementService.getWorkitem(sid)
+						def ccmWorkitem = ccmWorkManagementService.getWorkitem(sid)
 						Date ts = ccmWorkitem.modified()
 						def links = ccmWorkManagementService.getAllLinks(sid, ts, ccmWorkitem, linkMapping)
 						//new FlowInterceptor() {}.flowLogging(clManager) {
 							def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
+//							String wiJson = new JsonBuilder(wiChanges).toPrettyString()
+//							File wiFile = new File('./src/integration-test/resources/testdata/wichanges.json')
+//							def of = wiFile.newDataOutputStream()
+//							of << wiJson
+//							of.close()
 							if (wiChanges != null) {
 								clManager.add("${id}", wiChanges)
 							}
@@ -290,9 +297,15 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id.text())
-						def wiChanges = ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping)
-						if (wiChanges != null) {
-							clManager.add("${id}", wiChanges)
+						ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping) { key, changes ->
+							if (key == 'WorkItem') {
+								clManager.add("${id}", changes)
+							} else if (key == 'Result') {
+								def resultChanges = changes.resultChanges
+								def rid = changes.rid
+								testManagementService.sendResultChanges(collection, tfsProject, resultChanges, rid)
+								workManagementService.refreshCache(collection, tfsProject, ["${id}"])
+							}
 						}
 					}
 					clManager.flush();
@@ -316,12 +329,12 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
 
-	def filtered(def workItems, String filter) {
-		if (this.filterMap[filter] != null) {
-			return this.filterMap[filter].filter(workItems)
-		}
-		return workItems.workItem.findAll { wi -> true }
-	}
+//	def filtered(def workItems, String filter) {
+//		if (this.filterMap[filter] != null) {
+//			return this.filterMap[filter].filter(workItems)
+//		}
+//		return workItems.workItem.findAll { wi -> true }
+//	}
 
 	def loadCCMWITs(def ccmTemplateDir) {
 		def wits = []

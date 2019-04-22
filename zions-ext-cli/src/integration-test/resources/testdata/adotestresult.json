@@ -1,0 +1,86 @@
+{
+	"id": 100017,
+	"configuration": {
+		"id": "10"
+	},
+	"project": {
+		"id": "b95a29af-917f-4762-b4bc-c716e7a33b18",
+		"name": "FutureCore",
+		"url": "https://dev.azure.com/eto-dev/_apis/projects/FutureCore"
+	},
+	"startedDate": "2019-01-31T18:13:12.073Z",
+	"completedDate": "2019-01-31T18:13:12.073Z",
+	"outcome": "Passed",
+	"revision": 3,
+	"state": "Completed",
+	"testCase": {
+		"id": "100000",
+		"name": "FS-SYN-010/700-082/MISC/EFFECTIVE_LIMIT/Commitment interest(Fee) for mirror account must be based on the effective limit, pro-rated Global Limit, and Effective Limit Basis"
+	},
+	"testPoint": {
+		"id": "37933"
+	},
+	"testRun": {
+		"id": "1000316",
+		"name": "Release 2 - PRT - Final Regression Run",
+		"url": "https://dev.azure.com/eto-dev/FutureCore/_apis/test/Runs/1000316"
+	},
+	"lastUpdatedDate": "2019-04-16T15:40:51.33Z",
+	"priority": 0,
+	"createdDate": "2019-04-11T17:45:04.863Z",
+	"associatedBugs": [
+		{
+			"id": "86329",
+			"name": "Complete the Summary Section of Test Case: FS-GEN-005/2.1.4-GEN-005-001/branch calendar/holiday creation/positive",
+			"url": "https://dev.azure.com/eto-dev/_apis/wit/workItems/86329"
+		}
+	],
+	"url": "https://dev.azure.com/eto-dev/FutureCore/_apis/test/Runs/1000316/Results/100017",
+	"failureType": "None",
+	"testCaseTitle": "FS-SYN-010/700-082/MISC/EFFECTIVE_LIMIT/Commitment interest(Fee) for mirror account must be based on the effective limit, pro-rated Global Limit, and Effective Limit Basis",
+	"testCaseRevision": 1,
+	"customFields": [],
+	"testPlan": {
+		"id": "99979"
+	},
+	"testCaseReferenceId": 33279263,
+	"owner": {
+		"displayName": "Eric Amundson",
+		"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+			}
+		},
+		"id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"uniqueName": "eric.amundson2@zionsbancorp.com",
+		"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj",
+		"descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+	},
+	"runBy": {
+		"displayName": "Eric Amundson",
+		"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+			}
+		},
+		"id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"uniqueName": "eric.amundson2@zionsbancorp.com",
+		"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj",
+		"descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+	},
+	"lastUpdatedBy": {
+		"displayName": "Eric Amundson",
+		"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+			}
+		},
+		"id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"uniqueName": "eric.amundson2@zionsbancorp.com",
+		"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj",
+		"descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+	}
+}

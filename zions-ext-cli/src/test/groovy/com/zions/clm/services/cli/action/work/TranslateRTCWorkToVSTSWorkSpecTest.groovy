@@ -106,7 +106,7 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 			'--wit.mapping.file=' + mappingFile,
 			'--wi.query=query',
 			'--wi.filter=allfilter',
-			'--include.update=meta,refresh,workdata,worklinks,attachments',
+			'--include.update==workdata,worklinks,attachments',
 			'--meta=meta',
 			'--refresh=true',
 			'--tfs.collection=tfsCollection'

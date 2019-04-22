@@ -9,7 +9,9 @@ import com.zions.qm.services.test.ClmTestManagementService
 class ResultTestcaseTitleHandler extends QmBaseAttributeHandler {
 	@Autowired
 	ClmTestManagementService clmTestManagementService
-
+	public ResultTestcaseTitleHandler() {
+		cacheCheck = false
+	}
 	public String getQmFieldName() {
 		// TODO Auto-generated method stub
 		return 'title'
@@ -17,9 +19,9 @@ class ResultTestcaseTitleHandler extends QmBaseAttributeHandler {
 
 	public def formatValue(def value, def data) {
 		def outVal = null
-		def itemData = data.itemData
-		String title = "${itemData.title.text()}"
-		return title;
+		def testCase = data.testCase
+		String title = "${testCase.title.text()}"
+		return title.trim();
 	}
 
 }
