@@ -195,10 +195,10 @@ import groovy.xml.XmlUtil
 @Component
 @Slf4j
 class TranslateRQMToMTM implements CliAction {
-	@Autowired
-	private Map<String, IFilter> filterMap;
-	@Autowired
-	QmMetadataManagementService qmMetadataManagementService;
+//	@Autowired
+//	private Map<String, IFilter> filterMap;
+//	@Autowired
+//	QmMetadataManagementService qmMetadataManagementService;
 	@Autowired
 	TestMappingManagementService testMappingManagementService;
 	@Autowired
@@ -361,11 +361,11 @@ class TranslateRQMToMTM implements CliAction {
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 							int aid = Integer.parseInt(testcase.webId.text())
 							 //generate test data
-							String testcasexml = XmlUtil.serialize(testcase)
-							def resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}-OB.xml")
-							def os = resultFile.newDataOutputStream()
-							os << testcasexml
-							os.close()
+//							String testcasexml = XmlUtil.serialize(testcase)
+//							def resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}-OB.xml")
+//							def os = resultFile.newDataOutputStream()
+//							os << testcasexml
+//							os.close()
 							String idtype = "${aid}-testcase"
 							if (!idKeyMap.containsKey(idtype)) {
 								def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
@@ -500,12 +500,12 @@ class TranslateRQMToMTM implements CliAction {
 	 * @param filter - Name of IFilter to use
 	 * @return filtered result.
 	 */
-	def filtered(def items, String filter) {
-		if (this.filterMap[filter] != null) {
-			return this.filterMap[filter].filter(items)
-		}
-		return items.entry.findAll { ti -> true }
-	}
+//	def filtered(def items, String filter) {
+//		if (this.filterMap[filter] != null) {
+//			return this.filterMap[filter].filter(items)
+//		}
+//		return items.entry.findAll { ti -> true }
+//	}
 
 	def loadTestTypes(def templateDir) {
 		def testTypes = []

@@ -90,6 +90,7 @@ class ClmTestManagementService {
 	def getTestItem(String uri) {
 		uri = uri.replace(' ', '+')
 		def result = qmGenericRestClient.get(
+			//contentType: ContentType.XML,
 			uri: uri,
 			headers: [Accept: 'text/xml'] );
 		return result

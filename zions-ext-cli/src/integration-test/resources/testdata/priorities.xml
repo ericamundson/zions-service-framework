@@ -1,0 +1,70 @@
+<rdf:RDF xmlns:dcterms="http://purl.org/dc/elements/1.1/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:qm_process="http://jazz.net/xmlns/prod/jazz/rqm/process/1.0/"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+	<qm_process:ProcessInfo>
+		<qm_process:hasPriority>
+			<qm_process:Priority
+				rdf:about="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/priority/literal.priority.130">
+				<owl:sameAs
+					rdf:resource="http://jazz.net/xmlns/prod/jazz/rqm/process/1.0/Priority/literal.priority.130" />
+				<rdfs:label
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">High</rdfs:label>
+				<dcterms:title
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">High</dcterms:title>
+				<dcterms:identifier
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">literal.priority.130</dcterms:identifier>
+				<qm_process:projectArea
+					rdf:resource="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg" />
+			</qm_process:Priority>
+		</qm_process:hasPriority>
+		<qm_process:hasPriority>
+			<qm_process:Priority
+				rdf:about="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/priority/literal.priority.120">
+				<owl:sameAs
+					rdf:resource="http://jazz.net/xmlns/prod/jazz/rqm/process/1.0/Priority/literal.priority.120" />
+				<rdfs:label
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Medium</rdfs:label>
+				<dcterms:title
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Medium</dcterms:title>
+				<dcterms:identifier
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">literal.priority.120</dcterms:identifier>
+				<qm_process:projectArea
+					rdf:resource="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg" />
+			</qm_process:Priority>
+		</qm_process:hasPriority>
+		<qm_process:hasPriority>
+			<qm_process:Priority
+				rdf:about="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/priority/literal.priority.110">
+				<owl:sameAs
+					rdf:resource="http://jazz.net/xmlns/prod/jazz/rqm/process/1.0/Priority/literal.priority.110" />
+				<rdfs:label
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Low</rdfs:label>
+				<dcterms:title
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Low</dcterms:title>
+				<dcterms:identifier
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">literal.priority.110</dcterms:identifier>
+				<qm_process:projectArea
+					rdf:resource="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg" />
+			</qm_process:Priority>
+		</qm_process:hasPriority>
+		<qm_process:hasPriority>
+			<qm_process:Priority
+				rdf:about="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/priority/literal.priority.101">
+				<owl:sameAs
+					rdf:resource="http://jazz.net/xmlns/prod/jazz/rqm/process/1.0/Priority/literal.priority.101" />
+				<qm_process:default
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</qm_process:default>
+				<rdfs:label
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Unassigned</rdfs:label>
+				<dcterms:title
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Unassigned</dcterms:title>
+				<dcterms:identifier
+					rdf:datatype="http://www.w3.org/2001/XMLSchema#string">literal.priority.101</dcterms:identifier>
+				<qm_process:projectArea
+					rdf:resource="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg" />
+			</qm_process:Priority>
+		</qm_process:hasPriority>
+	</qm_process:ProcessInfo>
+</rdf:RDF>

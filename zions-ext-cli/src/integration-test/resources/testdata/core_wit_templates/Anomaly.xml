@@ -1,0 +1,1889 @@
+<witd:WITD application='Work item type editor' version='1.0' xmlns:witd='http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef'>
+  <WORKITEMTYPE name='Anomaly'>
+    <DESCRIPTION>general work item starter</DESCRIPTION>
+    <FIELDS>
+      <FIELD name='Severity' refname='internalSeverity' type='severity' dimension='reportable'>
+        <HELPTEXT>From rtc 'Severity'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='S5 - Trivial - Cosmetic, Color, Spelling Errors' />
+          <LISTITEM value='S4 - Minor - Easy Workaround' />
+          <LISTITEM value='S3 - Major - Acceptable Workaround' />
+          <LISTITEM value='S2 - Critical - None or Unacceptable Workaround, Major Feature Failure' />
+          <LISTITEM value='S1 - Blocker - Application Crashes, Loss of Data, or Data Corruption' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Summary' refname='summary' type='mediumHtml' dimension='reportable'>
+        <HELPTEXT>From rtc 'Summary'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Resolution' refname='internalResolution' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Resolution'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Status' refname='internalState' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Status'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Description' refname='description' type='html' dimension='reportable'>
+        <HELPTEXT>From rtc 'Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Sequence Value' refname='internalSequenceValue' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Sequence Value'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Creation Date' refname='creationDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Creation Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Start Date' refname='startDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Start Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Time Spent' refname='timeSpent' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Time Spent'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Resolution Date' refname='resolutionDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Resolution Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Owned By' refname='owner' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Owned By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Planned For' refname='target' type='interval' dimension='reportable'>
+        <HELPTEXT>From rtc 'Planned For'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Resolved By' refname='resolver' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Resolved By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Due Date' refname='dueDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Due Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Corrected Estimate' refname='correctedEstimate' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Corrected Estimate'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Estimate' refname='duration' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Estimate'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Created By' refname='creator' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Created By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Modified By' refname='modifiedBy' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Modified By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='State Transitions' refname='internalStateTransitions' type='stateTransitions' dimension='reportable'>
+        <HELPTEXT>From rtc 'State Transitions'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Archived' refname='archived' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Archived'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Approval Descriptors' refname='internalApprovalDescriptors' type='approvalDescriptors' dimension='reportable'>
+        <HELPTEXT>From rtc 'Approval Descriptors'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Custom Attributes' refname='customAttributes' type='customAttribute' dimension='reportable'>
+        <HELPTEXT>From rtc 'Custom Attributes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Approvals' refname='internalApprovals' type='approvals' dimension='reportable'>
+        <HELPTEXT>From rtc 'Approvals'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Subscribed By' refname='internalSubscriptions' type='subscriptions' dimension='reportable'>
+        <HELPTEXT>From rtc 'Subscribed By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Type' refname='workItemType' type='type' dimension='reportable'>
+        <HELPTEXT>From rtc 'Type'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Comments' refname='internalComments' type='comments' dimension='reportable'>
+        <HELPTEXT>From rtc 'Comments'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Id' refname='id' type='integer' dimension='reportable'>
+        <HELPTEXT>From rtc 'Id'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Found In' refname='foundIn' type='deliverable' dimension='reportable'>
+        <HELPTEXT>From rtc 'Found In'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Project Area' refname='projectArea' type='projectArea' dimension='reportable'>
+        <HELPTEXT>From rtc 'Project Area'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Restricted Access' refname='contextId' type='uuid' dimension='reportable'>
+        <HELPTEXT>From rtc 'Restricted Access'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Filed Against' refname='category' type='category' dimension='reportable'>
+        <HELPTEXT>From rtc 'Filed Against'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Modified Date' refname='modified' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Modified Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Priority' refname='internalPriority' type='priority' dimension='reportable'>
+        <HELPTEXT>From rtc 'Priority'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='P4 - Could Have' />
+          <LISTITEM value='P3 - Should Have' />
+          <LISTITEM value='P2 - Must Have' />
+          <LISTITEM value='P1 - Show Stopper' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Tags' refname='internalTags' type='tags' dimension='reportable'>
+        <HELPTEXT>From rtc 'Tags'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Fixed_In_Drop(Vendor)' refname='com.zions.workitem.atttribute.FixedInDropVendor' type='com.zion.workitem.enumeration.drops' dimension='reportable'>
+        <HELPTEXT>From rtc 'Fixed_In_Drop(Vendor)'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='N/A' />
+          <LISTITEM value='R0 - 13.0' />
+          <LISTITEM value='R0 - 14.0' />
+          <LISTITEM value='R0 - 14.1' />
+          <LISTITEM value='R1 - 15.1.0.1' />
+          <LISTITEM value='R1 - 15.1.0.3a' />
+          <LISTITEM value='R1 - 15.1.1.0' />
+          <LISTITEM value='R1 - 15.1.1.0a' />
+          <LISTITEM value='R1 - 15.1.1.1 - 05/25/2015' />
+          <LISTITEM value='R1 - 15.1.1.2a - 06/12/2015' />
+          <LISTITEM value='R1 - 15.1.1.3 - 06/30/2015' />
+          <LISTITEM value='R1 - 15.1.2.0 - 08/05/2015' />
+          <LISTITEM value='R1 - 15.1.2.0a - 08/18/2015' />
+          <LISTITEM value='R1 - 15.1.2.1a - 08/20/2015' />
+          <LISTITEM value='R1 - 15.1.2.2 - 08/25/2015' />
+          <LISTITEM value='R1 - 15.1.2.3 - 09/01/2015' />
+          <LISTITEM value='R1 - 15.1.2.4 - 09/09/2015' />
+          <LISTITEM value='R1 - 15.1.2.5 - 09/16/2015' />
+          <LISTITEM value='R1 - 15.1.2.6 - 09/23/2015' />
+          <LISTITEM value='R1 - 15.1.3.0 - 09/30/2015' />
+          <LISTITEM value='R1 - 15.1.3.0a - 10/06/2015' />
+          <LISTITEM value='R1 - 15.1.3.1 - 10/09/2015' />
+          <LISTITEM value='R1 - 15.1.3.2 - 10/14/2015' />
+          <LISTITEM value='R1 - 15.1.3.3 - 10/21/2015' />
+          <LISTITEM value='R1 - 15.1.3.4 - 10/28/2015' />
+          <LISTITEM value='R1 - 15.1.3.5 - 10/30/2015' />
+          <LISTITEM value='R1 - 15.1.4.0 - 11/04/2015' />
+          <LISTITEM value='R1 - 15.1.4.1 - 11/10/2015' />
+          <LISTITEM value='R1 - 15.1.4.2 - 11/17/2015' />
+          <LISTITEM value='R1 - 15.1.4.3 - 11/19/2015' />
+          <LISTITEM value='R1 - 15.1.4.3a - 11/24/2015' />
+          <LISTITEM value='R1 - 15.1.4.3b - 11/28/2015' />
+          <LISTITEM value='R1 - 15.1.4.4 - 12/01/2015' />
+          <LISTITEM value='R1 - 15.1.4.5 - 12/08/2015' />
+          <LISTITEM value='R1 - 15.1.4.5a - 12/11/2015' />
+          <LISTITEM value='R1 - 15.1.4.6 - 12/15/2015' />
+          <LISTITEM value='R1 - 15.1.4.7 - 12/22/2015' />
+          <LISTITEM value='R1 - 15.1.4.8 - 12/29/2015' />
+          <LISTITEM value='R1 - 15.1.4.9 - 01/05/2016' />
+          <LISTITEM value='R1 - 15.1.4.10 - 01/12/2016' />
+          <LISTITEM value='R1 - 15.1.4.11 - 01/19/2016' />
+          <LISTITEM value='R1 - 15.1.4.12 - 01/25/2016' />
+          <LISTITEM value='R1 - 15.1.5.0 - 01/29/2016' />
+          <LISTITEM value='R1 - 15.1.5.1 - 02/09/2016' />
+          <LISTITEM value='R1 - 15.1.5.2 - 02/16/2016' />
+          <LISTITEM value='R1 - 15.1.5.3 - 02/19/2016' />
+          <LISTITEM value='R1 - 15.1.5.4 - 03/01/2016' />
+          <LISTITEM value='R1 - 15.1.5.5 - 03/08/2016' />
+          <LISTITEM value='R1 - 15.1.5.6 - 03/15/2016' />
+          <LISTITEM value='R1 - 15.1.5.7 - 03/22/2016' />
+          <LISTITEM value='R2 - 16.2.1.0 - 03/02/2016' />
+          <LISTITEM value='R1 - 15.1.5.8 - 03/29/2016' />
+          <LISTITEM value='R1 - 15.1.5.9 - 04/05/2016' />
+          <LISTITEM value='R1 - 15.1.5.10 - 04/12/2016' />
+          <LISTITEM value='R1 - 15.1.5.11 - 04/19/2016' />
+          <LISTITEM value='R1 - 15.1.5.12 - 04/26/2016' />
+          <LISTITEM value='R1 - 15.1.5.13a - 05/03/2016' />
+          <LISTITEM value='R1 - 15.1.5.14 - 05/10/2016' />
+          <LISTITEM value='R1 - 15.1.5.15 - 05/17/2016' />
+          <LISTITEM value='R2 - 16.2.2.0 - 05/19/2016' />
+          <LISTITEM value='R1 - 15.1.5.15b - 05/23/2016' />
+          <LISTITEM value='R1 - 15.1.5.16 - 05/24/2016' />
+          <LISTITEM value='R1 - 15.1.5.16a - 05/27/2016' />
+          <LISTITEM value='R1 - 15.1.5.17 - 05/31/2016' />
+          <LISTITEM value='R1 - 15.1.5.18 - 06/07/2016' />
+          <LISTITEM value='R2 - 16.2.2.2 - 06/09/2016' />
+          <LISTITEM value='R1 - 15.1.5.19 - 06/14/2016' />
+          <LISTITEM value='R2 - 16.2.2.3 - 06/17/2016' />
+          <LISTITEM value='R1 - 15.1.5.20 - 06/21/2016' />
+          <LISTITEM value='R1 - 15.1.5.21 - 06/28/2016' />
+          <LISTITEM value='R2 - 16.2.2.4 - 06/30/2016' />
+          <LISTITEM value='R1 - 15.1.5.22 - 07/05/2016' />
+          <LISTITEM value='R3 - 16.3.1.0 - 07/05/2016' />
+          <LISTITEM value='R1 - 15.1.5.23 - 07/12/2016' />
+          <LISTITEM value='R2 - 16.2.2.5 - 07/14/2016' />
+          <LISTITEM value='R1 - 15.1.5.24 - 07/19/2016' />
+          <LISTITEM value='R1 - 15.1.5.25 - 07/26/2016' />
+          <LISTITEM value='R2 - 16.2.2.6 - 07/28/2016' />
+          <LISTITEM value='R3 - 16.3.1.1 - 07/30/2016' />
+          <LISTITEM value='R1 - 15.1.6.0 - 08/02/2016' />
+          <LISTITEM value='R1 - 15.1.6.1 - 08/09/2016' />
+          <LISTITEM value='R3 - 16.3.1.1a - 08/11/2016' />
+          <LISTITEM value='R2 - 16.2.2.7 - 08/11/2016' />
+          <LISTITEM value='R1 - 15.1.6.2 - 08/16/2016' />
+          <LISTITEM value='R1 - 15.1.6.3 - 08/23/2016' />
+          <LISTITEM value='R2 - 16.2.2.8 - 08/25/2016' />
+          <LISTITEM value='R1 - 15.1.6.4 - 08/30/2016' />
+          <LISTITEM value='R1 - 15.1.6.5 - 09/06/2016' />
+          <LISTITEM value='R2 - 16.2.2.9 - 09/08/2016' />
+          <LISTITEM value='R1 - 15.1.6.5a - 09/09/2016' />
+          <LISTITEM value='R1 - 15.1.6.6 - 09/13/2016' />
+          <LISTITEM value='R1 - 15.1.6.6b - 09/16/2016' />
+          <LISTITEM value='R1 - 15.1.6.7 - 09/20/2016' />
+          <LISTITEM value='R2 - 16.2.2.10 - 09/22/2016' />
+          <LISTITEM value='R2 - 16.2.2.10a - 09/22/2016' />
+          <LISTITEM value='R1 - 15.1.6.8 - 09/27/2016' />
+          <LISTITEM value='R1 - 15.1.6.8a - 09/30/2016' />
+          <LISTITEM value='R2 - 16.2.2.10b - 10/03/2016' />
+          <LISTITEM value='R1 - 15.1.6.9 - 10/04/2016' />
+          <LISTITEM value='R1 - 15.6.1.9a - 10/06/2016' />
+          <LISTITEM value='R2 - 16.2.2.11 - 10/07/2016' />
+          <LISTITEM value='R1 - 15.1.6.10 - 10/11/2016' />
+          <LISTITEM value='R1- 15.1.6.10a - 10/14/2016' />
+          <LISTITEM value='R1 - 15.1.6.11 - 10/18/2016' />
+          <LISTITEM value='R2 - 16.2.2.12 - 10/20/2016' />
+          <LISTITEM value='R1 - 15.1.6.11c - 10/21/2016' />
+          <LISTITEM value='R1 - 15.1.6.12 - 10/25/2016' />
+          <LISTITEM value='R2 - 16.2.2.13 - 10/27/2016' />
+          <LISTITEM value='R1 - 15.1.6.13 - 11/01/2016' />
+          <LISTITEM value='R1 - 15.1.6.14 - 11/08/2016' />
+          <LISTITEM value='R2 - 16.2.2.14 - 11/10/2016' />
+          <LISTITEM value='R1 - 15.1.6.15 - 11/15/2016' />
+          <LISTITEM value='R1 - 15.1.6.16 - 11/22/2016' />
+          <LISTITEM value='R1 - 15.1.6.16a - 11/25/2016' />
+          <LISTITEM value='R2 - 16.2.2.15 - 11/26/2016' />
+          <LISTITEM value='R1 - 15.1.6.17 - 12/03/2016' />
+          <LISTITEM value='R2 - 16.2.2.16 - 12/08/2016' />
+          <LISTITEM value='R1 - 15.1.6.18 - 12/13/2016' />
+          <LISTITEM value='R1 - 15.1.6.19 - 12/20/2016' />
+          <LISTITEM value='R2 - 16.2.2.17 - 12/23/2016' />
+          <LISTITEM value='R1 - 15.1.6.20 - 01/03/2017' />
+          <LISTITEM value='R2 - 16.2.3.0 - 01/06/2017' />
+          <LISTITEM value='R1 - 15.1.6.21 - 01/10/2017' />
+          <LISTITEM value='R1 - 15.1.6.22 - 01/17/2017' />
+          <LISTITEM value='R2 - 16.2.3.1 - 01/19/2017' />
+          <LISTITEM value='R1 - 15.1.6.23 - 01/24/2017' />
+          <LISTITEM value='R1 - 15.1.7.0 - 01/31/2017' />
+          <LISTITEM value='R2 - 16.2.3.2 - 02/02/2017' />
+          <LISTITEM value='R1 - 15.1.7.1 - 02/07/2017' />
+          <LISTITEM value='R1 - 15.1.7.2 - 02/14/2017' />
+          <LISTITEM value='R2 - 16.2.3.3 - 02/16/2017' />
+          <LISTITEM value='R1 - 15.1.7.3 - 02/21/2017' />
+          <LISTITEM value='R1 - 15.1.7.4 - 02/28/2017' />
+          <LISTITEM value='R2 - 16.2.3.4 - 03/02/2017' />
+          <LISTITEM value='R1 - 15.1.7.5 - 03/07/2017' />
+          <LISTITEM value='R1 - 15.1.7.6 - 03/14/2017' />
+          <LISTITEM value='R2 - 16.2.3.5 - 03/16/2017' />
+          <LISTITEM value='R1 - 15.1.7.6a - 03/17/2017' />
+          <LISTITEM value='R1 - 15.1.7.7 - 03/21/2017' />
+          <LISTITEM value='R1 - 15.1.7.7a - 03/24/2017' />
+          <LISTITEM value='R1 - 15.1.8.0 - 03/28/2017' />
+          <LISTITEM value='R2 - 16.2.3.6 - 03/30/2017' />
+          <LISTITEM value='R1 - 15.1.8.0a - 03/31/2017' />
+          <LISTITEM value='R1 - 15.1.8.1 - 04/07/2017' />
+          <LISTITEM value='R1 - 15.1.8.2 - 04/11/2017' />
+          <LISTITEM value='R2 - 16.2.3.7 - 04/13/2017' />
+          <LISTITEM value='R1 - 15.1.8.3 - 04/14/2017' />
+          <LISTITEM value='R1 - 15.1.8.4 - 04/18/2017' />
+          <LISTITEM value='R1 - 15.1.8.5 - 04/21/2017' />
+          <LISTITEM value='R1 - 15.1.8.6 - 04/25/2017' />
+          <LISTITEM value='R2 - 16.2.3.8 - 04/27/2017' />
+          <LISTITEM value='R1 - 15.1.8.7 - 04/28/2017' />
+          <LISTITEM value='R1 - 15.1.8.8 - 05/02/2017' />
+          <LISTITEM value='R1 - 15.1.8.9 - 05/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.10 - 05/11/2017' />
+          <LISTITEM value='R2 - 16.2.3.9 - 05/11/2017' />
+          <LISTITEM value='R1 - 15.1.8.11 - 05/23/2017' />
+          <LISTITEM value='R2 - 16.2.3.10 - 5/24/2017' />
+          <LISTITEM value='R1 - 15.1.8.10a - 05/27/2017' />
+          <LISTITEM value='R1 - 15.1.8.10b - 05/30/2017' />
+          <LISTITEM value='R1 - 15.1.8.10c - 06/01/2017' />
+          <LISTITEM value='R1 - 15.1.8.10d - 06/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.11 - 06/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.11a - 06/06/2017' />
+          <LISTITEM value='R1 - 15.1.8.10e - 06/08/2017' />
+          <LISTITEM value='R2 - 16.2.3.11 - 06/08/2017' />
+          <LISTITEM value='R1 - 15.1.8.10f - 06/12/2017' />
+          <LISTITEM value='R1 - 15.1.8.11b - 06/12/2017' />
+          <LISTITEM value='R1 - 15.1.8.12 - 06/12/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.0 - 6/15/2017' />
+          <LISTITEM value='R1 - 15.1.8.13 - 06/19/2017' />
+          <LISTITEM value='R2 - 16.2.3.12 - 06/22/2017' />
+          <LISTITEM value='R1 - 15.1.8.12b - 06/26/2017' />
+          <LISTITEM value='R1 - 15.1.8.12c - 06/29/2017' />
+          <LISTITEM value='R1 - 15.1.8.13 - 06/29/2017' />
+          <LISTITEM value='R2 - 16.2.3.13 - 7/7/2017' />
+          <LISTITEM value='R1 - 15.1.8.13 - 07/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.13a - 07/10/2017' />
+          <LISTITEM value='R1 - 15.1.8.14 - 07/11/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.0a - 7/12/2016' />
+          <LISTITEM value='R1 - 15.1.8.15 - 07/17/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.1 - 07/14/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.1a - 7/21/2017' />
+          <LISTITEM value='R2 - 16.2.3.13a - 7/11/2017' />
+          <LISTITEM value='R2 - 16.2.3.13b - 7/14/2017' />
+          <LISTITEM value='R2 - 16.2.3.14 - 7/20/2017' />
+          <LISTITEM value='R1 - 15.1.8.16 - 07/26/2017' />
+          <LISTITEM value='R1 - 15.1.8.16a - 07/26/2017' />
+          <LISTITEM value='R1 - 15.1.8.15b - 07/27/2017' />
+          <LISTITEM value='R1 - 15.1.8.15d - 07/31/2017' />
+          <LISTITEM value='R2 - 16.2.3.15 - 08/03/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.1 - 08/09/2017' />
+          <LISTITEM value='R1 - 15.1.8.17a - 08/10/2017' />
+          <LISTITEM value='R2 - 16.2.3.16 - 8/18/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.4 - 8/25/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.5 - 8/28/2017' />
+          <LISTITEM value='R2 - 16.2.4.0 - 09/01/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.6 - 09/05/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.7 - 09/11/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.8 - 09/11/2017' />
+          <LISTITEM value='R2 - 16.2.4.1 - 09/14/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.12 - 09/21/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.13 - 09/25/2017' />
+          <LISTITEM value='R2 - 16.2.4.2 - 09/28/2017' />
+          <LISTITEM value='R2 - 16.2.4.2a - 10/02/2017' />
+          <LISTITEM value='R2 - 16.2.4.2b - 10/03/2017' />
+          <LISTITEM value='R2 - 16.2.4.2c - 10/04/2017' />
+          <LISTITEM value='R2 - 16.2.4.3 - 10/12/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.14 - 10/03/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.15 - 10/04/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.16 - 10/09/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.17 - 10/16/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.18 - 10/16/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.19 - 10/16/2017' />
+          <LISTITEM value='R2 - 16.2.4.4 - 10/20/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.21 - 10/27/2017' />
+          <LISTITEM value='R3 - 17.1.4.0 - 10/31/2017' />
+          <LISTITEM value='R2 - 16.2.4.5 - 11/10/2017' />
+          <LISTITEM value='R2 - 16.2.4.5a  - 11/17/2017' />
+          <LISTITEM value='R2 - 16.2.4.6 11/24/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.22 - 11/07/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.23 - 11/13/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.24 - 11/14/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.25 - 11/24/2017' />
+          <LISTITEM value='R2  - 16.2.4.7 - 12/08/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.26 - 12/11/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.27 - 12/11/2017' />
+          <LISTITEM value='R2 - 16.2.4.8 - 12/19/2017' />
+          <LISTITEM value='R1.1.4 - 15.2.8.29 - 01/02/2018' />
+          <LISTITEM value='R3 - 17.1.5.0 - 12/31/2017' />
+          <LISTITEM value='R2 - 16.2.4.9 - 01/05/2018' />
+          <LISTITEM value='R2 - 16.2.4.10 - 01/18/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.30 - 01/16/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.31 - 01/22/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.32 - 01/22/2018' />
+          <LISTITEM value='R2 - 16.2.4.10c - 1/25/2018' />
+          <LISTITEM value='R2 - 16.2.4.11 - 02/01/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.33 - 02/02/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.34 - 02/07/2018' />
+          <LISTITEM value='R2 - 16.2.4.11a - 02/09/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.35 - 02/12/2018' />
+          <LISTITEM value='R2 - 16.2.4.12 - 02/15/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.36 - 02/20/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.37 - 02/20/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.38 - 02/28/2018' />
+          <LISTITEM value='R2 - 16.2.4.13 - 03/01/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.39 - 03/09/2018' />
+          <LISTITEM value='R2 - 16.2.4.14 - 03/14/2018' />
+          <LISTITEM value='R2 - 16.2.4.15 - 03/28/2018' />
+          <LISTITEM value='R2 - 16.2.4.14b - 03/22/2018' />
+          <LISTITEM value='R2 - 16.2.4.14c - 03/23/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.41 - 03/26/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.42 - 03/26/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.44 - 04/09/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.45 - 04/09/2018' />
+          <LISTITEM value='R2 - 16.2.4.16 - 04/11/2018' />
+          <LISTITEM value='R2 - 16.2.4.16a - 04/19/2018' />
+          <LISTITEM value='R2 - 16.2.4.17 - 04/25/2018' />
+          <LISTITEM value='R1.1.8 - 15.2.8.48 - 04/30/2018' />
+          <LISTITEM value='R2 - 16.2.4.18 - 05/10/2018' />
+          <LISTITEM value='R1.1.8 - 15.2.8.49 - 05/16/2018' />
+          <LISTITEM value='R1.1.9a - 15.2.8.50 - 05/21/2018' />
+          <LISTITEM value='R2 - 16.2.4.19 - 05/23/2018' />
+          <LISTITEM value='R1.1.9a - 15.2.8.51 - 05/29/2018' />
+          <LISTITEM value='R2 - 16.2.5.0 - 06/11/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.52 - 06/06/2018' />
+          <LISTITEM value='R1.1.9a - 15.2.8.53 - 06/13/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.54 - 06/14/2018' />
+          <LISTITEM value='R2 - 16.2.5.1 - 06/20/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.55 - 06/27/2018' />
+          <LISTITEM value='R2 - 16.2.5.2 - 07/04/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.56 - 07/06/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.57 - 07/13/2018' />
+          <LISTITEM value='R2 -16.2.5.3 - 07/18/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.58 - 07/20/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.59 - 07/25/2018' />
+          <LISTITEM value='R2 -16.2.5.4 - 08/01/2018' />
+          <LISTITEM value='R2 -16.2.5.5 - 08/15/2018' />
+          <LISTITEM value='R1.1.10a - 15.2.8.60 - 08/27/2018' />
+          <LISTITEM value='R1.1.10b - 15.2.8.61 - 08/30/2018' />
+          <LISTITEM value='R2 -16.2.5.6 - 08/29/2018' />
+          <LISTITEM value='R1.1.10b - 15.2.8.62 - 09/04/2018' />
+          <LISTITEM value='R2 - 16.2.5.7 - 09/12/18' />
+          <LISTITEM value='R1.1.10 - 15.2.8.63 - 09/12/2018' />
+          <LISTITEM value='R1.1.10 - 15.2.8.64 - 09/20/2018' />
+          <LISTITEM value='R2 - 16.2.5.7b - 09/20/18' />
+          <LISTITEM value='R1.1.10 - 15.2.8.65 - 09/25/2018' />
+          <LISTITEM value='R2 - 16.2.5.8 - 9/26/18' />
+          <LISTITEM value='R3 � 17.3.1.0 � 9/30/2018' />
+          <LISTITEM value='R2 - 16.2.5.9 - 10/10/2018' />
+          <LISTITEM value='R3 � 17.3.1.1 � 10/19/2018' />
+          <LISTITEM value='R2 - 16.2.6.0  - 10/24/2018' />
+          <LISTITEM value='R2 - 16.2.6.1 - 11/07/2018' />
+          <LISTITEM value=' R2 - 16.2.6.2 - 11/15/2018' />
+          <LISTITEM value='2018 1098 Tax Reporting Changes - 15.2.8.69 - 11/14/2018' />
+          <LISTITEM value=' 2018 1098 Tax Reporting Changes - 15.2.8.70 - 11/23/2018' />
+          <LISTITEM value='R2 - 16.2.6.3 - 11/28/2018' />
+          <LISTITEM value='R2 - 16.2.6.3a - 12/04/2018' />
+          <LISTITEM value='R2 - 16.2.6.4  - 12/12/2018' />
+          <LISTITEM value='R2 - 16.2.6.5 - 12/20/2018' />
+          <LISTITEM value='R2 - 16.2.6.6 - 12/27/2018' />
+          <LISTITEM value='R2 - 16.2.6.7 -  01/03/2019' />
+          <LISTITEM value='R2 - 16.2.6.8 -  01/09/2019' />
+          <LISTITEM value='R3 � 17.3.1.3 � 01/04/2019' />
+          <LISTITEM value='R2 - 16.2.6.9 -  01/16/2019' />
+          <LISTITEM value='PS - 16.2.6.9d - 02/252019' />
+          <LISTITEM value='PS - 16.2.6.9e - 03/01/2019' />
+          <LISTITEM value='PS - 16.2.6.9e - 03/01/2019' />
+          <LISTITEM value='PS - 16.2.6.9f - 03/01/2019' />
+          <LISTITEM value='PS - 16.2.6.9g - 03/01/2019' />
+          <LISTITEM value='PS - 16.2.6.10 - 03/01/2019' />
+          <LISTITEM value='PS - 16.2.6.9h - 03/11/2019' />
+          <LISTITEM value='PS - 16.2.6.10a - Test delivery: 3/11/19; prod deployment 3/17/19' />
+          <LISTITEM value='R3 � 17.3.1.4 � 02/08/2019' />
+          <LISTITEM value='R3 � 17.3.1.5 � 03/05/2019' />
+          <LISTITEM value='PS - 16.2.6.11 - Test delivery: 3/18/19; prod deployment 3/24/19' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Found In Build (Zions)' refname='com.zions.workitem.attribute.FoundInBuild' type='com.zion.workitem.enumeration.build' dimension='reportable'>
+        <HELPTEXT>From rtc 'Found In Build (Zions)'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='N/A' />
+          <LISTITEM value='07/16/2015' />
+          <LISTITEM value='08/16/2015' />
+          <LISTITEM value='08/31/2015' />
+          <LISTITEM value='09/08/2015' />
+          <LISTITEM value='09/22/2015' />
+          <LISTITEM value='09/29/2015' />
+          <LISTITEM value='10/09/2015' />
+          <LISTITEM value='10/16/2015' />
+          <LISTITEM value='10/30/2015' />
+          <LISTITEM value='11/06/2015' />
+          <LISTITEM value='11/13/2015' />
+          <LISTITEM value='11/19/2015' />
+          <LISTITEM value='11/25/2015' />
+          <LISTITEM value='11/30/2015' />
+          <LISTITEM value='12/04/2015' />
+          <LISTITEM value='12/22/2015' />
+          <LISTITEM value='05/20/2016' />
+          <LISTITEM value='05/28/2016' />
+          <LISTITEM value='06/02/2016' />
+          <LISTITEM value='06/10/2016' />
+          <LISTITEM value='06/10/2016A' />
+          <LISTITEM value='06/17/2016' />
+          <LISTITEM value='06/20/2016' />
+          <LISTITEM value='06/24/2016' />
+          <LISTITEM value='07/01/2016' />
+          <LISTITEM value='07/15/2016' />
+          <LISTITEM value='07/21/2016' />
+          <LISTITEM value='07/22/2016' />
+          <LISTITEM value='07/29/2016' />
+          <LISTITEM value='08/05/2016' />
+          <LISTITEM value='08/12/2016' />
+          <LISTITEM value='08/19/2016' />
+          <LISTITEM value='08/26/2016' />
+          <LISTITEM value='09/02/2016' />
+          <LISTITEM value='09/09/2016' />
+          <LISTITEM value='09/16/2016' />
+          <LISTITEM value='09/23/2016' />
+          <LISTITEM value='09/30/2016' />
+          <LISTITEM value='10/07/2016' />
+          <LISTITEM value='10/14/2016' />
+          <LISTITEM value='11/07/2016' />
+          <LISTITEM value='11/10/2016' />
+          <LISTITEM value='12/02/2016' />
+          <LISTITEM value='12/13/2016' />
+          <LISTITEM value='01/20/2017' />
+          <LISTITEM value='01/27/2017' />
+          <LISTITEM value='02/24/2017' />
+          <LISTITEM value='03/10/2017' />
+          <LISTITEM value='03/31/2017' />
+          <LISTITEM value='1.00' />
+          <LISTITEM value='2.00' />
+          <LISTITEM value='3.00' />
+          <LISTITEM value='4.00' />
+          <LISTITEM value='5.00' />
+          <LISTITEM value='6.00' />
+          <LISTITEM value='7.00' />
+          <LISTITEM value='8.00' />
+          <LISTITEM value='9.00' />
+          <LISTITEM value='10.00' />
+          <LISTITEM value='11.00' />
+          <LISTITEM value='12.00' />
+          <LISTITEM value='13.00' />
+          <LISTITEM value='14.00' />
+          <LISTITEM value='15.00' />
+          <LISTITEM value='16.00' />
+          <LISTITEM value='17.00' />
+          <LISTITEM value='18.00' />
+          <LISTITEM value='19.00' />
+          <LISTITEM value='20.00' />
+          <LISTITEM value='21.00' />
+          <LISTITEM value='22.00' />
+          <LISTITEM value='23.00' />
+          <LISTITEM value='24.00' />
+          <LISTITEM value='25.00' />
+          <LISTITEM value='26.00' />
+          <LISTITEM value='27.00' />
+          <LISTITEM value='28.00' />
+          <LISTITEM value='29.00' />
+          <LISTITEM value='30.00' />
+          <LISTITEM value='31.00' />
+          <LISTITEM value='32.00' />
+          <LISTITEM value='33.00' />
+          <LISTITEM value='34.00' />
+          <LISTITEM value='35.00' />
+          <LISTITEM value='36.00' />
+          <LISTITEM value='37.00' />
+          <LISTITEM value='38.00' />
+          <LISTITEM value='39.00' />
+          <LISTITEM value='40.00' />
+          <LISTITEM value='41.00' />
+          <LISTITEM value='42.00' />
+          <LISTITEM value='43.00' />
+          <LISTITEM value='44.00' />
+          <LISTITEM value='45.00' />
+          <LISTITEM value='46.00' />
+          <LISTITEM value='47.00' />
+          <LISTITEM value='48.00' />
+          <LISTITEM value='49.00' />
+          <LISTITEM value='50.00' />
+          <LISTITEM value='51.00' />
+          <LISTITEM value='52.00' />
+          <LISTITEM value='53.00' />
+          <LISTITEM value='54.00' />
+          <LISTITEM value='55.00' />
+          <LISTITEM value='56.00' />
+          <LISTITEM value='57.00' />
+          <LISTITEM value='58.00' />
+          <LISTITEM value='59.00' />
+          <LISTITEM value='60.00' />
+          <LISTITEM value='61.00' />
+          <LISTITEM value='62.00' />
+          <LISTITEM value='63.00' />
+          <LISTITEM value='64.00' />
+          <LISTITEM value='65.00' />
+          <LISTITEM value='66.00' />
+          <LISTITEM value='67.00' />
+          <LISTITEM value='68.00' />
+          <LISTITEM value='69.00' />
+          <LISTITEM value='70.00' />
+          <LISTITEM value='71.00' />
+          <LISTITEM value='72.00' />
+          <LISTITEM value='73.00' />
+          <LISTITEM value='74.00' />
+          <LISTITEM value='75.00' />
+          <LISTITEM value='76.00' />
+          <LISTITEM value='77.00' />
+          <LISTITEM value='78.00' />
+          <LISTITEM value='79.00' />
+          <LISTITEM value='80.00' />
+          <LISTITEM value='81.00' />
+          <LISTITEM value='82.00' />
+          <LISTITEM value='83.00' />
+          <LISTITEM value='84.00' />
+          <LISTITEM value='85.00' />
+          <LISTITEM value='86.00' />
+          <LISTITEM value='87.00' />
+          <LISTITEM value='88.00' />
+          <LISTITEM value='89.00' />
+          <LISTITEM value='90.00' />
+          <LISTITEM value='91.00' />
+          <LISTITEM value='92.00' />
+          <LISTITEM value='93.00' />
+          <LISTITEM value='94.00' />
+          <LISTITEM value='95.00' />
+          <LISTITEM value='96.00' />
+          <LISTITEM value='97.00' />
+          <LISTITEM value='98.00' />
+          <LISTITEM value='99.00' />
+          <LISTITEM value='100.00' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Release Found In' refname='com.ibm.workitem.anomaly.tab.releasefound' type='com.ibm.workitem.anomaly.tab.reslease' dimension='reportable'>
+        <HELPTEXT>From rtc 'Release Found In'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='R1' />
+          <LISTITEM value='R1.0.0a' />
+          <LISTITEM value='R1.0.0b' />
+          <LISTITEM value='R1.0.0c' />
+          <LISTITEM value='R1.0.1' />
+          <LISTITEM value='R1.0.2' />
+          <LISTITEM value='R1.0.3' />
+          <LISTITEM value='R1.0.4' />
+          <LISTITEM value='R1.0.5' />
+          <LISTITEM value='R1.0.6' />
+          <LISTITEM value='R1.0.7' />
+          <LISTITEM value='R1.0.8' />
+          <LISTITEM value='R1.1.0' />
+          <LISTITEM value='R1.2.0' />
+          <LISTITEM value='R1.3.0' />
+          <LISTITEM value='R2' />
+          <LISTITEM value='R3' />
+          <LISTITEM value='Deferred' />
+          <LISTITEM value='PS' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Phase Found In' refname='com.ibm.workitem.anomaly.tab.phasefoundin' type='com.ibm.team.workitem.anomaly.sdlcphase' dimension='reportable'>
+        <HELPTEXT>From rtc 'Phase Found In'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Reguirement Definition' />
+          <LISTITEM value='Design' />
+          <LISTITEM value='Development' />
+          <LISTITEM value='Test - System' />
+          <LISTITEM value='Test - System Integration' />
+          <LISTITEM value='Test - User Acceptance' />
+          <LISTITEM value='Production Readiness' />
+          <LISTITEM value='Production Support' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Owned by Team' refname='com.zions.workitem.attribute.OwnedByTeam' type='com.zion.workitem.enumeration.TestingTeam' dimension='reportable'>
+        <HELPTEXT>From rtc 'Owned by Team'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='BaNCS Prod Sup: Prod' />
+          <LISTITEM value='BaNCS Prod Sup: Test' />
+          <LISTITEM value='BaNCS Product: Test' />
+          <LISTITEM value='BST: BaNCS' />
+          <LISTITEM value='BST: Parameter' />
+          <LISTITEM value='BOR Team' />
+          <LISTITEM value='Business Unit: CDA' />
+          <LISTITEM value='Business Unit: ELO' />
+          <LISTITEM value='Business Unit: EML' />
+          <LISTITEM value='Business Unit: RLC' />
+          <LISTITEM value='Data Governance' />
+          <LISTITEM value='Data Migration: Dev' />
+          <LISTITEM value='Data Migration: Dev - CLCS' />
+          <LISTITEM value='Data Migration: Dev - RCIF' />
+          <LISTITEM value='Data Migration: Dev - Shaw' />
+          <LISTITEM value='Data Migration: Dev - Data Cleanse' />
+          <LISTITEM value='Data Migration: Test' />
+          <LISTITEM value='EIM: EDW Dev' />
+          <LISTITEM value='EIM: EDW Test' />
+          <LISTITEM value='E2E' />
+          <LISTITEM value='Finance: Accounting' />
+          <LISTITEM value='Finance: ACLS - Archive' />
+          <LISTITEM value='Finance: BaNCS Extracts' />
+          <LISTITEM value='Finance: Data Migration - Archive' />
+          <LISTITEM value='Finance: EDW - Archive' />
+          <LISTITEM value='Finance: Evolv' />
+          <LISTITEM value='Finance: Evolv - TI' />
+          <LISTITEM value='Finance: FAH' />
+          <LISTITEM value='Finance: Frontier' />
+          <LISTITEM value='Finance: Loan Operations' />
+          <LISTITEM value='Finance: ODS - Archive' />
+          <LISTITEM value='Finance: Recon' />
+          <LISTITEM value='Finance: R2R - Archive' />
+          <LISTITEM value='Finance: Triage' />
+          <LISTITEM value='Interfaces: BaNCS Test' />
+          <LISTITEM value='Interfaces: Tier 2' />
+          <LISTITEM value='N/A' />
+          <LISTITEM value='NFR: Support' />
+          <LISTITEM value='NFR: Test' />
+          <LISTITEM value='ODS: EIM Dev' />
+          <LISTITEM value='Parameter DEV' />
+          <LISTITEM value='Performance: Test' />
+          <LISTITEM value='PSIT: Triage ' />
+          <LISTITEM value='Reports: BaNCS Test' />
+          <LISTITEM value='Reports: ODS Test' />
+          <LISTITEM value='R2R: Test ' />
+          <LISTITEM value='SNF: Test' />
+          <LISTITEM value='TCS Dev' />
+          <LISTITEM value='UAT: Triage' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Target Fix Date' refname='com.zion.workitem.attribute.TargetFixDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Target Fix Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Triage Task Needed' refname='com.tmb.team.workitem.att.child_tasks1' type='enumerationList$com.ibm.team.workitem.triagetab.tasktype' dimension='reportable'>
+        <HELPTEXT>From rtc 'Triage Task Needed'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Investigation' />
+          <LISTITEM value='Remediation' />
+          <LISTITEM value='Test' />
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Investigation Task BST' />
+          <LISTITEM value='Investigation Task Business Unit' />
+          <LISTITEM value='Investigation Task Management' />
+          <LISTITEM value='Investigation Task ORBIT' />
+          <LISTITEM value='Investigation Task Primatics' />
+          <LISTITEM value='Investigation Task QA' />
+          <LISTITEM value='Investigation Task TCS' />
+          <LISTITEM value='Investigation Task Zions' />
+          <LISTITEM value='Remediation Task Primatics' />
+          <LISTITEM value='Remediation Task Procedure' />
+          <LISTITEM value='Remediation Task TCS' />
+          <LISTITEM value='Remediation Task Training' />
+          <LISTITEM value='Remediation Task Zions' />
+          <LISTITEM value='ReTest Orbit' />
+          <LISTITEM value='ReTest QA' />
+          <LISTITEM value='Investigation: 01' />
+          <LISTITEM value='Investigation: 02' />
+          <LISTITEM value='Investigation: 03' />
+          <LISTITEM value='Investigation: 04' />
+          <LISTITEM value='Investigation: 05' />
+          <LISTITEM value='Investigation: 06' />
+          <LISTITEM value='Investigation: 07' />
+          <LISTITEM value='Investigation: 08' />
+          <LISTITEM value='Remediation: 01' />
+          <LISTITEM value='Remediation: 02' />
+          <LISTITEM value='Remediation: 03' />
+          <LISTITEM value='Remediation: 04' />
+          <LISTITEM value='Remediation: 05' />
+          <LISTITEM value='Remediation: 06' />
+          <LISTITEM value='Remediation: 07' />
+          <LISTITEM value='Remediation: 08' />
+          <LISTITEM value='ReTest: 01' />
+          <LISTITEM value='ReTest: 02' />
+          <LISTITEM value='ReTest: 03' />
+          <LISTITEM value='ReTest: 04' />
+          <LISTITEM value='ReTest: 05' />
+          <LISTITEM value='ReTest: 06' />
+          <LISTITEM value='ReTest: 07' />
+          <LISTITEM value='ReTest: 08' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Business Impact/Workaround' refname='com.zions.workitem.anomaly.attribute.BusinessImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Business Impact/Workaround'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Previous State' refname='com.zions.workitem.attribute.zzzPreviousState' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Previous State'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Reopen Count' refname='com.zions.workitem.attribute.ReopenCount' type='integer' dimension='reportable'>
+        <HELPTEXT>From rtc 'Reopen Count'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Phase Targeted To' refname='com.ibm.workitem.anomaly.tab.phasetarget' type='com.ibm.team.workitem.anomaly.sdlcphase' dimension='reportable'>
+        <HELPTEXT>From rtc 'Phase Targeted To'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Reguirement Definition' />
+          <LISTITEM value='Design' />
+          <LISTITEM value='Development' />
+          <LISTITEM value='Test - System' />
+          <LISTITEM value='Test - System Integration' />
+          <LISTITEM value='Test - User Acceptance' />
+          <LISTITEM value='Production Readiness' />
+          <LISTITEM value='Production Support' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Release Fixed In' refname='com.ibm.workitem.anomaly.tab.releasefixed' type='com.ibm.workitem.anomaly.tab.reslease' dimension='reportable'>
+        <HELPTEXT>From rtc 'Release Fixed In'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='R1' />
+          <LISTITEM value='R1.0.0a' />
+          <LISTITEM value='R1.0.0b' />
+          <LISTITEM value='R1.0.0c' />
+          <LISTITEM value='R1.0.1' />
+          <LISTITEM value='R1.0.2' />
+          <LISTITEM value='R1.0.3' />
+          <LISTITEM value='R1.0.4' />
+          <LISTITEM value='R1.0.5' />
+          <LISTITEM value='R1.0.6' />
+          <LISTITEM value='R1.0.7' />
+          <LISTITEM value='R1.0.8' />
+          <LISTITEM value='R1.1.0' />
+          <LISTITEM value='R1.2.0' />
+          <LISTITEM value='R1.3.0' />
+          <LISTITEM value='R2' />
+          <LISTITEM value='R3' />
+          <LISTITEM value='Deferred' />
+          <LISTITEM value='PS' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Target Retest Date' refname='com.zion.workitem.attribute.TargetRetestDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Target Retest Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='xxxFound by Team' refname='com.zions.workitem.attribute.FoundByTeam' type='com.zion.workitem.enumeration.TestingTeam' dimension='reportable'>
+        <HELPTEXT>From rtc 'xxxFound by Team'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='BaNCS Prod Sup: Prod' />
+          <LISTITEM value='BaNCS Prod Sup: Test' />
+          <LISTITEM value='BaNCS Product: Test' />
+          <LISTITEM value='BST: BaNCS' />
+          <LISTITEM value='BST: Parameter' />
+          <LISTITEM value='BOR Team' />
+          <LISTITEM value='Business Unit: CDA' />
+          <LISTITEM value='Business Unit: ELO' />
+          <LISTITEM value='Business Unit: EML' />
+          <LISTITEM value='Business Unit: RLC' />
+          <LISTITEM value='Data Governance' />
+          <LISTITEM value='Data Migration: Dev' />
+          <LISTITEM value='Data Migration: Dev - CLCS' />
+          <LISTITEM value='Data Migration: Dev - RCIF' />
+          <LISTITEM value='Data Migration: Dev - Shaw' />
+          <LISTITEM value='Data Migration: Dev - Data Cleanse' />
+          <LISTITEM value='Data Migration: Test' />
+          <LISTITEM value='EIM: EDW Dev' />
+          <LISTITEM value='EIM: EDW Test' />
+          <LISTITEM value='E2E' />
+          <LISTITEM value='Finance: Accounting' />
+          <LISTITEM value='Finance: ACLS - Archive' />
+          <LISTITEM value='Finance: BaNCS Extracts' />
+          <LISTITEM value='Finance: Data Migration - Archive' />
+          <LISTITEM value='Finance: EDW - Archive' />
+          <LISTITEM value='Finance: Evolv' />
+          <LISTITEM value='Finance: Evolv - TI' />
+          <LISTITEM value='Finance: FAH' />
+          <LISTITEM value='Finance: Frontier' />
+          <LISTITEM value='Finance: Loan Operations' />
+          <LISTITEM value='Finance: ODS - Archive' />
+          <LISTITEM value='Finance: Recon' />
+          <LISTITEM value='Finance: R2R - Archive' />
+          <LISTITEM value='Finance: Triage' />
+          <LISTITEM value='Interfaces: BaNCS Test' />
+          <LISTITEM value='Interfaces: Tier 2' />
+          <LISTITEM value='N/A' />
+          <LISTITEM value='NFR: Support' />
+          <LISTITEM value='NFR: Test' />
+          <LISTITEM value='ODS: EIM Dev' />
+          <LISTITEM value='Parameter DEV' />
+          <LISTITEM value='Performance: Test' />
+          <LISTITEM value='PSIT: Triage ' />
+          <LISTITEM value='Reports: BaNCS Test' />
+          <LISTITEM value='Reports: ODS Test' />
+          <LISTITEM value='R2R: Test ' />
+          <LISTITEM value='SNF: Test' />
+          <LISTITEM value='TCS Dev' />
+          <LISTITEM value='UAT: Triage' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Found In Drop (Vendor)' refname='com.zions.workitem.attribute.FoundInDrop' type='com.zion.workitem.enumeration.drops' dimension='reportable'>
+        <HELPTEXT>From rtc 'Found In Drop (Vendor)'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='N/A' />
+          <LISTITEM value='R0 - 13.0' />
+          <LISTITEM value='R0 - 14.0' />
+          <LISTITEM value='R0 - 14.1' />
+          <LISTITEM value='R1 - 15.1.0.1' />
+          <LISTITEM value='R1 - 15.1.0.3a' />
+          <LISTITEM value='R1 - 15.1.1.0' />
+          <LISTITEM value='R1 - 15.1.1.0a' />
+          <LISTITEM value='R1 - 15.1.1.1 - 05/25/2015' />
+          <LISTITEM value='R1 - 15.1.1.2a - 06/12/2015' />
+          <LISTITEM value='R1 - 15.1.1.3 - 06/30/2015' />
+          <LISTITEM value='R1 - 15.1.2.0 - 08/05/2015' />
+          <LISTITEM value='R1 - 15.1.2.0a - 08/18/2015' />
+          <LISTITEM value='R1 - 15.1.2.1a - 08/20/2015' />
+          <LISTITEM value='R1 - 15.1.2.2 - 08/25/2015' />
+          <LISTITEM value='R1 - 15.1.2.3 - 09/01/2015' />
+          <LISTITEM value='R1 - 15.1.2.4 - 09/09/2015' />
+          <LISTITEM value='R1 - 15.1.2.5 - 09/16/2015' />
+          <LISTITEM value='R1 - 15.1.2.6 - 09/23/2015' />
+          <LISTITEM value='R1 - 15.1.3.0 - 09/30/2015' />
+          <LISTITEM value='R1 - 15.1.3.0a - 10/06/2015' />
+          <LISTITEM value='R1 - 15.1.3.1 - 10/09/2015' />
+          <LISTITEM value='R1 - 15.1.3.2 - 10/14/2015' />
+          <LISTITEM value='R1 - 15.1.3.3 - 10/21/2015' />
+          <LISTITEM value='R1 - 15.1.3.4 - 10/28/2015' />
+          <LISTITEM value='R1 - 15.1.3.5 - 10/30/2015' />
+          <LISTITEM value='R1 - 15.1.4.0 - 11/04/2015' />
+          <LISTITEM value='R1 - 15.1.4.1 - 11/10/2015' />
+          <LISTITEM value='R1 - 15.1.4.2 - 11/17/2015' />
+          <LISTITEM value='R1 - 15.1.4.3 - 11/19/2015' />
+          <LISTITEM value='R1 - 15.1.4.3a - 11/24/2015' />
+          <LISTITEM value='R1 - 15.1.4.3b - 11/28/2015' />
+          <LISTITEM value='R1 - 15.1.4.4 - 12/01/2015' />
+          <LISTITEM value='R1 - 15.1.4.5 - 12/08/2015' />
+          <LISTITEM value='R1 - 15.1.4.5a - 12/11/2015' />
+          <LISTITEM value='R1 - 15.1.4.6 - 12/15/2015' />
+          <LISTITEM value='R1 - 15.1.4.7 - 12/22/2015' />
+          <LISTITEM value='R1 - 15.1.4.8 - 12/29/2015' />
+          <LISTITEM value='R1 - 15.1.4.9 - 01/05/2016' />
+          <LISTITEM value='R1 - 15.1.4.10 - 01/12/2016' />
+          <LISTITEM value='R1 - 15.1.4.11 - 01/19/2016' />
+          <LISTITEM value='R1 - 15.1.4.12 - 01/25/2016' />
+          <LISTITEM value='R1 - 15.1.5.0 - 01/29/2016' />
+          <LISTITEM value='R1 - 15.1.5.1 - 02/09/2016' />
+          <LISTITEM value='R1 - 15.1.5.2 - 02/16/2016' />
+          <LISTITEM value='R1 - 15.1.5.3 - 02/19/2016' />
+          <LISTITEM value='R1 - 15.1.5.4 - 03/01/2016' />
+          <LISTITEM value='R1 - 15.1.5.5 - 03/08/2016' />
+          <LISTITEM value='R1 - 15.1.5.6 - 03/15/2016' />
+          <LISTITEM value='R1 - 15.1.5.7 - 03/22/2016' />
+          <LISTITEM value='R2 - 16.2.1.0 - 03/02/2016' />
+          <LISTITEM value='R1 - 15.1.5.8 - 03/29/2016' />
+          <LISTITEM value='R1 - 15.1.5.9 - 04/05/2016' />
+          <LISTITEM value='R1 - 15.1.5.10 - 04/12/2016' />
+          <LISTITEM value='R1 - 15.1.5.11 - 04/19/2016' />
+          <LISTITEM value='R1 - 15.1.5.12 - 04/26/2016' />
+          <LISTITEM value='R1 - 15.1.5.13a - 05/03/2016' />
+          <LISTITEM value='R1 - 15.1.5.14 - 05/10/2016' />
+          <LISTITEM value='R1 - 15.1.5.15 - 05/17/2016' />
+          <LISTITEM value='R2 - 16.2.2.0 - 05/19/2016' />
+          <LISTITEM value='R1 - 15.1.5.15b - 05/23/2016' />
+          <LISTITEM value='R1 - 15.1.5.16 - 05/24/2016' />
+          <LISTITEM value='R1 - 15.1.5.16a - 05/27/2016' />
+          <LISTITEM value='R1 - 15.1.5.17 - 05/31/2016' />
+          <LISTITEM value='R1 - 15.1.5.18 - 06/07/2016' />
+          <LISTITEM value='R2 - 16.2.2.2 - 06/09/2016' />
+          <LISTITEM value='R1 - 15.1.5.19 - 06/14/2016' />
+          <LISTITEM value='R2 - 16.2.2.3 - 06/17/2016' />
+          <LISTITEM value='R1 - 15.1.5.20 - 06/21/2016' />
+          <LISTITEM value='R1 - 15.1.5.21 - 06/28/2016' />
+          <LISTITEM value='R2 - 16.2.2.4 - 06/30/2016' />
+          <LISTITEM value='R1 - 15.1.5.22 - 07/05/2016' />
+          <LISTITEM value='R3 - 16.3.1.0 - 07/05/2016' />
+          <LISTITEM value='R1 - 15.1.5.23 - 07/12/2016' />
+          <LISTITEM value='R2 - 16.2.2.5 - 07/14/2016' />
+          <LISTITEM value='R1 - 15.1.5.24 - 07/19/2016' />
+          <LISTITEM value='R1 - 15.1.5.25 - 07/26/2016' />
+          <LISTITEM value='R2 - 16.2.2.6 - 07/28/2016' />
+          <LISTITEM value='R3 - 16.3.1.1 - 07/30/2016' />
+          <LISTITEM value='R1 - 15.1.6.0 - 08/02/2016' />
+          <LISTITEM value='R1 - 15.1.6.1 - 08/09/2016' />
+          <LISTITEM value='R3 - 16.3.1.1a - 08/11/2016' />
+          <LISTITEM value='R2 - 16.2.2.7 - 08/11/2016' />
+          <LISTITEM value='R1 - 15.1.6.2 - 08/16/2016' />
+          <LISTITEM value='R1 - 15.1.6.3 - 08/23/2016' />
+          <LISTITEM value='R2 - 16.2.2.8 - 08/25/2016' />
+          <LISTITEM value='R1 - 15.1.6.4 - 08/30/2016' />
+          <LISTITEM value='R1 - 15.1.6.5 - 09/06/2016' />
+          <LISTITEM value='R2 - 16.2.2.9 - 09/08/2016' />
+          <LISTITEM value='R1 - 15.1.6.5a - 09/09/2016' />
+          <LISTITEM value='R1 - 15.1.6.6 - 09/13/2016' />
+          <LISTITEM value='R1 - 15.1.6.6b - 09/16/2016' />
+          <LISTITEM value='R1 - 15.1.6.7 - 09/20/2016' />
+          <LISTITEM value='R2 - 16.2.2.10 - 09/22/2016' />
+          <LISTITEM value='R2 - 16.2.2.10a - 09/22/2016' />
+          <LISTITEM value='R1 - 15.1.6.8 - 09/27/2016' />
+          <LISTITEM value='R1 - 15.1.6.8a - 09/30/2016' />
+          <LISTITEM value='R2 - 16.2.2.10b - 10/03/2016' />
+          <LISTITEM value='R1 - 15.1.6.9 - 10/04/2016' />
+          <LISTITEM value='R1 - 15.6.1.9a - 10/06/2016' />
+          <LISTITEM value='R2 - 16.2.2.11 - 10/07/2016' />
+          <LISTITEM value='R1 - 15.1.6.10 - 10/11/2016' />
+          <LISTITEM value='R1- 15.1.6.10a - 10/14/2016' />
+          <LISTITEM value='R1 - 15.1.6.11 - 10/18/2016' />
+          <LISTITEM value='R2 - 16.2.2.12 - 10/20/2016' />
+          <LISTITEM value='R1 - 15.1.6.11c - 10/21/2016' />
+          <LISTITEM value='R1 - 15.1.6.12 - 10/25/2016' />
+          <LISTITEM value='R2 - 16.2.2.13 - 10/27/2016' />
+          <LISTITEM value='R1 - 15.1.6.13 - 11/01/2016' />
+          <LISTITEM value='R1 - 15.1.6.14 - 11/08/2016' />
+          <LISTITEM value='R2 - 16.2.2.14 - 11/10/2016' />
+          <LISTITEM value='R1 - 15.1.6.15 - 11/15/2016' />
+          <LISTITEM value='R1 - 15.1.6.16 - 11/22/2016' />
+          <LISTITEM value='R1 - 15.1.6.16a - 11/25/2016' />
+          <LISTITEM value='R2 - 16.2.2.15 - 11/26/2016' />
+          <LISTITEM value='R1 - 15.1.6.17 - 12/03/2016' />
+          <LISTITEM value='R2 - 16.2.2.16 - 12/08/2016' />
+          <LISTITEM value='R1 - 15.1.6.18 - 12/13/2016' />
+          <LISTITEM value='R1 - 15.1.6.19 - 12/20/2016' />
+          <LISTITEM value='R2 - 16.2.2.17 - 12/23/2016' />
+          <LISTITEM value='R1 - 15.1.6.20 - 01/03/2017' />
+          <LISTITEM value='R2 - 16.2.3.0 - 01/06/2017' />
+          <LISTITEM value='R1 - 15.1.6.21 - 01/10/2017' />
+          <LISTITEM value='R1 - 15.1.6.22 - 01/17/2017' />
+          <LISTITEM value='R2 - 16.2.3.1 - 01/19/2017' />
+          <LISTITEM value='R1 - 15.1.6.23 - 01/24/2017' />
+          <LISTITEM value='R1 - 15.1.7.0 - 01/31/2017' />
+          <LISTITEM value='R2 - 16.2.3.2 - 02/02/2017' />
+          <LISTITEM value='R1 - 15.1.7.1 - 02/07/2017' />
+          <LISTITEM value='R1 - 15.1.7.2 - 02/14/2017' />
+          <LISTITEM value='R2 - 16.2.3.3 - 02/16/2017' />
+          <LISTITEM value='R1 - 15.1.7.3 - 02/21/2017' />
+          <LISTITEM value='R1 - 15.1.7.4 - 02/28/2017' />
+          <LISTITEM value='R2 - 16.2.3.4 - 03/02/2017' />
+          <LISTITEM value='R1 - 15.1.7.5 - 03/07/2017' />
+          <LISTITEM value='R1 - 15.1.7.6 - 03/14/2017' />
+          <LISTITEM value='R2 - 16.2.3.5 - 03/16/2017' />
+          <LISTITEM value='R1 - 15.1.7.6a - 03/17/2017' />
+          <LISTITEM value='R1 - 15.1.7.7 - 03/21/2017' />
+          <LISTITEM value='R1 - 15.1.7.7a - 03/24/2017' />
+          <LISTITEM value='R1 - 15.1.8.0 - 03/28/2017' />
+          <LISTITEM value='R2 - 16.2.3.6 - 03/30/2017' />
+          <LISTITEM value='R1 - 15.1.8.0a - 03/31/2017' />
+          <LISTITEM value='R1 - 15.1.8.1 - 04/07/2017' />
+          <LISTITEM value='R1 - 15.1.8.2 - 04/11/2017' />
+          <LISTITEM value='R2 - 16.2.3.7 - 04/13/2017' />
+          <LISTITEM value='R1 - 15.1.8.3 - 04/14/2017' />
+          <LISTITEM value='R1 - 15.1.8.4 - 04/18/2017' />
+          <LISTITEM value='R1 - 15.1.8.5 - 04/21/2017' />
+          <LISTITEM value='R1 - 15.1.8.6 - 04/25/2017' />
+          <LISTITEM value='R2 - 16.2.3.8 - 04/27/2017' />
+          <LISTITEM value='R1 - 15.1.8.7 - 04/28/2017' />
+          <LISTITEM value='R1 - 15.1.8.8 - 05/02/2017' />
+          <LISTITEM value='R1 - 15.1.8.9 - 05/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.10 - 05/11/2017' />
+          <LISTITEM value='R2 - 16.2.3.9 - 05/11/2017' />
+          <LISTITEM value='R1 - 15.1.8.11 - 05/23/2017' />
+          <LISTITEM value='R2 - 16.2.3.10 - 5/24/2017' />
+          <LISTITEM value='R1 - 15.1.8.10a - 05/27/2017' />
+          <LISTITEM value='R1 - 15.1.8.10b - 05/30/2017' />
+          <LISTITEM value='R1 - 15.1.8.10c - 06/01/2017' />
+          <LISTITEM value='R1 - 15.1.8.10d - 06/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.11 - 06/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.11a - 06/06/2017' />
+          <LISTITEM value='R1 - 15.1.8.10e - 06/08/2017' />
+          <LISTITEM value='R2 - 16.2.3.11 - 06/08/2017' />
+          <LISTITEM value='R1 - 15.1.8.10f - 06/12/2017' />
+          <LISTITEM value='R1 - 15.1.8.11b - 06/12/2017' />
+          <LISTITEM value='R1 - 15.1.8.12 - 06/12/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.0 - 6/15/2017' />
+          <LISTITEM value='R1 - 15.1.8.13 - 06/19/2017' />
+          <LISTITEM value='R2 - 16.2.3.12 - 06/22/2017' />
+          <LISTITEM value='R1 - 15.1.8.12b - 06/26/2017' />
+          <LISTITEM value='R1 - 15.1.8.12c - 06/29/2017' />
+          <LISTITEM value='R1 - 15.1.8.13 - 06/29/2017' />
+          <LISTITEM value='R2 - 16.2.3.13 - 7/7/2017' />
+          <LISTITEM value='R1 - 15.1.8.13 - 07/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.13a - 07/10/2017' />
+          <LISTITEM value='R1 - 15.1.8.14 - 07/11/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.0a - 7/12/2016' />
+          <LISTITEM value='R1 - 15.1.8.15 - 07/17/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.1 - 07/14/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.1a - 7/21/2017' />
+          <LISTITEM value='R2 - 16.2.3.13a - 7/11/2017' />
+          <LISTITEM value='R2 - 16.2.3.13b - 7/14/2017' />
+          <LISTITEM value='R2 - 16.2.3.14 - 7/20/2017' />
+          <LISTITEM value='R1 - 15.1.8.16 - 07/26/2017' />
+          <LISTITEM value='R1 - 15.1.8.16a - 07/26/2017' />
+          <LISTITEM value='R1 - 15.1.8.15b - 07/27/2017' />
+          <LISTITEM value='R1 - 15.1.8.15d - 07/31/2017' />
+          <LISTITEM value='R2 - 16.2.3.15 - 08/03/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.1 - 08/09/2017' />
+          <LISTITEM value='R1 - 15.1.8.17a - 08/10/2017' />
+          <LISTITEM value='R2 - 16.2.3.16 - 8/18/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.4 - 8/25/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.5 - 8/28/2017' />
+          <LISTITEM value='R2 - 16.2.4.0 - 09/01/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.6 - 09/05/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.7 - 09/11/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.8 - 09/11/2017' />
+          <LISTITEM value='R2 - 16.2.4.1 - 09/14/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.12 - 09/21/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.13 - 09/25/2017' />
+          <LISTITEM value='R2 - 16.2.4.2 - 09/28/2017' />
+          <LISTITEM value='R2 - 16.2.4.2a - 10/02/2017' />
+          <LISTITEM value='R2 - 16.2.4.2b - 10/03/2017' />
+          <LISTITEM value='R2 - 16.2.4.2c - 10/04/2017' />
+          <LISTITEM value='R2 - 16.2.4.3 - 10/12/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.14 - 10/03/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.15 - 10/04/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.16 - 10/09/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.17 - 10/16/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.18 - 10/16/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.19 - 10/16/2017' />
+          <LISTITEM value='R2 - 16.2.4.4 - 10/20/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.21 - 10/27/2017' />
+          <LISTITEM value='R3 - 17.1.4.0 - 10/31/2017' />
+          <LISTITEM value='R2 - 16.2.4.5 - 11/10/2017' />
+          <LISTITEM value='R2 - 16.2.4.5a  - 11/17/2017' />
+          <LISTITEM value='R2 - 16.2.4.6 11/24/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.22 - 11/07/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.23 - 11/13/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.24 - 11/14/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.25 - 11/24/2017' />
+          <LISTITEM value='R2  - 16.2.4.7 - 12/08/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.26 - 12/11/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.27 - 12/11/2017' />
+          <LISTITEM value='R2 - 16.2.4.8 - 12/19/2017' />
+          <LISTITEM value='R1.1.4 - 15.2.8.29 - 01/02/2018' />
+          <LISTITEM value='R3 - 17.1.5.0 - 12/31/2017' />
+          <LISTITEM value='R2 - 16.2.4.9 - 01/05/2018' />
+          <LISTITEM value='R2 - 16.2.4.10 - 01/18/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.30 - 01/16/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.31 - 01/22/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.32 - 01/22/2018' />
+          <LISTITEM value='R2 - 16.2.4.10c - 1/25/2018' />
+          <LISTITEM value='R2 - 16.2.4.11 - 02/01/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.33 - 02/02/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.34 - 02/07/2018' />
+          <LISTITEM value='R2 - 16.2.4.11a - 02/09/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.35 - 02/12/2018' />
+          <LISTITEM value='R2 - 16.2.4.12 - 02/15/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.36 - 02/20/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.37 - 02/20/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.38 - 02/28/2018' />
+          <LISTITEM value='R2 - 16.2.4.13 - 03/01/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.39 - 03/09/2018' />
+          <LISTITEM value='R2 - 16.2.4.14 - 03/14/2018' />
+          <LISTITEM value='R2 - 16.2.4.15 - 03/28/2018' />
+          <LISTITEM value='R2 - 16.2.4.14b - 03/22/2018' />
+          <LISTITEM value='R2 - 16.2.4.14c - 03/23/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.41 - 03/26/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.42 - 03/26/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.44 - 04/09/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.45 - 04/09/2018' />
+          <LISTITEM value='R2 - 16.2.4.16 - 04/11/2018' />
+          <LISTITEM value='R2 - 16.2.4.16a - 04/19/2018' />
+          <LISTITEM value='R2 - 16.2.4.17 - 04/25/2018' />
+          <LISTITEM value='R1.1.8 - 15.2.8.48 - 04/30/2018' />
+          <LISTITEM value='R2 - 16.2.4.18 - 05/10/2018' />
+          <LISTITEM value='R1.1.8 - 15.2.8.49 - 05/16/2018' />
+          <LISTITEM value='R1.1.9a - 15.2.8.50 - 05/21/2018' />
+          <LISTITEM value='R2 - 16.2.4.19 - 05/23/2018' />
+          <LISTITEM value='R1.1.9a - 15.2.8.51 - 05/29/2018' />
+          <LISTITEM value='R2 - 16.2.5.0 - 06/11/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.52 - 06/06/2018' />
+          <LISTITEM value='R1.1.9a - 15.2.8.53 - 06/13/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.54 - 06/14/2018' />
+          <LISTITEM value='R2 - 16.2.5.1 - 06/20/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.55 - 06/27/2018' />
+          <LISTITEM value='R2 - 16.2.5.2 - 07/04/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.56 - 07/06/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.57 - 07/13/2018' />
+          <LISTITEM value='R2 -16.2.5.3 - 07/18/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.58 - 07/20/2018' />
+          <LISTITEM value='R3 � 17.1.8.2 � 6/30/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.59 - 07/25/2018' />
+          <LISTITEM value='R2 -16.2.5.4 - 08/01/2018' />
+          <LISTITEM value='R2 -16.2.5.5 - 08/15/2018' />
+          <LISTITEM value='R1.1.10a - 15.2.8.60 - 08/27/2018' />
+          <LISTITEM value='R1.1.10b - 15.2.8.61 - 08/30/2018' />
+          <LISTITEM value='R2 -16.2.5.6 - 08/29/2018' />
+          <LISTITEM value='R1.1.10b - 15.2.8.62 - 09/04/2018' />
+          <LISTITEM value='R2 - 16.2.5.7 - 09/12/18' />
+          <LISTITEM value='R1.1.10 - 15.2.8.63 - 09/12/2018' />
+          <LISTITEM value='R1.1.10 - 15.2.8.64 - 09/20/2018' />
+          <LISTITEM value='R2 - 16.2.5.7b - 09/20/18' />
+          <LISTITEM value='R1.1.10 - 15.2.8.65 - 09/25/2018' />
+          <LISTITEM value='R2 - 16.2.5.8 - 9/26/18' />
+          <LISTITEM value='R3 � 17.3.1.0 � 9/30/2018' />
+          <LISTITEM value='R2 - 16.2.5.9 - 10/10/2018' />
+          <LISTITEM value='R3 � 17.3.1.1 � 10/19/2018' />
+          <LISTITEM value='R2 - 16.2.6.0  - 10/24/2018' />
+          <LISTITEM value='R2 - 16.2.6.1 - 11/07/2018' />
+          <LISTITEM value=' R2 - 16.2.6.2 - 11/15/2018' />
+          <LISTITEM value='2018 1098 Tax Reporting Changes - 15.2.8.69 - 11/14/2018' />
+          <LISTITEM value=' 2018 1098 Tax Reporting Changes - 15.2.8.70 - 11/23/2018' />
+          <LISTITEM value='R2 - 16.2.6.3 - 11/28/2018' />
+          <LISTITEM value='R2 - 16.2.6.3a - 12/04/2018' />
+          <LISTITEM value='R2 - 16.2.6.4  - 12/12/2018' />
+          <LISTITEM value='R2 - 16.2.6.5 - 12/20/2018' />
+          <LISTITEM value='R2 - 16.2.6.6 - 12/27/2018' />
+          <LISTITEM value='R2 - 16.2.6.7 -  01/03/2019' />
+          <LISTITEM value='R2 - 16.2.6.8 -  01/09/2019' />
+          <LISTITEM value='R3 � 17.3.1.3 � 01/04/2019' />
+          <LISTITEM value='R2 - 16.2.6.9 -  01/16/2019' />
+          <LISTITEM value='PS - 16.2.6.9d - 02/252019' />
+          <LISTITEM value='PS - 16.2.6.9e - 03/01/2019' />
+          <LISTITEM value='PS - 16.2.6.9e - 03/01/2019' />
+          <LISTITEM value='PS - 16.2.6.9f - 03/01/2019' />
+          <LISTITEM value='PS - 16.2.6.9g - 03/01/2019' />
+          <LISTITEM value='PS - 16.2.6.10 - 03/01/2019' />
+          <LISTITEM value='PS - 16.2.6.9h - 03/11/2019' />
+          <LISTITEM value='PS - 16.2.6.10a - Test delivery: 3/11/19; prod deployment 3/17/19' />
+          <LISTITEM value='R3 � 17.3.1.4 � 02/08/2019' />
+          <LISTITEM value='R3 � 17.3.1.5 � 03/05/2019' />
+          <LISTITEM value='PS - 16.2.6.11 - Test delivery: 3/18/19; prod deployment 3/24/19' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Company Responsible' refname='com.zion.workitem.attribute.CompanyResponsible' type='com.zion.workitem.enumeration.CompanyResponsible' dimension='reportable'>
+        <HELPTEXT>From rtc 'Company Responsible'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='CRIF' />
+          <LISTITEM value='Primatics' />
+          <LISTITEM value='SWBC' />
+          <LISTITEM value='RR Donnelley' />
+          <LISTITEM value='TCS' />
+          <LISTITEM value='Zions' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Phase Fixed In' refname='com.ibm.workitem.anomaly.tab.phasefixed' type='com.ibm.team.workitem.anomaly.sdlcphase' dimension='reportable'>
+        <HELPTEXT>From rtc 'Phase Fixed In'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Reguirement Definition' />
+          <LISTITEM value='Design' />
+          <LISTITEM value='Development' />
+          <LISTITEM value='Test - System' />
+          <LISTITEM value='Test - System Integration' />
+          <LISTITEM value='Test - User Acceptance' />
+          <LISTITEM value='Production Readiness' />
+          <LISTITEM value='Production Support' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Last Reopen Date' refname='com.zions.workitem.attribute.LastReopenDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Last Reopen Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Found By Team' refname='com.zions.workitem.attribute.FoundByTeamCategory' type='category' dimension='reportable'>
+        <HELPTEXT>From rtc 'Found By Team'</HELPTEXT>
+      </FIELD>
+      <FIELD name='MiddleFile' refname='com.zions.workitem.attribute.com.zions.workitem.attribute.MiddleFile' type='enumerationList$MiddleFileList' dimension='reportable'>
+        <HELPTEXT>From rtc 'MiddleFile'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='N/A' />
+          <LISTITEM value='DMZ-001-RCIF-Customer-Information-01' />
+          <LISTITEM value='DMZ-002-RCIF-Customer-Information-Address-Details-01' />
+          <LISTITEM value='DMZ-003-RCIF-Customer-Information-Email-Details-01' />
+          <LISTITEM value='DMZ-004-RCIF-Customer-Information-Phone-Details-01' />
+          <LISTITEM value='DMZ-005-RCIF-Customer-ID-Details-01' />
+          <LISTITEM value='DMZ-006-RCIF-Customer-Address Linkage-Details-01' />
+          <LISTITEM value='DMZ-007-RCIF-Relationship-Details-01' />
+          <LISTITEM value='DMZ-008-TCKL-Customer-Information-Tickler-Details-01' />
+          <LISTITEM value='DMZ-001-RET-Collateral-Info-01' />
+          <LISTITEM value='DMZ-002-RET-Collateral-Property-Details-01' />
+          <LISTITEM value='DMZ-003-RET-Collateral-Share-Details-01' />
+          <LISTITEM value='DMZ-001-RET-Loan-Account-Information-01' />
+          <LISTITEM value='DMZ-002-RET-Loan-Trasaction-Data-01' />
+          <LISTITEM value='DMZ-003-RET-Collateral-Share-Details-01' />
+          <LISTITEM value='DMZ-001-RET-Loan-Account-Information-01' />
+          <LISTITEM value='DMZ-002-RET-Loan-Trasaction-Data-01' />
+          <LISTITEM value='DMZ-004-RET-Loan-Account-Due-Payment-details-01' />
+          <LISTITEM value='DMZ-005-RET-Loan-Account-Discharge-details-01' />
+          <LISTITEM value='DMZ-006-RET-Loan-Account-Sweep-Standing-Instruction-details-01' />
+          <LISTITEM value='DMZ-007-RET-RelationShip-details-01' />
+          <LISTITEM value='DMZ-009-RET-Statement-Printing-details-01' />
+          <LISTITEM value='DMZ-010-RET-Loan-Repayment-Plan-01' />
+          <LISTITEM value='DMZ-015-RET-Index-Rate-History-01' />
+          <LISTITEM value='DMZ-016-RET-Insurance-Details-01' />
+          <LISTITEM value='DMZ-017-RET-Loan-Account-Billing-Information-01' />
+          <LISTITEM value='DMZ-020-RET-Loan-Disbursement-Details-01' />
+          <LISTITEM value='DMZ-021-RET-Loan-DPD-History-01' />
+          <LISTITEM value='DMZ-022-RET-Loan-Extension-Details-01' />
+          <LISTITEM value='DMZ-023-RET-Loan-Fee-01' />
+          <LISTITEM value='DMZ-024-RET-Loan-Interest-Capitalization-Details-01' />
+          <LISTITEM value='DMZ-025-RET-Loan-Negotiated-Payment-Details-01' />
+          <LISTITEM value='DMZ-026-RET-Loan-Interest-Commitment_Interest-Interest_Reset-Details-01' />
+          <LISTITEM value='DMZ-027-RET-Loan-Rate-Matrix-History-01' />
+          <LISTITEM value='ACLS/RCIF Customer File' />
+          <LISTITEM value='DMZ-001-R2-Loan-Account-Information-01-ADD-04' />
+          <LISTITEM value='DMZ-001-SHAW-CLCS-Customer-Information-02-ADD-04' />
+          <LISTITEM value='DMZ-002-R2-Loan-Transaction-Data-01-ADD-04' />
+          <LISTITEM value='DMZ-002-SHAW-CLCS-Customer-Information-Address-Details-02-ADD-03' />
+          <LISTITEM value='DMZ-003-SHAW-CLCS-Customer-Information-Email-Details-02-ADD-02' />
+          <LISTITEM value='DMZ-004-R2-Loan-Account-Due-Payment-details-01-ADD-03' />
+          <LISTITEM value='DMZ-004-SHAW-CLCS-Customer-Information-Phone-Details-02-ADD-02' />
+          <LISTITEM value='DMZ-005-SHAW-CLCS-Customer-ID-Details-02-ADD-01' />
+          <LISTITEM value='DMZ-006-R2-Loan-Account-Sweep-Standing-Instruction-details-01-ADD-03' />
+          <LISTITEM value=' DMZ-006-SHAW-CLCS-Customer-Address-Linkage-Details-02-ADD-03' />
+          <LISTITEM value='DMZ-007-R2-RelationShip-details-01-ADD-03' />
+          <LISTITEM value='DMZ-008-R2-Tickler-Details-01-ADD-04' />
+          <LISTITEM value='DMZ-009-R2-Statement-Printing-details-01-ADD-02' />
+          <LISTITEM value='DMZ-010-R2-Loan-Repayment-Plan-01-ADD-03' />
+          <LISTITEM value='DMZ-013-R2-Escrow-Details-01-ADD-02' />
+          <LISTITEM value='DMZ-014-R2-Escrow-Itemized-Payment-Record-Details-01-ADD-03' />
+          <LISTITEM value='DMZ-015-R2-Index-Rate-History-01-ADD-02' />
+          <LISTITEM value='DMZ-016-R2-Insurance-Details-01-ADD-03' />
+          <LISTITEM value='DMZ-017-R2-Loan-Account-Billing-Information-01-ADD-03' />
+          <LISTITEM value='DMZ-020-R2-Loan-Disbursement-Details-01-ADD-02' />
+          <LISTITEM value='DMZ-021-R2-Loan-DPD-History-01-ADD-03' />
+          <LISTITEM value='DMZ-023-R2-Loan-Fee-01-ADD-03' />
+          <LISTITEM value='DMZ-024-R2-Loan-Interest-Capitalization-Details-01-ADD-04' />
+          <LISTITEM value='DMZ-025-R2-Loan-Negotiated-Payment-Details-01-ADD-01' />
+          <LISTITEM value='DMZ-026-R2-Loan-Interest-Rate-Basket-01-ADD-02' />
+          <LISTITEM value='DMZ-026-R2-Loan-Interest-Commitment_Interest-Interest_Reset-Details-01-ADD-03' />
+          <LISTITEM value='DMZ-027-R2-Loan-Rate-Matrix-History-01-ADD-03' />
+          <LISTITEM value='DMZ-028-R2-Escrow-Vendor-Payment-Record-01-ADD-03' />
+          <LISTITEM value='DMZ-029-R2-Collateral-Information-01-ADD-04' />
+          <LISTITEM value='DMZ-030-R2-Collateral-Property-Details-01-ADD-03' />
+          <LISTITEM value='DMZ-031-R2-Budget-Line-Item-Master-01-ADD-02' />
+          <LISTITEM value='DMZ-032-R2-Budget-Other-Sources-01-ADD-03' />
+          <LISTITEM value='DMZ-033-R2-Budget-Summary-Master-01-ADD-03' />
+          <LISTITEM value='DMZ-039-R2-Inspection-History-01-ADD-02' />
+          <LISTITEM value='DMZ-040-R2-Facility Master-01-ADD-04' />
+          <LISTITEM value='DMZ-041-R2-Facility Breakdown-01-ADD-04' />
+          <LISTITEM value='DMZ-043-R2-SBA Loans-01-ADD-03' />
+          <LISTITEM value='DMZ-046-R2-Arrangement member product linkage-01-ADD-02' />
+          <LISTITEM value='DMZ-047-R2-Arrangement Setup master-01-ADD-03' />
+          <LISTITEM value='DMZ-048-R2-Counter Party Settlement Instruction-01-ADD-02' />
+          <LISTITEM value='DMZ-049-R2-Arrangement Member Linkage Details-01-ADD-03' />
+          <LISTITEM value='DMZ-050-R2-Arrangement Account Linkage Details-01-ADD-03' />
+          <LISTITEM value='DMZ-051-R2-Arrangement Product Linkage Details-01-ADD-03' />
+          <LISTITEM value='DMZ-052-R2-Contingent Account Master Details-01-ADD-03' />
+          <LISTITEM value='DMZ-053-R2-Arrangement Member Mirror account master-01-ADD-03' />
+          <LISTITEM value='DMZ-055-R2-Inward Settlement BGL transaction details-01-ADD-01' />
+          <LISTITEM value='DMZ-057-R2-Vendor master details-01-ADD-02' />
+          <LISTITEM value='DMZ-059-R2-Periodic-Fees-01-ADD-02' />
+          <LISTITEM value='DMZ-060-R2-Payment_Template-01-ADD-02' />
+          <LISTITEM value='DMZ-061-R2-LOC_Payment_instructions-01' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Responsible Team' refname='com.ibm.workitem.tab.anomaly.team' type='category' dimension='reportable'>
+        <HELPTEXT>From rtc 'Responsible Team'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Classification' refname='com.ibm.workitem.anomaly.tab.classification' type='com.ibm.team.workitem.anomaly.rootcause.classification' dimension='reportable'>
+        <HELPTEXT>From rtc 'Classification'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unclassified' />
+          <LISTITEM value='Invalid' />
+          <LISTITEM value='Development' />
+          <LISTITEM value='Enhancement Request' />
+          <LISTITEM value='Defect' />
+          <LISTITEM value='Issue' />
+          <LISTITEM value='Question' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Release Targeted To' refname='com.ibm.workitem.anomaly.tab.releasetarget' type='com.ibm.workitem.anomaly.tab.reslease' dimension='reportable'>
+        <HELPTEXT>From rtc 'Release Targeted To'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='R1' />
+          <LISTITEM value='R1.0.0a' />
+          <LISTITEM value='R1.0.0b' />
+          <LISTITEM value='R1.0.0c' />
+          <LISTITEM value='R1.0.1' />
+          <LISTITEM value='R1.0.2' />
+          <LISTITEM value='R1.0.3' />
+          <LISTITEM value='R1.0.4' />
+          <LISTITEM value='R1.0.5' />
+          <LISTITEM value='R1.0.6' />
+          <LISTITEM value='R1.0.7' />
+          <LISTITEM value='R1.0.8' />
+          <LISTITEM value='R1.1.0' />
+          <LISTITEM value='R1.2.0' />
+          <LISTITEM value='R1.3.0' />
+          <LISTITEM value='R2' />
+          <LISTITEM value='R3' />
+          <LISTITEM value='Deferred' />
+          <LISTITEM value='PS' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Color' refname='com.zions.workitem.attribute.DefectColor' type='com.zions.workitem.enumeration.stoplight' dimension='reportable'>
+        <HELPTEXT>From rtc 'Color'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Green' />
+          <LISTITEM value='Yellow' />
+          <LISTITEM value='Red' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Fixed In Build (Zions)' refname='com.zions.workitem.attribute.FixedInBuild' type='com.zion.workitem.enumeration.build' dimension='reportable'>
+        <HELPTEXT>From rtc 'Fixed In Build (Zions)'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='N/A' />
+          <LISTITEM value='07/16/2015' />
+          <LISTITEM value='08/16/2015' />
+          <LISTITEM value='08/31/2015' />
+          <LISTITEM value='09/08/2015' />
+          <LISTITEM value='09/22/2015' />
+          <LISTITEM value='09/29/2015' />
+          <LISTITEM value='10/09/2015' />
+          <LISTITEM value='10/16/2015' />
+          <LISTITEM value='10/30/2015' />
+          <LISTITEM value='11/06/2015' />
+          <LISTITEM value='11/13/2015' />
+          <LISTITEM value='11/19/2015' />
+          <LISTITEM value='11/25/2015' />
+          <LISTITEM value='11/30/2015' />
+          <LISTITEM value='12/04/2015' />
+          <LISTITEM value='12/22/2015' />
+          <LISTITEM value='05/20/2016' />
+          <LISTITEM value='05/28/2016' />
+          <LISTITEM value='06/02/2016' />
+          <LISTITEM value='06/10/2016' />
+          <LISTITEM value='06/10/2016A' />
+          <LISTITEM value='06/17/2016' />
+          <LISTITEM value='06/20/2016' />
+          <LISTITEM value='06/24/2016' />
+          <LISTITEM value='07/01/2016' />
+          <LISTITEM value='07/15/2016' />
+          <LISTITEM value='07/21/2016' />
+          <LISTITEM value='07/22/2016' />
+          <LISTITEM value='07/29/2016' />
+          <LISTITEM value='08/05/2016' />
+          <LISTITEM value='08/12/2016' />
+          <LISTITEM value='08/19/2016' />
+          <LISTITEM value='08/26/2016' />
+          <LISTITEM value='09/02/2016' />
+          <LISTITEM value='09/09/2016' />
+          <LISTITEM value='09/16/2016' />
+          <LISTITEM value='09/23/2016' />
+          <LISTITEM value='09/30/2016' />
+          <LISTITEM value='10/07/2016' />
+          <LISTITEM value='10/14/2016' />
+          <LISTITEM value='11/07/2016' />
+          <LISTITEM value='11/10/2016' />
+          <LISTITEM value='12/02/2016' />
+          <LISTITEM value='12/13/2016' />
+          <LISTITEM value='01/20/2017' />
+          <LISTITEM value='01/27/2017' />
+          <LISTITEM value='02/24/2017' />
+          <LISTITEM value='03/10/2017' />
+          <LISTITEM value='03/31/2017' />
+          <LISTITEM value='1.00' />
+          <LISTITEM value='2.00' />
+          <LISTITEM value='3.00' />
+          <LISTITEM value='4.00' />
+          <LISTITEM value='5.00' />
+          <LISTITEM value='6.00' />
+          <LISTITEM value='7.00' />
+          <LISTITEM value='8.00' />
+          <LISTITEM value='9.00' />
+          <LISTITEM value='10.00' />
+          <LISTITEM value='11.00' />
+          <LISTITEM value='12.00' />
+          <LISTITEM value='13.00' />
+          <LISTITEM value='14.00' />
+          <LISTITEM value='15.00' />
+          <LISTITEM value='16.00' />
+          <LISTITEM value='17.00' />
+          <LISTITEM value='18.00' />
+          <LISTITEM value='19.00' />
+          <LISTITEM value='20.00' />
+          <LISTITEM value='21.00' />
+          <LISTITEM value='22.00' />
+          <LISTITEM value='23.00' />
+          <LISTITEM value='24.00' />
+          <LISTITEM value='25.00' />
+          <LISTITEM value='26.00' />
+          <LISTITEM value='27.00' />
+          <LISTITEM value='28.00' />
+          <LISTITEM value='29.00' />
+          <LISTITEM value='30.00' />
+          <LISTITEM value='31.00' />
+          <LISTITEM value='32.00' />
+          <LISTITEM value='33.00' />
+          <LISTITEM value='34.00' />
+          <LISTITEM value='35.00' />
+          <LISTITEM value='36.00' />
+          <LISTITEM value='37.00' />
+          <LISTITEM value='38.00' />
+          <LISTITEM value='39.00' />
+          <LISTITEM value='40.00' />
+          <LISTITEM value='41.00' />
+          <LISTITEM value='42.00' />
+          <LISTITEM value='43.00' />
+          <LISTITEM value='44.00' />
+          <LISTITEM value='45.00' />
+          <LISTITEM value='46.00' />
+          <LISTITEM value='47.00' />
+          <LISTITEM value='48.00' />
+          <LISTITEM value='49.00' />
+          <LISTITEM value='50.00' />
+          <LISTITEM value='51.00' />
+          <LISTITEM value='52.00' />
+          <LISTITEM value='53.00' />
+          <LISTITEM value='54.00' />
+          <LISTITEM value='55.00' />
+          <LISTITEM value='56.00' />
+          <LISTITEM value='57.00' />
+          <LISTITEM value='58.00' />
+          <LISTITEM value='59.00' />
+          <LISTITEM value='60.00' />
+          <LISTITEM value='61.00' />
+          <LISTITEM value='62.00' />
+          <LISTITEM value='63.00' />
+          <LISTITEM value='64.00' />
+          <LISTITEM value='65.00' />
+          <LISTITEM value='66.00' />
+          <LISTITEM value='67.00' />
+          <LISTITEM value='68.00' />
+          <LISTITEM value='69.00' />
+          <LISTITEM value='70.00' />
+          <LISTITEM value='71.00' />
+          <LISTITEM value='72.00' />
+          <LISTITEM value='73.00' />
+          <LISTITEM value='74.00' />
+          <LISTITEM value='75.00' />
+          <LISTITEM value='76.00' />
+          <LISTITEM value='77.00' />
+          <LISTITEM value='78.00' />
+          <LISTITEM value='79.00' />
+          <LISTITEM value='80.00' />
+          <LISTITEM value='81.00' />
+          <LISTITEM value='82.00' />
+          <LISTITEM value='83.00' />
+          <LISTITEM value='84.00' />
+          <LISTITEM value='85.00' />
+          <LISTITEM value='86.00' />
+          <LISTITEM value='87.00' />
+          <LISTITEM value='88.00' />
+          <LISTITEM value='89.00' />
+          <LISTITEM value='90.00' />
+          <LISTITEM value='91.00' />
+          <LISTITEM value='92.00' />
+          <LISTITEM value='93.00' />
+          <LISTITEM value='94.00' />
+          <LISTITEM value='95.00' />
+          <LISTITEM value='96.00' />
+          <LISTITEM value='97.00' />
+          <LISTITEM value='98.00' />
+          <LISTITEM value='99.00' />
+          <LISTITEM value='100.00' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Environment' refname='com.zions.workitem.attribute.enviroments' type='enumerationList$com.zions.workitem.enumeration.enviroment' dimension='reportable'>
+        <HELPTEXT>From rtc 'Environment'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='SITa / TEST1' />
+          <LISTITEM value='SITb / TEST2' />
+          <LISTITEM value='SITb12 / TEST3' />
+          <LISTITEM value='UATa / TEST4' />
+          <LISTITEM value='UATb / TEST5' />
+          <LISTITEM value='Performance / TEST6' />
+          <LISTITEM value='TEST7' />
+          <LISTITEM value='TEST8' />
+          <LISTITEM value='TEST9' />
+          <LISTITEM value='TEST10' />
+          <LISTITEM value='TEST11' />
+          <LISTITEM value='TEST12' />
+          <LISTITEM value='TEST20' />
+          <LISTITEM value='Staging' />
+          <LISTITEM value='N/A' />
+          <LISTITEM value='Data Migration / DEV7' />
+          <LISTITEM value='DM2' />
+          <LISTITEM value='DM4' />
+          <LISTITEM value='Operational Data Store' />
+          <LISTITEM value='Disaster Recovery / DR' />
+          <LISTITEM value='Parameter Environment / PARAM1' />
+          <LISTITEM value='Parameter Environment / PARAM2' />
+          <LISTITEM value='Production' />
+          <LISTITEM value='Training / TRAINING1' />
+          <LISTITEM value='Development' />
+          <LISTITEM value='Parameter Environment / PARAM3' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Related Addendums' refname='com.zion.workitem.enumeration.RelatedAddendums' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Related Addendums'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Fixed In Drop (Vendor)' refname='com.zions.workitem.attribute.FixedInDrop01' type='enumerationList$com.zion.workitem.enumeration.dropfix' dimension='reportable'>
+        <HELPTEXT>From rtc 'Fixed In Drop (Vendor)'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='N/A' />
+          <LISTITEM value='15.1.0.1' />
+          <LISTITEM value='15.1.0.3a' />
+          <LISTITEM value='15.1.1.0' />
+          <LISTITEM value='15.1.1.0a' />
+          <LISTITEM value='15.1.1.1 - 05/25' />
+          <LISTITEM value='15.1.1.2 - 06/12' />
+          <LISTITEM value='15.1.1.2a - 06/12' />
+          <LISTITEM value='15.1.1.3 - 06/30' />
+          <LISTITEM value='07/17' />
+          <LISTITEM value='15.1.2.0 - 08/05' />
+          <LISTITEM value='15.1.2.0a - 08/18' />
+          <LISTITEM value='15.1.2.2 - 08/25' />
+          <LISTITEM value='15.1.2.3 - 09/01' />
+          <LISTITEM value='15.1.2.4 - 09/08' />
+          <LISTITEM value='15.1.2.5 - 09/15' />
+          <LISTITEM value='15.1.2.6 - 09/22' />
+          <LISTITEM value='15.1.3.0 - 09/30' />
+          <LISTITEM value='15.1.3.0a - 10/06' />
+          <LISTITEM value='15.1.3.1 - 10/09' />
+          <LISTITEM value='15.1.3.2 - 10/13' />
+          <LISTITEM value='15.1.3.3 - 10/20' />
+          <LISTITEM value='15.1.3.4 - 10/27' />
+          <LISTITEM value='15.1.3.5 - 10/30' />
+          <LISTITEM value='15.1.4.0 - 11/03/2015' />
+          <LISTITEM value='15.1.4.1 - 11/10/2015' />
+          <LISTITEM value='15.1.4.2 - 11/17/2015' />
+          <LISTITEM value='15.1.4.3 - 11/19/2015' />
+          <LISTITEM value='15.1.4.3a - 11/24/2015' />
+          <LISTITEM value='15.1.4.3b - 11/28/2015' />
+          <LISTITEM value='15.1.4.4 - 12/01/2015' />
+          <LISTITEM value='15.1.4.5 - 12/08/2015' />
+          <LISTITEM value='15.1.4.5a - 12/11/2015' />
+          <LISTITEM value='15.1.4.6 - 12/15/2015' />
+          <LISTITEM value='15.1.4.7 - 12/22/2015' />
+          <LISTITEM value='15.1.4.8 - 12/29/2015' />
+          <LISTITEM value='15.1.4.9 - 01/05/2016' />
+          <LISTITEM value='15.1.4.10 - 01/12/2016' />
+          <LISTITEM value='15.1.4.11 - 01/19/2016' />
+          <LISTITEM value='15.1.4.12 - 01/25/2016' />
+          <LISTITEM value='15.1.5.0 - 01/29/2016' />
+          <LISTITEM value='15.1.5.1 - 02/09/2016' />
+          <LISTITEM value='15.1.5.2 - 02/16/2016' />
+          <LISTITEM value='15.1.5.3 - 02/19/2016' />
+          <LISTITEM value='15.1.5.4 - 03/01/2016' />
+          <LISTITEM value='15.1.5.5 - 03/08/2016' />
+          <LISTITEM value='15.1.5.6 - 03/15/2016' />
+          <LISTITEM value='15.1.5.7 - 03/22/2016' />
+          <LISTITEM value='15.1.5.8 - 03/29/2016' />
+          <LISTITEM value='15.1.5.9 - 04/05/2016' />
+          <LISTITEM value='15.1.5.10 - 04/12/2016' />
+          <LISTITEM value='15.1.5.11 - 04/19/2016' />
+          <LISTITEM value='15.1.5.12 - 04/26/2016' />
+          <LISTITEM value='15.1.5.13a - 05/03/2016' />
+          <LISTITEM value='15.1.5.14 - 05/10/2016' />
+          <LISTITEM value='15.1.5.15 - 05/17/2016' />
+          <LISTITEM value='15.1.5.15b - 05/23/2016' />
+          <LISTITEM value='15.1.5.16 - 05/24/2016' />
+          <LISTITEM value='15.1.5.16a - 05/27/2016' />
+          <LISTITEM value='15.1.5.17 - 05/31/2016' />
+          <LISTITEM value='15.1.5.18 - 06/07/2016' />
+          <LISTITEM value='16.2.2.2 - 06/09/2016' />
+          <LISTITEM value='15.1.5.19 - 06/14/2016' />
+          <LISTITEM value='16.2.2.3 - 06/17/2016' />
+          <LISTITEM value='15.1.5.20 - 06/21/2016' />
+          <LISTITEM value='15.1.5.21 - 06/28/2016' />
+          <LISTITEM value='16.2.2.4 - 06/30/2016' />
+          <LISTITEM value='15.1.5.22 - 07/05/2016' />
+          <LISTITEM value='R3 - 16.3.1.0 - 07/05/2016' />
+          <LISTITEM value='R1 - 15.1.5.23 - 07/12/2016' />
+          <LISTITEM value='R2 - 16.2.2.5 - 07/14/2016' />
+          <LISTITEM value='R1 - 15.1.5.24 - 07/19/2016' />
+          <LISTITEM value='R1 - 15.1.5.25 - 07/26/2016' />
+          <LISTITEM value='R2 - 16.2.2.6 - 07/28/2016' />
+          <LISTITEM value='R3 - 16.3.1.1 - 07/30/2016' />
+          <LISTITEM value='R1 - 15.1.6.0 - 08/02/2016' />
+          <LISTITEM value='R1 - 15.1.6.1 - 08/09/2016' />
+          <LISTITEM value='R3 - 16.3.1.1a - 08/11/2016' />
+          <LISTITEM value='R2 - 16.2.2.7 - 08/11/2016' />
+          <LISTITEM value='R1 - 15.1.6.2 - 08/16/2016' />
+          <LISTITEM value='R1 - 15.1.6.3 - 08/23/2016' />
+          <LISTITEM value='R2 - 16.2.2.8 - 08/25/2016' />
+          <LISTITEM value='R1 - 15.1.6.4 - 08/30/2016' />
+          <LISTITEM value='R1 - 15.1.6.5 - 09/06/2016' />
+          <LISTITEM value='R2 - 16.2.2.9 - 09/08/2016' />
+          <LISTITEM value='R1 - 15.1.6.5a - 09/09/2016' />
+          <LISTITEM value='R1 - 15.1.6.6 - 09/13/2016' />
+          <LISTITEM value='R1 - 15.1.6.6b - 09/16/2016' />
+          <LISTITEM value='R1 - 15.1.6.7 - 09/20/2016' />
+          <LISTITEM value='R2 - 16.2.2.10 - 09/22/2016' />
+          <LISTITEM value='R2 - 16.2.2.10a - 09/22/2016' />
+          <LISTITEM value='R1 - 15.1.6.8 - 09/27/2016' />
+          <LISTITEM value='R1 - 15.1.6.8a - 09/30/2016' />
+          <LISTITEM value='R2 - 16.2.2.10b - 10/03/2016' />
+          <LISTITEM value='R1 - 15.1.6.9 - 10/04/2016' />
+          <LISTITEM value='R1 - 15.6.1.9a - 10/06/2016' />
+          <LISTITEM value='R2 - 16.2.2.11 - 10/07/2016' />
+          <LISTITEM value='R1 - 15.1.6.10 - 10/11/2016' />
+          <LISTITEM value='R1- 15.1.6.10a - 10/14/2016' />
+          <LISTITEM value='R1 - 15.1.6.11 - 10/18/2016' />
+          <LISTITEM value='R2 - 16.2.2.12 - 10/20/2016' />
+          <LISTITEM value='R1 - 15.1.6.11c - 10/21/2016' />
+          <LISTITEM value='R1 - 15.1.6.12 - 10/25/2016' />
+          <LISTITEM value='R2 - 16.2.2.13 - 10/27/2016' />
+          <LISTITEM value='R1 - 15.1.6.13 - 11/01/2016' />
+          <LISTITEM value='R1 - 15.1.6.14 - 11/08/2016' />
+          <LISTITEM value='R2 - 16.2.2.14 - 11/10/2016' />
+          <LISTITEM value='R1 - 15.1.6.15 - 11/15/2016' />
+          <LISTITEM value='R1 - 15.1.6.16 - 11/22/2016' />
+          <LISTITEM value='R1 - 15.1.6.16a - 11/25/2016' />
+          <LISTITEM value='R2 - 16.2.2.15 - 11/26/2016' />
+          <LISTITEM value='R1 - 15.1.6.17 - 12/03/2016' />
+          <LISTITEM value='12/06/2016' />
+          <LISTITEM value='R2 - 16.2.2.16 - 12/08/2016' />
+          <LISTITEM value='R1 - 15.1.6.18 - 12/13/2016' />
+          <LISTITEM value='R1 - 15.1.6.19 - 12/20/2016' />
+          <LISTITEM value='R2 - 16.2.2.17 - 12/23/2016' />
+          <LISTITEM value='12/27/2016' />
+          <LISTITEM value='R1 - 15.1.6.20 - 01/03/2017' />
+          <LISTITEM value='R2 - 16.2.3.0 - 01/06/2017' />
+          <LISTITEM value='R1 - 15.1.6.21 - 01/10/2017' />
+          <LISTITEM value='R1 - 15.1.6.22 - 01/17/2017' />
+          <LISTITEM value='R2 - 16.2.3.1 - 01/19/2017' />
+          <LISTITEM value='R1 - 15.1.6.23 - 01/24/2017' />
+          <LISTITEM value='R1 - 15.1.7.0 - 01/31/2017' />
+          <LISTITEM value='R2 - 16.2.3.2 - 02/02/2017' />
+          <LISTITEM value='R1 - 15.1.7.1 - 02/07/2017' />
+          <LISTITEM value='R1 - 15.1.7.2 - 02/14/2017' />
+          <LISTITEM value='R2 - 16.2.3.3 - 02/16/2017' />
+          <LISTITEM value='R1 - 15.1.7.3 - 02/21/2017' />
+          <LISTITEM value='R1 - 15.1.7.4 - 02/28/2017' />
+          <LISTITEM value='R2 - 16.2.3.4 - 03/02/2017' />
+          <LISTITEM value='R1 - 15.1.7.5 - 03/07/2017' />
+          <LISTITEM value='R1 - 15.1.7.6 - 03/14/2017' />
+          <LISTITEM value='R2 - 16.2.3.5 - 03/16/2017' />
+          <LISTITEM value='R1 - 15.1.7.6a - 03/17/2017' />
+          <LISTITEM value='R1 - 15.1.7.7 - 03/21/2017' />
+          <LISTITEM value='R1 - 15.1.7.7a - 03/24/2017' />
+          <LISTITEM value='R1 - 15.1.8.0 - 03/28/2017' />
+          <LISTITEM value='R2 - 16.2.3.6 - 03/30/2017' />
+          <LISTITEM value='R1 - 15.1.8.0a - 03/31/2017' />
+          <LISTITEM value='R1 - 15.1.8.1 - 04/07/2017' />
+          <LISTITEM value='R1 - 15.1.8.2 - 04/11/2017' />
+          <LISTITEM value='R2 - 16.2.3.7 - 04/13/2017' />
+          <LISTITEM value='R1 - 15.1.8.3 - 04/14/2017' />
+          <LISTITEM value='R1 - 15.1.8.4 - 04/18/2017' />
+          <LISTITEM value='R1 - 15.1.8.5 - 04/21/2017' />
+          <LISTITEM value='R1 - 15.1.8.6 - 04/25/2017' />
+          <LISTITEM value='R2 - 16.2.3.8 - 04/27/2017' />
+          <LISTITEM value='R1 - 15.1.8.7 - 04/28/2017' />
+          <LISTITEM value='R1 - 15.1.8.8 - 05/02/2017' />
+          <LISTITEM value='R1 - 15.1.8.9 - 05/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.10 - 05/11/2017' />
+          <LISTITEM value='R2 - 16.2.3.9 - 05/11/2017' />
+          <LISTITEM value='R2 - 16.2.3.10 - 5/24/2017' />
+          <LISTITEM value='R1 - 15.1.8.10a - 05/27/2017' />
+          <LISTITEM value='R1 - 15.1.8.11 - 05/25/2017' />
+          <LISTITEM value='R1 - 15.1.8.10b - 05/30/2017' />
+          <LISTITEM value='R1 - 15.1.8.10c - 06/01/2017' />
+          <LISTITEM value='R1 - 15.1.8.11 - 06/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.10d - 06/05/2017' />
+          <LISTITEM value='R1 - 15.1.8.11a - 06/06/2017' />
+          <LISTITEM value='R1 - 15.1.8.10e - 06/08/2017' />
+          <LISTITEM value='R2 - 16.2.3.11 - 06/08/2017' />
+          <LISTITEM value='R1 - 15.1.8.11b - 06/12/2017' />
+          <LISTITEM value='R1 - 15.1.8.10f - 06/12/2017' />
+          <LISTITEM value='R1 - 15.1.8.12 - 06/12/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.0 – 6/15/2017' />
+          <LISTITEM value='R1 - 15.1.8.13 - 06/19/2017' />
+          <LISTITEM value='R2 - 16.2.3.12 - 06/22/2017' />
+          <LISTITEM value='R1 - 15.1.8.12b - 06/26/2017' />
+          <LISTITEM value='R1 - 15.1.8.12c - 06/29/2017' />
+          <LISTITEM value='R1 - 15.1.8.13 - 06/29/2017' />
+          <LISTITEM value='R1 - 15.1.8.13 - 07/05/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.0a - 7/12/2016' />
+          <LISTITEM value='R2 -16.2.3.13 - 7/7/2017' />
+          <LISTITEM value='R1 - 15.1.8.13a - 07/10/2017' />
+          <LISTITEM value='R1 - 15.1.8.14 - 07/11/2017' />
+          <LISTITEM value='R1 - 15.1.8.15 - 07/17/2017' />
+          <LISTITEM value='R1 - 15.1.8.16 - 07/24/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.1 - 07/14/2017' />
+          <LISTITEM value='R2 - 16.2.3.13a – 7/11/2017' />
+          <LISTITEM value='R2 -16.2.3.13b – 7/14/2017' />
+          <LISTITEM value='R2 - 16.2.3.14 - 7/20/2017' />
+          <LISTITEM value='R1.1 - 15.2.1.1a - 7/21/2017' />
+          <LISTITEM value='R1 - 15.1.8.16 - 07/26/2017' />
+          <LISTITEM value='R1 - 15.1.8.16a - 07/26/2017' />
+          <LISTITEM value='R1 - 15.1.8.15b - 07/27/2017' />
+          <LISTITEM value='R2 - 16.2.3.14a - 07/25/2017' />
+          <LISTITEM value='R1 - 15.1.8.16b - 07/28/2017' />
+          <LISTITEM value='R1 - 15.1.8.15c - 07/28/2017' />
+          <LISTITEM value='R1 - 15.1.8.15d - 07/31/2017' />
+          <LISTITEM value='R2 - 16.2.3.15 - 08/03/2017' />
+          <LISTITEM value='R1 - 15.1.8.17 - 08/07/2017' />
+          <LISTITEM value='R1 - 15.1.8.18 - 08/07/2017' />
+          <LISTITEM value='R1 - 15.1.8.19 - 08/07/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.1 - 08/09/2017' />
+          <LISTITEM value='R1 - 15.1.8.17a - 08/10/2017' />
+          <LISTITEM value='R1 - 15.1.8.19a - 08/11/2017' />
+          <LISTITEM value='R2 - 16.2.3.16 - 08/18/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.3 - 08/18/2017' />
+          <LISTITEM value='R1 - 15.1.8.20 - 08/18/2017' />
+          <LISTITEM value='R1 - 15.1.8.21 - 08/21/2017' />
+          <LISTITEM value='R1 - 15.1.8.22 - 08/22/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.4 - 08/25/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.5 - 08/28/2017' />
+          <LISTITEM value='R2 - 16.2.4.0 - 09/01/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.6 - 09/05/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.7 - 09/11/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.8 - 09/11/2017' />
+          <LISTITEM value='R2 - 16.2.4.1 - 09/14/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.10 - 09/21/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.11 - 09/21/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.12 - 09/22/2017' />
+          <LISTITEM value=' R1.1 - 15.2.8.13 - 09/25/2017' />
+          <LISTITEM value='R2 - 16.2.4.2 - 09/28/2017' />
+          <LISTITEM value='R2 - 16.2.4.2a - 10/02/2017' />
+          <LISTITEM value='R2 - 16.2.4.2b - 10/03/2017' />
+          <LISTITEM value='R2 - 16.2.4.2c - 10/04/2017' />
+          <LISTITEM value='R2 - 16.2.4.3 - 10/12/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.14 - 09/25/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.15 - 10/04/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.16 - 10/09/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.17 - 10/16/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.18 - 10/16/2017' />
+          <LISTITEM value='R1.1 - 15.2.8.19 - 10/16/2017' />
+          <LISTITEM value='R2 - 16.2.4.4 - 10/20/2017' />
+          <LISTITEM value='R3 - 17.1.4.0 - 10/31/2017' />
+          <LISTITEM value='R2 - 16.2.4.5 - 11/10/2017' />
+          <LISTITEM value='R1.1.3 - 15.2.8.22 - 11/7/2017' />
+          <LISTITEM value='R1.1.3 - 15.2.8.23 - 11/13/2017' />
+          <LISTITEM value='R1.1.3 - 15.2.8.24 - 11/14/2017' />
+          <LISTITEM value='R2 - 16.2.4.5a  - 11/17/2017' />
+          <LISTITEM value='R2 - 16.2.4.6 11/24/2017' />
+          <LISTITEM value='R1.1.3 - 15.2.8.25 - 11/24/2017' />
+          <LISTITEM value='R2 - 16.2.4.7 - 12/08/2017' />
+          <LISTITEM value='R1.1.3a - 15.2.8.26 - 12/11/2017' />
+          <LISTITEM value='R1.1.4 - 15.2.8.27 - 12/11/2017' />
+          <LISTITEM value='R2 - 16.2.4.8 - 12/19/2017' />
+          <LISTITEM value='R1.1.4 - 15.2.8.29 - 1/2/2018' />
+          <LISTITEM value='R2 - 16.2.4.9 - 01/05/2018' />
+          <LISTITEM value='R2 - 16.2.4.10 - 01/18/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.30 01/16/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.31 - 01/22/2018' />
+          <LISTITEM value='R1.1.4a - 15.2.8.32 - 01/22/2018' />
+          <LISTITEM value='R2 - 16.2.4.10c - 1/25/2018' />
+          <LISTITEM value='R2 - 16.2.4.11 - 02/01/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.33 - 02/02/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.34 - 02/07/2018' />
+          <LISTITEM value='R2 - 16.2.4.11a - 02/09/2018' />
+          <LISTITEM value='R1.1.5 - 15.2.8.35 - 02/12/2018' />
+          <LISTITEM value='R2 - 16.2.4.12 - 02/15/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.36 - 02/20/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.37 - 02/20/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.38 - 02/28/2018' />
+          <LISTITEM value='R2 - 16.2.4.13 - 03/01/2018' />
+          <LISTITEM value='R1.1.6 - 15.2.8.39 - 03/09/2018' />
+          <LISTITEM value='R2 - 16.2.4.14 - 03/14/2018' />
+          <LISTITEM value='R2 - 16.2.4.15 - 03/28/2018' />
+          <LISTITEM value='R2 - 16.2.4.14b - 03/22/2018' />
+          <LISTITEM value='R2 - 16.2.4.14c - 03/23/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.41 - 03/26/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.42 - 03/26/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.44 - 04/09/2018' />
+          <LISTITEM value='R1.1.7 - 15.2.8.45 - 04/09/2018' />
+          <LISTITEM value='R2 - 16.2.4.16 - 04/11/2018' />
+          <LISTITEM value='R2 - 16.2.4.16a - 04/19/2018' />
+          <LISTITEM value='R2 - 16.2.4.17 - 04/25/2018' />
+          <LISTITEM value='R1.1.8 - 15.2.8.48 - 04/30/2018' />
+          <LISTITEM value='R2 - 16.2.4.18 - 05/10/2018' />
+          <LISTITEM value='R1.1.8 - 15.2.8.49 - 05/16/2018' />
+          <LISTITEM value='R1.1.9a - 15.2.8.50 - 05/21/2018' />
+          <LISTITEM value='R2 - 16.2.4.19 - 05/23/2018' />
+          <LISTITEM value='R1.1.9a - 15.2.8.51 - 05/29/2018' />
+          <LISTITEM value='R2 - 16.2.5.0 - 06/11/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.52 - 06/06/2018' />
+          <LISTITEM value='R1.1.9a - 15.2.8.53 - 06/13/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.54 - 06/14/2018' />
+          <LISTITEM value='R2 - 16.2.5.1 - 06/20/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.55 - 06/27/2018' />
+          <LISTITEM value='R2 - 16.2.5.2 - 07/04/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.56 - 07/06/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.57 - 07/13/2018' />
+          <LISTITEM value='R2 -16.2.5.3 - 07/18/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.58 - 07/20/2018' />
+          <LISTITEM value='R3 � 17.1.8.2 � 6/30/2018' />
+          <LISTITEM value='R1.1.9b - 15.2.8.59 - 07/25/2018' />
+          <LISTITEM value='R2 -16.2.5.4 - 08/01/2018' />
+          <LISTITEM value='R2 -16.2.5.5 - 08/15/2018' />
+          <LISTITEM value='R1.1.10a - 15.2.8.60 - 08/27/2018' />
+          <LISTITEM value='R1.1.10b - 15.2.8.61 - 08/30/2018' />
+          <LISTITEM value='R2 -16.2.5.6 - 08/29/2018' />
+          <LISTITEM value='R1.1.10b - 15.2.8.62 - 09/04/2018' />
+          <LISTITEM value='R2 - 16.2.5.7 - 09/12/18' />
+          <LISTITEM value='R1.1.10 - 15.2.8.63 - 09/12/2018' />
+          <LISTITEM value='R1.1.10 - 15.2.8.64 - 09/20/2018' />
+          <LISTITEM value='R2 - 16.2.5.7b - 09/20/18' />
+          <LISTITEM value='R1.1.10 - 15.2.8.65 - 09/25/2018' />
+          <LISTITEM value='R2 - 16.2.5.8 - 9/26/18' />
+          <LISTITEM value='R3 � 17.3.1.0 � 9/30/2018' />
+          <LISTITEM value='R2 - 16.2.5.9 - 10/10/2018' />
+          <LISTITEM value='R3 � 17.3.1.1 � 10/19/2018' />
+          <LISTITEM value='R2 - 16.2.6.0  - 10/24/2018' />
+          <LISTITEM value='R2 - 16.2.6.1 - 11/07/2018' />
+          <LISTITEM value=' R2 - 16.2.6.2 - 11/15/2018' />
+          <LISTITEM value='2018 1098 Tax Reporting Changes - 15.2.8.69 - 11/14/2018' />
+          <LISTITEM value=' 2018 1098 Tax Reporting Changes - 15.2.8.70 - 11/23/2018' />
+          <LISTITEM value='R2 - 16.2.6.3 - 11/28/2018' />
+          <LISTITEM value='R2 - 16.2.6.3a - 12/04/2018' />
+          <LISTITEM value='R2 - 16.2.6.4 - 12/12/2018' />
+          <LISTITEM value='R2 - 16.2.6.5 - 12/20/2018' />
+          <LISTITEM value='R2 - 16.2.6.6 - 12/27/2018' />
+          <LISTITEM value='R2 - 16.2.6.7 -  01/03/2019' />
+          <LISTITEM value='R2 - 16.2.6.8 -  01/09/2019' />
+          <LISTITEM value='R3 � 17.3.1.3 � 01/04/2019' />
+          <LISTITEM value='R2 - 16.2.6.9 -  01/16/2019' />
+          <LISTITEM value='PS - 16.2.6.9d - Test delivery ; prod deployment 2/27/19' />
+          <LISTITEM value='PS - 16.2.6.9e - Test delivery 3/1/19; prod deployment 3/3/19' />
+          <LISTITEM value='PS - 16.2.6.9f - Test delivery 3/1/19; prod deployment 3/3/19' />
+          <LISTITEM value='PS - 16.2.6.9g - Test delivery: 3/1/19; prod deployment 3/3/19' />
+          <LISTITEM value='PS - 16.2.6.10 - Test delivery: 3/1/19; prod deployment 3/17/19' />
+          <LISTITEM value='PS - 16.2.6.11 - Test delivery: 3/18/19; prod deployment 3/24/19' />
+          <LISTITEM value='PS - 16.2.6.13 - Test delivery 4/4/19; prod deployment 4/21/19' />
+          <LISTITEM value='PS - 16.2.6.9h - Test delivery: 3/11/19; prod deployment 3/13/19' />
+          <LISTITEM value='PS - 16.2.6.10a - Test delivery 3/12/19; prod deployment 3/17/19' />
+          <LISTITEM value='R3 � 17.3.1.4 � 02/08/2019' />
+          <LISTITEM value='R3 � 17.3.1.5 � 03/05/2019' />
+          <LISTITEM value='PS - 16.2.6.14 - Test delivery 4/4/19; prod deployment 4/21/19' />
+          <LISTITEM value='PS - 16.2.6.15 - Test delivery: 4/22/19; prod deployment 5/5/19' />
+          <LISTITEM value='PS - 16.2.6.12 - Test delivery: 3/29/19; prod deployment 4/17/19' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Root Cause Classification' refname='com.zions.workitem.attribute.rootcauseclassification' type='enumerationList$RootCauseClassification' dimension='reportable'>
+        <HELPTEXT>From rtc 'Root Cause Classification'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Code - Oracle' />
+          <LISTITEM value='Code - Primatics' />
+          <LISTITEM value='Code - TCS' />
+          <LISTITEM value='Code - Vendor' />
+          <LISTITEM value='Code - Zions' />
+          <LISTITEM value='Configuration - BaNCS' />
+          <LISTITEM value='Configuration - Zions' />
+          <LISTITEM value='Configuration - Evolv' />
+          <LISTITEM value='Configuration - FAH' />
+          <LISTITEM value='Data Clean-Up' />
+          <LISTITEM value='Data Mapping' />
+          <LISTITEM value='Data Mapping - ODS/EDW' />
+          <LISTITEM value='Investigating' />
+          <LISTITEM value='Parameter' />
+          <LISTITEM value='Requirement' />
+          <LISTITEM value='Test Case' />
+        </ALLOWEDVALUES>
+      </FIELD>
+    </FIELDS>
+  </WORKITEMTYPE>
+</witd:WITD>

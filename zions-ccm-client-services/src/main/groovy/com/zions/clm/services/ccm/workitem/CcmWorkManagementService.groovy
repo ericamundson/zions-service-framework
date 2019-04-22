@@ -71,7 +71,7 @@ class CcmWorkManagementService {
 		newId = -1
 	}
 	
-	IWorkItem getWorkitem(id) {
+	def getWorkitem(id) {
 		if (id instanceof String) {
 			id = Integer.parseInt(id)
 		}
@@ -110,27 +110,51 @@ class CcmWorkManagementService {
 	 * @param linkMapping
 	 * @return
 	 */
-	def getWILinkChanges(int id, String project, linkMapping) {
+	void getWILinkChanges(int id, String project, linkMapping, Closure closure) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
 		IWorkItem workItem = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, null);
 		Date modified = workItem.modified()
-		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 		String sid = "${id}"
+		def cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
 		if (cacheWI != null) {
 			def cid = cacheWI.id
+			List<LinkInfo> info = this.getAllLinks(sid, modified, workItem, linkMapping)
+			def resultLinks = getLinks('affects_execution_result',info)
+			resultLinks.each { LinkInfo link ->
+				def result = cacheManagementService.getFromCache(link.itemIdRelated, 'QM', ICacheManagementService.RESULT_DATA)
+				if (result) {
+					def resultChanges = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${result.testRun.id}/results/${result.id}", query:['api-version':'5.0-preview.5'], body: []]
+					def data = [id: result.id, associatedBugs: []]
+					def wis = []
+					result.associatedBugs.each { bug ->
+						String bid = "${bug.id}"
+						wis.add(bid)
+					}
+					String wid = "${cid}"
+					if (!wis.contains(wid)) {
+						wis.add(wid)
+						data.associatedBugs = wis
+						resultChanges.body.add(data)
+						def changes = [resultChanges: resultChanges, rid: link.itemIdRelated]
+						closure.call('Result', changes)
+					}
+				}
+			}
+			
+			if (resultLinks.size() > 0) {
+				cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
+			}
 			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
-			List<LinkInfo> info = this.getAllLinks(sid, modified, workItem, linkMapping)
-			wiData = generateLinkChanges(wiData, info, linkMapping, cacheWI)
+			wiData = generateWILinkChanges(wiData, info, linkMapping, cacheWI)
 			if (wiData.body.size() == 1) {
-				return null
+				closure.call('WorkItem', wiData)
 			}
-			return wiData
+
 		}
-		return null
 	}
 	
 	List<LinkInfo> getLinks(String type, links) {
@@ -150,7 +174,7 @@ class CcmWorkManagementService {
 	 * @param cacheWI
 	 * @return
 	 */
-	def generateLinkChanges(def wiData, List<LinkInfo> links, linkMapping, cacheWI) {
+	def generateWILinkChanges(def wiData, List<LinkInfo> links, linkMapping, cacheWI) {
 		//def linksList = links.split(',')
 		links.each { LinkInfo info -> 
 			String id = info.itemIdRelated
@@ -160,15 +184,7 @@ class CcmWorkManagementService {
 			def runId = null
 			def linkId = null
 			if (linkMap) {
-				if (info.type == 'affects_execution_result') {
-					def result = cacheManagementService.getFromCache(id, module, ICacheManagementService.RESULT_DATA)
-					if (result) {
-						runId = result.testRun.id
-						linkId = result.id
-						url = "${tfsUrl}/_TestManagement/Runs?_a=resultSummary&runId=${runId}&resultId=${linkId}"
-					}
-					
-				} else {
+				if (info.type != 'affects_execution_result') {
 					def linkWI = cacheManagementService.getFromCache(id, module, ICacheManagementService.WI_DATA)
 					if (linkWI) {
 						linkId = linkWI.id
@@ -215,7 +231,7 @@ class CcmWorkManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	@Cache( elementType = WorkitemChanges)
+	//@Cache( elementType = WorkitemChanges)
 	WorkitemChanges generateWIData(id, Date timeStamp, workItem,  project, type, wiMap, memberMap) {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
@@ -348,7 +364,7 @@ class CcmWorkManagementService {
 
 
 	@Cache(elementType = LinkInfo)
-	public List<LinkInfo> getAllLinks(String id, Date timeStamp, IWorkItem workItem, linkMapping) {
+	public List<LinkInfo> getAllLinks(String id, Date timeStamp, workItem, linkMapping) {
 		List<LinkInfo> links = new ArrayList<LinkInfo>()
 		linkMapping.each { key, linkMap ->
 			String linkType = ReferenceUtil.getReferenceType(key);

@@ -16,7 +16,6 @@ import groovy.json.JsonBuilder
  * @author z091182
  *
  */
-@Component
 class CacheWorkitemAttachments implements CliAction {
 	AttachmentsManagementService attachmentsManagementService;
 	

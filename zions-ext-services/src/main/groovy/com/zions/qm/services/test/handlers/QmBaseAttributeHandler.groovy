@@ -28,7 +28,8 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 				if (fieldMap.values.size() > 0) {
 	
 					fieldMap.values.each { aval ->
-						if ("${aValue}" == "${aval.source}") {
+						String source = "${aval.source}"
+						if ("${aValue}" == "${source}") {
 							val = "${aval.target}"
 							return
 						}
@@ -54,7 +55,7 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 		}
 
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: aValue]
-		if (cacheCheck && wiCache != null) {
+		if (this.cacheCheck && wiCache != null) {
 			String type = "${itemMap.target}"
 			if (type == 'Test Case' || type.endsWith(' WI')) {
 				String cVal = wiCache.fields."${fieldMap.target}"

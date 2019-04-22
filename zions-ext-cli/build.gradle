@@ -40,6 +40,8 @@ dependencies {
 task integrationTest(type: Test) {
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
+    systemProperty "spring.profiles.active", 'integration-test'
+    
 }
 
 integrationTest.mustRunAfter test

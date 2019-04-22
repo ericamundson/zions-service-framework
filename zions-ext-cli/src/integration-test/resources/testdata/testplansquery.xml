@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><tag0:feed xmlns:tag0="http://www.w3.org/2005/Atom">
+  <tag0:title type="text">testplan ATOM feed for project area Zions FutureCore Program (Quality Management)</tag0:title>
+  <tag0:id>https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan</tag0:id>
+  <tag0:link rel="alternate" href="https://clm.cs.zionsbank.com/qm/web/console/"/>
+  <tag0:link rel="self" href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan?fields=feed%2Fentry%2Fcontent%2Ftestplan%5BcreationDate%3E%3D%272018-12-31T23%3A59%3A59.999Z%27%5D%2F*"/>
+  <tag0:entry>
+    <tag0:id>https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:546</tag0:id>
+    <tag0:updated>2019-01-31T18:05:03.915Z</tag0:updated>
+    <tag0:title type="text">Release 2 - PRT - Final Regression</tag0:title>
+    <tag0:summary type="text"/>
+    <tag0:link rel="alternate" href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:546" title="" type="application/xml"/>
+    <tag0:link rel="enclosure" href="https://clm.cs.zionsbank.com/qm/web/console/Zions%20FutureCore%20Program%20%28Quality%20Management%29/_sTRhcK39Eead8Oi3qsmIPw#action=com.ibm.rqm.planning.home.actionDispatcher&amp;subAction=viewTestPlan&amp;id=546" title="Web Console" type="text/html"/>
+    <tag0:content type="application/xml">
+      <ns2:testplan xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+        <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+        <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:546</ns3:identifier>
+        <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:546?stylesheet=true"/>
+        <ns2:webId>546</ns2:webId>
+        <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">Release 2 - PRT - Final Regression</ns3:title>
+        <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/"/>
+        <ns2:creationDate>2019-01-30T16:34:34.660Z</ns2:creationDate>
+        <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2019-01-31T18:05:03.915Z</ns5:updated>
+        <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.zions.workflow.testplan/com.zions.workflow.testplan.state.s0">com.zions.workflow.testplan.state.s0</ns5:state>
+        <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/v070383">v070383</ns3:creator>
+        <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">unassigned</ns5:owner>
+        <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.101">literal.priority.101</ns2:priority>
+        <ns2:locked>false</ns2:locked>
+        <ns3:alias xmlns:ns3="http://purl.org/dc/elements/1.1/">urn:com.ibm.rqm:testplan:546</ns3:alias>
+        <ns2:category term="Release" value="Release Two"/>
+        <ns2:category term="Reporting Group" value="PRT"/>
+        <ns2:category term="Active" value="Yes"/>
+        <ns2:category term="Reporting Type" value="PRT"/>
+        <ns2:testcase href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:110174"/>
+        <ns2:testcase href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:133303"/>
+        <ns2:testcase href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:133304"/>
+        <ns2:testcase href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:133305"/>
+        <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testplan/com.ibm.rqm.planning.templates.testplan.template_1400002740007"/>
+        <ns2:configuration href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/configuration/TE6"/>
+        <ns2:copiedFrom href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:530"/>
+        <ns2:copiedRoot href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:530"/>
+      </ns2:testplan>
+    </tag0:content>
+  </tag0:entry>
+  <tag0:entry>
+    <tag0:id>https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:545</tag0:id>
+    <tag0:updated>2019-02-22T18:07:36.308Z</tag0:updated>
+    <tag0:title type="text">Release 2 - PRT Test 7 .9c Regression - Automation</tag0:title>
+    <tag0:summary type="text"/>
+    <tag0:link rel="alternate" href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:545" title="" type="application/xml"/>
+    <tag0:link rel="enclosure" href="https://clm.cs.zionsbank.com/qm/web/console/Zions%20FutureCore%20Program%20%28Quality%20Management%29/_sTRhcK39Eead8Oi3qsmIPw#action=com.ibm.rqm.planning.home.actionDispatcher&amp;subAction=viewTestPlan&amp;id=545" title="Web Console" type="text/html"/>
+    <tag0:content type="application/xml">
+      <ns2:testplan xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+        <ns2:projectArea alias="Zions+FutureCore+Program+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_aC9CQPfREeOd1div3hxkJQ"/>
+        <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:545</ns3:identifier>
+        <ns2:stylesheet href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:545?stylesheet=true"/>
+        <ns2:webId>545</ns2:webId>
+        <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">Release 2 - PRT Test 7 .9c Regression - Automation</ns3:title>
+        <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/"/>
+        <ns2:creationDate>2019-01-29T20:46:15.584Z</ns2:creationDate>
+        <ns5:updated xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/">2019-02-22T18:07:36.308Z</ns5:updated>
+        <ns5:state xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/workflowstate/com.zions.workflow.testplan/com.zions.workflow.testplan.state.s0">com.zions.workflow.testplan.state.s0</ns5:state>
+        <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z094441">z094441</ns3:creator>
+        <ns5:owner xmlns:ns5="http://jazz.net/xmlns/alm/v0.1/" xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z094441">z094441</ns5:owner>
+        <ns2:priority xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_aC9CQPfREeOd1div3hxkJQ/priority/literal.priority.101">literal.priority.101</ns2:priority>
+        <ns2:locked>true</ns2:locked>
+        <ns3:alias xmlns:ns3="http://purl.org/dc/elements/1.1/">urn:com.ibm.rqm:testplan:545</ns3:alias>
+        <ns2:category term="Release" value="Release Two"/>
+        <ns2:category term="Reporting Group" value="PRT"/>
+        <ns2:category term="Active" value="Yes"/>
+        <ns2:category term="Reporting Type" value="PRT"/>
+        <ns2:testcase href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:110174"/>
+        <ns2:testcase href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:133303"/>
+        <ns2:testcase href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:133304"/>
+        <ns2:testcase href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/urn:com.ibm.rqm:testcase:133305"/>
+        <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/template/testplan/com.ibm.rqm.planning.templates.testplan.template_1400002740007"/>
+        <ns2:configuration href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/configuration/TE6"/>
+        <ns2:esignatures>
+          <ns2:esignature>
+            <ns2:esigcontributor xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z080876">z080876</ns2:esigcontributor>
+            <ns2:esigaction>Set the edit capability to "Locked".</ns2:esigaction>
+            <ns2:esigtime>2019-02-22T18:07:36.295Z</ns2:esigtime>
+            <ns2:esigreason/>
+            <ns2:esigcomment>Locking</ns2:esigcomment>
+          </ns2:esignature>
+          <ns2:esignature>
+            <ns2:esigcontributor xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z080876">z080876</ns2:esigcontributor>
+            <ns2:esigaction>Set the edit capability to "Unlocked".</ns2:esigaction>
+            <ns2:esigtime>2019-02-22T18:05:51.481Z</ns2:esigtime>
+            <ns2:esigreason/>
+            <ns2:esigcomment>Unlocking to fix Environment Info</ns2:esigcomment>
+          </ns2:esignature>
+          <ns2:esignature>
+            <ns2:esigcontributor xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z094441">z094441</ns2:esigcontributor>
+            <ns2:esigaction>Set the edit capability to "Locked".</ns2:esigaction>
+            <ns2:esigtime>2019-02-07T18:20:48.660Z</ns2:esigtime>
+            <ns2:esigreason/>
+            <ns2:esigcomment>Locked</ns2:esigcomment>
+          </ns2:esignature>
+        </ns2:esignatures>
+      </ns2:testplan>
+    </tag0:content>
+  </tag0:entry>
+</tag0:feed>
