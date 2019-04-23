@@ -14,7 +14,7 @@ class ResultStateHandler extends QmBaseAttributeHandler {
 	public def formatValue(def value, def data) {
 		def itemData = data.itemData
 		String outVal = "${itemData.state.text()}"
-		return outVal;
+		return outVal.trim();
 	}
 
 }

@@ -179,7 +179,7 @@ public class ClmTestItemManagementService {
 	}
 
 	private def getResultData(def resultMap, def testCase) {
-		String rqmId = "${testCase.webId.text()}-Result"
+		String rqmId = "${testCase.webId.text()}-Test Case"
 		def adoTestCase = cacheManagementService.getFromCache(rqmId, ICacheManagementService.WI_DATA)
 		if (adoTestCase == null) return null
 		return resultMap["${adoTestCase.id}"]

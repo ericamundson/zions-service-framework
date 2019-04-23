@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-ext-cli/src/main/groovy/com/zions/ext/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="translateRTCWorkToVSTSWork --clm.url=https://clm.cs.zionsbank.com --clm.user=z091182 --clm.password=&quot;4878Middy002&quot; --tfs.url=https://dev.azure.com/zionseto --tfs.user=z091182 --tfs.token=5ygjaomvtrq6jgtxyrbpqsvahj2kuzzq6tjxgllrc76j7cbwzp4a --clm.projectArea=&quot;BPM (Change Management)&quot; --ccm.template.dir=&quot;D:\bpm_wit_templates&quot; --wit.mapping.file=&quot;./NetLossCCMMapping.xml&quot; --tfs.project=&quot;CSI&quot; --process.name=&quot;DTSTest&quot; --include.update=phases --include.phases=workdata,worklinks,attachments --wi.query=&quot;workitem/workItem[projectArea/name='BPM (Change Management)' and category/name='Net Loss Automation']/(id|modified|state/group|target/name|target/archived|type/name|category/name|related/state/group|related/type/name|related/category/name|parent/state/group|parent/type/name|parent/category/name)&quot; --wi.filter=allFilter --cache.location=d:/bpm_prod_cache --selected.checkpoint=none --tfs.areapath=&quot;CSI\\NetLoss&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=clm"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>

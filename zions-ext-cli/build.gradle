@@ -1,6 +1,6 @@
 bootJar {
 	enabled = true
-	mainClassName = 'com.zion.vsts.services.cli.CliApplication'
+	mainClassName = 'com.zions.ext.services.cli.CliApplication'
 	archiveName = 'zions-ext-cli.jar'
 	//version =  null
 }
@@ -40,6 +40,8 @@ dependencies {
 task integrationTest(type: Test) {
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
+    systemProperty "spring.profiles.active", 'integration-test'
+    
 }
 
 integrationTest.mustRunAfter test

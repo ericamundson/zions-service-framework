@@ -1,0 +1,830 @@
+<witd:WITD application='Work item type editor' version='1.0' xmlns:witd='http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef'>
+  <WORKITEMTYPE name='Change Request'>
+    <DESCRIPTION>general work item starter</DESCRIPTION>
+    <FIELDS>
+      <FIELD name='Severity' refname='internalSeverity' type='severity' dimension='reportable'>
+        <HELPTEXT>From rtc 'Severity'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='S5 - Trivial - Cosmetic, Color, Spelling Errors' />
+          <LISTITEM value='S4 - Minor - Easy Workaround' />
+          <LISTITEM value='S3 - Major - Acceptable Workaround' />
+          <LISTITEM value='S2 - Critical - None or Unacceptable Workaround, Major Feature Failure' />
+          <LISTITEM value='S1 - Blocker - Application Crashes, Loss of Data, or Data Corruption' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Summary' refname='summary' type='mediumHtml' dimension='reportable'>
+        <HELPTEXT>From rtc 'Summary'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Resolution' refname='internalResolution' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Resolution'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Status' refname='internalState' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Status'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Description' refname='description' type='html' dimension='reportable'>
+        <HELPTEXT>From rtc 'Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Sequence Value' refname='internalSequenceValue' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Sequence Value'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Creation Date' refname='creationDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Creation Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Start Date' refname='startDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Start Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Time Spent' refname='timeSpent' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Time Spent'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Resolution Date' refname='resolutionDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Resolution Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Owned By' refname='owner' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Owned By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Planned For' refname='target' type='interval' dimension='reportable'>
+        <HELPTEXT>From rtc 'Planned For'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Resolved By' refname='resolver' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Resolved By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Due Date' refname='dueDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Due Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Corrected Estimate' refname='correctedEstimate' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Corrected Estimate'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Estimate' refname='duration' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Estimate'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Created By' refname='creator' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Created By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Modified By' refname='modifiedBy' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Modified By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='State Transitions' refname='internalStateTransitions' type='stateTransitions' dimension='reportable'>
+        <HELPTEXT>From rtc 'State Transitions'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Archived' refname='archived' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Archived'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Approval Descriptors' refname='internalApprovalDescriptors' type='approvalDescriptors' dimension='reportable'>
+        <HELPTEXT>From rtc 'Approval Descriptors'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Custom Attributes' refname='customAttributes' type='customAttribute' dimension='reportable'>
+        <HELPTEXT>From rtc 'Custom Attributes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Approvals' refname='internalApprovals' type='approvals' dimension='reportable'>
+        <HELPTEXT>From rtc 'Approvals'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Subscribed By' refname='internalSubscriptions' type='subscriptions' dimension='reportable'>
+        <HELPTEXT>From rtc 'Subscribed By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Type' refname='workItemType' type='type' dimension='reportable'>
+        <HELPTEXT>From rtc 'Type'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Comments' refname='internalComments' type='comments' dimension='reportable'>
+        <HELPTEXT>From rtc 'Comments'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Id' refname='id' type='integer' dimension='reportable'>
+        <HELPTEXT>From rtc 'Id'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Found In' refname='foundIn' type='deliverable' dimension='reportable'>
+        <HELPTEXT>From rtc 'Found In'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Project Area' refname='projectArea' type='projectArea' dimension='reportable'>
+        <HELPTEXT>From rtc 'Project Area'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Restricted Access' refname='contextId' type='uuid' dimension='reportable'>
+        <HELPTEXT>From rtc 'Restricted Access'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Filed Against' refname='category' type='category' dimension='reportable'>
+        <HELPTEXT>From rtc 'Filed Against'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Modified Date' refname='modified' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Modified Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Priority' refname='internalPriority' type='priority' dimension='reportable'>
+        <HELPTEXT>From rtc 'Priority'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='P4 - Could Have' />
+          <LISTITEM value='P3 - Should Have' />
+          <LISTITEM value='P2 - Must Have' />
+          <LISTITEM value='P1 - Show Stopper' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Tags' refname='internalTags' type='tags' dimension='reportable'>
+        <HELPTEXT>From rtc 'Tags'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Exceptions Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationExceptions' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Exceptions Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Statements and Notices Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationStatementsandNotices' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Statements and Notices Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Interfaces Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationInterfaces' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Interfaces Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='UX/UI Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationUXUIImpact' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'UX/UI Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Program Manager' refname='com.zion.workitem.enumeration.ReleaseManager' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Program Manager'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Statements and Notices Impact Description' refname='com.zion.workitem.enumeration.StatementsandNoticesImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Statements and Notices Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Release' refname='com.zion.workitem.enumeration.ReleaseNumber' type='com.zion.workitem.enumeration.ReleaseNumber' dimension='reportable'>
+        <HELPTEXT>From rtc 'Release'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Release 1 - Consumer Lending' />
+          <LISTITEM value='Release 2 - Commercial Lending' />
+          <LISTITEM value='Release 3 - Deposits' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Finance/GL/Accounting Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationFinanceAccountingGL' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Finance/GL/Accounting Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Requirements Impact Level Of Effort' refname='com.zions.workitem.attribute.ImpactDurationRequirements' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Requirements Impact Level Of Effort'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Reports Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationReports' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Reports Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Compliance Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationCompliance' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Compliance Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Data Governance Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationDataGovernance' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Data Governance Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Parameters Impact Level of Effort' refname='com.zions.workitem.attribute.ImpactDurationParameters' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Parameters Impact Level of Effort'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Data Migration Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationDataMigration' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Data Migration Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Requirements Frozen' refname='com.zion.workitem.enumeration.RequirementsFrozen' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Requirements Frozen'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Project Manager' refname='com.zion.workitem.enumeration.ProjectManager' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Project Manager'</HELPTEXT>
+      </FIELD>
+      <FIELD name='CIF Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationCIF' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'CIF Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Web Services Impact' refname='com.zions.workitem.cr.question.webservicesimpact' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Web Services Impact'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Financial/GL/Accounting Impact (Yes/No)' refname='com.zion.workitem.enumeration.FinancialReportingImpact' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Financial/GL/Accounting Impact (Yes/No)'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Acceptable Manual Workaround Available' refname='com.zion.workitem.enumeration.AcceptableManualWorkaroundAvailable' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Acceptable Manual Workaround Available'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Overall Change Impact' refname='com.zion.workitem.enumeration.OverallChangeImpact' type='com.zion.workitem.enumeration.Impact' dimension='reportable'>
+        <HELPTEXT>From rtc 'Overall Change Impact'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Minimal' />
+          <LISTITEM value='Minor' />
+          <LISTITEM value='Moderate' />
+          <LISTITEM value='Major' />
+          <LISTITEM value='Severe' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Data Field Changes' refname='com.zion.workitem.enumeration.DataFieldChanges' type='com.zion.workitem.enumeration.DataFieldChanges' dimension='reportable'>
+        <HELPTEXT>From rtc 'Data Field Changes'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='No Data Field Changes' />
+          <LISTITEM value='New Data Field Changes' />
+          <LISTITEM value='Modified Data Field Changes' />
+          <LISTITEM value='Dropped Data Field Changes' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Priority' refname='com.zion.workitem.enumeration.Priority' type='com.zion.workitem.enumeration.PriorityZions' dimension='reportable'>
+        <HELPTEXT>From rtc 'Priority'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Priority 1' />
+          <LISTITEM value='Priority 2' />
+          <LISTITEM value='Priority 3' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='NFR Impact' refname='com.zion.workitem.enumeration.NFRImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'NFR Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Source Of Change' refname='com.zion.workitem.enumeration.SourceOfChange' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Source Of Change'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Addendum Required' refname='com.zion.workitem.enumeration.AddendumRequire' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Addendum Required'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Addendum Status' refname='com.zions.workitems.attributes.changerequest.addendumstatus' type='com.zions.workitem.enumeration.addendumstatus' dimension='reportable'>
+        <HELPTEXT>From rtc 'Addendum Status'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Team Approved' />
+          <LISTITEM value='Submitted for Program Approval' />
+          <LISTITEM value='Received' />
+          <LISTITEM value='Approved' />
+          <LISTITEM value='Completed' />
+          <LISTITEM value='Cancelled' />
+          <LISTITEM value='Program Approved' />
+          <LISTITEM value='Team Approved' />
+          <LISTITEM value='Submitted for Program Approval' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='External Project Impact' refname='com.zion.workitem.enumeration.ExternalProjectImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'External Project Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='TCS Estimate' refname='com.zion.workitem.enumeration.TCSEstimate' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'TCS Estimate'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Required Escalation' refname='com.zions.workitem.attribute.crescalation' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Required Escalation'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Customer Impact' refname='com.zion.workitem.enumeration.CustomerImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Customer Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='TCS Code Drop Planned Date' refname='com.zions.attributes.changetype_date_code_TCS_planned' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'TCS Code Drop Planned Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Additional Vendor Name' refname='com.zions.attributes.changetype_name_ExtraVendor' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Additional Vendor Name'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Maintenance Impact' refname='com.zion.workitem.enumeration.MaintenanceImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Maintenance Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Additional Vendor Document Drop Planned Date' refname='com.zions.attributes.changetype_date_docs_ExtraVendor_planned' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Additional Vendor Document Drop Planned Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='TCS Document Changes' refname='com.zions.attributes.changetype_bool_docs_TCS' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'TCS Document Changes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Budget Impact' refname='com.zion.workitem.enumeration.BudgetImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Budget Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='UX/UI Impact Description' refname='com.zions.workitem.attribute.Screen_Alignment_Impact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'UX/UI Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Change Type' refname='Change_Type' type='Change_Type' dimension='reportable'>
+        <HELPTEXT>From rtc 'Change Type'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='CCB' />
+          <LISTITEM value='Non-CCB' />
+          <LISTITEM value='Undefined' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='System Impact' refname='com.zion.workitem.enumeration.SystemImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'System Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='BaNCS Impact Description' refname='com.zion.workitem.enumeration.TCSImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'BaNCS Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Parameters Impact Description' refname='com.zions.workitem.attribute.Parameters_Impact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Parameters Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Screen Change Required' refname='com.zion.workitem.enumeration.ScreenChangeRequired' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Screen Change Required'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Data Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationData' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Data Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Is this Regulatory or Compliance Requirement' refname='com.zion.workitem.enumeration.RegulatoryorComplianceRequirement' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Is this Regulatory or Compliance Requirement'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Custom Gap Description' refname='com.zion.workitem.enumeration.CustomGapDescription' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Custom Gap Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Significant Customer Impact' refname='com.zion.workitem.enumeration.SignificantCustomerImpact' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Significant Customer Impact'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Finance/GL/Accounting Impact Description' refname='com.zions.workitem.attribute.Accounting_Impact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Finance/GL/Accounting Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='ApprovalVotes' refname='com.zions.attributes.cr.approvalvotes' type='contributorList' dimension='reportable'>
+        <HELPTEXT>From rtc 'ApprovalVotes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='TCS Development Level of Effort' refname='com.zions.workitem.attributes.tcsloe' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'TCS Development Level of Effort'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Requirements Impact Description unused' refname='com.zion.workitem.attribute.requirementsimpactdescription' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Requirements Impact Description unused'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Data Governance Impact Description' refname='com.zions.workitem.attribute.impactstringdatagovernance' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Data Governance Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Release Management Notes' refname='com.zions.attributes.releasemanagementnotes' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Release Management Notes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Data Migration Impact' refname='com.zions.workitem.attribute.ImpactBooldatamigrationimpact' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Data Migration Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Primatics Document Drop Planned Date' refname='com.zions.attributes.changetype_date_docs_Primatics_planned' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Primatics Document Drop Planned Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Zions Code Drop Date' refname='com.zions.attributes.changetype_date_code_Zions' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Zions Code Drop Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Additional Vendor Code Drop Planned Date' refname='com.zions.attributes.changetype_date_code_ExtraVendor_planned' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Additional Vendor Code Drop Planned Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Vendor Document Changes' refname='com.zions.attributes.changetype_bool_docs_ExtraVendor' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Vendor Document Changes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='TCS Document Drop Planned Date' refname='com.zions.attributes.changetype_date_docs_TCS_planned' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'TCS Document Drop Planned Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Additional Vendor Code Drop Date' refname='com.zions.attributes.changetype_date_code_ExtraVendor' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Additional Vendor Code Drop Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Temporary Manual Workaround Required' refname='com.zion.workitem.enumeration.TemporaryManualWorkaroundAvailible' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Temporary Manual Workaround Required'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Zions Code Changes' refname='com.zions.attributes.changetype_bool_code_Zions' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Zions Code Changes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Requirements Impact Enum' refname='com.zion.workitem.attribute.requirementsimpact' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Requirements Impact Enum'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Senior Functional Lead' refname='Senior_Functional_Lead1' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Senior Functional Lead'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Parameters Impact' refname='com.zions.workitem.attribute.ImpactBoolparameters' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Parameters Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='CIF Impact' refname='com.zions.workitem.attribute.ImpactBoolcif' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'CIF Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Interfaces Impact' refname='com.zions.workitem.attribute.ImpactBoolinterfaces' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Interfaces Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Exceptions Impact Description' refname='com.zions.workitem.attribute.ImpactStringexceptions' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Exceptions Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Test Impact' refname='com.zions.workitem.attribute.ImpactBooltest' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Test Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Data Impact Description' refname='com.zions.workitem.attribute.ImpactStringdata' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Data Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Reports Impact' refname='com.zions.workitem.attribute.ImpactBoolreports' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Reports Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Primary Impacted Area' refname='com.zion.workitem.attribute.Primary_Impacted_Area' type='enumerationList$com.zion.workitem.enumeration.ImpactedArea' dimension='reportable'>
+        <HELPTEXT>From rtc 'Primary Impacted Area'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true' />
+      </FIELD>
+      <FIELD name='ETO Operations Impact Description' refname='com.zions.workitem.attribute.ImpactStringetooperations' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'ETO Operations Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Custom Gap' refname='com.zion.workitem.enumeration.CustomGap1' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Custom Gap'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Level' refname='com.zion.workitem.attribute.gate' type='com.zion.workitem.enumeration.gate' dimension='reportable'>
+        <HELPTEXT>From rtc 'Level'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Level 1' />
+          <LISTITEM value='Level 2' />
+          <LISTITEM value='Level 3' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='TCS Code Changes' refname='com.zions.workitem.attributes.changerequest.tcscodechanges' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'TCS Code Changes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Date of Addendum Approval' refname='com.zions.workitem.attribute.changerequest.addendumapprovaldate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Date of Addendum Approval'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Primatics Document Drop Date' refname='com.zions.attributes.changetype_date_docs_Primatics' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Primatics Document Drop Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Zions Document Drop Planned Date' refname='com.zions.attributes.changetype_date_docs_Zions_planned' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Zions Document Drop Planned Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Business Prioritization Review Date' refname='com.zions.workitem.attribute.businesspriorityreviewdate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Business Prioritization Review Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Vendor Code Changes' refname='com.zions.attributes.changetype_bool_code_ExtraVendor' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Vendor Code Changes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='TCS Code Drop Date' refname='com.zion.workitem.enumeration.CodeDropDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'TCS Code Drop Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Business Owner Comments' refname='com.zions.workitem.attribute.businessownercomments' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Business Owner Comments'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Specification' refname='com.zion.workitem.attribute.Specification' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Specification'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Primatics Code Drop Date' refname='com.zions.attributes.changetype_date_code_Primatics' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Primatics Code Drop Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Workstream' refname='com.zions.workitem.attribute.Work_Stream_Work_Package' type='com.zions.workitem.enumeration.workstream_R3' dimension='reportable'>
+        <HELPTEXT>From rtc 'Workstream'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Accounting' />
+          <LISTITEM value='Architecture' />
+          <LISTITEM value='Accounting-Finance Integration' />
+          <LISTITEM value='Accounting Readiness (FAH &amp; LAE Dev R1)' />
+          <LISTITEM value='Account Opening (AOP)' />
+          <LISTITEM value='BaNCS Product' />
+          <LISTITEM value='BOR' />
+          <LISTITEM value='CIF' />
+          <LISTITEM value='Credit Risk' />
+          <LISTITEM value='Credit Lead as ASOR' />
+          <LISTITEM value='Compliance' />
+          <LISTITEM value='Controls (BOR)' />
+          <LISTITEM value='Data Migration' />
+          <LISTITEM value='Data Migration/Data Validation' />
+          <LISTITEM value='Data Architecture/Model' />
+          <LISTITEM value='DDA' />
+          <LISTITEM value='EIM Readiness' />
+          <LISTITEM value='Exceptions' />
+          <LISTITEM value='IRA' />
+          <LISTITEM value='Interface' />
+          <LISTITEM value='Interface (non-FACC)' />
+          <LISTITEM value='NFR' />
+          <LISTITEM value='NFR/Infrastructure' />
+          <LISTITEM value='Program Management' />
+          <LISTITEM value='R2R' />
+          <LISTITEM value='Retail Loan Readiness' />
+          <LISTITEM value='Release Management' />
+          <LISTITEM value='Statements &amp; Notices' />
+          <LISTITEM value='Source Data Cleanup' />
+          <LISTITEM value='Relationship Pricing' />
+          <LISTITEM value='Reporting' />
+          <LISTITEM value='Roll Out' />
+          <LISTITEM value='Service Desk/Back-office Operations' />
+          <LISTITEM value='Statements &amp; Notices' />
+          <LISTITEM value='Screen Alignment' />
+          <LISTITEM value='TD' />
+          <LISTITEM value='Technology Readiness' />
+          <LISTITEM value='Teller' />
+          <LISTITEM value='Testing' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Primatics Code Drop Planned Date' refname='com.zions.attributes.changetype_date_code_Primatics_planned' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Primatics Code Drop Planned Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Defect Number' refname='com.zion.workitem.enumeration.DefectNumber' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Defect Number'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Zions Document Changes' refname='com.zions.attributes.changetype_bool_docs_zions' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Zions Document Changes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Primatics Document Changes' refname='com.zions.attributes.changetype_bool_docs_Primatics' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Primatics Document Changes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Additional Vendor Document Drop Date' refname='com.zions.attributes.changetype_date_docs_ExtraVendor' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Additional Vendor Document Drop Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Addendum Delivery Date' refname='com.zions.workitem.attribute.changerequest.addendumdeliverydate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Addendum Delivery Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Category Of Change' refname='com.zion.workitem.enumeration.CategoryOfChange' type='com.zion.workitem.enumeration.ReasonForChange' dimension='reportable'>
+        <HELPTEXT>From rtc 'Category Of Change'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Select a dropdown value' />
+          <LISTITEM value='New Requirement' />
+          <LISTITEM value='Requirement Deferred' />
+          <LISTITEM value='Requirement Change' />
+          <LISTITEM value='Requirement Drop' />
+          <LISTITEM value='Solution Change' />
+          <LISTITEM value='Design Constraints' />
+          <LISTITEM value='Document Change Only' />
+          <LISTITEM value='Screen Change' />
+          <LISTITEM value='New Data Field' />
+          <LISTITEM value='Transaction Code' />
+          <LISTITEM value='Communication' />
+          <LISTITEM value='Correction' />
+          <LISTITEM value='Undefined' />
+          <LISTITEM value='Process Change' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Related Addendums' refname='com.zion.workitem.enumeration.RelatedAddendums' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Related Addendums'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Escalation Approver' refname='com.zions.attributes.escalationapprover' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Escalation Approver'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Date of Escalation Approval' refname='com.zions.attributes.escalationapprovaldate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Date of Escalation Approval'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Zions Document Drop Date' refname='com.zions.attributes.changetype_date_docs_Zions' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Zions Document Drop Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Primatics Code Changes' refname='com.zions.attributes.changetype_bool_code_Primatics' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Primatics Code Changes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='CCB Decision Date' refname='com.zion.workitem.enumeration.CCBDecisionDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'CCB Decision Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Business Owner' refname='com.zions.workitem.attribute.businessowner' type='com.zions.enum.businessowner' dimension='reportable'>
+        <HELPTEXT>From rtc 'Business Owner'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='RLC' />
+          <LISTITEM value='Finance/Accounting' />
+          <LISTITEM value='Collections' />
+          <LISTITEM value='ELO' />
+          <LISTITEM value='FutureCore PRogram' />
+          <LISTITEM value='IT' />
+          <LISTITEM value='EIM/Data Governance' />
+          <LISTITEM value='Bank Operations' />
+          <LISTITEM value='Unassigned' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Systems Impacted' refname='com.zion.workitem.enumeration.SystemsImpacted' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Systems Impacted'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Zions Code Drop Planned Date' refname='com.zions.attributes.changetype_date_code_Zions_planned' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Zions Code Drop Planned Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Implementation Date' refname='com.zions.workitem.attribute.changerequest.implementationdate_tempfield' type='com.zions.workitem.enumeration.implementationdate' dimension='reportable'>
+        <HELPTEXT>From rtc 'Implementation Date'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='RL 3.0' />
+          <LISTITEM value='RL 2.9 (24-mos)' />
+          <LISTITEM value='RL 2.5 (12-mos)' />
+          <LISTITEM value='RL 2.5' />
+          <LISTITEM value='RL 2.2 (6-mos)' />
+          <LISTITEM value='RL 2.1 (SHAW)' />
+          <LISTITEM value='RL 2.1' />
+          <LISTITEM value='RL 2.0 (CLCS)' />
+          <LISTITEM value='Consumer/Retail Roadmap' />
+          <LISTITEM value='RL 2.0' />
+          <LISTITEM value='RL 1.1' />
+          <LISTITEM value='RL 1.1.x' />
+          <LISTITEM value='RL 1.0.x' />
+          <LISTITEM value='RL 1.0 GoLive' />
+          <LISTITEM value='Construction/Commercial Roadmap' />
+          <LISTITEM value='TBD' />
+          <LISTITEM value='RL 1.0 GoLive' />
+          <LISTITEM value='Consumer/Retail Roadmap' />
+          <LISTITEM value='RL 2.0' />
+          <LISTITEM value='RL 2.0' />
+          <LISTITEM value='RL 2.0 (CLCS)' />
+          <LISTITEM value='RL 2.2 (6-mos)' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Roll out Impact' refname='com.zion.workitem.enumeration.RolloutImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Roll out Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Interfaces Impact Description' refname='com.zion.workitem.enumeration.InterfacesImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Interfaces Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Data Migration Impact Description' refname='com.zion.workitem.enumeration.DataMigrationImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Data Migration Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Expected Implementation Date (Go Live)' refname='com.zion.workitem.enumeration.ExpectedImplementationDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Expected Implementation Date (Go Live)'</HELPTEXT>
+      </FIELD>
+      <FIELD name='New Transaction Code' refname='com.zion.workitem.enumeration.NewTransactionCode' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'New Transaction Code'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Test Impact Description' refname='com.zion.workitem.enumeration.TestImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Test Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Action Items' refname='com.zion.workitem.enumeration.ActionItems' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Action Items'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Requirements Impact Description' refname='com.zion.workitem.enumeration.ModelBankImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Requirements Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='TCS Document Drop Date' refname='com.zions.attributes.changetype_date_docs_TCS' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'TCS Document Drop Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Business - Treasury' refname='com.zion.workitem.attribute.ImpactBusinessTreasury' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Business - Treasury'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Statements and Notices Impact' refname='com.zions.workitem.attribute.ImpactBoolstatementsnotices' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Statements and Notices Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Lending Impact' refname='com.zion.workitem.attribute.LendingImpact' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Lending Impact'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Implementation Plan' refname='com.zion.workitem.enumeration.ImplementationPlan' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Implementation Plan'</HELPTEXT>
+      </FIELD>
+      <FIELD name='UX/UI Impact' refname='com.zions.workitem.attribute.ImpactBooluxui' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'UX/UI Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Data Governance Impact' refname='com.zions.workitem.attribute.ImpactBooldatagovernance' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Data Governance Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Customer Care Operations Impact' refname='com.zion.workitem.attribute.customercareopsimpact' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Customer Care Operations Impact'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Finance/GL/Accounting Impact' refname='com.zions.workitem.attribute.ImpactBoolfinanceglaccounting' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Finance/GL/Accounting Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Change Impact Review Date' refname='com.zion.workitem.enumeration.ChangeImpactReviewDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Change Impact Review Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Documentation Updates Required' refname='com.zion.workitem.attribute.documentupdatesrequired' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Documentation Updates Required'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Operational Support Area' refname='com.zions.workitem.cr.attribute.operationalsupportarea' type='com.zions.enums.operationalsupportarea' dimension='reportable'>
+        <HELPTEXT>From rtc 'Operational Support Area'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Application Architecture' />
+          <LISTITEM value='Data Governance/Standardization' />
+          <LISTITEM value='BI - Data Marts/Reports' />
+          <LISTITEM value='EIM - ODS/EDW/Extracts' />
+          <LISTITEM value='Finance/GL' />
+          <LISTITEM value='Compliance' />
+          <LISTITEM value='ETO Operations' />
+          <LISTITEM value='Enterprise Retail Bank' />
+          <LISTITEM value='Quality &amp; Test' />
+          <LISTITEM value='Application Services' />
+          <LISTITEM value='N/A' />
+          <LISTITEM value='Unassigned' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Documentation Update Owner' refname='com.zion.workitem.attribute.documentationupdateowner' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Documentation Update Owner'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Compliance Impact Description' refname='com.zion.workitem.enumeration.ComplianceImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Compliance Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Requirements Impact' refname='com.zions.workitem.attribute.ImpactBoolrequirements' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Requirements Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Parameters Impact (Yes/No)' refname='com.zions.workitem.attribute.parameters_impact' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Parameters Impact (Yes/No)'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Estimate Assumptions' refname='com.zion.workitem.enumeration.EstimateAssumptions' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Estimate Assumptions'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Deposit / Treasury / Management Operations Impact' refname='com.zion.workitem.attribute.depositstreasurymanagementopsimpact' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Deposit / Treasury / Management Operations Impact'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Operational Impact of not approving change' refname='com.zion.workitem.enumeration.OperationalImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Operational Impact of not approving change'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Schedule Impact' refname='com.zion.workitem.enumeration.ScheduleImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Schedule Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Enterprise Retail Bank Impact Description' refname='com.zions.workitem.attribute.ImpactStringenterpriseretailbank' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Enterprise Retail Bank Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='xxxBaNCS Impact' refname='com.zions.workitem.attribute.ImpactBoolbancs' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'xxxBaNCS Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='TCS Owner' refname='com.zion.workitem.enumeration.TCSOwner' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'TCS Owner'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Enterprise Retail Bank Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationEnterpriseRetailBank' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Enterprise Retail Bank Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Test Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationTest' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Test Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='ETO Operations Impact Duration' refname='com.zions.workitem.attribute.ImpactDurationETOOperations' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'ETO Operations Impact Duration'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Business - Deposits' refname='com.zion.workitem.attribute.ImpactBusinessDeposits' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Business - Deposits'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Exceptions Impact' refname='com.zions.workitem.attribute.ImpactBoolexceptions' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Exceptions Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='CIF Impact Description' refname='com.zions.workitem.attribute.ImpactStringCIF' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'CIF Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='ETO Operations Impact' refname='com.zions.workitem.attribute.ImpactBooletooperations' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'ETO Operations Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Teller Operations Impact' refname='com.zion.workitem.attribute.telleropsimpact' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Teller Operations Impact'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Data Impact' refname='com.zions.workitem.attribute.ImpactBooldata' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Data Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Enterprise Retail Bank Impact' refname='com.zions.workitem.attribute.ImpactBoolenterpriseretailbank' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Enterprise Retail Bank Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Compliance Impact' refname='com.zions.workitem.attribute.ImpactBoolcompliance' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Compliance Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Reports Impact Description' refname='com.zion.workitem.enumeration.ReportsImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Reports Impact Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='BOR Impact' refname='com.zion.workitem.enumeration.BORImpact' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'BOR Impact'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Requirements Level of Effort' refname='com.zions.workitem.attribute.requirementsloe' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Requirements Level of Effort'</HELPTEXT>
+      </FIELD>
+    </FIELDS>
+  </WORKITEMTYPE>
+</witd:WITD>

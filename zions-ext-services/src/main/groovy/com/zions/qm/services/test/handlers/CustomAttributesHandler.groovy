@@ -52,6 +52,9 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 				descMap[desc.name] = desc
 			}
 		}
+		if (descMap.size()== 0) {
+			descMap['none'] = []
+		}
 		return descMap
 	}
 
@@ -173,6 +176,7 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 	}
 	
 	def addCADescriptors(ca, outDesc, tfsAreaPath, excluded) {
+		if (!ca) return
 		def stuff = null
 		ca.'soapenv:Body'.response.returnValue.values.each { item ->
 			if (!item.archived) {
@@ -188,6 +192,7 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 	}
 	
 	def addCatDescriptors(cats, outDesc, tfsAreaPath, excluded) {
+		if (!cats) return
 		cats.'soapenv:Body'.response.returnValue.values.each { cat ->
 			if (!cat.archived) {
 				String type = 'Enumeration'
