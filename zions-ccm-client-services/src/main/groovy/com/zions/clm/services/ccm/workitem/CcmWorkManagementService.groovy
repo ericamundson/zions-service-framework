@@ -130,13 +130,15 @@ class CcmWorkManagementService {
 					def resultChanges = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${result.testRun.id}/results/${result.id}", query:['api-version':'5.0-preview.5'], body: []]
 					def data = [id: result.id, testCaseTitle: title, associatedBugs: []]
 					def wis = []
-					result.associatedBugs.each { bug ->
-						String bid = "${bug.id}"
-						wis.add(bid)
+					if (result.associatedBugs) {
+						result.associatedBugs.each { bug ->
+							String bid = "${bug.id}"
+							wis.add(bid)
+						}
+						data.associatedBugs.addAll(result.associatedBugs)
 					}
 					String wid = "${cid}"
 					if (!wis.contains(wid)) {
-						data.associatedBugs.addAll(result.associatedBugs)
 						data.associatedBugs.add([id:wid])
 						resultChanges.body.add(data)
 						def changes = [resultChanges: resultChanges, rid: link.itemIdRelated]
