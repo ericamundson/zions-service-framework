@@ -125,8 +125,10 @@ class CcmWorkManagementService {
 			resultLinks.each { LinkInfo link ->
 				def result = cacheManagementService.getFromCache(link.itemIdRelated, 'QM', ICacheManagementService.RESULT_DATA)
 				if (result) {
+					String title = "${result.testCaseTitle}"
+					
 					def resultChanges = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${result.testRun.id}/results/${result.id}", query:['api-version':'5.0-preview.5'], body: []]
-					def data = [id: result.id, associatedBugs: []]
+					def data = [id: result.id, testCaseTitle: title, associatedBugs: []]
 					def wis = []
 					result.associatedBugs.each { bug ->
 						String bid = "${bug.id}"
@@ -134,8 +136,8 @@ class CcmWorkManagementService {
 					}
 					String wid = "${cid}"
 					if (!wis.contains(wid)) {
-						wis.add(wid)
-						data.associatedBugs = wis
+						data.associatedBugs.addAll(result.associatedBugs)
+						data.associatedBugs.add([id:wid])
 						resultChanges.body.add(data)
 						def changes = [resultChanges: resultChanges, rid: link.itemIdRelated]
 						closure.call('Result', changes)

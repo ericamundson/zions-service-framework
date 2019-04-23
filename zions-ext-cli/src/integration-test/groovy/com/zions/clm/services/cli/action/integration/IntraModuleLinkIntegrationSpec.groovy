@@ -141,10 +141,16 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		cacheManagementService.cacheModule = 'CCM'
 		restartManagementService.includePhases = 'workdata,worklinks'
 		ccmToAdo.execute(appArgs)
+		def results = cacheManagementService.getAllOfType('resultData')
+		int bugCount = 0
+		results.each { key, result ->
+			if (result.associatedBugs) {
+				bugCount = bugCount + result.associatedBugs.size()
+			}
+		}
 
 		then: 'validate ccm data'
-		true
-		
+		bugCount == 4
 		
 		cleanup: 'Remove all ADO changes'
 		cacheManagementService.cacheModule = 'QM'
@@ -250,9 +256,9 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		int id = -1
 		wis.workItem.each { wi ->
 			String type = "${wi.type.name.text()}".replace(' ', '%20')
-//			if (type == 'Anomaly') {
-//				type = 'Bug'
-//			}
+			if (type == 'Anomaly') {
+				type = 'Bug'
+			}
 			clmTypeSetter.type = type
 			idSetter.id = "${id}"
 			def wichanges = dataGenerationService.generate('/testdata/wichanges.json')
@@ -277,7 +283,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 			Closure closure = args[3]
 			def wi = cacheManagementService.getFromCache(aid, ICacheManagementService.WI_DATA)
 			String type = "${wi.fields.'System.WorkItemType'}"
-			if (type == 'Anomaly') {
+			if (type == 'Bug') {
 				String cid = "${wi.id}"
 				
 				
