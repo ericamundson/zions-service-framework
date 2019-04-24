@@ -76,7 +76,7 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 }
 
 @TestConfiguration
-@Profile("test")
+@Profile("integration-test")
 @ComponentScan(["com.zions.common.services.test", "com.zions.common.services.cache.db"])
 @PropertySource("classpath:test.properties")
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
