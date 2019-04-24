@@ -100,7 +100,7 @@ class MongoDBCacheManagementServiceTestConfig {
 			.tempDir('build/tmp')
 			.downloadPath('file:./../zions-common-data/mongodb/')
 			.artifactStorePath('./build/embeddeddb')
-			.bindIp("127.0.0.1")
+			.bindIp("localhost")
 			.port(12345)
 			.build();
 	}

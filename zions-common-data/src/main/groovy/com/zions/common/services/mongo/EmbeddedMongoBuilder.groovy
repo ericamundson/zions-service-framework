@@ -187,7 +187,7 @@ public class EmbeddedMongoBuilder {
         return new RuntimeConfigBuilder()
                 .defaults(Command.MongoD)
                 .processOutput(buildOutputConfig())
-				.daemonProcess(false)
+				//.daemonProcess(false)
                 .artifactStore(buildArtifactStore())
                 .build();
     }
