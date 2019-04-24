@@ -234,6 +234,8 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				}
 				log.info("Refreshing cache for ${changeList.size()} artifacts.")
 				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
+				//I am not sure how relevant the below set of work is
+				//that would be part of flushQueries, no?
 				String nextUrl = "${artifacts.ResponseInfo.nextPage.@'rdf:resource'}"
 				if (nextUrl == '') break
 				page++
@@ -243,6 +245,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					artifacts = clmRequirementsManagementService.nextPage(nextUrl)
 				}
 			}
+		}
+		if (includes['flushQueries'] != null) {
+			clmRequirementsManagementService.flushQueries(projectURI, oslcNs, oslcSelect, oslcWhere)
 		}
 		if (includes['whereused'] != null) {
 			log.info("fetching 'where used' lookup records")

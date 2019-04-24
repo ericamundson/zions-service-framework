@@ -3,6 +3,7 @@ package com.zions.rm.services.requirements
 
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
+import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.rest.IGenericRestClient
@@ -65,6 +66,7 @@ class ClmRequirementsManagementService {
 	
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
+	
 	
 	def queryForModules(String projectURI, String query) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?" + query;
@@ -137,7 +139,47 @@ class ClmRequirementsManagementService {
 		}
 		return modules
 	}
+
+	//This is copied from the ClmWorkItem and Test management services, but we may not need it
+	//as we are possibly handling things via BaseQueryHandler's getItems forcing it to saveToCache a new timestamp
+	//in scenarios where the previous cache does not exist
+	def flushQueries(String projectURI, String oslcNS, String oslcSelect, String oslcWhere) {
+		Date ts = new Date()
+		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+		int page = 0
+		def currentItems
+		new CacheInterceptor() {}.provideCaching(this, "${page}", ts, RequirementQueryData) {
+			currentItems = this.queryForArtifacts(projectURI, oslcNS, oslcSelect, oslcWhere)
+		}
+		while (true) {
+			String nextUrl = "${currentItems.ResponseInfo.nextPage.@'rdf:resource'}"
+			if (nextUrl == '') break
+			page++
+			new CacheInterceptor() {}.provideCaching(this, "${page}", ts, RequirementQueryData) {
+				currentItems = this.nextPage(nextUrl)
+			}
+		}
+		/*would like to do something more like:
+		 String nextUrl = geturl(projectUri blah blah)
+		 do {
+		 	new CacheInterceptor() {}.provideCaching(this, "${page}", ts, RequirementQueryData) {
+			currentItems = this.nextPage(nextUrl)
+			}
+			nextUrl = "${currentItems.ResponseInfo.nextPage.@'rdf:resource'}"
+			page++
+		} while (nextUrl != '')
+		
+	     * but I won't because I'm sure it would break something
+	     * just seems like repeated code all over 
+		 * 
+		 */
+	}
+
 	
+	//Since the specified values can be autowired, I really feel like maybe
+	//there should just be a getUri function and a queryForArtifacts(uri)
+	//that returns the below data.  Some of the code seems overly duplicated.
+	//not gonna mess with it though.
 	def queryForArtifacts(String projectURI, String oslcNS, String oslcSelect, String oslcWhere) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/views?oslc.query=&projectURL=" + this.rmGenericRestClient.clmUrl + "/rm/process/project-areas/" + projectURI + 
 					oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl) + "&oslc.pageSize=${clmPageSize}";
@@ -176,7 +218,7 @@ class ClmRequirementsManagementService {
 	}
 	
 	public def nextPage(url) {
-		log.debug("Retrieving next page: ${url}")
+		log.debug("Retrieving page: ${url}")
 		def result = rmGenericRestClient.get(
 			uri: url,
 			headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
