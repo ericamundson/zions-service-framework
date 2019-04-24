@@ -74,7 +74,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			htmlData = new XmlSlurper().parseText(html)
 		}
 		catch (Exception e) {
-			log.error("Error parsing description for ID &sId: ${e.getMessage()}")
+			log.error("Error parsing description for ID $sId: ${e.getMessage()}")
 			return null
 		}
 		// First move all embedded images to ADO
