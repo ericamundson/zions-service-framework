@@ -56,9 +56,10 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 //
 //		when: 'calling of method under test (data)'
 //		def keyname = underTest.saveToCache( data ,'1',ICacheManagementService.PLAN_DATA)
+//		def testplan = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
 //
 //		then: ''
-//		true
+//		testplan != null
 //	}
 //
 //	@Test
@@ -96,8 +97,10 @@ class MongoDBCacheManagementServiceTestConfig {
 		
 		return new EmbeddedMongoBuilder()
 			.version('3.2.16')
+			.tempDir('build/tmp')
 			.downloadPath('file:./../zions-common-data/mongodb/')
-			.bindIp("127.0.0.1")
+			.artifactStorePath('./build/embeddeddb')
+			.bindIp("localhost")
 			.port(12345)
 			.build();
 	}
