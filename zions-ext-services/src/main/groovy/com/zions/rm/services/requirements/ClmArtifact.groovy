@@ -47,8 +47,7 @@ class ClmArtifact {
 		attributeMap.'Identifier' = in_id
 	}
 	public void setDescription(String in_desc) {
-		// Convert codes to proper tags
-		in_desc = in_desc.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("&#xa0;", '')
+		if (in_desc == null) in_desc = ''
 		// If this is a Heading, use Primary Text for the Title (this is a weird thing DNG modules do)
 		if (this.getArtifactType() == 'Heading' && in_desc != '') {
 			this.setTitle(stripTags(in_desc))
@@ -86,6 +85,6 @@ class ClmArtifact {
 		}
 	}
 	private String stripTags(String input) {
-		return input.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("&amp;", '&').replaceAll("\\<.*?>","")
+		return input.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("&#xa0;", ' ').replaceAll("&amp;", '&').replaceAll("\\<.*?>","")
 	}
 }
