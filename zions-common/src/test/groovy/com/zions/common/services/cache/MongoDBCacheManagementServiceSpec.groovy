@@ -37,42 +37,42 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 	@Autowired
 	DataGenerationService dataGenerationService
 
-	def 'saveBinaryAsAttachment for project name success flow.'(){
-
-		def result= new ByteArrayInputStream();
-
-		when: 'calling of method under test (saveBinaryAsAttachment)'
-		def keyname = underTest.saveBinaryAsAttachment( result ,'','')
-		// 218-Test Plan
-		then: ''
-		true
-
-	}
-
-	@Test
-	def 'saveToCache for project name success flow.'(){
-
-		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
-
-		when: 'calling of method under test (data)'
-		def keyname = underTest.saveToCache( data ,'1',ICacheManagementService.PLAN_DATA)
-		def testplan = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
-
-		then: ''
-		testplan != null
-	}
-
-	@Test
-	def 'getFromCache for project name success flow.'(){
-
-		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
-
-		when: 'calling of method under test (getFromCache)'
-		def keyname = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
-
-		then: ''
-		true
-	}
+//	def 'saveBinaryAsAttachment for project name success flow.'(){
+//
+//		def result= new ByteArrayInputStream();
+//
+//		when: 'calling of method under test (saveBinaryAsAttachment)'
+//		def keyname = underTest.saveBinaryAsAttachment( result ,'','')
+//		// 218-Test Plan
+//		then: ''
+//		true
+//
+//	}
+//
+//	@Test
+//	def 'saveToCache for project name success flow.'(){
+//
+//		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
+//
+//		when: 'calling of method under test (data)'
+//		def keyname = underTest.saveToCache( data ,'1',ICacheManagementService.PLAN_DATA)
+//		def testplan = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
+//
+//		then: ''
+//		testplan != null
+//	}
+//
+//	@Test
+//	def 'getFromCache for project name success flow.'(){
+//
+//		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
+//
+//		when: 'calling of method under test (getFromCache)'
+//		def keyname = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
+//
+//		then: ''
+//		true
+//	}
 }
 
 @TestConfiguration
