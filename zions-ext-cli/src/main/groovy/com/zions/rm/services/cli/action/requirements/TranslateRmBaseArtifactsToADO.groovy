@@ -290,7 +290,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 								reqChanges.each { key, val ->
 									clManager.add("${id}", val)
 								}
-								//log.print "adding changes for requirement ${id}"
+								log.debug("adding changes for requirement ${id}")
 							}
 						//}
 					}
