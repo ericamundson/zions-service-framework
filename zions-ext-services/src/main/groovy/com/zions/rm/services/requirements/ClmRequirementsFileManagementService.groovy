@@ -27,7 +27,7 @@ class ClmRequirementsFileManagementService {
 		// TODO Auto-generated constructor stub
 	}
 
-	public def ensureRequirementFileAttachment(def itemData, String url, String altFilename) {
+	public def ensureRequirementFileAttachment(def itemData, String url) {
 		def result = clmRequirementsManagementService.getContent(url)
 		String contentDisp = "${result.headers.'Content-Disposition'}"
 		String filename = null
@@ -35,7 +35,7 @@ class ClmRequirementsFileManagementService {
 			filename = contentDisp.substring(contentDisp.indexOf('filename=')+10,contentDisp.indexOf('";'))
 		}
 		else {
-			filename = altFilename
+			filename = 'missing_filename'
 		}
 
 		String attUrl

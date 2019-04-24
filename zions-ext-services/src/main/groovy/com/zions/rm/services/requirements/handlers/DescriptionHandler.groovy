@@ -53,9 +53,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		String outHtml
 		if (itemData.getFormat() == 'WrapperResource') {
 			// For wrapper resource (uploaded file), we need to create our own description with hyperlink to attachment
-			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, itemData.getFileHref(),'')
+			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, itemData.getFileHref())
 
 			outHtml = '<div><a href=' + fileItem.url + '&download=true>Uploaded Attachment</a></div>'
+			
+			// Delete wrapper preview image?
 		}
 		else {
 			// strip out all namespace stuff from html
@@ -65,7 +67,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 
 			outHtml = processHtml(description, sId, itemData)
 		}
-		return 	outHtml
+		return 	outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>')
 	}
 	
 	def processHtml(String html, String sId, def itemData) {
@@ -84,9 +86,6 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		}
 		imgs.each { img ->
 			String url = img.@src
-			String altFilename = "${img.@alt}".replace(' WrapperResource','') + '.jpeg'
-			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, url, altFilename)
-			img.@src = fileItem.url
 			
 			// If the embedded image was due to an embedded wrapper resource artifact, we want to get the original document attachment
 			int wrapNdx = url.indexOf('resourceRevisionURL')
@@ -95,7 +94,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 				def about = clmUrl + '/rm/resources/' + url.substring(wrapNdx+74)
 				def wrappedResourceArtifact = new ClmArtifact('','',about)
 				wrappedResourceArtifact = clmRequirementsManagementService.getNonTextArtifact(wrappedResourceArtifact)
-				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, wrappedResourceArtifact.getFileHref(),'')
+				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, wrappedResourceArtifact.getFileHref())
+			}
+			else {
+				def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, url)
+				img.@src = fileItem.url			
 			}
 		}
 		
