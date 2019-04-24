@@ -15,6 +15,8 @@ import de.flapdoodle.embed.mongo.distribution.Versions;
 import de.flapdoodle.embed.process.config.IRuntimeConfig;
 import de.flapdoodle.embed.process.config.io.ProcessOutput;
 import de.flapdoodle.embed.process.distribution.GenericVersion;
+import de.flapdoodle.embed.process.io.directories.FixedPath
+import de.flapdoodle.embed.process.io.directories.IDirectory
 import de.flapdoodle.embed.process.runtime.Network;
 import de.flapdoodle.embed.process.store.Downloader;
 import de.flapdoodle.embed.process.store.IArtifactStore;
@@ -59,7 +61,9 @@ public class EmbeddedMongoBuilder {
     private Integer port;
     private String bindIp = InetAddress.getLoopbackAddress().getHostAddress();
 	private String downloadPath = null
-
+	private IDirectory artifactStorePath = null
+	private IDirectory tempDir = null
+	
 
     /**
      * Builds {@link MongodStarter}, then starts "embedded" MongoDB instance
@@ -97,10 +101,26 @@ public class EmbeddedMongoBuilder {
     }
 	
 	public EmbeddedMongoBuilder downloadPath(String path) {
-		if (version == null) {
+		if (path == null) {
 			throw new IllegalArgumentException("path must not be null");
 		}
 		this.downloadPath = path;
+		return this;
+	}
+
+	public EmbeddedMongoBuilder artifactStorePath(String path) {
+		if (path == null) {
+			throw new IllegalArgumentException("path must not be null");
+		}
+		this.artifactStorePath = new FixedPath(path);
+		return this;
+	}
+	
+	public EmbeddedMongoBuilder tempDir(String path) {
+		if (path == null) {
+			throw new IllegalArgumentException("path must not be null");
+		}
+		this.tempDir = new FixedPath(path);
 		return this;
 	}
 
@@ -176,8 +196,11 @@ public class EmbeddedMongoBuilder {
 		if (this.downloadPath) {
 	        return new ArtifactStoreBuilder()
 	                .defaults(Command.MongoD)
+					//.tempDir(tempDir)
+					.useCache(false)
 	                .download(new DownloadConfigBuilder()
 	                        .defaultsForCommand(Command.MongoD)
+							.artifactStorePath(artifactStorePath)
 							.downloadPath(downloadPath)
 	                        .progressListener(new Slf4jProgressListener(logger))
 	                        .build())
