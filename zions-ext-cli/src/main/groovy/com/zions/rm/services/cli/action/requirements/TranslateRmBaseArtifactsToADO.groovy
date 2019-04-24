@@ -270,7 +270,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					items.each { rmItem ->
 						String sid = "${rmItem.Requirement.identifier}"
 						int id = Integer.parseInt(sid)
-						//log.debug("items.each loop for id: ${sid}")
+						log.debug("items.each loop for id: ${sid}")
 						String formatString = rmItem.Requirement.ArtifactFormat.@'rdf:resource'
 						String format = formatString.substring(formatString.lastIndexOf('#') + 1)
 						String about = "${rmItem.Requirement.@'rdf:about'}"

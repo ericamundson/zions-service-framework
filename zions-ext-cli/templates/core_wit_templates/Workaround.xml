@@ -1,0 +1,329 @@
+<witd:WITD application='Work item type editor' version='1.0' xmlns:witd='http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef'>
+  <WORKITEMTYPE name='Workaround'>
+    <DESCRIPTION>general work item starter</DESCRIPTION>
+    <FIELDS>
+      <FIELD name='Severity' refname='internalSeverity' type='severity' dimension='reportable'>
+        <HELPTEXT>From rtc 'Severity'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='S5 - Trivial - Cosmetic, Color, Spelling Errors' />
+          <LISTITEM value='S4 - Minor - Easy Workaround' />
+          <LISTITEM value='S3 - Major - Acceptable Workaround' />
+          <LISTITEM value='S2 - Critical - None or Unacceptable Workaround, Major Feature Failure' />
+          <LISTITEM value='S1 - Blocker - Application Crashes, Loss of Data, or Data Corruption' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Summary' refname='summary' type='mediumHtml' dimension='reportable'>
+        <HELPTEXT>From rtc 'Summary'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Resolution' refname='internalResolution' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Resolution'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Status' refname='internalState' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Status'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Description' refname='description' type='html' dimension='reportable'>
+        <HELPTEXT>From rtc 'Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Sequence Value' refname='internalSequenceValue' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Sequence Value'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Creation Date' refname='creationDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Creation Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Start Date' refname='startDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Start Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Time Spent' refname='timeSpent' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Time Spent'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Resolution Date' refname='resolutionDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Resolution Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Owned By' refname='owner' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Owned By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Planned For' refname='target' type='interval' dimension='reportable'>
+        <HELPTEXT>From rtc 'Planned For'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Resolved By' refname='resolver' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Resolved By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Due Date' refname='dueDate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Due Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Corrected Estimate' refname='correctedEstimate' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Corrected Estimate'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Estimate' refname='duration' type='duration' dimension='reportable'>
+        <HELPTEXT>From rtc 'Estimate'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Created By' refname='creator' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Created By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Modified By' refname='modifiedBy' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Modified By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='State Transitions' refname='internalStateTransitions' type='stateTransitions' dimension='reportable'>
+        <HELPTEXT>From rtc 'State Transitions'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Archived' refname='archived' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Archived'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Approval Descriptors' refname='internalApprovalDescriptors' type='approvalDescriptors' dimension='reportable'>
+        <HELPTEXT>From rtc 'Approval Descriptors'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Custom Attributes' refname='customAttributes' type='customAttribute' dimension='reportable'>
+        <HELPTEXT>From rtc 'Custom Attributes'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Approvals' refname='internalApprovals' type='approvals' dimension='reportable'>
+        <HELPTEXT>From rtc 'Approvals'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Subscribed By' refname='internalSubscriptions' type='subscriptions' dimension='reportable'>
+        <HELPTEXT>From rtc 'Subscribed By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Type' refname='workItemType' type='type' dimension='reportable'>
+        <HELPTEXT>From rtc 'Type'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Comments' refname='internalComments' type='comments' dimension='reportable'>
+        <HELPTEXT>From rtc 'Comments'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Id' refname='id' type='integer' dimension='reportable'>
+        <HELPTEXT>From rtc 'Id'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Found In' refname='foundIn' type='deliverable' dimension='reportable'>
+        <HELPTEXT>From rtc 'Found In'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Project Area' refname='projectArea' type='projectArea' dimension='reportable'>
+        <HELPTEXT>From rtc 'Project Area'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Restricted Access' refname='contextId' type='uuid' dimension='reportable'>
+        <HELPTEXT>From rtc 'Restricted Access'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Filed Against' refname='category' type='category' dimension='reportable'>
+        <HELPTEXT>From rtc 'Filed Against'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Modified Date' refname='modified' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Modified Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Priority' refname='internalPriority' type='priority' dimension='reportable'>
+        <HELPTEXT>From rtc 'Priority'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='P4 - Could Have' />
+          <LISTITEM value='P3 - Should Have' />
+          <LISTITEM value='P2 - Must Have' />
+          <LISTITEM value='P1 - Show Stopper' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Tags' refname='internalTags' type='tags' dimension='reportable'>
+        <HELPTEXT>From rtc 'Tags'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Workaround Description' refname='com.zions.attribute.workaround.description' type='html' dimension='reportable'>
+        <HELPTEXT>From rtc 'Workaround Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='System Procedure Update Required' refname='com.zions.attribute.workaround.systemprocedureupdaterequired' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'System Procedure Update Required'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Number of Transactions' refname='com.zions.attribute.workaround.numberoftransactions' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Number of Transactions'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Business Procedure Update Completion Date' refname='com.zions.attribute.workaround.businessproccompletiondate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Business Procedure Update Completion Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='EKB Enterprise Keywords Updated?' refname='com.zions.attribute.workaround.ekbenterprisekeywordsupdated' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'EKB Enterprise Keywords Updated?'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Business Procedure Update Approval Date' refname='com.zions.attribute.workaround.businessprocupdateapprovaldate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Business Procedure Update Approval Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Existing Execution Time Per Transaction' refname='com.zions.attribute.workaround.existingexecutiontimepertransaction' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Existing Execution Time Per Transaction'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Business Procedure Update Required' refname='com.zions.attribute.workaround.businessprocupdaterequired' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Business Procedure Update Required'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Subject Matter Experts' refname='com.zions.attribute.workaround.sme' type='contributorList' dimension='reportable'>
+        <HELPTEXT>From rtc 'Subject Matter Experts'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Primary Impacted Group' refname='com.zions.attribute.workaround.primaryimpactedgroup' type='com.zions.enumeration.impactgroup' dimension='reportable'>
+        <HELPTEXT>From rtc 'Primary Impacted Group'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='N/A' />
+          <LISTITEM value='CDA' />
+          <LISTITEM value='CIF' />
+          <LISTITEM value='CLSG' />
+          <LISTITEM value='Collections' />
+          <LISTITEM value='C360' />
+          <LISTITEM value='ELO' />
+          <LISTITEM value='EML' />
+          <LISTITEM value='Evolv' />
+          <LISTITEM value='Finance' />
+          <LISTITEM value='Middle Office' />
+          <LISTITEM value='MLA' />
+          <LISTITEM value='OLA' />
+          <LISTITEM value='Recon' />
+          <LISTITEM value='SAG' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Workaround Testable' refname='com.zions.attribute.workaround.workaroundtestable' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Workaround Testable'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='System Procedure Update Completion Date' refname='com.zions.attribute.workaround.systemprocupdatecompletedate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'System Procedure Update Completion Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='System Procedure Update Status' refname='com.zions.attribute.workaround.systemprocupdatestatus' type='com.zions.enumerations.triplestatus' dimension='reportable'>
+        <HELPTEXT>From rtc 'System Procedure Update Status'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Not Started' />
+          <LISTITEM value='In Progress' />
+          <LISTITEM value='Completed' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Control Description' refname='com.zions.attribute.workaround.controldescription' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Control Description'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Demonstration Date' refname='com.zions.attribute.workaround.demonstrationdate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'Demonstration Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Business Procedure Update Status' refname='com.zions.attribute.workaround.businessprocupdatestatus' type='com.zions.enumerations.triplestatus' dimension='reportable'>
+        <HELPTEXT>From rtc 'Business Procedure Update Status'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Not Started' />
+          <LISTITEM value='In Progress' />
+          <LISTITEM value='Completed' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Transaction Frequency' refname='com.zions.attribute.workaround.transactionfrequency' type='com.zions.enumeration.lowmidhigh' dimension='reportable'>
+        <HELPTEXT>From rtc 'Transaction Frequency'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Low' />
+          <LISTITEM value='Mid' />
+          <LISTITEM value='High' />
+          <LISTITEM value='Unassigned' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Training Required' refname='com.zions.attribute.workaround.trainingrequired' type='boolean' dimension='reportable'>
+        <HELPTEXT>From rtc 'Training Required'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Training where Workaround will be Taught' refname='com.zions.attribute.workaround.trainingwheretaught' type='string' dimension='reportable'>
+        <HELPTEXT>From rtc 'Training where Workaround will be Taught'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Expected New Execution Times Per Transaction' refname='com.zions.attribute.workaround.expectednewexecutiontimespertransaction' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Expected New Execution Times Per Transaction'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Found in Release' refname='FoundinRelease' type='com.zions.workitem.attribute.FoundInRelease' dimension='reportable'>
+        <HELPTEXT>From rtc 'Found in Release'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='R1.0.0' />
+          <LISTITEM value='R1.0.0a' />
+          <LISTITEM value='R1.0.1' />
+          <LISTITEM value='R1.0.2' />
+          <LISTITEM value='R1.0.3' />
+          <LISTITEM value='R1.0.4' />
+          <LISTITEM value='R1.0.5' />
+          <LISTITEM value='R1.0.6' />
+          <LISTITEM value='R1.0.7' />
+          <LISTITEM value='R1.0.8' />
+          <LISTITEM value='R1.1.0' />
+          <LISTITEM value='R1.2.0' />
+          <LISTITEM value='R1.3.0' />
+          <LISTITEM value='R2.0.0' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Frequency' refname='com.zions.attribute.workaround.frequency' type='com.zions.enumeration.frequency' dimension='reportable'>
+        <HELPTEXT>From rtc 'Frequency'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Daily' />
+          <LISTITEM value='Weekly' />
+          <LISTITEM value='Semi-Monthly' />
+          <LISTITEM value='Monthly' />
+          <LISTITEM value='Quarterly' />
+          <LISTITEM value='Semi-Yearly' />
+          <LISTITEM value='Annually' />
+          <LISTITEM value='Infrequent' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Demo Requested' refname='com.zions.attribute.workaround.demorequested' type='enumerationList$com.zions.enumeration.workaround.demogroups' dimension='reportable'>
+        <HELPTEXT>From rtc 'Demo Requested'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Audit' />
+          <LISTITEM value='Compliance' />
+          <LISTITEM value='No' />
+          <LISTITEM value='Risk' />
+          <LISTITEM value='SOX' />
+          <LISTITEM value='TBD' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Change Required to Controls' refname='com.zions.attribute.workaround.changerequiredtocontrols' type='com.zion.workitem.enumeration.YesNo' dimension='reportable'>
+        <HELPTEXT>From rtc 'Change Required to Controls'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Unassigned' />
+          <LISTITEM value='Yes' />
+          <LISTITEM value='No' />
+          <LISTITEM value='N/A' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Other Impacted Groups' refname='com.zions.attribute.workaround.otherimpactedgroups' type='enumerationList$com.zions.enumeration.impactgroup' dimension='reportable'>
+        <HELPTEXT>From rtc 'Other Impacted Groups'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='N/A' />
+          <LISTITEM value='CDA' />
+          <LISTITEM value='CIF' />
+          <LISTITEM value='CLSG' />
+          <LISTITEM value='Collections' />
+          <LISTITEM value='C360' />
+          <LISTITEM value='ELO' />
+          <LISTITEM value='EML' />
+          <LISTITEM value='Evolv' />
+          <LISTITEM value='Finance' />
+          <LISTITEM value='Middle Office' />
+          <LISTITEM value='MLA' />
+          <LISTITEM value='OLA' />
+          <LISTITEM value='Recon' />
+          <LISTITEM value='SAG' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='System Procedure Approved Date' refname='com.zions.attribute.workaround.systemprocapproveddate' type='timestamp' dimension='reportable'>
+        <HELPTEXT>From rtc 'System Procedure Approved Date'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Workaround Complexity' refname='com.zions.attribute.workaround.complexity' type='com.zions.enumeration.lowmidhigh' dimension='reportable'>
+        <HELPTEXT>From rtc 'Workaround Complexity'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Low' />
+          <LISTITEM value='Mid' />
+          <LISTITEM value='High' />
+          <LISTITEM value='Unassigned' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Impact Rated By' refname='com.zions.attribute.workaround.impactrater' type='contributor' dimension='reportable'>
+        <HELPTEXT>From rtc 'Impact Rated By'</HELPTEXT>
+      </FIELD>
+      <FIELD name='Workaround Impact' refname='com.zions.attribute.workaround.impact_calc' type='com.zions.enumeration.lowmidhigh' dimension='reportable'>
+        <HELPTEXT>From rtc 'Workaround Impact'</HELPTEXT>
+        <ALLOWEDVALUES expanditems='true'>
+          <LISTITEM value='Low' />
+          <LISTITEM value='Mid' />
+          <LISTITEM value='High' />
+          <LISTITEM value='Unassigned' />
+        </ALLOWEDVALUES>
+      </FIELD>
+      <FIELD name='Existing Control Number' refname='com.zions.attribute.workaround.existingcontrolnumber' type='smallString' dimension='reportable'>
+        <HELPTEXT>From rtc 'Existing Control Number'</HELPTEXT>
+      </FIELD>
+    </FIELDS>
+  </WORKITEMTYPE>
+</witd:WITD>

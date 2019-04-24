@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<repository:Contributor
+	xmlns:repository="com.ibm.team.repository"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	itemId="_-Ec1sCCzEeapKMLuhcU3XA">
+	<stateId>_oJMPsUnIEemJwu4WFEVKGg</stateId>
+	<immutable>true</immutable>
+	<contextId>_8lNyYNwSEd2pIJ5QVwgQGg</contextId>
+	<modified>2019-03-18T21:56:04.779Z</modified>
+	<mergePredecessor xsi:nil="true" />
+	<predecessor>_S0ueh5HnEei1U7fTJrTB8w</predecessor>
+	<emailAddress>Eric.Amundson2@zionsbancorp.com</emailAddress>
+	<userId>z091182</userId>
+	<name>Eric Amundson</name>
+	<archived>false</archived>
+	<modifiedBy itemId="_-Ec1sCCzEeapKMLuhcU3XA" />
+	<details itemId="_-Ec1sSCzEeapKMLuhcU3XA" />
+</repository:Contributor>

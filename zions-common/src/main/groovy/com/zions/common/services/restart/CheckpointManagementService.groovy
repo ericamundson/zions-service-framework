@@ -127,12 +127,15 @@ class CheckpointManagementService implements ICheckpointManagementService {
 	
 	void clear() {
 		int counter = 0
+		int i = 0
+		//cacheManagementService.deleteByType(CACHE_TYPE)
 		while (true) {
 			if (cacheManagementService.exists("${i}-${CACHE_TYPE}")) {
 				cacheManagementService.deleteById("${i}-${CACHE_TYPE}")
 			} else {
 				break;
 			}
+			i++
 		}
 		currentCheckpoint = null;
 		idCounter = 0;

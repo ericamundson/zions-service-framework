@@ -1,0 +1,79 @@
+{
+	"id": 100001,
+	"configuration": {
+		"id": "143"
+	},
+	"project": {
+		"id": "2ec3eefe-d0fd-4d92-8dfa-56265dd047b6",
+		"name": "IntegrationTests",
+		"url": "https://dev.azure.com/eto-dev/_apis/projects/IntegrationTests"
+	},
+	"startedDate": "2016-11-09T22:58:51.147Z",
+	"completedDate": "2016-11-09T22:58:51.147Z",
+	"outcome": "Passed",
+	"revision": 3,
+	"state": "Completed",
+	"testCase": {
+		"id": "108426",
+		"name": "Do good by stealth, and blush to find it fame."
+	},
+	"testPoint": {
+		"id": "45525"
+	},
+	"testRun": {
+		"id": "1000530",
+		"name": "Neither a lofty degree of intelligence nor imagination nor both together go to the making of genius. Love, love, love, that is the soul of genius. Run",
+		"url": "https://dev.azure.com/eto-dev/IntegrationTests/_apis/test/Runs/1000530"
+	},
+	"lastUpdatedDate": "2019-04-22T18:33:25.547Z",
+	"priority": 0,
+	"createdDate": "2019-04-22T18:11:50.163Z",
+	"url": "https://dev.azure.com/eto-dev/IntegrationTests/_apis/test/Runs/1000530/Results/100001",
+	"failureType": "None",
+	"testCaseTitle": "Do good by stealth, and blush to find it fame.",
+	"testCaseRevision": 1,
+	"customFields": [],
+	"testPlan": {
+		"id": "108423"
+	},
+	"testCaseReferenceId": 49923954,
+	"owner": {
+		"displayName": "Eric Amundson",
+		"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+			}
+		},
+		"id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"uniqueName": "eric.amundson2@zionsbancorp.com",
+		"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj",
+		"descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+	},
+	"runBy": {
+		"displayName": "Eric Amundson",
+		"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+			}
+		},
+		"id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"uniqueName": "eric.amundson2@zionsbancorp.com",
+		"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj",
+		"descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+	},
+	"lastUpdatedBy": {
+		"displayName": "Eric Amundson",
+		"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+			}
+		},
+		"id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"uniqueName": "eric.amundson2@zionsbancorp.com",
+		"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj",
+		"descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+	}
+}

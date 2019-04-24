@@ -32,7 +32,7 @@ class RestartManagementService implements IRestartManagementService {
 	private Map<String, IQueryHandler> queryHandlers
 	
 	@Value('${include.phases:}')
-	private String includePhases
+	public String includePhases
 	
 	@Autowired(required=false)
 	private Map<String, IFilter> filterMap;
@@ -42,7 +42,7 @@ class RestartManagementService implements IRestartManagementService {
 	ICheckpointManagementService checkpointManagementService
 	
 	@Value('${selected.checkpoint:none}')
-	private String selectedCheckpoint
+	public String selectedCheckpoint
 	
 
 	/** 
@@ -87,6 +87,9 @@ class RestartManagementService implements IRestartManagementService {
 	 * 	 
 	 */
 	public Object processPhases(Closure closure) {
+		if (selectedCheckpoint == 'none') {
+			checkpointManagementService.clear()
+		}
 		Checkpoint checkpoint = checkpointManagementService.selectCheckpoint(selectedCheckpoint);
 		String[] phases = includePhases.split(',')
 		// Move to checkpoint

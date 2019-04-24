@@ -1,0 +1,14 @@
+{
+    "method": "PATCH",
+    "uri": "/_apis/wit/workitems/{{idSetter}}?api-version=5.0-preview.3&bypassRules=true",
+    "headers": {
+        "Content-Type": "application/json-patch+json"
+    },
+    "body": [
+        {
+            "op": "add",
+            "path": "/rev",
+            "value": 1
+        }
+    ]
+}

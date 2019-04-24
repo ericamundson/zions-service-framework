@@ -31,11 +31,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="BPM\NetLoss"/>
+			<defaultvalue target="CSI\NetLoss"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="BPM"/>
+			<defaultvalue target="CSI"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -118,17 +118,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="BPM\NetLoss"/>
-			<value source='BPM\GPR' target="BPM\NetLoss\GPR"/>
-			<value source='BPM\Infosec' target="BPM\NetLoss\Infosec"/>
-			<value source='BPM\NAOP' target="BPM\NetLoss\NAOP"/>
-			<value source='BPM\Online Banking' target="BPM\NetLoss\OnlineBanking"/>
-			<value source='BPM\SAOB' target="BPM\NetLoss\SAOB"/>
-			<value source='BPM\Zelle' target="BPM\NetLoss\Zelle"/>
+			<defaultvalue target="CSI\NetLoss"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="BPM"/>
+			<defaultvalue target="CSI"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -214,11 +208,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="BPM\NetLoss"/>
+			<defaultvalue target="CSI\NetLoss"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="BPM"/>
+			<defaultvalue target="CSI"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -301,11 +295,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="BPM\NetLoss"/>
+			<defaultvalue target="CSI\NetLoss"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="BPM"/>
+			<defaultvalue target="CSI"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -364,7 +358,6 @@
 		<field source="closedDateHandler" target="Microsoft.VSTS.Common.ClosedDate"/>
 		<field source="resolver" target="Microsoft.VSTS.Common.ClosedBy"/>
 		<field source="owner" target="System.AssignedTo"/>
-		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
 		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
@@ -392,11 +385,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="BPM\NetLoss"/>
+			<defaultvalue target="CSI\NetLoss"/>
 		</field>
 		<field source="netLossTagHandler" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="BPM"/>
+			<defaultvalue target="CSI"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -471,11 +464,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="BPM\NetLoss"/>
+			<defaultvalue target="CSI\NetLoss"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="BPM"/>
+			<defaultvalue target="CSI"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>

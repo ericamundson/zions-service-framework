@@ -2,6 +2,7 @@
 <launchConfiguration type="org.eclipse.buildship.core.launch.runconfiguration">
 <listAttribute key="arguments">
 <listEntry value="-PbuildType=ci"/>
+<listEntry value="-Puser.home=build"/>
 </listAttribute>
 <booleanAttribute key="build_scans_enabled" value="false"/>
 <stringAttribute key="gradle_distribution" value="GRADLE_DISTRIBUTION(WRAPPER)"/>
@@ -13,6 +14,7 @@
 <booleanAttribute key="show_execution_view" value="true"/>
 <listAttribute key="tasks">
 <listEntry value="build"/>
+<listEntry value="integrationTest"/>
 </listAttribute>
 <stringAttribute key="working_dir" value="${workspace_loc:/zions-service-framework}"/>
 </launchConfiguration>
