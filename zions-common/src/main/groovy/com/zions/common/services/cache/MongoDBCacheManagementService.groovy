@@ -66,7 +66,7 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 		CacheItem ci = repository.findByProjectAndModuleAndKeyAndType(dbProject, cacheModule, id, type)
 		String json = new JsonBuilder(data).toPrettyString()
 		if (ci == null) {
-			ci = new CacheItem([project:dbProject, key:id, type:type, json: json])
+			ci = new CacheItem([project:dbProject, module: cacheModule, key:id, type:type, json: json])
 		} else {
 			ci.json = json;
 		}
@@ -143,7 +143,7 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 
 	@Override
 	public void deleteByType(String type) {
-		Long i = repository.deleteCacheItemByProjectAndModuleAndType(project, cacheModule, type)
+		Long i = repository.deleteCacheItemByProjectAndModuleAndType(dbProject, cacheModule, type)
 		
 	}
 
