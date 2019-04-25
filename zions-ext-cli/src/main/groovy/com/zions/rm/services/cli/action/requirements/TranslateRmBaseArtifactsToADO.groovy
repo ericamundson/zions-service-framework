@@ -256,11 +256,12 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 			else {
 				log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
-			}			
+			}
 		}
 		if (includes['phases'] != null) {
 			
 			log.info("Processing artifacts")
+			int phaseCount = 0
 			restartManagementService.processPhases { phase, items ->
 				log.debug("Entering phase loop")
 				if (phase == 'requirements') {
@@ -294,9 +295,10 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							}
 						//}
 					}
-					log.debug("about to flush clmanager")
+					log.debug("about to flush clmanager for phaseCount ${phaseCount}")
 					clManager.flush();
-					log.debug("finished flushing clmanager")
+					log.debug("finished flushing clmanager for phaseCount ${phaseCount}")
+					phaseCount++
 				}
 			}
 		}
