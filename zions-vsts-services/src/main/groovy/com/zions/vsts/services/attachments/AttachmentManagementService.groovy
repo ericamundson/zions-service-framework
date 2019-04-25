@@ -2,6 +2,7 @@ package com.zions.vsts.services.attachments
 
 import com.zions.common.services.attachments.IAttachments
 import com.zions.vsts.services.work.FileManagementService
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component
  * @author z091182
  *
  */
+@Slf4j
 @Component
 class AttachmentManagementService implements IAttachments {
 	
@@ -31,7 +33,12 @@ class AttachmentManagementService implements IAttachments {
 	 */
 	public def sendAttachment(def info) {
 		File file = info.file
+		if (file) {
 		return fileManagementService.uploadAttachment(tfsCollection, this.tfsProject, this.tfsProject, file)
+		} else {
+			log.debug("sendAttachment was provided with a null file, skipping upload attempt")
+			return null
+		}
 	}
 
 }

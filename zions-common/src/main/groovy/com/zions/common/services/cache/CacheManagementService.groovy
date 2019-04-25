@@ -59,8 +59,11 @@ class CacheManagementService implements ICacheManagementService {
 			}
 			return save
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			//added these logs to the error catch because there is something breaking in the upload
+			log.debug("Filenotfound exception for upload attempt, name: ${name} | id: ${id}")
 		} catch (IOException e) {
+			//somehow, upload step after this receives a blank file.
+			log.debug("IOException for upload attempt, name: ${name} | id: ${id}")
 			// TODO Auto-generated catch block
 		}
 	
@@ -94,10 +97,10 @@ class CacheManagementService implements ICacheManagementService {
 	 * @return
 	 */
 	def getFromCache(def id, String type) {
-		log.debug("Retrieving id from cache: ${id}")
+		log.trace("Retrieving id from cache: ${id}")
 		File cacheData = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}${type}.json");
 		if (cacheData.exists()) {
-			log.debug("Returning cache data id ${id} module ${cacheModule}")
+			log.trace("Returning cache data id ${id} module ${cacheModule}")
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)
 		}
@@ -113,10 +116,10 @@ class CacheManagementService implements ICacheManagementService {
 	 * @return
 	 */
 	def getFromCache(def id, String module, String type) {
-		log.debug("Retrieving id from cache: ${id}")
+		log.trace("Retrieving id from cache: ${id}")
 		File cacheData = new File("${this.cacheLocation}${File.separator}${module}${File.separator}${id}${File.separator}${type}.json");
 		if (cacheData.exists()) {
-			log.debug("Returning cache data with id ${id} module ${module}")
+			log.trace("Returning cache data with id ${id} module ${module}")
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)
 		}
