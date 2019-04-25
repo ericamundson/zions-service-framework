@@ -537,7 +537,9 @@ class ClmRequirementsManagementService {
 			links.add(info)
 		}
 		//autowired cache elementtype=linkinfo not functiong as expected, moving on
+		if (links.size() > 0) { 
 		cacheManagementService.saveToCache(links, id, 'LinkInfo')
+		}
 		return links
 	}
 	
