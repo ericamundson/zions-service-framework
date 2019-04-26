@@ -247,7 +247,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 		}
 		if (includes['flushQueries'] != null) {
+			log.info("Refreshing cache of main DNG query")
 			clmRequirementsManagementService.flushQueries(projectURI, oslcNs, oslcSelect, oslcWhere)
+			log.info("Finished refreshing cache of main DNG query, future operations should use this cache")
 		}
 		if (includes['whereused'] != null) {
 			log.info("fetching 'where used' lookup records")
@@ -270,8 +272,10 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					log.debug("Getting content of ${items.size()} items")
 					items.each { rmItem ->
 						String sid = "${rmItem.Requirement.identifier}"
+						//sometimes this is blank?  some kind of error!
+						if (sid) {
 						int id = Integer.parseInt(sid)
-						log.debug("items.each loop for id: ${sid}")
+						//log.debug("items.each loop for id: ${sid}")
 						String formatString = rmItem.Requirement.ArtifactFormat.@'rdf:resource'
 						String format = formatString.substring(formatString.lastIndexOf('#') + 1)
 						String about = "${rmItem.Requirement.@'rdf:about'}"
@@ -290,12 +294,17 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							if (reqChanges != null) {
 								reqChanges.each { key, val ->
 									clManager.add("${id}", val)
+									
 								}
-								log.debug("adding changes for requirement ${id}")
+								//log.debug("adding changes for requirement ${id}")
 							}
 						//}
+						} else {
+							log.debug("Had an error getting the ID of an item, skipping")
+							//todo: add an error to the checkpoint error log
+						}
 					}
-					log.debug("about to flush clmanager for phaseCount ${phaseCount}")
+					log.debug("have ${clManager.size()} changes, about to flush clmanager for phaseCount ${phaseCount}")
 					clManager.flush();
 					log.debug("finished flushing clmanager for phaseCount ${phaseCount}")
 					phaseCount++

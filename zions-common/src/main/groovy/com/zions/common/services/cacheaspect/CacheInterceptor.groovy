@@ -1,6 +1,9 @@
 package com.zions.common.services.cacheaspect
 
 import com.zions.common.services.cache.ICacheManagementService
+
+import groovy.util.logging.Slf4j
+
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
  * @author z091182
  *
  */
+@Slf4j
 trait CacheInterceptor implements Interceptor {
 	
 	
@@ -84,7 +88,7 @@ trait CacheInterceptor implements Interceptor {
 				doRun = true
 				return
 			}
-			
+			log.trace("beforeInvoke is returning cached data")
 			return cacheData.dataValue()
 		}
 	}
@@ -95,6 +99,7 @@ trait CacheInterceptor implements Interceptor {
 			if (!cacheData) {
 				CacheWData data = this.eTypeClass.newInstance()
 				data.doData(result)
+				log.trace("afterInvoke is saving serialized data to cache")
 				cacheManagementService.saveToCache(data, id, eType)
 			}
 		}

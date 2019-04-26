@@ -48,8 +48,14 @@ class ClmRequirementsFileManagementService {
 			if (cacheLink == null) { // Upload attachment to ADO
 				def file = cacheManagementService.saveBinaryAsAttachment(result.data, filename, itemData.getCacheID())
 				def attData = attachmentService.sendAttachment([file:file])
+				if (attData) {
 				attUrl = attData.url
 				itemData.adoFileInfo.add([file: file, comment: "Added attachment ${filename}", url:attUrl])
+				} else {
+					if (checkpointManagementService != null) {
+						checkpointManagementService.addLogentry("File upload attempt failed for Artifact ID: ${itemData.getIdentifier()} Filename: ${filename}")
+					}
+				}
 			}
 			else { // ADO attachment already exists in ADO.  Reference existing url.
 				def encoded = URLEncoder.encode("${cacheLink.attributes.name}", 'utf-8')
