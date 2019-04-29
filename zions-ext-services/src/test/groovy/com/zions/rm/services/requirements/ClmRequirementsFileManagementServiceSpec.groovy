@@ -68,7 +68,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 		when: 'Calling method under test cacheRequirementFile'
 		boolean success = true
 		try {
-			underTest.ensureRequirementFileAttachment(ritem,url,altFilename)
+			underTest.ensureRequirementFileAttachment(ritem,url)
 		} catch (e) {
 			success = false
 		}
