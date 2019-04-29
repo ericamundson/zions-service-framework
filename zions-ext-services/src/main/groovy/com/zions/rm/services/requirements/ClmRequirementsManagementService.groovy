@@ -3,6 +3,7 @@ package com.zions.rm.services.requirements
 
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
+import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.rest.IGenericRestClient
@@ -65,6 +66,7 @@ class ClmRequirementsManagementService {
 	
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
+	
 	
 	def queryForModules(String projectURI, String query) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?" + query;
@@ -137,21 +139,63 @@ class ClmRequirementsManagementService {
 		}
 		return modules
 	}
+
+	//This is copied from the ClmWorkItem and Test management services, but we may not need it
+	//as we are possibly handling things via BaseQueryHandler's getItems forcing it to saveToCache a new timestamp
+	//in scenarios where the previous cache does not exist
+	def flushQueries(String projectURI, String oslcNS, String oslcSelect, String oslcWhere) {
+		Date ts = new Date()
+		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+		int page = 0
+		def currentItems
+		new CacheInterceptor() {}.provideCaching(this, "${page}", ts, RequirementQueryData) {
+			currentItems = this.queryForArtifacts(projectURI, oslcNS, oslcSelect, oslcWhere)
+		}
+		while (true) {
+			String nextUrl = "${currentItems.ResponseInfo.nextPage.@'rdf:resource'}"
+			if (nextUrl == '') break
+			page++
+			new CacheInterceptor() {}.provideCaching(this, "${page}", ts, RequirementQueryData) {
+				currentItems = this.nextPage(nextUrl)
+			}
+		}
+		/*would like to do something more like:
+		 String nextUrl = geturl(projectUri blah blah)
+		 do {
+		 	new CacheInterceptor() {}.provideCaching(this, "${page}", ts, RequirementQueryData) {
+			currentItems = this.nextPage(nextUrl)
+			}
+			nextUrl = "${currentItems.ResponseInfo.nextPage.@'rdf:resource'}"
+			page++
+		} while (nextUrl != '')
+		
+	     * but I won't because I'm sure it would break something
+	     * just seems like repeated code all over 
+		 * 
+		 */
+	}
+
 	
+	//Since the specified values can be autowired, I really feel like maybe
+	//there should just be a getUri function and a queryForArtifacts(uri)
+	//that returns the below data.  Some of the code seems overly duplicated.
+	//not gonna mess with it though.
 	def queryForArtifacts(String projectURI, String oslcNS, String oslcSelect, String oslcWhere) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/views?oslc.query=&projectURL=" + this.rmGenericRestClient.clmUrl + "/rm/process/project-areas/" + projectURI + 
 					oslcNS + oslcSelect + oslcWhere.replace('zpath',this.rmGenericRestClient.clmUrl) + "&oslc.pageSize=${clmPageSize}";
 
 		uri = uri.replace('<','%3C').replace('>', '%3E')
-		log.debug("queryForArtifacts with uri: ${uri}")
+		log.debug("Live REST call: queryForArtifacts with uri: ${uri}")
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
 		if (result != null) {
+			log.debug("Live REST call queryForArtifacts finished, returning data")
 			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
 			return new XmlSlurper().parseText(xml)
 		}
 		else {
+			log.debug("Live REST call queryForArtifacts returned no data for uri: ${uri}")
 			return null;
 		}
 	}
@@ -176,24 +220,28 @@ class ClmRequirementsManagementService {
 	}
 	
 	public def nextPage(url) {
-		log.debug("Retrieving next page: ${url}")
+		log.debug("Live REST call: nextPage by url: ${url}")
 		def result = rmGenericRestClient.get(
 			uri: url,
 			headers: [Accept: 'application/rdf+xml', 'OSLC-Core-Version': '2.0'] );
 		if (result != null) {
+			log.debug("Live REST call for nextPage completed, returning data")
 			String xml = IOUtils.toString(result, StandardCharsets.UTF_8)
 			return new XmlSlurper().parseText(xml)
 		}
 		else {
+			log.debug("Live REST call for nextPage returned no data")
 			return null;
 		}
 	}
 	
+	//single giant query but should cache ok
 	def queryForWhereUsed() {
 		String uri = this.rmBGenericRestClient.clmUrl + "/rs/query/11126/dataservice?report=11099&limit=-1&basicAuthenticationEnabled=true"
 		def results = rmBGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/rdf+xml'] );
+		log.info("Fetched whereUsed info from JRS, now storing to cache")
 		if (results != null) {
 			def prevID = null
 			def whereUsedList = []
@@ -207,13 +255,16 @@ class ClmRequirementsManagementService {
 				
 				prevID = id
 			}
+			log.debug("Stored ${whereUsedList.size()} whereUsed records")
 			return true
 		}
 		else {
+			log.info("Null results from fetching whereUsed cache, something went wrong I wager")
 			return false
 		}
 	}
 	
+	//cool, hardcoded logic!
 	boolean shouldAddCollectionsToModule(String moduleType) {
 		return (moduleType == 'UI Spec' || moduleType == 'Functional Spec')
 	}
@@ -238,11 +289,11 @@ class ClmRequirementsManagementService {
 	}
 	
 	def getTextArtifact(def in_artifact, boolean includeCollections) {
-		log.debug("Fetching text artifact")
+		//log.debug("Fetching text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
 				headers: [Accept: 'application/xml'] );
-		log.debug("Fetching URI: ${in_artifact.getAbout()}")
+		//log.debug("Fetching URI: ${in_artifact.getAbout()}")
 		// Extract artifact attributes
 		result.children().each { artifactNode ->
 			parseTopLevelAttributes(artifactNode, in_artifact)
@@ -307,7 +358,7 @@ class ClmRequirementsManagementService {
 		return memberHrefs
 	}
 	def getNonTextArtifact(def in_artifact) {
-		log.debug("fetching non-text artifact")
+		//log.debug("fetching non-text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/resources?resourceURI="),
 				headers: [Accept: 'application/xml'] );
@@ -363,7 +414,7 @@ class ClmRequirementsManagementService {
 		String modified = artifactNode.collaboration.modified
 		String identifier = artifactNode.identifier
 		Date modifiedDate = Date.parse("yyyy-MM-dd'T'hh:mm:ss",modified)
-		log.debug("Attempting to find and cache links for ${identifier}")
+		//log.debug("Attempting to find and cache links for ${identifier}")
 		in_artifact.setLinks(getAllLinks(identifier, modifiedDate, artifactNode))
 	}
 	
@@ -487,7 +538,7 @@ class ClmRequirementsManagementService {
 			String rid = link.identifier //if the target is QM this will be a guid
 			String key = link.title //if we just want the string type of link it's .title, uri to type is .linkType
 			String module = link.relation.text().split('/')[3]
-			log.debug("Found link for Artifact ${id} to ${module} item ${rid}")
+			//log.debug("Found link for Artifact ${id} to ${module} item ${rid}")
 			if (module == 'qm') {
 				rid = link.alternative
 			}
@@ -495,7 +546,9 @@ class ClmRequirementsManagementService {
 			links.add(info)
 		}
 		//autowired cache elementtype=linkinfo not functiong as expected, moving on
+		if (links.size() > 0) { 
 		cacheManagementService.saveToCache(links, id, 'LinkInfo')
+		}
 		return links
 	}
 	

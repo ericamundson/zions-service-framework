@@ -3,6 +3,7 @@ package com.zions.common.services.cache
 import groovy.io.FileType
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component
  * @author z091182
  *
  */
+@Slf4j
 @Component
 class CacheManagementService implements ICacheManagementService {
 	
@@ -57,8 +59,11 @@ class CacheManagementService implements ICacheManagementService {
 			}
 			return save
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			//added these logs to the error catch because there is something breaking in the upload
+			log.debug("Filenotfound exception for upload attempt, name: ${name} | id: ${id}")
 		} catch (IOException e) {
+			//somehow, upload step after this receives a blank file.
+			log.debug("IOException for upload attempt, name: ${name} | id: ${id}")
 			// TODO Auto-generated catch block
 		}
 	
@@ -92,11 +97,14 @@ class CacheManagementService implements ICacheManagementService {
 	 * @return
 	 */
 	def getFromCache(def id, String type) {
+		log.trace("Retrieving id from cache: ${id}")
 		File cacheData = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}${type}.json");
 		if (cacheData.exists()) {
+			log.trace("Returning cache data id ${id} module ${cacheModule}")
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)
 		}
+		log.debug("Did not find id: ${id}")
 		return null
 
 	}
@@ -108,8 +116,10 @@ class CacheManagementService implements ICacheManagementService {
 	 * @return
 	 */
 	def getFromCache(def id, String module, String type) {
+		log.trace("Retrieving id from cache: ${id}")
 		File cacheData = new File("${this.cacheLocation}${File.separator}${module}${File.separator}${id}${File.separator}${type}.json");
 		if (cacheData.exists()) {
+			log.trace("Returning cache data with id ${id} module ${module}")
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)
 		}

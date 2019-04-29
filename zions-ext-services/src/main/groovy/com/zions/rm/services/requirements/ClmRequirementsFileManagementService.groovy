@@ -27,7 +27,7 @@ class ClmRequirementsFileManagementService {
 		// TODO Auto-generated constructor stub
 	}
 
-	public def ensureRequirementFileAttachment(def itemData, String url, String altFilename) {
+	public def ensureRequirementFileAttachment(def itemData, String url) {
 		def result = clmRequirementsManagementService.getContent(url)
 		String contentDisp = "${result.headers.'Content-Disposition'}"
 		String filename = null
@@ -35,7 +35,7 @@ class ClmRequirementsFileManagementService {
 			filename = contentDisp.substring(contentDisp.indexOf('filename=')+10,contentDisp.indexOf('";'))
 		}
 		else {
-			filename = altFilename
+			filename = 'missing_filename'
 		}
 
 		String attUrl
@@ -48,8 +48,14 @@ class ClmRequirementsFileManagementService {
 			if (cacheLink == null) { // Upload attachment to ADO
 				def file = cacheManagementService.saveBinaryAsAttachment(result.data, filename, itemData.getCacheID())
 				def attData = attachmentService.sendAttachment([file:file])
+				if (attData) {
 				attUrl = attData.url
 				itemData.adoFileInfo.add([file: file, comment: "Added attachment ${filename}", url:attUrl])
+				} else {
+					if (checkpointManagementService != null) {
+						checkpointManagementService.addLogentry("File upload attempt failed for Artifact ID: ${itemData.getIdentifier()} Filename: ${filename}")
+					}
+				}
 			}
 			else { // ADO attachment already exists in ADO.  Reference existing url.
 				def encoded = URLEncoder.encode("${cacheLink.attributes.name}", 'utf-8')
