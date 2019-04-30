@@ -98,7 +98,7 @@ class MongoDBCacheManagementServiceTestConfig {
 		return new EmbeddedMongoBuilder()
 			.version('3.2.16')
 			//.tempDir('build/tmp')
-			.downloadPath('file:./../zions-common-data/mongodb/')
+			.downloadPath('file:../zions-common-data/mongodb/')
 			//.artifactStorePath('./build/embeddeddb')
 			.bindIp("localhost")
 			.port(12345)
