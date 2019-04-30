@@ -201,7 +201,7 @@ public class EmbeddedMongoBuilder {
 					.useCache(false)
 	                .download(new DownloadConfigBuilder()
 	                        .defaultsForCommand(Command.MongoD)
-							.artifactStorePath(artifactStorePath)
+							//.artifactStorePath(artifactStorePath)
 							.downloadPath(downloadPath)
 	                        .progressListener(new Slf4jProgressListener(logger))
 	                        .build())
