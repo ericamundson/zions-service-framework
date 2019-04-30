@@ -17,6 +17,7 @@ import groovyx.net.http.ContentType
 import groovy.transform.Canonical
 import groovy.util.logging.Slf4j
 import java.nio.charset.StandardCharsets
+import java.text.Normalizer
 import org.apache.commons.io.IOUtils
 
 /**
@@ -426,6 +427,20 @@ class ClmRequirementsManagementService {
 		//amending this to deal with null titles in addition to blanks
 		if (!title) {
 			title= "<blank title>"
+		}
+		
+		//amending this to deal with invalid ascii
+		String identifier = "${artifactNode.identifier}"
+		
+		if (identifier in ['7382', '7309', '7308','7301','7362', '7563','7566','7803','7748','7753','7766','7808','7670','7757']) {
+			//title == "BAD TITLE"
+			log.debug("Id: ${identifier} prenormalized title: ${title}")
+		}
+		
+		title = Normalizer.normalize(title,Normalizer.Form.NFKD)
+		title = title.replaceAll("[^\\p{ASCII}]", "") //ascii titles only
+		if (identifier in ['7382', '7309', '7308','7301','7362', '7563','7566','7803','7748','7753','7766','7808','7670','7757']) {
+			log.debug("Id: ${identifier} has normalized title: ${title}")
 		}
 		in_artifact.setTitle(title)
 		
