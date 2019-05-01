@@ -17,6 +17,7 @@ import groovyx.net.http.ContentType
 import groovy.transform.Canonical
 import groovy.util.logging.Slf4j
 import java.nio.charset.StandardCharsets
+import java.text.Normalizer
 import org.apache.commons.io.IOUtils
 
 /**
@@ -404,7 +405,7 @@ class ClmRequirementsManagementService {
 	}
 	private def getCollectionArtifacts(def in_artifact, def memberHrefs) {
 		memberHrefs.each { memberHref ->
-			def artifact = new ClmModuleElement(null,in_artifact.getDepth(),null,'false',memberHref)
+			def artifact = new ClmModuleElement(null,in_artifact.getDepth()+1,null,'false',memberHref)
 
 			in_artifact.collectionArtifacts << getTextArtifact(artifact,false)
 		}
@@ -427,6 +428,11 @@ class ClmRequirementsManagementService {
 		if (!title) {
 			title= "<blank title>"
 		}
+		
+		//amending this to deal with invalid ascii
+		String identifier = "${artifactNode.identifier}"
+		title = Normalizer.normalize(title,Normalizer.Form.NFKD)
+		title = title.replaceAll("[^\\p{ASCII}]", "") //ascii titles only
 		in_artifact.setTitle(title)
 		
 		if (in_artifact.getBaseArtifactURI() == null || in_artifact.getBaseArtifactURI() == ''){

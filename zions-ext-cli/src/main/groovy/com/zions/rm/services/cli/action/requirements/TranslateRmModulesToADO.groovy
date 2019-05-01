@@ -246,6 +246,7 @@ class TranslateRmModulesToADO implements CliAction {
 							
 				// Iterate through all module elements and add them to changeList
 				def ubound = module.orderedArtifacts.size() - 1
+				def lastSection = 0
 				0.upto(ubound, {
 	
 					// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
@@ -260,11 +261,8 @@ class TranslateRmModulesToADO implements CliAction {
 					else if (module.orderedArtifacts[it].getIsHeading()) {
 						module.orderedArtifacts[it].setDescription('') // If simple heading, remove duplicate description
 					}
-					else if (it > 0 && module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[it-1].getDepth()){ 
-						// For all other content, increment the depth if not already incremented so as to preserve outline numbering from DOORS
-						module.orderedArtifacts[it].incrementDepth(1)
-					}
-					if (!module.orderedArtifacts[it].getIsDuplicate()) {  // Only store first occurrence of an artifact in the module
+					// Only store first occurrence of an artifact in the module
+					if (!module.orderedArtifacts[it].getIsDuplicate()) {  
 						changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
 						aid = module.orderedArtifacts[it].getCacheID()
 						changes.each { key, val ->
@@ -277,6 +275,17 @@ class TranslateRmModulesToADO implements CliAction {
 					else {
 						log.info("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
 					}
+					// Adjust depth to preserve outline numbering
+					if (lastSection > 0 && module.orderedArtifacts[it].getTfsWorkitemType() != 'Section' &&
+						module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[lastSection].getDepth()){ 
+						// For all requirement content under a section, increment the depth if not already incremented so as to preserve outline numbering from DOORS
+						module.orderedArtifacts[it].incrementDepth(1)
+					}					
+					// save index of last section
+					if (module.orderedArtifacts[it].getTfsWorkitemType() == 'Section') {
+						lastSection = it
+					}
+
 				})
 				
 	
