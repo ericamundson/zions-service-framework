@@ -28,9 +28,16 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class RestartManagementService implements IRestartManagementService {
 	
+	/**
+	 * There should be a query handler per phase that can be executed.
+	 * Lookup for handler by name:  "${phase}QueryHandler" which should match class name
+	 */
 	@Autowired(required=false)
 	private Map<String, IQueryHandler> queryHandlers
 	
+	/**
+	 * The list of phases to be run by command line action.
+	 */
 	@Value('${include.phases:}')
 	public String includePhases
 	
@@ -41,6 +48,16 @@ class RestartManagementService implements IRestartManagementService {
 	@Autowired
 	ICheckpointManagementService checkpointManagementService
 	
+	/**
+	 * selected.checkpoint Spring boot property has the following values
+	 *  <ul>
+	 *  <li>last - used to get last checkpoint page run</li>
+	 *  <li>priorToLogEntries - If there are issues with any batch of work items log entries will get
+	 *  added to checkpoint.  This checkpoint selection with checkpoint to any batch issues.</li>
+	 *  <li> A specific checkpoint key can be selected.  E.G. 1-checkpoint</li>
+	 *  <li>update - used to run against only source items that have updated since time of checkpoint</li>
+	 *  </ul>
+	 */
 	@Value('${selected.checkpoint:none}')
 	public String selectedCheckpoint
 	

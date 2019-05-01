@@ -56,7 +56,7 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 
 		when: 'calling of method under test (data)'
 		def keyname = underTest.saveToCache( data ,'1',ICacheManagementService.PLAN_DATA)
-		def testplan = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
+		def testplan = underTest.getFromCache( '1', 'CCM', ICacheManagementService.PLAN_DATA)
 
 		then: ''
 		testplan != null

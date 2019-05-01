@@ -48,6 +48,10 @@ import com.zions.qm.services.test.ClmTestAttachmentManagementService
 import com.zions.qm.services.test.ClmTestItemManagementService
 import com.zions.qm.services.test.ClmTestManagementService
 import com.zions.qm.services.test.TestMappingManagementService
+import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
+import com.zions.rm.services.requirements.ClmRequirementsItemManagementService
+import com.zions.rm.services.requirements.ClmRequirementsManagementService
+import com.zions.rm.services.requirements.RequirementsMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.test.TestManagementService
@@ -116,17 +120,13 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 	
 
 	def 'CCM to QM item linking'() {
-		given: 'Setup of RQM to ADO test elements'
+		given: 'Setup of RQM to ADO test elements with two test plans and 4 test case each'
 		setupRQMToADO()
 
 
-		and: 'Setup of CCM to ADO work item elements'
-		setupCCMToADO()
-		
-		and: 'Setup of ccm link data'
-		setupLinkData()
-
-		
+		and: 'Setup of CCM to ADO work item elements with link data with 4 bugs that will link to test results'
+		setupCCMToADOForQMLinks()
+				
 		when: 'call RQM data,links,execution phase'
 		def appArgs = new DefaultApplicationArguments(loadQMArgs())
 		//restartManagementService.selectedCheckpoint = 'last'
@@ -149,7 +149,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 			}
 		}
 
-		then: 'validate ccm data'
+		then: 'validate correct number of associated bugs to test results'
 		bugCount == 4
 		
 		cleanup: 'Remove all ADO changes'
@@ -158,6 +158,13 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.AreaPath] = 'IntegrationTests'"
 		cacheManagementService.cacheModule = 'CCM'
 		workManagementService.clean('', tfsProject, query)
+	}
+	
+	def 'CCM to RM item linking'()
+	{
+		given: 'Setup of RM to ADO requirements artifacts with 8 requirements artifacts'
+		
+		and: 'Setup of CCM to ADO work items with links to the 8 requirements artifacts'
 	}
 	
 	def setupRQMToADO()
@@ -231,7 +238,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 
 	}
 	
-	def setupCCMToADO()
+	def setupCCMToADOForQMLinks()
 	{
 		def wis
 	
@@ -361,13 +368,30 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		return args
 	}
 
+	private String[] loadRMArgs() {
+		/*
+		--include.update=phases --include.phases=requirements --mr.url=http://utmvti0190:8026  --clm.url=https://clm.cs.zionsbank.com --clm.user=svc-rtcmigration --clm.password=t35T1ng411rTcM!gR@t10n  --clm.pageSize=100 --tfs.url=https://dev.azure.com --tfs.collection=eto-dev --tfs.user=robert.huet@zionsbancorp.com  --clm.projectAreaUri=_klNSEBNGEeSmasotILOx6w --rm.mapping.file=./CoreRRMMapping.xml --tfs.project=FutureCore --process.name=ZionsAgile --include.update=data --oslc.namespaces="&oslc.prefix=dcterms=<http://purl.org/dc/terms/>&oslc.prefix=nav=<http://jazz.net/ns/rm/navigation%23>&oslc.prefix=rdf=<http://www.w3.org/1999/02/22-rdf-syntax-ns%23>&oslc.prefix=rmTypes=<http://www.ibm.com/xmlns/rdm/types/>&oslc.prefix=rm=<http://www.ibm.com/xmlns/rdm/rdf/>" --oslc.select="&oslc.select=dcterms:modified,dcterms:identifier,rmTypes:ArtifactFormat" --oslc.where="&oslc.where=nav:parent=<https://clm.cs.zionsbank.com/rm/folders/_QMhwgVsGEemdeebbT-QcUQ>" --rm.filter=allFilter --tfs.areapath=FutureCore\Requirements\R3 --tfs.projectUri={b95a29af-917f-4762-b4bc-c716e7a33b18} --tfs.projectFolder=FutureCore --tfs.isDefaultTeam=true --tfs.teamGuid=dbe48e2d-5113-471a-976d-eb8c1dffa7c5 --tfs.collectionId=1bec1897-29a0-44d0-80a8-670c5ae5ef4a
+		 */
+		String[] args = [
+			'--ccm.template.dir=none',
+			'--include.update=phases',
+			'--include.phases=requirements',
+			'--meta=meta',
+			'--tfs.areapath=IntegrationTests\\RM',
+			'--tfs.projectUri=none',
+			'--clm.projectArea=none',
+			'--rm.mapping.file=./src/integration-test/resources/testdata/CoreRRMMapping.xml',
+			'--tfs.project=IntegrationTests'
+		]
+		return args
+	}
 }
 
 @TestConfiguration
 @Profile("integration-test")
 @ComponentScan(["com.zions.vsts.services", "com.zions.common.services.test", "com.zions.common.services.restart", "com.zions.qm.services.test.handlers", "com.zions.qm.services.cli.action.test.query", "com.zions.clm.services.cli.action.work.query", "com.zions.clm.services.cli.action.integration", "com.zions.common.services.cacheaspect"])
 @PropertySource("classpath:integration-test.properties")
-//@EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
+@EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 class IntraModuleLinkIntegrationSpecConfig {
 	def mockFactory = new DetachedMockFactory()
 	
@@ -470,6 +494,31 @@ class IntraModuleLinkIntegrationSpecConfig {
 	TestMappingManagementService testMappingManagementService() {
 		return new TestMappingManagementService()
 	}
+	//End QM
+	
+	//Start RM beans
+	@Bean
+	ClmRequirementsManagementService clmRequirementsManagementService()
+	{
+		return mockFactory.Stub(ClmRequirementsManagementService)
+	}
+	
+	@Bean
+	RequirementsMappingManagementService requirementsMappingManagementService()
+	{
+		return new RequirementsMappingManagementService()
+	}
+	
+	@Bean
+	ClmRequirementsItemManagementService clmRequirementsItemManagementService() {
+		return new ClmRequirementsItemManagementService()
+	}
+	
+	@Bean
+	ClmRequirementsFileManagementService clmRequirementsFileManagementService() {
+		return new ClmRequirementsFileManagementService()
+	}
+	//End RM beans
 
 	
 	@Bean
@@ -497,27 +546,31 @@ class IntraModuleLinkIntegrationSpecConfig {
 	CommandManagementService commandManagementService() {
 		return new CommandManagementService();
 	}
+	//End  VSTS
 
 	
-//	public MongoClient mongoClient() throws Exception {
-//		
-//		return new EmbeddedMongoBuilder()
-//			.version('3.2.16')
-//			.downloadPath('file:./../zions-common-data/mongodb/')
-//			.bindIp("127.0.0.1")
-//			.port(12345)
-//			.build();
-//	}
-//
-//	
-//	public @Bean MongoTemplate mongoTemplate() throws Exception {
-//		return new MongoTemplate(mongoClient(), getDatabaseName());
-//	}
-//
-//	protected String getDatabaseName() {
-//		// TODO Auto-generated method stub
-//		return 'coredev';
-//	}
+	
+	//Cache managment beans
+	public MongoClient mongoClient() throws Exception {
+		
+		return new EmbeddedMongoBuilder()
+			.version('3.2.16')
+			//.tempDir('mongodb')
+			.installPath('../zions-common-data/mongodb/win32/mongodb-win32-x86_64-3.2.16/bin')
+			.bindIp("localhost")
+			.port(12345)
+			.build();
+	}
+
+	
+	public @Bean MongoTemplate mongoTemplate() throws Exception {
+		return new MongoTemplate(mongoClient(), getDatabaseName());
+	}
+
+	protected String getDatabaseName() {
+		// TODO Auto-generated method stub
+		return 'coredev';
+	}
 	
 	@Bean
 	IRestartManagementService restartManagementService() {
@@ -527,7 +580,7 @@ class IntraModuleLinkIntegrationSpecConfig {
 	
 	@Bean
 	ICacheManagementService cacheManagementService() {
-		return new CacheManagementService()
+		return new MongoDBCacheManagementService()
 	}
 }
 
