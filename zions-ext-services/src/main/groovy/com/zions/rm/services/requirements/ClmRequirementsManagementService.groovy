@@ -405,7 +405,7 @@ class ClmRequirementsManagementService {
 	}
 	private def getCollectionArtifacts(def in_artifact, def memberHrefs) {
 		memberHrefs.each { memberHref ->
-			def artifact = new ClmModuleElement(null,in_artifact.getDepth(),null,'false',memberHref)
+			def artifact = new ClmModuleElement(null,in_artifact.getDepth()+1,null,'false',memberHref)
 
 			in_artifact.collectionArtifacts << getTextArtifact(artifact,false)
 		}
