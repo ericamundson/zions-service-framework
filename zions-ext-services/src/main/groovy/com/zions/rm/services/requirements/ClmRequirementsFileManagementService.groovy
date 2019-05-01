@@ -52,9 +52,10 @@ class ClmRequirementsFileManagementService {
 				attUrl = attData.url
 				itemData.adoFileInfo.add([file: file, comment: "Added attachment ${filename}", url:attUrl])
 				} else {
-					if (checkpointManagementService != null) {
-						checkpointManagementService.addLogentry("File upload attempt failed for Artifact ID: ${itemData.getIdentifier()} Filename: ${filename}")
-					}
+//					if (checkpointManagementService != null) {
+//						checkpointManagementService.addLogentry("File upload attempt failed for Artifact ID: ${itemData.getIdentifier()} Filename: ${filename}")
+//					}
+					return null
 				}
 			}
 			else { // ADO attachment already exists in ADO.  Reference existing url.
