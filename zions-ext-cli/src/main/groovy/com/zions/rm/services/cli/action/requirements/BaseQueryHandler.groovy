@@ -60,10 +60,14 @@ class BaseQueryHandler implements IQueryHandler {
 		page=0
 		if (cp) {
 			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
-			
-		}
+			log.debug("Timestamp from cachepage: ${currentTimestamp}")
+		} 
+//		else {
+//			cacheManagementService.saveToCache([timestamp: currentTimestamp.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+//			log.debug("Creating first QueryStart cache for RM")
+//		}
 		String pageId = "${page}"
-		
+		log.debug("getItems for page ${pageId} at timestamp ${currentTimestamp}")
 		new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, RequirementQueryData) {
 			currentItems = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
 		}
@@ -92,11 +96,11 @@ class BaseQueryHandler implements IQueryHandler {
 		if (nextUrl == null) return null
 		page++
 		String pageId = "${page}"
-		log.debug("Retrieving RM page: ${page}")
+		log.debug("Retrieving next RM page: ${page}")
 		new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, RequirementQueryData) {
 			currentItems = clmRequirementsManagementService.nextPage(nextUrl)
 		}
-		log.debug("Returning RM page: ${page}")
+		log.debug("Returning next RM page: ${page}")
 		return currentItems
 	}
 

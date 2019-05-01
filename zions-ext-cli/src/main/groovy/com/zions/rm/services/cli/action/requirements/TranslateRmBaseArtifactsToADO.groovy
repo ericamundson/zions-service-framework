@@ -234,6 +234,8 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				}
 				log.info("Refreshing cache for ${changeList.size()} artifacts.")
 				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
+				//I am not sure how relevant the below set of work is
+				//that would be part of flushQueries, no?
 				String nextUrl = "${artifacts.ResponseInfo.nextPage.@'rdf:resource'}"
 				if (nextUrl == '') break
 				page++
@@ -244,6 +246,11 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				}
 			}
 		}
+		if (includes['flushQueries'] != null) {
+			log.info("Refreshing cache of main DNG query")
+			clmRequirementsManagementService.flushQueries(projectURI, oslcNs, oslcSelect, oslcWhere)
+			log.info("Finished refreshing cache of main DNG query, future operations should use this cache")
+		}
 		if (includes['whereused'] != null) {
 			log.info("fetching 'where used' lookup records")
 			if (clmRequirementsManagementService.queryForWhereUsed()) {
@@ -251,11 +258,12 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 			else {
 				log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
-			}			
+			}
 		}
 		if (includes['phases'] != null) {
 			
 			log.info("Processing artifacts")
+			int phaseCount = 0
 			restartManagementService.processPhases { phase, items ->
 				log.debug("Entering phase loop")
 				if (phase == 'requirements') {
@@ -264,6 +272,8 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					log.debug("Getting content of ${items.size()} items")
 					items.each { rmItem ->
 						String sid = "${rmItem.Requirement.identifier}"
+						//sometimes this is blank?  some kind of error!
+						if (sid) {
 						int id = Integer.parseInt(sid)
 						//log.debug("items.each loop for id: ${sid}")
 						String formatString = rmItem.Requirement.ArtifactFormat.@'rdf:resource'
@@ -284,14 +294,20 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							if (reqChanges != null) {
 								reqChanges.each { key, val ->
 									clManager.add("${id}", val)
+									
 								}
-								//log.print "adding changes for requirement ${id}"
+								//log.debug("adding changes for requirement ${id}")
 							}
 						//}
+						} else {
+							log.debug("Had an error getting the ID of an item, skipping")
+							//todo: add an error to the checkpoint error log
+						}
 					}
-					log.debug("about to flush clmanager")
+					log.debug("have ${clManager.size()} changes, about to flush clmanager for phaseCount ${phaseCount}")
 					clManager.flush();
-					log.debug("finished flushing clmanager")
+					log.debug("finished flushing clmanager for phaseCount ${phaseCount}")
+					phaseCount++
 				}
 			}
 		}

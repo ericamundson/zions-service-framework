@@ -14,6 +14,9 @@ class ReleaseHandler extends RmBaseAttributeHandler {
 	@Override
 	public Object formatValue(Object val, Object itemData) {
 		// TODO Auto-generated method stub
+		if (itemData.getID() == '1570366') {
+			def i = 0
+		}
 		if (val == 'Not Assigned') {
 			return null
 		}
@@ -26,7 +29,7 @@ class ReleaseHandler extends RmBaseAttributeHandler {
 				val = 'R2'
 			}
 			else if (val == 'Deposits') {
-				val == 'R3'
+				val = 'R3'
 			}
 			return val
 		}

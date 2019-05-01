@@ -39,4 +39,8 @@ class ChangeListManager {
 		idMap = [:]
 		count = 0
 	}
+	
+	def size() {
+		return count
+	}
 }

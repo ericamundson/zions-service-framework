@@ -53,9 +53,12 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		String outHtml
 		if (itemData.getFormat() == 'WrapperResource') {
 			// For wrapper resource (uploaded file), we need to create our own description with hyperlink to attachment
-			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, itemData.getFileHref(),'')
-
-			outHtml = '<div><a href=' + fileItem.url + '&download=true>Uploaded Attachment</a></div>'
+			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, itemData.getFileHref())
+			if (fileItem) {
+			outHtml = "<div><a href='" + fileItem.url + "&amp;download=true'>Uploaded Attachment: ${fileItem.fileName}</a></div>"
+			} else {
+				outHtml = "<div>Uploading Attachment from CLM failed, please see original work item</div>"
+			}
 		}
 		else {
 			// strip out all namespace stuff from html
@@ -65,7 +68,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 
 			outHtml = processHtml(description, sId, itemData)
 		}
-		return 	outHtml
+		return 	outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>')
 	}
 	
 	def processHtml(String html, String sId, def itemData) {
@@ -74,20 +77,18 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			htmlData = new XmlSlurper().parseText(html)
 		}
 		catch (Exception e) {
-			log.error("Error parsing description for ID &sId: ${e.getMessage()}")
+			log.error("Error parsing description for ID $sId: ${e.getMessage()}")
 			return null
 		}
-		// First move all embedded images to ADO
+		// First move all embedded images or embedded attachments to ADO
+		def wrapperRootNode
 		def imgs = htmlData.'**'.findAll { p ->
 			String src = p.@src
 			"${p.name()}" == 'img' && "${src}".startsWith(this.clmUrl)
 		}
 		imgs.each { img ->
 			String url = img.@src
-			String altFilename = "${img.@alt}".replace(' WrapperResource','') + '.jpeg'
-			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, url, altFilename)
-			img.@src = fileItem.url
-			
+			def fileItem
 			// If the embedded image was due to an embedded wrapper resource artifact, we want to get the original document attachment
 			int wrapNdx = url.indexOf('resourceRevisionURL')
 			if (wrapNdx > 0) {
@@ -95,13 +96,37 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 				def about = clmUrl + '/rm/resources/' + url.substring(wrapNdx+74)
 				def wrappedResourceArtifact = new ClmArtifact('','',about)
 				wrappedResourceArtifact = clmRequirementsManagementService.getNonTextArtifact(wrappedResourceArtifact)
-				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, wrappedResourceArtifact.getFileHref(),'')
+				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, wrappedResourceArtifact.getFileHref())
+				
+				// Now delete image node
+				String attachmentLink = "<div><a href='" + fileItem.url + "&amp;download=true'>Uploaded Attachment: ${fileItem.fileName}</a></div>"
+				if (wrapperRootNode) {
+					wrapperRootNode.appendNode(new XmlSlurper().parseText(attachmentLink))
+				}
+				else {
+					wrapperRootNode = new XmlSlurper().parseText(attachmentLink)
+				}
 			}
+			else {
+				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, url)
+				if(fileItem) {
+				img.@src = fileItem.url		
+				} else {
+					log.error("Error uploading attachment for ID ${sId}")
+				}
+			}
+			
+
 		}
-		
-		// Next process all tables, adding border info to <td> tags
-		addBorderStyle('th', htmlData)
-		addBorderStyle('td', htmlData)
+		// If there are any embedded documents, we just return the wrapper document links
+		if (wrapperRootNode) {
+			htmlData = wrapperRootNode
+		}	
+		else {	
+			// Next process all tables, adding border info to <td> tags
+			addBorderStyle('th', htmlData)
+			addBorderStyle('td', htmlData)
+		}
 
 		// Return html as string, but remove <?xml tag as it causes issues
 		return XmlUtil.asString(htmlData).replace('<?xml version="1.0" encoding="UTF-8"?>\n', '')
