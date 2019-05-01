@@ -54,9 +54,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		if (itemData.getFormat() == 'WrapperResource') {
 			// For wrapper resource (uploaded file), we need to create our own description with hyperlink to attachment
 			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, itemData.getFileHref())
-
+			if (fileItem) {
 			outHtml = "<div><a href='" + fileItem.url + "&amp;download=true'>Uploaded Attachment: ${fileItem.fileName}</a></div>"
-
+			} else {
+				outHtml = "<div>Uploading Attachment from CLM failed, please see original work item</div>"
+			}
 		}
 		else {
 			// strip out all namespace stuff from html
@@ -107,7 +109,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			}
 			else {
 				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, url)
-				img.@src = fileItem.url			
+				if(fileItem) {
+				img.@src = fileItem.url		
+				} else {
+					log.error("Error uploading attachment for ID ${sId}")
+				}
 			}
 			
 
