@@ -533,7 +533,7 @@ class ClmRequirementsManagementService {
 	//what we need: artifact id and type, then the link set to look through and get all links
 	//if how we get the type varies we can pass that in from the parent I suppose
 	//if we use datemodified as a parameter as well we can use that to set the cache date
-	@Cache(elementType = LinkInfo)
+	@Cache(elementType=LinkInfo)
 	public List<LinkInfo> getAllLinks(String id, Date timeStamp, def artifactNode) {
 		List<LinkInfo> links = new ArrayList<LinkInfo>()
 //		String modified = rmItemData.Requirement.modified
@@ -552,9 +552,9 @@ class ClmRequirementsManagementService {
 			links.add(info)
 		}
 		//autowired cache elementtype=linkinfo not functiong as expected, moving on
-		if (links.size() > 0) { 
-		cacheManagementService.saveToCache(links, id, 'LinkInfo')
-		}
+//		if (links.size() > 0) { 
+//		cacheManagementService.saveToCache(links, id, 'LinkInfo')
+//		}
 		return links
 	}
 	

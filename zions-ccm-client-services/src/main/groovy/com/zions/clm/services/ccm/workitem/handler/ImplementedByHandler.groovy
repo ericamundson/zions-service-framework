@@ -19,8 +19,8 @@ import com.zions.common.services.work.handler.IFieldHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
-class ImplementedByHandler implements IFieldHandler {
+@Component('CcmImplementedByHandler')
+class ImplementedByHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

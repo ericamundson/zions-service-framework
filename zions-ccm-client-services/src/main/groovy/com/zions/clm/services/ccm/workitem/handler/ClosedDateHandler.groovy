@@ -17,8 +17,8 @@ import com.zions.common.services.work.handler.IFieldHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
-class ClosedDateHandler implements IFieldHandler {
+@Component('CcmClosedDateHandler')
+class ClosedDateHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

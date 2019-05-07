@@ -4,7 +4,7 @@ import com.zions.qm.services.test.ClmTestManagementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
+@Component('QmStateHandler')
 class StateHandler extends QmBaseAttributeHandler {
 	@Autowired
 	ClmTestManagementService clmTestManagementService

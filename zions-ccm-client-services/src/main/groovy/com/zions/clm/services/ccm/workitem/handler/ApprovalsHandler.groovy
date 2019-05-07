@@ -39,9 +39,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.apache.commons.lang.StringEscapeUtils;
 
-@Component
+@Component('CcmApprovalsHandler')
 @Slf4j
-class ApprovalsHandler implements IFieldHandler {
+class ApprovalsHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired
