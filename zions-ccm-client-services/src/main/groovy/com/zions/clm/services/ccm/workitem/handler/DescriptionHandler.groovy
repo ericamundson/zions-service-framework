@@ -32,9 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
-@Component
+@Component('CcmDescriptionHandler')
 @Slf4j
-class DescriptionHandler implements IFieldHandler {
+class DescriptionHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	

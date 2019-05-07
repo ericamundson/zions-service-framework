@@ -7,24 +7,30 @@ import java.lang.reflect.Method
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
+import org.aspectj.lang.annotation.Pointcut
 import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cglib.core.Signature
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.stereotype.Component
 
 @Aspect
 @Configuration
+@EnableAspectJAutoProxy
 class CacheAspect {
 	
 	public CacheAspect() {
-		//println 'Cache aspect running'
+		println 'Cache aspect running'
 	}
 	
 	@Autowired
 	ICacheManagementService cacheManagementService
+	
+	@Pointcut('@annotation(com.zions.common.services.cacheaspect.Cache)')
+	public void cachePointcutDefinition() {}
 
-	@Around('@annotation(com.zions.common.services.cacheaspect.Cache)')
+	@Around('cachePointcutDefinition()')
 	public def around(ProceedingJoinPoint joinPoint) throws Throwable {
 		def args = joinPoint.args
 		def obj = joinPoint.this

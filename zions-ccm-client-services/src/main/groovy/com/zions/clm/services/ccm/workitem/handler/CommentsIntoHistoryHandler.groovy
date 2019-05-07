@@ -31,9 +31,9 @@ import groovyx.net.http.ContentType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
+@Component('CcmCommentsIntoHistoryHandler')
 @Slf4j
-class CommentsIntoHistoryHandler implements IFieldHandler {
+class CommentsIntoHistoryHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

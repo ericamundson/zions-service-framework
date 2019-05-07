@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 import com.zions.qm.services.test.ClmTestManagementService
 import groovy.xml.MarkupBuilder
 
-@Component
+@Component('QmTestCaseDescriptionHandler')
 class TestCaseDescriptionHandler extends QmBaseAttributeHandler {
 	@Autowired
 	ClmTestManagementService clmTestManagementService

@@ -3,8 +3,8 @@ package com.zions.qm.services.test.handlers
 import com.zions.common.services.work.handler.IFieldHandler
 import org.springframework.stereotype.Component
 
-@Component
-class PlanBlankHandler implements IFieldHandler {
+@Component('QmPlanBlankHandler')
+class PlanBlankHandler extends QmBaseAttributeHandler {
 	
 	public PlanBlankHandler() {}
 
@@ -40,6 +40,18 @@ class PlanBlankHandler implements IFieldHandler {
 			}
 		}
 		return retVal;
+	}
+
+	@Override
+	public String getQmFieldName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object formatValue(Object val, Object itemData) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

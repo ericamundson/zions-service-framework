@@ -29,9 +29,9 @@ import groovy.xml.XmlUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
+@Component('CcmBlankHandler')
 @Slf4j
-class BlankHandler implements IFieldHandler {
+class BlankHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

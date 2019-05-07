@@ -33,7 +33,7 @@ class RestartManagementService implements IRestartManagementService {
 	 * Lookup for handler by name:  "${phase}QueryHandler" which should match class name
 	 */
 	@Autowired(required=false)
-	private Map<String, IQueryHandler> queryHandlers
+	Map<String, IQueryHandler> queryHandlers
 	
 	/**
 	 * The list of phases to be run by command line action.

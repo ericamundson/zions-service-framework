@@ -8,6 +8,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
+import com.zions.rm.services.requirements.handlers.RmBaseAttributeHandler
 import com.zions.rm.services.requirements.RequirementQueryData
 
 import groovy.json.JsonSlurper
@@ -52,8 +53,8 @@ class ClmRequirementsItemManagementService {
 	@Value('${tfs.url}')
 	String tfsUrl
 
-	@Autowired
-	private Map<String, IFieldHandler> fieldMap;
+	@Autowired(required=false)
+	Map<String, RmBaseAttributeHandler> fieldMap;
 	
 	@Autowired
 	RequirementsMappingManagementService rmMappingManagementService

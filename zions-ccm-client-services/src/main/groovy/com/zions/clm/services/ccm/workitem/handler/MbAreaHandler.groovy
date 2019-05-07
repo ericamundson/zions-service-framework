@@ -29,9 +29,9 @@ import groovy.xml.XmlUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
+@Component('CcmMbAreaHandler')
 @Slf4j
-class MbAreaHandler implements IFieldHandler {
+class MbAreaHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

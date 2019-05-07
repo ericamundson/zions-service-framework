@@ -2,7 +2,7 @@ package com.zions.qm.services.test.handlers
 
 import org.springframework.stereotype.Component
 
-@Component
+@Component('QmResultStateHandler')
 class ResultStateHandler extends QmBaseAttributeHandler {
 	static int SIZE = 255
 

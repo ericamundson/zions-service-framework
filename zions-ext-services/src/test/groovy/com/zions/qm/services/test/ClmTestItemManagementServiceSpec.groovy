@@ -17,6 +17,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.test.DataGenerationService
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.qm.services.test.handlers.NameHandler
+import com.zions.qm.services.test.handlers.QmBaseAttributeHandler
 import com.zions.qm.services.test.handlers.StartDateHandler
 import groovy.json.JsonSlurper
 import spock.lang.Specification
@@ -36,6 +37,9 @@ class ClmTestItemManagementServiceSpec extends Specification {
 	
 	@Autowired
 	ICacheManagementService cacheManagementService
+	
+//	@Autowired
+//	Map<String, IFieldHandler> fieldMap
 
 	def 'getChanges main flow with test plan data'() {
 		given: 'Plan data'
@@ -212,9 +216,9 @@ class ClmTestItemManagementServiceSpecConfig {
 	}
 
 	@Bean
-	Map<String, IFieldHandler> fieldMap() {
-		Map<String, IFieldHandler> retVal = ['nameHandler': new NameHandler(),
-			'startDateHandler': new StartDateHandler()
+	Map<String, QmBaseAttributeHandler> fieldMap() {
+		Map<String, QmBaseAttributeHandler> retVal = ['QmNameHandler': new NameHandler(),
+			'QmStartDateHandler': new StartDateHandler()
 		]
 		return retVal
 	}

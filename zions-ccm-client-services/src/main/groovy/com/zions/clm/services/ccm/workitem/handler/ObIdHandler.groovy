@@ -31,9 +31,9 @@ import groovy.xml.XmlUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
+@Component('CcmObIdHandler')
 @Slf4j
-class ObIdHandler implements IFieldHandler {
+class ObIdHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

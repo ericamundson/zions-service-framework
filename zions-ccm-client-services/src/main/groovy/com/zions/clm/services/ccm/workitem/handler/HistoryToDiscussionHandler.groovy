@@ -27,9 +27,9 @@ import groovy.xml.XmlUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
+@Component('CcmHistoryToDiscussionHandler')
 @Slf4j
-class HistoryToDiscussionHandler implements IFieldHandler {
+class HistoryToDiscussionHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

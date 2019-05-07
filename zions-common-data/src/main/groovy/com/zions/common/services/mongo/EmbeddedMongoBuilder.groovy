@@ -183,9 +183,10 @@ public class EmbeddedMongoBuilder {
         Logger logger = LoggerFactory.getLogger(MongodProcess.class);
 
         return new ProcessOutput(
-                new Slf4jStreamProcessor(logger, Slf4jLevel.TRACE),
                 new Slf4jStreamProcessor(logger, Slf4jLevel.WARN),
-                new Slf4jStreamProcessor(logger, Slf4jLevel.INFO));
+                new Slf4jStreamProcessor(logger, Slf4jLevel.WARN),
+                new Slf4jStreamProcessor(logger, Slf4jLevel.WARN)
+				);
     }
 
     private IRuntimeConfig buildRuntimeConfig() {

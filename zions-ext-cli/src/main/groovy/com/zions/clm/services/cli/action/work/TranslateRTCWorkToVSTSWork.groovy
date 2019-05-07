@@ -134,6 +134,7 @@ import groovy.util.logging.Slf4j
  *  end
  *  @enduml
  */
+@Component
 @Slf4j
 class TranslateRTCWorkToVSTSWork implements CliAction {
 //	@Autowired
