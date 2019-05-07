@@ -1,0 +1,739 @@
+<witmapping>
+	<exclude>
+		<wit name="Change Request"/>
+		<wit name="Actor"/>
+		<wit name="Use Case"/>
+		<wit name="User Story"/>
+		<wit name="Spec Proxy"/>
+		<wit name="Function Point"/>
+		<wit name="Process Inventory"/>
+	</exclude>
+	<wit source="Functional Spec" target="Document" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="documentTypeHandler" target="Custom.DocumentType"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>	
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+	
+	<wit source="UI Spec" target="Document" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="documentTypeHandler" target="Custom.DocumentType"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+	
+	<wit source="Default" target="PlaceHolder" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+	
+	<wit source="Data Requirement" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Functional Requirement" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+
+	<wit source="Information Requirement" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Interface Requirement" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Reporting Requirement" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Screen Requirement" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+
+	<wit source="Statement and Notices Requirement" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+
+	<wit source="Technical Requirement" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+
+	<wit source="Touchpoint Requirement" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+	
+	<wit source="Error Message" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+		
+	<wit source="Control" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Interface Change" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Migration Change" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Parameter Change" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+
+	<wit source="Processing Change" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Report Change" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+		
+	<wit source="Screen Change" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+	</wit>		
+
+	<wit source="Non-Functional Requirement" target="Non Functional Requirement" translateUnmappedFields="false">
+		<field source="nfrTypeHandler" target="Custom.NFRType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+	
+	<wit source="Documentation Change" target="Non Functional Requirement" translateUnmappedFields="false">
+		<field source="nfrTypeHandler" target="Custom.NFRType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+	
+	<wit source="System Process Flow" target="Diagram" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+	
+	<wit source="Screen Field Configuration" target="Entity" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="uiTransNumHandler" target="Custom.TransactionNum"/>
+		<field source="uiOriginalTagNameHandler" target="Custom.OriginalTagName"/>
+		<field source="uiTagNameHandler" target="Custom.TagName"/>
+		<field source="uiRevisedFieldNameHandler" target="Custom.RevisedName"/>
+		<field source="uiFieldFormatHandler" target="Custom.Format"/>
+		<field source="uiFieldTypeHandler" target="Custom.FieldType"/>
+		<field source="uiFieldDisplayHandler" target="Custom.Display"/>
+		<field source="uiMandatoryHandler" target="Custom.Mandatory"/>
+		<field source="uiValidationHandler" target="Custom.Validation"/>
+		<field source="uiTabNameHandler" target="Custom.TabName"/>
+		<field source="uiGroupNumHandler" target="Custom.GroupNum"/>
+		<field source="uiGroupNameHandler" target="Custom.GroupName"/>
+		<field source="uiPositionHandler" target="Custom.Position"/>
+		<field source="uiValuesHandler" target="Custom.Values"/>
+		<field source="uiDefaultValueHandler" target="Custom.DefaultValue"/>
+		<field source="uiTooltipHandler" target="Custom.Tooltip"/>
+		<field source="fsDocumentNumHandler" target="Custom.DocumentNum"/>
+		<field source="uiRemarksHandler" target="Custom.Remarks"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+			
+	<wit source="Heading" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Supporting Material" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+
+	<wit source="Compliance Requirement" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Management Overview" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Scope" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Out of Scope" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+
+	<wit source="Input Specification" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Output Specification" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+		
+	<wit source="Assumption" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+
+	<wit source="Affiliate Mapping" target="Mockup" translateUnmappedFields="false">
+		<field source="mockupTypeHandler" target="Custom.MockupType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Report Mockup" target="Mockup" translateUnmappedFields="false">
+		<field source="mockupTypeHandler" target="Custom.MockupType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+		
+	<wit source="Screen Mockup" target="Mockup" translateUnmappedFields="false">
+		<field source="mockupTypeHandler" target="Custom.MockupType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>		
+	
+	<wit source="Business Requirement" target="Business Requirement" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="vendorIdHandler" target="Custom.VendorID"/>
+		<field source="gapNoGapHandler" target="Custom.GapNoGap"/>
+		<field source="detailsOfGapHandler" target="Custom.DetailsofGap"/>
+		<field source="vendorRecommendationHandler" target="Custom.VendorRecommendation"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+
+	<wit source="Subtopic" target="RM Feature" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+			
+	<wit source="Issue" target="Section" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+		
+	<wit source="Scope" target="Section" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Out of Scope" target="Section" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Assumption" target="Section" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	<links>
+	</links>
+</witmapping>
