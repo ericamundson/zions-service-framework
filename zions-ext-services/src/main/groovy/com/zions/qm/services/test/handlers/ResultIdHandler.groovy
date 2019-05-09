@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
-@Component
+@Component('QmResultIdHandler')
 class ResultIdHandler extends QmBaseAttributeHandler {
 	static int SIZE = 255
 	

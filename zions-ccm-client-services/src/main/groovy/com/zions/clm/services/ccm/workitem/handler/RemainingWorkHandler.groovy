@@ -17,8 +17,8 @@ import com.zions.common.services.work.handler.IFieldHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
-class RemainingWorkHandler implements IFieldHandler {
+@Component('CcmRemainingWorkHandler')
+class RemainingWorkHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

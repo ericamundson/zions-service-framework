@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <oslc:ResponseInfo xmlns:oslc="http://open-services.net/ns/core#" rdf:about="https://clm.cs.zionsbank.com/rm/views?oslc.query&amp;projectURL=https%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Fprocess%2Fproject-areas%2F_klNSEBNGEeSmasotILOx6w&amp;oslc.prefix=dcterms%3D%3Chttp%3A%2F%2Fpurl.org%2Fdc%2Fterms%2F%3E&amp;oslc.prefix=rdf%3D%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E&amp;oslc.prefix=rmTypes%3D%3Chttp%3A%2F%2Fwww.ibm.com%2Fxmlns%2Frdm%2Ftypes%2F%3E&amp;oslc.prefix=rm%3D%3Chttp%3A%2F%2Fwww.ibm.com%2Fxmlns%2Frdm%2Frdf%2F%3E&amp;oslc.prefix=rm_property%3D%3Chttps%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Ftypes%2F%3E&amp;oslc.select=dcterms%3Amodified&amp;oslc.select=dcterms%3Aidentifier&amp;oslc.select=rmTypes%3AArtifactFormat&amp;oslc.where=rm%3AofType%21%3D%3Chttps%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Ftypes%2F_q_2-gQohEeWG_8WdrBu0ag%3E&amp;oslc.where=rm%3AofType%21%3D%3Chttps%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Ftypes%2F_XHQ1EUd6EeWxxpwDSKvU_g%3E&amp;oslc.where=rm%3AofType%21%3D%3Chttps%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Ftypes%2F_10SRcbP2EeW9MNpRqZ4e1Q%3E&amp;oslc.where=rm%3AofType%21%3D%3Chttps%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Ftypes%2F_uJ8gIXx6EeeBHs59x_vypg%3E&amp;oslc.where=rm%3AofType%21%3D%3Chttps%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Ftypes%2F_5ADZ4W4yEeaJ3Olejg6eKA%3E&amp;oslc.where=rm%3AofType%21%3D%3Chttps%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Ftypes%2F_ReHe0LLbEeS5FIAyBUGhBQ%3E&amp;oslc.where=rm%3AofType%21%3D%3Chttps%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Ftypes%2F_LWwkIb1REeS5FIAyBUGhBQ%3E&amp;oslc.where=rdf%3Atype%21%3D%3Chttp%3A%2F%2Fopen-services.net%2Fns%2Frm%23RequirementCollection%3E&amp;oslc.where=rm_property%3A_C_lWkhNXEeSmasotILOx6w%3D%3Chttps%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Ftypes%2F_oCM1ARNUEeSmasotILOx6w%236bf79c5d-0764-43c9-83a1-2a42c265ced5%3E&amp;oslc.where=dcterms%3Amodified%3E%3D%222019-04-10T21%3A51%3A40.979Z%22%5E%5Exsd%3AdateTime&amp;oslc.pageSize=100">
+    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">Query Results: 21907</dcterms:title>
+  </oslc:ResponseInfo>
+  <rdf:Description rdf:about="https://clm.cs.zionsbank.com/rm/views?oslc.query=&amp;projectURL=https%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Fprocess%2Fproject-areas%2F_klNSEBNGEeSmasotILOx6w">
+    <rdfs:member xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+      <oslc_rm:Requirement xmlns:oslc_rm="http://open-services.net/ns/rm#" rdf:about="https://clm.cs.zionsbank.com/rm/resources/_nzrpEPmcEeS1AZ5YZsutBA">
+        <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-18T01:01:46.491Z</dcterms:modified>
+        <rmTypes:ArtifactFormat xmlns:rmTypes="http://www.ibm.com/xmlns/rdm/types/" rdf:resource="https://clm.cs.zionsbank.com/rm/types/_lUmusRNGEeSmasotILOx6w#Text"/>
+        <dcterms:identifier xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7363</dcterms:identifier>
+      </oslc_rm:Requirement>
+    </rdfs:member>
+    <rdfs:member xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+      <oslc_rm:Requirement xmlns:oslc_rm="http://open-services.net/ns/rm#" rdf:about="https://clm.cs.zionsbank.com/rm/resources/_nzv6gPmcEeS1AZ5YZsutBA">
+        <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-18T01:01:51.999Z</dcterms:modified>
+        <rmTypes:ArtifactFormat xmlns:rmTypes="http://www.ibm.com/xmlns/rdm/types/" rdf:resource="https://clm.cs.zionsbank.com/rm/types/_lUmusRNGEeSmasotILOx6w#Text"/>
+        <dcterms:identifier xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7374</dcterms:identifier>
+      </oslc_rm:Requirement>
+    </rdfs:member>
+    <rdfs:member xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+      <oslc_rm:Requirement xmlns:oslc_rm="http://open-services.net/ns/rm#" rdf:about="https://clm.cs.zionsbank.com/rm/resources/_n0HG4PmcEeS1AZ5YZsutBA">
+        <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-18T01:01:54.641Z</dcterms:modified>
+        <rmTypes:ArtifactFormat xmlns:rmTypes="http://www.ibm.com/xmlns/rdm/types/" rdf:resource="https://clm.cs.zionsbank.com/rm/types/_lUmusRNGEeSmasotILOx6w#Text"/>
+        <dcterms:identifier xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7282</dcterms:identifier>
+      </oslc_rm:Requirement>
+    </rdfs:member>
+    <rdfs:member xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+      <oslc_rm:Requirement xmlns:oslc_rm="http://open-services.net/ns/rm#" rdf:about="https://clm.cs.zionsbank.com/rm/resources/_n0KxQPmcEeS1AZ5YZsutBA">
+        <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-18T01:02:01.913Z</dcterms:modified>
+        <rmTypes:ArtifactFormat xmlns:rmTypes="http://www.ibm.com/xmlns/rdm/types/" rdf:resource="https://clm.cs.zionsbank.com/rm/types/_lUmusRNGEeSmasotILOx6w#Text"/>
+        <dcterms:identifier xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7382</dcterms:identifier>
+      </oslc_rm:Requirement>
+    </rdfs:member>
+    <rdfs:member xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+      <oslc_rm:Requirement xmlns:oslc_rm="http://open-services.net/ns/rm#" rdf:about="https://clm.cs.zionsbank.com/rm/resources/_n0F4x_mcEeS1AZ5YZsutBA">
+        <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-18T01:02:07.314Z</dcterms:modified>
+        <rmTypes:ArtifactFormat xmlns:rmTypes="http://www.ibm.com/xmlns/rdm/types/" rdf:resource="https://clm.cs.zionsbank.com/rm/types/_lUmusRNGEeSmasotILOx6w#Text"/>
+        <dcterms:identifier xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7336</dcterms:identifier>
+      </oslc_rm:Requirement>
+    </rdfs:member>
+    <rdfs:member xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+      <oslc_rm:Requirement xmlns:oslc_rm="http://open-services.net/ns/rm#" rdf:about="https://clm.cs.zionsbank.com/rm/resources/_n0xOMPmcEeS1AZ5YZsutBA">
+        <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-18T01:02:14.504Z</dcterms:modified>
+        <rmTypes:ArtifactFormat xmlns:rmTypes="http://www.ibm.com/xmlns/rdm/types/" rdf:resource="https://clm.cs.zionsbank.com/rm/types/_lUmusRNGEeSmasotILOx6w#Text"/>
+        <dcterms:identifier xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7335</dcterms:identifier>
+      </oslc_rm:Requirement>
+    </rdfs:member>
+    <rdfs:member xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+      <oslc_rm:Requirement xmlns:oslc_rm="http://open-services.net/ns/rm#" rdf:about="https://clm.cs.zionsbank.com/rm/resources/_n0zDYPmcEeS1AZ5YZsutBA">
+        <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-18T01:02:19.3Z</dcterms:modified>
+        <rmTypes:ArtifactFormat xmlns:rmTypes="http://www.ibm.com/xmlns/rdm/types/" rdf:resource="https://clm.cs.zionsbank.com/rm/types/_lUmusRNGEeSmasotILOx6w#Text"/>
+        <dcterms:identifier xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7338</dcterms:identifier>
+      </oslc_rm:Requirement>
+    </rdfs:member>
+    <rdfs:member xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+      <oslc_rm:Requirement xmlns:oslc_rm="http://open-services.net/ns/rm#" rdf:about="https://clm.cs.zionsbank.com/rm/resources/_n1V18PmcEeS1AZ5YZsutBA">
+        <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-18T01:02:24.283Z</dcterms:modified>
+        <rmTypes:ArtifactFormat xmlns:rmTypes="http://www.ibm.com/xmlns/rdm/types/" rdf:resource="https://clm.cs.zionsbank.com/rm/types/_lUmusRNGEeSmasotILOx6w#Text"/>
+        <dcterms:identifier xmlns:dcterms="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7398</dcterms:identifier>
+      </oslc_rm:Requirement>
+    </rdfs:member>
+  </rdf:Description>
+</rdf:RDF>

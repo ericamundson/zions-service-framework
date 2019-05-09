@@ -3,7 +3,7 @@ package com.zions.qm.services.test.handlers
 import com.zions.common.services.work.handler.IFieldHandler
 import org.springframework.stereotype.Component
 
-abstract class QmBaseIntegerAttributeHandler implements IFieldHandler {
+abstract class QmBaseIntegerAttributeHandler extends QmBaseAttributeHandler {
 	
 	boolean cacheCheck = true
 

@@ -14,12 +14,17 @@ import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.mongo.distribution.Versions;
 import de.flapdoodle.embed.process.config.IRuntimeConfig;
 import de.flapdoodle.embed.process.config.io.ProcessOutput;
+import de.flapdoodle.embed.process.distribution.BitSize
+import de.flapdoodle.embed.process.distribution.Distribution
 import de.flapdoodle.embed.process.distribution.GenericVersion;
+import de.flapdoodle.embed.process.distribution.Platform
+import de.flapdoodle.embed.process.extract.ImmutableExtractedFileSet
 import de.flapdoodle.embed.process.io.directories.FixedPath
 import de.flapdoodle.embed.process.io.directories.IDirectory
 import de.flapdoodle.embed.process.runtime.Network;
 import de.flapdoodle.embed.process.store.Downloader;
 import de.flapdoodle.embed.process.store.IArtifactStore;
+import de.flapdoodle.embed.process.store.StaticArtifactStoreBuilder
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +67,7 @@ public class EmbeddedMongoBuilder {
     private String bindIp = InetAddress.getLoopbackAddress().getHostAddress();
 	private String downloadPath = null
 	private IDirectory artifactStorePath = null
-	private IDirectory tempDir = null
+	private File installPath = null
 	
 
     /**
@@ -100,11 +105,11 @@ public class EmbeddedMongoBuilder {
         return this;
     }
 	
-	public EmbeddedMongoBuilder downloadPath(String path) {
+	public EmbeddedMongoBuilder installPath(String path) {
 		if (path == null) {
 			throw new IllegalArgumentException("path must not be null");
 		}
-		this.downloadPath = path;
+		this.installPath = new File(path);
 		return this;
 	}
 
@@ -178,9 +183,10 @@ public class EmbeddedMongoBuilder {
         Logger logger = LoggerFactory.getLogger(MongodProcess.class);
 
         return new ProcessOutput(
-                new Slf4jStreamProcessor(logger, Slf4jLevel.TRACE),
                 new Slf4jStreamProcessor(logger, Slf4jLevel.WARN),
-                new Slf4jStreamProcessor(logger, Slf4jLevel.INFO));
+                new Slf4jStreamProcessor(logger, Slf4jLevel.WARN),
+                new Slf4jStreamProcessor(logger, Slf4jLevel.WARN)
+				);
     }
 
     private IRuntimeConfig buildRuntimeConfig() {
@@ -194,17 +200,15 @@ public class EmbeddedMongoBuilder {
 
     private IArtifactStore buildArtifactStore() {
         Logger logger = LoggerFactory.getLogger(Downloader.class);
-		if (this.downloadPath) {
-	        return new ArtifactStoreBuilder()
-	                .defaults(Command.MongoD)
-					//.tempDir(tempDir)
-					.useCache(false)
-	                .download(new DownloadConfigBuilder()
-	                        .defaultsForCommand(Command.MongoD)
-							.artifactStorePath(artifactStorePath)
-							.downloadPath(downloadPath)
-	                        .progressListener(new Slf4jProgressListener(logger))
-	                        .build())
+		if (this.installPath) {
+			File exe = new File(installPath, 'mongod.exe')
+			Distribution d = new Distribution(version, Platform.detect(), BitSize.detect())
+	        return new StaticArtifactStoreBuilder()
+					.fileSet(d, new ImmutableExtractedFileSet.Builder()
+						.baseDir(new File('./'))
+						.executable(exe)
+						.baseDirIsGenerated(false)
+						.build())
 	                .build();
 		}
 		return new ArtifactStoreBuilder()

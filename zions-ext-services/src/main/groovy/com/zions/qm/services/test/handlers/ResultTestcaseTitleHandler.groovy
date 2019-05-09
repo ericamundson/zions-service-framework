@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 import com.zions.qm.services.test.ClmTestManagementService
 
-@Component
+@Component('QmResultTestcaseTitleHandler')
 class ResultTestcaseTitleHandler extends QmBaseAttributeHandler {
 	@Autowired
 	ClmTestManagementService clmTestManagementService

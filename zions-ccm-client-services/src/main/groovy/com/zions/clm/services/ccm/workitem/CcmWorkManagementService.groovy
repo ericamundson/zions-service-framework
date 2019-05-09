@@ -18,6 +18,7 @@ import com.ibm.team.workitem.common.model.IWorkItemReferences
 import com.zions.clm.services.ccm.client.CcmGenericRestClient
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.utils.ReferenceUtil
+import com.zions.clm.services.ccm.workitem.handler.CcmBaseAttributeHandler
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.cli.action.CliAction
@@ -39,8 +40,8 @@ import groovyx.net.http.ContentType
 @Slf4j
 class CcmWorkManagementService {
 	
-	@Autowired
-	private Map<String, IFieldHandler> fieldMap;
+	@Autowired(required=false)
+	private Map<String, CcmBaseAttributeHandler> fieldMap;
 	
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
@@ -285,15 +286,20 @@ class CcmWorkManagementService {
 	 */
 	def getFieldData(IWorkItem workItem, def fieldMap, def cacheWI, memberMap, wiMap) {
 		String attributId = "${fieldMap.source}"
+		String ccmHandlerName = "Ccm${attributId.substring(0,1).toUpperCase()}${attributId.substring(1)}"
 		String fValue = ""
 		if (attributId.trim().equals("")) {
 			fValue = "any"
 		} else {
 			fValue = workitemAttributeManager.getStringRepresentation(workItem, workItem.getProjectArea(), attributId)
-			if (fValue == null && this.fieldMap["${attributId}"] != null) {
+			if (fValue == null && this.fieldMap[ccmHandlerName] != null) {
+				def data = [workItem: workItem, memberMap: memberMap, fieldMap: fieldMap, cacheWI: cacheWI, wiMap: wiMap]
+				return this.fieldMap[ccmHandlerName].execute(data)
+			} else if (fValue == null && this.fieldMap["${attributId}"] != null) {
 				def data = [workItem: workItem, memberMap: memberMap, fieldMap: fieldMap, cacheWI: cacheWI, wiMap: wiMap]
 				return this.fieldMap["${attributId}"].execute(data)
 			}
+
 			if (fValue == null) return null
 		}
 		

@@ -2,7 +2,7 @@ package com.zions.qm.services.test.handlers
 
 import org.springframework.stereotype.Component
 
-@Component
+@Component('QmStartDateHandler')
 class StartDateHandler extends QmBaseAttributeHandler {
 	static int SIZE = 255
 

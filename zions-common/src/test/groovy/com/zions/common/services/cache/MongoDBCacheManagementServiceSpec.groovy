@@ -37,42 +37,42 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 	@Autowired
 	DataGenerationService dataGenerationService
 
-//	def 'saveBinaryAsAttachment for project name success flow.'(){
-//
-//		def result= new ByteArrayInputStream();
-//
-//		when: 'calling of method under test (saveBinaryAsAttachment)'
-//		def keyname = underTest.saveBinaryAsAttachment( result ,'','')
-//		// 218-Test Plan
-//		then: ''
-//		true
-//
-//	}
-//
-//	@Test
-//	def 'saveToCache for project name success flow.'(){
-//
-//		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
-//
-//		when: 'calling of method under test (data)'
-//		def keyname = underTest.saveToCache( data ,'1',ICacheManagementService.PLAN_DATA)
-//		def testplan = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
-//
-//		then: ''
-//		testplan != null
-//	}
-//
-//	@Test
-//	def 'getFromCache for project name success flow.'(){
-//
-//		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
-//
-//		when: 'calling of method under test (getFromCache)'
-//		def keyname = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
-//
-//		then: ''
-//		true
-//	}
+	def 'saveBinaryAsAttachment for project name success flow.'(){
+
+		def result= new ByteArrayInputStream();
+
+		when: 'calling of method under test (saveBinaryAsAttachment)'
+		def keyname = underTest.saveBinaryAsAttachment( result ,'','')
+		// 218-Test Plan
+		then: ''
+		true
+
+	}
+
+	@Test
+	def 'saveToCache for project name success flow.'(){
+
+		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
+
+		when: 'calling of method under test (data)'
+		def keyname = underTest.saveToCache( data ,'1',ICacheManagementService.PLAN_DATA)
+		def testplan = underTest.getFromCache( '1', 'CCM', ICacheManagementService.PLAN_DATA)
+
+		then: ''
+		testplan != null
+	}
+
+	@Test
+	def 'getFromCache for project name success flow.'(){
+
+		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
+
+		when: 'calling of method under test (getFromCache)'
+		def keyname = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
+
+		then: ''
+		true
+	}
 }
 
 @TestConfiguration
@@ -97,9 +97,8 @@ class MongoDBCacheManagementServiceTestConfig {
 		
 		return new EmbeddedMongoBuilder()
 			.version('3.2.16')
-			.tempDir('build/tmp')
-			.downloadPath('file:./../zions-common-data/mongodb/')
-			.artifactStorePath('./build/embeddeddb')
+			//.tempDir('mongodb')
+			.installPath('../zions-common-data/mongodb/win32/mongodb-win32-x86_64-3.2.16/bin')
 			.bindIp("localhost")
 			.port(12345)
 			.build();
