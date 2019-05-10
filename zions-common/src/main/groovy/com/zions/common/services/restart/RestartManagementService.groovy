@@ -104,7 +104,7 @@ class RestartManagementService implements IRestartManagementService {
 	 * 	 
 	 */
 	public Object processPhases(Closure closure) {
-		if (selectedCheckpoint == 'none') {
+		if (selectedCheckpoint == 'none' || selectedCheckpoint == 'update') {
 			checkpointManagementService.clear()
 		}
 		Checkpoint checkpoint = checkpointManagementService.selectCheckpoint(selectedCheckpoint);
@@ -112,6 +112,7 @@ class RestartManagementService implements IRestartManagementService {
 		// Move to checkpoint
 		boolean remaining = false
 		phases.each { String phase ->
+			phase = phase.trim()
 			String handlerName = "${phase}QueryHandler"
 			IQueryHandler queryHandler = queryHandlers[handlerName]
 			def items = queryHandler.getItems()
@@ -139,7 +140,7 @@ class RestartManagementService implements IRestartManagementService {
 					checkpointManagementService.addCheckpoint(phase, url)
 					
 					// process integration logic
-					log.debug("going to wrapped worker with item count: ${inItems.size()}")
+					log.debug("going to RestartManagementService::processPhases closure with item count: ${inItems.size()}")
 					closure(phase, inItems);
 					log.debug("Setting url and nextPage items for phase loop")
 					url = queryHandler.pageUrl

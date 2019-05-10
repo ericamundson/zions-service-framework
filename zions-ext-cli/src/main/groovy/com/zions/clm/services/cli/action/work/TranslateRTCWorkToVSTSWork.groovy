@@ -304,7 +304,9 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 							} else if (key == 'Result') {
 								def resultChanges = changes.resultChanges
 								def rid = changes.rid
+								cacheManagementService.cacheModule = 'QM'
 								testManagementService.sendResultChanges(collection, tfsProject, resultChanges, rid)
+								cacheManagementService.cacheModule = 'CCM'
 								workManagementService.refreshCache(collection, tfsProject, ["${id}"])
 							}
 						}

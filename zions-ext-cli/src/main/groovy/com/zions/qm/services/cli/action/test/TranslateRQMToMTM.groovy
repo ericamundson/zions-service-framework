@@ -298,6 +298,7 @@ class TranslateRQMToMTM implements CliAction {
 					items.each { testItem ->
 						def testcase = clmTestManagementService.getTestItem(testItem.id.text())
 						int aid = Integer.parseInt(testcase.webId.text())
+						clmTestItemManagementService.cacheLinkChanges(testcase)
 						// generate test data
 						//						String testcasexml = XmlUtil.serialize(testcase)
 						//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
@@ -323,6 +324,7 @@ class TranslateRQMToMTM implements CliAction {
 					items.each { testItem ->
 						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
 						int id = Integer.parseInt(testplan.webId.text())
+						clmTestItemManagementService.cacheLinkChanges(testplan)
 						//Generate test data
 						//					String itemXml = XmlUtil.serialize(testplan)
 						//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/testplan${id}.xml")
@@ -342,7 +344,8 @@ class TranslateRQMToMTM implements CliAction {
 
 						testplan.testsuite.each { testsuiteRef ->
 							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
-							String tsXml = XmlUtil.serialize(testsuite)
+							clmTestItemManagementService.cacheLinkChanges(testsuite)
+							//String tsXml = XmlUtil.serialize(testsuite)
 							int tsid = Integer.parseInt(testsuite.webId.text())
 							String idtype = "${tsid}-testsuite"
 							if (!idKeyMap.containsKey(idtype)) {
@@ -356,16 +359,26 @@ class TranslateRQMToMTM implements CliAction {
 								}
 								idKeyMap[idtype] = idtype
 							}
+							testsuite.testcase.each { testcaseRef ->
+								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+								clmTestItemManagementService.cacheLinkChanges(testcase)
+								int aid = Integer.parseInt(testcase.webId.text())
+								 //generate test data
+								idtype = "${aid}-testcase"
+								if (!idKeyMap.containsKey(idtype)) {
+									def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+										String tid = "${aid}-${key}".toString()
+										clManager.add(tid,val)
+									}
+									idKeyMap[idtype] = idtype
+								}
+							}
 						}
 						testplan.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 							int aid = Integer.parseInt(testcase.webId.text())
+							clmTestItemManagementService.cacheLinkChanges(testcase)
 							 //generate test data
-//							String testcasexml = XmlUtil.serialize(testcase)
-//							def resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}-OB.xml")
-//							def os = resultFile.newDataOutputStream()
-//							os << testcasexml
-//							os.close()
 							String idtype = "${aid}-testcase"
 							if (!idKeyMap.containsKey(idtype)) {
 								def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
@@ -381,16 +394,44 @@ class TranslateRQMToMTM implements CliAction {
 				//		workManagementService.testBatchWICreate(collection, tfsProject)
 				//apply work links
 				if (phase == 'links') {
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+					def idKeyMap = [:]
 					items.each { testItem ->
 						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
 						String itemXml = XmlUtil.serialize(testplan)
 						String webId = "${testplan.webId.text()}"
+						String idtype = "${webId}-testplan"
+						if (!idKeyMap.containsKey(idtype)) {
+							clmTestItemManagementService.processForLinkChanges(testplan) { key, val ->
+									String tid = "${webId}-${key}".toString()
+									clManager.add(tid,val)
+							}
+							idKeyMap[idtype] = idtype
+						}
 						testplan.testsuite.each { testsuiteRef ->
 							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
 							def tcs = []
+							String tswebId = "${testsuite.webId.text()}"
+							idtype = "${tswebId}-testsuite"
+							if (!idKeyMap.containsKey(idtype)) {
+								clmTestItemManagementService.processForLinkChanges(testsuite) { key, val ->
+										String tid = "${tswebId}-${key}".toString()
+										clManager.add(tid,val)
+								}
+								idKeyMap[idtype] = idtype
+							}
 							testsuite.testcase.each { testcaseRef ->
 								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 								tcs.add(testcase)
+								String tcwebId = "${testcase.webId.text()}"
+								idtype = "${tcwebId}-testcase"
+								if (!idKeyMap.containsKey(idtype)) {
+									clmTestItemManagementService.processForLinkChanges(testcase) { key, val ->
+											String tid = "${tcwebId}-${key}".toString()
+											clManager.add(tid,val)
+									}
+									idKeyMap[idtype] = idtype
+								}
 							}
 							testManagementService.setParent(testsuite, tcs, mappingData)
 						}
@@ -400,9 +441,18 @@ class TranslateRQMToMTM implements CliAction {
 							String tcitemXml = XmlUtil.serialize(testcase)
 							String tcwebId = "${testcase.webId.text()}"
 							tcs.add(testcase)
+							idtype = "${tcwebId}-testcase"
+							if (!idKeyMap.containsKey(idtype)) {
+								clmTestItemManagementService.processForLinkChanges(testcase) { key, val ->
+										String tid = "${tcwebId}-${key}".toString()
+										clManager.add(tid,val)
+								}
+								idKeyMap[idtype] = idtype
+							}
 						}
 						testManagementService.setParent(testplan, tcs, mappingData)
 					}
+					clManager.flush()
 				}
 
 				if (phase == 'executions') {

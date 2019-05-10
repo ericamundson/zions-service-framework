@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.test.context.ContextConfiguration
-
+import com.ibm.team.workitem.common.model.IWorkItem
 import com.mongodb.MongoClient
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
@@ -48,6 +48,7 @@ import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.qm.services.cli.action.test.QmAllFilter
 import com.zions.qm.services.cli.action.test.TranslateRQMToMTM
+import com.zions.qm.services.cli.action.test.query.ExecutionsQueryHandler
 import com.zions.qm.services.cli.action.test.query.LinksQueryHandler
 import com.zions.qm.services.cli.action.test.query.PlansQueryHandler
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
@@ -178,6 +179,12 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 	PlansQueryHandler plansQueryHandler
 	
 	@Autowired
+	ExecutionsQueryHandler executionsQueryHandler
+	
+	@Autowired 
+	WorkitemAttributeManager workitemAttributeManager
+	
+	@Autowired
 	Map<String, IFilter> filterMap
 	
 	def rmUrls = []
@@ -204,21 +211,24 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		cacheManagementService.cacheModule = 'CCM'
 		restartManagementService.includePhases = 'workdata,worklinks'
 		ccmToAdo.execute(appArgs)
-		def results = cacheManagementService.getAllOfType('resultData')
-		int bugCount = 0
-		results.each { key, result ->
-			if (result.associatedBugs) {
-				bugCount = bugCount + result.associatedBugs.size()
+		def results = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
+		int resultCount = 0
+		results.each { key, wi ->
+			wi.relations.each { relation ->
+				String url = "${relation.url}"
+				if (url.startsWith('vstfs')) {
+					resultCount++
+				}
 			}
 		}
 
 		then: 'validate correct number of associated bugs to test results'
-		bugCount == 4
+		resultCount == 4
 		
 		cleanup: 'Remove all ADO changes'
 		cacheManagementService.cacheModule = 'QM'
 		testManagementService.cleanupTestItems('', tfsProject, "${tfsProject}\\test")
-		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.AreaPath] = 'IntegrationTests'"
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.AreaPath] = 'IntegrationTests\\work' OR [System.AreaPath] = 'IntegrationTests'"
 		cacheManagementService.cacheModule = 'CCM'
 		workManagementService.clean('', tfsProject, query)
 	}
@@ -252,57 +262,62 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		ccmToAdo.execute(appArgs)
 
 		then: 'validate existence of work items with links to Requirement type work items in ADO'
+		true
 		
 		cleanup: 'Cleanup all ADO changes for next integration run.'
+		cacheManagementService.cacheModule = 'RM'
 		String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-'"
 		workManagementService.clean('',tfsProject, query)
 		
-		query = "Select [System.Id], [System.Title] From WorkItems Where [System.AreaPath] = 'IntegrationTests'"
+		query = "Select [System.Id], [System.Title] From WorkItems Where [System.AreaPath] = 'IntegrationTests' OR [System.AreaPath] = 'IntegrationTests\\work'"
 		cacheManagementService.cacheModule = 'CCM'
 		workManagementService.clean('', tfsProject, query)
 
 	}
 	
 	def 'QM to RM item linking'() {
-//		setup: 'Setup RM work items()'
-//		setupRMToADO();
-//		
-//		and: 'Setup QM with RM linking'
-//		setupQMToADOForRMLinks()
-//		
-//		when: 'Run RM to ADO element translation'
-//		def appArgs = new DefaultApplicationArguments(loadRMArgs())
-//		//restartManagementService.selectedCheckpoint = 'last'
-//		cacheManagementService.cacheModule = 'RM'
-//		restartManagementService.queryHandlers = ['requirementsQueryHandler': requirementsQueryHandler]
-//		restartManagementService.includePhases = 'requirements'
-//		rmBaseToAdo.execute(appArgs)
-//		def wiData = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
-//				
-//		then: 'validate existence of requirements work items in ADO'
-//		wiData.size() == 8
-//		
-//		when: 'Run QM to ADO element translation'
-//		appArgs = new DefaultApplicationArguments(loadQMArgs())
+		setup: 'Setup RM work items()'
+		setupRMToADO();
+		
+		and: 'Setup QM with RM linking'
+		setupQMToADOForRMLinks()
+		
+		when: 'Run RM to ADO element translation'
+		def appArgs = new DefaultApplicationArguments(loadRMArgs())
 		//restartManagementService.selectedCheckpoint = 'last'
-//		restartManagementService.queryHandlers = ['plansQueryHandler': plansQueryHandler, 'linksQueryHandler': linksQueryHandler]
-//		restartManagementService.includePhases = 'plans, links'
-//		cacheManagementService.cacheModule = 'QM'
-//		qmtoAdo.execute(appArgs)
+		cacheManagementService.cacheModule = 'RM'
+		restartManagementService.queryHandlers = ['requirementsQueryHandler': requirementsQueryHandler]
+		restartManagementService.includePhases = 'requirements'
+		rmBaseToAdo.execute(appArgs)
+		def wiData = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
+				
+		then: 'validate existence of requirements work items in ADO'
+		wiData.size() == 8
+		
+		when: 'Run QM to ADO element translation'
+		appArgs = new DefaultApplicationArguments(loadQMArgs())
+		//restartManagementService.selectedCheckpoint = 'last'
+		restartManagementService.queryHandlers = ['plansQueryHandler': plansQueryHandler, 'executionsQueryHandler': executionsQueryHandler, 'linksQueryHandler': linksQueryHandler]
+		restartManagementService.includePhases = 'plans,links,executions'
+		cacheManagementService.cacheModule = 'QM'
+		qmtoAdo.execute(appArgs)
 
-//		then: 'Validate QM to RM links'
-//		
-//		cleanup:
-//		cacheManagementService.cacheModule = 'QM'
-//		testManagementService.cleanupTestItems('', tfsProject, "${tfsProject}\\test")
-//		
-//		cacheManagementService.cacheModule = 'RM'
-//		String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-'"
-//		workManagementService.clean('',tfsProject, query)
+		then: 'Validate QM to RM links'
+		true
+		
+		cleanup:
+		cacheManagementService.cacheModule = 'QM'
+		testManagementService.cleanupTestItems('', tfsProject, "${tfsProject}\\test")
+		
+		cacheManagementService.cacheModule = 'RM'
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-'"
+		workManagementService.clean('',tfsProject, query)
 
 		
 	}
 	
+	
+	//setup behavior.
 	def setupRQMToADO()
 	{
 //		def tpqdata = dataGenerationService.generate('/testdata/TestPlanQueryData.json')
@@ -390,75 +405,25 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 			return null
 		}
 		
-		int id = -1
-		wis.workItem.each { wi ->
-			String type = "${wi.type.name.text()}".replace(' ', '%20')
-			if (type == 'Anomaly') {
-				type = 'Bug'
-			}
-			clmTypeSetter.type = type
-			idSetter.id = "${id}"
-			def wichanges = dataGenerationService.generate('/testdata/wichanges.json')
-			String aid = "${wi.id.text()}"
-			wiMap[aid] = wichanges
-			id--
-		}
-		//Modified aModified = new Modified()
-		ccmWorkManagementService.getWorkitem(_) >> { return new Modified() {} }
 		
 		ccmWorkManagementService.getAllLinks(_, _, _, _) >> { args ->
-			List<LinkInfo> retVal = new ArrayList<LinkInfo>()
-		}
-		
-		ccmWorkManagementService.getWIChanges(_, _, _, _) >> { args ->
-			String aid = "${args[0]}"
-			return wiMap[aid]
-		}
-		
-		ccmWorkManagementService.getWILinkChanges(_, _, _, _) >> { args ->
-			String aid = "${args[0]}"
-			Closure closure = args[3]
-			def wi = cacheManagementService.getFromCache(aid, ICacheManagementService.WI_DATA)
-			String type = "${wi.fields.'System.WorkItemType'}"
-			if (type == 'Bug') {
-				String cid = "${wi.id}"
-				
-				
-				//Stub result link
+			List<LinkInfo> links = new ArrayList<LinkInfo>()
+			IWorkItem wi = args[2]
+			String type = workitemAttributeManager.getStringRepresentation(wi, wi.getProjectArea(), 'workItemType')
+			if (type == 'Anomaly') {
+				String id = "${wi.getId()}"
 				Random r = new Random()
 				int ci = r.nextInt(4)
 				String rid = "100020000${ci+5}-Result"
-				def result = cacheManagementService.getFromCache(rid, 'QM', ICacheManagementService.RESULT_DATA)
-				def testedByLink = null
-				if (result) {
-					String title = "${result.testCaseTitle}"
-					
-					def resultChanges = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/IntegrationTests/_apis/test/Runs/${result.testRun.id}/results/${result.id}", query:['api-version':'5.0'], body: []]
-					def data = [id: result.id, testCaseTitle:title, associatedBugs: [[id:cid]]]
-					resultChanges.body.add(data)
-					def changes = [resultChanges: resultChanges, rid: rid]
-					closure('Result', changes)
-					
-					String tcUrl = "https://dev.azure.com/eto-dev/_apis/wit/workItems/${result.testCase.id}"
-					testedByLink = [op: 'add', path: '/relations/-', value: [rel: 'Microsoft.VSTS.Common.TestedBy-Forward', url: tcUrl, attributes:[comment: "Tested by"]]]
-				}	
-				
-				//Stub plan link
-				wi = cacheManagementService.getFromCache(aid, ICacheManagementService.WI_DATA)
-				def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-				def rev = [ op: 'test', path: '/rev', value: wi.rev]
-				wiData.body.add(rev)
-				def plan = cacheManagementService.getFromCache('10002-Test Plan WI', 'QM', ICacheManagementService.WI_DATA)
-				String url = "https://dev.azure.com/eto-dev/_apis/wit/workItems/${plan.id}"
-				def change = [op: 'add', path: '/relations/-', value: [rel: 'System.LinkTypes.Related', url: url, attributes:[comment: "related_test_plan"]]]
-				wiData.body.add(change)
-				if (testedByLink) {
-					wiData.body.add(testedByLink)
-				}
-				closure('WorkItem', wiData)
+			    def info = new LinkInfo(type: 'affects_execution_result', itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'CCM', moduleRelated: 'QM')
+				links.add(info)
 
+			    info = new LinkInfo(type: 'related_test_plan', itemIdCurrent: id, itemIdRelated: '10002-Test Plan WI', moduleCurrent: 'CCM', moduleRelated: 'QM')
+				links.add(info)
 			}
+			return links
 		}
+		
 	}
 	
 	def setupRMToADO() {
@@ -472,6 +437,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 	
 	def setupCCMToADOForRMLinks() {
 		def wis
+		ccmWorkManagementService.rtcRepositoryClient.initializeRTC()
 		
 		def wiMap = [:]
 		cacheManagementService.cacheModule = 'CCM'
@@ -485,56 +451,58 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 			return null
 		}
 		
-		int id = -1
-		wis.workItem.each { wi ->
-			String type = "${wi.type.name.text()}".replace(' ', '%20')
-			clmTypeSetter.type = type
-			idSetter.id = "${id}"
-			def wichanges = dataGenerationService.generate('/testdata/wichanges.json')
-			String aid = "${wi.id.text()}"
-			wiMap[aid] = wichanges
-			id--
-		}
-		//Modified aModified = new Modified()
-		ccmWorkManagementService.getWorkitem(_) >> { return new Modified() {} }
 		
 		ccmWorkManagementService.getAllLinks(_, _, _, _) >> { args ->
-			List<LinkInfo> retVal = new ArrayList<LinkInfo>()
-		}
-		
-		ccmWorkManagementService.getWIChanges(_, _, _, _) >> { args ->
-			String aid = "${args[0]}"
-			return wiMap[aid]
-		}
-		
-		ccmWorkManagementService.getWILinkChanges(_, _, _, _) >> { args ->
+			List<LinkInfo> links = new ArrayList<LinkInfo>()
+			IWorkItem wi = args[2]
 			cacheManagementService.cacheModule = 'RM'
 			def reqs = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
+			cacheManagementService.cacheModule = 'CCM'
 			def ids = []
 			reqs.each { key, val ->
 				ids.add(key)
 			}
-			cacheManagementService.cacheModule = 'CCM'
-			
-			String aid = "${args[0]}"
-			Closure closure = args[3]
-			
-			def wi = cacheManagementService.getFromCache(aid, ICacheManagementService.WI_DATA)
-			String cid = "${wi.id}"
-			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-			def rev = [ op: 'test', path: '/rev', value: wi.rev]
-			wiData.body.add(rev)
-			
 			Random r = new Random()
 			int i  = r.nextInt(ids.size())
 			
+			String id = "${wi.getId()}"
+			
 			def rid = ids.get(i)
-			def req = reqs[rid]
-			String url = "https://dev.azure.com/eto-dev/_apis/wit/workItems/${req.id}"
-			def change = [op: 'add', path: '/relations/-', value: [rel: 'System.LinkTypes.Related', url: url, attributes:[comment: "affects_requirement"]]]
-			wiData.body.add(change)
-			closure('WorkItem', wiData)
+			//def req = reqs[rid]
+			def info = new LinkInfo(type: 'affects_requirement', itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'CCM', moduleRelated: 'RM')
+			links.add(info)
+			return links
 		}
+		
+		
+//		ccmWorkManagementService.getWILinkChanges(_, _, _, _) >> { args ->
+//			cacheManagementService.cacheModule = 'RM'
+//			def reqs = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
+//			def ids = []
+//			reqs.each { key, val ->
+//				ids.add(key)
+//			}
+//			cacheManagementService.cacheModule = 'CCM'
+//			
+//			String aid = "${args[0]}"
+//			Closure closure = args[3]
+//			
+//			def wi = cacheManagementService.getFromCache(aid, ICacheManagementService.WI_DATA)
+//			String cid = "${wi.id}"
+//			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+//			def rev = [ op: 'test', path: '/rev', value: wi.rev]
+//			wiData.body.add(rev)
+//			
+//			Random r = new Random()
+//			int i  = r.nextInt(ids.size())
+//			
+//			def rid = ids.get(i)
+//			def req = reqs[rid]
+//			String url = "https://dev.azure.com/eto-dev/_apis/wit/workItems/${req.id}"
+//			def change = [op: 'add', path: '/relations/-', value: [rel: 'System.LinkTypes.Related', url: url, attributes:[comment: "affects_requirement"]]]
+//			wiData.body.add(change)
+//			closure('WorkItem', wiData)
+//		}
 	}
 		
 	def setupQMToADOForRMLinks() {
@@ -597,6 +565,32 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 			} else if (url.contains('testscript')) {
 				return dataGenerationService.generate('/testdata/testscriptT.xml')
 			}
+		}
+		
+		clmTestItemManagementService.getAllLinks(_, _, _) >> { args -> 
+			def typeMap = ['testcase': 'Test Case', 'testsuite': 'Test Suite WI', 'testplan': 'Test Plan WI']
+			List<LinkInfo> links = new ArrayList<LinkInfo>()
+			def testItem = args[2]
+			cacheManagementService.cacheModule = 'RM'
+			def reqs = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
+			cacheManagementService.cacheModule = 'QM'
+			def ids = []
+			reqs.each { key, val ->
+				ids.add(key)
+			}
+			Random r = new Random()
+			int j  = r.nextInt(ids.size())
+			
+			String iType = "${testItem.name()}"
+			String oType = typeMap[iType]
+			String id = "${testItem.webId.text()}-${oType}"
+			
+			def rid = ids.get(j)
+			//def req = reqs[rid]
+			def info = new LinkInfo(type: 'requirement', itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'QM', moduleRelated: 'RM')
+			links.add(info)
+			return links
+
 		}
 
 	}
@@ -686,7 +680,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 
 @TestConfiguration
 @Profile("integration-test")
-@ComponentScan(["com.zions.vsts.services", "com.zions.common.services.test", "com.zions.qm.services.test.handlers", "com.zions.rm.services.requirements.handlers", "com.zions.common.services.restart", "com.zions.qm.services.cli.action.test.query", "com.zions.clm.services.cli.action.work.query", "com.zions.clm.services.cli.action.integration", "com.zions.common.services.cacheaspect"])
+@ComponentScan(["com.zions.vsts.services", "com.zions.common.services.test", "com.zions.qm.services.test.handlers", "com.zions.rm.services.requirements.handlers", "com.zions.clm.services.ccm.workitem.handler", "com.zions.common.services.restart", "com.zions.qm.services.cli.action.test.query", "com.zions.clm.services.cli.action.work.query", "com.zions.clm.services.cli.action.integration", "com.zions.common.services.cacheaspect"])
 @PropertySource("classpath:integration-test.properties")
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 class IntraModuleLinkIntegrationSpecConfig {
@@ -717,7 +711,7 @@ class IntraModuleLinkIntegrationSpecConfig {
 	// CCM Beans
 	@Bean
 	RtcRepositoryClient rtcRepositoryClient() {
-		return mockFactory.Mock(RtcRepositoryClient)
+		return new RtcRepositoryClient(clmUrl, clmUser, clmPassword)
 	}
 	
 	@Bean
@@ -744,7 +738,7 @@ class IntraModuleLinkIntegrationSpecConfig {
 	@Bean
 	IGenericRestClient clmGenericRestClient() {
 		//ClmGenericRestClient c
-		return mockFactory.Mock(ClmGenericRestClient, name: 'clmGenericRestClient')
+		return new ClmGenericRestClient(clmUrl, clmUser, clmPassword)
 	}
 	
 	@Bean
@@ -755,7 +749,7 @@ class IntraModuleLinkIntegrationSpecConfig {
 	@Bean
 	ClmWorkItemManagementService clmWorkItemManagementService() {
 		//return new ClmWorkItemManagementService()
-		return mockFactory.Stub(ClmWorkItemManagementService)
+		return mockFactory.Spy(ClmWorkItemManagementService)
 	}
 	
 //	@Bean
@@ -765,12 +759,12 @@ class IntraModuleLinkIntegrationSpecConfig {
 	
 	@Bean
 	WorkitemAttributeManager workitemAttributeManager() {
-		return mockFactory.Mock(WorkitemAttributeManager)
+		return new WorkitemAttributeManager()
 	}
 	
 	@Bean
 	CcmWorkManagementService ccmWorkManagementService() {
-		return mockFactory.Stub(CcmWorkManagementService)
+		return mockFactory.Spy(CcmWorkManagementService)
 	}
 	
 	
@@ -798,7 +792,7 @@ class IntraModuleLinkIntegrationSpecConfig {
 	
 	@Bean
 	ClmTestItemManagementService clmTestItemManagementService() {
-		return new ClmTestItemManagementService()
+		return mockFactory.Spy(ClmTestItemManagementService)
 	}
 	
 	@Bean
@@ -819,6 +813,11 @@ class IntraModuleLinkIntegrationSpecConfig {
 	@Bean
 	LinksQueryHandler linksQueryHandler() {
 		return new LinksQueryHandler()
+	}
+	
+	@Bean
+	ExecutionsQueryHandler executionsQueryHandler() {
+		return new ExecutionsQueryHandler()
 	}
 	//End QM
 	
