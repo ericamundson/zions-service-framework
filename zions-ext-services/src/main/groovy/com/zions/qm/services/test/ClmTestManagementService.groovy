@@ -37,7 +37,7 @@ class ClmTestManagementService {
 	@Value('${qm.tc.query:}')
 	String qmTcQuery
 
-
+	
 	public ClmTestManagementService() {
 		
 	}
@@ -100,12 +100,6 @@ class ClmTestManagementService {
 	
 	}
 	
-	@Cache(elementType = LinkInfo)
-	public List<LinkInfo> getAllLinks(String id, Date timeStamp, testItem) {
-		List<LinkInfo> links = new ArrayList<LinkInfo>()
-		return links
-		
-	}
 
 	
 	def getProjectArea(String name) {
