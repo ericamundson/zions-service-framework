@@ -12,6 +12,7 @@ import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementServ
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.db.DatabaseQueryService
 import com.zions.common.services.query.IFilter
 import com.zions.common.services.restart.Checkpoint
 import com.zions.common.services.restart.ICheckpointManagementService
@@ -32,6 +33,7 @@ import groovy.xml.XmlUtil
 import com.zions.rm.services.requirements.ClmArtifact
 import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 import com.zions.rm.services.requirements.RequirementQueryData
+import com.zions.common.services.db.DataWarehouseQueryData
 
 /**
  * Provides command line interaction to synchronize RRM requirements management with ADO.
@@ -152,6 +154,8 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	@Autowired 
 	ClmRequirementsManagementService clmRequirementsManagementService
 	@Autowired
+	DatabaseQueryService rmDatabaseQueryService
+	@Autowired
 	ClmRequirementsFileManagementService rmFileManagementService
 	@Autowired
 	IRestartManagementService restartManagementService
@@ -159,6 +163,22 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	ICheckpointManagementService checkpointManagementService
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
+	
+	String dbQueryString = '''SELECT T1.REFERENCE_ID as reference_id,
+  T1.URL as about,
+  T1.Primary_Text as text
+FROM RIDW.VW_REQUIREMENT T1
+LEFT OUTER JOIN RICALM.VW_RQRMENT_ENUMERATION T2
+ON T2.REQUIREMENT_ID=T1.REQUIREMENT_ID AND T2.NAME='Release'
+WHERE T1.PROJECT_ID = 19  AND
+(  T1.REQUIREMENT_TYPE NOT IN ( 'Change Request','Actor','Use Case','User Story','Spec Proxy','Function Point','Process Inventory','Term','Use Case Diagram' ) AND
+  T2.LITERAL_NAME = 'Deposits'  AND
+  LENGTH(T1.URL) = 65 AND
+  T1.REC_DATETIME > TO_DATE('05/01/2014','mm/dd/yyyy')
+) AND
+T1.ISSOFTDELETED = 0 AND
+(T1.REQUIREMENT_ID <> -1 AND T1.REQUIREMENT_ID IS NOT NULL)
+'''
 	
 	public TranslateRmBaseArtifactsToADO() {
 	}
@@ -247,9 +267,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 		}
 		if (includes['flushQueries'] != null) {
-			log.info("Refreshing cache of main DNG query")
-			clmRequirementsManagementService.flushQueries(projectURI, oslcNs, oslcSelect, oslcWhere)
-			log.info("Finished refreshing cache of main DNG query, future operations should use this cache")
+			log.info("Refreshing cache of main DNG query from JRS")
+			this.flushQueries()
+			log.info("Finished refreshing cache of main DNG query from JRS, future operations should use this cache")
 		}
 		if (includes['whereused'] != null) {
 			log.info("fetching 'where used' lookup records")
@@ -269,36 +289,39 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				if (phase == 'requirements') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					clmRequirementsItemManagementService.resetNewId()
+					rmDatabaseQueryService.init()
 					log.debug("Getting content of ${items.size()} items")
 					items.each { rmItem ->
-						String sid = "${rmItem.Requirement.identifier}"
+						String sid = "${rmItem.reference_id}"
 						//sometimes this is blank?  some kind of error!
 						if (sid) {
-						int id = Integer.parseInt(sid)
-						//log.debug("items.each loop for id: ${sid}")
-						String formatString = rmItem.Requirement.ArtifactFormat.@'rdf:resource'
-						String format = formatString.substring(formatString.lastIndexOf('#') + 1)
-						String about = "${rmItem.Requirement.@'rdf:about'}"
-						ClmArtifact artifact = new ClmArtifact('', format, about)
-						if (format == 'Text') {
-							clmRequirementsManagementService.getTextArtifact(artifact,false)
-						}
-						else if (format == 'WrapperResource'){
-							clmRequirementsManagementService.getNonTextArtifact(artifact)
-						}
-						else {
-							log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
-						}
-						//new FlowInterceptor() {}.flowLogging(clManager) {
-							def reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
-							if (reqChanges != null) {
-								reqChanges.each { key, val ->
-									clManager.add("${id}", val)
-									
-								}
-								//log.debug("adding changes for requirement ${id}")
+							int id = Integer.parseInt(sid)
+							//log.debug("items.each loop for id: ${sid}")
+							String primaryTextString = "${rmItem.text}"
+							//data warehouse indicator for wrapperresources is replacing the primay text field with this string
+							String format = primaryTextString.equals("No primary text") ? 'WrapperResource' : 'Text'
+							//here is the uri
+							String about = "${rmItem.about}"
+							ClmArtifact artifact = new ClmArtifact('', format, about)
+							if (format == 'Text') {
+								clmRequirementsManagementService.getTextArtifact(artifact,false)
 							}
-						//}
+							else if (format == 'WrapperResource'){
+								clmRequirementsManagementService.getNonTextArtifact(artifact)
+							}
+							else {
+								log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
+							}
+							//new FlowInterceptor() {}.flowLogging(clManager) {
+								def reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
+								if (reqChanges != null) {
+									reqChanges.each { key, val ->
+										clManager.add("${id}", val)
+										
+									}
+									//log.debug("adding changes for requirement ${id}")
+								}
+							//}
 						} else {
 							log.debug("Had an error getting the ID of an item, skipping")
 							//todo: add an error to the checkpoint error log
@@ -312,6 +335,26 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 		}
 
+	}
+	
+	def flushQueries() {
+		Date ts = new Date()
+		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+		int pageCount = 0
+		def currentItems
+		def iUrl
+//		try {
+		rmDatabaseQueryService.init()
+		new CacheInterceptor() {}.provideCaching(rmDatabaseQueryService, "${pageCount}", ts, DataWarehouseQueryData) {
+			currentItems = rmDatabaseQueryService.query(dbQueryString)
+		}
+		while (true) {
+			iUrl = rmDatabaseQueryService.pageUrl()
+			new CacheInterceptor() {}.provideCaching(rmDatabaseQueryService, "${pageCount}", ts, DataWarehouseQueryData) {
+				currentItems = rmDatabaseQueryService.nextPage()
+			}
+			if(!currentItems) break;
+		}
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
