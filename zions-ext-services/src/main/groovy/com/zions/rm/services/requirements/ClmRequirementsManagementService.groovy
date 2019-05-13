@@ -69,76 +69,91 @@ class ClmRequirementsManagementService {
 	ICacheManagementService cacheManagementService
 	
 	
-	def queryForModules(String projectURI, String query) {
-		String uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?" + query;
-		if (query == null || query.length() == 0 || "${query}" == 'none') {  // if no query provided, then at least restrict to the project area
-			uri = this.rmGenericRestClient.clmUrl + "/rm/publish/modules?projectURI=" + projectURI;
+	def queryForModules(String query) {
+		String uri = this.rmGenericRestClient.clmUrl + "/rm/publish/collections?" + query;
+		def result = rmGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/xml'] );
+		def moduleList = []
+		// Get all module uris from collection
+		def modules =  result.'**'.findAll { p ->
+			"${p.name()}" == 'relation'
 		}
+		modules.forEach { node ->
+			moduleList.add("${node}")
+		}
+		return moduleList
+	}
+
+	ClmRequirementsModule getModule(String moduleUri, boolean validationOnly) {
+		boolean cacheLinks = false
+		boolean addEmbeddedCollections = false
+		String uri = moduleUri.replace('resources/','publish/modules?resourceURI=')
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/xml'] );
 			
-		// Define a list of ClmRequirementsModules
-		def modules = []
-		
 		// Extract and instantiate the ClmRequirementsmodules
-		result.children().each { module ->
-			String moduleType = ""
-			def moduleAttributeMap = [:]
-			def orderedArtifacts = []
-			
-			// Extract module title, format, about
-			String moduleTitle = module.title
-			String moduleFormat = module.format
-			String moduleAbout = module.about
-			
-			// Extract module attributes and members
-			module.children().each { child ->
-				String iName = child.name()
-				if (iName == "collaboration" ) {
-					// Set artifact type and attributes
-					moduleType = parseCollaborationAttributes(child, moduleAttributeMap )
-				}
-				else if (iName == "moduleContext") {
-					def kk = 0
-					child.children().each { contextBinding ->
-							String about = contextBinding.about
-							String artifactTitle = contextBinding.title
-							String format = contextBinding.format
-							int depth = contextBinding.depth.toInteger()
-							String isHeading = contextBinding.isHeading
-							String baseUID = contextBinding.core
-							
-							ClmModuleElement artifact = new ClmModuleElement(artifactTitle, depth, format, isHeading, about)
-							artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}","${baseUID}")
-							
-							orderedArtifacts.add(artifact)
-							if (format == "Text") {
-								// Get artifact details (attributes and links) from DNG
-								getTextArtifact(artifact, true)
-								// If artifact has embedded collection, add collection members to the module
-								if (shouldAddCollectionsToModule(moduleType) && artifact.collectionArtifacts != null && artifact.collectionArtifacts.size > 0) {
-									artifact.setDescription(null)  // blank out Description content
-									artifact.setArtifactType('Supporting Material')  // Collection container should now be just a Section in the module
-									artifact.collectionArtifacts.each { ca ->
-										orderedArtifacts.add(ca)
-									}
+		def module = result.artifact[0]
+		String moduleType = ""
+		def moduleAttributeMap = [:]
+		def orderedArtifacts = []
+		
+		// Extract module title, format, about
+		String moduleTitle = module.title
+		String moduleFormat = module.format
+		String moduleAbout = module.about
+		
+		// Extract module attributes and members
+		module.children().each { child ->
+			String iName = child.name()
+			if (iName == "collaboration" ) {
+				// Set artifact type and attributes
+				moduleType = parseCollaborationAttributes(child, moduleAttributeMap )
+				if (!validationOnly) {
+					cacheLinks = true
+					addEmbeddedCollections = shouldAddCollectionsToModule(moduleType)
+				}				
+			}
+			else if (iName == "moduleContext") {
+				def kk = 0
+				child.children().each { contextBinding ->
+						String about = contextBinding.about
+						String artifactTitle = contextBinding.title
+						String format = contextBinding.format
+						int depth = contextBinding.depth.toInteger()
+						String isHeading = contextBinding.isHeading
+						String baseUID = contextBinding.core
+						
+						ClmModuleElement artifact = new ClmModuleElement(artifactTitle, depth, format, isHeading, about)
+						artifact.setBaseArtifactURI("${this.rmBGenericRestClient.clmUrl}","${baseUID}")
+						
+						orderedArtifacts.add(artifact)
+						if (format == "Text") {
+							// Get artifact details (attributes and links) from DNG
+							getTextArtifact(artifact, true, cacheLinks)
+							// If artifact has embedded collection, add collection members to the module
+							if (shouldAddCollectionsToModule(moduleType) && artifact.collectionArtifacts != null && artifact.collectionArtifacts.size > 0) {
+								artifact.setDescription(null)  // blank out Description content
+								artifact.setArtifactType('Supporting Material')  // Collection container should now be just a Section in the module
+								artifact.collectionArtifacts.each { ca ->
+									orderedArtifacts.add(ca)
 								}
 							}
-							else {
-								getNonTextArtifact(artifact)
-							}
-					}
-					def j = 1
+						}
+						else {
+							getNonTextArtifact(artifact, cacheLinks)
+						}
 				}
+				def j = 1
 			}
-			
-			
-			// Add module to result list
-			ClmRequirementsModule iModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, moduleAttributeMap,orderedArtifacts)
-			modules.add(iModule)
 		}
-		return modules
+		
+		
+		// Instantiate and return the module
+		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, moduleAttributeMap,orderedArtifacts)
+		return clmModule
+
 	}
 
 	//This is copied from the ClmWorkItem and Test management services, but we may not need it
@@ -289,7 +304,7 @@ class ClmRequirementsManagementService {
 		return emailAddress
 	}
 	
-	def getTextArtifact(def in_artifact, boolean includeCollections) {
+	def getTextArtifact(def in_artifact, boolean includeCollections, boolean cacheLinks) {
 		//log.debug("Fetching text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
@@ -298,7 +313,7 @@ class ClmRequirementsManagementService {
 		// Extract artifact attributes
 		result.children().each { artifactNode ->
 			parseTopLevelAttributes(artifactNode, in_artifact)
-			parseLinksFromArtifactNode(artifactNode, in_artifact)
+			if (cacheLinks) parseLinksFromArtifactNode(artifactNode, in_artifact)
 			artifactNode.children().each { child ->
 				String iName = child.name()
 				if (iName == "collaboration" ) {
@@ -331,7 +346,7 @@ class ClmRequirementsManagementService {
 						
 						// If there are collection members to be retrieved, then retrieve them
 						if (memberHrefs != null && memberHrefs.size() > 0) {
-							getCollectionArtifacts(in_artifact, memberHrefs)
+							getCollectionArtifacts(in_artifact, memberHrefs, cacheLinks)
 						}
 					}
 				}
@@ -358,7 +373,7 @@ class ClmRequirementsManagementService {
 		}
 		return memberHrefs
 	}
-	def getNonTextArtifact(def in_artifact) {
+	def getNonTextArtifact(def in_artifact, boolean cacheLinks) {
 		//log.debug("fetching non-text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/resources?resourceURI="),
@@ -367,7 +382,7 @@ class ClmRequirementsManagementService {
 		// Extract artifact attributes
 		result.children().each { artifactNode ->
 			parseTopLevelAttributes(artifactNode, in_artifact)
-			parseLinksFromArtifactNode(artifactNode, in_artifact)
+			if (cacheLinks) parseLinksFromArtifactNode(artifactNode, in_artifact)
 			artifactNode.children().each { child ->
 				String iName = child.name()
 				if (iName == "collaboration" ) {
@@ -403,11 +418,11 @@ class ClmRequirementsManagementService {
 		
 		return memberHrefs
 	}
-	private def getCollectionArtifacts(def in_artifact, def memberHrefs) {
+	private def getCollectionArtifacts(def in_artifact, def memberHrefs, boolean cacheLinks) {
 		memberHrefs.each { memberHref ->
 			def artifact = new ClmModuleElement(null,in_artifact.getDepth()+1,null,'false',memberHref)
 
-			in_artifact.collectionArtifacts << getTextArtifact(artifact,false)
+			in_artifact.collectionArtifacts << getTextArtifact(artifact,false,cacheLinks)
 		}
 	}
 	
