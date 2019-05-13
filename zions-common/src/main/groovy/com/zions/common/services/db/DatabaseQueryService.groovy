@@ -19,6 +19,7 @@ import com.zions.common.services.cacheaspect.CacheWData
  * @author z091182
  *
  */
+@Slf4j
 @Component
 class DatabaseQueryService implements IDatabaseQueryService {
 	@Value('${db.url:}')
@@ -104,6 +105,27 @@ class DatabaseQueryService implements IDatabaseQueryService {
 		return "${select}/1/${pageSize}"
 	}
 	
+	def flushQueries() {
+		Date ts = new Date()
+		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+		int pageCount = 0
+		def currentItems
+		def iUrl
+//		try {
+		init()
+		new CacheInterceptor() {}.provideCaching(this, "${pageCount}", ts, DataWarehouseQueryData) {
+			currentItems = this.query(QueryString())
+		}
+		while (true) {
+			iUrl = this.pageUrl()
+			pageCount++
+			new CacheInterceptor() {}.provideCaching(this, "${pageCount}", ts, DataWarehouseQueryData) {
+				currentItems = this.nextPage()
+			}
+			if(!currentItems) break;
+		}
+	}
+	
 	public String QueryString() {
 		if (select) return select
 		return '''SELECT T1.REFERENCE_ID as reference_id,
@@ -130,12 +152,12 @@ class DataWarehouseQueryData implements CacheWData {
 	String data
 	
 	void doData(def result) {
-		log.debug("ReqQueryData serializing result doData")
+		log.debug("DWQueryData serializing result doData")
 		data = new JsonOutput().toJson(result)
 	}
 	
 	def dataValue() {
-		log.debug("ReqQueryData returning serialized result dataValue")
+		log.debug("DWQueryData returning serialized result dataValue")
 		return new JsonSlurper().parseText(data)
 	}
 

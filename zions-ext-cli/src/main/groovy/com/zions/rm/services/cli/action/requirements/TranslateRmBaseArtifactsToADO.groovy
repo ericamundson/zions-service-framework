@@ -268,7 +268,7 @@ T1.ISSOFTDELETED = 0 AND
 		}
 		if (includes['flushQueries'] != null) {
 			log.info("Refreshing cache of main DNG query from JRS")
-			this.flushQueries()
+			rmDatabaseQueryService.flushQueries()
 			log.info("Finished refreshing cache of main DNG query from JRS, future operations should use this cache")
 		}
 		if (includes['whereused'] != null) {
@@ -336,26 +336,7 @@ T1.ISSOFTDELETED = 0 AND
 		}
 
 	}
-	
-	def flushQueries() {
-		Date ts = new Date()
-		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
-		int pageCount = 0
-		def currentItems
-		def iUrl
-//		try {
-		rmDatabaseQueryService.init()
-		new CacheInterceptor() {}.provideCaching(rmDatabaseQueryService, "${pageCount}", ts, DataWarehouseQueryData) {
-			currentItems = rmDatabaseQueryService.query(dbQueryString)
-		}
-		while (true) {
-			iUrl = rmDatabaseQueryService.pageUrl()
-			new CacheInterceptor() {}.provideCaching(rmDatabaseQueryService, "${pageCount}", ts, DataWarehouseQueryData) {
-				currentItems = rmDatabaseQueryService.nextPage()
-			}
-			if(!currentItems) break;
-		}
-	}
+
 
 	public Object validate(ApplicationArguments args) throws Exception {
 		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'clm.pageSize', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'oslc.namespaces', 'oslc.select', 'oslc.where', 'rm.filter', 'mr.url']
