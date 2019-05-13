@@ -57,7 +57,7 @@ class SmartDocManagementService {
 			"projectUri":"$tfsProjectURI",
 			"projectName":"$tfsProject",
 			"rootFolder":"$tfsProject",
-			"isDefaultTeam": false,
+			"isDefaultTeam": true,
 			"teamGuid":"$tfsTeamGUID",
 			"collectionName":"$collection",
 			"collectionId":"$tfsCollectionGUID",

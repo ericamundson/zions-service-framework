@@ -14,6 +14,7 @@ import com.zions.qm.services.metadata.QmMetadataManagementService
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
 import com.zions.rm.services.requirements.ClmRequirementsItemManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
+import com.zions.rm.services.requirements.ClmRequirementsModule
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.mr.SmartDocManagementService
@@ -196,6 +197,25 @@ class TranslateRmModulesToADO implements CliAction {
 				log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
 			}			
 		}
+		// validate data
+		if (includes['validation'] != null) {
+			log.info('Validating module data...')
+			def moduleUris = clmRequirementsManagementService.queryForModules(rmQuery)
+			moduleUris.each { moduleUri ->
+				log.info("${getCurTimestamp()} - Getting next module: $moduleUri")
+				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri,true)
+				log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} ...")
+				// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
+				def errCount = validateModule(module)
+				if (errCount > 0) {
+					log.info("*** ERROR: Skipping module '${module.getTitle()}' due to $errCount errors")
+					return // goes to next module
+				}
+				else {
+					log.info("Module '${module.getTitle()}' validated")
+				}
+			}
+		}
 		//refresh.
 		if (includes['phases'] != null) {
 			// Get field mappings, target members map and RM modules to translate to ADO
@@ -204,31 +224,16 @@ class TranslateRmModulesToADO implements CliAction {
 			log.info('Getting ADO Project Members...')
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			log.info("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
-			def modules = clmRequirementsManagementService.queryForModules(projectURI, rmQuery)
+			def moduleUris = clmRequirementsManagementService.queryForModules(rmQuery)
 			def changeList = []
 			def idMap = [:]
 			int iModule = 1
 			int count = 0
-			modules.each { module ->
-				log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} (${iModule++} of ${modules.size()}) ...")
-				module.checkForDuplicates()
-				// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
-				def errCount = 0
-				module.orderedArtifacts.each { artifact ->
-					if ((artifact.getIsHeading() && artifact.getArtifactType() != 'Heading') ||
-						(!artifact.getIsHeading() && artifact.getArtifactType() == 'Heading') ) {
-						log.error("*** ERROR: Artifact #${artifact.getID()} has inconsistent heading row type in module ${module.getTitle()}")
-						errCount++
-					}
-					else if (artifact.getIsHeading() && (artifact.hasEmbeddedImage() || artifact.getFormat() == 'WrapperResource')) {
-						log.error("*** ERROR: Artifact #${artifact.getID()} is heading with image or attachment in module ${module.getTitle()}")
-						errCount++
-					} 
-					else if (artifact.getIsDuplicate()) {
-						log.error("*** ERROR: Artifact #${artifact.getID()} is a duplicate instance in module ${module.getTitle()}.  This is not yet supported in ADO.")
-						errCount++
-					}
-				}
+			moduleUris.each { moduleUri ->
+				log.info("${getCurTimestamp()} - Getting next module: $moduleUri")
+				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri,false)
+				log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} ...")
+				def errCount = validateModule(module)
 				if (errCount > 0) {
 					log.info("*** ERROR: Skipping module '${module.getTitle()}' due to $errCount errors")
 					return // goes to next module
@@ -318,7 +323,34 @@ class TranslateRmModulesToADO implements CliAction {
 
 
 	}
-	
+
+	def validateModule(def module)	{
+		def errCount = 0
+		if (module.orderedArtifacts == null || module.orderedArtifacts.size() < 1) {
+			log.error("*** ERROR: No elements found in module ${module.getTitle()}")
+			errCount++
+		}
+		else {
+			module.checkForDuplicates()
+		}
+		// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
+		module.orderedArtifacts.each { artifact ->
+			if ((artifact.getIsHeading() && artifact.getArtifactType() != 'Heading') ||
+				(!artifact.getIsHeading() && artifact.getArtifactType() == 'Heading') ) {
+				log.error("*** ERROR: Artifact #${artifact.getID()} has inconsistent heading row type in module ${module.getTitle()}")
+				errCount++
+			}
+			else if (artifact.getIsHeading() && (artifact.hasEmbeddedImage() || artifact.getFormat() == 'WrapperResource')) {
+				log.error("*** ERROR: Artifact #${artifact.getID()} is heading with image or attachment in module ${module.getTitle()}")
+				errCount++
+			}
+			else if (artifact.getIsDuplicate()) {
+				log.error("*** ERROR: Artifact #${artifact.getID()} is a duplicate instance in module ${module.getTitle()}.  This is not yet supported in ADO.")
+				errCount++
+			}
+		}
+		return errCount
+	}
 	boolean isToIncorporateTitle(def module, def indexOfElementToCheck) {
 		// This function is dependent upon the type of module
 		String artifactType = module.orderedArtifacts[indexOfElementToCheck].getArtifactType()
