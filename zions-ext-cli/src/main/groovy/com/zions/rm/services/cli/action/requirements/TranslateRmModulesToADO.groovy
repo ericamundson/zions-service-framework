@@ -230,7 +230,7 @@ class TranslateRmModulesToADO implements CliAction {
 			int iModule = 1
 			int count = 0
 			moduleUris.each { moduleUri ->
-				log.info("${getCurTimestamp()} - Getting next module: $moduleUri")
+				log.info("${getCurTimestamp()} - Getting data for module: $moduleUri")
 				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri,false)
 				log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} ...")
 				def errCount = validateModule(module)
