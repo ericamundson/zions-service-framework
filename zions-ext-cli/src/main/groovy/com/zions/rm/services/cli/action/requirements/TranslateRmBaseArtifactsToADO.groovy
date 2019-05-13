@@ -281,7 +281,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 						String about = "${rmItem.Requirement.@'rdf:about'}"
 						ClmArtifact artifact = new ClmArtifact('', format, about)
 						if (format == 'Text') {
-							clmRequirementsManagementService.getTextArtifact(artifact,false)
+							clmRequirementsManagementService.getTextArtifact(artifact,false,true)
 						}
 						else if (format == 'WrapperResource'){
 							clmRequirementsManagementService.getNonTextArtifact(artifact)
