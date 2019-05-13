@@ -5,6 +5,6 @@ import org.springframework.stereotype.Component
 
 @Slf4j
 @Component
-public class RequirementsQueryHandler extends BaseQueryHandler {
+public class RequirementsQueryHandler extends BaseDatabaseQueryHandler {
 
 }
