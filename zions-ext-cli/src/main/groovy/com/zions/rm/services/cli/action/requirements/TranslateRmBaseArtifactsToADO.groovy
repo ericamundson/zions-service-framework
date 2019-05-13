@@ -289,7 +289,7 @@ T1.ISSOFTDELETED = 0 AND
 				if (phase == 'requirements') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					clmRequirementsItemManagementService.resetNewId()
-					rmDatabaseQueryService.init()
+					//rmDatabaseQueryService.init()
 					log.debug("Getting content of ${items.size()} items")
 					items.each { rmItem ->
 						String sid = "${rmItem.reference_id}"
