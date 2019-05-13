@@ -2,7 +2,7 @@ package com.zions.qm.services.test.handlers
 
 import org.springframework.stereotype.Component
 
-@Component
+@Component('QmDescriptionHandler')
 class DescriptionHandler extends QmBaseAttributeHandler {
 
 	public String getQmFieldName() {

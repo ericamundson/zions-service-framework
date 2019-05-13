@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 import com.zions.qm.services.test.ClmTestManagementService
 
-@Component
+@Component('QmResultOwnerHandler')
 class ResultOwnerHandler extends QmBaseAttributeHandler {
 	@Autowired
 	ClmTestManagementService clmTestManagementService

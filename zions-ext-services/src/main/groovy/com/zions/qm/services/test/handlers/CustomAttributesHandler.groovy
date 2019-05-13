@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
-@Component
+@Component('QmCustomAttributesHandler')
 class CustomAttributesHandler extends QmBaseAttributeHandler {
 	
 	@Autowired

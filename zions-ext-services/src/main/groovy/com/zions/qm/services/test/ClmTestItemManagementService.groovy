@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
-
+import com.zions.qm.services.test.handlers.QmBaseAttributeHandler
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
@@ -52,8 +52,8 @@ public class ClmTestItemManagementService {
 	@Autowired
 	ICacheManagementService cacheManagementService
 
-	@Autowired
-	private Map<String, IFieldHandler> fieldMap;
+	@Autowired(required=false)
+	Map<String, QmBaseAttributeHandler> fieldMap;
 
 	@Autowired
 	TestMappingManagementService testMappingManagementService
@@ -267,8 +267,19 @@ public class ClmTestItemManagementService {
 	
 	private def getFieldData(def qmItemData, def id, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null) {
 		String handlerName = "${field.source}"
+		String qmHandlerName = "Qm${handlerName.substring(0,1).toUpperCase()}${handlerName.substring(1)}"
 		String fValue = ""
-		if (this.fieldMap["${handlerName}"] != null) {
+		if (this.fieldMap[qmHandlerName] != null) {
+			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
+			if (testCase != null) {
+				data['testCase'] = testCase
+			}
+			if (resultMap != null) {
+				data['resultMap'] = resultMap
+			}
+			def fieldData = this.fieldMap[qmHandlerName].execute(data)
+			return fieldData
+		} else if (this.fieldMap["${handlerName}"] != null) {
 			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
 			if (testCase != null) {
 				data['testCase'] = testCase
@@ -279,6 +290,7 @@ public class ClmTestItemManagementService {
 			def fieldData = this.fieldMap["${handlerName}"].execute(data)
 			return fieldData
 		}
+
 		return null
 	}
 

@@ -29,9 +29,9 @@ import groovy.xml.XmlUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
+@Component('CcmCommentsHandler')
 @Slf4j
-class CommentsHandler implements IFieldHandler {
+class CommentsHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

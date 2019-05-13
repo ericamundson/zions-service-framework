@@ -11,7 +11,7 @@ import com.zions.qm.services.test.ClmTestManagementService
 import groovy.xml.MarkupBuilder
 import groovy.xml.XmlUtil
 
-@Component
+@Component('QmStepsHandler')
 class StepsHandler extends QmBaseAttributeHandler {
 	@Autowired
 	ClmTestManagementService clmTestManagementService

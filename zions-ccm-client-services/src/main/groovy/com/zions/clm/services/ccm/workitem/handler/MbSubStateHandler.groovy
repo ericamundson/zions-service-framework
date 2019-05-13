@@ -36,9 +36,9 @@ import org.eclipse.core.runtime.IProgressMonitor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
+@Component('CcmMbSubStateHandler')
 @Slf4j
-class MbSubStateHandler implements IFieldHandler {
+class MbSubStateHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

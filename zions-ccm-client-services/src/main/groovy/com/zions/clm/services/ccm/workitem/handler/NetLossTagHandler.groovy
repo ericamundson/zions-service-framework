@@ -36,9 +36,9 @@ import org.eclipse.core.runtime.IProgressMonitor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component
+@Component('CcmNetLossTagHandler')
 @Slf4j
-class NetLossTagHandler implements IFieldHandler {
+class NetLossTagHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired

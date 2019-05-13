@@ -3,6 +3,8 @@ package com.zions.qm.services.test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import com.zions.common.services.cacheaspect.Cache
+import com.zions.common.services.link.LinkInfo
 
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
@@ -92,10 +94,19 @@ class ClmTestManagementService {
 		def result = qmGenericRestClient.get(
 			//contentType: ContentType.XML,
 			uri: uri,
+			query: [calmlinks: true],
 			headers: [Accept: 'text/xml'] );
 		return result
 	
 	}
+	
+	@Cache(elementType = LinkInfo)
+	public List<LinkInfo> getAllLinks(String id, Date timeStamp, testItem) {
+		List<LinkInfo> links = new ArrayList<LinkInfo>()
+		return links
+		
+	}
+
 	
 	def getProjectArea(String name) {
 		def thepa = null
