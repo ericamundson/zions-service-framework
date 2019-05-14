@@ -64,11 +64,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			// strip out all namespace stuff from html
 			String description = "${value}".replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')
 			description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
-			// Process any embedded images
 
+			// Process any embedded images and table formatting
 			outHtml = processHtml(description, sId, itemData)
 		}
-		return 	outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>')
+		return 	outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll('Â', '')
 	}
 	
 	def processHtml(String html, String sId, def itemData) {
