@@ -3,6 +3,7 @@ package com.zions.rm.services.cli.action.requirements
 import com.zions.common.services.cache.CacheInterceptorService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
+import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.db.DatabaseQueryService
 import com.zions.common.services.logging.FlowInterceptor
 import com.zions.common.services.rest.IGenericRestClient
@@ -10,8 +11,7 @@ import com.zions.common.services.restart.Checkpoint
 import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.common.services.restart.IQueryHandler
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
-import com.zions.rm.services.requirements.RequirementQueryData
-import com.zions.common.services.db.DataWarehouseQueryData
+import com.zions.rm.services.requirements.DataWarehouseQueryData
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -52,6 +52,8 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 	@Value('${clm.pageSize}')
 	String clmPageSize
 	
+	String select
+	
 	def currentItems
 	
 	Date currentTimestamp = new Date()
@@ -71,21 +73,20 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 //			log.debug("Creating first QueryStart cache for RM")
 //		}
 		String pageId = "${page}"
-		String dbQueryString = rmDatabaseQueryService.QueryString()
 		log.debug("getItems for page ${pageId} at timestamp ${currentTimestamp}")
-		new CacheInterceptor() {}.provideCaching(rmDatabaseQueryService, pageId, currentTimestamp, DataWarehouseQueryData) {
-			currentItems = rmDatabaseQueryService.query(dbQueryString)
+		new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, DataWarehouseQueryData) {
+			currentItems = clmRequirementsManagementService.queryDatawarehouseSource()
 		}
 		return currentItems
 	}
 
 	//feels weird to just call like this
 	public String initialUrl() {
-		return rmDatabaseQueryService.initialUrl()
+		return clmRequirementsManagementService.initialUrlDb()
 	}
 
 	public String getPageUrl() {
-		return rmDatabaseQueryService.pageUrl()
+		return clmRequirementsManagementService.pageUrlDb()
 	}
 
 	//see it's caching the data warehouse stuff page by page, I think
@@ -95,8 +96,8 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 		page++
 		String pageId = "${page}"
 		log.debug("Retrieving next DB page: ${page}")
-		new CacheInterceptor() {}.provideCaching(rmDatabaseQueryService, pageId, currentTimestamp, DataWarehouseQueryData) {
-			currentItems = rmDatabaseQueryService.nextPage()
+		new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, DataWarehouseQueryData) {
+			currentItems = clmRequirementsManagementService.nextPageDb()
 		}
 		log.debug("Returning next DB page: ${page}")
 		return currentItems

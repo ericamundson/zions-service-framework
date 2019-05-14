@@ -33,7 +33,6 @@ import groovy.xml.XmlUtil
 import com.zions.rm.services.requirements.ClmArtifact
 import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
 import com.zions.rm.services.requirements.RequirementQueryData
-import com.zions.common.services.db.DataWarehouseQueryData
 
 /**
  * Provides command line interaction to synchronize RRM requirements management with ADO.
@@ -154,8 +153,6 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	@Autowired 
 	ClmRequirementsManagementService clmRequirementsManagementService
 	@Autowired
-	DatabaseQueryService rmDatabaseQueryService
-	@Autowired
 	ClmRequirementsFileManagementService rmFileManagementService
 	@Autowired
 	IRestartManagementService restartManagementService
@@ -268,7 +265,7 @@ T1.ISSOFTDELETED = 0 AND
 		}
 		if (includes['flushQueries'] != null) {
 			log.info("Refreshing cache of main DNG query from JRS")
-			rmDatabaseQueryService.flushQueries()
+			clmRequirementsManagementService.flushQueries()
 			log.info("Finished refreshing cache of main DNG query from JRS, future operations should use this cache")
 		}
 		if (includes['whereused'] != null) {
