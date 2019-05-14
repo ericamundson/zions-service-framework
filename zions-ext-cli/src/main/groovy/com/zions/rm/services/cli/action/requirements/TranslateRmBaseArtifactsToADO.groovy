@@ -304,10 +304,10 @@ T1.ISSOFTDELETED = 0 AND
 							String about = "${rmItem.about}"
 							ClmArtifact artifact = new ClmArtifact('', format, about)
 							if (format == 'Text') {
-								clmRequirementsManagementService.getTextArtifact(artifact,false)
+								clmRequirementsManagementService.getTextArtifact(artifact,false,true)
 							}
 							else if (format == 'WrapperResource'){
-								clmRequirementsManagementService.getNonTextArtifact(artifact)
+								clmRequirementsManagementService.getNonTextArtifact(artifact,true)
 							}
 							else {
 								log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
