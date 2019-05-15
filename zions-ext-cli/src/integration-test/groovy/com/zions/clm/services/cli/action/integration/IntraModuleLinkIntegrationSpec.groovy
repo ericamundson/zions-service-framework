@@ -35,6 +35,8 @@ import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.command.CommandManagementService
+import com.zions.common.services.db.DatabaseQueryService
+import com.zions.common.services.db.IDatabaseQueryService
 import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.query.IFilter
@@ -178,6 +180,9 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 	PlansQueryHandler plansQueryHandler
 	
 	@Autowired
+	IDatabaseQueryService databaseQueryService
+	
+	@Autowired
 	Map<String, IFilter> filterMap
 	
 	def rmUrls = []
@@ -252,6 +257,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		ccmToAdo.execute(appArgs)
 
 		then: 'validate existence of work items with links to Requirement type work items in ADO'
+		true
 		
 		cleanup: 'Cleanup all ADO changes for next integration run.'
 		String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-'"
@@ -264,41 +270,41 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 	}
 	
 	def 'QM to RM item linking'() {
-//		setup: 'Setup RM work items()'
-//		setupRMToADO();
-//		
-//		and: 'Setup QM with RM linking'
-//		setupQMToADOForRMLinks()
-//		
-//		when: 'Run RM to ADO element translation'
-//		def appArgs = new DefaultApplicationArguments(loadRMArgs())
-//		//restartManagementService.selectedCheckpoint = 'last'
-//		cacheManagementService.cacheModule = 'RM'
-//		restartManagementService.queryHandlers = ['requirementsQueryHandler': requirementsQueryHandler]
-//		restartManagementService.includePhases = 'requirements'
-//		rmBaseToAdo.execute(appArgs)
-//		def wiData = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
-//				
-//		then: 'validate existence of requirements work items in ADO'
-//		wiData.size() == 8
-//		
-//		when: 'Run QM to ADO element translation'
-//		appArgs = new DefaultApplicationArguments(loadQMArgs())
+		setup: 'Setup RM work items()'
+		setupRMToADO();
+		
+		and: 'Setup QM with RM linking'
+		setupQMToADOForRMLinks()
+		
+		when: 'Run RM to ADO element translation'
+		def appArgs = new DefaultApplicationArguments(loadRMArgs())
 		//restartManagementService.selectedCheckpoint = 'last'
-//		restartManagementService.queryHandlers = ['plansQueryHandler': plansQueryHandler, 'linksQueryHandler': linksQueryHandler]
-//		restartManagementService.includePhases = 'plans, links'
-//		cacheManagementService.cacheModule = 'QM'
-//		qmtoAdo.execute(appArgs)
+		cacheManagementService.cacheModule = 'RM'
+		restartManagementService.queryHandlers = ['requirementsQueryHandler': requirementsQueryHandler]
+		restartManagementService.includePhases = 'requirements'
+		rmBaseToAdo.execute(appArgs)
+		def wiData = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
+				
+		then: 'validate existence of requirements work items in ADO'
+		wiData.size() == 8
+		
+		when: 'Run QM to ADO element translation'
+		appArgs = new DefaultApplicationArguments(loadQMArgs())
+		//restartManagementService.selectedCheckpoint = 'last'
+		restartManagementService.queryHandlers = ['plansQueryHandler': plansQueryHandler, 'linksQueryHandler': linksQueryHandler]
+		restartManagementService.includePhases = 'plans, links'
+		cacheManagementService.cacheModule = 'QM'
+		qmtoAdo.execute(appArgs)
 
-//		then: 'Validate QM to RM links'
-//		
-//		cleanup:
-//		cacheManagementService.cacheModule = 'QM'
-//		testManagementService.cleanupTestItems('', tfsProject, "${tfsProject}\\test")
-//		
-//		cacheManagementService.cacheModule = 'RM'
-//		String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-'"
-//		workManagementService.clean('',tfsProject, query)
+		then: 'Validate QM to RM links'
+		
+		cleanup:
+		cacheManagementService.cacheModule = 'QM'
+		testManagementService.cleanupTestItems('', tfsProject, "${tfsProject}\\test")
+		
+		cacheManagementService.cacheModule = 'RM'
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-'"
+		workManagementService.clean('',tfsProject, query)
 
 		
 	}
@@ -463,11 +469,22 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 	
 	def setupRMToADO() {
 		
-		clmRequirementsManagementService.queryForArtifacts(_, _, _, _) >> {
-			def result = dataGenerationService.generate('/testdata/RequirementsQuery1.xml')
-			return result
+//		clmRequirementsManagementService.queryForArtifacts(_, _, _, _) >> {
+//			def result = dataGenerationService.generate('/testdata/RequirementsQuery1.xml')
+//			return result
+//		}
+		databaseQueryService.query(_) >> {
+			return dataGenerationService.generate('/testdata/rmFirstQueryResult.json')
 		}
-		
+		databaseQueryService.initialUrl() >> {
+			return 'abigselect/1/1'
+		}
+		databaseQueryService.pageUrl() >> {
+			return 'abigselect/1/2'
+		}
+		databaseQueryService.nextPage() >> {
+			return null
+		}
 	}
 	
 	def setupCCMToADOForRMLinks() {
@@ -863,6 +880,12 @@ class IntraModuleLinkIntegrationSpecConfig {
 	@Bean
 	RequirementsQueryHandler requirementsQueryHandler() {
 		return new RequirementsQueryHandler()
+	}
+	
+	@Bean
+	IDatabaseQueryService databaseQueryService() {
+		return mockFactory.Stub(DatabaseQueryService)
+		//return new DatabaseQueryService()
 	}
 	//End RM beans
 
