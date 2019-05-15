@@ -5,6 +5,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.db.DatabaseQueryService
+import com.zions.common.services.db.IDatabaseQueryService
 import com.zions.common.services.logging.FlowInterceptor
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.Checkpoint
@@ -28,7 +29,7 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 	ClmRequirementsManagementService clmRequirementsManagementService
 	
 	@Autowired
-	DatabaseQueryService rmDatabaseQueryService
+	IDatabaseQueryService databaseQueryService
 	
 	@Autowired
 	ICacheManagementService cacheManagementService
@@ -91,8 +92,8 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 
 	//see it's caching the data warehouse stuff page by page, I think
 	public Object nextPage() {
-		String nextUrl = this.getPageUrl()
-		if (nextUrl == null) return null
+//		String nextUrl = this.getPageUrl()
+//		if (nextUrl == null) return null
 		page++
 		String pageId = "${page}"
 		log.debug("Retrieving next DB page: ${page}")

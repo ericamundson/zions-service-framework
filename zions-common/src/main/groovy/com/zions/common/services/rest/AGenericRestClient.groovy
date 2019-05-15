@@ -265,7 +265,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		}
 		//JsonOutput t
 		if (resp.status != 200 && resp.status != 201) {
-			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
+			log.error("GenericRestClient::rateLimitPost -- Failed. Status: "+resp.getStatusLine());
 			System.sleep(300000)
 			resp = delegate.post(retryCopy)
 		}
