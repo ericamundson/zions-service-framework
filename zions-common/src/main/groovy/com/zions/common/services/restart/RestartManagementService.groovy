@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.query.IFilter
+import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 
 /**

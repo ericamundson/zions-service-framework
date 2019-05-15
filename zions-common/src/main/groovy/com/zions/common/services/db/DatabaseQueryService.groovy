@@ -1,6 +1,9 @@
 package com.zions.common.services.db
 
 import groovy.sql.Sql
+import groovy.util.logging.Slf4j
+
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Component
  * @author z091182
  *
  */
+@Slf4j
 @Component
 class DatabaseQueryService implements IDatabaseQueryService {
 	@Value('${db.url:}')
@@ -26,6 +30,7 @@ class DatabaseQueryService implements IDatabaseQueryService {
 
 	@Value('${page.size:100}')
 	int pageSize
+
 	
 	Sql sql = null
 	
@@ -91,5 +96,5 @@ class DatabaseQueryService implements IDatabaseQueryService {
 		// TODO Auto-generated method stub
 		return "${select}/1/${pageSize}"
 	}
-
 }
+

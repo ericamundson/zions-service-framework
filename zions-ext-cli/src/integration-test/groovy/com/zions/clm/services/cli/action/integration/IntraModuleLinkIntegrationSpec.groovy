@@ -35,6 +35,8 @@ import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.command.CommandManagementService
+import com.zions.common.services.db.DatabaseQueryService
+import com.zions.common.services.db.IDatabaseQueryService
 import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.query.IFilter
@@ -183,6 +185,9 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 	
 	@Autowired 
 	WorkitemAttributeManager workitemAttributeManager
+	
+	@Autowired
+	IDatabaseQueryService databaseQueryService
 	
 	@Autowired
 	Map<String, IFilter> filterMap
@@ -428,11 +433,23 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 	
 	def setupRMToADO() {
 		
-		clmRequirementsManagementService.queryForArtifacts(_, _, _, _) >> {
-			def result = dataGenerationService.generate('/testdata/RequirementsQuery1.xml')
-			return result
+//		clmRequirementsManagementService.queryForArtifacts(_, _, _, _) >> {
+//			def result = dataGenerationService.generate('/testdata/RequirementsQuery1.xml')
+//			return result
+//		}
+		databaseQueryService.query(_) >> {
+			return dataGenerationService.generate('/testdata/rmFirstQueryResult.json')
 		}
-		
+		databaseQueryService.initialUrl() >> {
+			return 'abigselect/1/1'
+		}
+		databaseQueryService.pageUrl() >> {
+			return 'abigselect/1/2'
+		}
+		databaseQueryService.nextPage() >> {
+			return null
+		}
+
 	}
 	
 	def setupCCMToADOForRMLinks() {
@@ -862,6 +879,12 @@ class IntraModuleLinkIntegrationSpecConfig {
 	@Bean
 	RequirementsQueryHandler requirementsQueryHandler() {
 		return new RequirementsQueryHandler()
+	}
+	
+	@Bean
+	IDatabaseQueryService databaseQueryService() {
+		return mockFactory.Stub(DatabaseQueryService)
+		
 	}
 	//End RM beans
 

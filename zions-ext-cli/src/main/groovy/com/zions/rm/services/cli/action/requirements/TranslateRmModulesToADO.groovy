@@ -230,7 +230,7 @@ class TranslateRmModulesToADO implements CliAction {
 			int iModule = 1
 			int count = 0
 			moduleUris.each { moduleUri ->
-				log.info("${getCurTimestamp()} - Getting next module: $moduleUri")
+				log.info("${getCurTimestamp()} - Getting data for module: $moduleUri")
 				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri,false)
 				log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} ...")
 				def errCount = validateModule(module)
@@ -356,17 +356,18 @@ class TranslateRmModulesToADO implements CliAction {
 		String artifactType = module.orderedArtifacts[indexOfElementToCheck].getArtifactType()
 		String moduleType = module.getArtifactType()
 		boolean shouldMerge = false 
-		if ((moduleType == 'Functional Spec') &&
-			   (artifactType == 'Supporting Material' ||
-				artifactType == 'Scope' ||
+		if (artifactType == 'Supporting Material') { // regardless of module
+			shouldMerge = true
+		}
+		else if ((moduleType == 'Functional Spec') &&
+			   (artifactType == 'Scope' ||
 				artifactType == 'Out of Scope' ||
 				artifactType == 'Assumption' ||
 				artifactType == 'Issue' )) {
 			shouldMerge = true 
 		}
 		else if ((moduleType == 'UI Spec') &&
-			   (artifactType == 'Supporting Material' ||
-				artifactType == 'Screen Change' ||
+			   (artifactType == 'Screen Change' ||
 				artifactType == 'User Interface Flow'))	{
 			shouldMerge = true 
 		}

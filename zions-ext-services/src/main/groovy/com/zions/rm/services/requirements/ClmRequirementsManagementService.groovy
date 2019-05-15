@@ -1,10 +1,11 @@
 package com.zions.rm.services.requirements
 
-
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cacheaspect.CacheWData
+import com.zions.common.services.db.DatabaseQueryService
+import com.zions.common.services.db.IDatabaseQueryService
 import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.rest.IGenericRestClient
 
@@ -14,11 +15,16 @@ import org.springframework.stereotype.Component
 import groovy.util.slurpersupport.NodeChild
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
+import groovy.json.JsonBuilder
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import groovy.transform.Canonical
 import groovy.util.logging.Slf4j
 import java.nio.charset.StandardCharsets
 import java.text.Normalizer
 import org.apache.commons.io.IOUtils
+
+
 
 /**
  * Handles queries into DNG to navigate object structure of DNG.
@@ -68,6 +74,9 @@ class ClmRequirementsManagementService {
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
 	
+	@Autowired
+	IDatabaseQueryService databaseQueryService
+
 	
 	def queryForModules(String query) {
 		String uri = this.rmGenericRestClient.clmUrl + "/rm/publish/collections?" + query;
@@ -155,40 +164,65 @@ class ClmRequirementsManagementService {
 		return clmModule
 
 	}
+	
+	def queryDatawarehouseSource() {
+		String select = QueryString() //will replace this or fix QueryString when there is a better way to get the SQL
+		databaseQueryService.init()
+		return databaseQueryService.query(select)
+	}
+	
+	def nextPageDb() {
+		return databaseQueryService.nextPage()
+	}
+	
+	def pageUrlDb() {
+		return databaseQueryService.pageUrl()
+	}
+	
+	def initialUrlDb() {
+		return databaseQueryService.initialUrl()
+	}
 
-	//This is copied from the ClmWorkItem and Test management services, but we may not need it
-	//as we are possibly handling things via BaseQueryHandler's getItems forcing it to saveToCache a new timestamp
-	//in scenarios where the previous cache does not exist
-	def flushQueries(String projectURI, String oslcNS, String oslcSelect, String oslcWhere) {
+	//
+	def flushQueries() {
 		Date ts = new Date()
 		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
-		int page = 0
+		int pageCount = 0
 		def currentItems
-		new CacheInterceptor() {}.provideCaching(this, "${page}", ts, RequirementQueryData) {
-			currentItems = this.queryForArtifacts(projectURI, oslcNS, oslcSelect, oslcWhere)
+		def iUrl
+//		try {
+		new CacheInterceptor() {}.provideCaching(this, "${pageCount}", ts, DataWarehouseQueryData) {
+			currentItems = this.queryDatawarehouseSource()
 		}
 		while (true) {
-			String nextUrl = "${currentItems.ResponseInfo.nextPage.@'rdf:resource'}"
-			if (nextUrl == '') break
-			page++
-			new CacheInterceptor() {}.provideCaching(this, "${page}", ts, RequirementQueryData) {
-				currentItems = this.nextPage(nextUrl)
+			iUrl = this.pageUrlDb()
+			pageCount++
+			new CacheInterceptor() {}.provideCaching(this, "${pageCount}", ts, DataWarehouseQueryData) {
+				currentItems = this.nextPageDb()
 			}
+			if(!currentItems) break;
 		}
-		/*would like to do something more like:
-		 String nextUrl = geturl(projectUri blah blah)
-		 do {
-		 	new CacheInterceptor() {}.provideCaching(this, "${page}", ts, RequirementQueryData) {
-			currentItems = this.nextPage(nextUrl)
-			}
-			nextUrl = "${currentItems.ResponseInfo.nextPage.@'rdf:resource'}"
-			page++
-		} while (nextUrl != '')
-		
-	     * but I won't because I'm sure it would break something
-	     * just seems like repeated code all over 
-		 * 
-		 */
+	}
+	
+	//Utterly disgusting but I'm trying to make it work right now
+	//should read this from a file because sql is too big/ugly for java parameters
+	//ideally there's some flex way we can stick dates in it so we can parameterize modified date for Update
+	public String QueryString() {
+		return '''SELECT T1.REFERENCE_ID as reference_id,
+  T1.URL as about,
+  T1.Primary_Text as text
+FROM RIDW.VW_REQUIREMENT T1
+LEFT OUTER JOIN RICALM.VW_RQRMENT_ENUMERATION T2
+ON T2.REQUIREMENT_ID=T1.REQUIREMENT_ID AND T2.NAME='Release'
+WHERE T1.PROJECT_ID = 19  AND
+(  T1.REQUIREMENT_TYPE NOT IN ( 'Change Request','Actor','Use Case','User Story','Spec Proxy','Function Point','Process Inventory','Term','Use Case Diagram' ) AND
+  T2.LITERAL_NAME = 'Deposits'  AND
+  LENGTH(T1.URL) = 65 AND
+  T1.REC_DATETIME > TO_DATE('05/01/2014','mm/dd/yyyy')
+) AND
+T1.ISSOFTDELETED = 0 AND
+(T1.REQUIREMENT_ID <> -1 AND T1.REQUIREMENT_ID IS NOT NULL)
+'''
 	}
 
 	
@@ -572,9 +606,7 @@ class ClmRequirementsManagementService {
 //		}
 		return links
 	}
-	
-	
-}
+	}
 
 //This class is used by the CacheInterceptor to store the direct query results; there are similar identical classes for both CCM and QM.
 //I am unsure if the classname is why they are different and that has some impact on how the data is stored in the cache,
@@ -592,5 +624,19 @@ class RequirementQueryData implements CacheWData {
 		log.debug("ReqQueryData returning serialized result dataValue")
 		return new XmlSlurper().parseText(data)
 	}
+}
 
+@Slf4j
+class DataWarehouseQueryData implements CacheWData {
+	def data
+	
+	void doData(def result) {
+		log.debug("DWQueryData serializing result doData")
+		data = new JsonBuilder(result).toPrettyString()
+	}
+	
+	def dataValue() {
+		log.debug("DWQueryData returning serialized result dataValue")
+		return new JsonSlurper().parseText(data)
+	}
 }

@@ -8,7 +8,7 @@ import com.zions.common.services.query.IFilter
 class AllFilter implements IFilter {
 
 	public def filter(def items) {
-		return items.Description.member.each { req ->
+		return items.each { req ->
 			true
 		}
 	}
