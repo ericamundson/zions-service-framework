@@ -26,13 +26,14 @@ class DatabaseQueryServiceSpec extends Specification {
 		when:  'call query and paging calls'
 		boolean flag = true
 		try {
+			println 'JVM Languages:'
 			def page = databaseQueryService.query('select * from languages')
 			String iUrl = databaseQueryService.initialUrl()
 			while (true) {
 				page.each { item ->
-					println "Id:  ${item.id}, Name: ${item.name}"
+					println "	Id: ${item.id}, Name: ${item.name}"
 				}
-				println 'end page'
+				println '	end page'
 				iUrl = databaseQueryService.pageUrl()
 				page = databaseQueryService.nextPage()
 				if (!page) break;
@@ -54,12 +55,12 @@ class DatabaseQueryServiceSpec extends Specification {
 		sql.execute '''
     create table languages(
         id integer not null auto_increment,
-        name varchar(20) not null,
+        name varchar(50) not null,
         primary key(id)
     )
 '''
 		 
-		['Groovy', 'Java', 'C++', 'JRuby', 'Clojure', 'Jython'].each {
+		['Groovy', 'Java', 'Kotlin', 'JRuby', 'Clojure', 'Jython', 'Pascal', 'Cobol', 'Smalltalk', 'Visual Basic (Jabaco)'].each {
 			sql.execute "insert into languages(name) values($it)"
 		}
 	}
