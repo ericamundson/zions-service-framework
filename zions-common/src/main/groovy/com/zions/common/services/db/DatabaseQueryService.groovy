@@ -68,6 +68,7 @@ class DatabaseQueryService implements IDatabaseQueryService {
 
 	@Override
 	public def nextPage() {
+		index += pageSize
 		def page = []
 		sql.eachRow(this.select, index, pageSize) { row ->
 			def rowm = [:]
@@ -82,8 +83,7 @@ class DatabaseQueryService implements IDatabaseQueryService {
 	}
 	
 	public String pageUrl() {
-		index += pageSize
-		return "${select}/${index}/${pageSize}"
+		return "${select}/${index+pageSize}/${pageSize}"
 	}
 
 	@Override
