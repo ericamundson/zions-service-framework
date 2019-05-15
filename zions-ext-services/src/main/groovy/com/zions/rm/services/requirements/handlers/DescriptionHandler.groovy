@@ -55,7 +55,14 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			// For wrapper resource (uploaded file), we need to create our own description with hyperlink to attachment
 			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, itemData.getFileHref())
 			if (fileItem) {
-			outHtml = "<div><a href='" + fileItem.url + "&amp;download=true'>Uploaded Attachment: ${fileItem.fileName}</a></div>"
+				if (isImageFile("${fileItem.fileName}")) {
+					// convert uploaded image to embedded image
+					outHtml = "<div><img alt='Embedded image' src='" + fileItem.url + "'/></div>"
+				}
+				else {
+					// include link to attached document
+					outHtml = "<div><a href='" + fileItem.url + "&amp;download=true'>Uploaded Attachment: ${fileItem.fileName}</a></div>"
+				}
 			} else {
 				outHtml = "<div>Uploading Attachment from CLM failed, please see original work item</div>"
 			}
@@ -99,7 +106,14 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, wrappedResourceArtifact.getFileHref())
 				
 				// Now delete image node
-				String attachmentLink = "<div><a href='" + fileItem.url + "&amp;download=true'>Uploaded Attachment: ${fileItem.fileName}</a></div>"
+				String attachmentLink
+				if (isImageFile("${fileItem.fileName}")) {
+					// Convert uploaded image to an embedded image
+					attachmentLink = "<div><img alt='Embedded image' src='" + fileItem.url + "'/></div>"
+				}
+				else {
+					attachmentLink = "<div><a href='" + fileItem.url + "&amp;download=true'>Uploaded Attachment: ${fileItem.fileName}</a></div>"
+				}
 				if (wrapperRootNode) {
 					wrapperRootNode.appendNode(new XmlSlurper().parseText(attachmentLink))
 				}
@@ -143,4 +157,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		}		
 	}
 
+	boolean isImageFile(String filename) {
+		return (filename.toLowerCase().indexOf('.png') > 0 || filename.toLowerCase().indexOf('.jpg'))
+	}
 }
