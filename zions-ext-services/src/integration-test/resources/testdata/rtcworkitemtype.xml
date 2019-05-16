@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<workitem Version="1.0.0" rel="next" href="https://clm.cs.zionsbank.com/ccm/rpt/repository/workitem?id=_xvPvYAR5EemrdrP3IQbjAw&amp;fields=projectArea%2FprojectArea%2Fname&amp;size=100&amp;pos=100">
+<projectArea>
+<workItemTypes>
+<name>Prod Test SandBox (CCM)</name>
+</workItemTypes>
+</projectArea>
+<projectArea>
+<name>Zions FutureCore Program (Change Management)</name>
+</projectArea>
+<projectArea>
+<name>BA Project Area (Change Management)</name>
+</projectArea>
+</workitem>

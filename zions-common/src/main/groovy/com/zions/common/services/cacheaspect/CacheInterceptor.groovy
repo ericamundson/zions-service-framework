@@ -88,7 +88,7 @@ trait CacheInterceptor implements Interceptor {
 				doRun = true
 				return
 			}
-			log.trace("beforeInvoke is returning cached data")
+			//log.trace("beforeInvoke is returning cached data")
 			return cacheData.dataValue()
 		}
 	}
@@ -99,7 +99,7 @@ trait CacheInterceptor implements Interceptor {
 			if (!cacheData) {
 				CacheWData data = this.eTypeClass.newInstance()
 				data.doData(result)
-				log.trace("afterInvoke is saving serialized data to cache")
+				//log.trace("afterInvoke is saving serialized data to cache")
 				cacheManagementService.saveToCache(data, id, eType)
 			}
 		}
