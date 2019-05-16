@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<complexType>
+			<complexContent>
+				<extension base="reportableArtifact">
+					<sequence>
+						<element ref="alm:updated">
+							<annotation>
+								<documentation xml:lang="en">
+									[READ-ONLY] The last modification date of a resource. Format is XML
+									dateTime.
+								</documentation>
+							</annotation>
+						</element>
+						<element ref="dc:title">
+							<annotation>
+								<documentation xml:lang="en">The execution
+									variable value.</documentation>
+							</annotation>
+						</element>
+						<element minOccurs="0" name="expectedTotalPoints"
+						type="int">
+						<annotation>
+							<documentation xml:lang="en">
+								The expected number of total points during the test phase.
+							</documentation>
+						</annotation>
+					    </element>
+						<element maxOccurs="1" minOccurs="1"
+							name="executionvariable">
+							<annotation>
+								<documentation xml:lang="en">
+									[IMMUTABLE] The execution variable that this value is associated with.
+								</documentation>
+							</annotation>
+							<complexType>
+								<attribute name="href" type="anyURI"
+									use="required">
+									<annotation>
+										<documentation xml:lang="en">The URL of the
+											execution variable.</documentation>
+									</annotation>
+								</attribute>
+							</complexType>
+						</element>
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+

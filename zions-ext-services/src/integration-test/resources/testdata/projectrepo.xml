@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<soapenv:Envelope
+	xmlns:rest="com.ibm.team.process.internal.common.rest"
+	xmlns:com.ibm.team.repository.common.services="http:///com/ibm/team/core/services.ecore"
+	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<soapenv:Body>
+	<summary>projectArea</summary>
+		<response>
+		<summary>projectArea</summary>
+			<method>getProjectAreasPaged</method>
+			<interface>com.ibm.team.process.internal.service.web.IProcessWebUIService</interface>
+			<returnValue xsi:type="com.ibm.team.repository.common.services:ComplexDataArg">
+				<type>COMPLEX</type>
+				<value xsi:type="rest:ResultSetDTO">
+				<count>38</count>
+				</value>
+			</returnValue>
+		</response>
+	</soapenv:Body>
+</soapenv:Envelope>
