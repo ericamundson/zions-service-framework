@@ -21,6 +21,7 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 		when: 'Run getChanges'
 		
 		then: 'Validate resulting changes'
+		true
 		
 	}
 
