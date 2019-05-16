@@ -74,7 +74,7 @@ class ClmRequirementsManagementService {
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
 	
-	@Autowired
+	@Autowired(required=false)
 	IDatabaseQueryService databaseQueryService
 
 	
