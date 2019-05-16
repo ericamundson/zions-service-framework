@@ -74,6 +74,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 		}
 		
 		then: 'ensure success'
+		success
 	}
 
 }
@@ -99,10 +100,6 @@ class ClmRequirementsFileManagementServiceSpecConfig {
 		return factory.Mock(CacheManagementService)
 	}
 	
-	@Bean
-	IAttachments attachmentService() {
-		return factory.Mock(RmAttachmentManagementServiceSpec)
-	}
 	
 	@Bean
 	ClmRequirementsFileManagementService underTest() {
@@ -112,6 +109,11 @@ class ClmRequirementsFileManagementServiceSpecConfig {
 	@Bean
 	RequirementsMappingManagementService rmMappingManagementService() {
 		return new RequirementsMappingManagementService()
+	}
+	
+	@Bean
+	IAttachments attachmentService() {
+		return factory.Mock(IAttachments)
 	}
 
 }

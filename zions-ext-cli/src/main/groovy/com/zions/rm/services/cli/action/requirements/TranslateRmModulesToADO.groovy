@@ -356,17 +356,18 @@ class TranslateRmModulesToADO implements CliAction {
 		String artifactType = module.orderedArtifacts[indexOfElementToCheck].getArtifactType()
 		String moduleType = module.getArtifactType()
 		boolean shouldMerge = false 
-		if ((moduleType == 'Functional Spec') &&
-			   (artifactType == 'Supporting Material' ||
-				artifactType == 'Scope' ||
+		if (artifactType == 'Supporting Material') { // regardless of module
+			shouldMerge = true
+		}
+		else if ((moduleType == 'Functional Spec') &&
+			   (artifactType == 'Scope' ||
 				artifactType == 'Out of Scope' ||
 				artifactType == 'Assumption' ||
 				artifactType == 'Issue' )) {
 			shouldMerge = true 
 		}
 		else if ((moduleType == 'UI Spec') &&
-			   (artifactType == 'Supporting Material' ||
-				artifactType == 'Screen Change' ||
+			   (artifactType == 'Screen Change' ||
 				artifactType == 'User Interface Flow'))	{
 			shouldMerge = true 
 		}

@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
 
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cacheaspect.Cache
+import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.qm.services.test.handlers.QmBaseAttributeHandler
@@ -60,6 +62,10 @@ public class ClmTestItemManagementService {
 		
 	int newId = -1
 	
+	Map<String, String> itemMap = ['testcase': 'Test Case', 'testsuite': 'Test Suite', 'testplan': 'Test Case']
+	
+	Map<String, String> wiNameMap = ['testcase': 'Test Case', 'testsuite': 'Test Suite WI', 'testplan': 'Test Plan WI']
+	
 	
 	def resetNewId() {
 		newId = -1
@@ -69,6 +75,60 @@ public class ClmTestItemManagementService {
 		
 	}
 	
+	void cacheLinkChanges(def qmItemData) {
+		String iType = "${qmItemData.name()}"
+		String oType = wiNameMap[iType]
+		String sid = "${qmItemData.webId.text()}-${oType}"
+		String tss = "${qmItemData.updated.text()}"
+		Date ts = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", tss)
+		List<LinkInfo> links = getAllLinks(sid, ts, qmItemData)
+
+	}
+	
+	void processForLinkChanges(def qmItemData, Closure closure) {
+		String iType = "${qmItemData.name()}"
+		String oType = wiNameMap[iType]
+		String sid = "${qmItemData.webId.text()}-${oType}"
+		String tss = "${qmItemData.updated.text()}"
+		def cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
+		if (!cacheWI) return
+		Date ts = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", tss)
+		List<LinkInfo> links = getAllLinks(sid, ts, qmItemData)
+		if (links.size() == 0) return
+		String cid = "${cacheWI.id}"
+		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+		def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
+		wiData.body.add(rev)
+		links.each { LinkInfo info ->
+			String id = info.itemIdRelated
+			String module = info.moduleRelated
+			def url = null
+			def runId = null
+			def linkId = null
+			def linkWI = cacheManagementService.getFromCache(id, module, ICacheManagementService.WI_DATA)
+			if (linkWI) {
+				linkId = linkWI.id
+				url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
+			}
+			if (linkId && !linkExists(cacheWI, linkId) && "${linkId}" != "${cacheWI.id}") {
+				def change = [op: 'add', path: '/relations/-', value: [rel: 'System.LinkTypes.Related', url: url, attributes:[comment: "${info.type}"]]]
+				wiData.body.add(change)
+			}
+
+		}
+		if (wiData.body.size() > 1) {
+			closure(oType, wiData)
+		}
+	}
+
+	boolean linkExists(cacheWI, linkId) {
+		def url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
+		def link = cacheWI.relations.find { rel ->
+			url == "${rel.url}"
+		}
+		return link != null
+	}
+
 	/**
 	 * Main entry point for generating requests
 	 * 
@@ -293,6 +353,27 @@ public class ClmTestItemManagementService {
 
 		return null
 	}
+	
+	@Cache(elementType = LinkInfo)
+	public List<LinkInfo> getAllLinks(String id, Date timeStamp, testItem) {
+		List<LinkInfo> links = new ArrayList<LinkInfo>()
+		String itype = "${testItem.name()}"
+		String otype = itemMap[itype]
+		String wid = "${testItem.webId.text()}-${otype}"
+		testItem.requirement.each { req ->
+			String rid = "${req.@href}"
+			LinkInfo info = new LinkInfo(type: 'requirement', itemIdCurrent: wid, itemIdRelated: rid, moduleCurrent: 'QM', moduleRelated: 'RM')
+			links.add(info)
+		}
+		testItem.relatedChangeRequest.each { wi ->
+			String rid = "${wi.@href}"
+			LinkInfo info = new LinkInfo(type: 'relatedChangeRequest', itemIdCurrent: wid, itemIdRelated: rid, moduleCurrent: 'QM', moduleRelated: 'CCM')
+			links.add(info)
+		}
+		return links
+		
+	}
+
 
 	private def getTestMaps(qmItemData) {
 		String type = "${qmItemData.name()}"

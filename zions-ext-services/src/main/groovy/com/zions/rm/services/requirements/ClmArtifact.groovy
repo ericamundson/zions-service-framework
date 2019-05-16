@@ -85,6 +85,6 @@ class ClmArtifact {
 		}
 	}
 	private String stripTags(String input) {
-		return input.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("&#xa0;", ' ').replaceAll("&amp;", '&').replaceAll("\\<.*?>","")
+		return input.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("&#xa0;", ' ').replaceAll("&#xc2;", ' ').replaceAll("&amp;", '&').replaceAll("\\<.*?>","")
 	}
 }

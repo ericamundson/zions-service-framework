@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:acc="http://open-services.net/ns/core/acc#"
+	xmlns:acp="http://jazz.net/ns/acp#"
+	xmlns:calm="http://jazz.net/xmlns/prod/jazz/calm/1.0/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:dng_task="http://jazz.net/ns/rm/dng/task#"
+	xmlns:jazz_rm="http://jazz.net/ns/rm#"
+	xmlns:nav="http://jazz.net/ns/rm/navigation#"
+	xmlns:oslc="http://open-services.net/ns/core#"
+	xmlns:oslc_auto="http://open-services.net/ns/auto#"
+	xmlns:oslc_config="http://open-services.net/ns/config#"
+	xmlns:oslc_rm="http://open-services.net/ns/rm#"
+	xmlns:process="http://jazz.net/ns/process#"
+	xmlns:public_rm_10="http://www.ibm.com/xmlns/rm/public/1.0/"
+	xmlns:rm="http://www.ibm.com/xmlns/rdm/rdf/"
+	xmlns:rm_property="https://clm.cs.zionsbank.com/rm/types/">
+	<oslc_rm:Requirement
+		rdf:about="https://clm.cs.zionsbank.com/rm/resources/_VRFm8-L7EeS1AZ5YZsutBA">
+		<oslc_rm:validatedBy rdf:ID="n38"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vayTIOo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n13"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_tMgoQ-o5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n98"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vkAgk-o4EeWSXPAepUatNg" />
+		<rdf:type rdf:resource="http://jazz.net/ns/rm#Text" />
+		<oslc_rm:validatedBy rdf:ID="n0"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_tVOfYeo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n30"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_s5HyMeo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n28"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_srUmw-o5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n78"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_mlXKkeo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n95"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_lS42Eeo4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n102"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/39169" />
+		<oslc_rm:affectedBy rdf:ID="n104"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/39611" />
+		<oslc_rm:validatedBy rdf:ID="n54"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_nfKgYeo4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n124"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/117064" />
+		<oslc_rm:validatedBy rdf:ID="n51"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_nT8H0eo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n49"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_uyiAU-o4EeWSXPAepUatNg" />
+		<dcterms:creator
+			rdf:resource="https://clm.cs.zionsbank.com/jts/users/z080876" />
+		<oslc_rm:validatedBy rdf:ID="n56"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ntMVUeo4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n121"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/84859" />
+		<oslc_rm:validatedBy rdf:ID="n53"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_oZokkOo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n23"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_tBJs0-o5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n85"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_nDkwkeo4EeWSXPAepUatNg" />
+		<dcterms:title rdf:parseType="Literal">Bucket adjustments
+		</dcterms:title>
+		<oslc_rm:validatedBy rdf:ID="n7"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_sfGvseo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n86"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_lmNasOo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n21"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_swT0cOo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n20"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_snhr4eo5EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n120"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/91309" />
+		<oslc_rm:validatedBy rdf:ID="n33"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_m-gDUOo4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n116"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/43290" />
+		<oslc_rm:affectedBy rdf:ID="n110"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/40692" />
+		<oslc_rm:validatedBy rdf:ID="n26"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_sK72geo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n90"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_lKfIAeo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n66"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_l9Sd8Oo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n29"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_sjp4geo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n65"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_qjcJseo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n10"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_tJQf8eo5EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n115"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/43059" />
+		<oslc_rm:affectedBy rdf:ID="n123"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/113275" />
+		<process:projectArea
+			rdf:resource="https://clm.cs.zionsbank.com/rm/process/project-areas/_klNSEBNGEeSmasotILOx6w" />
+		<oslc_rm:validatedBy rdf:ID="n91"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ld8Pgeo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n72"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_uqnac-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n37"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vuOzkeo4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n109"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/40623" />
+		<dcterms:identifier
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#string">6388</dcterms:identifier>
+		<oslc_rm:validatedBy rdf:ID="n44"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_u3k4Yeo4EeWSXPAepUatNg" />
+		<rm_property:_QnuncQoREeWG_8WdrBu0ag>Syndication and Participation
+		</rm_property:_QnuncQoREeWG_8WdrBu0ag>
+		<process:teamArea
+			rdf:resource="https://clm.cs.zionsbank.com/rm/process/project-areas/_klNSEBNGEeSmasotILOx6w/team-areas/_VrYI4NTzEeWs4aVoIVyOXg" />
+		<oslc_rm:validatedBy rdf:ID="n50"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vB3c0eo4EeWSXPAepUatNg" />
+		<rm_property:_rgQ6sQoSEeWG_8WdrBu0ag
+			rdf:resource="https://clm.cs.zionsbank.com/rm/types/_e_38QQoSEeWG_8WdrBu0ag#7a1c9163-6943-40a7-8c06-0e0d9825c221" />
+		<oslc_rm:validatedBy rdf:ID="n19"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_tEi_E-o5EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n111"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/40802" />
+		<oslc_rm:validatedBy rdf:ID="n97"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ut5X8eo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n74"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vpBjceo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n36"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vWBu8Oo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n25"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_t0o_Qeo5EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n114"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/43051" />
+		<oslc_rm:affectedBy rdf:ID="n108"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/40378" />
+		<oslc_rm:validatedBy rdf:ID="n45"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_w5V70eo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n81"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_nODiQeo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n76"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_mg2eA-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n40"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vGAV8-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n55"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_oLzj8-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n52"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_n14-Ueo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n58"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_nkrSgOo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n82"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_mvsLQeo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n59"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_n-aoMeo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n87"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_k8LmQOo4EeWSXPAepUatNg" />
+		<rm_property:_lHNdMQouEeWG_8WdrBu0ag>Participations/Syndications
+		</rm_property:_lHNdMQouEeWG_8WdrBu0ag>
+		<oslc_rm:validatedBy rdf:ID="n68"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_qwd5EOo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n18"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_rohtAeo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n60"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_oTPoseo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n32"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_m6fGDOo4EeWSXPAepUatNg" />
+		<rm_property:_tpCPwRNWEeSmasotILOx6w
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#string" />
+		<oslc_rm:validatedBy rdf:ID="n3"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_sPsas-o5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n100"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ubpxY-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n94"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_lYmcgeo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n64"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_qomWgeo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n15"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_sGVDU-o5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n8"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_s0xdseo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n67"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_l4Z98eo4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n113"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/42924" />
+		<oslc_rm:validatedBy rdf:ID="n77"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_mdFYU-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n24"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_wxRvg-o5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n80"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_m0cIYOo4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n103"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/39300" />
+		<jazz_rm:primaryText rdf:parseType="Literal">
+			<div xmlns="http://www.w3.org/1999/xhtml">
+				<p dir="ltr" id="_14290529666430">When acting as a member bank, TCS BaNCS must allow
+					a user to make adjustments to the following buckets to support
+					reconciliation discrepancies between Agent and member:</p>
+				<p dir="ltr" id="_14290529666431">a. Principal</p>
+				<p dir="ltr" id="_14290529666432">b. Normal Interest</p>
+				<p dir="ltr" id="_14290529666433">c. Default Interest</p>
+				<p dir="ltr" id="_14290529666434">d. Commitment Interest</p>
+				<p dir="ltr" id="_14290529666435">e. Fee</p>
+			</div>
+		</jazz_rm:primaryText>
+		<oslc_rm:affectedBy rdf:ID="n122"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/112937" />
+		<oslc_rm:affectedBy rdf:ID="n105"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/39803" />
+		<oslc_rm:validatedBy rdf:ID="n34"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_rln_c-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n22"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_tdXuxeo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n9"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_rWh-E-o5EeWSXPAepUatNg" />
+		<oslc:serviceProvider
+			rdf:resource="https://clm.cs.zionsbank.com/rm/oslc_rm/_klNSEBNGEeSmasotILOx6w/services.xml" />
+		<oslc_rm:validatedBy rdf:ID="n93"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_lhpq0Oo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n46"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ww05A-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n79"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_nHzwUeo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n31"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vKDIc-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n84"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_oFL-keo4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n112"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/41333" />
+		<oslc_rm:validatedBy rdf:ID="n41"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_wnG8Ueo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n61"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_q0igwOo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n70"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_qNnDoeo4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n107"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/40329" />
+		<oslc_rm:affectedBy rdf:ID="n117"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/43292" />
+		<dcterms:modified
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-07-16T18:42:48.412Z</dcterms:modified>
+		<oslc_rm:validatedBy rdf:ID="n88"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_lOzAQOo4EeWSXPAepUatNg" />
+		<rm_property:_WEV2YRNWEeSmasotILOx6w
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PSA-SYN-700</rm_property:_WEV2YRNWEeSmasotILOx6w>
+		<oslc_rm:validatedBy rdf:ID="n2"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_tQmeE-o5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n17"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_tZTHEeo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n1"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_s9Ly0eo5EeWSXPAepUatNg" />
+		<rm_property:_XmhlYRNXEeSmasotILOx6w
+			rdf:resource="https://clm.cs.zionsbank.com/rm/types/_WIcvwhNVEeSmasotILOx6w#ceb7c9c2-b537-4bc6-8099-12cf107c5983" />
+		<oslc_config:component
+			rdf:resource="https://clm.cs.zionsbank.com/rm/cm/component/_DlyjYLHoEea1KfoGehhVEQ" />
+		<oslc_rm:validatedBy rdf:ID="n83"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_mqpTMeo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n69"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_q4X34-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n4"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_tgsIgOo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n99"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ueiGQeo4EeWSXPAepUatNg" />
+		<rm_property:_OtXMUhNXEeSmasotILOx6w
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PSA-SYN-700-281</rm_property:_OtXMUhNXEeSmasotILOx6w>
+		<oslc_rm:validatedBy rdf:ID="n35"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vSLJseo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n5"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ts0gA-o5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n92"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_lBVzEeo4EeWSXPAepUatNg" />
+		<dcterms:contributor
+			rdf:resource="https://clm.cs.zionsbank.com/jts/users/v070965" />
+		<oslc_rm:affectedBy rdf:ID="n125"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/135346" />
+		<oslc_rm:validatedBy rdf:ID="n27"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_raROkeo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n12"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_tkC-geo5EeWSXPAepUatNg" />
+		<rm_property:_hPAYARNWEeSmasotILOx6w
+			rdf:resource="https://clm.cs.zionsbank.com/rm/types/_mP7i8RNQEeSmasotILOx6w#cb88cab7-315b-4d65-8b7f-5faaefc54f0e" />
+		<rm_property:_mVb5khNGEeSmasotILOx6w
+			rdf:resource="https://clm.cs.zionsbank.com/rm/types/_mFxs8RNGEeSmasotILOx6w#753d4b7c-7734-44cf-805f-72f3554c72d1" />
+		<oslc_rm:validatedBy rdf:ID="n6"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_0dPq8-o5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n47"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_u7STs-o4EeWSXPAepUatNg" />
+		<acp:accessControl
+			rdf:resource="https://clm.cs.zionsbank.com/rm/accessControl/_klNSEBNGEeSmasotILOx6w" />
+		<oslc_rm:affectedBy rdf:ID="n106"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/39979" />
+		<oslc_rm:validatedBy rdf:ID="n75"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vz_dU-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n71"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_uh6xc-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n89"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_k3_CxOo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n16"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_0gZso-o5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n63"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_qsszYeo4EeWSXPAepUatNg" />
+		<dcterms:created
+			rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2015-04-14T23:09:57.043Z</dcterms:created>
+		<oslc_rm:validatedBy rdf:ID="n39"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_vOfjk-o4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n119"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/43054" />
+		<oslc_rm:validatedBy rdf:ID="n14"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_txBDgeo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n43"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_w1Ft9eo4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n57"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_nZ9QQeo4EeWSXPAepUatNg" />
+		<rm_property:_C_lWkhNXEeSmasotILOx6w
+			rdf:resource="https://clm.cs.zionsbank.com/rm/types/_oCM1ARNUEeSmasotILOx6w#8c0a4f4b-31e6-437c-88b2-a9eeebdc9e98" />
+		<oslc_rm:validatedBy rdf:ID="n48"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_u-lfU-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n11"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_toXd0eo5EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n62"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_qJNr0-o4EeWSXPAepUatNg" />
+		<nav:parent
+			rdf:resource="https://clm.cs.zionsbank.com/rm/folders/_Yh4isRQNEeSmasotILOx6w" />
+		<oslc_rm:validatedBy rdf:ID="n73"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_umg9k-o4EeWSXPAepUatNg" />
+		<oslc_rm:affectedBy rdf:ID="n118"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/43294" />
+		<oslc:instanceShape
+			rdf:resource="https://clm.cs.zionsbank.com/rm/types/_Kajd4hNYEeSmasotILOx6w" />
+		<oslc_rm:affectedBy rdf:ID="n101"
+			rdf:resource="https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/31076" />
+		<oslc_rm:validatedBy rdf:ID="n42"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_ws5bQ-o4EeWSXPAepUatNg" />
+		<oslc_rm:validatedBy rdf:ID="n96"
+			rdf:resource="https://clm.cs.zionsbank.com/qm/oslc_qm/contexts/_aC9CQPfREeOd1div3hxkJQ/resources/com.ibm.rqm.planning.VersionedTestCase/_veYZseo4EeWSXPAepUatNg" />
+	</oslc_rm:Requirement>
+	<rdf:Description rdf:about="#n90">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-NORMINT-ADJ_766
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n92">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-NORMINT-ADJ_767
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n91">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-NORMINT-ADJ_773
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n94">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-NORMINT-ADJ-_775
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n93">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-NORMINT-ADJ_771
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n96">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-DEFAULTINT-ADJ_808
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n95">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-NORMINT-ADJ_774
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n10">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-ACCRU-ADJ-_439
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n98">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-DEFAULTINT-ADJ_809
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n97">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-DEFAULTINT-ADJ-_815
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n12">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-INT-ADJ-_430
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n11">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-ACCRU-ADJ-_431
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n99">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-DEFAULTINT-ADJ_814
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n14">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-INT-ADJ-_427
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n13">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-INT-ADJ-_424
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n16">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/BUCKET-TO-BUCKET/Performing
+			Default Interest Accrual adjustment - Decrease transaction on
+			Customer account under Syndication Arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n15">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/NORM-INT-ADJ-_404
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n18">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/COMM-INT-ADJ-_418
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n17">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-INT-ADJ-_421
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n19">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-ACCRU-ADJ/Performing
+			Default Interest Accrual adjustment - Decrease transaction on
+			Customer account under Part Sale - Servicing Sold Arrangement
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n21">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-ACCRU-ADJ-_433
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n20">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-ACCRU-ADJ/Performing
+			Default Interest Accrual adjustment - Decrease transaction on
+			Customer account under Syndication Arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n23">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-ACCRU-ADJ/Performing
+			Default Interest Accrual adjustment - Decrease transaction on
+			Customer account under Participation Arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n22">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-INT-ADJ-_422
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n25">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-INT-ADJ/Performing
+			Default Interest Accrual adjustment - Decrease transaction on
+			Customer account under Participation Arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n121">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n24">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/BUCKET-TO-BUCKET/Performing
+			Bucket to Bucket adjustment transaction on Customer account under
+			Part Sale - Servicing Sold Arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n122">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n27">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/COMM-INT-ADJ/Performing
+			Commitment Interest Accrual adjustment - Increase transaction on
+			Customer account under Syndication Arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n26">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/NORM-INT-ADJ/Performing
+			Normal Interest Accrual adjustment - Decrease transaction on Customer
+			account under Part Sale - Servicing Sold Arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n120">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n29">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-ACCRU-ADJ-_436
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n125">
+		<dcterms:title rdf:parseType="Literal">135346: FS-SYN-002/700-281
+			: Member is not present for Part purchase without servicing
+			arrangement in migrated data.</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n28">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-ACCRU-ADJ-_432
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n123">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n124">
+		<dcterms:title rdf:parseType="Literal">117064: FS-SYN-002:Error
+			4290 is displayed when creating default interest on mirror account
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n30">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/BUCKET-TO-BUCKET_441
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n32">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-COMMINT-ADJ_796
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n31">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-COMMINT-ADJ_803
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n34">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-COMMINT-ADJ_798
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n33">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-COMMINT-ADJ_797
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n36">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-COMMINT-ADJ_800
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n35">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-COMMINT-ADJ_799
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n38">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-COMMINT-ADJ_804
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n37">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-COMMINT-ADJ-_805
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n39">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-COMMINT-ADJ_801
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n41">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-DEFAULTINT-ADJ_824
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n40">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-COMMINT-ADJ_802
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n43">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-DEFAULTINT-ADJ_821
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n42">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-DEFAULTINT-ADJ-_825
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n45">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-DEFAULTINT-ADJ_822
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n44">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-DEFAULTINT-ADJ_820
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n47">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-DEFAULTINT-ADJ_818
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n46">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-DEFAULTINT-ADJ_823
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n49">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-DEFAULTINT-ADJ_819
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n48">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-DEFAULTINT-ADJ_816
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n0">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-INT-ADJ-_423
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n1">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/BUCKET-TO-BUCKET_442
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n2">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-INT-ADJ-_425
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n3">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/NORM-INT-ADJ-_409
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n4">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-INT-ADJ-_426
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n5">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-INT-ADJ-_429
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n6">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/BUCKET-TO-BUCKET_444
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n50">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/PAY-DEFAULTINT-ADJ_817
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n7">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-ACCRU-ADJ-_435
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n8">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/DEFAULT-ACCRU-ADJ-_437
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n52">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/PAY-NORMINT-ADJ_781
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n9">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/NORM-INT-ADJ-_410
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n51">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-NORMINT-ADJ_779
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n54">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/PAY-NORMINT-ADJ_778
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n53">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/PAY-NORMINT-ADJ_783
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n56">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//PAY-NORMINT-ADJ_777
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n55">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/PAY-NORMINT-ADJ_784
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n58">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/PAY-NORMINT-ADJ_776
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n57">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/PAY-NORMINT-ADJ_780
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n59">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/PAY-NORMINT-ADJ-_785
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n61">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//REC-PRIN-ADJ/
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n60">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/PAY-NORMINT-ADJ_782
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n63">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-PRIN-ADJ/Performing
+			Receivable Settlement Principal adjustment - Increase transaction
+			under Part Sale - Servicing Retained arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n62">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-PRIN-ADJ/Performing
+			Receivable Settlement Principal adjustment - Increase transaction
+			under Syndication arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n65">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-PRIN-ADJ/Performing
+			Receivable Settlement Principal adjustment - Increase transaction
+			under Part Sale - Servicing Retained arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n64">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-PRIN-ADJ/Performing
+			Receivable Settlement Principal adjustment - Decrease transaction
+			under Participation arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n67">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-PRIN-ADJ/Performing
+			Receivable Settlement Principal adjustment - Decrease transaction
+			under Full Sale - Servicing Retained arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n66">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-PRIN-ADJ/Performing
+			Receivable Settlement Principal adjustment - Decrease transaction
+			under Part Purchase - With Servicing arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n69">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-PRIN-ADJ/Performing
+			Receivable Settlement Principal adjustment - Increase transaction
+			under Part Purchase - With Servicing arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n68">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-PRIN-ADJ/Performing
+			Receivable Settlement Principal adjustment - Decrease transaction
+			under Syndication arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n70">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//REC-PRIN-ADJ/Performing
+			Receivable Settlement Principal adjustment - Decrease transaction
+			under Participation arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n72">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-DEFAULTINT-ADJ/Performing
+			Receivable Settlement Default Interest adjustment - Decrease
+			transaction under Syndication arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n71">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-DEFAULTINT-ADJ/Performing
+			Receivable Settlement Default Interest adjustment - Decrease
+			transaction under Participation arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n74">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-DEFAULTINT-ADJ/Performing
+			Receivable Settlement Default Interest adjustment - Increase
+			transaction under Participation arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n73">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-DEFAULTINT-ADJ/Performing
+			Receivable Settlement Default Interest adjustment - Increase
+			transaction under Part Purchase - With Servicing arrangement
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n76">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//REC-COMMINT-ADJ_791
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n75">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-DEFAULTINT-ADJ/Performing
+			Receivable Settlement Default Interest adjustment - Increase
+			transaction under Syndication arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n78">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-COMMINT-ADJ_789
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n77">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-COMMINT-ADJ_790
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n110">
+		<dcterms:title rdf:parseType="Literal">40692: FS-SYN-002:
+			Commitment interest is not getting billed when commitment interest
+			setup is done on bill generation day.</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n79">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-COMMINT-ADJ_793
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n111">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n114">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n115">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n112">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n113">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n118">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n119">
+		<dcterms:title rdf:parseType="Literal">43054: Accounting Playbook:
+			Transaction Code:10760-Incorrect transaction code getting displayed
+			for Default Interest Adjustment on Backdated advance on Main Loan
+			Account</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n116">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n117">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n81">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-COMMINT-ADJ_794
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n80">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-COMMINT-ADJ_792
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n83">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-COMMINT-ADJ_787
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n82">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-COMMINT-ADJ_788
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n85">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-COMMINT-ADJ-_795
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n84">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-COMMINT-ADJ_786
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n87">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-NORMINT-ADJ_769
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n86">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-NORMINT-ADJ/Performing
+			Receivable Settlement Normal Interest adjustment - Decrease
+			transaction under Participation arrangement</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n89">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-NORMINT-ADJ_768
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n88">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002/700-281/REC-NORMINT-ADJ_770
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n100">
+		<dcterms:title rdf:parseType="Literal">FS-SYN-002//REC-DEFAULTINT-ADJ_813
+		</dcterms:title>
+	</rdf:Description>
+	<rdf:Description rdf:about="#n103">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n104">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n101">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n102">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n107">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n108">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n105">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n106">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+	<rdf:Description rdf:about="#n109">
+		<dcterms:title rdf:parseType="Literal" />
+	</rdf:Description>
+</rdf:RDF>

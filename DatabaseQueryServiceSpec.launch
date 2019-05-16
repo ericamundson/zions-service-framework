@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.junit.launchconfig">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/zions-ext-cli/src/test/groovy"/>
+<listEntry value="/zions-common/src/test/groovy/com/zions/common/services/db/DatabaseQueryServiceSpec.groovy"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
-<listEntry value="2"/>
+<listEntry value="1"/>
 </listAttribute>
-<listAttribute key="org.eclipse.eclemma.core.SCOPE_IDS">
-<listEntry value="=zions-ext-cli/src\/main\/groovy"/>
-</listAttribute>
-<stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=zions-ext-cli/src\/test\/groovy"/>
+<stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
 <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value=""/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.common.services.db.DatabaseQueryServiceSpec"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-common"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-ea -Dspring.profiles.active=test"/>
 </launchConfiguration>

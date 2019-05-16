@@ -5,6 +5,7 @@ import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.db.DatabaseQueryService
+import com.zions.common.services.db.IDatabaseQueryService
 import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.rest.IGenericRestClient
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component
 import groovy.util.slurpersupport.NodeChild
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
+import groovy.json.JsonBuilder
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.transform.Canonical
@@ -72,8 +74,8 @@ class ClmRequirementsManagementService {
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
 	
-	@Autowired
-	DatabaseQueryService rmDatabaseQueryService
+	@Autowired(required=false)
+	IDatabaseQueryService databaseQueryService
 
 	
 	def queryForModules(String query) {
@@ -165,20 +167,20 @@ class ClmRequirementsManagementService {
 	
 	def queryDatawarehouseSource() {
 		String select = QueryString() //will replace this or fix QueryString when there is a better way to get the SQL
-		rmDatabaseQueryService.init()
-		return rmDatabaseQueryService.query(select)
+		databaseQueryService.init()
+		return databaseQueryService.query(select)
 	}
 	
 	def nextPageDb() {
-		return rmDatabaseQueryService.nextPage()
+		return databaseQueryService.nextPage()
 	}
 	
 	def pageUrlDb() {
-		return rmDatabaseQueryService.pageUrl()
+		return databaseQueryService.pageUrl()
 	}
 	
 	def initialUrlDb() {
-		return rmDatabaseQueryService.initialUrl()
+		return databaseQueryService.initialUrl()
 	}
 
 	//
@@ -626,11 +628,11 @@ class RequirementQueryData implements CacheWData {
 
 @Slf4j
 class DataWarehouseQueryData implements CacheWData {
-	String data
+	def data
 	
 	void doData(def result) {
 		log.debug("DWQueryData serializing result doData")
-		data = new JsonOutput().toJson(result)
+		data = new JsonBuilder(result).toPrettyString()
 	}
 	
 	def dataValue() {

@@ -34,7 +34,7 @@ public class RtcRepositoryClient implements Serializable {
 		initializeRTC()
 	}
 	
-	private void initializeRTC() throws TeamRepositoryException {
+	public void initializeRTC() throws TeamRepositoryException {
 		if (!TeamPlatform.isStarted()) {
 			TeamPlatform.startup();
 		}
