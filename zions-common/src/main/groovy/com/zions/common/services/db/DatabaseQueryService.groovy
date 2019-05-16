@@ -1,7 +1,6 @@
 package com.zions.common.services.db
 
 import groovy.sql.Sql
-import groovy.util.logging.Slf4j
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component
  * @author z091182
  *
  */
-@Slf4j
 @Component
 class DatabaseQueryService implements IDatabaseQueryService {
 	@Value('${db.url:}')
