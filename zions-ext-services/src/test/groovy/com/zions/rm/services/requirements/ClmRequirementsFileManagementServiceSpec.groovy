@@ -74,6 +74,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 		}
 		
 		then: 'ensure success'
+		success
 	}
 
 }
@@ -108,6 +109,11 @@ class ClmRequirementsFileManagementServiceSpecConfig {
 	@Bean
 	RequirementsMappingManagementService rmMappingManagementService() {
 		return new RequirementsMappingManagementService()
+	}
+	
+	@Bean
+	IAttachments attachmentService() {
+		return factory.Mock(IAttachments)
 	}
 
 }
