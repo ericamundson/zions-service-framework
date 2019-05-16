@@ -233,7 +233,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		cleanup: 'Remove all ADO changes'
 		cacheManagementService.cacheModule = 'QM'
 		testManagementService.cleanupTestItems('', tfsProject, "${tfsProject}\\test")
-		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.AreaPath] = 'IntegrationTests\\work' OR [System.AreaPath] = 'IntegrationTests'"
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = 'IntegrationTests'"
 		cacheManagementService.cacheModule = 'CCM'
 		workManagementService.clean('', tfsProject, query)
 	}
@@ -271,7 +271,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		
 		cleanup: 'Cleanup all ADO changes for next integration run.'
 		cacheManagementService.cacheModule = 'RM'
-		String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-'"
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-' AND [System.TeamProject] = 'IntegrationTests'"
 		workManagementService.clean('',tfsProject, query)
 		
 		query = "Select [System.Id], [System.Title] From WorkItems Where [System.AreaPath] = 'IntegrationTests' OR [System.AreaPath] = 'IntegrationTests\\work'"
@@ -315,7 +315,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		testManagementService.cleanupTestItems('', tfsProject, "${tfsProject}\\test")
 		
 		cacheManagementService.cacheModule = 'RM'
-		String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-'"
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [Custom.ExternalID] CONTAINS 'DNG-' AND [System.TeamProject] = 'IntegrationTests'"
 		workManagementService.clean('',tfsProject, query)
 
 		
