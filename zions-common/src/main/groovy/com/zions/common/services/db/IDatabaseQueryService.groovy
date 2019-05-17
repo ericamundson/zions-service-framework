@@ -12,6 +12,7 @@ interface IDatabaseQueryService {
 	 * @return Map of results
 	 */
 	def query(String sql);
+	def query(String sql, def parms);
 	
 	/**
 	 * @return Map of result
