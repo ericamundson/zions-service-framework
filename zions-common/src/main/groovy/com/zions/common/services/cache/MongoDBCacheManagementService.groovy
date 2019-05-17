@@ -104,7 +104,10 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 			// TODO Auto-generated catch block
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+		} catch (NullPointerException e) {
+			// weird, this happened to artifact 74184
 		}
+		
 	
 	}
 

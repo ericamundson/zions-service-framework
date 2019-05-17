@@ -181,10 +181,10 @@ class FetchFolderHiearchyFromRM implements CliAction {
 		String about = "${rmItemData.Requirement.@'rdf:about'}"
 		ClmArtifact artifact = new ClmArtifact('', format, about)
 		if (format == 'Text') {
-			clmRequirementsManagementService.getTextArtifact(artifact,false)
+			clmRequirementsManagementService.getTextArtifact(artifact,false,false)
 		}
 		else if (format == 'WrapperResource'){
-			clmRequirementsManagementService.getNonTextArtifact(artifact)
+			clmRequirementsManagementService.getNonTextArtifact(artifact,false)
 		}
 		else {
 			println("WARNING: Unsupported format of $format for artifact id: $identifier")
