@@ -16,7 +16,7 @@ task updateBatJarVersion(type: Copy) {
 	from('batch') {
 		include( '**/*.bat' )
 	}
-	into("batch_out")
+	into("${buildDir}/batch_out")
 	
 	filter {
 		String line -> line.replaceAll('zions-vsts-cli.jar', "zions-vsts-cli-${version}.jar")
