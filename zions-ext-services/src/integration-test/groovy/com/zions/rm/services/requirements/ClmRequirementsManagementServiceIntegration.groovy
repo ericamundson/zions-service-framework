@@ -118,9 +118,12 @@ public class ClmRequirementsManagementServiceSpecConfig {
 	@Value('${cache.location}')
 	String cacheLocation
 	
+	@Value('${sql.resource.name}')
+	String sqlResourceName
+	
 	@Bean
 	ClmRequirementsManagementService underTest() {
-		return new ClmRequirementsManagementService()
+		return new ClmRequirementsManagementService(sqlResourceName)
 	}
 
 	
