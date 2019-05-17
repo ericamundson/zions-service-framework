@@ -78,11 +78,12 @@ class ClmRequirementsManagementService {
 	@Autowired(required=false)
 	IDatabaseQueryService databaseQueryService
 	
-	String selectStatement
+	@Value('${sql.resource.name:/sql/core.sql}') 
+	String sqlResourceName
+	
 
 	
-	ClmRequirementsManagementService(@Value('${sql.resource.name:/sql/core.sql}') String resource) {
-		selectStatement = sqlQuery(resource)
+	ClmRequirementsManagementService() {
 	}
 	
 	def queryForModules(String query) {
@@ -172,14 +173,11 @@ class ClmRequirementsManagementService {
 
 	}
 	
-	String sqlQuery(String sqlresource) {
-		URL url = this.getClass().getResource(sqlresource)
-		File sqlFile = new File(url.file)
-		String sql = sqlFile.text
-		return sql
-	}
 	
 	def queryDatawarehouseSource() {
+		
+		
+		String selectStatement = new SqlLoader().sqlQuery(sqlResourceName)
 		
 //		'''SELECT T1.REFERENCE_ID as reference_id,
 //  T1.URL as about,
@@ -674,4 +672,15 @@ class DataWarehouseQueryData implements CacheWData {
 		log.debug("DWQueryData returning serialized result dataValue")
 		return new JsonSlurper().parseText(data)
 	}
+}
+
+class SqlLoader {
+	
+	String sqlQuery(String sqlresource) {
+		URL url = this.getClass().getResource(sqlresource)
+		File sqlFile = new File(url.file)
+		String sql = sqlFile.text
+		return sql
+	}
+
 }

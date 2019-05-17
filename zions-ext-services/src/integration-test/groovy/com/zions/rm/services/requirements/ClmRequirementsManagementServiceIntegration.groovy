@@ -123,7 +123,7 @@ public class ClmRequirementsManagementServiceSpecConfig {
 	
 	@Bean
 	ClmRequirementsManagementService underTest() {
-		return new ClmRequirementsManagementService(sqlResourceName)
+		return new ClmRequirementsManagementService()
 	}
 
 	

@@ -716,8 +716,6 @@ class IntraModuleLinkIntegrationSpecConfig {
 	String clmUser
 	@Value('${clm.password:}')
 	String clmPassword
-	@Value('${sql.resource.name}')
-	String sqlResourceName
 
 
 	
@@ -844,7 +842,7 @@ class IntraModuleLinkIntegrationSpecConfig {
 	@Bean
 	ClmRequirementsManagementService clmRequirementsManagementService()
 	{
-		return mockFactory.Spy(ClmRequirementsManagementService, constructorArgs: [sqlResourceName])
+		return mockFactory.Spy(ClmRequirementsManagementService)
 	}
 	
 	@Bean
