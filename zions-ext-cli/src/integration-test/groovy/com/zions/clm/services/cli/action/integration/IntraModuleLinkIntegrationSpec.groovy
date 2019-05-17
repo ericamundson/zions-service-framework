@@ -687,6 +687,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 			'--oslc.select="&oslc.select=dcterms:modified,dcterms:identifier,rmTypes:ArtifactFormat"',
 			'--oslc.where="&oslc.where=nav:parent=<https://clm.cs.zionsbank.com/rm/folders/_QMhwgVsGEemdeebbT-QcUQ>"',
 			'--rm.mapping.file=./src/integration-test/resources/testdata/CoreRRMMapping.xml',
+			'--rm.source.sql=./src/integration-test/resources/testdata/rm_datawarehouse_testdata.sql',
 			'--tfs.project=IntegrationTests',
 			'--tfs.teamGuid=none',
 			'--tfs.collectionId=none'

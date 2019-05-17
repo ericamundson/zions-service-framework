@@ -29,7 +29,7 @@ class DatabaseQueryService implements IDatabaseQueryService {
 	@Value('${page.size:100}')
 	int pageSize
 
-	
+
 	Sql sql = null
 	
 	def columnNames = []
@@ -93,6 +93,11 @@ class DatabaseQueryService implements IDatabaseQueryService {
 	public String initialUrl() {
 		// TODO Auto-generated method stub
 		return "${select}/1/${pageSize}"
+	}
+	
+	public String initialUrl(String select) {
+		this.select = select
+		return initialUrl()
 	}
 }
 
