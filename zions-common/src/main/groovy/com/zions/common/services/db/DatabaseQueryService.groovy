@@ -38,6 +38,8 @@ class DatabaseQueryService implements IDatabaseQueryService {
 	
 	String select
 	
+	def parms
+	
 	def init() {
 		if (sql) return
 		sql = groovy.sql.Sql.newInstance(dbUrl, dbUser, dbPassword, dbDriver)
@@ -52,19 +54,31 @@ class DatabaseQueryService implements IDatabaseQueryService {
 		}
 	}
 	
-	@Override
-	public def query(String select) {
+	public def query(String select, def parms = null) {
 		init()
 		this.select = select
+		this.parms = parms
 		index = 1
 		def page = []
-		sql.eachRow(this.select,metaCB, index, pageSize) { row ->
-			def rowm = [:]
-			columnNames.each { name ->
-				String oname = "${name}".toLowerCase()
-				rowm[oname] = row."${name}"
+		if (parms) {
+			sql.eachRow(this.select,parms,metaCB, index, pageSize) { row ->
+				def rowm = [:]
+				columnNames.each { name ->
+					String oname = "${name}".toLowerCase()
+					rowm[oname] = row."${name}"
+				}
+				page.add(rowm)
 			}
-			page.add(rowm)
+		} else {
+			sql.eachRow(this.select, metaCB, index, pageSize) { row ->
+				def rowm = [:]
+				columnNames.each { name ->
+					String oname = "${name}".toLowerCase()
+					rowm[oname] = row."${name}"
+				}
+				page.add(rowm)
+			}
+
 		}
 		return page;
 	}
@@ -73,13 +87,25 @@ class DatabaseQueryService implements IDatabaseQueryService {
 	public def nextPage() {
 		index += pageSize
 		def page = []
-		sql.eachRow(this.select, index, pageSize) { row ->
-			def rowm = [:]
-			columnNames.each { name ->
-				String oname = "${name}".toLowerCase()
-				rowm[oname] = row."${name}"
+		if (parms) {
+			sql.eachRow(this.select,parms,metaCB, index, pageSize) { row ->
+				def rowm = [:]
+				columnNames.each { name ->
+					String oname = "${name}".toLowerCase()
+					rowm[oname] = row."${name}"
+				}
+				page.add(rowm)
 			}
-			page.add(rowm)
+		} else {
+			sql.eachRow(this.select, metaCB, index, pageSize) { row ->
+				def rowm = [:]
+				columnNames.each { name ->
+					String oname = "${name}".toLowerCase()
+					rowm[oname] = row."${name}"
+				}
+				page.add(rowm)
+			}
+
 		}
 		if (page.size() == 0) return null
 		return page;

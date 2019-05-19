@@ -38,6 +38,18 @@ class DatabaseQueryServiceSpec extends Specification {
 				page = databaseQueryService.nextPage()
 				if (!page) break;
 			}
+			println 'With parm JVM Languages:'
+			page = databaseQueryService.query("select * from languages where name = :name", [name: 'Groovy'])
+			iUrl = databaseQueryService.initialUrl()
+			while (true) {
+				page.each { item ->
+					println "	Id: ${item.id}, Name: ${item.name}"
+				}
+				println '	end page'
+				iUrl = databaseQueryService.pageUrl()
+				page = databaseQueryService.nextPage()
+				if (!page) break;
+			}
 		} catch (e) {
 			flag = false
 		}

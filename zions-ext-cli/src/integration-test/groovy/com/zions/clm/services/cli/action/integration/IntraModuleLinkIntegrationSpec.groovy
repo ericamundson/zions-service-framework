@@ -437,7 +437,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 //			def result = dataGenerationService.generate('/testdata/RequirementsQuery1.xml')
 //			return result
 //		}
-		databaseQueryService.query(_) >> {
+		databaseQueryService.query(_, _) >> {
 			return dataGenerationService.generate('/testdata/rmFirstQueryResult.json')
 		}
 		databaseQueryService.initialUrl() >> {

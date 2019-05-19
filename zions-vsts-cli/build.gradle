@@ -1,7 +1,7 @@
 bootJar {
 	enabled = true
 	mainClassName = 'com.zions.vsts.services.cli.CliApplication'
-	archiveName = 'zions-vsts-cli.jar'
+	archiveName = "zions-vsts-cli-${version}.jar"
 	//version =  "${version}"
 }
 
@@ -10,4 +10,15 @@ dependencies {
 	compile project(':zions-ext-services')
 	compile project(':zions-common')
 	
+}
+
+task updateBatJarVersion(type: Copy) {
+	from('batch') {
+		include( '**/*.bat' )
+	}
+	into("${buildDir}/batch_out")
+	
+	filter {
+		String line -> line.replaceAll('zions-vsts-cli.jar', "zions-vsts-cli-${version}.jar")
+	}
 }

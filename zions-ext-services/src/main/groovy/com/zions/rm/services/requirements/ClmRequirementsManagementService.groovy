@@ -174,7 +174,7 @@ class ClmRequirementsManagementService {
 	}
 	
 	
-	def queryDatawarehouseSource() {
+	def queryDatawarehouseSource(Date ts) {
 		
 		
 		String selectStatement = new SqlLoader().sqlQuery(sqlResourceName)
@@ -195,8 +195,9 @@ class ClmRequirementsManagementService {
 //(T1.REQUIREMENT_ID <> -1 AND T1.REQUIREMENT_ID IS NOT NULL)
 //'''
 		 //will replace this or fix QueryString when there is a better way to get the SQL
+		String endDate = ts.format('MM/dd/yyyy')
 		databaseQueryService.init()
-		return databaseQueryService.query(selectStatement)
+		return databaseQueryService.query(selectStatement, [endDate: endDate])
 	}
 	
 	def nextPageDb() {
@@ -224,7 +225,7 @@ class ClmRequirementsManagementService {
 		def iUrl
 //		try {
 		new CacheInterceptor() {}.provideCaching(this, "${pageCount}", ts, DataWarehouseQueryData) {
-			currentItems = this.queryDatawarehouseSource()
+			currentItems = this.queryDatawarehouseSource(ts)
 		}
 		while (true) {
 			iUrl = this.pageUrlDb()

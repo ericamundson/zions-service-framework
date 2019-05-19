@@ -1,7 +1,7 @@
 bootJar {
 	enabled = true
 	mainClassName = 'com.zions.ext.services.cli.CliApplication'
-	archiveName = 'zions-ext-cli.jar'
+	archiveName = "zions-ext-cli-${version}.jar"
 	//version =  null
 }
 
@@ -44,4 +44,16 @@ task integrationTest(type: Test) {
     
 }
 
+
 integrationTest.mustRunAfter test
+
+task updateBatJarVersion(type: Copy) {
+	from('batch') {
+		include( '**/*.bat' )
+	}
+	into("${buildDir}/batch_out")
+	
+	filter {
+		String line -> line.replaceAll('zions-ext-cli.jar', "zions-ext-cli-${version}.jar")
+	}
+}

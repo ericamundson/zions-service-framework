@@ -64,7 +64,7 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 		String pageId = "${page}"
 		log.debug("getItems for page ${pageId} at timestamp ${currentTimestamp}")
 		new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, DataWarehouseQueryData) {
-			currentItems = clmRequirementsManagementService.queryDatawarehouseSource()
+			currentItems = clmRequirementsManagementService.queryDatawarehouseSource(currentTimestamp)
 		}
 		return currentItems
 	}
