@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tag0:feed xmlns:tag0="http://www.w3.org/2005/Atom">
+	<tag0:title type="text">executionresult ATOM feed for project area
+		Mobile and Online Banking (Quality Management)</tag0:title>
+	<tag0:id>https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionresult
+	</tag0:id>
+	<tag0:link rel="alternate"
+		href="https://clm.cs.zionsbank.com/qm/web/console/" />
+	<tag0:link rel="self"
+		href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionresult?fields=feed%2Fentry%2Fcontent%2Fexecutionresult%5Btestcase%2F%40href%3D%27https%3A%2F%2Fclm.cs.zionsbank.com%2Fqm%2Fservice%2Fcom.ibm.rqm.integration.service.IIntegrationService%2Fresources%2FMobile+and+Online+Banking+%28Quality+Management%29%2Ftestcase%2Furn%3Acom.ibm.rqm%3Atestcase%3A49864%27+and+testplan%2F%40href%3D%27https%3A%2F%2Fclm.cs.zionsbank.com%2Fqm%2Fservice%2Fcom.ibm.rqm.integration.service.IIntegrationService%2Fresources%2FMobile+and+Online+Banking+%28Quality+Management%29%2Ftestplan%2Furn%3Acom.ibm.rqm%3Atestplan%3A218%27%5D%2F*" />
+	<tag0:entry>
+		<tag0:id>https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionresult/urn:com.ibm.rqm:executionresult:86040
+		</tag0:id>
+		<tag0:updated>2016-11-18T18:56:56.729Z</tag0:updated>
+		<tag0:title type="text">AUTO Account Transactions</tag0:title>
+		<tag0:summary type="text" />
+		<tag0:link rel="alternate"
+			href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionresult/urn:com.ibm.rqm:executionresult:86040"
+			title="" type="application/xml" />
+		<tag0:link rel="enclosure"
+			href="https://clm.cs.zionsbank.com/qm/web/console/Mobile%20and%20Online%20Banking%20%28Quality%20Management%29/_tx0jEK39Eead8Oi3qsmIPw#action=com.ibm.rqm.planning.home.actionDispatcher&amp;subAction=viewResult&amp;resultItemId=_Qw7hoKX4EeakW4AC6FsNdg"
+			title="Web Console" type="text/html" />
+		<tag0:content type="application/xml">
+			<ns2:executionresult
+				xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+				<ns2:projectArea
+					alias="Mobile+and+Online+Banking+%28Quality+Management%29"
+					href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg" />
+				<ns3:identifier
+					xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionresult/urn:com.ibm.rqm:executionresult:86040
+				</ns3:identifier>
+				<ns2:webId>86040</ns2:webId>
+				<ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">AUTO Account Transactions</ns3:title>
+				<ns2:creationDate>2016-11-08T21:13:57.690Z</ns2:creationDate>
+				<alm:updated xmlns:alm="http://jazz.net/xmlns/alm/v0.1/">2016-11-18T18:56:56.729Z
+				</alm:updated>
+				<alm:state xmlns:alm="http://jazz.net/xmlns/alm/v0.1/">com.ibm.rqm.execution.common.state.passed
+				</alm:state>
+				<ns3:creator
+					xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:ns3="http://purl.org/dc/elements/1.1/"
+					ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z087816">z087816</ns3:creator>
+				<alm:owner
+					xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:alm="http://jazz.net/xmlns/alm/v0.1/"
+					ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z087816">z087816</alm:owner>
+				<ns2:locked>false</ns2:locked>
+				<ns2:rollupResult>false</ns2:rollupResult>
+				<ns16:approvalstate
+					xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1"
+					ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testcaseresult.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</ns16:approvalstate>
+				<ns2:variables />
+				<ns16:machine
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">Local Computer</ns16:machine>
+				<ns16:iterations
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">1</ns16:iterations>
+				<ns16:starttime
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">2016-11-08T21:13:57.690Z</ns16:starttime>
+				<ns16:endtime
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">2016-11-08T21:14:23.317Z</ns16:endtime>
+				<ns16:totalRunTime
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">25627</ns16:totalRunTime>
+				<ns16:weight
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">1</ns16:weight>
+				<ns16:pointspassed
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">1</ns16:pointspassed>
+				<ns16:pointsfailed
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:pointsfailed>
+				<ns16:pointsattempted
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">1</ns16:pointsattempted>
+				<ns16:pointsblocked
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:pointsblocked>
+				<ns16:pointsinconclusive
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:pointsinconclusive>
+				<ns16:scriptStepCount
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCount>
+				<ns16:scriptStepCountPassed
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountPassed>
+				<ns16:scriptStepCountFailed
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountFailed>
+				<ns16:scriptStepCountAttempted
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountAttempted>
+				<ns16:scriptStepCountBlocked
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountBlocked>
+				<ns16:scriptStepCountInconclusive
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountInconclusive>
+				<ns16:scriptStepCountPermFailed
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountPermFailed>
+				<ns16:scriptStepCountDeferred
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">0</ns16:scriptStepCountDeferred>
+				<ns2:stateid>_xxi0sK3AEeakW4AC6FsNdg</ns2:stateid>
+				<ns2:pointspermfailed>0</ns2:pointspermfailed>
+				<ns2:pointsdeferred>0</ns2:pointsdeferred>
+				<ns16:isCurrent
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">true</ns16:isCurrent>
+				<ns16:testcasestateatexecution
+					xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1"
+					ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testcase.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new
+				</ns16:testcasestateatexecution>
+				<ns16:testplanstateatexecution
+					xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1"
+					ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testplan.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new
+				</ns16:testplanstateatexecution>
+				<ns16:testscriptstateatexecution
+					xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1"
+					ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testscript.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new
+				</ns16:testscriptstateatexecution>
+				<ns16:testedby
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">
+					<ns16:tester
+						xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+						ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z087816">z087816</ns16:tester>
+				</ns16:testedby>
+				<ns16:stepResults
+					xmlns:ns16="http://jazz.net/xmlns/alm/qm/v0.1/executionresult/v0.1">
+					<ns16:stepResult
+						xmlns:ns1="http://schema.ibm.com/vega/2008/"
+						result="com.ibm.rqm.execution.common.state.passed"
+						ns1:id="_QxRf4KX4EeakW4AC6FsNdg" stepIndex="1"
+						startTime="2016-11-08T21:14:23.317Z"
+						endTime="2016-11-08T21:14:23.317Z"
+						href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionelementresult/_QxRf4KX4EeakW4AC6FsNdg">
+						<ns16:startTime>2016-11-08T21:14:23.317Z</ns16:startTime>
+						<ns16:endTime>2016-11-08T21:14:23.317Z</ns16:endTime>
+						<ns16:result>com.ibm.rqm.execution.common.state.passed
+						</ns16:result>
+						<ns16:expectedResult>
+							<div xmlns="http://www.w3.org/1999/xhtml">1. Your Quick Transfer of 2.22 will be in the
+								Transactions Pending section and will be displayed in MLFI.
+							</div>
+						</ns16:expectedResult>
+						<ns16:actualResult>
+							<div xmlns="http://www.w3.org/1999/xhtml">Personal NBA,NSB,VBC passed. Covered in
+								automation.</div>
+						</ns16:actualResult>
+						<ns16:description>
+							<div xmlns="http://www.w3.org/1999/xhtml">
+								1. Log into OLB with a user that has a AUTO account
+								<br />
+								<br />
+								<br />
+								<br />
+								2. Go to the Quick Transfer section and select a DDA account for
+								the "From Account" dropdown
+								<br />
+								<br />
+								<br />
+								<br />
+								3. Go to the Quick Transfer section and select the AUTO account
+								listed in the "To Account" dropdown
+								<br />
+								<br />
+								<br />
+								<br />
+								4. Enter 2.22 in the "Amount" box
+								<br />
+								<br />
+								<br />
+								<br />
+								5. Click on the Preview Transfer button
+								<br />
+								<br />
+								<br />
+								<br />
+								6. Click on the Submit button
+								<br />
+								<br />
+								<br />
+								<br />
+								7. Click on the AUTO account name that you selected for the "To
+								Account"
+								<br />
+								<br />
+								<br />
+								<br />
+								8. You will see your transfer in the "Transactions Pending"
+								section
+								<br />
+								<br />
+								<br />
+								<br />
+								9. Go to the Mainframe and use MLFI for the AUTO account (the
+								MLFI appl type is ILD for auto)
+							</div>
+						</ns16:description>
+						<ns16:stepType>com.ibm.rqm.execution.common.elementtype.execution
+						</ns16:stepType>
+						<ns16:tester
+							xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+							ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/z087816">z087816</ns16:tester>
+						<ns16:comment />
+						<ns16:compare />
+					</ns16:stepResult>
+				</ns16:stepResults>
+				<ns2:testcase
+					href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testcase/AUTO_Account_Transactions" />
+				<ns2:testscript
+					href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testscript/AUTO_Account_Transactions" />
+				<ns2:executionworkitem
+					href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/executionworkitem/urn:com.ibm.rqm:executionworkitem:78673" />
+				<ns2:testplan
+					href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testplan/urn:com.ibm.rqm:testplan:218" />
+				<ns2:alias type="string">urn:com.ibm.rqm:executionresult:86040
+				</ns2:alias>
+			</ns2:executionresult>
+		</tag0:content>
+	</tag0:entry>
+</tag0:feed>

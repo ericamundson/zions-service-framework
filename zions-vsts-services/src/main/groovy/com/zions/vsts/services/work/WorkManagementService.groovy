@@ -94,12 +94,20 @@ class WorkManagementService {
 	}
 	
 	def clean(String collection, String project, String query) {
+		def deleted = [:]
 		def wis = getWorkItems(collection, project, query)
 		def changelist = []
 		while (true) {
+			boolean repeatedDelete = false
 			wis.workItems.each { wi ->
+				if (deleted.containsKey(wi.id)) {
+					repeatedDelete = true
+					return
+				}
 				deleteWorkitem(wi.url)
+				deleted[wi.id] = wi
 			}
+			if (repeatedDelete) break
 			wis = getWorkItems(collection, project, query)
 			if (!wis || wis.workItems.size() == 0) break;
 		}

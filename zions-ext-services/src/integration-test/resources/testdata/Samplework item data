@@ -1,0 +1,21 @@
+this is first line //
+this is econd line//\
+this is third line //\
+
+
+<xs:sequence>
+<xs:element minOccurs="0" name="workItem" maxOccurs="unbounded" type="com.ibm.team.workitem.WorkItem"/>
+<xs:element minOccurs="0" name="projectArea" maxOccurs="unbounded" type="com.ibm.team.process.ProjectArea"/>
+<xs:element minOccurs="0" name="teamArea" maxOccurs="unbounded" type="com.ibm.team.process.TeamArea"/>
+<xs:element minOccurs="0" name="contributor" maxOccurs="unbounded" type="com.ibm.team.repository.Contributor"/>
+<xs:element minOccurs="0" name="category" maxOccurs="unbounded" type="com.ibm.team.workitem.Category"/>
+<xs:element minOccurs="0" name="iteration" maxOccurs="unbounded" type="com.ibm.team.process.Iteration"/>
+<xs:element minOccurs="0" name="deliverable" maxOccurs="unbounded" type="com.ibm.team.workitem.Deliverable"/>
+<xs:element minOccurs="0" name="developmentLine" maxOccurs="unbounded" type="com.ibm.team.process.DevelopmentLine"/>
+<xs:element minOccurs="0" name="iterationType" maxOccurs="unbounded" type="com.ibm.team.process.IterationType"/>
+<xs:element minOccurs="0" name="timeSheetEntry" maxOccurs="unbounded" type="com.ibm.team.workitem.TimeSheetEntry"/>
+<xs:element minOccurs="0" name="auditableLink" maxOccurs="unbounded" type="com.ibm.team.links.AuditableLink"/>
+<xs:element minOccurs="0" name="deletedWorkItem" maxOccurs="unbounded" type="com.ibm.team.workitem.DeletedWorkItem"/>
+<xs:element minOccurs="0" name="deletedLink" maxOccurs="unbounded" type="com.ibm.team.workitem.DeletedLink"/>
+</xs:sequence>
+

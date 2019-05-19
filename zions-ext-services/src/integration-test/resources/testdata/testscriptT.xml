@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><ns2:testscript xmlns:ns2="http://jazz.net/xmlns/alm/qm/v0.1/">
+  <ns2:projectArea alias="Mobile+and+Online+Banking+%28Quality+Management%29" href="https://clm.cs.zionsbank.com/qm/resource/itemOid/com.ibm.team.process.ProjectArea/_VdmoMFmxEea4DNHMyk7tfg"/>
+  <ns3:identifier xmlns:ns3="http://purl.org/dc/elements/1.1/">https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/testscript/AUTO_Account_Transactions</ns3:identifier>
+  <ns2:webId>46732</ns2:webId>
+  <ns3:title xmlns:ns3="http://purl.org/dc/elements/1.1/">AUTO Account Transactions</ns3:title>
+  <ns3:description xmlns:ns3="http://purl.org/dc/elements/1.1/">Verify that the account transactions displayed for an AUTO account are correct.
+
+ This is applicable for POLB and BOLB.
+ This is applicable for all affiliates.
+ This is common code.
+
+ AUTO</ns3:description>
+  <ns2:creationDate>2016-11-04T19:43:05.590Z</ns2:creationDate>
+  <alm:updated xmlns:alm="http://jazz.net/xmlns/alm/v0.1/">2018-02-14T21:22:53.911Z</alm:updated>
+  <alm:state xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:alm="http://jazz.net/xmlns/alm/v0.1/" ns7:resource="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/process-info/_VdmoMFmxEea4DNHMyk7tfg/workflowstate/com.ibm.rqm.process.testscript.workflow/com.ibm.rqm.planning.common.new">com.ibm.rqm.planning.common.new</alm:state>
+  <ns3:creator xmlns:ns7="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" ns7:resource="https://clm.cs.zionsbank.com/jts/resource/itemName/com.ibm.team.repository.Contributor/rationalmigration">rationalmigration</ns3:creator>
+  <alm:owner xmlns:alm="http://jazz.net/xmlns/alm/v0.1/">unassigned</alm:owner>
+  <ns2:locked>false</ns2:locked>
+  <ns2:scripttype>com.ibm.rqm.planning.common.scripttype.manual</ns2:scripttype>
+  <ns2:variables/>
+  <ns2:includeBuiltInVars>false</ns2:includeBuiltInVars>
+  <ns2:scriptStepCount>1</ns2:scriptStepCount>
+  <ns2:steps>
+    <ts:step xmlns:ns1="http://schema.ibm.com/vega/2008/" xmlns:ts="http://jazz.net/xmlns/alm/qm/v0.1/testscript/v0.1/" ns1:id="_tdWekbW2Eea8HrycClsR8Q" stepIndex="1" type="execution">
+      <ts:name>1. Log into OLB with a user that has a AUTO account
+
+
+
+2. Go to the Quick Transfer section and select a DDA account for the "From Account" dropdown
+
+
+
+</ts:name>
+      <ts:title>1. Log into OLB with a user that has a AUTO account
+
+
+
+2. Go to the Quick Transfer section and select a DDA account for the "From Account" dropdown
+
+
+
+</ts:title>
+      <ts:description>
+        <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml" dir="ltr">1. Log into OLB with a user that has a AUTO account<tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+2. Go to the Quick Transfer section and select a DDA account for the "From Account" dropdown<tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+3. Go to the Quick Transfer section and select the AUTO account listed in the "To Account" dropdown<tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+4. Enter 2.22 in the "Amount" box<tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+5. Click on the Preview Transfer button<tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+6. Click on the Submit button<tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+7. Click on the DDA account name that you selected for the "From Account"<tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+8. You will see your transfer in the "Transactions Pending" section<tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+          <tag0:br/>
+9. Go to the Mainframe and use MLFI for the AUTO account (the MLFI appl type is ILD for auto)</tag0:div>
+      </ts:description>
+      <ts:expectedResult>
+        <tag0:div xmlns:tag0="http://www.w3.org/1999/xhtml">1. Your Quick Transfer of 2.22 will be in the Transactions Pending section and will be displayed in MLFI.</tag0:div>
+      </ts:expectedResult>
+  	  <ns2:attachment href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/attachment/stuff"/>
+      <ts:comment/>
+      <ts:compare/>
+    </ts:step>
+  </ns2:steps>
+  <ns2:template href="https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Mobile+and+Online+Banking+%28Quality+Management%29/template/manualtestscript/com.ibm.rqm.planning.manualtestscript.default"/>
+  <ns2:artifactAttributes>
+    <ns2:artifactAttribute>
+      <ns2:predefinedAttributeId>com.ibm.rqm.planning.common.manualtestscript.step.description</ns2:predefinedAttributeId>
+    </ns2:artifactAttribute>
+    <ns2:artifactAttribute>
+      <ns2:predefinedAttributeId>com.ibm.rqm.planning.common.manualtestscript.step.expectedresult</ns2:predefinedAttributeId>
+    </ns2:artifactAttribute>
+    <ns2:artifactAttribute>
+      <ns2:predefinedAttributeId>com.ibm.rqm.planning.common.manualtestscript.step.attachementsandlinks</ns2:predefinedAttributeId>
+    </ns2:artifactAttribute>
+  </ns2:artifactAttributes>
+</ns2:testscript>

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.context.annotation.PropertySource
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.test.context.ContextConfiguration
@@ -21,7 +22,10 @@ import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cache.MongoDBCacheManagementService
+import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.command.CommandManagementService
+import com.zions.common.services.db.DatabaseQueryService
+import com.zions.common.services.db.IDatabaseQueryService
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
@@ -29,13 +33,18 @@ import com.zions.common.services.test.DataGenerationService
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[ClmRequirementsManagementServiceSpecConfig])
-class ClmRequirementsManagementServiceSpec extends Specification {
+class ClmRequirementsManagementServiceIntegration extends Specification {
 	
 	@Autowired
 	DataGenerationService dataGenerationService
 	
 	@Autowired
 	ClmRequirementsManagementService underTest
+	
+	@Autowired
+	ICacheManagementService cacheManagementService
+	
+	
 
 	def 'Get all links for artifact'() {
 		setup: 'get artifact'
@@ -47,12 +56,34 @@ class ClmRequirementsManagementServiceSpec extends Specification {
 		then:
 		true
 	}
+	
+	def 'Partial flush query'() {
+		setup: 'None needed'
+		
+		when: 'Test a partial impl of flushing'
+		boolean success = true
+		try {
+			underTest.flushQueries(2)
+		} catch (e) {
+			e.printStackTrace()
+			success = false
+		}
+		def pages = cacheManagementService.getAllOfType('DataWarehouseQueryData')
+		
+		then:
+		success && pages.size() == 2
+		
+		cleanup:
+		cacheManagementService.clear()
+
+	}
 
 }
 
 @TestConfiguration
-@Profile("test")
-@ComponentScan(["com.zions.common.services.cacheaspect", "com.zions.vsts.services","com.zions.ext.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.test"])
+@Profile("integration-test")
+@ComponentScan(["com.zions.common.services.cacheaspect", "com.zions.ext.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.test"])
+@PropertySource("classpath:integration-test.properties")
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 public class ClmRequirementsManagementServiceSpecConfig {
 	@Autowired
@@ -87,6 +118,9 @@ public class ClmRequirementsManagementServiceSpecConfig {
 	@Value('${cache.location}')
 	String cacheLocation
 	
+	@Value('${sql.resource.name}')
+	String sqlResourceName
+	
 	@Bean
 	ClmRequirementsManagementService underTest() {
 		return new ClmRequirementsManagementService()
@@ -117,6 +151,11 @@ public class ClmRequirementsManagementServiceSpecConfig {
 	@Bean
 	DataGenerationService dataGenerationService() {
 		return new DataGenerationService()
+	}
+	
+	@Bean
+	IDatabaseQueryService databaseQueryService() {
+		return new DatabaseQueryService()
 	}
 
 

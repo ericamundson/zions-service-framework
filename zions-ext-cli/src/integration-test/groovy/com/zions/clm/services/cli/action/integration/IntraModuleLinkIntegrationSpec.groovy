@@ -717,7 +717,7 @@ class IntraModuleLinkIntegrationSpecConfig {
 	String clmUser
 	@Value('${clm.password:}')
 	String clmPassword
-	
+
 
 	
 	@Bean
