@@ -45,6 +45,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
+		log.debug('*******Entering DescriptionHandler.formatValue')
 		if (value == null || value.length() == 0) {
 			return '<div></div>'
 		}
@@ -75,15 +76,12 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			// Process any embedded images and table formatting
 			outHtml = processHtml(description, sId, itemData)
 		}
-		boolean hasSpecialCharacter = false
-		if (outHtml.indexOf('Â') > 0) {
-			hasSpecialCharacter = true
-			log.debug('*******Description has special character')
+		if (outHtml.indexOf('Â') > 0 || outHtml.indexOf('\u00c2&nbsp;') > 0 ) {
+			log.debug('*******Description has special character Â')
 		}
-		outHtml = outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll('Â', '')
-		if (hasSpecialCharacter) {
-			log.debug('Processed: ' + outHtml)
-		}
+
+		outHtml = outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll('\u00c2&nbsp;', '').replaceAll('Â', '')
+
 		return outHtml
 	}
 	
