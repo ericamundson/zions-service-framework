@@ -45,7 +45,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 	ClmRequirementsFileManagementService underTest
 	
 	def 'requirement file attachment main flow'() {
-		given: 'Module Element with wrapped resource file format'
+		given: 'Module Element has a embedded file resource'
 		String wrappedResourceFilename = 'stuff.txt'
 		def ritem = new ClmModuleElement(wrappedResourceFilename, 1, 'Wrapped Resource', 'false', 'https://...')
 		ritem.setID('123456')
@@ -53,19 +53,19 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 		def url = 'https:\\path'
 		def altFilename = 'alt name'
 		
-		and: 'Step of cacheManagementService saveBinaryAsAttachment call'
+		and: 'Cache file resource to an uploadable location'
 		File attFile = new File('attachment.txt')
 		1 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> attFile
 		
-		and: 'Step of attachmentService sendAttachment call'
+		and: 'Send file resource to target system'
 		1 * attachmentService.sendAttachment(_) >> [url: 'http://path']
 		
-		and: 'Stub of clmRequirementsManagementService getContent call'
+		and: 'Encode resource for target upload.'
 		String encodedStuff = "Here's some text".bytes.encodeBase64()
 		ByteArrayInputStream s = new ByteArrayInputStream("Here's some text".bytes)
 		1 * clmRequirementsManagementService.getContent(_) >> [headers: ['Content-Disposition': 'filename=\"stuff.txt\";'], data: s]
 		
-		when: 'Calling method under test cacheRequirementFile'
+		when: 'Make call to ensure target system has resource'
 		boolean success = true
 		try {
 			underTest.ensureRequirementFileAttachment(ritem,url)

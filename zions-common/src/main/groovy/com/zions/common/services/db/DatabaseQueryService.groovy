@@ -120,10 +120,5 @@ class DatabaseQueryService implements IDatabaseQueryService {
 		// TODO Auto-generated method stub
 		return "${select}/1/${pageSize}"
 	}
-	
-	public String initialUrl(String select) {
-		this.select = select
-		return initialUrl()
-	}
 }
 
