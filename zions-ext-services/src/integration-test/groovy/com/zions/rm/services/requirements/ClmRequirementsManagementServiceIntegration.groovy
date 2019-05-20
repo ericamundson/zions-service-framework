@@ -29,7 +29,7 @@ import com.zions.common.services.db.IDatabaseQueryService
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
-
+import groovy.util.logging.Slf4j
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -45,21 +45,56 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 	@Autowired
 	ICacheManagementService cacheManagementService
 	
+	@Autowired
+	IDatabaseQueryService databaseQueryService
+	
 	
 	def 'Handle base requirement artifacts'() {
-		given: 'A set of requirement artifacts'
-		underTest.queryDatawarehouseSource(_) >> {
-			
-		}
+		given: 'A page of requirement artifacts'
+		Date ts = new Date()
+		def items = underTest.queryDatawarehouseSource(ts)
+		def tItems = dataGenerationService.generate('/testdata/rmFirstQueryResult.json')
+		items.addAll(tItems)
 				
 		when: 'produce artifact data for text or non-text types'
+		int tCount = 0
+		int ntCount = 0
+		items.each { rmItem ->
+			String sid = "${rmItem.reference_id}"
+			//sometimes this is blank?  some kind of error!
+			if (sid) {
+				int id = Integer.parseInt(sid)
+				//log.debug("items.each loop for id: ${sid}")
+				String primaryTextString = "${rmItem.text}"
+				//data warehouse indicator for wrapperresources is replacing the primay text field with this string
+				String format = primaryTextString.equals("No primary text") ? 'WrapperResource' : 'Text'
+				//here is the uri
+				String about = "${rmItem.about}"
+				ClmArtifact artifact = new ClmArtifact('', format, about)
+				if (format == 'Text') {
+					underTest.getTextArtifact(artifact,false,true)
+					tCount++
+				}
+				else if (format == 'WrapperResource'){
+					underTest.getNonTextArtifact(artifact,true)
+					ntCount++
+				}
+			}
+		}
+
 		
 		then: 'processing has no failures and verify set of text vs non-text artifact data elements count'
+		tCount > 0 || ntCount > 0
 		
 	}
 	
 	def 'Handle module requirement artifacts'() {
 		given: 'A set of module artifacts'
+		
+		when: 'Processed for module artifact details'
+		
+		then: ''
+		true
 	}
 	
 
