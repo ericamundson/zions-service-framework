@@ -161,24 +161,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
 	
-	String dbQueryString = '''SELECT T1.REFERENCE_ID as reference_id,
-  T1.URL as about,
-  T1.Primary_Text as text
-FROM RIDW.VW_REQUIREMENT T1
-LEFT OUTER JOIN RICALM.VW_RQRMENT_ENUMERATION T2
-ON T2.REQUIREMENT_ID=T1.REQUIREMENT_ID AND T2.NAME='Release'
-WHERE T1.PROJECT_ID = 19  AND
-(  T1.REQUIREMENT_TYPE NOT IN ( 'Change Request','Actor','Use Case','User Story','Spec Proxy','Function Point','Process Inventory','Term','Use Case Diagram' ) AND
-  T2.LITERAL_NAME = 'Deposits'  AND
-  LENGTH(T1.URL) = 65 AND
-  T1.REC_DATETIME > TO_DATE('05/01/2014','mm/dd/yyyy')
-) AND
-T1.ISSOFTDELETED = 0 AND
-(T1.REQUIREMENT_ID <> -1 AND T1.REQUIREMENT_ID IS NOT NULL)
-'''
-	
 	public TranslateRmBaseArtifactsToADO() {
 	}
+	
 
 	public def execute(ApplicationArguments data) {
 		boolean excludeMetaUpdate = true
@@ -193,9 +178,9 @@ T1.ISSOFTDELETED = 0 AND
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
 		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
 		String tfsUser = data.getOptionValues('tfs.user')[0]
-		String oslcNs = data.getOptionValues('oslc.namespaces')[0]
-		String oslcSelect = data.getOptionValues('oslc.select')[0]
-		String oslcWhere = data.getOptionValues('oslc.where')[0]
+//		String oslcNs = data.getOptionValues('oslc.namespaces')[0]
+//		String oslcSelect = data.getOptionValues('oslc.select')[0]
+//		String oslcWhere = data.getOptionValues('oslc.where')[0]
 		String rmFilter = data.getOptionValues('rm.filter')[0]
 		String tfsProjectURI = data.getOptionValues('tfs.projectUri')[0]
 		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
@@ -215,53 +200,6 @@ T1.ISSOFTDELETED = 0 AND
 				query = query + " AND [System.AreaPath] = '${areaPath}'"
 			}
 			workManagementService.clean(collection,tfsProject, query)
-		}
-
-		// Refresh cached list migrated ADO work items
-		if (includes['refresh'] != null) {
-			log.info("Refreshing cache.")
-			Checkpoint cp = cacheManagementService.getFromCache('query', 'QueryStart')
-			int page=0
-			Date currentTimestamp = new Date()
-			if (cp) {
-				currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.getTimeStamp())
-				
-			}
-			String pageId = "${page}"
-			def artifacts
-			new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, RequirementQueryData) {
-				artifacts = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
-			}
-			while (true) {
-				def changeList = []
-//				def filtered = filtered(workItems, wiFilter)
-				artifacts.Description.children().each { itemData ->
-					String sid = "${itemData.Requirement.identifier}"
-					if (sid != '' && sid != null) {
-						int id
-						try {
-							id = Integer.parseInt("${itemData.Requirement.identifier}")
-						}
-						catch (NumberFormatException e) { 
-							log.error("NumberFormatException trying to parse identifier: ${itemData.Requirement.identifier}")
-							return
-						}
-						changeList.add(id)
-					}
-				}
-				log.info("Refreshing cache for ${changeList.size()} artifacts.")
-				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
-				//I am not sure how relevant the below set of work is
-				//that would be part of flushQueries, no?
-				String nextUrl = "${artifacts.ResponseInfo.nextPage.@'rdf:resource'}"
-				if (nextUrl == '') break
-				page++
-				pageId = "${page}"
-				//stores entire result page in cache I believe
-				new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, QueryTracking) {
-					artifacts = clmRequirementsManagementService.nextPage(nextUrl)
-				}
-			}
 		}
 		if (includes['flushQueries'] != null) {
 			log.info("Refreshing cache of main DNG query from JRS")
@@ -336,7 +274,7 @@ T1.ISSOFTDELETED = 0 AND
 
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'clm.pageSize', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'oslc.namespaces', 'oslc.select', 'oslc.where', 'rm.filter', 'mr.url']
+		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'clm.pageSize', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'rm.mapping.file', 'rm.filter', 'mr.url']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
@@ -344,7 +282,4 @@ T1.ISSOFTDELETED = 0 AND
 		}
 		return true
 	}
-
-
-
 }

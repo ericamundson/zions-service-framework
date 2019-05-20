@@ -29,8 +29,9 @@ import com.zions.common.services.db.IDatabaseQueryService
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
-
+import groovy.util.logging.Slf4j
 import spock.lang.Specification
+import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ClmRequirementsManagementServiceSpecConfig])
 class ClmRequirementsManagementServiceIntegration extends Specification {
@@ -44,23 +45,74 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 	@Autowired
 	ICacheManagementService cacheManagementService
 	
+	@Autowired
+	IDatabaseQueryService databaseQueryService
+	
+	
+	def 'Handle base requirement artifacts'() {
+		given: 'A page of requirement artifacts'
+		Date ts = new Date()
+		def items = underTest.queryDatawarehouseSource(ts)
+		def tItems = dataGenerationService.generate('/testdata/rmFirstQueryResult.json')
+		items.addAll(tItems)
+				
+		when: 'produce artifact data for text or non-text types'
+		int tCount = 0
+		int ntCount = 0
+		items.each { rmItem ->
+			String sid = "${rmItem.reference_id}"
+			//sometimes this is blank?  some kind of error!
+			if (sid) {
+				int id = Integer.parseInt(sid)
+				//log.debug("items.each loop for id: ${sid}")
+				String primaryTextString = "${rmItem.text}"
+				//data warehouse indicator for wrapperresources is replacing the primay text field with this string
+				String format = primaryTextString.equals("No primary text") ? 'WrapperResource' : 'Text'
+				//here is the uri
+				String about = "${rmItem.about}"
+				ClmArtifact artifact = new ClmArtifact('', format, about)
+				if (format == 'Text') {
+					underTest.getTextArtifact(artifact,false,true)
+					tCount++
+				}
+				else if (format == 'WrapperResource'){
+					underTest.getNonTextArtifact(artifact,true)
+					ntCount++
+				}
+			}
+		}
+
+		
+		then: 'processing has no failures and verify set of text vs non-text artifact data elements count'
+		tCount > 0 || ntCount > 0
+		
+	}
+	
+	def 'Handle module requirement artifacts'() {
+		given: 'A set of module artifacts'
+		
+		when: 'Processed for module artifact details'
+		
+		then: ''
+		true
+	}
 	
 
 	def 'Get all links for artifact'() {
 		setup: 'get artifact'
 		def artifact = dataGenerationService.generate('/testdata/requirementWithLinks.xml')
 		
-		when: 'run all links'
+		when: 'determine all requirement artifact links'
 		def links = underTest.getAllLinks('7543', new Date(), artifact.artifact)
 		
-		then:
-		true
+		then: 'validate number of links are 7'
+		links.size() == 7
 	}
 	
-	def 'Partial flush query'() {
-		setup: 'None needed'
+	def 'Partial flush of query pages'() {
+		given: 'A valid data warehouse query'
 		
-		when: 'Test a partial impl of flushing'
+		when: 'Run a partial flush of two pages of requirements artifact query'
 		boolean success = true
 		try {
 			underTest.flushQueries(2)
@@ -70,7 +122,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		}
 		def pages = cacheManagementService.getAllOfType('DataWarehouseQueryData')
 		
-		then:
+		then: 'Validate no errors and there are two pages of requirements artifacts'
 		success && pages.size() == 2
 		
 		cleanup:
@@ -86,35 +138,29 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 @PropertySource("classpath:integration-test.properties")
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 public class ClmRequirementsManagementServiceSpecConfig {
-	@Autowired
+	def factory = new DetachedMockFactory()
+
 	@Value('${clm.url:https://clm.cs.zionsbank.com}')
 	String clmUrl
 	
-	@Autowired
 	@Value('${clm.user:none}')
 	String clmUser
 	
-	@Autowired
 	@Value('${clm.password:none}')
 	String clmPassword
 	
-	@Autowired
 	@Value('${mr.url:none}')
 	String mrUrl
 	
-	@Autowired
 	@Value('${clm.user:none}')
 	String userid
 	
-	@Autowired
 	@Value('${tfs.user:none}')
 	String tfsUserid
 	
-	@Autowired
 	@Value('${clm.password:none}')
 	String password
 	
-	@Autowired
 	@Value('${cache.location}')
 	String cacheLocation
 	
@@ -155,7 +201,7 @@ public class ClmRequirementsManagementServiceSpecConfig {
 	
 	@Bean
 	IDatabaseQueryService databaseQueryService() {
-		return new DatabaseQueryService()
+		return factory.Spy(DatabaseQueryService)
 	}
 
 

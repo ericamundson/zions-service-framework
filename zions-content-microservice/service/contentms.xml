@@ -3,6 +3,6 @@
       <name>contentms</name>
       <description>This service runs ALMOps static content documentation service.</description>
       <executable>java</executable>
-      <arguments>-Xrs -Xmx256m -jar "d:\bin\service\zions-content-microservice.jar" --logging.file="d:\bin\service\contentms.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "e:\bin\service\zions-content-microservice.jar" --logging.file="e:\bin\service\logs\contentms.log" </arguments>
       <logmode>rotate</logmode>
 </service>

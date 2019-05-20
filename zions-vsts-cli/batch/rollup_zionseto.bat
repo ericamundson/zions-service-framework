@@ -1,1 +1,1 @@
-java -Dspring.profiles.active=default -jar d:\bin\batch\zions-vsts-cli.jar performRollup  --tfs.url=https://dev.azure.com/zionseto --tfs.user=z091182 --tfs.token=5ygjaomvtrq6jgtxyrbpqsvahj2kuzzq6tjxgllrc76j7cbwzp4a  --logging.file=d:\bin\batch\logs\rollup_zionseto.log
+java -Dspring.profiles.active=default -jar e:\bin\batch\zions-vsts-cli.jar performRollup  --tfs.url=https://dev.azure.com/zionseto --tfs.user=z091182 --tfs.token=5ygjaomvtrq6jgtxyrbpqsvahj2kuzzq6tjxgllrc76j7cbwzp4a  --logging.file=e:\bin\batch\logs\rollup_zionseto.log
