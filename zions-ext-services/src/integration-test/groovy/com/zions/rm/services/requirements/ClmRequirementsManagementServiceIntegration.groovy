@@ -31,6 +31,7 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
 
 import spock.lang.Specification
+import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ClmRequirementsManagementServiceSpecConfig])
 class ClmRequirementsManagementServiceIntegration extends Specification {
@@ -45,22 +46,38 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 	ICacheManagementService cacheManagementService
 	
 	
+	def 'Handle base requirement artifacts'() {
+		given: 'A set of requirement artifacts'
+		underTest.queryDatawarehouseSource(_) >> {
+			
+		}
+				
+		when: 'produce artifact data for text or non-text types'
+		
+		then: 'processing has no failures and verify set of text vs non-text artifact data elements count'
+		
+	}
+	
+	def 'Handle module requirement artifacts'() {
+		given: 'A set of module artifacts'
+	}
+	
 
 	def 'Get all links for artifact'() {
 		setup: 'get artifact'
 		def artifact = dataGenerationService.generate('/testdata/requirementWithLinks.xml')
 		
-		when: 'run all links'
+		when: 'determine all requirement artifact links'
 		def links = underTest.getAllLinks('7543', new Date(), artifact.artifact)
 		
-		then:
-		true
+		then: 'validate number of links are 7'
+		links.size() == 7
 	}
 	
-	def 'Partial flush query'() {
-		setup: 'None needed'
+	def 'Partial flush of query pages'() {
+		given: 'A valid data warehouse query'
 		
-		when: 'Test a partial impl of flushing'
+		when: 'Run a partial flush of two pages of requirements artifact query'
 		boolean success = true
 		try {
 			underTest.flushQueries(2)
@@ -70,7 +87,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		}
 		def pages = cacheManagementService.getAllOfType('DataWarehouseQueryData')
 		
-		then:
+		then: 'Validate no errors and there are two pages of requirements artifacts'
 		success && pages.size() == 2
 		
 		cleanup:
@@ -86,35 +103,29 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 @PropertySource("classpath:integration-test.properties")
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 public class ClmRequirementsManagementServiceSpecConfig {
-	@Autowired
+	def factory = new DetachedMockFactory()
+
 	@Value('${clm.url:https://clm.cs.zionsbank.com}')
 	String clmUrl
 	
-	@Autowired
 	@Value('${clm.user:none}')
 	String clmUser
 	
-	@Autowired
 	@Value('${clm.password:none}')
 	String clmPassword
 	
-	@Autowired
 	@Value('${mr.url:none}')
 	String mrUrl
 	
-	@Autowired
 	@Value('${clm.user:none}')
 	String userid
 	
-	@Autowired
 	@Value('${tfs.user:none}')
 	String tfsUserid
 	
-	@Autowired
 	@Value('${clm.password:none}')
 	String password
 	
-	@Autowired
 	@Value('${cache.location}')
 	String cacheLocation
 	
@@ -155,7 +166,7 @@ public class ClmRequirementsManagementServiceSpecConfig {
 	
 	@Bean
 	IDatabaseQueryService databaseQueryService() {
-		return new DatabaseQueryService()
+		return factory.Spy(DatabaseQueryService)
 	}
 
 
