@@ -75,7 +75,16 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			// Process any embedded images and table formatting
 			outHtml = processHtml(description, sId, itemData)
 		}
-		return 	outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll('Â', '')
+		boolean hasSpecialCharacter = false
+		if (outHtml.indexOf('Â') > 0) {
+			hasSpecialCharacter = true
+			log.debug('*******Description has special character')
+		}
+		outHtml = outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll('Â', '')
+		if (hasSpecialCharacter) {
+			log.debug('Processed: ' + outHtml)
+		}
+		return outHtml
 	}
 	
 	def processHtml(String html, String sId, def itemData) {
@@ -102,7 +111,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 				// Need to pull in the attachment for the embedded wrapped resource
 				def about = clmUrl + '/rm/resources/' + url.substring(wrapNdx+74)
 				def wrappedResourceArtifact = new ClmArtifact('','',about)
-				wrappedResourceArtifact = clmRequirementsManagementService.getNonTextArtifact(wrappedResourceArtifact)
+				wrappedResourceArtifact = clmRequirementsManagementService.getNonTextArtifact(wrappedResourceArtifact, false)
 				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, wrappedResourceArtifact.getFileHref())
 				
 				// Now delete image node

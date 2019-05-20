@@ -40,20 +40,8 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 	@Autowired
 	IGenericRestClient rmGenericRestClient
 //
-	@Value('${clm.projectAreaUri:}')
-	String projectURI
-	@Value('${oslc.namespaces:}')
-	String oslcNs
-	@Value('${oslc.select:}')
-	String oslcSelect
-	@Value('${oslc.where:}')
-	String oslcWhere
 	@Value('${rm.filter:}')
 	String rmFilter
-	@Value('${clm.pageSize}')
-	String clmPageSize
-	
-	String select
 	
 	def currentItems
 	
