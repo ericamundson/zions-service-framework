@@ -45,7 +45,6 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		log.debug('*******Entering DescriptionHandler.formatValue')
 		if (value == null || value.length() == 0) {
 			return '<div></div>'
 		}
@@ -80,7 +79,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			log.debug('*******Description has special character Â')
 		}
 
-		outHtml = outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll('\u00c2&nbsp;', '').replaceAll('Â', '')
+		outHtml = outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("[^\\p{ASCII}]", "")
 
 		return outHtml
 	}
