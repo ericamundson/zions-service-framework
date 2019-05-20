@@ -12,6 +12,7 @@ import com.zions.rm.services.requirements.handlers.RmBaseAttributeHandler
 import com.zions.rm.services.requirements.RequirementQueryData
 
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 
@@ -48,6 +49,7 @@ import groovyx.net.http.ContentType
  *
  */
 @Component
+@Slf4j
 class ClmRequirementsItemManagementService {	
 	@Autowired
 	@Value('${tfs.url}')
@@ -114,10 +116,12 @@ class ClmRequirementsItemManagementService {
 			def fieldData = getFieldData(rmItemData, field, memberMap, cacheWI, map)
 			if (fieldData != null) {
 				if (fieldData.value != null) {
+					log.debug(">>>after getFieldData>>>${fieldData.value}")
 					wiData.body.add(fieldData)
 				} else {
 					fieldData.each { fData ->
 						if (fData.value != null) {
+							log.debug(">>>after getFieldData>>>${fData.value}")
 							wiData.body.add(fData)
 						}
 					}
