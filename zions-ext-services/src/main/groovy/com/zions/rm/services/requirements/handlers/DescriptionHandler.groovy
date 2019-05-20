@@ -75,7 +75,16 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			// Process any embedded images and table formatting
 			outHtml = processHtml(description, sId, itemData)
 		}
-		return 	outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll('Â', '')
+		boolean hasSpecialCharacter = false
+		if (outHtml.indexOf('Â') > 0) {
+			hasSpecialCharacter = true
+			log.debug('*******Description has special character')
+		}
+		outHtml = outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll('Â', '')
+		if (hasSpecialCharacter) {
+			log.debug('Processed: ' + outHtml)
+		}
+		return outHtml
 	}
 	
 	def processHtml(String html, String sId, def itemData) {
