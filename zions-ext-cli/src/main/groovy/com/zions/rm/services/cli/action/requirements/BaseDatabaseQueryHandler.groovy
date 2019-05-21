@@ -55,7 +55,7 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 		page=0
 		if (cp) {
 			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
-			log.debug("Timestamp from cachepage: ${currentTimestamp}")
+			log.debug("Timestamp retrieved from cache: ${currentTimestamp}")
 		} 
 //		else {
 //			cacheManagementService.saveToCache([timestamp: currentTimestamp.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')

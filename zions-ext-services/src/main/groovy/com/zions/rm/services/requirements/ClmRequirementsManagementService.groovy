@@ -181,6 +181,7 @@ class ClmRequirementsManagementService {
 	}
 	
 	def nextPageDb() {
+		log.debug("Retrieving nextPage from databasequeryservice")
 		return databaseQueryService.nextPage()
 	}
 	
