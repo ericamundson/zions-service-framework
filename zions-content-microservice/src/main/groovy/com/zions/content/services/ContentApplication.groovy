@@ -16,13 +16,14 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration
 
 
 /* Pull in HTML content from C:\Resources\ and deploy
  * to localhost using Tomcat on port 8080 * when running as Java Application
  * author: Michael Angelastro 2/25/19 */
 
-@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration])
+@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration,EmbeddedMongoAutoConfiguration])
 public class ContentApplication {
 
 
