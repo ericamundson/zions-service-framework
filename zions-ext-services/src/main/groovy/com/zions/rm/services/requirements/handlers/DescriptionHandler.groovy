@@ -160,6 +160,6 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	}
 
 	boolean isImageFile(String filename) {
-		return (filename.toLowerCase().indexOf('.png') > 0 || filename.toLowerCase().indexOf('.jpg'))
+		return (filename.toLowerCase().indexOf('.png') > 0 || filename.toLowerCase().indexOf('.jpg') > 0)
 	}
 }
