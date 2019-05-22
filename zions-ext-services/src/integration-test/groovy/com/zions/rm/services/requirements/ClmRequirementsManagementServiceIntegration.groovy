@@ -30,8 +30,13 @@ import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
 import groovy.util.logging.Slf4j
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
+import com.mongodb.diagnostics.logging.Loggers;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @ContextConfiguration(classes=[ClmRequirementsManagementServiceSpecConfig])
 class ClmRequirementsManagementServiceIntegration extends Specification {
@@ -47,6 +52,9 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 	
 	@Autowired
 	IDatabaseQueryService databaseQueryService
+	
+	@Autowired
+	IGenericRestClient rmGenericRestClient
 	
 	
 	def 'Handle base requirement artifacts'() {
@@ -88,13 +96,31 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		
 	}
 	
+	@Ignore
 	def 'Handle module requirement artifacts'() {
 		given: 'A set of module artifacts'
+		//resourceURI=_Z2_j8fQqEeihN7TNly_siw
+		String rmQuery = 'resourceURI=_Z2_j8fQqEeihN7TNly_siw'
+		def moduleUris = underTest.queryForModules(rmQuery)
+		int size = moduleUris.size()
+		moduleUris.removeRange(1, size)
 		
 		when: 'Processed for module artifact details'
+		//rmGenericRestClient.outputTestDataFlag = true
+		rmGenericRestClient.outputTestDataType = 'xml'
+		rmGenericRestClient.outputTestDataPrefix = 'module'
+		def modules = []
+		moduleUris.each { moduleUri ->
+			ClmRequirementsModule module = underTest.getModule(moduleUri,false)
+			int errCount = validateModule(module) 
+			if (errCount == 0){
+				modules.add(module)
+			}
+		}
+		rmGenericRestClient.outputTestDataFlag = false
 		
-		then: ''
-		true
+		then: 'Validate module artifacts'
+		modules.size() > 0
 	}
 	
 
@@ -128,6 +154,33 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		cleanup:
 		cacheManagementService.clear()
 
+	}
+	def validateModule(def module)	{
+		def errCount = 0
+		if (module.orderedArtifacts == null || module.orderedArtifacts.size() < 1) {
+			log.error("*** ERROR: No elements found in module ${module.getTitle()}")
+			errCount++
+		}
+		else {
+			module.checkForDuplicates()
+		}
+		// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
+		module.orderedArtifacts.each { artifact ->
+			if ((artifact.getIsHeading() && artifact.getArtifactType() != 'Heading') ||
+				(!artifact.getIsHeading() && artifact.getArtifactType() == 'Heading') ) {
+				log.error("*** ERROR: Artifact #${artifact.getID()} has inconsistent heading row type in module ${module.getTitle()}")
+				errCount++
+			}
+			else if (artifact.getIsHeading() && (artifact.hasEmbeddedImage() || artifact.getFormat() == 'WrapperResource')) {
+				log.error("*** ERROR: Artifact #${artifact.getID()} is heading with image or attachment in module ${module.getTitle()}")
+				errCount++
+			}
+			else if (artifact.getIsDuplicate()) {
+				log.error("*** ERROR: Artifact #${artifact.getID()} is a duplicate instance in module ${module.getTitle()}.  This is not yet supported in ADO.")
+				errCount++
+			}
+		}
+		return errCount
 	}
 
 }
@@ -213,13 +266,15 @@ public class ClmRequirementsManagementServiceSpecConfig {
 
 	@Bean
 	MongoClient mongoClient() throws UnknownHostException {
-		return new EmbeddedMongoBuilder()
+		Logger.getLogger(Loggers.PREFIX).setLevel(Level.OFF);
+		def builder = new EmbeddedMongoBuilder()
 			.version('3.2.16')
 			//.tempDir('mongodb')
 			.installPath('../zions-common-data/mongodb/win32/mongodb-win32-x86_64-3.2.16/bin')
 			.bindIp("localhost")
 			.port(12345)
 			.build();
+		return builder
 	}
 	
 	public @Bean MongoTemplate mongoTemplate() throws Exception {
