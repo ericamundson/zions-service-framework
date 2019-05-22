@@ -75,10 +75,6 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			// Process any embedded images and table formatting
 			outHtml = processHtml(description, sId, itemData)
 		}
-		if (outHtml.indexOf('Â') > 0 || outHtml.indexOf('\u00c2&nbsp;') > 0 ) {
-			log.debug('*******Description has special character Â')
-		}
-
 		outHtml = outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("[^\\p{ASCII}]", "")
 
 		return outHtml

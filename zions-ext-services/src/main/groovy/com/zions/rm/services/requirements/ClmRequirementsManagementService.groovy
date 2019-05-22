@@ -354,7 +354,7 @@ class ClmRequirementsManagementService {
 					String primaryTextString = new groovy.xml.StreamingMarkupBuilder().bind {mkp.yield richTextBody.children() }
 					in_artifact.setDescription(primaryTextString)
 
-					if (includeCollections) {
+					if (includeCollections && primaryTextString.indexOf('WrapperResource')==-1) {
 						// Check to see if this artifact has an embedded collection in "showContent" mode
 						def memberHrefs = []
 						def collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent')
@@ -372,7 +372,7 @@ class ClmRequirementsManagementService {
 						}
 						
 						// If there are collection members to be retrieved, then retrieve them
-						if (memberHrefs != null && memberHrefs.size() > 0) {
+						if (memberHrefs) {
 							getCollectionArtifacts(in_artifact, memberHrefs, cacheLinks)
 						}
 					}
