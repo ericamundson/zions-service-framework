@@ -181,6 +181,7 @@ class ClmRequirementsManagementService {
 	}
 	
 	def nextPageDb() {
+		log.debug("Retrieving nextPage from databasequeryservice")
 		return databaseQueryService.nextPage()
 	}
 	
@@ -637,9 +638,9 @@ class DataWarehouseQueryData implements CacheWData {
 class SqlLoader {
 	
 	String sqlQuery(String sqlresource) {
-		URL url = this.getClass().getResource(sqlresource)
-		File sqlFile = new File(url.file)
-		String sql = sqlFile.text
+		InputStream is = this.getClass().getResource(sqlresource).openStream()
+		//File sqlFile = new File(url.file)
+		String sql = is.text
 		return sql
 	}
 
