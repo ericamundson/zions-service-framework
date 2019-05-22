@@ -3,7 +3,10 @@ package com.zions.common.services.rest
 import org.apache.http.Header
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
+import org.springframework.beans.factory.annotation.Value
+import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
+import groovy.xml.XmlUtil
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
 
@@ -41,7 +44,20 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	RESTClient delegate;
 	
 	boolean checked = false
+	
+	@Value('${output.test.data.flag:false}')
+	boolean outputTestDataFlag = false
+	
+	@Value('${output.test.data.location:./src/test/resources/testdata}')
+	String outputTestDataLocation
 
+	@Value('${output.test.data.type:json}')
+	String outputTestDataType
+	
+	@Value('${output.test.data.prefix:testdata}')
+	String outputTestDataPrefix
+	
+	
 	@Override
 	abstract public void setCredentials(String user, String token);
 
@@ -87,6 +103,14 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	@Override
 	def get(Map input) {
 		//log.debug("GenericRestClient::get -- URI before checkBlankCollection: "+input.uri)
+		String url
+		def query = null
+		if (outputTestDataFlag) {
+			url = "${input.uri}"
+			if (input.query) {
+				query = input.query
+			}
+		}
 		boolean withHeader = false
 		if (input.withHeader) {
 			withHeader = input.withHeader
@@ -99,7 +123,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		//log.debug("GenericRestClient::get -- URI after checkBlankCollection: "+oinput.uri)
 		HttpResponseDecorator resp = delegate.get(oinput)
 		if (resp.data == null) {
-			log.debug("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
+			log.error("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
 		}
 
 		if (withHeader) {
@@ -110,9 +134,30 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			def result = [data: resp.data, headers: headerMap]
 			return result
 		}
+		if (outputTestDataFlag) {
+			writeTestData(resp.data, url, query)
+		}
 		return resp.data;
 	}
 	
+	def writeTestData(def data, String url, def query) {
+		long ts = new Date().time
+		if (this.outputTestDataType == 'json') {
+			File dir = new File(this.outputTestDataLocation)
+			File of = new File(dir, "${this.outputTestDataPrefix}${ts}.json")
+			def os = of.newDataOutputStream()
+			def info = [url: "${url}", query: query, type: "${this.outputTestDataType}", data: "new JsonBuilder(data).toPrettyString()}"]
+			os << "${new JsonBuilder(info).toPrettyString()}";
+			os.close()
+		} else if (this.outputTestDataType == 'xml') {
+			File dir = new File(this.outputTestDataLocation)
+			File of = new File(dir, "${this.outputTestDataPrefix}${ts}.json")
+			def os = of.newDataOutputStream()
+			def info = [url: "${url}", query: query, type: "${this.outputTestDataType}", data: "${new XmlUtil().serialize(data)}"]
+			os << "${new JsonBuilder(info).toPrettyString()}";
+			os.close()
+		}
+	}
 	/* (non-Javadoc)
 	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#get(java.util.Map)
 	 */
@@ -181,7 +226,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		HttpResponseDecorator resp = delegate.patch(oinput)
 		
 		if (resp.status != 200) {
-			log.debug("GenericRestClient::patch -- Warning. Status: "+resp.getStatusLine());
+			log.error("GenericRestClient::patch -- Warning. Status: "+resp.getStatusLine());
 			return null;
 		}
 		if (withHeader) {
@@ -212,7 +257,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		HttpResponseDecorator resp = delegate.post(oinput)
 		//JsonOutput t
 		if (resp.status != 200 && resp.status!= 201) {
-			log.debug("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
+			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
 		}
 		if (withHeader) {
 			def headerMap = [:]
