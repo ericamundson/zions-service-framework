@@ -85,7 +85,6 @@ class DatabaseQueryService implements IDatabaseQueryService {
 
 	@Override
 	public def nextPage() {
-		index += pageSize
 		def page = []
 		if (parms) {
 			sql.eachRow(this.select,parms,metaCB, index, pageSize) { row ->
@@ -111,7 +110,12 @@ class DatabaseQueryService implements IDatabaseQueryService {
 		return page;
 	}
 	
+	//yeah, in theory this should be current page
+	//and nextPage should jump up the count, but it breaks the other way
+	//due to caching not incrementing pages, URI never advances, checkpoints
+	//get messed up
 	public String pageUrl() {
+		index += pageSize
 		return "${select}/${index+pageSize}/${pageSize}"
 	}
 
