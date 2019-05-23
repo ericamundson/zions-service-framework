@@ -116,7 +116,7 @@ class DatabaseQueryService implements IDatabaseQueryService {
 	//get messed up
 	public String pageUrl() {
 		index += pageSize
-		return "${select}/${index+pageSize}/${pageSize}"
+		return "${select}/${index}/${pageSize}"
 	}
 
 	@Override

@@ -25,10 +25,10 @@ class DatabaseQueryServiceSpec extends Specification {
 		
 		when:  'call query and paging calls'
 		boolean flag = true
+		println 'JVM Languages:'
+		def page = databaseQueryService.query('select * from languages')
+		String iUrl = databaseQueryService.initialUrl()
 		try {
-			println 'JVM Languages:'
-			def page = databaseQueryService.query('select * from languages')
-			String iUrl = databaseQueryService.initialUrl()
 			while (true) {
 				page.each { item ->
 					println "	Id: ${item.id}, Name: ${item.name}"
@@ -41,12 +41,14 @@ class DatabaseQueryServiceSpec extends Specification {
 			println 'With parm JVM Languages:'
 			page = databaseQueryService.query("select * from languages where name = :name", [name: 'Groovy'])
 			iUrl = databaseQueryService.initialUrl()
+			println "   pageUrl: ${iUrl}" 
 			while (true) {
 				page.each { item ->
 					println "	Id: ${item.id}, Name: ${item.name}"
 				}
 				println '	end page'
 				iUrl = databaseQueryService.pageUrl()
+				println "   pageUrl: ${iUrl}" 
 				page = databaseQueryService.nextPage()
 				if (!page) break;
 			}
@@ -54,7 +56,7 @@ class DatabaseQueryServiceSpec extends Specification {
 			flag = false
 		}
 		then:
-		flag
+		flag && iUrl == 'select * from languages where name = :name/11/10'
 		
 		cleanup:
 		cleanDbData()
