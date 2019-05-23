@@ -28,6 +28,7 @@ class DatabaseQueryServiceSpec extends Specification {
 		println 'JVM Languages:'
 		def page = databaseQueryService.query('select * from languages')
 		String iUrl = databaseQueryService.initialUrl()
+		println "   pageUrl: ${iUrl}" 
 		try {
 			while (true) {
 				page.each { item ->
@@ -35,6 +36,7 @@ class DatabaseQueryServiceSpec extends Specification {
 				}
 				println '	end page'
 				iUrl = databaseQueryService.pageUrl()
+				println "   pageUrl: ${iUrl}" 
 				page = databaseQueryService.nextPage()
 				if (!page) break;
 			}
@@ -56,7 +58,7 @@ class DatabaseQueryServiceSpec extends Specification {
 			flag = false
 		}
 		then:
-		flag && iUrl == 'select * from languages where name = :name/11/10'
+		flag && iUrl == 'select * from languages where name = :name/6/5'
 		
 		cleanup:
 		cleanDbData()
