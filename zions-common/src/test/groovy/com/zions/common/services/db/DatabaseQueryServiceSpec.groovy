@@ -29,36 +29,36 @@ class DatabaseQueryServiceSpec extends Specification {
 		def page = databaseQueryService.query('select * from languages')
 		String iUrl = databaseQueryService.initialUrl()
 		println "   pageUrl: ${iUrl}" 
-		try {
-			while (true) {
-				page.each { item ->
-					println "	Id: ${item.id}, Name: ${item.name}"
-				}
-				println '	end page'
-				iUrl = databaseQueryService.pageUrl()
-				println "   pageUrl: ${iUrl}" 
-				page = databaseQueryService.nextPage()
-				if (!page) break;
+		while (true) {
+			page.each { item ->
+				println "	Id: ${item.id}, Name: ${item.name}"
 			}
-			println 'With parm JVM Languages:'
-			page = databaseQueryService.query("select * from languages where name = :name", [name: 'Groovy'])
-			iUrl = databaseQueryService.initialUrl()
+			println '	end page'
+			iUrl = databaseQueryService.pageUrl()
 			println "   pageUrl: ${iUrl}" 
-			while (true) {
-				page.each { item ->
-					println "	Id: ${item.id}, Name: ${item.name}"
-				}
-				println '	end page'
-				iUrl = databaseQueryService.pageUrl()
-				println "   pageUrl: ${iUrl}" 
-				page = databaseQueryService.nextPage()
-				if (!page) break;
-			}
-		} catch (e) {
-			flag = false
+			page = databaseQueryService.nextPage()
+			if (!page) break;
 		}
-		then:
-		flag && iUrl == 'select * from languages where name = :name/6/5'
+		then: 'validate query with no parms'
+		iUrl == 'select * from languages/11/5'
+		
+		when:'Run query with parms'
+		println 'With parm JVM Languages:'
+		page = databaseQueryService.query("select * from languages where name = :name", [name: 'Groovy'])
+		iUrl = databaseQueryService.initialUrl()
+		println "   pageUrl: ${iUrl}" 
+		while (true) {
+			page.each { item ->
+				println "	Id: ${item.id}, Name: ${item.name}"
+			}
+			println '	end page'
+			iUrl = databaseQueryService.pageUrl()
+			println "   pageUrl: ${iUrl}" 
+			page = databaseQueryService.nextPage()
+			if (!page) break;
+		}
+		then: 'validate query with parms'
+		iUrl == 'select * from languages where name = :name/6/5'
 		
 		cleanup:
 		cleanDbData()
