@@ -113,7 +113,6 @@ class DatabaseQueryService implements IDatabaseQueryService {
 		if (page.size() == 0) return null
 		return page;
 	}
-	
 	//yeah, in theory this should be current page
 	//and nextPage should jump up the count, but it breaks the other way
 	//due to caching not incrementing pages, URI never advances, checkpoints
@@ -127,20 +126,6 @@ class DatabaseQueryService implements IDatabaseQueryService {
 	public String initialUrl() {
 		// TODO Auto-generated method stub
 		return "${select}/1/${pageSize}"
-	}
-	
-	//might not be best practice here for interface implementation
-	//but this is here because: a restarted process never calls
-	//this.query function (as it pulls the query data from cache)
-	//thus, the select string is never set and upon restart the uri
-	//are always returned as 'null/x/size'
-	//since we know initialUrl is always invoked by restartmanager,
-	//we just have the controller BaseDatabaseQueryHandler (or whatever)
-	//set the initial URI this way regardless of query being invoked
-	//tl;dr: caching system results in null this.select on checkpoint restart
-	public String initialUrl(String query) {
-		this.select = query
-		return initialUrl()
 	}
 }
 
