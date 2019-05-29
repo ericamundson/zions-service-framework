@@ -30,7 +30,7 @@ public class LoggingAspect {
 		try {
 			
 			/*First statement of try block attempts to test if log member exists on object.
-			If it does, then iLog will get set to incoming object's loggers*/
+			If it does, then iLog will get set to incoming object's logger*/
 			
 				obj.log.isInfoEnabled()
 				iLog = obj.log
