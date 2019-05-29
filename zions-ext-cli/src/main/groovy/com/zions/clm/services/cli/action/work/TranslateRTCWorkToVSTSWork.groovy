@@ -21,6 +21,7 @@ import com.zions.common.services.query.IFilter
 import com.zions.common.services.restart.Checkpoint
 import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.common.services.restart.IRestartManagementService
+import com.zions.common.services.test.TestDataInterceptor
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.work.ChangeListManager
@@ -258,8 +259,15 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 			}
 			workManagementService.clean(collection,tfsProject, query)
 		}
-		def translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
-		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+		boolean testData = false
+		def translateMapping
+		new TestDataInterceptor() {}.provideTestData(processTemplateService, './src/test/resources/testdata', !testData, ['getTranslateMapping', 'getLinkMapping']) {
+			translateMapping = processTemplateService.getTranslateMapping(collection, tfsProject, mapping, ccmWits)
+		}
+		def memberMap		
+		new TestDataInterceptor() {}.provideTestData(memberManagementService, './src/test/resources/testdata', !testData, ['getProjectMembersMap']) {
+			memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
+		}
 		def linkMapping = processTemplateService.getLinkMapping(mapping)
 		//translate work data.
 		if (includes['phases'] != null) {

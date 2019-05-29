@@ -146,7 +146,7 @@ class ClmTestManagementService {
 
 	}
 	
-	def flushQueries(String projectName) {
+	def flushQueries(String projectName, int maxPage = -1) {
 		Date ts = new Date()
 		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
 		int page = 0
@@ -156,11 +156,12 @@ class ClmTestManagementService {
 			planData = this.getTestPlansViaQuery(qmQuery, projectName)
 		}
 		while (true) {
+			page++
+			if (maxPage != -1 && maxPage == page) break; // For testing
 			def nextLink = planData.'**'.find { node ->
 				node.name() == 'link' && node.@rel == 'next'
 			}
 			if (nextLink == null) break
-			page++
 			new CacheInterceptor() {}.provideCaching(this, "${page}", ts, TestPlanQueryData) {
 				planData = this.nextPage(nextLink.@href)
 			}
@@ -174,11 +175,12 @@ class ClmTestManagementService {
 			configData = this.getConfigurationsViaQuery('', projectName)
 		}
 		while (true) {
+			page++
+			if (maxPage != -1 && maxPage == page) break; // For testing
 			def nextLink = configData.'**'.find { node ->
 				node.name() == 'link' && node.@rel == 'next'
 			}
 			if (nextLink == null) break
-			page++
 			new CacheInterceptor() {}.provideCaching(this, "${page}", ts, ConfigurationQueryData) {
 				configData = this.nextPage(nextLink.@href)
 			}
@@ -190,11 +192,12 @@ class ClmTestManagementService {
 			testcaseData = this.getTestCaseViaQuery(qmTcQuery, projectName)
 		}
 		while (true) {
+			page++
+			if (maxPage != -1 && (maxPage) == page) break; // For testing
 			def nextLink = testcaseData.'**'.find { node ->
 				node.name() == 'link' && node.@rel == 'next'
 			}
 			if (nextLink == null) break
-			page++
 			new CacheInterceptor() {}.provideCaching(this, "${page}", ts, TestCaseQueryData) {
 				testcaseData = this.nextPage(nextLink.@href)
 			}
@@ -206,7 +209,7 @@ class ClmTestManagementService {
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
 		def project = URLEncoder.encode(projectName, 'UTF-8')
-		//project = project.replace('+', '%20')
+		project = project.replace('+', '%20')
 
 		String uri = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/testplan?fields=" + encoded;
 		if (query == null || query.length() == 0 || "${query}" == 'none') {
@@ -223,7 +226,7 @@ class ClmTestManagementService {
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
 		def project = URLEncoder.encode(projectName, 'UTF-8')
-		//project = project.replace('+', '%20')
+		project = project.replace('+', '%20')
 
 		String uri = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/testcase?fields=" + encoded;
 		if (query == null || query.length() == 0 || "${query}" == 'none') {
@@ -240,7 +243,7 @@ class ClmTestManagementService {
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
 		def project = URLEncoder.encode(projectName, 'UTF-8')
-		//project = project.replace('+', '%20')
+		project = project.replace('+', '%20')
 
 		String uri = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/configuration?fields=" + encoded;
 		if (query == null || query.length() == 0 || "${query}" == 'none') {
