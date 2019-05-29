@@ -374,19 +374,33 @@ class WorkManagementService {
 	
 	def cacheResult(result, idMap) {
 		int count = 0
-		result.value.each { resp ->
-			if ("${resp.code}" == '200') {
-				def wi = new JsonSlurper().parseText(resp.body)
-				String id = idMap[count]
-				cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
-			} else {
+		int mapSize = idMap.size()
+		if (!result.value) return
+		int retCount = result.value.size()
+		if (retCount > 0 && retCount < mapSize) {
+			result.value.each { resp ->
 				def issue = new JsonSlurper().parseText(resp.body)
-				log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+				log.error "Failed to save full batch of work items, Error:  ${issue.'value'.Message}"
 				if (checkpointManagementService != null) {
-					checkpointManagementService.addLogentry("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+					checkpointManagementService.addLogentry("Failed to save full batch of work items, Error:  ${issue.'value'.Message}")
 				}
+
 			}
-			count++
+		} else {
+			result.value.each { resp ->
+				if ("${resp.code}" == '200') {
+					def wi = new JsonSlurper().parseText(resp.body)
+					String id = idMap[count]
+					cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
+				} else {
+					def issue = new JsonSlurper().parseText(resp.body)
+					log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+					if (checkpointManagementService != null) {
+						checkpointManagementService.addLogentry("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+					}
+				}
+				count++
+			}
 		}
 	}
 	

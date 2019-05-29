@@ -9,3 +9,27 @@ dependencies {
 	compile project(':zions-common')
 	compile project(':zions-ext-services')
 }
+
+sourceSets {
+	integrationTest {
+		groovy {
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+			srcDir file('src/integration-test/groovy')
+		}
+		resources.srcDir file('src/integration-test/resources')
+	}
+}
+
+configurations {
+	integrationTestCompile.extendsFrom testCompile
+	integrationTestRuntime.extendsFrom testRuntime
+}
+task integrationTest(type: Test) {
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+	systemProperty "spring.profiles.active", 'integration-test'
+	
+}
+
+integrationTest.mustRunAfter test

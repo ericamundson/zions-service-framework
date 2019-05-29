@@ -123,33 +123,33 @@ class RestartManagementService implements IRestartManagementService {
 				remaining = true
 				if (checkpoint != null) {
 					while (url != checkpoint.pageUrl) {
-						log.debug("Skipping to next page to catch up with checkpoint")
+						//log.debug("Skipping to next page to catch up with checkpoint")
 						url = queryHandler.getPageUrl()
 						items = queryHandler.nextPage()
 					}
 				}
 			} 
 			if (remaining) {
-				log.info("Starting ${phase}")
+				//log.info("Starting ${phase}")
 				while (true) {
-					log.debug("top of phase loop inside restartmanager")
+					//log.debug("top of phase loop inside restartmanager")
 					def inItems = filtered(items, filterName);
 					if (selectedCheckpoint == 'update') {
 						inItems = filterForUpdate(inItems, checkpoint)
 					}
-					log.debug("Adding checkpoint for phase: ${phase} | url: ${url}")
+					//log.debug("Adding checkpoint for phase: ${phase} | url: ${url}")
 					checkpointManagementService.addCheckpoint(phase, url)
 					
 					// process integration logic
-					log.debug("going to RestartManagementService::processPhases closure with item count: ${inItems.size()}")
+					//log.debug("going to RestartManagementService::processPhases closure with item count: ${inItems.size()}")
 					closure(phase, inItems);
-					log.debug("Setting url and nextPage items for phase loop")
+					//log.debug("Setting url and nextPage items for phase loop")
 					url = queryHandler.pageUrl
 					items = queryHandler.nextPage()
 					if (items == null) break;
 					
 				}
-				log.info("Ending ${phase}")
+				//log.info("Ending ${phase}")
 			}
 		}
 		checkpointManagementService.addCheckpoint('update', 'none')

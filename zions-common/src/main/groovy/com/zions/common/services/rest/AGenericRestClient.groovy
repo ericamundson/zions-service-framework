@@ -305,7 +305,9 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		HttpResponseDecorator resp = delegate.post(oinput)
 		
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
-		if (resp.status == 200 && dHeader != null) {
+		int status = resp.status
+		if ((status == 200 || status == 201) && dHeader != null) {
+			log.warn "GenericRestClient::rateLimitPost --  ADO started throttling. Delaying 5 minutes."
 			System.sleep(300000)			
 		}
 		//JsonOutput t

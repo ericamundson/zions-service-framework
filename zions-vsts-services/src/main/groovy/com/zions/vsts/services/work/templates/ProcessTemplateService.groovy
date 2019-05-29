@@ -273,11 +273,11 @@ public class ProcessTemplateService {
 	}
 	
 	def getLinkMapping(mapping) {
-		def linkMapping = [:]
+		def ilinkMapping = [:]
 		mapping.links.link.each { link -> 
-			linkMapping["${link.@source}"] = link
+			ilinkMapping["${link.@source}"] = link
 		}
-		return linkMapping
+		return ilinkMapping
 	}
 	
 	def getTranslateMapping(def collection, def project, def mapping, def ccmWits) {
