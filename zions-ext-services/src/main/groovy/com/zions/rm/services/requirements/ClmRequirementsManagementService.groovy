@@ -189,10 +189,12 @@ class ClmRequirementsManagementService {
 		return databaseQueryService.pageUrl()
 	}
 	
-	def initialUrlDb() {
+	def initialUrlDb(Date ts) {
 		log.debug("Setting db select and returning initialUrl")
-		String selectStatement = new SqlLoader().sqlQuery(sqlResourceName)
-		return databaseQueryService.initialUrl(selectStatement)
+		if (!databaseQueryService.select) {
+			queryDatawarehouseSource(ts)
+		}
+		return databaseQueryService.initialUrl()
 	}
 
 	//
