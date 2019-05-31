@@ -123,37 +123,33 @@ class FileManagementService {
 
 	public def uploadAttachment(collection, project, area, File file) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		def currentEncoder = genericRestClient.delegate.encoder.'application/json'
-		genericRestClient.delegate.encoder.'application/json' = this.&encodeFile
 		def efilename = URLEncoder.encode(file.name, 'utf-8').replace('+', '%20')
 		def earea = URLEncoder.encode(area, 'utf-8').replace('+', '%20')
-		def result = genericRestClient.rateLimitPost(
+		def result = genericRestClient.rateLimitPost([
 			contentType: ContentType.JSON,
 			requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/attachments",
 			body: file,
-			query: ['api-version': '5.0-preview.3', uploadType: 'Simple', areaPath: earea, fileName: efilename]
+			query: ['api-version': '5.0-preview.3', uploadType: 'Simple', areaPath: earea, fileName: efilename]], 
+			this.&encodeFile
 			
 			)
-		genericRestClient.delegate.encoder.'application/json' = currentEncoder
 		return result
 	}
 	
 	public def uploadAttachment(collection, project, area, byte[] bytes) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		def currentEncoder = genericRestClient.delegate.encoder.'application/json'
-		genericRestClient.delegate.encoder.'application/json' = this.&encodeBytes
 		def efilename = URLEncoder.encode(file.name, 'utf-8').replace('+', '%20')
 		def earea = URLEncoder.encode(area, 'utf-8').replace('+', '%20')
-		def result = genericRestClient.rateLimitPost(
+		def result = genericRestClient.rateLimitPost([
 			contentType: ContentType.JSON,
 			requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/attachments",
 			body: bytes,
-			query: ['api-version': '5.0-preview.3', uploadType: 'Simple', areaPath: earea, fileName: efilename]
+			query: ['api-version': '5.0-preview.3', uploadType: 'Simple', areaPath: earea, fileName: efilename]],
+			this.&encodeBytes
 			
 			)
-		genericRestClient.delegate.encoder.'application/json' = currentEncoder
 		return result
 	}
 }

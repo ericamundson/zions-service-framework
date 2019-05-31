@@ -38,7 +38,7 @@ class FileManagementServiceSpec extends Specification {
 		1 * cacheManagementService.getFromCache(_,_) >> wiData
 		
 		and: 'stub for upload attachment rest request'
-		1 * genericRestClient.rateLimitPost(_) >> [url: 'https://an.azure.location']
+		1 * genericRestClient.rateLimitPost(_, _) >> [url: 'https://an.azure.location']
 		
 		when: 'call method under test ensureAttachments'
 		def wiUpdate = underTest.ensureAttachments('', '', 'aId', [[file: new File('dumb.png'), comment: "Added dumb.png"]])

@@ -1,14 +1,32 @@
 package com.zions.vsts.services.tfs.rest
 
 import com.zions.common.services.rest.IGenericRestClient
+import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
 
+@Component('multiUserGenericRestClient')
+@Slf4j
 class MultiUserGenericRestClient implements IGenericRestClient {
 	
-	List<GenericRestClient> genericClients = []
+	//@Autowired(required = false)
+	List<GenericRestClient> genericRestClients = new ArrayList<GenericRestClient>()
 	
-	int currentClient
+	int currentClient = 0
+
+	@Value('${tfs.url:}')
+	String tfsUrl
 	
-	int maxClient
+	@Value('${tfs.users:}')
+	String[] tfsUsers
+	
+	@Value('${tfs.tokens:}')
+	String[] tfsTokens
+	
+	public MultiUserGenericRestClient() {
+	}
+	
 
 	@Override
 	public Object setProxy() {
@@ -21,41 +39,70 @@ class MultiUserGenericRestClient implements IGenericRestClient {
 		// TODO Auto-generated method stub
 
 	}
+	
+	private IGenericRestClient getClient() {
+		if (genericRestClients.size() == 0) {
+			int i = 0
+			tfsUsers.each { user ->
+				GenericRestClient client = new GenericRestClient(tfsUrl, user, tfsTokens[i])
+				genericRestClients.add(client)
+				i++
+			}
+	
+		}
+		IGenericRestClient client = genericRestClients.get(currentClient)
+		if (!client) {
+			log.error "MultiUserGenericRestClient getClient::  No clients configured"
+			throw new Exception("MultiUserGenericRestClient getClient:: No ADO clients configured")
+		}
+		if (currentClient == (genericRestClients.size() - 1)) {
+			currentClient = 0
+		} else {
+			currentClient++
+		}
+		return client
+	}
 
 	@Override
 	public Object get(Map input) {
-		// TODO Auto-generated method stub
-		return null
+		return getClient().get(input)
 	}
 
 	@Override
 	public Object put(Map input) {
 		// TODO Auto-generated method stub
-		return null
+		return getClient().put(input)
 	}
 
 	@Override
 	public Object delete(Map input) {
 		// TODO Auto-generated method stub
-		return null
+		return getClient().delete(input)
 	}
 
 	@Override
 	public Object patch(Map input) {
 		// TODO Auto-generated method stub
-		return null
+		return getClient().patch(input)
 	}
 
 	@Override
 	public Object post(Map input) {
 		// TODO Auto-generated method stub
-		return null
+		return getClient().post(input)
 	}
 
 	@Override
 	public Object rateLimitPost(Map input) {
 		// TODO Auto-generated method stub
-		return null
+		return getClient().rateLimitPost(input)
+	}
+
+
+	@Override
+	public Object rateLimitPost(Map input, Closure encoderFunction) {
+		// TODO Auto-generated method stub
+		return getClient().rateLimitPost(input, encoderFunction);
 	}
 
 }

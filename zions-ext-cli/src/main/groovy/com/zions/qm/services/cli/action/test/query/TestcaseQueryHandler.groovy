@@ -1,5 +1,6 @@
 package com.zions.qm.services.cli.action.test.query
 
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.qm.services.test.TestCaseQueryData
 import org.springframework.beans.factory.annotation.Value
@@ -55,6 +56,17 @@ class TestcaseQueryHandler extends BaseQueryHandler {
 			currentItems = clmTestManagementService.nextPage(nextLink.@href)
 		}
 		return currentItems
+	}
+	
+	public boolean isModified(Object item) {
+		String key = "${item.webId.text()}-Test Case"
+		def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
+		if (!cacheWI) return true
+		String sDate = "${item.updated.text()}"
+		Date clmDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
+		sDate = "${cacheWI.fields.'System.ChangedDate'}"
+		Date adoDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
+		return clmDate.time >= adoDate.time;
 	}
 
 }

@@ -391,7 +391,7 @@ class CcmWorkManagementService {
 			idList.each { String rid ->
 				if (rid && rid.length() > 0) {
 					rid = resolveId(rid, module)
-					if ("${linkMap.@key}".length() > 0) {
+					if (rid && "${linkMap.@key}".length() > 0) {
 						rid = "${rid}-${linkMap.@key}"
 					}
 					//log.info("Related ID for work item (${id}):  ${module} ${rid}")

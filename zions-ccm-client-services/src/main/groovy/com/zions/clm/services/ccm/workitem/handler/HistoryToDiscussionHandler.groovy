@@ -57,6 +57,7 @@ class HistoryToDiscussionHandler extends CcmBaseAttributeHandler {
 		int count = 0
 		while (history == null && count < 10) {
 			history = clmWorkItemManagementService.getWorkItemHistory(wi.id)
+			count++
 		}
 		if (history == null) {
 			return null

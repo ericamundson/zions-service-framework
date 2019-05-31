@@ -84,10 +84,25 @@ class BaseQueryHandler implements IQueryHandler {
 		return this.itemFilter;
 	}
 
-	public Date modifiedDate(Object item) {
+	public boolean isModified(Object item) {
+		String key = "${item.id.text()}"
+		def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
+		if (!cacheWI) return true
 		String sDate = "${item.modified.text()}"
-		
-		return new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
+		Date clmDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
+		String modified = cacheWI.fields['System.ChangedDate']
+		if (modified != null && modified.length()> 0) {
+			if (modified.lastIndexOf('.') > -1) {
+				modified = modified.substring(0, modified.lastIndexOf('.'))
+			} else {
+				modified = modified.replace('Z', '')
+			}
+			modified = modified + ".999Z"
+			Date modDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", modified)
+			return clmDate.time >= modDate.time;
+		} 
+		return true;
 	}
+
 
 }

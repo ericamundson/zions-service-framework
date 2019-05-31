@@ -95,6 +95,7 @@ class DescriptionHandler extends CcmBaseAttributeHandler {
 			img.@src = attData.url
 		}
 		String outHtml = XmlUtil.asString(htmlData)
+		outHtml = outHtml.replaceAll("[^\\p{ASCII}]", "")
 		return outHtml 
 	}
 
