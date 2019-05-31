@@ -207,6 +207,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		def appArgs = new DefaultApplicationArguments(loadQMArgs())
 		//restartManagementService.selectedCheckpoint = 'last'
 		cacheManagementService.cacheModule = 'QM'
+		restartManagementService.includePhases = 'plans,links,executions'
 		qmtoAdo.execute(appArgs)
 		
 		then: 'Validate rqm data'

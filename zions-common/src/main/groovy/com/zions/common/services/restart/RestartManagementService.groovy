@@ -123,7 +123,7 @@ class RestartManagementService implements IRestartManagementService {
 			def items = queryHandler.getItems()
 			String url = queryHandler.initialUrl();
 			String filterName = queryHandler.filterName
-			if (checkpoint.phase == 'update') remaining = true
+			if (selectedCheckpoint == 'update') remaining = true
 			if (checkpoint == null || checkpoint.phase == phase) {
 				remaining = true
 				if (checkpoint != null) {
