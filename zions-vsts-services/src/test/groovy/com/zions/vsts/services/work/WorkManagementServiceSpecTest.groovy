@@ -109,8 +109,8 @@ class WorkManagementServiceSpecTest extends Specification {
 	def 'clean call success flow'() {
 		given: 'setup getWorkitems stub'
 		def workitems = new JsonSlurper().parseText(this.getClass().getResource('/testdata/workitemsquery.json').text)		
-		1 *  genericRestClient.post(_) >> workitems
-		1 *  genericRestClient.post(_) >> null
+		1 *  genericRestClient.rateLimitPost(_) >> workitems
+		1 *  genericRestClient.rateLimitPost(_) >> null
 		
 		and: 'setup deleteWorkitem stub'
 		1* genericRestClient.delete(_) >> null
