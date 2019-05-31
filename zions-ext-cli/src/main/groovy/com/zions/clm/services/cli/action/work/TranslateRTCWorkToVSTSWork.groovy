@@ -276,7 +276,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		if (includes['phases'] != null) {
 			//cacheManagementService.deleteByType('LinkInfo')
 			restartManagementService.processPhases { phase, items ->
-				if (phase == 'workdata') {
+				if (phase == 'workdata' || phase == 'update') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					ccmWorkManagementService.resetNewId()
 					items.each { workitem ->
@@ -305,7 +305,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				}
 				//		workManagementService.testBatchWICreate(collection, tfsProject)
 				//apply work links
-				if (phase == 'worklinks') {
+				if (phase == 'worklinks' || phase == 'update' || phase == 'other') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id.text())
@@ -326,7 +326,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				}
 
 				//extract & apply attachments.
-				if (phase == 'attachments') {
+				if (phase == 'attachments' || phase == 'update' || phase == 'other') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id.text())
