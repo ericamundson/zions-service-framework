@@ -6,5 +6,6 @@ interface IQueryHandler {
 	String getPageUrl()
 	def nextPage()
 	String getFilterName();
-	Date modifiedDate(def item)
+	boolean isModified(def item)
+	
 }

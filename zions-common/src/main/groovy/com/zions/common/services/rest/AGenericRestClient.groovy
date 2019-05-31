@@ -123,7 +123,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		//log.debug("GenericRestClient::get -- URI after checkBlankCollection: "+oinput.uri)
 		HttpResponseDecorator resp = delegate.get(oinput)
 		if (resp.data == null) {
-			log.error("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
+			log.warn("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
 		}
 
 		if (withHeader) {
@@ -180,6 +180,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		HttpResponseDecorator resp = delegate.put(oinput)
 		
 		if (resp.status != 200) {
+			log.error("GenericRestClient::put -- Failed. Status: "+resp.getStatusLine());
 			return null;
 		}
 		if (withHeader) {
@@ -291,7 +292,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		return input
 	}
 
-	public Object rateLimitPost(Map input) {
+	public Object rateLimitPost(Map input, Closure encoderFunction = null) {
 		boolean withHeader = false
 		if (input.withHeader) {
 			withHeader = input.withHeader
@@ -301,13 +302,23 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		if (checked) {
 			oinput = checkBlankCollection(input)
 		}
+		def currentEncoder = null
+		if (encoderFunction) {
+			currentEncoder = delegate.encoder.'application/json'
+			delegate.encoder.'application/json' = encoderFunction
+			
+		}
 		Map retryCopy = deepcopy(oinput)
 		HttpResponseDecorator resp = delegate.post(oinput)
-		
+		if (currentEncoder) {
+			delegate.encoder.'application/json' = currentEncoder
+			
+		}
+
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
 		int status = resp.status
 		if ((status == 200 || status == 201) && dHeader != null) {
-			log.warn "GenericRestClient::rateLimitPost --  ADO started throttling. Delaying 5 minutes."
+			log.error "GenericRestClient::rateLimitPost --  ADO started throttling. Delaying 5 minutes."
 			System.sleep(300000)			
 		}
 		//JsonOutput t

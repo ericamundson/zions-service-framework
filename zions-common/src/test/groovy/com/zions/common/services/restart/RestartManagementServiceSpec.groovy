@@ -136,10 +136,11 @@ class TestQueryHandler implements IQueryHandler {
 		return null;
 	}
 
+
 	@Override
-	public Date modifiedDate(Object item) {
+	public boolean isModified(Object item) {
 		// TODO Auto-generated method stub
-		return null;
+		return true;
 	}
 	
 }

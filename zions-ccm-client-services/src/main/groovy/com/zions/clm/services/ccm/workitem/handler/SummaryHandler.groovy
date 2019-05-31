@@ -51,6 +51,7 @@ class SummaryHandler extends CcmBaseAttributeHandler {
 		def wiCache = data.cacheWI
 		def memberMap = data.memberMap
 		String summary = wi.getHTMLSummary().plainText
+		summary = summary.replaceAll("[^\\p{ASCII}]", "")
 		int sLength = summary.length()
 		String sId = "${wi.id}"
 		

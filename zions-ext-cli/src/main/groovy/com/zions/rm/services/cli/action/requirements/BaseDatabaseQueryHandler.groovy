@@ -103,4 +103,8 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 		return new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
 	}
 
+	public boolean isModified(Object item) {
+		return true;
+	}
+
 }

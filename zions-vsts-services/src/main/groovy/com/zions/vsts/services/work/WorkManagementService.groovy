@@ -114,6 +114,31 @@ class WorkManagementService {
 		cacheManagementService.clear()
 	}
 	
+	def cleanDuplicates(String collection, String project) {
+		def deleted = [:]
+		def cacheWIs = cacheManagementService.getAllOfType('wiData')
+		cacheWIs.each { key, cacheWI -> 
+			String eId = "${cacheWI.fields.'Custom.ExternalID'}"
+			String cid = "${cacheWI.id}"
+			String query = "select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${project}' AND [Custom.ExternalID] = '${eId}'"
+			def wis = getWorkItems(collection, project, query)
+			if (wis && wis.workItems && wis.workItems.size() > 1) {
+				for (int i = 0; i < wis.workItems.size(); i++) {
+					def wi = wis.workItems[i]
+					String wid = "${wi.id}"
+					if (wid != cid) {
+						deleteWorkitem(wi.url)
+					}
+				}
+			} 
+			else if (wis && wis.workItems && "${wis.workItems[0].id}" != "${cid}") {
+				String wid = "${wis.workItems[0].id}"
+				def wi = getWorkItem(collection, project, wid)
+				cacheManagementService.saveToCache(wi, key, 'wiData')
+			}
+		}
+	}
+
 //	def getWorkItem(String url) {
 //		def result = genericRestClient.get(
 //			uri: url,
@@ -123,12 +148,15 @@ class WorkManagementService {
 //		return result
 //	}
 
-	def getWorkItems(String collection, String project, String aquery) {
+	def getWorkItems(String collection, String project, String aquery, int lastId = -1) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def query = [query: aquery]
+		def query = [query: "${aquery}"]
+		if (lastId != -1) {
+			query = [query: "${aquery} AND [System.Id] > ${lastId}  ORDER BY [System.Id] ASC"]
+		}
 		String body = new JsonBuilder(query).toPrettyString()
-		def result = genericRestClient.post(
+		def result = genericRestClient.rateLimitPost(
 			requestContentType: ContentType.JSON,
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/wiql",
