@@ -254,7 +254,8 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 								checkpointManagementService.addLogentry("Artifact ${sid} generated a NullPointerException and was not added as a change")
 								return
 							} catch (Exception e) {
-								
+								checkpointManagementService.addLogentry("Artifact ${sid} generated an exception and was not added as a change: ${e}")
+								return
 							}
 							
 							//new FlowInterceptor() {}.flowLogging(clManager) {
