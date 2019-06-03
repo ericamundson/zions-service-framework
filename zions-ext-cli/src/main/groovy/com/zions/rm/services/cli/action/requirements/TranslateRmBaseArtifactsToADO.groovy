@@ -237,7 +237,10 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							String format = primaryTextString.equals("No primary text") ? 'WrapperResource' : 'Text'
 							//here is the uri
 							String about = "${rmItem.about}"
+							//log.debug("Fetch artifact: ${sid} ${format} ${about}")
 							ClmArtifact artifact = new ClmArtifact('', format, about)
+							
+							try {
 							if (format == 'Text') {
 								clmRequirementsManagementService.getTextArtifact(artifact,false,true)
 							}
@@ -247,12 +250,18 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							else {
 								log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
 							}
+							} catch (java.lang.NullPointerException e) {
+								checkpointManagementService.addLogentry("Artifact ${sid} generated a NullPointerException and was not added as a change")
+								return
+							} catch (Exception e) {
+								
+							}
+							
 							//new FlowInterceptor() {}.flowLogging(clManager) {
 								def reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
 								if (reqChanges != null) {
 									reqChanges.each { key, val ->
 										clManager.add("${id}", val)
-										
 									}
 									//log.debug("adding changes for requirement ${id}")
 								}
