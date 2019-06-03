@@ -44,14 +44,80 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	}
 
 	@Override
-	public Object formatValue(Object value, Object itemData) {
-		if (value == null || value.length() == 0) {
-			return '<div></div>'
-		}
-		
+	public Object formatValue(Object value, Object itemData) {		
 		String sId = itemData.getCacheID()
 		String outHtml
-		if (itemData.getFormat() == 'WrapperResource') {
+		if (itemData.getArtifactType() == 'Report Filter') {
+			String seq = itemData.getAttribute('Sequence No')
+			String filterDesc = itemData.getAttribute('Filter Description')
+			outHtml = """<div><p><b>Sequence No:</b>&nbsp$seq</p>
+                         <p><b>Filter Description:</b>&nbsp$filterDesc</p>"""
+		}
+		else if (itemData.getArtifactType() == 'Report Group Layout') {
+			String section = itemData.getAttribute('Sections')
+			String alignment = itemData.getAttribute('Alignment')
+			String pageBreak = itemData.getAttribute('Page Break')
+			outHtml = """<div><p><b>Section:</b>&nbsp$section</p>
+                         <p><b>Alignment:</b>&nbsp$alignment</p>
+                         <p><b>Page Break:</b>&nbsp$pageBreak</p>
+                         <p><b>Value:</b>&nbsp${itemData.stripTags(value)}</p>"""
+		}		
+		else if (itemData.getArtifactType() == 'Report Sort') {
+			String seq = itemData.getAttribute('Sequence No')
+			String groupClause = itemData.getAttribute('Group Clause')
+			String fieldName = itemData.getAttribute('Field Name')
+			String gsb = itemData.getAttribute('Group or Sort')
+			String order = itemData.getAttribute('Sort Order')
+			String remarks = itemData.getAttribute('Info Comments')
+			outHtml = """<div><p><b>Sequence No:</b>&nbsp$seq</p>
+                         <p><b>Group Clause:</b>&nbsp$groupClause</p>
+                         <p><b>Report Field Name:</b>&nbsp$fieldName</p>
+                         <p><b>Group / Sort / Break:</b>&nbsp$gsb</p>
+                         <p><b>Sort Order:</b>&nbsp$order</p>
+                         <p><b>Remarks: </b>&nbsp$remarks</p></div>"""
+		}
+		else if (itemData.getArtifactType() == 'Report Summary Fields') {
+			String field = itemData.getAttribute('Field Name')
+			String valFormat = itemData.getAttribute('Value Format')
+			String alignment = itemData.getAttribute('Alignment')
+			String calc = itemData.getAttribute('Calculation Needed - Y/N')
+			outHtml = """<div><p><b>Report Field Name:</b>&nbsp$field</p>
+                         <p><b>Value Format:</b>&nbsp$valFormat</p>
+                         <p><b>Data Alignment:</b>&nbsp$alignment</p>
+                         <p><b>Field Mapping and Calculation:</b>&nbsp$calc</p>"""
+		}
+		else if (itemData.getArtifactType() == 'Reporting RRZ') {
+			String title = itemData.getAttribute('Report Title')
+			String pageSize = itemData.getAttribute('Page Size')
+			String pageLayout = itemData.getAttribute('Page Layout')
+			String docName = itemData.getAttribute('Document Name')
+			String docNum = itemData.getAttribute('FS Document #')
+			String audience = itemData.getAttribute('Audience')
+			String distSchedule = itemData.getAttribute('Distribution Schedule')
+			String distFormat = itemData.getAttribute('Distribution Format')
+			String distMethod = itemData.getAttribute('Non-CORE System')
+			String desc = itemData.getAttribute('Info Comments')
+			String affiliates = itemData.getAttribute('Affiliates Affected')
+			outHtml = """<div><p><b>Report Title:</b><br>
+                         &nbsp&nbsp$title</p>
+                         <p><b>Business Requirements:</b><br>
+                         &nbsp&nbsp$docName<br>
+                         &nbsp&nbsp$docNum</p>
+                         <p><b>Description:</b><br>
+                         &nbsp&nbsp$desc</p>
+                         <p><b>Audience:</b><br>
+                         &nbsp&nbsp${audience.replaceAll(';',', ')}</p>
+                         <p><b>Distribution:</b><br>
+						 &nbsp&nbspDistribution Schedule:&nbsp$distSchedule<br>
+						 &nbsp&nbspDistribution Format:&nbsp$distFormat<br>
+						 &nbsp&nbspDistribution Method:&nbsp${distMethod.replaceAll(';',', ')}</p>
+                         <p><b>General Report and Page Layout:</b><br>
+						 &nbsp&nbspPage Size:&nbsp$pageSize<br>
+						 &nbsp&nbspPage Orientation:&nbsp$pageLayout</p></div>
+                         <p><b>Input Parameters:</b><br>
+                         &nbsp&nbspAffiliate:&nbsp${affiliates.replaceAll(';',', ')}</p>"""
+		}
+		else if (itemData.getFormat() == 'WrapperResource') {
 			// For wrapper resource (uploaded file), we need to create our own description with hyperlink to attachment
 			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, itemData.getFileHref())
 			if (fileItem) {
@@ -67,6 +133,9 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 				outHtml = "<div>Uploading Attachment from CLM failed, please see original work item</div>"
 			}
 		}
+		else if (value == null || value.length() == 0) {
+			return '<div></div>'
+		}		
 		else {
 			// strip out all namespace stuff from html
 			String description = "${value}".replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')

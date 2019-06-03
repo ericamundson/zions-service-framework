@@ -263,8 +263,13 @@ class TranslateRmModulesToADO implements CliAction {
 						module.orderedArtifacts[it].setIsDeleted(true)
 						return  // Skip Heading artifact 
 					}
+					// If simple heading, remove duplicate description
 					else if (module.orderedArtifacts[it].getIsHeading()) {
-						module.orderedArtifacts[it].setDescription('') // If simple heading, remove duplicate description
+						module.orderedArtifacts[it].setDescription('') 
+					}
+					// If Reporting Requirement in Reporting RRZ, do not migrate the artifact
+					else if (module.getArtifactType()== 'Reporting RRZ' && module.orderedArtifacts[it].getArtifactType() == 'Reporting Requirement') {
+						module.orderedArtifacts[it].setIsDeleted(true)
 					}
 					// Only store first occurrence of an artifact in the module
 					if (!module.orderedArtifacts[it].getIsDuplicate()) {  
