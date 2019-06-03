@@ -3,6 +3,7 @@ package com.zions.qm.services.cli.action.test
 import java.util.Map
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
@@ -220,6 +221,9 @@ class TranslateRQMToMTM implements CliAction {
 
 	@Autowired
 	IRestartManagementService restartManagementService
+	
+	@Value('${process.full.plan:false}')
+	String processFullPlan
 
 	public TranslateRQMToMTM() {
 	}
@@ -280,11 +284,6 @@ class TranslateRQMToMTM implements CliAction {
 						def configuration = clmTestManagementService.getTestItem(testItem.id.text())
 						//int id = Integer.parseInt(configuration.webId.text())
 						def id = "${configuration.name.text()}"
-						//					String resultsxml = XmlUtil.serialize(configuration)
-						//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/configurationT.xml")
-						//					def os = resultFile.newDataOutputStream()
-						//					os << resultsxml
-						//					os.close()
 						clmTestItemManagementService.processForChanges(tfsProject, configuration, memberMap) { key, val ->
 							def oconfig = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-{key}")
 						}
@@ -359,12 +358,30 @@ class TranslateRQMToMTM implements CliAction {
 								}
 								idKeyMap[idtype] = idtype
 							}
-							testsuite.testcase.each { testcaseRef ->
+							if (processFullPlan == 'true') {
+								testsuite.testcase.each { testcaseRef ->
+									def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+									clmTestItemManagementService.cacheLinkChanges(testcase)
+									int aid = Integer.parseInt(testcase.webId.text())
+									 //generate test data
+									idtype = "${aid}-testcase"
+									if (!idKeyMap.containsKey(idtype)) {
+										def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+											String tid = "${aid}-${key}".toString()
+											clManager.add(tid,val)
+										}
+										idKeyMap[idtype] = idtype
+									}
+								}
+							}
+						}
+						if (processFullPlan == 'true') {
+							testplan.testcase.each { testcaseRef ->
 								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-								clmTestItemManagementService.cacheLinkChanges(testcase)
 								int aid = Integer.parseInt(testcase.webId.text())
+								clmTestItemManagementService.cacheLinkChanges(testcase)
 								 //generate test data
-								idtype = "${aid}-testcase"
+								String idtype = "${aid}-testcase"
 								if (!idKeyMap.containsKey(idtype)) {
 									def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
 										String tid = "${aid}-${key}".toString()
@@ -372,20 +389,6 @@ class TranslateRQMToMTM implements CliAction {
 									}
 									idKeyMap[idtype] = idtype
 								}
-							}
-						}
-						testplan.testcase.each { testcaseRef ->
-							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-							int aid = Integer.parseInt(testcase.webId.text())
-							clmTestItemManagementService.cacheLinkChanges(testcase)
-							 //generate test data
-							String idtype = "${aid}-testcase"
-							if (!idKeyMap.containsKey(idtype)) {
-								def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-									String tid = "${aid}-${key}".toString()
-									clManager.add(tid,val)
-								}
-								idKeyMap[idtype] = idtype
 							}
 						}
 					}
