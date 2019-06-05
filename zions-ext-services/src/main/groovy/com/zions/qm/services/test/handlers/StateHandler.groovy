@@ -10,7 +10,7 @@ class StateHandler extends QmBaseAttributeHandler {
 	ClmTestManagementService clmTestManagementService
 	
 	public String getQmFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'state'
 	}
 

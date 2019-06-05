@@ -28,6 +28,7 @@ class ClmTestManagementService {
 	
 	@Autowired
 	IGenericRestClient qmGenericRestClient
+	
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
 	
@@ -44,6 +45,13 @@ class ClmTestManagementService {
 	
 	
 	
+	/**
+	 * Retrieve custom attribute meta data from QM CLM project.
+	 * 
+	 * @param projectName - CLM QM project name.
+	 * @param type - specific QM type
+	 * @return Custom attribute data
+	 */
 	public def getCustomAttributes(String projectName, String type)
 	{
 		

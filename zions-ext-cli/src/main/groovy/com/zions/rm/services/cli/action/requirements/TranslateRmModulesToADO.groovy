@@ -71,12 +71,10 @@ import com.zions.rm.services.requirements.ClmRequirementsFileManagementService
  * }
  * 
  * class TranslateRRMToADO {
- * ... TODO: Implement these Spring Components in zions-ext-services project...
  * @Autowired ClmRequirementsItemManagementService clmRequirementsItemManagementService
  * @Autowired ClmRequirementsManagementService clmRequirementsManagementService
  * @Autowired RequirementsMappingManagementService requirementsMappingManagementService
  * 
- * ... TODO: Need to complete implementation of ...
  * 	+validate(ApplicationArguments args)
  * 	+execute(ApplicationArguments args)
  * 	+filtered(def, String)

@@ -7,13 +7,13 @@ class ReleaseHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public String getFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'Release'
 	}
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
-		// TODO Auto-generated method stub
+		
 		if (itemData.getID() == '1570366') {
 			def i = 0
 		}

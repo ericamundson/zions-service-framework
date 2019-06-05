@@ -10,7 +10,7 @@ import groovy.xml.MarkupBuilder
 class PreconditionHandler extends HtmlHandler {
 
 	public String getQmFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'com.ibm.rqm.planning.editor.section.testCasePreCondition'
 	}
 

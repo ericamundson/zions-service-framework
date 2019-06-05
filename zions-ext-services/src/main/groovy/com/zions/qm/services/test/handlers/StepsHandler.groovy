@@ -29,7 +29,7 @@ class StepsHandler extends QmBaseAttributeHandler {
 	def SPECIAL = ['&nbsp;','&copy;','&reg;','&euro;','&trade;','&larr;','&uarr;','&rarr;','&darr;']
 
 	public String getQmFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'none'
 	}
 

@@ -29,13 +29,11 @@ class BuildMicroService extends AbstractWebSocketMicroService {
 	
 	@Override
 	public Object processADOData(Object adoData) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String topic() {
-		// TODO Auto-generated method stub
 		return 'build.complete';
 	}
 

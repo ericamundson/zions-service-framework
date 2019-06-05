@@ -8,10 +8,20 @@ package com.zions.common.services.db
 interface IDatabaseQueryService {
 	
 	/**
+	 * Initial query start and returns initial page results.
+	 * 
 	 * @param sql
 	 * @return Map of results
 	 */
 	def query(String sql);
+	
+	/**
+	 * Initial query start with input parms map and returns initial page results.
+	 * 
+	 * @param sql - statement
+	 * @param parms - map of name: value pairs.
+	 * @return result map.
+	 */
 	def query(String sql, def parms);
 	
 	/**
@@ -19,8 +29,14 @@ interface IDatabaseQueryService {
 	 */
 	def nextPage();
 	
+	/**
+	 * @return a page's url
+	 */
 	String pageUrl();
 	
+	/**
+	 * @return initial page url.
+	 */
 	String initialUrl()
 
 }

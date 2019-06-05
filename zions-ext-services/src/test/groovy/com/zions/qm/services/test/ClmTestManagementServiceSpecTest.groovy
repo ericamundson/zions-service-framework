@@ -219,7 +219,7 @@ class ClmTestManagementServiceSpecTestConfig {
 			//.tempDir('mongodb')
 			.installPath('../zions-common-data/mongodb/win32/mongodb-win32-x86_64-3.2.16/bin')
 			.bindIp("localhost")
-			.port(23456)
+			.port(12346)
 			.build();
 		return builder
 	}

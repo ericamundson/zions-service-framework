@@ -108,38 +108,38 @@ class TestQueryHandler implements IQueryHandler {
 
 	@Override
 	public Object getItems() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public String initialUrl() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public String getPageUrl() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public Object nextPage() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public String getFilterName() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 
 	@Override
 	public boolean isModified(Object item) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 	

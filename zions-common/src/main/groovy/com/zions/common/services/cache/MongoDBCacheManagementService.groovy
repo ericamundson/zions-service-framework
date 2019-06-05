@@ -4,6 +4,7 @@ import com.zions.common.services.cache.db.CacheItem
 import com.zions.common.services.cache.db.CacheItemRepository
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -18,15 +19,20 @@ import org.springframework.stereotype.Component
  *
  */
 @Component
+@Slf4j
 class MongoDBCacheManagementService implements ICacheManagementService {
+	/**
+	 * Mongodb setup configuration
+	 */
 	@Autowired(required=false)
 	MongoTemplate mongoTemplate
 
+	/**
+	 * Query controller for cache items being managed
+	 */
 	@Autowired(required=false)
 	CacheItemRepository repository
 	
-	
-	@Autowired
 	@Value('${db.project:coredev}')
 	String dbProject
 	
@@ -42,7 +48,7 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 
 	@Override
 	public Object getFromCache(Object id, String type) {
-		// TODO Auto-generated method stub
+		
 		CacheItem ci = repository.findByProjectAndModuleAndKeyAndType(dbProject, cacheModule, id, type)
 		if (ci == null) return null
 		String json = ci.json
@@ -52,7 +58,7 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	
 	@Override
 	public Object getFromCache(Object id, String module, String type) {
-		// TODO Auto-generated method stub
+		
 		CacheItem ci = repository.findByProjectAndModuleAndKeyAndType(dbProject, module, id, type)
 		if (ci == null) return null
 		String json = ci.json
@@ -62,7 +68,6 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 
 	@Override
 	public Object saveToCache(Object data, String id, String type) {
-		// TODO Auto-generated method stubC
 		CacheItem ci = repository.findByProjectAndModuleAndKeyAndType(dbProject, cacheModule, id, type)
 		String json = new JsonBuilder(data).toPrettyString()
 		if (ci == null) {
@@ -101,11 +106,12 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 			}
 			return save
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			log.error(e)
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			log.error(e)
 		} catch (NullPointerException e) {
 			// weird, this happened to artifact 74184
+			log.error(e)
 		}
 		
 	

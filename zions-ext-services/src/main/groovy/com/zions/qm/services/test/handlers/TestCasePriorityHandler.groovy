@@ -15,7 +15,7 @@ class TestCasePriorityHandler extends QmBaseIntegerAttributeHandler {
 
 
 	public String getQmFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'priority'
 	}
 

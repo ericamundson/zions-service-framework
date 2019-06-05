@@ -74,7 +74,7 @@ class MrGenericRestClient extends AGenericRestClient {
 	}
 
 	public void setCredentials(String user, String token) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 }

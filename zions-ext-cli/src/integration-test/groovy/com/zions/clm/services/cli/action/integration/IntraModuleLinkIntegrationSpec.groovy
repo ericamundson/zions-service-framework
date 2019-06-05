@@ -938,7 +938,6 @@ class IntraModuleLinkIntegrationSpecConfig {
 	}
 
 	protected String getDatabaseName() {
-		// TODO Auto-generated method stub
 		return 'coredev';
 	}
 	
