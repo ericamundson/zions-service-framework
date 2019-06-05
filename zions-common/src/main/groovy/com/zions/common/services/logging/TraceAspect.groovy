@@ -11,7 +11,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.EnableAspectJAutoProxy
 
 /**
- * Setup to log class method entry/exit.  
+ * Setup to log class method entry/exit. Any classes' methods marked with
+ * @See com.zions.common.services.logging.Traceable annotation will utilize aspect advice.
  *  
  * @author z091182
  *
@@ -23,6 +24,13 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy
 public class TraceAspect {
 
 
+	/**
+	 * Around advice implementation for trace aspect.
+	 * 
+	 * @param joinPoint - join point data.
+	 * @return - target's return
+	 * @throws Throwable
+	 */
 	@Around('execution (* *(..)) && @within(com.zions.common.services.logging.Traceable)')
 	public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
 		Logger ilog = log
@@ -31,11 +39,11 @@ public class TraceAspect {
 		if (ilog.isInfoEnabled()) {
 			ilog.info("Entering:  ${sig}")
 		}
-	    Object proceed = joinPoint.proceed();
+		Object proceed = joinPoint.proceed();
 		if (ilog.isInfoEnabled()) {
 			ilog.info("Leaving:  ${sig}")
 		}
 
-	    return proceed;
-	 }
+		return proceed;
 	}
+}
