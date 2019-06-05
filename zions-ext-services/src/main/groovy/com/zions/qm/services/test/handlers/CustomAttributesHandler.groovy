@@ -26,7 +26,6 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 	}
 
 	public String getQmFieldName() {
-		// TODO Auto-generated method stub
 		return 'none'
 	}
 	

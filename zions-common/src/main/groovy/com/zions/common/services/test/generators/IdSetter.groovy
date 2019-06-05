@@ -8,8 +8,6 @@ class IdSetter implements Generator {
 	public String id
 	@Override
 	public Object gen() {
-		// TODO Auto-generated method stub
-		
 		return id
 	}
 

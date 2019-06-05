@@ -40,7 +40,7 @@ class TestcaseQueryHandler extends BaseQueryHandler {
 	}
 	
 	public String getFilterName() {
-		// TODO Auto-generated method stub
+		
 		return this.tcItemFitler;
 	}
 

@@ -10,28 +10,30 @@ import org.slf4j.Logger
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.EnableAspectJAutoProxy
 
+/**
+ * Setup to log class method entry/exit.  
+ *  
+ * @author z091182
+ *
+ */
 @Aspect
 @Configuration
 @Slf4j
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass=true)
 public class TraceAspect {
 
 
-	/*@Around("execution(* com.journaldev.spring.model.Employee.getName())")*/ 
-	@Around('@annotation(com.zions.common.services.logging.Traceable)')
+	@Around('execution (* *(..)) && @within(com.zions.common.services.logging.Traceable)')
 	public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
 		Logger ilog = log
-		def obj = joinPoint.obj
-		try {
-			obj.log.isDebugEnabled()
-			ilog = obj.log
-		} catch (e) {}
-		if (ilog.isDebugEnabled()) {
-			ilog.debug("Entering:  ${sig}")
+		Signature sig = joinPoint.signature
+		String mName = sig.name
+		if (ilog.isInfoEnabled()) {
+			ilog.info("Entering:  ${sig}")
 		}
 	    Object proceed = joinPoint.proceed();
-		if (ilog.isDebugEnabled()) {
-			ilog.debug("Leaving:  ${sig}")
+		if (ilog.isInfoEnabled()) {
+			ilog.info("Leaving:  ${sig}")
 		}
 
 	    return proceed;

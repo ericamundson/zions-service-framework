@@ -68,7 +68,6 @@ trait CacheInterceptor implements Interceptor {
 	
 	@Override
 	public Object beforeInvoke(Object object, String methodName, Object[] arguments) {
-		// TODO Auto-generated method stub
 		if (!ignore && (!methods || methods.contains(methodName))) {
 			doRun = false
 			cacheData = null
@@ -108,7 +107,6 @@ trait CacheInterceptor implements Interceptor {
 
 	@Override
 	public boolean doInvoke() {
-		// TODO Auto-generated method stub
 		return doRun
 	}
 

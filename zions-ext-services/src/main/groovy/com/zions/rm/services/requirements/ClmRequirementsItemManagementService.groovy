@@ -69,7 +69,7 @@ class ClmRequirementsItemManagementService {
 		newId = -1
 	}
 	public ClmRequirementsItemManagementService() {
-		// TODO Auto-generated constructor stub
+		// Do nothing
 	}
 	
 	def getChanges(String project, def artifact, def memberMap, def runData = null) {

@@ -56,7 +56,7 @@ trait TestDataInterceptor implements Interceptor {
 	
 	@Override
 	public Object beforeInvoke(Object object, String methodName, Object[] arguments) {
-		// TODO Auto-generated method stub
+		
 		doRun = true
 	}
 
@@ -77,7 +77,7 @@ trait TestDataInterceptor implements Interceptor {
 
 	@Override
 	public boolean doInvoke() {
-		// TODO Auto-generated method stub
+		
 		return doRun
 	}
 

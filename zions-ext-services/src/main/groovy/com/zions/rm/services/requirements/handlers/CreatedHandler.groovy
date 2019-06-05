@@ -7,7 +7,7 @@ class CreatedHandler extends RmBaseAttributeHandler {
 	private String fSimpleDateTimeFormatPattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 	@Override
 	public String getFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'created'
 	}
 

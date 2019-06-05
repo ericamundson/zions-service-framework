@@ -44,13 +44,13 @@ class PlanBlankHandler extends QmBaseAttributeHandler {
 
 	@Override
 	public String getQmFieldName() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 	

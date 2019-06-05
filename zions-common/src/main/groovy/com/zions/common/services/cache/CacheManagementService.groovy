@@ -32,6 +32,9 @@ class CacheManagementService implements ICacheManagementService {
 	
 	public CacheManagementService() {}
 	
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.cache.ICacheManagementService#saveBinaryAsAttachment(java.io.ByteArrayInputStream, java.lang.String, java.lang.String)
+	 */
 	def saveBinaryAsAttachment(ByteArrayInputStream result, String name, String id) {
 		try {
 			File cacheDir = new File(this.cacheLocation)
@@ -60,16 +63,18 @@ class CacheManagementService implements ICacheManagementService {
 			return save
 		} catch (FileNotFoundException e) {
 			//added these logs to the error catch because there is something breaking in the upload
-			//log.debug("Filenotfound exception for upload attempt, name: ${name} | id: ${id}")
+			log.warn("Filenotfound exception for upload attempt, name: ${name} | id: ${id}", e)
 		} catch (IOException e) {
 			//somehow, upload step after this receives a blank file.
-			//log.debug("IOException for upload attempt, name: ${name} | id: ${id}")
-			// TODO Auto-generated catch block
+			log.warn("IOException for upload attempt, name: ${name} | id: ${id}", e)
 		}
 	
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.cache.ICacheManagementService#saveToCache(java.lang.Object, java.lang.String, java.lang.String)
+	 */
 	public def saveToCache(def data, String id, String type) {
 		File cacheDir = new File(this.cacheLocation)
 		if (!cacheDir.exists()) {
@@ -97,10 +102,10 @@ class CacheManagementService implements ICacheManagementService {
 	 * @return
 	 */
 	def getFromCache(def id, String type) {
-		log.trace("Retrieving id from cache: ${id}")
+		//log.trace("Retrieving id from cache: ${id}")
 		File cacheData = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}${type}.json");
 		if (cacheData.exists()) {
-			log.trace("Returning cache data id ${id} module ${cacheModule}")
+			//log.trace("Returning cache data id ${id} module ${cacheModule}")
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)
 		}
@@ -116,10 +121,10 @@ class CacheManagementService implements ICacheManagementService {
 	 * @return
 	 */
 	def getFromCache(def id, String module, String type) {
-		log.trace("Retrieving id from cache: ${id}")
+		//log.trace("Retrieving id from cache: ${id}")
 		File cacheData = new File("${this.cacheLocation}${File.separator}${module}${File.separator}${id}${File.separator}${type}.json");
 		if (cacheData.exists()) {
-			log.trace("Returning cache data with id ${id} module ${module}")
+			//log.trace("Returning cache data with id ${id} module ${module}")
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)
 		}
@@ -127,6 +132,9 @@ class CacheManagementService implements ICacheManagementService {
 
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.cache.ICacheManagementService#clear()
+	 */
 	@Override
 	public void clear() {
 		File file = new File("${this.cacheLocation}${File.separator}${cacheModule}")
@@ -134,6 +142,9 @@ class CacheManagementService implements ICacheManagementService {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.cache.ICacheManagementService#getAllOfType(java.lang.String)
+	 */
 	public def getAllOfType(String type) {
 		File cDir = new File("${this.cacheLocation}${File.separator}${cacheModule}")
 		def wis = [:]
@@ -149,6 +160,9 @@ class CacheManagementService implements ICacheManagementService {
 		return wis
 	}
 
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.cache.ICacheManagementService#exists(java.lang.Object)
+	 */
 	@Override
 	public boolean exists(Object id) {
 		File cacheItem = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}");
@@ -157,6 +171,9 @@ class CacheManagementService implements ICacheManagementService {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.cache.ICacheManagementService#deleteById(java.lang.String)
+	 */
 	void deleteById(String id) {
 		if (exists(id)) {
 			File cacheItem = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}");
@@ -164,6 +181,9 @@ class CacheManagementService implements ICacheManagementService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.cache.ICacheManagementService#deleteByType(java.lang.String)
+	 */
 	@Override
 	public void deleteByType(String type) {
 		File cDir = new File("${this.cacheLocation}${File.separator}${cacheModule}")

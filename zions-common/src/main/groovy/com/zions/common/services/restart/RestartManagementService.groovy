@@ -10,6 +10,8 @@ import groovy.util.logging.Slf4j
 
 /**
  * Handle restart on processing to ADO.
+ * <p><b>Class Design:</b></p>
+ * <img src="RestartManagmentService.png"/>
  * 
  * @author z091182
  *
@@ -70,7 +72,10 @@ class RestartManagementService implements IRestartManagementService {
 	 * 
 	 * Handle processing phases
 	 * 
-	 * @startuml
+	 * <p><b>Flow:</b></p>
+	 * <img src="RestartManagementService_processPhases_sequence_diagram.png"/>
+	 * 
+	 * @startuml RestartManagementService_processPhases_sequence_diagram.png
 	 * participant "RestartManagementService:this" as this
 	 * participant "Closure:closure" as closure
 	 * participant "CheckpointManagementService:checkpointManagementService" as checkpointManagementService
@@ -98,7 +103,8 @@ class RestartManagementService implements IRestartManagementService {
 	 * end
 	 * this -> checkpointManagementService:addCheckpoint(phase, url)
 	 * this -> closure: call(phase, items)
-	 * this -> queryHandler: nextPage(url) : items
+	 * this -> queryHandler: getPageUrl() : url
+	 * this -> queryHandler: nextPage() : items
 	 * alt items == null
 	 * this -> this: break;
 	 * end
@@ -135,7 +141,7 @@ class RestartManagementService implements IRestartManagementService {
 				}
 			} 
 			if (remaining) {
-				//log.info("Starting ${phase}")
+				log.info("Starting ${phase}")
 				while (true) {
 					//log.debug("top of phase loop inside restartmanager")
 					def inItems = filtered(items, filterName);
@@ -156,7 +162,7 @@ class RestartManagementService implements IRestartManagementService {
 					if (items == null) break;
 					
 				}
-				//log.info("Ending ${phase}")
+				log.info("Ending ${phase}")
 			}
 		}
 		return null

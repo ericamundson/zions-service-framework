@@ -39,7 +39,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	
 	@Override
 	public String getFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'Primary Text'
 	}
 

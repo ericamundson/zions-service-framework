@@ -22,7 +22,6 @@ class LicenseServiceImpl extends AbstractLicenseService {
 	}
 	@Override
 	protected License readLicense(File arg0) throws LicenseParseException, LicenseViolationException {
-		// TODO Auto-generated method stub
 		return InternalLicense.create();
 	}
 	public void validate() throws LicenseViolationException {
@@ -84,13 +83,11 @@ class InternalLicense extends License {
 
 	@Override
 	public List<LicenseProperty> getLicenseProperties() {
-		// TODO Auto-generated method stub
 		return new ArrayList();
 	}
 
 	@Override
 	public int getLicenseVersion() {
-		// TODO Auto-generated method stub
 		return 3;
 	}
 	public LocalDate getLocalDateValue(LicenseProperty key) {
@@ -102,7 +99,7 @@ class InternalLicense extends License {
 
 	@Override
 	public List<LicenseProperty> getRequiredProperties() {
-		// TODO Auto-generated method stub
+		
 		return new ArrayList();
 	}
 	public void validateLicenseFormat() {}

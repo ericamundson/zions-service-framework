@@ -193,7 +193,6 @@ public class EventController {
 				}
 				if (mappingFound) {
 					//this.services.put(eventType, svcMappings)
-					// TODO: Need to check index here and adjust lastUsed pointer if necessary
 					log.debug("Unegistered service for event type ${eventType} and service ${svcType}")
 					status = "ok"
 				}

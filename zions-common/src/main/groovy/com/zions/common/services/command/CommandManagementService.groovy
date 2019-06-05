@@ -15,6 +15,13 @@ class CommandManagementService {
 		
 	}
 	
+	/**
+	 * Handle command line call.
+	 * 
+	 * @param command - syntax to execute
+	 * @param dir - working directory
+	 * @return - no real return.
+	 */
 	def executeCommand(String command, File dir) {
 		def proc = "${command}".execute(null, dir)
 		proc.waitForProcessOutput(System.out, System.err)

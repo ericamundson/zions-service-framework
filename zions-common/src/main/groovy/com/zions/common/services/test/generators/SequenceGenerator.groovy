@@ -8,7 +8,7 @@ class SequenceGenerator implements Generator {
 	int start = 10000
 	@Override
 	public Object gen() {
-		// TODO Auto-generated method stub
+		
 		
 		return start++
 	}

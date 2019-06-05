@@ -30,13 +30,13 @@ class MultiUserGenericRestClient implements IGenericRestClient {
 
 	@Override
 	public Object setProxy() {
-		// TODO Auto-generated method stub
+		
 		return null
 	}
 
 	@Override
 	public void setCredentials(String user, String token) {
-		// TODO Auto-generated method stub
+		
 
 	}
 	
@@ -70,38 +70,38 @@ class MultiUserGenericRestClient implements IGenericRestClient {
 
 	@Override
 	public Object put(Map input) {
-		// TODO Auto-generated method stub
+		
 		return getClient().put(input)
 	}
 
 	@Override
 	public Object delete(Map input) {
-		// TODO Auto-generated method stub
+		
 		return getClient().delete(input)
 	}
 
 	@Override
 	public Object patch(Map input) {
-		// TODO Auto-generated method stub
+		
 		return getClient().patch(input)
 	}
 
 	@Override
 	public Object post(Map input) {
-		// TODO Auto-generated method stub
+		
 		return getClient().post(input)
 	}
 
 	@Override
 	public Object rateLimitPost(Map input) {
-		// TODO Auto-generated method stub
+		
 		return getClient().rateLimitPost(input)
 	}
 
 
 	@Override
 	public Object rateLimitPost(Map input, Closure encoderFunction) {
-		// TODO Auto-generated method stub
+		
 		return getClient().rateLimitPost(input, encoderFunction);
 	}
 

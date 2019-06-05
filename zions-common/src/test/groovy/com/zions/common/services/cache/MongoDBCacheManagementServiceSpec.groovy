@@ -110,7 +110,7 @@ class MongoDBCacheManagementServiceTestConfig {
 	}
 
 	protected String getDatabaseName() {
-		// TODO Auto-generated method stub
+		
 		return 'coredev';
 	}
 	

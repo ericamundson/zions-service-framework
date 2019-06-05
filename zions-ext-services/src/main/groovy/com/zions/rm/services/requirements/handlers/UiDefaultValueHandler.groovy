@@ -7,7 +7,7 @@ class UiDefaultValueHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public String getFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'UI Default Value'
 	}
 
