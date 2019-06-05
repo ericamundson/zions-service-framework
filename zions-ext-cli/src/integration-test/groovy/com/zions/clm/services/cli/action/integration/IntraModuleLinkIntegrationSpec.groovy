@@ -66,7 +66,6 @@ import com.zions.rm.services.requirements.ClmRequirementsItemManagementService
 import com.zions.rm.services.requirements.ClmRequirementsManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
 import com.zions.rm.services.requirements.handlers.AboutHandler
-import com.zions.rm.services.requirements.handlers.ActiveReasonHandler
 import com.zions.rm.services.requirements.handlers.ArtifactTypeHandler
 import com.zions.rm.services.requirements.handlers.ClosedReasonHandler
 import com.zions.rm.services.requirements.handlers.CreatedHandler

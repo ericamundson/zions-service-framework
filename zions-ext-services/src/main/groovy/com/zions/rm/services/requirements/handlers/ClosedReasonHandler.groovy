@@ -13,11 +13,8 @@ class ClosedReasonHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		if (value == 'Duplicate' || value == 'Delete' || value == 'Rejected' || value == 'Deprecated' || value == 'Stakeholder Approved' ) {
+		if (value == 'Duplicate' || value == 'Delete' || value == 'Rejected' || value == 'Deprecated' ) {
 			return value
-		}
-		else if ( value == 'Program Approved') {
-			return 'Stakeholder Approved'
 		}
 		else {
 			return null
