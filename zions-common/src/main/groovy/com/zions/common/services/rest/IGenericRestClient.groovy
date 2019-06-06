@@ -69,6 +69,7 @@ public interface IGenericRestClient {
 	 * @return
 	 */
 	def rateLimitPost(Map input);
-
+	def rateLimitPost(Map input, Closure encoderFunction);
+	
 	
 }

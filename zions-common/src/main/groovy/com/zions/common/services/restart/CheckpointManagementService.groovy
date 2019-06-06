@@ -40,7 +40,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 		cp.pageUrl = pageUrl
 		cp.timeStamp = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 		currentCheckpoint = cp
-		log.debug("Saving checkpoint: ${idCounter}-${CACHE_TYPE}")
+		//log.debug("Saving checkpoint: ${idCounter}-${CACHE_TYPE}")
 		cacheManagementService.saveToCache(cp, "${idCounter}-${CACHE_TYPE}", CACHE_TYPE)
 		idCounter++
 		return null
@@ -59,7 +59,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 	public Checkpoint getCurrentCheckpoint() {
 		// TODO Auto-generated method stub
 		if(!currentCheckpoint) {
-			log.debug("getCurrentCheckpoint is returning a null checkpoint just fyi hope that's ok")
+			//log.debug("getCurrentCheckpoint is returning a null checkpoint just fyi hope that's ok")
 		}
 		return currentCheckpoint
 	}
@@ -71,7 +71,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 			while (true) {
 				
 				if (!cacheManagementService.exists("${i}-${CACHE_TYPE}")) {
-					log.debug("selectCheckpoint key:update, no checkpoint at ${i} (bet that's a 0), returning currentCheckpoint")
+					//log.debug("selectCheckpoint key:update, no checkpoint at ${i} (bet that's a 0), returning currentCheckpoint")
 					return currentCheckpoint;
 				}
 				Checkpoint cp = loadCheckpoint(i)
@@ -91,13 +91,13 @@ class CheckpointManagementService implements ICheckpointManagementService {
 				if (!cacheManagementService.exists("${i}-${CACHE_TYPE}")) {
 					currentCheckpoint = loadCheckpoint(i-1)
 					if (currentCheckpoint != null) {
-						log.debug("selectCheckpoint key:last did not find checkpoint ${i} so idCounter is from checkpoint ${i-1}")
+						//log.debug("selectCheckpoint key:last did not find checkpoint ${i} so idCounter is from checkpoint ${i-1}")
 						idCounter = currentCheckpoint.checkpointId
 						//idCounter++
 					} else {
-						log.debug("selectCheckpoint key:last found null checkpoint at ${i-1} so maybe there aren't any checkpoints")
+						//log.debug("selectCheckpoint key:last found null checkpoint at ${i-1} so maybe there aren't any checkpoints")
 					}
-					log.debug("selectCheckpoint key:last, Checkpoint ${i} does not exist, starting at checkpoint ${i-1}")
+					//log.debug("selectCheckpoint key:last, Checkpoint ${i} does not exist, starting at checkpoint ${i-1}")
 					return currentCheckpoint;
 				}
 				i++

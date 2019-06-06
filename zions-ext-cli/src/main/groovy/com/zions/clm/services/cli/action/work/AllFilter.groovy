@@ -29,6 +29,7 @@ class AllFilter implements IFilter {
 		List<String> excluded = ["Track Build Item", "Retrospective",  "Adoption Item", "Infrastrucure Request"]
 		return workItems.workItem.findAll { wi ->
 			String type = "${wi.type.name.text()}"
+			//String archivedTarget = "${wi.target.archived.text()}"
 			boolean val = !excluded.contains(type)
 			return val
 		}

@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils
 import org.eclipse.core.runtime.IProgressMonitor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -1166,7 +1167,10 @@ public class WorkitemAttributeManager  {
 		if (value instanceof List<?>) {
 			List<?> items = (List<?>) value;
 			for (Object object : items) {
-				resultList.add(calculateString(object));
+				String tag = calculateString(object)
+				if (StringUtils.isAlphanumeric(tag)) {
+					resultList.add(tag);
+				}
 			}
 		}
 		if (resultList.size() == 0) {

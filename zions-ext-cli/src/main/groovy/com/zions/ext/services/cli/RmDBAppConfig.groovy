@@ -12,6 +12,7 @@ import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.attachments.AttachmentManagementService
+import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -94,6 +95,12 @@ public class RmDBAppConfig {
 	IAttachments attachmentService() {
 		return new AttachmentManagementService();
 	}
+	
+	@Bean
+	IGenericRestClient genericRestClient() {
+		return new MultiUserGenericRestClient()
+	}
+
 
 	@Value('${spring.data.mongodb.host:utmsdev0598}')
 	String dbHost

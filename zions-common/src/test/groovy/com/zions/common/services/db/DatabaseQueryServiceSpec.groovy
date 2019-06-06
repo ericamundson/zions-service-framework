@@ -3,17 +3,22 @@ package com.zions.common.services.db
 import static org.junit.Assert.*
 
 import groovy.sql.Sql
+import groovy.util.logging.Slf4j
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import spock.lang.Specification
+
+
 @ContextConfiguration(classes=[DatabaseQueryServiceSpecConfig])
+@Slf4j
 class DatabaseQueryServiceSpec extends Specification {
 
 	@Autowired
@@ -25,17 +30,17 @@ class DatabaseQueryServiceSpec extends Specification {
 		
 		when:  'call query and paging calls'
 		boolean flag = true
-		println 'JVM Languages:'
+		log.info 'JVM Languages:'
 		def page = databaseQueryService.query('select * from languages')
 		String iUrl = databaseQueryService.initialUrl()
-		println "   pageUrl: ${iUrl}" 
+		log.info "   pageUrl: ${iUrl}" 
 		while (true) {
 			page.each { item ->
-				println "	Id: ${item.id}, Name: ${item.name}"
+				log.info "	Id: ${item.id}, Name: ${item.name}"
 			}
-			println '	end page'
+			log.info '	end page'
 			iUrl = databaseQueryService.pageUrl()
-			println "   pageUrl: ${iUrl}" 
+			log.info "   pageUrl: ${iUrl}" 
 			page = databaseQueryService.nextPage()
 			if (!page) break;
 		}
@@ -43,17 +48,17 @@ class DatabaseQueryServiceSpec extends Specification {
 		iUrl == 'select * from languages/11/5'
 		
 		when:'Run query with parms'
-		println 'With parm JVM Languages:'
+		log.info 'With parm JVM Languages:'
 		page = databaseQueryService.query("select * from languages where name = :name", [name: 'Groovy'])
 		iUrl = databaseQueryService.initialUrl()
-		println "   pageUrl: ${iUrl}" 
+		log.info "   pageUrl: ${iUrl}" 
 		while (true) {
 			page.each { item ->
-				println "	Id: ${item.id}, Name: ${item.name}"
+				log.info "	Id: ${item.id}, Name: ${item.name}"
 			}
-			println '	end page'
+			log.info '	end page'
 			iUrl = databaseQueryService.pageUrl()
-			println "   pageUrl: ${iUrl}" 
+			log.info "   pageUrl: ${iUrl}" 
 			page = databaseQueryService.nextPage()
 			if (!page) break;
 		}
@@ -92,6 +97,7 @@ class DatabaseQueryServiceSpec extends Specification {
 
 @TestConfiguration
 @Profile("test")
+//@ComponentScan(["com.zions.common.services.logging"])
 @PropertySource("classpath:test.properties")
 class DatabaseQueryServiceSpecConfig {
 	

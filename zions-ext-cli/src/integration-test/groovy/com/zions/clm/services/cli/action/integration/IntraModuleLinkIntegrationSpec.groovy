@@ -90,6 +90,7 @@ import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
+import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
@@ -205,6 +206,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		def appArgs = new DefaultApplicationArguments(loadQMArgs())
 		//restartManagementService.selectedCheckpoint = 'last'
 		cacheManagementService.cacheModule = 'QM'
+		restartManagementService.includePhases = 'plans,links,executions'
 		qmtoAdo.execute(appArgs)
 		
 		then: 'Validate rqm data'
@@ -743,7 +745,7 @@ class IntraModuleLinkIntegrationSpecConfig {
 
 	@Bean
 	IGenericRestClient genericRestClient() {
-		return new GenericRestClient(tfsUrl, tfsUser, tfsToken)
+		return new MultiUserGenericRestClient()
 	}
 	
 	@Bean

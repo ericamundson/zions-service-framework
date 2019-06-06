@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component
 import com.ibm.team.repository.client.ITeamRepository;
 import com.ibm.team.repository.client.TeamPlatform;
 import com.ibm.team.repository.common.TeamRepositoryException;
+import groovy.util.logging.Slf4j
 
 /**
  * @author z091182
@@ -17,6 +18,7 @@ import com.ibm.team.repository.common.TeamRepositoryException;
  * o provides api service that accesses other service api interfaces.
  */
 @Component
+@Slf4j
 public class RtcRepositoryClient implements Serializable {
 
 	transient String uri;
@@ -39,7 +41,12 @@ public class RtcRepositoryClient implements Serializable {
 			TeamPlatform.startup();
 		}
 		repo = TeamPlatform.getTeamRepositoryService().getUnmanagedRepository("${uri}/ccm");
-		performLogin();
+		try {
+			performLogin();
+		} catch (e) {
+			log.error(e)
+			throw e
+		}
 	}
 	
 	/**

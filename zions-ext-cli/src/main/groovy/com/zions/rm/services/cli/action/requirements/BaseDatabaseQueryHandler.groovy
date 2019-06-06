@@ -71,7 +71,7 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 
 	//feels weird to just call like this
 	public String initialUrl() {
-		return clmRequirementsManagementService.initialUrlDb()
+		return clmRequirementsManagementService.initialUrlDb(currentTimestamp)
 	}
 
 	public String getPageUrl() {
@@ -101,6 +101,10 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 		String sDate = "${item.modified.text()}"
 		// might be something more like: rmItemData.Requirement.modified
 		return new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
+	}
+
+	public boolean isModified(Object item) {
+		return true;
 	}
 
 }

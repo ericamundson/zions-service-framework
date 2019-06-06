@@ -60,10 +60,10 @@ class CacheManagementService implements ICacheManagementService {
 			return save
 		} catch (FileNotFoundException e) {
 			//added these logs to the error catch because there is something breaking in the upload
-			log.debug("Filenotfound exception for upload attempt, name: ${name} | id: ${id}")
+			//log.debug("Filenotfound exception for upload attempt, name: ${name} | id: ${id}")
 		} catch (IOException e) {
 			//somehow, upload step after this receives a blank file.
-			log.debug("IOException for upload attempt, name: ${name} | id: ${id}")
+			//log.debug("IOException for upload attempt, name: ${name} | id: ${id}")
 			// TODO Auto-generated catch block
 		}
 	
@@ -104,7 +104,7 @@ class CacheManagementService implements ICacheManagementService {
 			JsonSlurper s = new JsonSlurper()
 			return s.parse(cacheData)
 		}
-		log.debug("Did not find id: ${id}")
+		//log.debug("Did not find id: ${id}")
 		return null
 
 	}

@@ -1,7 +1,8 @@
 package com.zions.common.services.db
 
+import com.zions.common.services.logging.Traceable
 import groovy.sql.Sql
-
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component
  *
  */
 @Component
+@Slf4j
 class DatabaseQueryService implements IDatabaseQueryService {
 	@Value('${db.url:}')
 	String dbUrl
@@ -54,6 +56,7 @@ class DatabaseQueryService implements IDatabaseQueryService {
 		}
 	}
 	
+	@Traceable
 	public def query(String select, def parms = null) {
 		init()
 		this.select = select
@@ -84,6 +87,7 @@ class DatabaseQueryService implements IDatabaseQueryService {
 	}
 
 	@Override
+	@Traceable
 	public def nextPage() {
 		def page = []
 		if (parms) {

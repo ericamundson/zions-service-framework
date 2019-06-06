@@ -41,7 +41,10 @@ class RestartManagementService implements IRestartManagementService {
 	 */
 	@Value('${include.phases:}')
 	public String includePhases
-	
+
+	@Value('${update.phases:}')
+	public String[] updatePhases
+
 	@Autowired(required=false)
 	private Map<String, IFilter> filterMap;
 	
@@ -105,10 +108,11 @@ class RestartManagementService implements IRestartManagementService {
 	 * 	 
 	 */
 	public Object processPhases(Closure closure) {
+		Checkpoint checkpoint = checkpointManagementService.selectCheckpoint(selectedCheckpoint);
 		if (selectedCheckpoint == 'none' || selectedCheckpoint == 'update') {
 			checkpointManagementService.clear()
 		}
-		Checkpoint checkpoint = checkpointManagementService.selectCheckpoint(selectedCheckpoint);
+		checkpointManagementService.addCheckpoint('update', 'none')
 		String[] phases = includePhases.split(',')
 		// Move to checkpoint
 		boolean remaining = false
@@ -119,49 +123,51 @@ class RestartManagementService implements IRestartManagementService {
 			def items = queryHandler.getItems()
 			String url = queryHandler.initialUrl();
 			String filterName = queryHandler.filterName
+			if (selectedCheckpoint == 'update') remaining = true
 			if (checkpoint == null || checkpoint.phase == phase) {
 				remaining = true
 				if (checkpoint != null) {
 					while (url != checkpoint.pageUrl) {
-						log.debug("Skipping to next page to catch up with checkpoint")
+						//log.debug("Skipping to next page to catch up with checkpoint")
 						url = queryHandler.getPageUrl()
 						items = queryHandler.nextPage()
 					}
 				}
 			} 
 			if (remaining) {
-				log.info("Starting ${phase}")
+				//log.info("Starting ${phase}")
 				while (true) {
-					log.debug("top of phase loop inside restartmanager")
+					//log.debug("top of phase loop inside restartmanager")
 					def inItems = filtered(items, filterName);
-					if (selectedCheckpoint == 'update') {
-						inItems = filterForUpdate(inItems, checkpoint)
+					if (selectedCheckpoint == 'update' && updatePhases.contains(phase)) {
+						inItems = filterForUpdate(inItems, checkpoint, queryHandler)
 					}
-					log.debug("Adding checkpoint for phase: ${phase} | url: ${url}")
+					//log.debug("Adding checkpoint for phase: ${phase} | url: ${url}")
 					checkpointManagementService.addCheckpoint(phase, url)
 					
 					// process integration logic
-					log.debug("going to RestartManagementService::processPhases closure with item count: ${inItems.size()}")
-					closure(phase, inItems);
-					log.debug("Setting url and nextPage items for phase loop")
+					//log.debug("going to RestartManagementService::processPhases closure with item count: ${inItems.size()}")
+					if (inItems.size() > 0) {
+						closure(phase, inItems);
+					}
+					//log.debug("Setting url and nextPage items for phase loop")
 					url = queryHandler.pageUrl
 					items = queryHandler.nextPage()
 					if (items == null) break;
 					
 				}
-				log.info("Ending ${phase}")
+				//log.info("Ending ${phase}")
 			}
 		}
-		checkpointManagementService.addCheckpoint('update', 'none')
 		return null
 	}
 	
 	def filterForUpdate(def items, Checkpoint cp, IQueryHandler qHandler) {
-		Date startDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", cp.timeStamp)
+		//Date startDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", cp.timeStamp)
 		
 		def outItems = items.findAll { item ->
-			Date iDate = qHandler.modifiedDate(item)
-			iDate >= startDate
+			boolean flag = qHandler.isModified(item)
+			flag
 		}
 		return outItems;
 	}
