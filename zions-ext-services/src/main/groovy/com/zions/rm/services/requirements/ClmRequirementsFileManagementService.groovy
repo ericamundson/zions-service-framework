@@ -24,7 +24,7 @@ class ClmRequirementsFileManagementService {
 	ICacheManagementService cacheManagementService
 
 	public ClmRequirementsFileManagementService() {
-		// TODO Auto-generated constructor stub
+		// Do nothing
 	}
 
 	public def ensureRequirementFileAttachment(def itemData, String url) {

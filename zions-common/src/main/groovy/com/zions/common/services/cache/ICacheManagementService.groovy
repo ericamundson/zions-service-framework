@@ -57,8 +57,16 @@ interface ICacheManagementService {
 	 */
 	void clear();
 	
+	/**
+	 * Delete cache item by it's key or id
+	 * @param id - given id.
+	 */
 	void deleteById(String id);
 	
+	/**
+	 * Delete a work items of some type.
+	 * @param type - name
+	 */
 	void deleteByType(String type);
 	/**
 	 * Check to see if element exists

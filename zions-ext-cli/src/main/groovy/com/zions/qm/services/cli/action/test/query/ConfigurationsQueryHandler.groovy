@@ -39,7 +39,6 @@ class ConfigurationsQueryHandler extends BaseQueryHandler {
 	}
 	
 	public String getFilterName() {
-		// TODO Auto-generated method stub
 		return this.cItemFitler;
 	}
 	

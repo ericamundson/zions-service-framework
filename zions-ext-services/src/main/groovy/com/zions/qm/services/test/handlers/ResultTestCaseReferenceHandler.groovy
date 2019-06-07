@@ -14,7 +14,7 @@ class ResultTestCaseReferenceHandler extends QmBaseAttributeHandler {
 	ICacheManagementService cacheManagementService
 
 	public String getQmFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'title'
 	}
 

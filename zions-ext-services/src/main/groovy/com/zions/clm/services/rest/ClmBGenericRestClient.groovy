@@ -16,9 +16,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 /**
- * Provides behavior to interact with TFS/VSTS rest api.  It utilizes groovy RESTClient
- * that provides a bunch of automation to take and output an object structure that simplifies or 
- * reduces need to build a BOM to represent data transfer object layer.
+ * Handles CLM rest request to reporting host which is base
+ * authenticated.
  * 
  * @author z091182
  *

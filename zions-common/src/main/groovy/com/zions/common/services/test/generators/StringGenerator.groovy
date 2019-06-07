@@ -4,6 +4,11 @@ import com.zions.common.services.test.Generator
 import org.springframework.stereotype.Component
 import org.apache.commons.lang.RandomStringUtils
 
+/**
+ * Generate a random alphanumeric string
+ * @author z091182
+ *
+ */
 @Component
 class StringGenerator implements Generator {
 	

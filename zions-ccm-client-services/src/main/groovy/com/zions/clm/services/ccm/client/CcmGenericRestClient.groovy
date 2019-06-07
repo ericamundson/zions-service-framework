@@ -94,26 +94,21 @@ public class CcmGenericRestClient extends AGenericRestClient {
 			);
 
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e)
 		} catch (KeyManagementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e)
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e)
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e)
 		} catch (KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e)
 		}
 	}
 	
 
 	public void setCredentials(String user, String token) {
-		// TODO Auto-generated method stub
+		// Do nothing.
 		
 	}
 }

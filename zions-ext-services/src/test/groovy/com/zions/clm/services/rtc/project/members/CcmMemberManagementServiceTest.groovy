@@ -5,7 +5,6 @@ import static org.junit.Assert.*
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonSlurper
-import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired

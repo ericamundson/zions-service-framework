@@ -14,6 +14,7 @@ import com.ibm.team.workitem.common.model.IWorkItem
 import com.ibm.team.workitem.common.model.IWorkItemReferences
 import com.ibm.team.workitem.common.model.WorkItemEndPoints
 import com.zions.clm.services.ccm.client.RtcRepositoryClient;
+import groovy.util.logging.Slf4j
 import java.io.OutputStream;
 
 /**
@@ -22,6 +23,7 @@ import java.io.OutputStream;
  *
  */
 @Component
+@Slf4j
 public class AttachmentsManagementService {
 	
 	@Autowired
@@ -99,9 +101,11 @@ public class AttachmentsManagementService {
 			}
 			return save
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			// do nothing
+			log.warn(e)
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// do nothing
+			log.warn(e)
 		}
 	
 	}

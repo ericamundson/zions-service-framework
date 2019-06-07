@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 @Slf4j
+@Traceable
 class DatabaseQueryService implements IDatabaseQueryService {
 	@Value('${db.url:}')
 	String dbUrl
@@ -56,7 +57,6 @@ class DatabaseQueryService implements IDatabaseQueryService {
 		}
 	}
 	
-	@Traceable
 	public def query(String select, def parms = null) {
 		init()
 		this.select = select
@@ -86,8 +86,9 @@ class DatabaseQueryService implements IDatabaseQueryService {
 		return page;
 	}
 
-	@Override
-	@Traceable
+	/* (non-Javadoc)
+	 * @see com.zions.common.services.db.IDatabaseQueryService#nextPage()
+	 */
 	public def nextPage() {
 		def page = []
 		if (parms) {
@@ -113,10 +114,15 @@ class DatabaseQueryService implements IDatabaseQueryService {
 		if (page.size() == 0) return null
 		return page;
 	}
-	//yeah, in theory this should be current page
-	//and nextPage should jump up the count, but it breaks the other way
-	//due to caching not incrementing pages, URI never advances, checkpoints
-	//get messed up
+	
+	/**
+	 * In theory this should be current page
+	 * and nextPage should jump up the count, but it breaks the other way
+	 * due to caching not incrementing pages, URI never advances, checkpoints
+	 * get messed up.
+	 * 
+	 * BTW, proper groovy doc way for method documentation.
+	 */
 	public String pageUrl() {
 		index += pageSize
 		return "${select}/${index}/${pageSize}"
@@ -124,7 +130,6 @@ class DatabaseQueryService implements IDatabaseQueryService {
 
 	@Override
 	public String initialUrl() {
-		// TODO Auto-generated method stub
 		return "${select}/1/${pageSize}"
 	}
 }
