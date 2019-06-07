@@ -40,10 +40,18 @@ public class ClmWorkItemManagementService {
 	ICacheManagementService cacheManagementService
 	
 
+	/**
+	 * Default constructor
+	 */
 	public ClmWorkItemManagementService() {
 		
 	}
 	
+	/**
+	 * Flush query pages to cache.
+	 * @param query - initial query
+	 * @return none
+	 */
 	def flushQueries(String query) {
 		Date ts = new Date()
 		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
@@ -64,6 +72,12 @@ public class ClmWorkItemManagementService {
 		}
 	}
 	
+	/**
+	 * Access CLM binary content.  Attachment data...
+	 * 
+	 * @param uri - resource of attachment data
+	 * @return [filename: <name>, data: <the binary data> ]
+	 */
 	def getContent(String uri) {
 		def result = clmGenericRestClient.get(
 			withHeader: true,
@@ -83,6 +97,12 @@ public class ClmWorkItemManagementService {
 
 	}
 
+	/**
+	 * Used by HistoryHandler to get CLM work item history data.
+	 * 
+	 * @param id - work item id
+	 * @return Map of the json format data.
+	 */
 	def getWorkItemHistory(int id) {
 		def uri = "${this.clmGenericRestClient.clmUrl}/ccm/service/com.ibm.team.workitem.common.internal.rest.IWorkItemRestService/workItemDTO2"
 		def query = [id: id, includeAttributes: false, includeLinks: false, includeApprovals: false, includeHistory: true, includeLinkHistory: true]
@@ -94,6 +114,12 @@ public class ClmWorkItemManagementService {
 		return result
 	}
 	
+	/**
+	 * Access CLM work items via a reportable api query.
+	 * 
+	 * @param query - xml xpath query.
+	 * @return XmlSlurper.parse result of query.
+	 */
 	public def getWorkItemsViaQuery(String query) {
 		//def query = "workitem/workItem[projectArea/name='${project}']/(id)"
 		def encoded = URLEncoder.encode(query, 'UTF-8')
@@ -111,6 +137,12 @@ public class ClmWorkItemManagementService {
 		return result
 	}
 	
+	/**
+	 * Next page of CLM work items query.
+	 * 
+	 * @param url - retrieved from header of prior page of query results
+	 * @return XmlSlurper.parse result of query page.
+	 */
 	public def nextPage(String url) {
 		def result = clmGenericRestClient.get(
 			uri: url,

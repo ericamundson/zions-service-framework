@@ -5,6 +5,12 @@ import groovy.json.JsonSlurper
 import org.springframework.stereotype.Component
 import org.apache.commons.lang.RandomStringUtils
 
+/**
+ * Generate a quote from a random list of quotes.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class QuoteGenerator implements Generator {
 	

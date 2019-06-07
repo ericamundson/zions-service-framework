@@ -11,7 +11,6 @@ import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementServ
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.QueryTracking
-import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cache.CacheInterceptorService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
@@ -220,34 +219,35 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		//refresh.
 		if (includes['refresh'] != null) {
 			log.info("Refreshing cache.")
-			Checkpoint cp = cacheManagementService.getFromCache('query', 'QueryStart')
-			int page=0
-			Date currentTimestamp = new Date()
-			if (cp) {
-				currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.getTimeStamp())
-				
-			}
-			String pageId = "${page}"
-			def workItems
-			new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
-				workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
-			}
-			while (true) {
-				def changeList = []
-				def filtered = filtered(workItems, wiFilter)
-				filtered.each { workitem ->
-					int id = Integer.parseInt(workitem.id.text())
-					changeList.add(id)
-				}
-				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
-				def rel = workItems.@rel
-				if ("${rel}" != 'next') break
-				page++
-				pageId = "${page}"
-				new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
-					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
-				}
-			}
+//			Checkpoint cp = cacheManagementService.getFromCache('query', 'QueryStart')
+//			int page=0
+//			Date currentTimestamp = new Date()
+//			if (cp) {
+//				currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.getTimeStamp())
+//				
+//			}
+//			String pageId = "${page}"
+//			def workItems
+//			new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
+//				workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
+//			}
+//			while (true) {
+//				def changeList = []
+//				def filtered = filtered(workItems, wiFilter)
+//				filtered.each { workitem ->
+//					int id = Integer.parseInt(workitem.id.text())
+//					changeList.add(id)
+//				}
+//				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
+//				def rel = workItems.@rel
+//				if ("${rel}" != 'next') break
+//				page++
+//				pageId = "${page}"
+//				new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
+//					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
+//				}
+//			}
+			workManagementService.refresh(collection, tfsProject)
 		}
 		if (includes['flushQueries'] != null) {
 			clmWorkItemManagementService.flushQueries(wiQuery)

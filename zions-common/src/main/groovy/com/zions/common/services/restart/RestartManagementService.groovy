@@ -44,13 +44,22 @@ class RestartManagementService implements IRestartManagementService {
 	@Value('${include.phases:}')
 	public String includePhases
 
+	/**
+	 * Specifies phases that are updateable.
+	 */
 	@Value('${update.phases:}')
 	public String[] updatePhases
 
+	/**
+	 * Work item filter map
+	 */
 	@Autowired(required=false)
 	private Map<String, IFilter> filterMap;
 	
 	
+	/**
+	 * Service to store and retrieve page checkpoints.
+	 */
 	@Autowired
 	ICheckpointManagementService checkpointManagementService
 	
@@ -168,6 +177,14 @@ class RestartManagementService implements IRestartManagementService {
 		return null
 	}
 	
+	/**
+	 * filter page items for phase processing.
+	 * 
+	 * @param items - input page items
+	 * @param cp - currently not used.
+	 * @param qHandler - current phase handler
+	 * @return filtered items
+	 */
 	def filterForUpdate(def items, Checkpoint cp, IQueryHandler qHandler) {
 		//Date startDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", cp.timeStamp)
 		
@@ -181,7 +198,7 @@ class RestartManagementService implements IRestartManagementService {
 	/**
 	 * Filters top level queries items.
 	 *
-	 * @param items - ojgect of elements to be filtered Groovy object generation from XML rest result
+	 * @param items - object of elements to be filtered Groovy object generation from XML rest result
 	 * @param filter - Name of IFilter to use
 	 * @return filtered result.
 	 */

@@ -13,6 +13,12 @@ import java.lang.annotation.Target;
 /*Logging annotation to be used at class level
  * Loggable annotation for all methods of a class annotated with the @Loggable annotation*/
 
+/**
+ * Applied to any class for performance logging.
+ * 
+ * @author z091182
+ *
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Loggable {}

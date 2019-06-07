@@ -4,6 +4,12 @@ import com.zions.common.services.test.Generator
 import org.springframework.stereotype.Component
 import org.apache.commons.lang.RandomStringUtils
 
+/**
+ * Generate a random alpha string
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class AlphaGenerator implements Generator {
 	

@@ -55,6 +55,8 @@ import org.springframework.stereotype.Component
 /**
  * Rest client for clm requests.
  * 
+ * Uses IBM two phase form authentication.
+ * 
  * @author z091182
  *
  */

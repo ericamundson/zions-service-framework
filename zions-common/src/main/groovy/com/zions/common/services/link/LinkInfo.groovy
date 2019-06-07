@@ -4,6 +4,12 @@ import com.zions.common.services.cacheaspect.CacheRequired
 
 import groovy.transform.Canonical
 
+/**
+ * Data required for work item linking.
+ * 
+ * @author z091182
+ *
+ */
 @Canonical
 class LinkInfo implements CacheRequired {
 	

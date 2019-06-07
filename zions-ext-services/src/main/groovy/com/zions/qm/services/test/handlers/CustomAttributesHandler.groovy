@@ -30,31 +30,7 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 	}
 	
 	def initDescMap() {
-		if (descMap.size()>0) return descMap
-		String[] types = ['Test Case', 'Test Suite', 'Test Plan']
-		def mapping = testMappingManagementService.mappingData
-		types.each { type ->
-			def outDesc = []
-			def excluded = []
-			mapping.each { map ->
-				String target = "${map.target}"
-				if (target == type) {
-					excluded = map.excluded
-					return
-				}
-			}
-			def cats = clmTestManagementService.getCategories(project, type)
-			this.addCatDescriptors(cats, outDesc, '', excluded) 
-			def ca = clmTestManagementService.getCustomAttributes(project, type)
-			addCADescriptors(ca, outDesc, '', excluded)
-			outDesc.each { desc -> 
-				descMap[desc.name] = desc
-			}
-		}
-		if (descMap.size()== 0) {
-			descMap['none'] = []
-		}
-		return descMap
+		descMap = clmTestManagementService.getDescriptorMap()
 	}
 
 	public def formatValue(def value, def data) {
@@ -174,53 +150,6 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 		return exist
 	}
 	
-	def addCADescriptors(ca, outDesc, tfsAreaPath, excluded) {
-		if (!ca) return
-		def stuff = null
-		ca.'soapenv:Body'.response.returnValue.values.each { item ->
-			if (!item.archived) {
-				if (!excluded.contains(item.identifier)) {
-					def name = item.name.replaceAll("[^A-Za-z0-9 ]", "");
-					name = name.replace(' ', '_')
-					def fieldName = "Custom.Test${toCamelCase(name)}"
-					def caItem = [name: item.identifier, displayName: item.name, fieldName: fieldName, attributeType: 'Text', areaPathsFilter: [tfsAreaPath], enumValues:[]]
-					outDesc.add(caItem)
-				}
-			}
-		}
-	}
-	
-	def addCatDescriptors(cats, outDesc, tfsAreaPath, excluded) {
-		if (!cats) return
-		cats.'soapenv:Body'.response.returnValue.values.each { cat ->
-			if (!cat.archived) {
-				String type = 'Enumeration'
-				if (cat.multiSelectable) {
-					type = 'Multiselect'
-				}
-				String displayName = "${cat.name}"
-				String name = displayName.replace(' ', '_')
-				if (!excluded.contains(name)) {
-					String fieldName = "Custom.Test${toCamelCase(name)}"
-					if (displayName == 'Automation Status') {
-						displayName = "RQM ${displayName}"
-					}
-					def catItem = [name: name, displayName: displayName, fieldName: fieldName, attributeType: type, areaPathsFilter: [tfsAreaPath], enumValues: []]
-					cat.categories.each { val ->
-						if (!val.archived) {
-							catItem.enumValues.add(val.name)
-						}
-					}
-					outDesc.add(catItem)
-				}
-			}
-		}
-	}
-	
-	static String toCamelCase( String text) {
-		text = text.replaceAll( "(_)([A-Za-z0-9])", { Object[] it -> it[2].toUpperCase() } )
-		return text
-	}
 
 
 }

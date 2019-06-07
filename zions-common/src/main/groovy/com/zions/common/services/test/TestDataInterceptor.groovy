@@ -3,12 +3,12 @@ package com.zions.common.services.test
 import com.zions.common.services.cache.ICacheManagementService
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
-
+import groovy.xml.XmlUtil
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
  * This trait can be added to any class anonymous or not to enable ability to surround a method call with ability 
- * to cache return of method with any given ID and Timestamp.
+ * to output return of method into locations so data can be used for test stubs.
  * 
  * @author z091182
  *
@@ -26,23 +26,23 @@ trait TestDataInterceptor implements Interceptor {
 	
 	boolean ignore
 	
+	String outType
+	
 	/**
-	 * This call sets up the ability to cache any specified object (obj) with the ability to cache return 
-	 * from method calls within closure.
+	 * Enables generating test data from output of specified methods
 	 * 
-	 * @param obj - object to enable caching.
-	 * @param id - ID of object to cache
-	 * @param timestamp - Timestamp to check stale cache
-	 * @param managedType - Must inherit from CacheWData abstract methods must serialize method returns.
-	 * @param methods - method filter.
-	 * @param ignore - turn off and on capability
-	 * @param closure - closure to encapsulate calls to cache.
+	 * @param obj - object being intercepted
+	 * @param saveLocation - location to place generated test data.
+	 * @param ignore - flag to ignore trait
+	 * @param methods - list of object methods to store output.
+	 * @param closure
 	 */
-	void provideTestData(def obj, String saveLocation, boolean ignore = false, List<String> methods= null,  Closure closure) {
+	void provideTestData(def obj, String saveLocation, boolean ignore = false, List<String> methods= null,  String type = 'json', Closure closure) {
 		doRun = true
 		this.methods = methods
 		this.ignore = ignore
 		this.saveLocation = saveLocation
+		this.outType = type
 		def proxy = ProxyMetaClass.getInstance(obj.class)
 		proxy.interceptor = this
 //		proxy.use closure
@@ -64,13 +64,24 @@ trait TestDataInterceptor implements Interceptor {
 	public Object afterInvoke(Object object, String methodName, Object[] arguments, Object result) {
 		if (!ignore && (!methods || methods.contains(methodName))) {
 			File saveDir = new File(saveLocation)
-			File jFile = new File(saveDir, "${methodName}.json")
-			try {
-				String json = new JsonBuilder(result).toPrettyString()
-				def os = jFile.newDataOutputStream()
-				os << json
-				os.close()
-			} catch (e) {}
+			if (outType == 'json') {
+				File jFile = new File(saveDir, "${methodName}.json")
+				try {
+					String json = new JsonBuilder(result).toPrettyString()
+					def os = jFile.newDataOutputStream()
+					os << json
+					os.close()
+				} catch (e) {}
+			} else if (outType == 'xml') {
+				File jFile = new File(saveDir, "${methodName}.xml")
+				try {
+					String xml = new XmlUtil().serialize(result)
+					def os = jFile.newDataOutputStream()
+					os << xml
+					os.close()
+				} catch (e) {}
+
+			}
 		}
 		return result
 	}

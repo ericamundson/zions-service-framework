@@ -8,6 +8,12 @@ import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonBuilder
 
+/**
+ * Enables extracting member data from CLM module projects.
+ * 
+ * @author z091182
+ *
+ */
 @Component
 public class CcmMemberManagementService {
 	@Autowired(required=true)
@@ -22,6 +28,12 @@ public class CcmMemberManagementService {
 		
 	}
 	
+	/**
+	 * Entry point for extracting CLM project member data
+	 * @param project - clm project.
+	 * @param tfsproject - ADO project name to relate member data
+	 * @return data structure of member data
+	 */
 	public def getMemberData(String project, String tfsproject) {
 		def query = "foundation/projectArea[name='${project}']/(name|teamMembers/userId|teamMembers/emailAddress|teamMembers/archived|allTeamAreas/archived|allTeamAreas/name|allTeamAreas/teamMembers/userId|allTeamAreas/teamMembers/emailAddress|allTeamAreas/teamMembers/archived)"
 		def encoded = URLEncoder.encode(query, 'UTF-8')
