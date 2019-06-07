@@ -24,9 +24,15 @@ class QmMetadataManagementService {
 	//def categoriesMapType = ['testplan': 'TestPlan', 'testsuite': 'TestSuite', 'testcase': 'TestCase', 'testscript': 'TestScript']
 	def schemaMap = [:]
 	
+	/**
+	 * Clm rest client.
+	 */
 	@Autowired(required=true)
 	IGenericRestClient qmGenericRestClient
 
+	/**
+	 * Access point for RQM project meta data.
+	 */
 	@Autowired
 	QmProjectManagementService  qmProjectManagementSerivce
 

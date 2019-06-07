@@ -198,6 +198,11 @@ class ClmTestManagementServiceSpecTestConfig {
 	}
 	
 	@Bean
+	TestMappingManagementService testMappingManagementService() {
+		return new TestMappingManagementService()
+	}
+	
+	@Bean
 	DataGenerationService dataGenerationService() {
 		return new DataGenerationService()
 	}

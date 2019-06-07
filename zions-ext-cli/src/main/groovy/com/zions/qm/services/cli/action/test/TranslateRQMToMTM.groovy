@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component
 import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
-import com.zions.clm.services.rtc.project.workitems.RtcWIMetadataManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.logging.FlowInterceptor
 import com.zions.common.services.query.IFilter

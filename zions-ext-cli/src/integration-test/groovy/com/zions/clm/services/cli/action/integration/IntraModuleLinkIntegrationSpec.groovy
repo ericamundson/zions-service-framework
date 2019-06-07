@@ -816,7 +816,7 @@ class IntraModuleLinkIntegrationSpecConfig {
 	
 	@Bean
 	ClmTestManagementService clmTestManagementService() {
-		return mockFactory.Stub(ClmTestManagementService)
+		return mockFactory.Spy(ClmTestManagementService)
 	}
 	
 	@Bean

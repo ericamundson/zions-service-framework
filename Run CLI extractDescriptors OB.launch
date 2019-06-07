@@ -9,7 +9,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="extractDescriptors --clm.url=https://clm.cs.zionsbank.com --clm.user=z091182  --clm.password=4878Middy001 --clm.projectArea=&quot;Mobile and Online Banking (Quality Management)&quot; --tfs.areaPath=&quot;DigitalBanking&quot; --tfs.url=https://dev.azure.com/eto-dev --tfs.user=z091182 --tfs.token=pzyybyd3zq5kzbdpkn4e656i6d3b7zfe43tms5s3v35gsifdngoq --tfs.project=DigitalBanking --test.mapping.file=&quot;./DigitalBankingRQMMapping.xml&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="extractDescriptors --clm.url=https://clm.cs.zionsbank.com --clm.user=z091182  --clm.password=4878Middy002 --clm.projectArea=&quot;Mobile and Online Banking (Quality Management)&quot; --tfs.areaPath=&quot;DigitalBanking&quot; --tfs.url=https://dev.azure.com/eto-dev --tfs.user=z091182 --tfs.token=pzyybyd3zq5kzbdpkn4e656i6d3b7zfe43tms5s3v35gsifdngoq --tfs.project=DigitalBanking --test.mapping.file=&quot;./DigitalBankingRQMMapping.xml&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=qm -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=z091182 -Dproxy.Password=4878Middy001"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
