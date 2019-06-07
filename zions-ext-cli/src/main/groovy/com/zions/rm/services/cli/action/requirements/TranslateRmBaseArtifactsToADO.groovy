@@ -258,8 +258,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							}
 
 							//new FlowInterceptor() {}.flowLogging(clManager) {
+							def reqChanges
 							try {
-								def reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
+								reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
 							} catch (Exception e) {
 								checkpointManagementService.addLogentry("could not getChanges for ${sid} because: ${e}")
 								return
