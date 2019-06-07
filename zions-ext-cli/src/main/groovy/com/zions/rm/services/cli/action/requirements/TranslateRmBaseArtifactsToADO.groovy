@@ -248,7 +248,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							else {
 								log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
 							}
-							} catch (java.lang.NullPointerException e) {
+							} catch (NullPointerException e) {
 								checkpointManagementService.addLogentry("Artifact ${sid} generated a NullPointerException and was not added as a change")
 								return
 							} catch (Exception e) {
@@ -258,7 +258,8 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							
 							//new FlowInterceptor() {}.flowLogging(clManager) {
 								def reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
-								if (reqChanges != null) {
+								//log.debug("changes fetched for ${sid}: ${reqChanges.size()}")
+								if (reqChanges) {
 									reqChanges.each { key, val ->
 										clManager.add("${id}", val)
 									}
