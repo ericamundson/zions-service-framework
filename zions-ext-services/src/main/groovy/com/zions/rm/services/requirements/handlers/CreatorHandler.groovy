@@ -11,7 +11,7 @@ class CreatorHandler extends RmBaseAttributeHandler {
 	
 	@Override
 	public String getFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'creator'
 	}
 

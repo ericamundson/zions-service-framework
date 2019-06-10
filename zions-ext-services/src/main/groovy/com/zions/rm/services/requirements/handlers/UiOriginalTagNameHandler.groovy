@@ -7,7 +7,7 @@ class UiOriginalTagNameHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public String getFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'UI Original Tag Name'
 	}
 

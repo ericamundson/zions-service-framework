@@ -10,6 +10,8 @@ import groovy.util.logging.Slf4j
 
 /**
  * Handle restart on processing to ADO.
+ * <p><b>Class Design:</b></p>
+ * <img src="RestartManagmentService.png"/>
  * 
  * @author z091182
  *
@@ -42,13 +44,22 @@ class RestartManagementService implements IRestartManagementService {
 	@Value('${include.phases:}')
 	public String includePhases
 
+	/**
+	 * Specifies phases that are updateable.
+	 */
 	@Value('${update.phases:}')
 	public String[] updatePhases
 
+	/**
+	 * Work item filter map
+	 */
 	@Autowired(required=false)
 	private Map<String, IFilter> filterMap;
 	
 	
+	/**
+	 * Service to store and retrieve page checkpoints.
+	 */
 	@Autowired
 	ICheckpointManagementService checkpointManagementService
 	
@@ -70,7 +81,10 @@ class RestartManagementService implements IRestartManagementService {
 	 * 
 	 * Handle processing phases
 	 * 
-	 * @startuml
+	 * <p><b>Flow:</b></p>
+	 * <img src="RestartManagementService_processPhases_sequence_diagram.png"/>
+	 * 
+	 * @startuml RestartManagementService_processPhases_sequence_diagram.png
 	 * participant "RestartManagementService:this" as this
 	 * participant "Closure:closure" as closure
 	 * participant "CheckpointManagementService:checkpointManagementService" as checkpointManagementService
@@ -98,7 +112,8 @@ class RestartManagementService implements IRestartManagementService {
 	 * end
 	 * this -> checkpointManagementService:addCheckpoint(phase, url)
 	 * this -> closure: call(phase, items)
-	 * this -> queryHandler: nextPage(url) : items
+	 * this -> queryHandler: getPageUrl() : url
+	 * this -> queryHandler: nextPage() : items
 	 * alt items == null
 	 * this -> this: break;
 	 * end
@@ -135,7 +150,7 @@ class RestartManagementService implements IRestartManagementService {
 				}
 			} 
 			if (remaining) {
-				//log.info("Starting ${phase}")
+				log.info("Starting ${phase}")
 				while (true) {
 					//log.debug("top of phase loop inside restartmanager")
 					def inItems = filtered(items, filterName);
@@ -156,12 +171,20 @@ class RestartManagementService implements IRestartManagementService {
 					if (items == null) break;
 					
 				}
-				//log.info("Ending ${phase}")
+				log.info("Ending ${phase}")
 			}
 		}
 		return null
 	}
 	
+	/**
+	 * filter page items for phase processing.
+	 * 
+	 * @param items - input page items
+	 * @param cp - currently not used.
+	 * @param qHandler - current phase handler
+	 * @return filtered items
+	 */
 	def filterForUpdate(def items, Checkpoint cp, IQueryHandler qHandler) {
 		//Date startDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", cp.timeStamp)
 		
@@ -175,7 +198,7 @@ class RestartManagementService implements IRestartManagementService {
 	/**
 	 * Filters top level queries items.
 	 *
-	 * @param items - ojgect of elements to be filtered Groovy object generation from XML rest result
+	 * @param items - object of elements to be filtered Groovy object generation from XML rest result
 	 * @param filter - Name of IFilter to use
 	 * @return filtered result.
 	 */

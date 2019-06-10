@@ -26,17 +26,36 @@ import groovyx.net.http.ContentType
 @Slf4j
 class ClmTestManagementService {
 	
+	/**
+	 * RQM data requests
+	 */
 	@Autowired
 	IGenericRestClient qmGenericRestClient
+	
+	/**
+	 * For caching query results
+	 */
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
+	
+	/**
+	 * Access to mapping meta data
+	 */
+	@Autowired
+	TestMappingManagementService testMappingManagementService
+
 	
 	@Value('${qm.query:}')
 	String qmQuery
 	
 	@Value('${qm.tc.query:}')
 	String qmTcQuery
+	
+	@Value('${clm.projectArea:}')
+	String project
 
+	def descMap = [:]
+	
 	
 	public ClmTestManagementService() {
 		
@@ -44,6 +63,13 @@ class ClmTestManagementService {
 	
 	
 	
+	/**
+	 * Retrieve custom attribute meta data from QM CLM project.
+	 * 
+	 * @param projectName - CLM QM project name.
+	 * @param type - specific QM type
+	 * @return Custom attribute data
+	 */
 	public def getCustomAttributes(String projectName, String type)
 	{
 		
@@ -67,6 +93,13 @@ class ClmTestManagementService {
 		return null
 	}
 	
+	/**
+	 * Return RQM category meta data.
+	 * 
+	 * @param projectName - RQM project area
+	 * @param type - Test element type
+	 * @return - Category data in the form of a Map
+	 */
 	public def getCategories(String projectName, String type)
 	{
 		Map<String, String> typeMap = ['Test Case': 'TestCase', 'Test Suite': 'TestSuite', 'Test Plan': 'TestPlan']
@@ -89,6 +122,11 @@ class ClmTestManagementService {
 		return null
 	}
 
+	/**
+	 * Get a specific RQM test element
+	 * @param uri - resource for test element
+	 * @return XmlSlurper.parse of RQM xml.
+	 */
 	def getTestItem(String uri) {
 		uri = uri.replace(' ', '+')
 		def result = qmGenericRestClient.get(
@@ -102,6 +140,11 @@ class ClmTestManagementService {
 	
 
 	
+	/**
+	 * RQM project area details
+	 * @param name - RQM project area name
+	 * @return XmlSlurper.parse of RQM xml
+	 */
 	def getProjectArea(String name) {
 		def thepa = null
 		String url = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.team.process.internal.service.web.IProcessWebUIService/allProjectAreas"
@@ -127,6 +170,12 @@ class ClmTestManagementService {
 		return thepa;
 	}
 	
+	/**
+	 * Returns attachment binary data.
+	 * 
+	 * @param uri - resource to access data
+	 * @return binary data
+	 */
 	def getContent(String uri) {
 		def result = qmGenericRestClient.get(
 			withHeader: true,
@@ -146,6 +195,13 @@ class ClmTestManagementService {
 
 	}
 	
+	/**
+	 * Cache all pages of each RQM query types.
+	 * 
+	 * @param projectName - RQM project area name
+	 * @param maxPage - Unit test specific optional parm
+	 * @return none.
+	 */
 	def flushQueries(String projectName, int maxPage = -1) {
 		Date ts = new Date()
 		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
@@ -205,6 +261,13 @@ class ClmTestManagementService {
 
 	}
 
+	/**
+	 * Query for RQM plans
+	 * 
+	 * @param query - additional query xpath
+	 * @param projectName - RQM project area name
+	 * @return First page of query data
+	 */
 	def getTestPlansViaQuery(String query, String projectName) {
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
@@ -222,6 +285,13 @@ class ClmTestManagementService {
 		return result
 	}
 	
+	/**
+	 * Test case specific query.
+	 * 
+	 * @param query - additional xpath query.
+	 * @param projectName - RQM project area
+	 * @return First page of test case data.
+	 */
 	def getTestCaseViaQuery(String query, String projectName) {
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
@@ -239,6 +309,13 @@ class ClmTestManagementService {
 		return result
 	}
 
+	/**
+	 * RQM configuration element query
+	 * 
+	 * @param query - additional xpath query
+	 * @param projectName - RQM project area.
+	 * @return First page of configuration data.
+	 */
 	def getConfigurationsViaQuery(String query, String projectName) {
 		def encoded = URLEncoder.encode(query, 'UTF-8')
 		encoded = encoded.replace('+', '%20')
@@ -261,6 +338,14 @@ class ClmTestManagementService {
 		return result
 	}
 
+	/**
+	 * Access all test results for a test case and test plan 
+	 * 
+	 * @param tcWebId - test case id
+	 * @param planWebId - plan id
+	 * @param projectName - RQM project area
+	 * @return Test results
+	 */
 	def getExecutionResultViaHref(String tcWebId, String planWebId, String projectName) {
 		def project = URLEncoder.encode(projectName, 'UTF-8')
 		//project = project.replace('+', '%20')
@@ -299,11 +384,95 @@ class ClmTestManagementService {
 		return outItems
 	}
 
+	/**
+	 * Get next page for any test element query
+	 * @param url - resource for new page
+	 * @return XmlSlurper.parse of xml results
+	 */
 	public def nextPage(url) {
 		def result = qmGenericRestClient.get(
 			uri: url,
 			headers: [Accept: 'application/xml'] );
 		return result
+	}
+	
+	/**
+	 * @return Meta-data for any test element custom attributes.
+	 */
+	public getDescriptorMap() {
+		if (descMap.size()>0) return descMap
+		String[] types = ['Test Case', 'Test Suite', 'Test Plan']
+		def mapping = testMappingManagementService.mappingData
+		types.each { type ->
+			def outDesc = []
+			def excluded = []
+			mapping.each { map ->
+				String target = "${map.target}"
+				if (target == type) {
+					excluded = map.excluded
+					return
+				}
+			}
+			def cats = this.getCategories(project, type)
+			this.addCatDescriptors(cats, outDesc, '', excluded)
+			def ca = this.getCustomAttributes(project, type)
+			addCADescriptors(ca, outDesc, '', excluded)
+			outDesc.each { desc ->
+				descMap[desc.name] = desc
+			}
+		}
+		if (descMap.size()== 0) {
+			descMap['none'] = []
+		}
+		return descMap
+	}
+	
+	private def addCADescriptors(ca, outDesc, tfsAreaPath, excluded) {
+		if (!ca) return
+		def stuff = null
+		ca.'soapenv:Body'.response.returnValue.values.each { item ->
+			if (!item.archived) {
+				if (!excluded.contains(item.identifier)) {
+					def name = item.name.replaceAll("[^A-Za-z0-9 ]", "");
+					name = name.replace(' ', '_')
+					def fieldName = "Custom.Test${toCamelCase(name)}"
+					def caItem = [name: item.identifier, displayName: item.name, fieldName: fieldName, attributeType: 'Text', areaPathsFilter: [tfsAreaPath], enumValues:[]]
+					outDesc.add(caItem)
+				}
+			}
+		}
+	}
+	
+	private def addCatDescriptors(cats, outDesc, tfsAreaPath, excluded) {
+		if (!cats) return
+		cats.'soapenv:Body'.response.returnValue.values.each { cat ->
+			if (!cat.archived) {
+				String type = 'Enumeration'
+				if (cat.multiSelectable) {
+					type = 'Multiselect'
+				}
+				String displayName = "${cat.name}"
+				String name = displayName.replace(' ', '_')
+				if (!excluded.contains(name)) {
+					String fieldName = "Custom.Test${toCamelCase(name)}"
+					if (displayName == 'Automation Status') {
+						displayName = "RQM ${displayName}"
+					}
+					def catItem = [name: name, displayName: displayName, fieldName: fieldName, attributeType: type, areaPathsFilter: [tfsAreaPath], enumValues: []]
+					cat.categories.each { val ->
+						if (!val.archived) {
+							catItem.enumValues.add(val.name)
+						}
+					}
+					outDesc.add(catItem)
+				}
+			}
+		}
+	}
+
+	static String toCamelCase( String text) {
+		text = text.replaceAll( "(_)([A-Za-z0-9])", { Object[] it -> it[2].toUpperCase() } )
+		return text
 	}
 
 }

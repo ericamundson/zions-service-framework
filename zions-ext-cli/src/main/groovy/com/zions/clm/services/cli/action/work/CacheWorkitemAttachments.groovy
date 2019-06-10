@@ -5,7 +5,6 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
-import com.zions.clm.services.work.maintenance.service.FixWorkItemIssuesService
 import com.zions.common.services.cli.action.CliAction
 
 import groovy.json.JsonBuilder

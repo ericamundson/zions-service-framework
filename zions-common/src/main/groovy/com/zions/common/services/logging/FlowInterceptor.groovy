@@ -3,11 +3,25 @@ package com.zions.common.services.logging
 import groovy.json.JsonBuilder
 import org.codehaus.groovy.runtime.StringBufferWriter
 
+/**
+ * Trait to intercept method calls of an object and log entry/exit
+ * @author z091182
+ *
+ */
 trait FlowInterceptor implements Interceptor {
 	
 	boolean showData = false
 	boolean logging = true
 	
+	/**
+	 * Setup flow logging on a single object
+	 * 
+	 * @param obj - object instance to log
+	 * @param logging - flag to perform logging
+	 * @param showData - flag to show argument in json format
+	 * @param c - closure with objects to be managed.
+	 * @return none
+	 */
 	def flowLogging(def obj,  boolean logging = true, boolean showData = false, Closure c) {
 		this.showData = showData
 		this.logging = logging
@@ -20,6 +34,16 @@ trait FlowInterceptor implements Interceptor {
 		proxy.interceptor = null
 //		proxy.use(closure)
 	}
+	
+	/**
+	 * Setup flow logging on a multiple objects
+	 * 
+	 * @param obj - list of object instances to log
+	 * @param logging - flag to perform logging
+	 * @param showData - flag to show argument in json format
+	 * @param c - closure with objects to be managed.
+	 * @return none
+	 */
 	def flowLogging(List<Object> objs,  boolean logging = true, boolean showData = false, Closure c) {
 		def objMap = [:]
 		this.showData = showData
@@ -38,6 +62,9 @@ trait FlowInterceptor implements Interceptor {
 //		proxy.use(closure)
 	}
 
+	/* (non-Javadoc)
+	 * @see groovy.lang.Interceptor#beforeInvoke(java.lang.Object, java.lang.String, java.lang.Object[])
+	 */
 	Object beforeInvoke(def obj, String methodName, Object[] args) {
 		boolean hasLogProp = false
 		try {
@@ -86,6 +113,10 @@ trait FlowInterceptor implements Interceptor {
 			
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see groovy.lang.Interceptor#afterInvoke(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
+	 */
 	Object afterInvoke(Object obj, String methodName, Object[] args, Object result) {
 		boolean hasLogProp = false
 		try {

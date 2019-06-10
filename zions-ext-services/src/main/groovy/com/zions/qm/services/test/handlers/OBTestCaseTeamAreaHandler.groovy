@@ -5,26 +5,35 @@ import org.springframework.stereotype.Component
 
 import com.zions.qm.services.test.ClmTestManagementService
 
-@Component('QmResultOwnerHandler')
-class ResultOwnerHandler extends QmBaseAttributeHandler {
+@Component('QmOBTestCaseTeamAreaHandler')
+class OBTestCaseTeamAreaHandler extends QmBaseAttributeHandler {
+	
 	@Autowired
 	ClmTestManagementService clmTestManagementService
+	
+	def priorities = null
+
 
 	public String getQmFieldName() {
 		
-		return 'owner'
+		return 'category'
 	}
 
 	public def formatValue(def value, def data) {
-		def outVal = null
 		def itemData = data.itemData
-		String url = "${itemData.owner.@'ns7:resource'}"
-		def owner = clmTestManagementService.getTestItem(url)
-		if (owner != null ) {
-			String email = "${owner.emailAddress.text()}"
-			outVal = email.toLowerCase()
+		String val = null
+		itemData.category.each { cat -> 
+			String name = "${cat.@term}".replace(' ', '_')
+			if (name == 'Component') {
+				val = "${cat.@value}"
+				return
+			}
 		}
-		return outVal;
+		if (val) {
+			return val
+		}
+		return null
 	}
+		
 
 }

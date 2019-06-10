@@ -105,7 +105,6 @@ class BaseQueryHandler implements IQueryHandler {
 	}
 
 	public String getFilterName() {
-		// TODO Auto-generated method stub
 		return this.rmFilter;
 	}
 

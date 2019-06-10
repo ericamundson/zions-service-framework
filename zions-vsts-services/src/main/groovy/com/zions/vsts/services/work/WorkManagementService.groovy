@@ -23,33 +23,32 @@ import groovyx.net.http.ContentType
 @Component
 @Slf4j
 class WorkManagementService {
-	
+
 	final private int BATCHSIZE = 200
-	
+
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
-		
+
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
-	
+
 	@Autowired(required=false)
 	ICheckpointManagementService checkpointManagementService
-	
+
 	@Value('${id.tracking.field:}')
 	private String idTrackingField
-	
+
 	private categoriesMap = [:]
 
 	public WorkManagementService() {
-		
 	}
-	
+
 	def refresh(String collection, String project) {
 		int i = 0;
 		def ids = []
 		def keys = []
 		def wis = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
-		wis.each { key, wi -> 
+		wis.each { key, wi ->
 			if (i == 200) {
 				def result = batchGet(collection, project, ids)
 				int k = 0
@@ -72,27 +71,26 @@ class WorkManagementService {
 				cacheManagementService.saveToCache(owi, keys[k], ICacheManagementService.WI_DATA)
 				k++
 			}
-
 		}
 	}
-	
+
 	def batchGet(String collection, String project, def ids) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		def query = ['$expand': 'all', ids:ids]
 		String body = new JsonBuilder(query).toPrettyString()
 		def result = genericRestClient.post(
-			requestContentType: ContentType.JSON,
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/workitemsbatch",
-			body: body,
-			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0']
-			)
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/workitemsbatch",
+				body: body,
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '5.0']
+				)
 		return result
 
 	}
-	
+
 	def clean(String collection, String project, String query) {
 		def deleted = [:]
 		def wis = getWorkItems(collection, project, query)
@@ -108,16 +106,16 @@ class WorkManagementService {
 				deleted[wi.id] = wi
 			}
 			if (repeatedDelete) break
-			wis = getWorkItems(collection, project, query)
+				wis = getWorkItems(collection, project, query)
 			if (!wis || wis.workItems.size() == 0) break;
 		}
 		cacheManagementService.clear()
 	}
-	
+
 	def cleanDuplicates(String collection, String project) {
 		def deleted = [:]
 		def cacheWIs = cacheManagementService.getAllOfType('wiData')
-		cacheWIs.each { key, cacheWI -> 
+		cacheWIs.each { key, cacheWI ->
 			String eId = "${cacheWI.fields.'Custom.ExternalID'}"
 			String cid = "${cacheWI.id}"
 			String query = "select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${project}' AND [Custom.ExternalID] = '${eId}'"
@@ -130,7 +128,7 @@ class WorkManagementService {
 						deleteWorkitem(wi.url)
 					}
 				}
-			} 
+			}
 			else if (wis && wis.workItems && "${wis.workItems[0].id}" != "${cid}") {
 				String wid = "${wis.workItems[0].id}"
 				def wi = getWorkItem(collection, project, wid)
@@ -139,14 +137,14 @@ class WorkManagementService {
 		}
 	}
 
-//	def getWorkItem(String url) {
-//		def result = genericRestClient.get(
-//			uri: url,
-//			contentType: ContentType.JSON,
-//			query: [destroy: true, 'api-version': '5.0-preview.3']
-//			)
-//		return result
-//	}
+	//	def getWorkItem(String url) {
+	//		def result = genericRestClient.get(
+	//			uri: url,
+	//			contentType: ContentType.JSON,
+	//			query: [destroy: true, 'api-version': '5.0-preview.3']
+	//			)
+	//		return result
+	//	}
 
 	def getWorkItems(String collection, String project, String aquery, int lastId = -1) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
@@ -157,30 +155,30 @@ class WorkManagementService {
 		}
 		String body = new JsonBuilder(query).toPrettyString()
 		def result = genericRestClient.rateLimitPost(
-			requestContentType: ContentType.JSON,
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/wiql",
-			body: body,
-			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0-preview.2', '$top': 1000]
-			)
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/wiql",
+				body: body,
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '5.0-preview.2', '$top': 1000]
+				)
 		return result
 
 	}
-	
+
 	def getWorkItems(String collection, String aquery) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		def query = [query: aquery]
 		String body = new JsonBuilder(query).toPrettyString()
 		def result = genericRestClient.post(
-			requestContentType: ContentType.JSON,
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/wiql",
-			body: body,
-			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0']
-			)
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/wiql",
+				body: body,
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '5.0']
+				)
 		return result
 
 	}
@@ -191,16 +189,16 @@ class WorkManagementService {
 		//def query = [query: aquery]
 		//String body = new JsonBuilder(query).toPrettyString()
 		def result = genericRestClient.get(
-			requestContentType: ContentType.JSON,
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
-			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0', "\$expand": 'All']
-			)
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '5.0', "\$expand": 'All']
+				)
 		return result
 
 	}
-	
+
 	def getChildren(String collection, String project, String id) {
 		def pwi = getWorkItem(collection, project, id)
 		def childIds = []
@@ -213,16 +211,16 @@ class WorkManagementService {
 				if (i != -1) {
 					cid = url.substring(i+1);
 				}
-					
+
 				//def cwi = getWorkitemViaUrl(rel)
-				
+
 				childIds.add(cid)
 			}
 		}
 		def children = getListedWorkitems(collection, project, childIds)
 		return children
 	}
-	
+
 	def getParent(String collection, String project, def cwi) {
 		//def cwi = getWorkItem(collection, project, id)
 		def childIds = []
@@ -231,11 +229,11 @@ class WorkManagementService {
 			String rel = "${relation.rel}"
 			String url = "${relation.url}"
 			if (rel == 'System.LinkTypes.Hierarchy-Reverse') {
-					
+
 				parent = getWorkitemViaUrl(url)
 				return
-				
-				
+
+
 			}
 		}
 		//def children = getListedWorkitems(collection, project, childIds)
@@ -249,15 +247,15 @@ class WorkManagementService {
 			//def query = [query: aquery]
 			//String body = new JsonBuilder(query).toPrettyString()
 			def result = genericRestClient.get(
-				requestContentType: ContentType.JSON,
-				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitemtypecategories",
-				//headers: [Accept: 'application/json'],
-				query: ['api-version': '5.0']
-				)
+					requestContentType: ContentType.JSON,
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitemtypecategories",
+					//headers: [Accept: 'application/json'],
+					query: ['api-version': '5.0']
+					)
 			result.value.each { cat ->
 				String catName = "${cat.name}"
-				cat.workItemTypes.each { wis -> 
+				cat.workItemTypes.each { wis ->
 					String typeName = "${wis.name}"
 					categoriesMap[typeName] = catName
 				}
@@ -265,7 +263,7 @@ class WorkManagementService {
 		}
 		return categoriesMap
 	}
-	
+
 	String getCategory(String collection, String project, def wi) {
 		String witype = "${wi.fields.'System.WorkItemType'}"
 		def catMap = getCategories(collection, project)
@@ -274,19 +272,19 @@ class WorkManagementService {
 
 	def deleteWorkitem(String url) {
 		def result = genericRestClient.delete(
-			uri: url,
-			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0-preview.3']
-			)
+				uri: url,
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '5.0-preview.3']
+				)
 		return result
 
 	}
-	
+
 	def refreshCache(def collection, def project, def cacheIds) {
 		def vstsIds = []
 		def idMap = [:]
 		int count = 0
-		cacheIds.each { id -> 
+		cacheIds.each { id ->
 			def wi = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 			if (wi != null) {
 				String vstsId = "${wi.id}"
@@ -297,39 +295,39 @@ class WorkManagementService {
 		}
 		def vstsWIs = getListedWorkitems(collection, project, vstsIds)
 		count = 0
-		vstsWIs.each { wi -> 
+		vstsWIs.each { wi ->
 			cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
 			count++
 		}
 	}
-	
+
 	def getWorkitemViaUrl(String url) {
 		def result = genericRestClient.get(
-			requestContentType: ContentType.JSON,
-			contentType: ContentType.JSON,
-			uri: url,
-			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0']
-			)
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: url,
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '5.0']
+				)
 		return result
 	}
-	
+
 	def getListedWorkitems(def collection, def project, def vstsIds) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		//def projectData = projectManagementService.getProject(collection, project)
-		
+
 		def result = genericRestClient.get(
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${eproject}/_apis/wit/workitems",
-			headers: [Accept: 'application/json'],
-			query: [ids: vstsIds.join(','), 'api-version': '4.1', '\$expand': 'all' ]
-			)
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${eproject}/_apis/wit/workitems",
+				headers: [Accept: 'application/json'],
+				query: [ids: vstsIds.join(','), 'api-version': '4.1', '\$expand': 'all' ]
+				)
 		if (result == null) {
 			return []
 		}
 		return result.value
 	}
-	
+
 	/**
 	 * Submit batch of work item changes to TFS/VSTS.
 	 * @param collection
@@ -361,20 +359,20 @@ class WorkManagementService {
 		}
 		if (bcount > 0) {
 			doPost(collection, project, bchangeList, bidMap)
-			
+
 		}
 	}
-	
+
 	private doPost(collection, tfsProject, bchangeList, bidMap) {
 		def body = new JsonBuilder(bchangeList).toPrettyString()
 		def result = genericRestClient.rateLimitPost(
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/\$batch",
-			body: body,
-			headers: [accept: 'application/json'],
-			query: ['api-version': '4.1']
-			
-			)
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/\$batch",
+				body: body,
+				headers: [accept: 'application/json'],
+				query: ['api-version': '4.1']
+
+				)
 		if (result != null) {
 			cacheResult(result, bidMap)
 		} else {
@@ -385,34 +383,50 @@ class WorkManagementService {
 		}
 
 	}
-	
+
 	public updateWorkItem(collection, project, id, data) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def body = new JsonBuilder(data).toPrettyString()
 		def result = genericRestClient.patch(
-			contentType: ContentType.JSON,
-			//requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
-			body: body,
-			query: ['api-version': '5.0', bypassRules:true],
-			headers: ['Content-Type': 'application/json-patch+json']
-			
-			)
+				contentType: ContentType.JSON,
+				//requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
+				body: body,
+				query: ['api-version': '5.0', bypassRules:true],
+				headers: ['Content-Type': 'application/json-patch+json']
+
+				)
 	}
-	
+
 	def cacheResult(result, idMap) {
 		int count = 0
 		int mapSize = idMap.size()
 		if (!result.value) return
 		int retCount = result.value.size()
 		if (retCount > 0 && retCount < mapSize) {
-			result.value.each { resp ->
-				def issue = new JsonSlurper().parseText(resp.body)
-				log.error "Failed to save full batch of work items, Error:  ${issue.'value'.Message}"
-				if (checkpointManagementService != null) {
-					checkpointManagementService.addLogentry("Failed to save full batch of work items, Error:  ${issue.'value'.Message}")
-				}
 
+			result.value.each { resp ->
+				if (count == 0) {
+					def issue = new JsonSlurper().parseText(resp.body)
+					log.error "Failed to save full batch of work items, Error:  ${issue.'value'.Message}"
+					if (checkpointManagementService != null) {
+						checkpointManagementService.addLogentry("Failed to save full batch of work items, Error:  ${issue.'value'.Message}")
+					} 
+				}
+				else if (count > 1) {
+					if ("${resp.code}" == '200') {
+						def wi = new JsonSlurper().parseText(resp.body)
+						String id = idMap[count]
+						cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
+					} else {
+						def issue = new JsonSlurper().parseText(resp.body)
+						log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+						if (checkpointManagementService != null) {
+							checkpointManagementService.addLogentry("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+						}
+					}
+				}
+				count++
 			}
 		} else {
 			result.value.each { resp ->
@@ -431,10 +445,10 @@ class WorkManagementService {
 			}
 		}
 	}
-	
 
-	
-	
+
+
+
 
 }
 

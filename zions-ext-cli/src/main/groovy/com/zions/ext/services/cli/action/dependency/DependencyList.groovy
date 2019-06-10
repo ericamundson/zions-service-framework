@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
-import com.zions.clm.services.work.maintenance.service.FixWorkItemIssuesService
 import com.zions.common.services.cli.action.CliAction
 
 import groovy.json.JsonBuilder

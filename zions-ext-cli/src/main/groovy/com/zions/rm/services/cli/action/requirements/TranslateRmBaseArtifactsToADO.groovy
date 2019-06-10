@@ -79,12 +79,10 @@ import com.zions.rm.services.requirements.RequirementQueryData
  * }
  * 
  * class TranslateRRMToADO {
- * ... TODO: Implement these Spring Components in zions-ext-services project...
  * @Autowired ClmRequirementsItemManagementService clmRequirementsItemManagementService
  * @Autowired ClmRequirementsManagementService clmRequirementsManagementService
  * @Autowired RequirementsMappingManagementService requirementsMappingManagementService
  * 
- * ... TODO: Need to complete implementation of ...
  * 	+validate(ApplicationArguments args)
  * 	+execute(ApplicationArguments args)
  * 	+filtered(def, String)
@@ -148,9 +146,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	MemberManagementService memberManagementService;
 	@Autowired
 	WorkManagementService workManagementService
-	@Autowired 
+	@Autowired
 	ClmRequirementsItemManagementService clmRequirementsItemManagementService
-	@Autowired 
+	@Autowired
 	ClmRequirementsManagementService clmRequirementsManagementService
 	@Autowired
 	ClmRequirementsFileManagementService rmFileManagementService
@@ -160,10 +158,10 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	ICheckpointManagementService checkpointManagementService
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
-	
+
 	public TranslateRmBaseArtifactsToADO() {
 	}
-	
+
 
 	public def execute(ApplicationArguments data) {
 		boolean excludeMetaUpdate = true
@@ -178,9 +176,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
 		String projectURI = data.getOptionValues('clm.projectAreaUri')[0]
 		String tfsUser = data.getOptionValues('tfs.user')[0]
-//		String oslcNs = data.getOptionValues('oslc.namespaces')[0]
-//		String oslcSelect = data.getOptionValues('oslc.select')[0]
-//		String oslcWhere = data.getOptionValues('oslc.where')[0]
+		//		String oslcNs = data.getOptionValues('oslc.namespaces')[0]
+		//		String oslcSelect = data.getOptionValues('oslc.select')[0]
+		//		String oslcWhere = data.getOptionValues('oslc.where')[0]
 		String rmFilter = data.getOptionValues('rm.filter')[0]
 		String tfsProjectURI = data.getOptionValues('tfs.projectUri')[0]
 		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
@@ -190,7 +188,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
-		
+
 		log.info('Getting ADO Project Members...')
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 
@@ -216,7 +214,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 		}
 		if (includes['phases'] != null) {
-			
+
 			log.info("Processing artifacts")
 			int phaseCount = 0
 			restartManagementService.processPhases { phase, items ->
@@ -239,33 +237,40 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 							String about = "${rmItem.about}"
 							//log.debug("Fetch artifact: ${sid} ${format} ${about}")
 							ClmArtifact artifact = new ClmArtifact('', format, about)
-							
-							try {
 							if (format == 'Text') {
-								clmRequirementsManagementService.getTextArtifact(artifact,false,true)
+								try {
+									clmRequirementsManagementService.getTextArtifact(artifact,false,true)
+								} catch (Exception e) {
+									checkpointManagementService.addLogentry("getTextArtifact for ${sid} generated an exception and was not added as a change")
+									return
+								}
 							}
 							else if (format == 'WrapperResource'){
-								clmRequirementsManagementService.getNonTextArtifact(artifact,true)
+								try {
+									clmRequirementsManagementService.getNonTextArtifact(artifact,true)
+								} catch (Exception e) {
+									checkpointManagementService.addLogentry("getNonTextArtifact for ${sid} generated an exception and was not added as a change")
+									return
+								}
 							}
 							else {
 								log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
 							}
-							} catch (java.lang.NullPointerException e) {
-								checkpointManagementService.addLogentry("Artifact ${sid} generated a NullPointerException and was not added as a change")
-								return
+
+							//new FlowInterceptor() {}.flowLogging(clManager) {
+							def reqChanges
+							try {
+								reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
 							} catch (Exception e) {
-								checkpointManagementService.addLogentry("Artifact ${sid} generated an exception and was not added as a change: ${e}")
+								checkpointManagementService.addLogentry("could not getChanges for ${sid} because: ${e}")
 								return
 							}
-							
-							//new FlowInterceptor() {}.flowLogging(clManager) {
-								def reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
-								if (reqChanges != null) {
-									reqChanges.each { key, val ->
-										clManager.add("${id}", val)
-									}
-									//log.debug("adding changes for requirement ${id}")
+							if (reqChanges) {
+								reqChanges.each { key, val ->
+									clManager.add("${id}", val)
 								}
+								//log.debug("adding changes for requirement ${id}")
+							}
 							//}
 						} else {
 							log.debug("Had an error getting the ID of an item, skipping")

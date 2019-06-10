@@ -57,9 +57,8 @@ class CheckpointManagementService implements ICheckpointManagementService {
 
 	@Override
 	public Checkpoint getCurrentCheckpoint() {
-		// TODO Auto-generated method stub
 		if(!currentCheckpoint) {
-			//log.debug("getCurrentCheckpoint is returning a null checkpoint just fyi hope that's ok")
+			log.error("getCurrentCheckpoint is returning a null checkpoint just fyi hope that's ok")
 		}
 		return currentCheckpoint
 	}

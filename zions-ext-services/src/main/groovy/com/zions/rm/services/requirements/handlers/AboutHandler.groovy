@@ -8,7 +8,7 @@ class AboutHandler extends RmBaseAttributeHandler {
 	
 	@Override
 	public String getFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'Base Artifact URI'
 	}
 

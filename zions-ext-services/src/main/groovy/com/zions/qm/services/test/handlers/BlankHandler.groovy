@@ -7,7 +7,6 @@ class BlankHandler extends QmBaseAttributeHandler {
 	static int SIZE = 255
 
 	public String getQmFieldName() {
-		// TODO Auto-generated method stub
 		return 'none'
 	}
 

@@ -39,7 +39,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	
 	@Override
 	public String getFieldName() {
-		// TODO Auto-generated method stub
+		
 		return 'Primary Text'
 	}
 
@@ -449,7 +449,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 				def wrappedResourceArtifact = new ClmArtifact('','',about)
 				wrappedResourceArtifact = clmRequirementsManagementService.getNonTextArtifact(wrappedResourceArtifact, false)
 				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, wrappedResourceArtifact.getFileHref())
-				
+				if(fileItem) {
 				// Now delete image node
 				String attachmentLink
 				if (isImageFile("${fileItem.fileName}")) {
@@ -464,6 +464,9 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 				}
 				else {
 					wrapperRootNode = new XmlSlurper().parseText(attachmentLink)
+				}
+				} else {
+					log.error("unable to parse a file attachment of ID ${sId}")
 				}
 			}
 			else {

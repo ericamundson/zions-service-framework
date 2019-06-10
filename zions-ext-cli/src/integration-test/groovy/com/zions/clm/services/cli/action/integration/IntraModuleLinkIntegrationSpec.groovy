@@ -815,7 +815,7 @@ class IntraModuleLinkIntegrationSpecConfig {
 	
 	@Bean
 	ClmTestManagementService clmTestManagementService() {
-		return mockFactory.Stub(ClmTestManagementService)
+		return mockFactory.Spy(ClmTestManagementService)
 	}
 	
 	@Bean
@@ -937,7 +937,6 @@ class IntraModuleLinkIntegrationSpecConfig {
 	}
 
 	protected String getDatabaseName() {
-		// TODO Auto-generated method stub
 		return 'coredev';
 	}
 	

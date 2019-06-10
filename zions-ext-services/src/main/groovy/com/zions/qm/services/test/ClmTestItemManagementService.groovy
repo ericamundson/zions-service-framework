@@ -36,6 +36,7 @@ import groovyx.net.http.ContentType
  * 
  * ClmTestItemManagementService --> Map: @Autowired fieldMap - The data conversion handlers
  * ClmTestItemManagementService --> TestMappingManagementService: @Autowired testMappingManagementService - Manages field in to out map data.
+ * ClmTestItemManagementService --> ICacheManagementService: @Autowired cacheManagementService - Store work item data.
  * @enduml
  *
  */
@@ -75,6 +76,11 @@ public class ClmTestItemManagementService {
 		
 	}
 	
+	/**
+	 * Called while access data elements. To cache link data prior to creating links.
+	 * 
+	 * @param qmItemData - RQM element data.
+	 */
 	void cacheLinkChanges(def qmItemData) {
 		String iType = "${qmItemData.name()}"
 		String oType = wiNameMap[iType]
@@ -85,6 +91,12 @@ public class ClmTestItemManagementService {
 
 	}
 	
+	/**
+	 * Entry point for processing ADO work item link changes.
+	 * 
+	 * @param qmItemData - CLM RQM element data
+	 * @param closure - callback for processing submission to ADO.
+	 */
 	void processForLinkChanges(def qmItemData, Closure closure) {
 		String iType = "${qmItemData.name()}"
 		String oType = wiNameMap[iType]
@@ -121,7 +133,7 @@ public class ClmTestItemManagementService {
 		}
 	}
 
-	boolean linkExists(cacheWI, linkId) {
+	private boolean linkExists(cacheWI, linkId) {
 		def url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
 		def link = cacheWI.relations.find { rel ->
 			url == "${rel.url}"
@@ -354,6 +366,14 @@ public class ClmTestItemManagementService {
 		return null
 	}
 	
+	/**
+	 * Method for creating link data. A aspect will ensure link data is cached.
+	 * 
+	 * @param id - element id
+	 * @param timeStamp - Link data creation timestamp
+	 * @param testItem - CLM test element
+	 * @return link data
+	 */
 	@Cache(elementType = LinkInfo)
 	public List<LinkInfo> getAllLinks(String id, Date timeStamp, testItem) {
 		List<LinkInfo> links = new ArrayList<LinkInfo>()

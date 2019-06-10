@@ -37,7 +37,7 @@ class SmartDocManagementService {
 	ICacheManagementService cacheManagementService
 	
 	public SmartDocManagementService() {
-		// TODO Auto-generated constructor stub
+		// Do nothing
 	}
 	
 	def createSmartDoc(def module, def tfsUrl, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsAltUser, def tfsAltPassword, def mrTemplate, def mrFolder) {

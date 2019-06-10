@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component
 class DescriptionHandler extends QmBaseAttributeHandler {
 
 	public String getQmFieldName() {
-		// TODO Auto-generated method stub
 		return 'summary'
 	}
 
