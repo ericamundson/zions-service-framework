@@ -118,6 +118,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
                          &nbsp&nbspAffiliate:&nbsp${affiliates.replaceAll(';',', ')}</p>"""
 		}
 		else if (itemData.getArtifactType() == 'Data Interface TCS') {
+			String touchpoint = itemData.getTitle()
 			String flowType = itemData.getAttribute('Flow Type')
 			String baNCSDirectionTCS = itemData.getAttribute('BaNCS Direction TCS')
 			String dataContent = itemData.getAttribute('Data Content')
@@ -132,7 +133,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			String frequencyofData = itemData.getAttribute('Frequency of Data')
 			String channelProtocol = itemData.getAttribute('Channel Protocol')
 			String channelDirection = itemData.getAttribute('Channel Direction')
-			String channelFailover = itemData.getAttribute('Channel Failover')
+			String channelFailover = itemData.getAttribute('Channel Failover/offline')
 			String channelRetryLimit = itemData.getAttribute('Channel Retry Limit')
 			String channelValidationofData = itemData.getAttribute('Channel Validation of Data')
 			String channelRegistrationofData = itemData.getAttribute('Channel Registration of Data')
@@ -193,8 +194,8 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314787" style="margin-left:.25in;">$flowLevel</p></td></tr> <tr><td colspan="1" id="_1559767314977" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314788" style="margin-left:.25in;"><b>Part of UFE</b></p></td><td colspan="1" id="_1559767314978" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314789" style="margin-left:.25in;">$ufe</p></td></tr></tbody></table>
-<h2 dir="ltr" id="_1559767314937">Data Specification</h2>
-<p dir="ltr" id="_1559767314790" style="margin-left:.25in;">Specification ID: ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314937">Data Specification</h3>
+<p dir="ltr" id="_1559767314790" style="margin-left:.25in;">Specification ID: $touchpoint</p>
 <p dir="ltr" id="_1559767314791" style="margin-left:.25in;">This section contains the information about the incoming or outgoing data including the data format.</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314956" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767314979" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
@@ -216,8 +217,8 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314805" style="margin-left:.25in;">$characterSet</p></td></tr><tr><td colspan="1" id="_1559767314993" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314806" style="margin-left:.25in;"><b>Frequency of Data</b></p></td><td colspan="1" id="_1559767314994" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314807" style="margin-left:.25in;">$frequencyofData</p> </td></tr></tbody></table>
-<h2 dir="ltr" id="_1559767314938">Communication Channel</h2>
-<p dir="ltr" id="_1559767314808" style="margin-left:.25in;">Specification ID: ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314938">Communication Channel</h3>
+<p dir="ltr" id="_1559767314808" style="margin-left:.25in;">Specification ID: $touchpoint</p>
 <p dir="ltr" id="_1559767314809" style="margin-left:.25in;">This section contains the information about the incoming or outgoing data including the data format.</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314957" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767314995" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
@@ -229,18 +230,18 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314814" style="margin-left:.25in;"><b>Direction</b></p></td><td colspan="1" id="_1559767315000" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314815" style="margin-left:.25in;">$channelDirection</p></td></tr> <tr><td colspan="1" id="_1559767315001" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314816" style="margin-left:.25in;"><b>Failover / offline channel</b></p></td><td colspan="1" id="_1559767315002" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314817" style="margin-left:.25in;">$channelFailover/offline</p></td></tr><tr><td colspan="1" id="_1559767315003" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
+<p id="_1559767314817" style="margin-left:.25in;">$channelFailover</p></td></tr><tr><td colspan="1" id="_1559767315003" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314818" style="margin-left:.25in;"><b>Channel retry limit</b></p></td><td colspan="1" id="_1559767315004" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314819" style="margin-left:.25in;">$channelRetryLimit</p> </td></tr><tr><td colspan="1" id="_1559767315005" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314820" style="margin-left:.25in;"><b>Validation of data at channel required</b></p></td><td colspan="1" id="_1559767315006" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314821" style="margin-left:.25in;">$channelValidationofData</p></td></tr><tr><td colspan="1" id="_1559767315007" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314822" style="margin-left:.25in;"><b>Registration of the data required</b></p></td><td colspan="1" id="_1559767315008" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314823" style="margin-left:.25in;">$channelRegistrationofData</p></td></tr></tbody></table>
-<h2 dir="ltr" id="_1559767314939">IO Data Format</h2>
-<p dir="ltr" id="_1559767314824" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
-<p dir="ltr" id="_1559767314825" style="margin-left:.25in;">The following IOF document will be generated separately from Rational: IOF-312-MTGE-03-B01.xlsx</p>
-<h2 dir="ltr" id="_1559767314940">Processing</h2>
-<p dir="ltr" id="_1559767314826" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314939">IO Data Format</h3>
+<p dir="ltr" id="_1559767314824" style="margin-left:.25in;">Specification ID:$touchpoint</p>
+<p dir="ltr" id="_1559767314825" style="margin-left:.25in;">The following IOF document will be generated separately from Rational: ${touchpoint.replace("ISZ-", "IOF-")}.xlsx</p>
+<h3 dir="ltr" id="_1559767314940">Processing</h3>
+<p dir="ltr" id="_1559767314826" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314958" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767315009" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314827" style="margin-left:.25in;"><span style="color:white">Item</span></p></td>
@@ -248,8 +249,8 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314828" style="margin-left:.25in;"><span style="color:white">Value</span></p></td></tr> <tr><td colspan="1" id="_1559767315011" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314829" style="margin-left:.25in;"><b>When is the data produced</b></p></td><td colspan="1" id="_1559767315012" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314830" style="margin-left:.25in;"><span style="color:black">$value</span></p></td></tr></tbody></table>
-<h2 dir="ltr" id="_1559767314941">Validation</h2>
-<p dir="ltr" id="_1559767314831" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314941">Validation</h3>
+<p dir="ltr" id="_1559767314831" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314959" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767315013" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314832" style="margin-left:.25in;"><span style="color:white">Item</span></p></td>
@@ -265,8 +266,8 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314841" style="margin-left:.25in;">$networkValidation</p> </td></tr><tr><td colspan="1" id="_1559767315023" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314842" style="margin-left:.25in;"><b>XSD Validation</b></p></td><td colspan="1" id="_1559767315024" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314843" style="margin-left:.25in;">$xsdValidation</p></td></tr></tbody></table>
-<h2 dir="ltr" id="_1559767314942">Grouping/Ungrouping</h2>
-<p dir="ltr" id="_1559767314844" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314942">Grouping/Ungrouping</h3>
+<p dir="ltr" id="_1559767314844" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314960" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767315025" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314845" style="margin-left:.25in;"><span style="color:white">Item</span></p></td>
@@ -276,11 +277,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314848" style="margin-left:.25in;">$groupingUngroupingofdatarequired</p></td></tr><tr><td colspan="1" id="_1559767315029" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314849" style="margin-left:.25in;"><b>Grouping/Ungrouping criteria</b></p></td><td colspan="1" id="_1559767315030" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314850" style="margin-left:.25in;">$groupingUngroupingcriteria</p></td></tr></tbody></table>
-<h2 dir="ltr" id="_1559767314943">Business Mapping</h2>
-<p dir="ltr" id="_1559767314851" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314943">Business Mapping</h3>
+<p dir="ltr" id="_1559767314851" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <p dir="ltr" id="_1559767314852" style="margin-left:.25in;">$businessMapping</p>
-<h2 dir="ltr" id="_1559767314944">Routing</h2>
-<p dir="ltr" id="_1559767314853" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314944">Routing</h3>
+<p dir="ltr" id="_1559767314853" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314961" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767315031" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314854" style="margin-left:.25in;"><span style="color:white">Item</span></p></td>
@@ -294,11 +295,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314861" style="margin-left:.25in;">$multipleRouting</p></td></tr><tr><td colspan="1" id="_1559767315039" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314862" style="margin-left:.25in;"><b>Routing criteria</b></p></td><td colspan="1" id="_1559767315040" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314863" style="margin-left:.25in;">$routingCriteria</p></td></tr> </tbody></table>
-<h2 dir="ltr" id="_1559767314945">Reconciliation</h2>
-<p dir="ltr" id="_1559767314864" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314945">Reconciliation</h3>
+<p dir="ltr" id="_1559767314864" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <p dir="ltr" id="_1559767314865" style="margin-left:.25in;">$reconciliation</p>
-<h2 dir="ltr" id="_1559767314946">Exception Handling</h2>
-<p dir="ltr" id="_1559767314866" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314946">Exception Handling</h3>
+<p dir="ltr" id="_1559767314866" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314962" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767315041" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314867" style="margin-left:.25in;"><span style="color:white">Item</span></p></td>
@@ -316,8 +317,8 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314878" style="margin-left:.25in;">$technicalExceptionHandling</p> </td></tr><tr><td colspan="1" id="_1559767315053" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314879" style="margin-left:.25in;"><b>Business Exception Handling</b></p></td><td colspan="1" id="_1559767315054" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314880" style="margin-left:.25in;">$businessExceptionHandling</p></td></tr></tbody></table>
-<h2 dir="ltr" id="_1559767314947">Dependencies</h2>
-<p dir="ltr" id="_1559767314881" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314947">Dependencies</h3>
+<p dir="ltr" id="_1559767314881" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314963" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767315055" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314882" style="margin-left:.25in;"><span style="color:white">Item</span></p></td><td colspan="1" id="_1559767315056" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
@@ -332,11 +333,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314891" style="margin-left:.25in;">$dependenciesonApps</p></td></tr><tr><td colspan="1" id="_1559767315065" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314892" style="margin-left:.25in;"><b>Responsible party for managing the dependencies</b></p></td><td colspan="1" id="_1559767315066" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314893" style="margin-left:.25in;">$dependencyOwner</p></td></tr></tbody></table>
-<h2 dir="ltr" id="_1559767314948">Service Integrator Requirements</h2>
-<p dir="ltr" id="_1559767314894" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314948">Service Integrator Requirements</h3>
+<p dir="ltr" id="_1559767314894" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <p dir="ltr" id="_1559767314895" style="margin-left:.25in;">$serviceIntegratorRequirement</p>
-<h2 dir="ltr" id="_1559767314949">Archival Requirements</h2>
-<p dir="ltr" id="_1559767314896" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314949">Archival Requirements</h3>
+<p dir="ltr" id="_1559767314896" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314964" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767315067" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314897" style="margin-left:.25in;"><span style="color:white">Item</span></p></td><td colspan="1" id="_1559767315068" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
@@ -345,8 +346,8 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314900" style="margin-left:.25in;">$archival</p></td></tr><tr><td colspan="1" id="_1559767315071" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314901" style="margin-left:.25in;"><b>Purge period</b></p></td><td colspan="1" id="_1559767315072" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314902" style="margin-left:.25in;">$purgingPeriod</p></td></tr> </tbody></table>
-<h2 dir="ltr" id="_1559767314950">Reporting Requirements</h2>
-<p dir="ltr" id="_1559767314903" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314950">Reporting Requirements</h3>
+<p dir="ltr" id="_1559767314903" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314965" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767315073" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314904" style="margin-left:.25in;"><span style="color:white">Item</span></p></td><td colspan="1" id="_1559767315074" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
@@ -357,17 +358,17 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314909" style="margin-left:.25in;">$exceptionReport</p></td></tr> <tr><td colspan="1" id="_1559767315079" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314910" style="margin-left:.25in;"><b>Reconciliation Report</b></p> </td><td colspan="1" id="_1559767315080" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314911" style="margin-left:.25in;">$reconciliationReport</p></td></tr></tbody></table>
-<h2 dir="ltr" id="_1559767314951">Data Migration Requirements</h2>
-<p dir="ltr" id="_1559767314912" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314951">Data Migration Requirements</h3>
+<p dir="ltr" id="_1559767314912" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <p dir="ltr" id="_1559767314913" style="margin-left:.25in;">$dataMigrationRequirement</p>
-<h2 dir="ltr" id="_1559767314952">Multi Entity Impact</h2>
-<p dir="ltr" id="_1559767314914" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314952">Multi Entity Impact</h3>
+<p dir="ltr" id="_1559767314914" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <p dir="ltr" id="_1559767314915" style="margin-left:.25in;">$multiEntityImpact</p>
-<h2 dir="ltr" id="_1559767314953">Phased Implementation Approach Impact</h2>
-<p dir="ltr" id="_1559767314916" style="margin-left:.25in;">Specification ID:ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314953">Phased Implementation Approach Impact</h3>
+<p dir="ltr" id="_1559767314916" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <p dir="ltr" id="_1559767314917" style="margin-left:.25in;">$phasedImplementationImpact</p>
-<h2 dir="ltr" id="_1559767314954">Service Level Agreement (shared SLA – all parties must comply)</h2>
-<p dir="ltr" id="_1559767314918" style="margin-left:.25in;">Specification ID: ISZ-312-MTGE-03-B01</p>
+<h3 dir="ltr" id="_1559767314954">Service Level Agreement (shared SLA – all parties must comply)</h3>
+<p dir="ltr" id="_1559767314918" style="margin-left:.25in;">Specification ID: $touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314966" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767315081" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314919" style="margin-left:.25in;"><span style="color:white">Item</span></p></td><td colspan="1" id="_1559767315082" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">

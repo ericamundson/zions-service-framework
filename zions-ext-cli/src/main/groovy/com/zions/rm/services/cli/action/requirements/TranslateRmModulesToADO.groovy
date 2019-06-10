@@ -260,6 +260,7 @@ class TranslateRmModulesToADO implements CliAction {
 						isToIncorporateTitle(module,it+1)) {
 						
 						module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
+						module.orderedArtifacts[it+1].setDepth(module.orderedArtifacts[it].getDepth())
 						module.orderedArtifacts[it].setIsDeleted(true)
 						return  // Skip Heading artifact 
 					}
