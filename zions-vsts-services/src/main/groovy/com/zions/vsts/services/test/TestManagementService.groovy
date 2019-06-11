@@ -247,14 +247,14 @@ public class TestManagementService {
 				if (twi != null) {
 					String type = "${twi.fields.'System.WorkItemType'}"
 					if (type == 'Test Plan') {
-						String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/test/plans/${wi.id}"
+						String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/testplan/plans/${wi.id}"
 						genericRestClient.delete(
 							uri: url,
 							contentType: ContentType.JSON,
-							query: [destroy: true, 'api-version': '5.0']
+							query: [destroy: true, 'api-version': '5.0-preview.1']
 							)
 					} else if (type == 'Test Case'){
-						String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/test/testcases/${wi.id}"
+						String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/testplan/testcases/${wi.id}"
 						genericRestClient.delete(
 							uri: url,
 							contentType: ContentType.JSON,
