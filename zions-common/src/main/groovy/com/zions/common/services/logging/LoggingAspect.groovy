@@ -61,6 +61,7 @@ public class LoggingAspect {
 			
 			//log.info("${joinPoint.getSignature()} executed in ${executionTime}ms");
 			return proceed;
+			
 		 }
 		}
 
