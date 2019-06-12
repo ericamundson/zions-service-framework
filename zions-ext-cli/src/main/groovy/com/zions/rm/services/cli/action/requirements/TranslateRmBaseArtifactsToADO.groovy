@@ -214,77 +214,108 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 		}
 		if (includes['phases'] != null) {
-
 			log.info("Processing artifacts")
 			int phaseCount = 0
+			ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 			restartManagementService.processPhases { phase, items ->
-				log.debug("Entering phase loop")
+				//log.debug("Entering phase loop")
+				clmRequirementsItemManagementService.resetNewId()
+				
 				if (phase == 'requirements') {
-					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
-					clmRequirementsItemManagementService.resetNewId()
 					//rmDatabaseQueryService.init()
 					log.debug("Getting content of ${items.size()} items")
 					items.each { rmItem ->
-						String sid = "${rmItem.reference_id}"
-						//sometimes this is blank?  some kind of error!
-						if (sid) {
-							int id = Integer.parseInt(sid)
-							//log.debug("items.each loop for id: ${sid}")
-							String primaryTextString = "${rmItem.text}"
-							//data warehouse indicator for wrapperresources is replacing the primay text field with this string
-							String format = primaryTextString.equals("No primary text") ? 'WrapperResource' : 'Text'
-							//here is the uri
-							String about = "${rmItem.about}"
-							//log.debug("Fetch artifact: ${sid} ${format} ${about}")
-							ClmArtifact artifact = new ClmArtifact('', format, about)
-							if (format == 'Text') {
-								try {
-									clmRequirementsManagementService.getTextArtifact(artifact,false,true)
-								} catch (Exception e) {
-									checkpointManagementService.addLogentry("getTextArtifact for ${sid} generated an exception and was not added as a change")
-									return
-								}
-							}
-							else if (format == 'WrapperResource'){
-								try {
-									clmRequirementsManagementService.getNonTextArtifact(artifact,true)
-								} catch (Exception e) {
-									checkpointManagementService.addLogentry("getNonTextArtifact for ${sid} generated an exception and was not added as a change")
-									return
-								}
-							}
-							else {
-								log.info("WARNING: Unsupported format of $format for artifact id: $identifier")
-							}
-
-							//new FlowInterceptor() {}.flowLogging(clManager) {
-							def reqChanges
-							try {
-								reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
-							} catch (Exception e) {
-								checkpointManagementService.addLogentry("could not getChanges for ${sid} because: ${e}")
-								return
-							}
-							if (reqChanges) {
-								reqChanges.each { key, val ->
-									clManager.add("${id}", val)
-								}
-								//log.debug("adding changes for requirement ${id}")
-							}
-							//}
-						} else {
-							log.debug("Had an error getting the ID of an item, skipping")
-							//todo: add an error to the checkpoint error log
-						}
+						saveDatawarehouseItemToAdoItemManager(rmItem, clManager, tfsProject, memberMap)
 					}
 					log.debug("have ${clManager.size()} changes, about to flush clmanager for phaseCount ${phaseCount}")
 					clManager.flush();
 					log.debug("finished flushing clmanager for phaseCount ${phaseCount}")
-					phaseCount++
 				}
+				if (phase == 'audit') {
+					//log.debug("auditing migrated artifacts")
+					//get list of wiData objects
+					//MongoDBCacheManagementService.getAllOfType
+					//def wiDataObjects = cacheManagementService.getAllOfType("wiData")
+					items.each { rmItem ->
+						String sid = "${rmItem.reference_id}"
+						//sometimes this is blank?  some kind of error!
+						if (sid && !cacheManagementService.exists(sid)) {
+							//leaving this log line in because I can count the lines in the output file to see how we're doing
+							log.debug("Datawarehouse item missing from mongodb: ${sid},page:${phaseCount},${rmItem.about}")
+							saveDatawarehouseItemToAdoItemManager(rmItem, clManager, tfsProject, memberMap)
+						}
+					}
+					if (clManager.size() > 0) {
+						log.info("Reattempting upload of ${clManager.size()} artifacts from page ${phaseCount}")
+						clManager.flush()
+					}
+				}
+				phaseCount++
 			}
 		}
 
+	}
+	
+	/**
+	 * Processes 
+	 * @param rmItem
+	 * @param clManager
+	 * @param tfsProject
+	 * @param memberMap
+	 * @return
+	 */
+	def saveDatawarehouseItemToAdoItemManager(def rmItem, def clManager, def tfsProject, def memberMap) {
+		String sid = "${rmItem.reference_id}"
+		//sometimes this is blank?  some kind of error!
+		if (sid) {
+			int id = Integer.parseInt(sid)
+			//log.debug("items.each loop for id: ${sid}")
+			String primaryTextString = "${rmItem.text}"
+			//data warehouse indicator for wrapperresources is replacing the primay text field with this string
+			String format = primaryTextString.equals("No primary text") ? 'WrapperResource' : 'Text'
+			//here is the uri
+			String about = "${rmItem.about}"
+			//log.debug("Fetch artifact: ${sid} ${format} ${about}")
+			ClmArtifact artifact = new ClmArtifact('', format, about)
+			if (format == 'Text') {
+				try {
+					clmRequirementsManagementService.getTextArtifact(artifact,false,true)
+				} catch (Exception e) {
+					checkpointManagementService.addLogentry("getTextArtifact for ${sid} generated an exception and was not added as a change")
+					
+				}
+			}
+			else if (format == 'WrapperResource'){
+				try {
+					clmRequirementsManagementService.getNonTextArtifact(artifact,true)
+				} catch (Exception e) {
+					checkpointManagementService.addLogentry("getNonTextArtifact for ${sid} generated an exception and was not added as a change")
+					return
+				}
+			}
+			else {
+				log.info("WARNING: Unsupported format of $format for artifact id: ${sid}")
+			}
+
+			//new FlowInterceptor() {}.flowLogging(clManager) {
+			def reqChanges
+			try {
+				reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
+			} catch (Exception e) {
+				checkpointManagementService.addLogentry("could not getChanges for ${sid} because: ${e}")
+				return
+			}
+			if (reqChanges) {
+				reqChanges.each { key, val ->
+					clManager.add("${id}", val)
+				}
+				//log.debug("adding changes for requirement ${id}")
+			}
+			//}
+		} else {
+			log.debug("Had an error getting the ID of an item, skipping")
+			//todo: add an error to the checkpoint error log
+		}
 	}
 
 
