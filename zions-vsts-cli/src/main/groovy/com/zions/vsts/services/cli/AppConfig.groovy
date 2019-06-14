@@ -58,4 +58,9 @@ public class AppConfig {
 	IGenericRestClient genericRestClient() {
 		return new GenericRestClient(tfsUrl, tfsUser, tfsToken)
 	}
+	
+	@Bean
+	IGenericRestClient mrGenericRestClient() {
+		return new GenericRestClient(tfsUrl, tfsUser, tfsToken)
+	}
 }
