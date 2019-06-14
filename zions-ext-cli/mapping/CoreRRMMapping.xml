@@ -15,7 +15,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="documentTypeHandler" target="Custom.DocumentType"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
@@ -31,7 +30,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="documentTypeHandler" target="Custom.DocumentType"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
@@ -47,7 +45,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="documentTypeHandler" target="Custom.DocumentType"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
@@ -63,7 +60,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -80,7 +76,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -97,7 +92,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -114,7 +108,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -131,7 +124,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -148,7 +140,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -165,7 +156,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -182,7 +172,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -199,7 +188,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -216,7 +204,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -233,7 +220,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -250,7 +236,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -267,7 +252,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -284,7 +268,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -301,7 +284,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -318,7 +300,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -335,7 +316,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -352,7 +332,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -369,7 +348,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -386,7 +364,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -403,7 +380,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -419,7 +395,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -436,7 +411,6 @@
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -462,7 +436,25 @@
 		<field source="uiRemarksHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
-			
+	
+	<wit source="Report Fields" target="Entity" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="valueFormatHandler" target="Custom.Format"/>
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>		
+		
 	<wit source="Heading" target="Section" translateUnmappedFields="false">
 		<field source="sectionTypeHandler" target="Custom.SectionType"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
@@ -471,7 +463,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -488,7 +479,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -505,7 +495,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -522,7 +511,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -539,7 +527,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -556,7 +543,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -573,7 +559,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -590,7 +575,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -607,7 +591,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -624,7 +607,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -641,7 +623,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -658,7 +639,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -678,7 +658,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -694,7 +673,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -710,7 +688,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -726,7 +703,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -742,7 +718,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
@@ -758,7 +733,6 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
-		<field source="activeReasonHandler" target="Custom.ActiveReason"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
