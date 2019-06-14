@@ -84,7 +84,16 @@ class ClmArtifact {
 			return (this.getDescription().indexOf('<img ') > -1)
 		}
 	}
-	private String stripTags(String input) {
+	public String stripTags(String input) {
 		return input.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("&#xa0;", ' ').replaceAll("&#xc2;", ' ').replaceAll("&amp;", '&').replaceAll("\\<.*?>","")
+	}
+	public def getAttribute(String attrName) {
+		def val = attributeMap."$attrName"
+		if (val) {
+			return val
+		}
+		else {
+			return ''
+		}
 	}
 }
