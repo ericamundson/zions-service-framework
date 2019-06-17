@@ -33,7 +33,8 @@ public class LoggingAspect {
 	 * @return actual return of method under join point.
 	 * @throws Throwable
 	 */
-	@Around('execution (* *(..)) && @within(com.zions.common.services.logging.Loggable)')
+	
+	@Around('execution (* *(..)) && !execution(* *.getMetaClass()) && @within(com.zions.common.services.logging.Loggable)')
 	public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 
 		def obj = joinPoint.this
