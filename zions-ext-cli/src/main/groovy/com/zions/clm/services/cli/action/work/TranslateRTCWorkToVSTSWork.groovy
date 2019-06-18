@@ -247,7 +247,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 //					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
 //				}
 //			}
-			workManagementService.refresh(collection, tfsProject)
+			workManagementService.refreshCacheByTeamArea(collection, tfsProject, areaPath)
 		}
 		if (includes['flushQueries'] != null) {
 			clmWorkItemManagementService.flushQueries(wiQuery)
@@ -257,7 +257,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 //			if (areaPath.length()>0) {
 //				query = "Select [System.Id], [System.Title] From WorkItems Where [System.AreaPath] = '${areaPath}' AND [Custom.ExternalID] CONTAINS 'RTC-'"
 //			}
-			workManagementService.clean(collection,tfsProject, query)
+			workManagementService.clean(collection, tfsProject, query)
 		}
 		if (includes['cleanDuplicates'] != null) {
 			workManagementService.cleanDuplicates(collection, tfsProject)

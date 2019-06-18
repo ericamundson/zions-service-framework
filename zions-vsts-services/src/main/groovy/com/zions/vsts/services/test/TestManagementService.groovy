@@ -272,8 +272,16 @@ public class TestManagementService {
 //		cacheL.deleteDir()
 	}
 	
+	String getPlanId(def planData) {
+		String className = planData.getClass().simpleName
+		if (className == 'TestPlan') {
+			return "${planData.id}"
+		}
+		return "${planData.webId.text()}-Test Plan"
+	}
+	
 	public def ensureTestRun(String collection, String project, def planData) {
-		String pid = "${planData.webId.text()}-Test Plan"
+		String pid = getPlanId(planData)
 		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
 		
 		if (runData == null) {
@@ -483,7 +491,7 @@ public class TestManagementService {
 //
 //	}
 	
-	private def associateCaseToSuite(def suiteData, def tcids) {
+	public def associateCaseToSuite(def suiteData, def tcids) {
 		String suiteUrl = "${suiteData.url}"
 		if (tcids.size()>0) {
 			String tcIds = tcids.join(',')

@@ -120,5 +120,8 @@
 	<wit source="testplan"  target="Test Plan WI" translateUnmappedFields="false">
 		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
 	</wit>
+	<wit source="testsuite"  target="Test Suite WI" translateUnmappedFields="false">
+		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
+	</wit>
 	
 </witmapping>
