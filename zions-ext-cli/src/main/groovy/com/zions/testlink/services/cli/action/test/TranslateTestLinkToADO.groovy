@@ -44,7 +44,7 @@ import groovy.xml.XmlUtil
  *  <li>tfs.user - ADO user</li>
  *  <li>tfs.token - ADO PAT</li>
  *  <li>tfs.project - ADO project</li>
- *  <li>qm.template.dir - RQM meta-data xml</li>
+ *  <li>tl.template.dir - TestLink meta-data xml</li>
  *  <li>tfs.areapath - ADO area path to set Test planning items.</li>
  *  <li>test.mapping.file - The xml mapping file to enable field data flow.</li>
  *  <li>tl.filter - the name of filter class to used to pair down items that can't be filtered by query.</li>
@@ -244,8 +244,8 @@ class TranslateTestLinkToADO implements CliAction {
 		String project = data.getOptionValues('clm.projectArea')[0]
 		String templateDir = data.getOptionValues('qm.template.dir')[0]
 		String mappingFile = data.getOptionValues('test.mapping.file')[0]
-		String qmQuery = data.getOptionValues('qm.query')[0]
-		String wiFilter = data.getOptionValues('qm.filter')[0]
+		String tlQuery = data.getOptionValues('tl.query')[0]
+		String wiFilter = data.getOptionValues('tl.filter')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -254,7 +254,6 @@ class TranslateTestLinkToADO implements CliAction {
 		File mFile = new File(mappingFile)
 
 		def mapping = new XmlSlurper().parseText(mFile.text)
-		def testTypes = loadTestTypes(templateDir)
 		//Update TFS wit definitions.
 		if (includes['meta'] != null) {
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
@@ -450,23 +449,12 @@ class TranslateTestLinkToADO implements CliAction {
 //		return items.entry.findAll { ti -> true }
 //	}
 
-	def loadTestTypes(def templateDir) {
-		def testTypes = []
-		File tDir = new File(templateDir)
-		if (tDir.exists() || tDir.isDirectory()) {
-			tDir.eachFile { file ->
-				def ttData = new XmlSlurper().parse(file)
-				testTypes.add(ttData)
-			}
-		}
-		return testTypes
-	}
 
 	/* (non-Javadoc)
 	 * @see com.zions.common.services.cli.action.CliAction#validate(org.springframework.boot.ApplicationArguments)
 	 */
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectArea', 'qm.template.dir', 'tfs.url', 'tfs.user', 'tfs.project', 'tfs.areapath', 'test.mapping.file', 'qm.query', 'qm.filter']
+		def required = ['tfs.url', 'tfs.user', 'tfs.project', 'tfs.areapath', 'test.mapping.file', 'tl.query', 'tl.filter']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

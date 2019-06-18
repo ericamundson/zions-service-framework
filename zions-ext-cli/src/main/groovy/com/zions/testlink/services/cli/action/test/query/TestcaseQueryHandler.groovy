@@ -41,10 +41,28 @@ class TestcaseQueryHandler implements IQueryHandler {
 	
 	TestSuite[] testSuites
 	
+	private void allSuites() {
+		TestProject project = testLinkClient.getTestProjectByName(projectName)
+		TestSuite[] topSuites = testLinkClient.getFirstLevelTestSuitesForTestProject(project.id)
+		List<TestSuite> suiteList = new ArrayList<TestSuite>()
+		topSuites.each { TestSuite parent ->
+			suiteList.add(parent)
+			addSuites(parent, suiteList)
+		}
+		testSuites = suiteList.toArray(new TestSuite[suiteList.size()])
+	}
+	
+	private TestSuite[] addSuites(TestSuite parent, List<TestSuite> suiteList) {
+		TestSuite[] children = testLinkClient.getTestSuitesForTestSuite(parent.id)
+		children.each { TestSuite child  ->
+			suiteList.add(child)
+			addSuites(child, suiteList)
+		}
+	}
+	
 	public def getItems() {
 		if (!testSuites) {
-			TestProject project = testLinkClient.getTestProjectByName(projectName)
-			testSuites = testLinkClient.getFirstLevelTestSuitesForTestProject(project.id)
+			allSuites()
 		}
 		if (testSuites.length > 0) {
 			TestCase[] tc = testLinkClient.getTestCasesForTestSuite(testSuites[0].id, true, TestCaseDetails.FULL)
