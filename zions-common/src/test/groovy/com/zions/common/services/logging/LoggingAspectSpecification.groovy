@@ -87,18 +87,24 @@ class SomeClass {
 }
 	
 @Loggable
-@Log
+
 
 class SomeClass2 {
 	
 	def methodOne() {
 		
-		log.info('run methodOne')
+		
+		int  x=10, y=20;
+		/*System.out.println("Employee class");*/
+		System.out.println(x+y+" testing the aspect logging code");
 		
 	}
 	
 	def methodTwo() {
-		log.info('run methodTwo')
+		
+		int  x=10, y=20;
+		System.out.println(x+y+" testing the apsect logging code");
+		/*System.out.println("Employee class");*/
 	}
 }
 
