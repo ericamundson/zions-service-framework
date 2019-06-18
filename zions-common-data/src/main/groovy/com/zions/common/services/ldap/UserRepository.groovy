@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 interface UserRepository extends LdapRepository<User> {
-	User findBySAMAccountName(String samAccountName)
+	User findByUid(String uid)
 	User findByEmail(String email)
 	User findByDisplayName(String displayName)
 }
