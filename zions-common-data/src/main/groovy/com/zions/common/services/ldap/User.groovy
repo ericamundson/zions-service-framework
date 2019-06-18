@@ -14,7 +14,7 @@ class User {
 	@Id
 	Name id
 	
-    @Attribute(name = "sAMAccountName") String sAMAccountName;
+    @Attribute(name = "uid") String uid;
 	@Attribute(name = "mail") String email;
 	@Attribute(name = "displayName") String displayName;
 	

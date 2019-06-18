@@ -18,7 +18,7 @@ class UserManagementService {
 	UserRepository userRepository
 	
 	User getUserById(String id) {
-		return userRepository.findBySAMAccountName(id)
+		return userRepository.findByUid(id)
 	}
 	
 	User getUserByEmail(String email) {

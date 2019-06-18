@@ -25,19 +25,18 @@ class UserManagementServiceSpec extends Specification {
 	UserManagementService userManagementService
 
 	public 'Find user info'() {
-		setup:
 		
-		when:
+		when: 'Access user by id'
 		//boolean auth = userManagementService.authenticate('z091182', '4878Middy002')
-		User testU = userManagementService.getUserById('z070187')
+		User testU = userManagementService.getUserById('z004421')
 		
-		then:
+		then: 'validate user found'
 		testU != null
 		
-		when:
+		when: 'Access user by email'
 		User eU = userManagementService.getUserByEmail('Michael.Angelastro@zionsbancorp.com')
 		
-		then:
+		then: 'validate user found'
 		eU != null
 
 	}
