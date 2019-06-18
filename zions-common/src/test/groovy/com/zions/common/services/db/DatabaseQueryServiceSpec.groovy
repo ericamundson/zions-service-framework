@@ -97,7 +97,7 @@ class DatabaseQueryServiceSpec extends Specification {
 
 @TestConfiguration
 @Profile("test")
-//@ComponentScan(["com.zions.common.services.logging"])
+@ComponentScan(["com.zions.common.services.logging"])
 @PropertySource("classpath:test.properties")
 class DatabaseQueryServiceSpecConfig {
 	

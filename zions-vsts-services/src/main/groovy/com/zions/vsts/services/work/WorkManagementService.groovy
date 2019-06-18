@@ -42,7 +42,110 @@ class WorkManagementService {
 
 	public WorkManagementService() {
 	}
+	
+	/**
+	 * Refresh work item cache by a query.
+	 * 
+	 * <ul>
+	 * <li>Handles deleting duplicates from failure during cache update.</li>
+	 * <li>Clears cache prior to update of cache.</li>
+	 * <li>Full refresh</li>
+	 * </ul>
+	 * 
+	 * @param collection
+	 * @param project
+	 * @param query
+	 * @return
+	 */
+	def refreshCacheByQuery(String collection, String project, String query) {
+		String module = cacheManagementService.cacheModule
+		cacheManagementService.deleteByType(ICacheManagementService.WI_DATA)
+		def wis = getWorkItems(collection, project, query)
+		if (!wis || !wis.workItems) return
+		def wiList = wis.workItems
+		int j = 0
+		def eMap = [:]
+		while (true) {
+			def ids = []
+			def keys = []
+			for (int i = 0; i < 200 && j < wiList.size(); i++) {
+				def wi = wiList[j]
+				ids.push(wi.id)
+				j++
+			}
+			def result = batchGet(collection, project, ids)
+			result.value.each { owi ->
+				String key = getKey(owi)
+				if (eMap.containsKey(key)) {
+					def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
+					log.info("Deleting duplicate of (${module}) Element: ${key}, ADO WI: ${owi.id}")
+					String url = "${owi.url}"
+					deleteWorkitem(url)
+				} else {
+					eMap[key] = key
+					cacheManagementService.saveToCache(owi, key, ICacheManagementService.WI_DATA)
+				}
+			}
+			if (j == wiList.size()) {
+				def lwi = wiList[j - 1]
+				String lastId =  "${lwi.id}"
+				j = 0
+				wis = getWorkItems(collection, project, query, lastId)
+				if (!wis || !wis.workItems || !wis.workItems.size() == 0) return
+				wiList = wis.workItems
+			}
+		}
+	}
+	
+	/**
+	 * Full refresh of work item cache for a given team area.
+	 * <ul>
+	 * <li>Handles deleting duplicates from failure during cache update.</li>
+	 * <li>Clears cache prior to update of cache.</li>
+	 * <li>Full refresh</li>
+	 * </ul>
+	 * 
+	 * @param collection - ADO organization
+	 * @param project - ADO project
+	 * @param teamArea - ADO work item team area.
+	 * @return none
+	 */
+	def refreshCacheByTeamArea(String collection, String project, String teamArea) {
+		def moduleMap = ['CCM': 'RTC-', 'RM':'DNG-', 'QM':'RQM-', 'TL': 'TL-']
+		String module = cacheManagementService.cacheModule
+		String eidPrefix = moduleMap[module]
+		String query = "Select [System.Id], [System.Title] From WorkItems Where ([System.AreaPath] = '${teamArea}' OR [System.AreaPath] under '${teamArea}') AND [Custom.ExternalID] CONTAINS '${eidPrefix}'"
+		refreshCacheByQuery(collection, project, query)
+	}
+	
+	private String getKey(def wi) {
+		String eId = "${wi.fields['Custom.ExternalID']}"
+		if (eId.startsWith('RTC-') || eId.startsWith('DNG-')) {
+			return eId.substring(4)
+		} else if (eId.startsWith('RQM-')) {
+			String wiType = "${wi.fields.'System.WorkItemType'}"
+			String key = "${eId.substring(4)}-${wiType}"
+			if (wiType != 'Test Case') {
+				key = "${key} WI"
+			}
+			return key
+		} else if (eId.startsWith('TL-')) {
+			return eId.substring(3)
+		}
+	}
 
+	/**
+	 * Refreshes cache based upon existing cache elements. 
+	 * This has a flaw if process is stopped during processing of batch work item cache update.
+	 * 
+	 * <ul>
+	 * <li>May look to deprecate this method.</li>
+	 * </ul>
+	 * 
+	 * @param collection - ADO organization
+	 * @param project - ADO project
+	 * @return nothing
+	 */
 	def refresh(String collection, String project) {
 		int i = 0;
 		def ids = []
@@ -73,8 +176,10 @@ class WorkManagementService {
 			}
 		}
 	}
+	
+	
 
-	def batchGet(String collection, String project, def ids) {
+	private def batchGet(String collection, String project, def ids) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		def query = ['$expand': 'all', ids:ids]
@@ -91,6 +196,14 @@ class WorkManagementService {
 
 	}
 
+	/**
+	 * Clean all work items via this query.
+	 * 
+	 * @param collection - ADO organization
+	 * @param project - ADO project
+	 * @param query - work item wiql query
+	 * @return nothing
+	 */
 	def clean(String collection, String project, String query) {
 		def deleted = [:]
 		def wis = getWorkItems(collection, project, query)
@@ -146,11 +259,11 @@ class WorkManagementService {
 	//		return result
 	//	}
 
-	def getWorkItems(String collection, String project, String aquery, int lastId = -1) {
+	def getWorkItems(String collection, String project, String aquery, String lastId = null) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def query = [query: "${aquery}"]
-		if (lastId != -1) {
+		def query = [query: "${aquery} ORDER BY [System.Id] ASC"]
+		if (lastId != null) {
 			query = [query: "${aquery} AND [System.Id] > ${lastId}  ORDER BY [System.Id] ASC"]
 		}
 		String body = new JsonBuilder(query).toPrettyString()

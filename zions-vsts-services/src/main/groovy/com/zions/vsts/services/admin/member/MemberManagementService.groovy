@@ -204,7 +204,7 @@ public class MemberManagementService {
 			def result = genericRestClient.get(
 					contentType: ContentType.JSON,
 					uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/teams/${teamData.id}/members",
-					query: ['api-version': '5.0-preview.2']
+					query: ['api-version': '5.0']
 					)
 			result.value.each { ridentity ->
 				def identity = ridentity.identity
@@ -232,7 +232,7 @@ public class MemberManagementService {
 			def result = genericRestClient.get(
 					contentType: ContentType.JSON,
 					uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/teams/${teamData.id}/members",
-					query: ['api-version': '5.0-preview.2']
+					query: ['api-version': '5.0']
 					)
 			result.value.each { ridentity ->
 				def identity = ridentity.identity

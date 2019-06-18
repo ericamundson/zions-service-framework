@@ -30,7 +30,7 @@ class SmartDocManagementService {
 		Integer index
 	}
 
-	@Autowired(required=true)
+	@Autowired(required=false)
 	private IGenericRestClient mrGenericRestClient
 	
 	@Autowired(required=true)
