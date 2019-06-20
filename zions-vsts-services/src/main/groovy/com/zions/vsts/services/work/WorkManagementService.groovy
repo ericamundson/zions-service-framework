@@ -14,9 +14,15 @@ import groovy.util.logging.Slf4j
 import groovyx.net.http.ContentType
 
 /**
- * Manages VSTS interaction to create/update work items.
- * o submits batch create/update requests
- * 
+ * Manages VSTS interaction to create, update and delete work items.
+ * <ul>
+ * <li>
+ * Submits batch create/update requests
+ * </li>
+ * <li>
+ * Manages caching of ADO work items to optimize requests made to ADO.
+ * </li>
+ * </ul>
  * @author z091182
  *
  */
