@@ -10,7 +10,9 @@ import org.springframework.boot.Banner
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.ldap.LdapDataAutoConfiguration
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration
 import org.springframework.context.ApplicationContext;
@@ -35,7 +37,7 @@ import org.springframework.context.annotation.Bean;
  * ApplicationRunner <|.. CliApplication
  * @enduml
  */
-@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration,EmbeddedMongoAutoConfiguration])
+@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration,EmbeddedMongoAutoConfiguration,LdapAutoConfiguration,LdapDataAutoConfiguration])
 @Slf4j
 public class CliApplication implements ApplicationRunner {
 	@Autowired
@@ -43,6 +45,7 @@ public class CliApplication implements ApplicationRunner {
 	
 	@Autowired(required=false)
 	SettingsManagementService settingsManagementService
+	
 	
 	/**
 	 * 
