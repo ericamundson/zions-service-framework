@@ -22,7 +22,7 @@ configurations {
 }
 dependencies {
 	compile project(':zions-common')
-	compile 'br.eti.kinoshita:testlink-java-api:1.9.6-1'
+	compile ('br.eti.kinoshita:testlink-java-api:1.9.6-1') { exclude (module: 'slf4j-simple') }
 	integrationTestCompile(
 		'org.springframework.boot:spring-boot-starter-test',
 		'org.springframework:spring-mock:2.0.8',
