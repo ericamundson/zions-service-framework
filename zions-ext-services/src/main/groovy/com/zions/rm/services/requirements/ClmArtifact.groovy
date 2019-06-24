@@ -90,7 +90,7 @@ class ClmArtifact {
 	public def getAttribute(String attrName) {
 		def val = attributeMap."$attrName"
 		if (val) {
-			return val
+			return val.replaceAll('\\r\\n|\\r|\\n', '<br>')
 		}
 		else {
 			return ''
