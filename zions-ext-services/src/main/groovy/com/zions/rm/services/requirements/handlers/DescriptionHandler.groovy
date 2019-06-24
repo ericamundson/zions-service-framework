@@ -118,6 +118,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
                          &nbsp&nbspAffiliate:&nbsp${affiliates.replaceAll(';',', ')}</p>"""
 		}
 		else if (itemData.getArtifactType() == 'Data Interface TCS') {
+			value = removeNamespace("${value}")
 			String touchpoint = itemData.getTitle()
 			String flowType = itemData.getAttribute('Flow Type')
 			String baNCSDirectionTCS = itemData.getAttribute('BaNCS Direction TCS')
@@ -412,8 +413,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		}		
 		else {
 			// strip out all namespace stuff from html
-			String description = "${value}".replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')
-			description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
+			String description = removeNamespace("${value}")
 
 			// Process any embedded images and table formatting
 			outHtml = processHtml(description, sId, itemData)
@@ -422,7 +422,11 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 
 		return outHtml
 	}
-	
+	String removeNamespace(String value) {
+		String description = value.replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')
+		description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
+		return description
+	}
 	def processHtml(String html, String sId, def itemData) {
 		def htmlData
 		try {
