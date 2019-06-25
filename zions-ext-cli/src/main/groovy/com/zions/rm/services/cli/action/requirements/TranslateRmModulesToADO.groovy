@@ -223,11 +223,10 @@ class TranslateRmModulesToADO implements CliAction {
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			log.info("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
 			def moduleUris = clmRequirementsManagementService.queryForModules(rmQuery)
-			def changeList = []
-			def idMap = [:]
-			int iModule = 1
-			int count = 0
 			moduleUris.each { moduleUri ->
+				int count = 0
+				def changeList = []
+				def idMap = [:]
 				log.info("${getCurTimestamp()} - Getting data for module: $moduleUri")
 				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri,false)
 				log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} ...")
@@ -373,6 +372,10 @@ class TranslateRmModulesToADO implements CliAction {
 		else if ((moduleType == 'UI Spec') &&
 			   (artifactType == 'Screen Change' ||
 				artifactType == 'User Interface Flow'))	{
+			shouldMerge = true 
+		}
+		else if ((moduleType == 'Interface Spec') &&
+			   (artifactType == 'Interface Requirement'))	{
 			shouldMerge = true 
 		}
 		return shouldMerge
