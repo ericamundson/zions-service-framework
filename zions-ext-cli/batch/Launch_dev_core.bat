@@ -24,11 +24,19 @@ SET spring.data.mongodb.database=adomigration_dev
 SET selected.checkpoint=none
 
 ::RM specific variables
+SET rm.include.update=flushQueries,whereused,phases
+SET rm.include.phases=requirements
+SET rm.include.update=flushQueries,whereused,phases
+SET rm.include.phases=requirements
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
 SET rm.tfs.areapath=FutureCore\Requirements\R3
+SET rm.sql.resource=/sql/core.sql
 
 ::CCM specific variables
+::blank out include.updates to skip CCM work item migration
+SET ccm.include.update=
+SET ccm.include.phases=
 SET wi.query="workitem/workItem[projectArea/name='Zions FutureCore Program (Change Management)']/(id|modified|state/group|target/archived|target/name|type/name|parent/state/group|parent/target/archived|parent/type/name|related/state/group|related/target/archived|related/type/name)"
 SET ccm.projectArea="Zions FutureCore Program (Change Management)"
 SET ccm.template.dir="e:\bin\batch\templates"
@@ -36,6 +44,9 @@ SET wit.mapping.file=".\CoreCCMMapping.xml"
 SET wi.filter=allFilter
 
 ::QM specific variables
+::blank out include.updates to skip test artifact migration
+SET qm.include.update=
+SET qm.include.phases=
 SET rqm.projectArea="Zions FutureCore Program (Quality Management)"
 SET rqm.template.dir="e:\bin\batch\templates\qm_templates"
 SET rqm.mapping.file="e:/bin/batch/mapping/CoreRQMMapping.xml"
