@@ -13,7 +13,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.boot.autoconfigure.data.ldap.LdapDataAutoConfiguration
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration
 
@@ -24,7 +26,7 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
  * @author z091182
  *
  */
-@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration,EmbeddedMongoAutoConfiguration])
+@SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration,EmbeddedMongoAutoConfiguration,LdapAutoConfiguration,LdapDataAutoConfiguration])
 public class WebSocketServerApplication {
 
 
