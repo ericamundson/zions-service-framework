@@ -639,13 +639,15 @@ class DataWarehouseQueryData implements CacheWData {
 	}
 }
 
+@Slf4j
 class SqlLoader {
 	
 	String sqlQuery(String sqlresource) {
-		InputStream is = this.getClass().getResource(sqlresource).openStream()
+		if (sqlresource.startsWith('/')) sqlresource=sqlresource.substring(1)
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream(sqlresource)
 		//File sqlFile = new File(url.file)
 		String sql = is.text
+		log.debug("Retrieved SQL query: ${sql}")
 		return sql
 	}
-
 }
