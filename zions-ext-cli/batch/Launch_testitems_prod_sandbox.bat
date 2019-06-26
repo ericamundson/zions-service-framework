@@ -30,7 +30,7 @@ SET rm.include.phases=requirements
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
 SET rm.tfs.areapath=FutureCore\Requirements\MigrationTest
-SET rm.sql.resource=/sql/coretest.sql
+SET rm.sql.resource=sql/coretest.sql
 
 
 ::CCM specific variables
