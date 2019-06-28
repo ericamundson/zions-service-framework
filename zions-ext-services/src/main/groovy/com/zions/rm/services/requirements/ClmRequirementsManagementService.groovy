@@ -77,7 +77,7 @@ class ClmRequirementsManagementService {
 	@Autowired(required=false)
 	IDatabaseQueryService databaseQueryService
 	
-	@Value('${sql.resource.name:/sql/corex.sql}') 
+	@Value('${sql.resource.name:/sql/core.sql}') 
 	String sqlResourceName
 	
 
@@ -643,6 +643,7 @@ class DataWarehouseQueryData implements CacheWData {
 class SqlLoader {
 	
 	String sqlQuery(String sqlresource) {
+		log.debug("Sql file at ${sqlresource}")
 		if (sqlresource.startsWith('/')) sqlresource=sqlresource.substring(1)
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(sqlresource)
 		//File sqlFile = new File(url.file)
