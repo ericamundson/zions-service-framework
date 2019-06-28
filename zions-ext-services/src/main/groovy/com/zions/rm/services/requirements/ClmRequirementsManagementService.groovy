@@ -77,7 +77,7 @@ class ClmRequirementsManagementService {
 	@Autowired(required=false)
 	IDatabaseQueryService databaseQueryService
 	
-	@Value('${sql.resource.name:/sql/core.sql}') 
+	@Value('${sql.resource.name:/sql/corex.sql}') 
 	String sqlResourceName
 	
 
