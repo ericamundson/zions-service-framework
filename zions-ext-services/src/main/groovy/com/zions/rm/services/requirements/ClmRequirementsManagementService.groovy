@@ -200,11 +200,15 @@ class ClmRequirementsManagementService {
 	//
 	/**
 	 * @param maxPage - For testing purposes
+	 * @param delta - Set to true if doing an update so we do not overwrite the queryStart (used as the beginning of delta queries)
 	 * @return
 	 */
-	def flushQueries(int maxPage = -1) {
+	def flushQueries(boolean delta = false, int maxPage = -1) {
 		Date ts = new Date()
-		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+		if (!delta) {
+			log.info("Writing new QueryStart timestamp for RM")
+			cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+		}
 		int pageCount = 0
 		def currentItems
 		def iUrl

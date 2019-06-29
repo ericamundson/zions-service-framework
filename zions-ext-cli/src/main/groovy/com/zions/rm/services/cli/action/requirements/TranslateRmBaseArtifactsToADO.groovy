@@ -204,6 +204,11 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			clmRequirementsManagementService.flushQueries()
 			log.info("Finished refreshing cache of main DNG query from JRS, future operations should use this cache")
 		}
+		if (includes['flushQueriesDelta'] != null) {
+			log.info("Refreshing cache of main DNG query from JRS")
+			clmRequirementsManagementService.flushQueries(true)
+			log.info("Finished refreshing cache of main DNG query from JRS, future operations should use this cache")
+		}
 		if (includes['whereused'] != null) {
 			log.info("fetching 'where used' lookup records")
 			if (clmRequirementsManagementService.queryForWhereUsed()) {

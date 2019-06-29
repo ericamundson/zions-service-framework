@@ -5,33 +5,31 @@ SET clm.password=t35T1ng411rTcM!gR@t10n
 SET mr.url=http://utmvti0190:8026
 SET clm.url=https://clm.cs.zionsbank.com
 SET clm.pageSize=100
+SET tfs.url=https://dev.azure.com
+SET tfs.collection=eto-dev
 SET clm.projectAreaUri=_klNSEBNGEeSmasotILOx6w
 
-SET tfs.url=https://dev.azure.com
-SET tfs.collection=ZionsETO
-SET tfs.project=Sandbox
+SET tfs.project=FutureCore
 SET process.name=ZionsAgile
-SET tfs.projectUri={344d4a70-f0d4-4b64-a725-4b2e321dd473}
+SET tfs.projectUri={b95a29af-917f-4762-b4bc-c716e7a33b18}
 SET tfs.projectFolder=FutureCore
 SET tfs.isDefaultTeam=true
-SET tfs.teamGuid={7abc7bf9-9624-40cf-a511-38142b3bebd4}
-SET tfs.collectionId={931ea459-abea-43db-9aed-eb489dee1e5e}
-set tfs.token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im9PdmN6NU1fN3AtSGpJS2xGWHo5M3VfVjBabyJ9.eyJuYW1laWQiOiIzNWI2N2UzYi1kMTRlLTZmNjEtYmIyYS05ZWVhZmY0MjMzMzgiLCJzY3AiOiJhcHBfdG9rZW4iLCJhdWkiOiJiOTJmYjg4OS0yYTc4LTQyZDctODNiMC0zYzg2NTRlNGJlMDUiLCJzaWQiOiI1NzM1Y2UzNi1mNWU0LTRhNjYtOWI0Ni1jMzIzZjlmYzBhZmUiLCJpc3MiOiJhcHAudnN0b2tlbi52aXN1YWxzdHVkaW8uY29tIiwiYXVkIjoiYXBwLnZzdG9rZW4udmlzdWFsc3R1ZGlvLmNvbXx2c286OTMxZWE0NTktYWJlYS00M2RiLTlhZWQtZWI0ODlkZWUxZTVlIiwibmJmIjoxNTYxNDc3NTc1LCJleHAiOjE1NjE0ODE3NzV9.A1QvNF1yWJVU3lwxyZf5sZNE2Ztp3Mrvi63LgaCLSr8vAAk2j5jj5hZlSaB7fHQUOomo9p6E0nCDi-iCiO-Pwksq825IPtLspD9bFsAlvwRGR28k-f75eRC9pKICLdR5BZM3lbpP1MCU5gXEv-wzSkt5fT17DPg5oFu1K2aNa0Alj1SlXEwBR1Vlo6Se8DYUaDZgmIHjmKYfALmxB1U-SMKiYtIvuUsbQukYOlKilOVaMKtDnIPQJ3F7eZzz9RefjEmK-qoq4iXIB-4zBnNJNTVRgLVnww3AqG37Vsxd_SeUZXupa5bghUQpPMwfF-2T8zzIYVDiWbdBqS9WVeo1_A
+SET tfs.teamGuid=dbe48e2d-5113-471a-976d-eb8c1dffa7c5
+SET tfs.collectionId=1bec1897-29a0-44d0-80a8-670c5ae5ef4a
+set tfs.token=5ygjaomvtrq6jgtxyrbpqsvahj2kuzzq6tjxgllrc76j7cbwzp4a
 ::that token was in the RQM execution?
 
-SET db.project=coresandbox
-SET spring.data.mongodb.database=adomigration_sand
+SET db.project=core
+SET spring.data.mongodb.database=adomigration_dev
 SET selected.checkpoint=none
 
 ::RM specific variables
-::blank out include.updates to skip RM artifact migration
-SET rm.include.update=flushQueries,whereused,phases
+SET rm.include.update=flushQueriesUpdate,whereused,phases
 SET rm.include.phases=requirements
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
-SET rm.tfs.areapath=FutureCore\Requirements\MigrationTest
-SET rm.sql.resource=sql/coretest.sql
-
+SET rm.tfs.areapath=FutureCore\Requirements\R3
+SET rm.sql.resource=sql/coreupdate.sql
 
 ::CCM specific variables
 ::blank out include.updates to skip CCM work item migration
@@ -54,16 +52,15 @@ SET rqm.query="none"
 SET rqm.filter=allFilter
 SET rqm.tfs.areapath="FutureCore\\Test"
 
-SET logdir=E:\bin\batch\logs\prodsandbox
-::don't need to change these regularly if you set the above folder to target environment/project
+SET logdir=E:\bin\batch\logs\dev
+::don't need to change these regularly
 SET log.rqm=%logdir%\translate_RQMtoADO.log
 SET log.dng=%logdir%\translate_DNGtoADO.log
 SET log.ccm=%logdir%\translate_CCMtoADO.log
 
 ::not using these items I think
 SET cache.location=e:\cache
-::this should instead be the tfs.users in each application-xdb.properties
-SET tfs.user=robert.huet@zionsbancorp.com
+SET tfs.user=robert.huet@zionsbancorp.com ::this should instead be the tfs.users in each application-xdb.properties
 
 ::in this window, call the script that sequences other scripts
 call orchestration_master.bat
