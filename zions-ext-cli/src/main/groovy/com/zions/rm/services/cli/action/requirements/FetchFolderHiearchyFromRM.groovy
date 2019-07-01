@@ -184,7 +184,7 @@ class FetchFolderHiearchyFromRM implements CliAction {
 			clmRequirementsManagementService.getTextArtifact(artifact,false,false)
 		}
 		else if (format == 'WrapperResource'){
-			clmRequirementsManagementService.getNonTextArtifact(artifact,false)
+			clmRequirementsManagementService.getNonTextArtifact(artifact,false,false)
 		}
 		else {
 			println("WARNING: Unsupported format of $format for artifact id: $identifier")

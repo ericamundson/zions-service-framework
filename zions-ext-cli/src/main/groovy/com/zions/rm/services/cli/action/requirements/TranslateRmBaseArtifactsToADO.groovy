@@ -282,12 +282,12 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					clmRequirementsManagementService.getTextArtifact(artifact,false,true)
 				} catch (Exception e) {
 					checkpointManagementService.addLogentry("getTextArtifact for ${sid} generated an exception and was not added as a change")
-					
+					return
 				}
 			}
 			else if (format == 'WrapperResource'){
 				try {
-					clmRequirementsManagementService.getNonTextArtifact(artifact,true)
+					clmRequirementsManagementService.getNonTextArtifact(artifact,false,true)
 				} catch (Exception e) {
 					checkpointManagementService.addLogentry("getNonTextArtifact for ${sid} generated an exception and was not added as a change")
 					return
