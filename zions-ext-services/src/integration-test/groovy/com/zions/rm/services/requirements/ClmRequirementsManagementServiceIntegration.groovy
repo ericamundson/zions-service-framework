@@ -141,7 +141,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		when: 'Run a partial flush of two pages of requirements artifact query'
 		boolean success = true
 		try {
-			underTest.flushQueries(2)
+			underTest.flushQueries(false,2)
 		} catch (e) {
 			e.printStackTrace()
 			success = false
