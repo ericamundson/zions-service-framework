@@ -556,7 +556,6 @@
 		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
 		<field source="reportPartHandler" target="Custom.ReportPart"/>
 		<field source="tableHandler" target="Custom.Table"/>
-		<field source="reportPartHandler" target="Custom.ReportPart"/>
 		<field source="fieldExistsHandler" target="Custom.FieldExists"/>
 		<field source="dBFieldNameHandler" target="DBFieldName.Format"/>
 		<field source="infoCommentsHandler" target="Custom.Remarks"/>
