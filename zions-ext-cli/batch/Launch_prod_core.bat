@@ -31,7 +31,7 @@ SET rm.include.update=flushQueries,whereused,phases
 SET rm.include.phases=requirements
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
-SET rm.tfs.areapath=FutureCore\Requirements\MigrationTest
+SET rm.tfs.areapath=BaNCS\Requirements\R3
 SET rm.sql.resource=sql/core.sql
 
 
