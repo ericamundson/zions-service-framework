@@ -52,19 +52,27 @@ class BaseDatabaseQueryHandler implements IQueryHandler {
 	//retrieves items from oracle
 	public def getItems() {
 		def cp = cacheManagementService.getFromCache('query', 'QueryStart')
+		def deltaCacheDate = cacheManagementService.getFromCache('last', 'QueryDelta')
+		def queryEndDate
 		page=0
 		if (cp) {
 			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
-			log.debug("Timestamp retrieved from cache: ${currentTimestamp}")
+			queryEndDate = currentTimestamp;
+			log.debug("QueryStart retrieved from cache: ${currentTimestamp}")
 		} 
+		if (deltaCacheDate) {
+			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", deltaCacheDate.timestamp)
+			log.debug("Delta querystart in cache, running delta job from QueryStart to ${currentTimestamp}")
+		}
+		log.info("Performing delta on update from original QueryStart date to ${queryEndDate}")
 //		else {
 //			cacheManagementService.saveToCache([timestamp: currentTimestamp.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
 //			log.debug("Creating first QueryStart cache for RM")
 //		}
 		String pageId = "${page}"
-		log.debug("getItems for page ${pageId} at timestamp ${currentTimestamp}")
+		log.debug("getItems for page ${pageId} with cache pages taken ${currentTimestamp}")
 		new CacheInterceptor() {}.provideCaching(clmRequirementsManagementService, pageId, currentTimestamp, DataWarehouseQueryData) {
-			currentItems = clmRequirementsManagementService.queryDatawarehouseSource(currentTimestamp)
+			currentItems = clmRequirementsManagementService.queryDatawarehouseSource(queryEndDate)
 		}
 		return currentItems
 	}
