@@ -100,11 +100,11 @@ class SmartDocManagementService {
 				}
 				if (i < module.orderedArtifacts.size() - 1 && module.orderedArtifacts[i+1].getDepth() > module.orderedArtifacts[i].getDepth()) {
 					def wiDetails = getWorkitemDetails(i+1, module)
-					jsonString = jsonString + """{"id":"${getVstsID(artifact)}","linkType":"Related","links":${wiDetails.detailString}}"""
+					jsonString = jsonString + """{"id":"${getVstsID(artifact)}","linkType":"","links":${wiDetails.detailString}}"""
 					i = wiDetails.index	
 				}
 				else {
-					jsonString = jsonString + """{"id":"${getVstsID(artifact)}","linkType":"Related"}"""
+					jsonString = jsonString + """{"id":"${getVstsID(artifact)}","linkType":""}"""
 					i++
 				}
 			}

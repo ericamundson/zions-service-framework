@@ -158,7 +158,7 @@ class ClmRequirementsManagementService {
 							}
 						}
 						else {
-							getNonTextArtifact(artifact, cacheLinks)
+							getNonTextArtifact(artifact, true, cacheLinks)
 						}
 				}
 				def j = 1
@@ -409,32 +409,39 @@ class ClmRequirementsManagementService {
 		}
 		return memberHrefs
 	}
-	def getNonTextArtifact(def in_artifact, boolean cacheLinks) {
+	def getNonTextArtifact(def in_artifact, boolean includeCollections, boolean cacheLinks) {
 		//log.debug("fetching non-text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/resources?resourceURI="),
 				headers: [Accept: 'application/xml'] );
 					
-		// Extract artifact attributes
-		result.children().each { artifactNode ->
-			parseTopLevelAttributes(artifactNode, in_artifact)
-			if (cacheLinks) parseLinksFromArtifactNode(artifactNode, in_artifact)
-			artifactNode.children().each { child ->
-				String iName = child.name()
-				if (iName == "collaboration" ) {
-					// Set artifact type and attributes
-					String artifactType = parseCollaborationAttributes( child, in_artifact.attributeMap)
-					in_artifact.setArtifactType(artifactType)
-				}
-				else if (iName == "wrappedResourceURI") {
-					// Set primary text
-					String primaryText = "<div>Uploaded Attachment</div>"
-					in_artifact.setDescription(primaryText)
-					String hRef = "${child}"
-					in_artifact.setFileHref(hRef)
-				}
+		// Should only be on artfact node
+		def artifactNode = result.children()[0]
+		
+		// First validate that this is not a text format (which could happen if a WrapperResource is embedded in a text artifact)
+		if ("${artifactNode.format}" == "Text") {
+			return getTextArtifact(in_artifact, includeCollections, cacheLinks)
+		}
+		
+		// Parse artifact attributes
+		parseTopLevelAttributes(artifactNode, in_artifact)
+		if (cacheLinks) parseLinksFromArtifactNode(artifactNode, in_artifact)
+		artifactNode.children().each { child ->
+			String iName = child.name()
+			if (iName == "collaboration" ) {
+				// Set artifact type and attributes
+				String artifactType = parseCollaborationAttributes( child, in_artifact.attributeMap)
+				in_artifact.setArtifactType(artifactType)
+			}
+			else if (iName == "wrappedResourceURI") {
+				// Set primary text
+				String primaryText = "<div>Uploaded Attachment</div>"
+				in_artifact.setDescription(primaryText)
+				String hRef = "${child}"
+				in_artifact.setFileHref(hRef)
 			}
 		}
+		
 		
 		return in_artifact
 
@@ -471,6 +478,8 @@ class ClmRequirementsManagementService {
 	}
 	
 	private void parseTopLevelAttributes(def artifactNode, def in_artifact) {
+		in_artifact.setFormat("${artifactNode.format}")
+		
 		String title = "${artifactNode.title}"
 		if (title == '') {
 			title= "${artifactNode.description}"

@@ -266,7 +266,8 @@ class TranslateRmModulesToADO implements CliAction {
 						module.orderedArtifacts[it].setDescription('') 
 					}
 					// If Reporting Requirement in Reporting RRZ, do not migrate the artifact
-					else if (module.getArtifactType()== 'Reporting RRZ' && module.orderedArtifacts[it].getArtifactType() == 'Reporting Requirement') {
+					else if (module.getArtifactType()== 'Reporting RRZ' && (module.orderedArtifacts[it].getArtifactType() == 'Reporting Requirement'||
+																			module.orderedArtifacts[it].getArtifactType() == 'Reporting RRZ')) {
 						module.orderedArtifacts[it].setIsDeleted(true)
 					}
 					// Only store first occurrence of an artifact in the module

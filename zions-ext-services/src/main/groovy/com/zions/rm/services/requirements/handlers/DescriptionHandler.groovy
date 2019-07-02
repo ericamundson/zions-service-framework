@@ -451,24 +451,24 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 				// Need to pull in the attachment for the embedded wrapped resource
 				def about = clmUrl + '/rm/resources/' + url.substring(wrapNdx+74)
 				def wrappedResourceArtifact = new ClmArtifact('','',about)
-				wrappedResourceArtifact = clmRequirementsManagementService.getNonTextArtifact(wrappedResourceArtifact, false)
+				wrappedResourceArtifact = clmRequirementsManagementService.getNonTextArtifact(wrappedResourceArtifact, false, false)
 				fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, wrappedResourceArtifact.getFileHref())
 				if(fileItem) {
-				// Now delete image node
-				String attachmentLink
-				if (isImageFile("${fileItem.fileName}")) {
-					// Convert uploaded image to an embedded image
-					attachmentLink = "<div><img alt='Embedded image' src='" + fileItem.url + "'/></div>"
-				}
-				else {
-					attachmentLink = "<div><a href='" + fileItem.url + "&amp;download=true'>Uploaded Attachment: ${fileItem.fileName}</a></div>"
-				}
-				if (wrapperRootNode) {
-					wrapperRootNode.appendNode(new XmlSlurper().parseText(attachmentLink))
-				}
-				else {
-					wrapperRootNode = new XmlSlurper().parseText(attachmentLink)
-				}
+					// Now delete image node
+					String attachmentLink
+					if (isImageFile("${fileItem.fileName}")) {
+						// Convert uploaded image to an embedded image
+						attachmentLink = "<div><img alt='Embedded image' src='" + fileItem.url + "'/></div>"
+					}
+					else {
+						attachmentLink = "<div><a href='" + fileItem.url + "&amp;download=true'>Uploaded Attachment: ${fileItem.fileName}</a></div>"
+					}
+					if (wrapperRootNode) {
+						wrapperRootNode.appendNode(new XmlSlurper().parseText(attachmentLink))
+					}
+					else {
+						wrapperRootNode = new XmlSlurper().parseText(attachmentLink)
+					}
 				} else {
 					log.error("unable to parse a file attachment of ID ${sId}")
 				}
