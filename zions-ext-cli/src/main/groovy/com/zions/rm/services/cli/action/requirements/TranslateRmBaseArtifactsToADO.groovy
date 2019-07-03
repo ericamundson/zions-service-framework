@@ -318,8 +318,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 			//}
 		} else {
-			log.debug("Had an error getting the ID of an item, skipping")
-			//todo: add an error to the checkpoint error log
+			checkpointManagementService.addLogentry("Had an error getting the ID of an item, skipping.")
 		}
 	}
 
