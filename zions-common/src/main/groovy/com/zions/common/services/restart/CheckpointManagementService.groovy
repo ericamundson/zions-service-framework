@@ -50,6 +50,7 @@ class CheckpointManagementService implements ICheckpointManagementService {
 	public Object addLogentry(String entry) {
 		if (currentCheckpoint == null) return;
 		currentCheckpoint.logEntries.add(entry)
+		log.error("checkpoint-logged error: ${entry}")
 		cacheManagementService.saveToCache(currentCheckpoint, "${idCounter-1}-${CACHE_TYPE}", CACHE_TYPE)
 		return null
 	}
