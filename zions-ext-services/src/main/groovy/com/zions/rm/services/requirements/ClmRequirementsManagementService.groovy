@@ -108,7 +108,7 @@ class ClmRequirementsManagementService {
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/xml'] );
-			
+		
 		// Extract and instantiate the ClmRequirementsmodules
 		def module = result.artifact[0]
 		String moduleType = ""
@@ -205,16 +205,30 @@ class ClmRequirementsManagementService {
 	 */
 	def flushQueries(boolean delta = false, int maxPage = -1) {
 		Date ts = new Date()
+		Date queryEndDate;
+		
+		//if this is not a delta run, queryEndDate and the QueryStart value are identical as usual
 		if (!delta) {
 			log.info("Writing new QueryStart timestamp for RM")
 			cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+			queryEndDate = ts;
+		} else {
+			//if this is a delta run, we want a new date for cache purposes (or it will reuse the original query pages)
+			//but we want to not touch QueryStart as that is what our delta is based on
+			//in theory this could shuffle to delta from the last delta, but it makes testing a pain for now
+			def cp = cacheManagementService.getFromCache('query', 'QueryStart')
+			if (cp) {
+				cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'last', 'QueryDelta')
+				queryEndDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
+			}
+			log.info("Performing delta on update from original QueryStart date ${queryEndDate}")
 		}
 		int pageCount = 0
 		def currentItems
 		def iUrl
-//		try {
+
 		new CacheInterceptor() {}.provideCaching(this, "${pageCount}", ts, DataWarehouseQueryData) {
-			currentItems = this.queryDatawarehouseSource(ts)
+			currentItems = this.queryDatawarehouseSource(queryEndDate)
 		}
 		while (true) {
 			iUrl = this.pageUrlDb()
