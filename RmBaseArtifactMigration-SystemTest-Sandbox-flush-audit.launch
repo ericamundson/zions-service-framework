@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-ext-cli/src/main/groovy/com/zions/ext/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="translateRmBaseArtifactsToADO&#13;&#10; --include.update=flushQueries,phases&#13;&#10; --include.phases=audit&#13;&#10; --mr.url=http://utmvti0190:8026&#13;&#10; --clm.url=https://clm.cs.zionsbank.com&#13;&#10; --clm.user=svc-rtcmigration&#13;&#10; --clm.password=t35T1ng411rTcM!gR@t10n &#13;&#10; --clm.pageSize=10&#13;&#10; --tfs.url=https://dev.azure.com&#13;&#10; --tfs.collection=ZionsETO&#13;&#10; --tfs.user=robert.huet@zionsbancorp.com &#13;&#10; --tfs.token=vnfgymavzc7njwt4lxcahf6zlsljfrvogeelo6higd4a6nojlxha&#13;&#10; --clm.projectAreaUri=_klNSEBNGEeSmasotILOx6w&#13;&#10; --rm.mapping.file=./CoreRRMMapping.xml&#13;&#10; --tfs.project=Sandbox&#13;&#10; --process.name=ZionsAgile&#13;&#10; --rm.filter=allFilter&#13;&#10; --tfs.areapath=Sandbox\BaNCS\Requirements\MigrationTest&#13;&#10; --tfs.projectUri={b95a29af-917f-4762-b4bc-c716e7a33b18}&#13;&#10; --tfs.projectFolder=Sandbox&#13;&#10; --tfs.isDefaultTeam=true&#13;&#10; --tfs.teamGuid=dbe48e2d-5113-471a-976d-eb8c1dffa7c5&#13;&#10; --tfs.collectionId=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&#13;&#10; --db.project=coresandbox&#13;&#10; --spring.data.mongodb.database=adomigration_sand&#13;&#10; --cache.location=C:\\rmtestcachesandbox&#13;&#10; --cache.module=RM &#13;&#10; --logging.level.root=INFO&#13;&#10; --logging.file=&quot;c:\\logs\\MigrationTranslateRMToADO_audit.log&quot;&#13;&#10; --selected.checkpoint=none&#13;&#10; --sql.resource.name=sql/coretest.sql"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=rmdb -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=svc-rtcmigration -Dproxy.Password=t35T1ng411rTcM!gR@t10nd"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>
