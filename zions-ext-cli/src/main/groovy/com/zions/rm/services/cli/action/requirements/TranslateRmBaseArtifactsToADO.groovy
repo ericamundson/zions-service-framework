@@ -299,7 +299,8 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				}
 			}
 			else {
-				log.info("WARNING: Unsupported format of $format for artifact id: ${sid}")
+				checkpointManagementService.addLogentry("Unsupported format of $format for artifact id: ${sid}")
+				return
 			}
 
 			//new FlowInterceptor() {}.flowLogging(clManager) {

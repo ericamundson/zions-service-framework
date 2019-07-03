@@ -552,12 +552,10 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
-		<field source="sequenceNoHandler" target="Custom.SequenceNo"/>
 		<field source="labelAlignmentHandler" target="Custom.LabelAlignment"/>
 		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
 		<field source="reportPartHandler" target="Custom.ReportPart"/>
 		<field source="tableHandler" target="Custom.Table"/>
-		<field source="reportPartHandler" target="Custom.ReportPart"/>
 		<field source="fieldExistsHandler" target="Custom.FieldExists"/>
 		<field source="dBFieldNameHandler" target="DBFieldName.Format"/>
 		<field source="infoCommentsHandler" target="Custom.Remarks"/>

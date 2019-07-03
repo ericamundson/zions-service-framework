@@ -79,7 +79,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		else if (itemData.getArtifactType() == 'Report Summary Fields') {
 			String field = itemData.getAttribute('Field Name')
 			String valFormat = itemData.getAttribute('Value Format')
-			String alignment = itemData.getAttribute('Alignment')
+			String alignment = itemData.getAttribute('Data Alignment')
 			String calc = itemData.getAttribute('Calculation Needed - Y/N')
 			outHtml = """<div><p><b>Report Field Name:</b>&nbsp$field</p>
                          <p><b>Value Format:</b>&nbsp$valFormat</p>
@@ -132,53 +132,17 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			String messageTypes = itemData.getAttribute('Message Types')
 			String characterSet = itemData.getAttribute('Character Set')
 			String frequencyofData = itemData.getAttribute('Frequency of Data')
-			String channelProtocol = itemData.getAttribute('Channel Protocol')
-			String channelDirection = itemData.getAttribute('Channel Direction')
-			String channelFailover = itemData.getAttribute('Channel Failover/offline')
-			String channelRetryLimit = itemData.getAttribute('Channel Retry Limit')
-			String channelValidationofData = itemData.getAttribute('Channel Validation of Data')
-			String channelRegistrationofData = itemData.getAttribute('Channel Registration of Data')
-			String duplicateCheck = itemData.getAttribute('Duplicate Check')
-			String duplicateCriteria = itemData.getAttribute('Duplicate Criteria')
-			String domainValidation = itemData.getAttribute('Domain Validation')
-			String networkValidation = itemData.getAttribute('Network Validation')
-			String xsdValidation = itemData.getAttribute('XSD Validation')
-			String groupingUngroupingofdatarequired = itemData.getAttribute('Grouping/Ungrouping of data required')
-			String groupingUngroupingcriteria = itemData.getAttribute('Grouping/Ungrouping criteria')
-			String businessMapping = itemData.getAttribute('Business Mapping')
-			String staticRouting = itemData.getAttribute('Static Routing')
-			String dynamicRouting = itemData.getAttribute('Dynamic Routing')
-			String multipleRouting = itemData.getAttribute('Multiple Routing')
-			String routingCriteria = itemData.getAttribute('Routing Criteria')
-			String reconciliation = itemData.getAttribute('Reconciliation')
-			String rejectFileonError = itemData.getAttribute('Reject File on Error')
-			String noDataHandling = itemData.getAttribute('No Data Handling')
-			String alertCriteria = itemData.getAttribute('Alert Criteria')
-			String alertProcedure = itemData.getAttribute('Alert Procedure')
-			String technicalExceptionHandling = itemData.getAttribute('Technical Exception Handling')
-			String businessExceptionHandling = itemData.getAttribute('Business Exception Handling')
 			String dependenciesonTransactions = itemData.getAttribute('Dependencies on Transactions')
 			String dependenciesonEOD = itemData.getAttribute('Dependencies on EOD')
 			String dependenciesonCutOffTime = itemData.getAttribute('Dependencies on Cut-Off Time')
 			String dependenciesonApps = itemData.getAttribute('Dependencies on Apps')
 			String dependencyOwner = itemData.getAttribute('Dependency Owner')
-			String serviceIntegratorRequirement = itemData.getAttribute('Service Integrator Requirement')
-			String archival = itemData.getAttribute('Archival/Retention Period')
-			String purgingPeriod = itemData.getAttribute('Purging Period')
 			String allMessageReport = itemData.getAttribute('All Message Report')
 			String exceptionReport = itemData.getAttribute('Exception Report')
 			String reconciliationReport = itemData.getAttribute('Reconciliation Report')
 			String dataMigrationRequirement = itemData.getAttribute('Data Migration Requirement')
 			String multiEntityImpact = itemData.getAttribute('Multi Entity Impact')
 			String phasedImplementationImpact = itemData.getAttribute('Phased Implementation Impact')
-			String tps = itemData.getAttribute('TPS')
-			String payloadSize = itemData.getAttribute('Payload Size')
-			String responseTime = itemData.getAttribute('Response Time')
-			String subscriptionRate = itemData.getAttribute('Subscription Rate')
-			String timetoSubscribe = itemData.getAttribute('Time to Subscribe')
-			String executionTime = itemData.getAttribute('Execution Time')
-			String recordCount = itemData.getAttribute('Record Count')
-			String timeofDay = itemData.getAttribute('Time of Day')
 			outHtml = """<div>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314955" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
 <td colspan="1" id="_1559767314967" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
@@ -218,29 +182,6 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314805" style="margin-left:.25in;">$characterSet</p></td></tr><tr><td colspan="1" id="_1559767314993" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314806" style="margin-left:.25in;"><b>Frequency of Data</b></p></td><td colspan="1" id="_1559767314994" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314807" style="margin-left:.25in;">$frequencyofData</p> </td></tr></tbody></table>
-<h3 dir="ltr" id="_1559767314938">Communication Channel</h3>
-<p dir="ltr" id="_1559767314808" style="margin-left:.25in;">Specification ID: $touchpoint</p>
-<p dir="ltr" id="_1559767314809" style="margin-left:.25in;">This section contains the information about the incoming or outgoing data including the data format.</p>
-<table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314957" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
-<td colspan="1" id="_1559767314995" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314810" style="margin-left:.25in;"><span style="color:white">Item</span></p></td>
-<td colspan="1" id="_1559767314996" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314811" style="margin-left:.25in;"><span style="color:white">Value</span></p></td></tr> <tr><td colspan="1" id="_1559767314997" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314812" style="margin-left:.25in;"><b>Protocol</b></p></td><td colspan="1" id="_1559767314998" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314813" style="margin-left:.25in;">$channelProtocol</p></td></tr><tr><td colspan="1" id="_1559767314999" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314814" style="margin-left:.25in;"><b>Direction</b></p></td><td colspan="1" id="_1559767315000" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314815" style="margin-left:.25in;">$channelDirection</p></td></tr> <tr><td colspan="1" id="_1559767315001" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314816" style="margin-left:.25in;"><b>Failover / offline channel</b></p></td><td colspan="1" id="_1559767315002" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314817" style="margin-left:.25in;">$channelFailover</p></td></tr><tr><td colspan="1" id="_1559767315003" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314818" style="margin-left:.25in;"><b>Channel retry limit</b></p></td><td colspan="1" id="_1559767315004" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314819" style="margin-left:.25in;">$channelRetryLimit</p> </td></tr><tr><td colspan="1" id="_1559767315005" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314820" style="margin-left:.25in;"><b>Validation of data at channel required</b></p></td><td colspan="1" id="_1559767315006" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314821" style="margin-left:.25in;">$channelValidationofData</p></td></tr><tr><td colspan="1" id="_1559767315007" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314822" style="margin-left:.25in;"><b>Registration of the data required</b></p></td><td colspan="1" id="_1559767315008" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314823" style="margin-left:.25in;">$channelRegistrationofData</p></td></tr></tbody></table>
-<h3 dir="ltr" id="_1559767314939">IO Data Format</h3>
-<p dir="ltr" id="_1559767314824" style="margin-left:.25in;">Specification ID:$touchpoint</p>
-<p dir="ltr" id="_1559767314825" style="margin-left:.25in;">The following IOF document will be generated separately from Rational: ${touchpoint.replace("ISZ-", "IOF-")}.xlsx</p>
 <h3 dir="ltr" id="_1559767314940">Processing</h3>
 <p dir="ltr" id="_1559767314826" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314958" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
@@ -250,74 +191,6 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314828" style="margin-left:.25in;"><span style="color:white">Value</span></p></td></tr> <tr><td colspan="1" id="_1559767315011" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314829" style="margin-left:.25in;"><b>When is the data produced</b></p></td><td colspan="1" id="_1559767315012" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314830" style="margin-left:.25in;"><span style="color:black">$value</span></p></td></tr></tbody></table>
-<h3 dir="ltr" id="_1559767314941">Validation</h3>
-<p dir="ltr" id="_1559767314831" style="margin-left:.25in;">Specification ID:$touchpoint</p>
-<table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314959" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
-<td colspan="1" id="_1559767315013" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314832" style="margin-left:.25in;"><span style="color:white">Item</span></p></td>
-<td colspan="1" id="_1559767315014" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314833" style="margin-left:.25in;"><span style="color:white">Value</span></p></td></tr> <tr><td colspan="1" id="_1559767315015" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314834" style="margin-left:.25in;"><b>Duplicate check required</b></p></td><td colspan="1" id="_1559767315016" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314835" style="margin-left:.25in;">$duplicateCheck</p></td></tr><tr><td colspan="1" id="_1559767315017" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314836" style="margin-left:.25in;"><b>Duplicate criteria</b></p></td><td colspan="1" id="_1559767315018" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314837" style="margin-left:.25in;">$duplicateCriteria</p></td></tr> <tr><td colspan="1" id="_1559767315019" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314838" style="margin-left:.25in;"><b>Domain Validation</b></p> </td><td colspan="1" id="_1559767315020" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314839" style="margin-left:.25in;">$domainValidation</p></td></tr><tr><td colspan="1" id="_1559767315021" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314840" style="margin-left:.25in;"><b>Network Validation</b></p></td><td colspan="1" id="_1559767315022" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314841" style="margin-left:.25in;">$networkValidation</p> </td></tr><tr><td colspan="1" id="_1559767315023" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314842" style="margin-left:.25in;"><b>XSD Validation</b></p></td><td colspan="1" id="_1559767315024" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314843" style="margin-left:.25in;">$xsdValidation</p></td></tr></tbody></table>
-<h3 dir="ltr" id="_1559767314942">Grouping/Ungrouping</h3>
-<p dir="ltr" id="_1559767314844" style="margin-left:.25in;">Specification ID:$touchpoint</p>
-<table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314960" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
-<td colspan="1" id="_1559767315025" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314845" style="margin-left:.25in;"><span style="color:white">Item</span></p></td>
-<td colspan="1" id="_1559767315026" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314846" style="margin-left:.25in;"><span style="color:white">Value</span></p></td></tr> <tr><td colspan="1" id="_1559767315027" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314847" style="margin-left:.25in;"><b>Grouping/Ungrouping of data required</b></p></td><td colspan="1" id="_1559767315028" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314848" style="margin-left:.25in;">$groupingUngroupingofdatarequired</p></td></tr><tr><td colspan="1" id="_1559767315029" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314849" style="margin-left:.25in;"><b>Grouping/Ungrouping criteria</b></p></td><td colspan="1" id="_1559767315030" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314850" style="margin-left:.25in;">$groupingUngroupingcriteria</p></td></tr></tbody></table>
-<h3 dir="ltr" id="_1559767314943">Business Mapping</h3>
-<p dir="ltr" id="_1559767314851" style="margin-left:.25in;">Specification ID:$touchpoint</p>
-<p dir="ltr" id="_1559767314852" style="margin-left:.25in;">$businessMapping</p>
-<h3 dir="ltr" id="_1559767314944">Routing</h3>
-<p dir="ltr" id="_1559767314853" style="margin-left:.25in;">Specification ID:$touchpoint</p>
-<table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314961" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
-<td colspan="1" id="_1559767315031" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314854" style="margin-left:.25in;"><span style="color:white">Item</span></p></td>
-<td colspan="1" id="_1559767315032" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314855" style="margin-left:.25in;"><span style="color:white">Value</span></p></td></tr> <tr><td colspan="1" id="_1559767315033" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314856" style="margin-left:.25in;"><b>Static routing</b></p></td> <td colspan="1" id="_1559767315034" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314857" style="margin-left:.25in;">$staticRouting</p></td></tr><tr><td colspan="1" id="_1559767315035" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314858" style="margin-left:.25in;"><b>Dynamic routing</b></p></td><td colspan="1" id="_1559767315036" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314859" style="margin-left:.25in;">$dynamicRouting</p></td></tr> <tr><td colspan="1" id="_1559767315037" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314860" style="margin-left:.25in;"><b>Multiple routing</b></p></td> <td colspan="1" id="_1559767315038" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314861" style="margin-left:.25in;">$multipleRouting</p></td></tr><tr><td colspan="1" id="_1559767315039" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314862" style="margin-left:.25in;"><b>Routing criteria</b></p></td><td colspan="1" id="_1559767315040" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314863" style="margin-left:.25in;">$routingCriteria</p></td></tr> </tbody></table>
-<h3 dir="ltr" id="_1559767314945">Reconciliation</h3>
-<p dir="ltr" id="_1559767314864" style="margin-left:.25in;">Specification ID:$touchpoint</p>
-<p dir="ltr" id="_1559767314865" style="margin-left:.25in;">$reconciliation</p>
-<h3 dir="ltr" id="_1559767314946">Exception Handling</h3>
-<p dir="ltr" id="_1559767314866" style="margin-left:.25in;">Specification ID:$touchpoint</p>
-<table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314962" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
-<td colspan="1" id="_1559767315041" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314867" style="margin-left:.25in;"><span style="color:white">Item</span></p></td>
-<td colspan="1" id="_1559767315042" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314868" style="margin-left:.25in;"><span style="color:white">Value</span></p></td></tr> <tr><td colspan="1" id="_1559767315043" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314869" style="margin-left:.25in;"><b>Reject complete file when there is error in one record</b></p></td><td colspan="1" id="_1559767315044" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314870" style="margin-left:.25in;">$rejectFileonError</p></td></tr><tr><td colspan="1" id="_1559767315045" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314871" style="margin-left:.25in;"><b>No data condition handling</b></p></td><td colspan="1" id="_1559767315046" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314872" style="margin-left:.25in;">$noDataHandling</p></td></tr><tr><td colspan="1" id="_1559767315047" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314873" style="margin-left:.25in;"><b>Alert criteria</b></p></td><td colspan="1" id="_1559767315048" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314874" style="margin-left:.25in;">$alertCriteria</p></td></tr><tr><td colspan="1" id="_1559767315049" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314875" style="margin-left:.25in;"><b>Alert procecure</b></p></td><td colspan="1" id="_1559767315050" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314876" style="margin-left:.25in;">$alertProcedure</p></td></tr><tr><td colspan="1" id="_1559767315051" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314877" style="margin-left:.25in;"><b>Technical Exception Handling</b></p></td><td colspan="1" id="_1559767315052" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314878" style="margin-left:.25in;">$technicalExceptionHandling</p> </td></tr><tr><td colspan="1" id="_1559767315053" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314879" style="margin-left:.25in;"><b>Business Exception Handling</b></p></td><td colspan="1" id="_1559767315054" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314880" style="margin-left:.25in;">$businessExceptionHandling</p></td></tr></tbody></table>
 <h3 dir="ltr" id="_1559767314947">Dependencies</h3>
 <p dir="ltr" id="_1559767314881" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314963" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
@@ -334,19 +207,6 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <p id="_1559767314891" style="margin-left:.25in;">$dependenciesonApps</p></td></tr><tr><td colspan="1" id="_1559767315065" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314892" style="margin-left:.25in;"><b>Responsible party for managing the dependencies</b></p></td><td colspan="1" id="_1559767315066" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
 <p id="_1559767314893" style="margin-left:.25in;">$dependencyOwner</p></td></tr></tbody></table>
-<h3 dir="ltr" id="_1559767314948">Service Integrator Requirements</h3>
-<p dir="ltr" id="_1559767314894" style="margin-left:.25in;">Specification ID:$touchpoint</p>
-<p dir="ltr" id="_1559767314895" style="margin-left:.25in;">$serviceIntegratorRequirement</p>
-<h3 dir="ltr" id="_1559767314949">Archival Requirements</h3>
-<p dir="ltr" id="_1559767314896" style="margin-left:.25in;">Specification ID:$touchpoint</p>
-<table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314964" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
-<td colspan="1" id="_1559767315067" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314897" style="margin-left:.25in;"><span style="color:white">Item</span></p></td><td colspan="1" id="_1559767315068" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314898" style="margin-left:.25in;"><span style="color:white">Value</span></p></td></tr> <tr><td colspan="1" id="_1559767315069" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314899" style="margin-left:.25in;"><b>Archival/Retention period</b></p></td><td colspan="1" id="_1559767315070" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314900" style="margin-left:.25in;">$archival</p></td></tr><tr><td colspan="1" id="_1559767315071" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314901" style="margin-left:.25in;"><b>Purge period</b></p></td><td colspan="1" id="_1559767315072" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314902" style="margin-left:.25in;">$purgingPeriod</p></td></tr> </tbody></table>
 <h3 dir="ltr" id="_1559767314950">Reporting Requirements</h3>
 <p dir="ltr" id="_1559767314903" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314965" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
@@ -368,29 +228,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 <h3 dir="ltr" id="_1559767314953">Phased Implementation Approach Impact</h3>
 <p dir="ltr" id="_1559767314916" style="margin-left:.25in;">Specification ID:$touchpoint</p>
 <p dir="ltr" id="_1559767314917" style="margin-left:.25in;">$phasedImplementationImpact</p>
-<h3 dir="ltr" id="_1559767314954">Service Level Agreement (shared SLA – all parties must comply)</h3>
-<p dir="ltr" id="_1559767314918" style="margin-left:.25in;">Specification ID: $touchpoint</p>
-<table border="1" cellpadding="0" cellspacing="0" dir="ltr" id="_1559767314966" style="border-collapse:collapse;border:none; border-collapse : collapse; border-color : #696969; border-collapse : collapse; "><tbody><tr>
-<td colspan="1" id="_1559767315081" rowspan="1" style="width:333px;border:solid black 1.0pt;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314919" style="margin-left:.25in;"><span style="color:white">Item</span></p></td><td colspan="1" id="_1559767315082" rowspan="1" style="width:333px;border:solid black 1.0pt;border-left:none;background:#0080FF;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314920" style="margin-left:.25in;"><span style="color:white">Value</span></p></td></tr> <tr><td colspan="1" id="_1559767315083" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314921" style="margin-left:.25in;"><b>TPS (near real-time or online)</b></p></td><td colspan="1" id="_1559767315084" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314922" style="margin-left:.25in;">$tps</p></td></tr><tr><td colspan="1" id="_1559767315085" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314923" style="margin-left:.25in;"><b>Payload size (for batch this is row size)</b></p></td><td colspan="1" id="_1559767315086" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314924" style="margin-left:.25in;">$payloadSize</p></td></tr><tr><td colspan="1" id="_1559767315087" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314925" style="margin-left:.25in;"><b>Response time (online)</b></p></td><td colspan="1" id="_1559767315088" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314926" style="margin-left:.25in;">$responseTime</p></td></tr><tr><td colspan="1" id="_1559767315089" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314927" style="margin-left:.25in;"><b>Subscription rate (near real-time)</b></p></td><td colspan="1" id="_1559767315090" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314928" style="margin-left:.25in;">$subscriptionRate</p></td></tr><tr><td colspan="1" id="_1559767315091" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314929" style="margin-left:.25in;"><b>Time to subscribe (near real-time)</b></p></td><td colspan="1" id="_1559767315092" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314930" style="margin-left:.25in;">$timetoSubscribe</p></td></tr><tr><td colspan="1" id="_1559767315093" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314931" style="margin-left:.25in;"><b>Execution time (batch)</b></p></td><td colspan="1" id="_1559767315094" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314932" style="margin-left:.25in;">$executionTime</p></td></tr> <tr><td colspan="1" id="_1559767315095" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314933" style="margin-left:.25in;"><b>Record count (batch)</b></p> </td><td colspan="1" id="_1559767315096" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314934" style="margin-left:.25in;">$recordCount</p></td></tr><tr><td colspan="1" id="_1559767315097" rowspan="1" style="width:333px;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314935" style="margin-left:.25in;"><b>Time of day (batch)</b></p></td><td colspan="1" id="_1559767315098" rowspan="1" style="width:333px;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;vertical-align:top; border-color : #696969; ">
-<p id="_1559767314936" style="margin-left:.25in;">$timeofDay</p></td> </tr></tbody></table>
-</div>"""
+</div>"""		
 		}
 		else if (itemData.getFormat() == 'WrapperResource') {
 			// For wrapper resource (uploaded file), we need to create our own description with hyperlink to attachment
