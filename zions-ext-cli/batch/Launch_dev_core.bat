@@ -60,7 +60,7 @@ SET log.ccm=%logdir%\translate_CCMtoADO.log
 
 ::not using these items I think
 SET cache.location=e:\cache
-SET tfs.user=robert.huet@zionsbancorp.com ::this should instead be the tfs.users in each application-xdb.properties
+SET tfs.user=robert.huet@zionsbancorp.com
 
 ::in this window, call the script that sequences other scripts
 call orchestration_master.bat
