@@ -28,7 +28,7 @@ SET rm.include.update=flushQueriesDelta,whereused,phases
 SET rm.include.phases=requirements
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
-SET rm.tfs.areapath=FutureCore\Requirements\R3
+SET rm.tfs.areapath=FutureCore\Requirements\Staging
 SET rm.sql.resource=sql/coreupdate.sql
 
 ::CCM specific variables
