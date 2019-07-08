@@ -13,6 +13,14 @@ class SequenceNoHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
+		if (value == null || value == '') {
+			// Use generated value (will only exist when migrating modules)
+			if (itemData.getTypeSeqNo()) {
+				value = itemData.getTypeSeqNo()
+			}
+		}
+		
+		// Validate numeric value
 	    try {
 	        Integer seq = Integer.parseInt(value);
 	    } catch (NumberFormatException | NullPointerException nfe) {

@@ -133,6 +133,8 @@ class ClmRequirementsManagementService {
 			}
 			else if (iName == "moduleContext") {
 				def kk = 0
+				def prevType = null
+				def seqNo = 0
 				child.children().each { contextBinding ->
 						String about = contextBinding.about
 						String artifactTitle = contextBinding.title
@@ -160,8 +162,18 @@ class ClmRequirementsManagementService {
 						else {
 							getNonTextArtifact(artifact, true, cacheLinks)
 						}
+						
+						// Set typeSeqNo to migrate RPE generated sequence numbers
+						if (artifact.getArtifactType()== prevType) {
+							seqNo = seqNo + 1
+							artifact.setTypeSeqNo(seqNo)
+						}
+						else {
+							seqNo = 1
+							artifact.setTypeSeqNo(seqNo)
+						}
+						prevType = artifact.getArtifactType()
 				}
-				def j = 1
 			}
 		}
 		
