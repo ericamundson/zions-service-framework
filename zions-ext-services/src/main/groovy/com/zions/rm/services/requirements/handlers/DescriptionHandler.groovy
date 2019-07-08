@@ -48,43 +48,47 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 		String sId = itemData.getCacheID()
 		String outHtml
 		if (itemData.getArtifactType() == 'Report Filter') {
-			String seq = itemData.getAttribute('Sequence No')
+			String seq = itemData.getTypeSeqNo()
 			String filterDesc = itemData.getAttribute('Filter Description')
-			outHtml = """<div><p><b>Sequence No:</b>&nbsp$seq</p>
-                         <p><b>Filter Description:</b>&nbsp$filterDesc</p>"""
+			outHtml = """<div><p style="margin-left: 40px">
+<b>Sequence No:</b>&nbsp$seq<br>
+<b>Filter Description:</b>&nbsp$filterDesc</p></div>"""
 		}
 		else if (itemData.getArtifactType() == 'Report Group Layout') {
 			String section = itemData.getAttribute('Sections')
 			String alignment = itemData.getAttribute('Alignment')
 			String pageBreak = itemData.getAttribute('Page Break')
-			outHtml = """<div><p><b>Section:</b>&nbsp$section</p>
-                         <p><b>Alignment:</b>&nbsp$alignment</p>
-                         <p><b>Page Break:</b>&nbsp$pageBreak</p>
-                         <p><b>Value:</b>&nbsp${itemData.stripTags(value)}</p>"""
+			outHtml = """<div><p style="margin-left: 40px">
+<b>Section:</b>&nbsp$section<br>
+<b>Alignment:</b>&nbsp$alignment<br>
+<b>Page Break:</b>&nbsp$pageBreak<br>
+<b>Value:</b>&nbsp${itemData.stripTags(value)}</p></div>"""
 		}		
 		else if (itemData.getArtifactType() == 'Report Sort') {
-			String seq = itemData.getAttribute('Sequence No')
+			String seq = itemData.getTypeSeqNo()
 			String groupClause = itemData.getAttribute('Group Clause')
 			String fieldName = itemData.getAttribute('Field Name')
 			String gsb = itemData.getAttribute('Group or Sort')
 			String order = itemData.getAttribute('Sort Order')
 			String remarks = itemData.getAttribute('Info Comments')
-			outHtml = """<div><p><b>Sequence No:</b>&nbsp$seq</p>
-                         <p><b>Group Clause:</b>&nbsp$groupClause</p>
-                         <p><b>Report Field Name:</b>&nbsp$fieldName</p>
-                         <p><b>Group / Sort / Break:</b>&nbsp$gsb</p>
-                         <p><b>Sort Order:</b>&nbsp$order</p>
-                         <p><b>Remarks: </b>&nbsp$remarks</p></div>"""
+			outHtml = """<div><p style="margin-left: 40px">
+<b>Sequence No:</b>&nbsp$seq<br>
+<b>Group Clause:</b>&nbsp$groupClause<br>
+<b>Report Field Name:</b>&nbsp$fieldName<br>
+<b>Group / Sort / Break:</b>&nbsp$gsb<br>
+<b>Sort Order:</b>&nbsp$order<br>
+<b>Remarks: </b>&nbsp$remarks</p></div>"""
 		}
 		else if (itemData.getArtifactType() == 'Report Summary Fields') {
 			String field = itemData.getAttribute('Field Name')
 			String valFormat = itemData.getAttribute('Value Format')
 			String alignment = itemData.getAttribute('Data Alignment')
-			String calc = itemData.getAttribute('Calculation Needed - Y/N')
-			outHtml = """<div><p><b>Report Field Name:</b>&nbsp$field</p>
-                         <p><b>Value Format:</b>&nbsp$valFormat</p>
-                         <p><b>Data Alignment:</b>&nbsp$alignment</p>
-                         <p><b>Field Mapping and Calculation:</b>&nbsp$calc</p>"""
+			String calc = value
+			outHtml = """<div><p style="margin-left: 40px">
+<b>Report Field Name:</b>&nbsp$field<br>
+<b>Value Format:</b>&nbsp$valFormat<br>
+<b>Data Alignment:</b>&nbsp$alignment<br>
+<b>Field Mapping and Calculation:</b>&nbsp$calc</p></div>"""
 		}
 		else if (itemData.getArtifactType() == 'Reporting RRZ') {
 			String title = itemData.getAttribute('Report Title')
@@ -98,24 +102,25 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 			String distMethod = itemData.getAttribute('Non-CORE System')
 			String desc = itemData.getAttribute('Info Comments')
 			String affiliates = itemData.getAttribute('Affiliates Affected')
-			outHtml = """<div><p><b>Report Title:</b><br>
-                         &nbsp&nbsp$title</p>
-                         <p><b>Business Requirements:</b><br>
-                         &nbsp&nbsp$docName<br>
-                         &nbsp&nbsp$docNum</p>
-                         <p><b>Description:</b><br>
-                         &nbsp&nbsp$desc</p>
-                         <p><b>Audience:</b><br>
-                         &nbsp&nbsp${audience.replaceAll(';',', ')}</p>
-                         <p><b>Distribution:</b><br>
-						 &nbsp&nbspDistribution Schedule:&nbsp$distSchedule<br>
-						 &nbsp&nbspDistribution Format:&nbsp$distFormat<br>
-						 &nbsp&nbspDistribution Method:&nbsp${distMethod.replaceAll(';',', ')}</p>
-                         <p><b>General Report and Page Layout:</b><br>
-						 &nbsp&nbspPage Size:&nbsp$pageSize<br>
-						 &nbsp&nbspPage Orientation:&nbsp$pageLayout</p></div>
-                         <p><b>Input Parameters:</b><br>
-                         &nbsp&nbspAffiliate:&nbsp${affiliates.replaceAll(';',', ')}</p>"""
+			outHtml = """<div><p style="margin-left: 40px">
+<b>Report Title:</b><br>
+$title<br>
+<b>Business Requirements:</b><br>
+$docName<br>
+$docNum<br>
+<b>Description:</b><br>
+$desc<br>
+<b>Audience:</b><br>
+${audience.replaceAll(';',', ')}<br>
+<b>Distribution:</b><br>
+Distribution Schedule:&nbsp$distSchedule<br>
+Distribution Format:&nbsp$distFormat<br>
+Distribution Method:&nbsp${distMethod.replaceAll(';',', ')}<br>
+<b>General Report and Page Layout:</b><br>
+Page Size:&nbsp$pageSize<br>
+Page Orientation:&nbsp$pageLayout<br>
+<b>Input Parameters:</b><br>
+Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 		}
 		else if (itemData.getArtifactType() == 'Data Interface TCS') {
 			value = removeNamespace("${value}")

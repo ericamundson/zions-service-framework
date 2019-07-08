@@ -4,6 +4,7 @@ class ClmArtifact {
 	String format
 	String tfsWorkitemType
 	String fileHref
+	String typeSeqNo
 	def attributeMap
 	def collectionArtifacts
 	def links
@@ -96,4 +97,8 @@ class ClmArtifact {
 			return ''
 		}
 	}
+	public void setTypeSeqNo(def seqNo) {
+		typeSeqNo = String.valueOf(seqNo)
+	}
+
 }
