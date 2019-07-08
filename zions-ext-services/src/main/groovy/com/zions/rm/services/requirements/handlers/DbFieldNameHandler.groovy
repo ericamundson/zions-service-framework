@@ -3,7 +3,7 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 
 @Component
-class DBFieldNameHandler extends RmBaseAttributeHandler {
+class DbFieldNameHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public String getFieldName() {
