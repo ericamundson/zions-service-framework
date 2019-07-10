@@ -11,7 +11,8 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
-
+import com.zions.common.services.cache.CacheManagementService
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
 import com.zions.vsts.services.settings.SettingsManagementService
@@ -117,5 +118,10 @@ class RollupManagementServiceSpecConfig {
 	@Bean
 	DataGenerationService dataGenerationService() {
 		return new DataGenerationService()
+	}
+	
+	@Bean
+	ICacheManagementService cacheManagementService() {
+		return new CacheManagementService()
 	}
 }

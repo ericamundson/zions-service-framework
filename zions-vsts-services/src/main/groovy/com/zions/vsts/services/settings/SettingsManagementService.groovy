@@ -2,7 +2,8 @@ package com.zions.vsts.services.settings
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-
+import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonBuilder
 import groovyx.net.http.ContentType
@@ -11,9 +12,13 @@ import groovyx.net.http.ContentType
 class SettingsManagementService {
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
+	
+	@Autowired(required=true)
+	ICacheManagementService cacheManagementService;
 
 	
 	def turnOffNotifications(collection) {
+		def procs = cacheManagementService.getAllOfType('ExecutingProcess')
 		String url = "${genericRestClient.getTfsUrl()}"
 		if (!url.toLowerCase().endsWith('zionseto')) return
 		def req = [defaultGroupDeliveryPreference:-1]
@@ -27,12 +32,25 @@ class SettingsManagementService {
 			headers: ['Content-Type': 'application/json']
 			
 			)
+		if (result != null) {
+			String module = cacheManagementService.cacheModule
+			String id = "${module}_running"
+			cacheManagementService.saveToCache([ module: "${module}"], id, 'ExecutingProcess')
+		}
 		return result
 	}
 	
 	def turnOnNotifications(collection) {
 		String url = "${genericRestClient.getTfsUrl()}"
 		if (!url.toLowerCase().endsWith('zionseto')) return
+		String module = cacheManagementService.cacheModule
+		String id = "${module}_running"
+		cacheManagementService.deleteById(id)
+		if (cacheManagementService instanceof MongoDBCacheManagementService) {
+			MongoDBCacheManagementService cms = cacheManagementService
+			Map wis = cms.getNoneModuleAllOfType('ExecutingProcess') 
+			if (!wis.empty) return
+		}
 		def req = [defaultGroupDeliveryPreference:2]
 		String body = new JsonBuilder(req).toPrettyString()
 		def result = genericRestClient.patch(
