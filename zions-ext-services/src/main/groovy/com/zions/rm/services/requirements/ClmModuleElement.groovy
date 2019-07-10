@@ -15,6 +15,15 @@ class ClmModuleElement extends ClmArtifact {
 		isDeleted = false
 		isDuplicate = false  // Assume false until checkDuplicate has been run
 	}
+	
+	public ClmModuleElement(int in_depth, def in_format, def in_attributeMap) {
+		super(in_format, in_attributeMap)
+		depth = in_depth
+
+		isHeading = false
+		isDeleted = false
+		isDuplicate = false  // Assume false until checkDuplicate has been run
+	}
 
 	public incrementDepth(def incr) {
 		this.depth = this.depth + incr

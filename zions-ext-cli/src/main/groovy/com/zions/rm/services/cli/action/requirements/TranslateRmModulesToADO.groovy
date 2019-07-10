@@ -229,6 +229,16 @@ class TranslateRmModulesToADO implements CliAction {
 				def idMap = [:]
 				log.info("${getCurTimestamp()} - Getting data for module: $moduleUri")
 				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri,false)
+				// For RSZ modules, we need to append the linked RRZ module
+				if (module.getArtifactType()== "RSZ Specification") {
+					// Get linked RRZ module URI
+					def rrz_uri = module.getLinkForType('Satisfies')
+					// Get RRZ Module info
+					if (rrz_uri) {
+						def rrz_module = clmRequirementsManagementService.getModule(rrz_uri,false)
+						module.appendModule(rrz_module)
+					}
+				}
 				log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} ...")
 				def errCount = validateModule(module)
 				if (errCount > 0) {
@@ -265,9 +275,11 @@ class TranslateRmModulesToADO implements CliAction {
 					else if (module.orderedArtifacts[it].getIsHeading()) {
 						module.orderedArtifacts[it].setDescription('') 
 					}
-					// If Reporting Requirement in Reporting RRZ, do not migrate the artifact
-					else if (module.getArtifactType()== 'Reporting RRZ' && (module.orderedArtifacts[it].getArtifactType() == 'Reporting Requirement'||
-																			module.orderedArtifacts[it].getArtifactType() == 'Reporting RRZ')) {
+					// If Reporting Requirement is in Reporting RRZ (or included in RSZ), do not migrate the artifact
+					else if ((module.getArtifactType()== 'Reporting RRZ' || module.getArtifactType()== 'RSZ Specification') && 
+							  module.getFormat()== 'Text' &&
+							 (module.orderedArtifacts[it].getArtifactType() == 'Reporting Requirement'||
+							  module.orderedArtifacts[it].getArtifactType() == 'Reporting RRZ')) {
 						module.orderedArtifacts[it].setIsDeleted(true)
 					}
 					// Only store first occurrence of an artifact in the module

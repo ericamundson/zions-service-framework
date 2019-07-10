@@ -104,6 +104,7 @@ class ClmRequirementsManagementService {
 	ClmRequirementsModule getModule(String moduleUri, boolean validationOnly) {
 		boolean cacheLinks = false
 		boolean addEmbeddedCollections = false
+		def links = []
 		String uri = moduleUri.replace('resources/','publish/modules?resourceURI=')
 		def result = rmGenericRestClient.get(
 				uri: uri,
@@ -130,6 +131,22 @@ class ClmRequirementsManagementService {
 					cacheLinks = true
 					addEmbeddedCollections = shouldAddCollectionsToModule(moduleType)
 				}				
+			}
+			else if (iName == "traceability") {
+				child.links.children().each { link ->
+					String linkType
+					String linkURI				
+					link.children().each { linkattr ->
+
+						if (linkattr.name() == 'title') {
+							linkType = "${link.title}"
+						}
+						else if (linkattr.name() == 'relation') {
+							linkURI = "${link.relation}"
+						}
+					}
+					links.add(new ModuleLink(linkType,linkURI))
+				}
 			}
 			else if (iName == "moduleContext") {
 				def kk = 0
@@ -179,7 +196,7 @@ class ClmRequirementsManagementService {
 		
 		
 		// Instantiate and return the module
-		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, moduleAttributeMap,orderedArtifacts)
+		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, moduleAttributeMap,orderedArtifacts,links)
 		return clmModule
 
 	}
