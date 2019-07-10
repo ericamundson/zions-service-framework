@@ -13,7 +13,7 @@ class SettingsManagementService {
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
 	
-	@Autowired
+	@Autowired(required=true)
 	ICacheManagementService cacheManagementService;
 
 	
