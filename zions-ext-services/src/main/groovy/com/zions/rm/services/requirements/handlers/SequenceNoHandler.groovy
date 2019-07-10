@@ -19,14 +19,15 @@ class SequenceNoHandler extends RmBaseAttributeHandler {
 				value = itemData.getTypeSeqNo()
 			}
 		}
-		
-		// Validate numeric value
-	    try {
-	        Integer seq = Integer.parseInt(value);
-	    } catch (NumberFormatException | NullPointerException nfe) {
-			log.error("Invalid value for Sequence No: $value")
-	        return null;
-	    }
+		else {
+			// Validate numeric value
+		    try {
+		        Integer seq = Integer.parseInt(value);
+		    } catch (NumberFormatException | NullPointerException nfe) {
+				throw new Exception("SequenceNoHandler threw exception, invalid value for SequenceNo: $value")
+		        return null;
+		    }
+		}
 		return value
 	}
 

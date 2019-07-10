@@ -5,20 +5,20 @@ class ClmArtifact {
 	String tfsWorkitemType
 	String fileHref
 	String typeSeqNo
-	def attributeMap
-	def collectionArtifacts
-	def links
-	def changes
-	def adoFileInfo
+	def attributeMap = [:]
+	def collectionArtifacts = []
+	def links = []
+	def changes = [:]
+	def adoFileInfo = []
 	def cacheWI // cached work item from ADO
 	public ClmArtifact(String in_title, String in_format, String in_about) {
-		attributeMap = [:]
-		collectionArtifacts = []
-		changes = [:]
 		setTitle(in_title)
 		this.setAbout(in_about)
 		format = in_format
-		adoFileInfo = []
+	}
+	public ClmArtifact(String in_format, def in_attributeMap) {
+		attributeMap = in_attributeMap
+		format = in_format
 	}
 	public void setAbout(String in_about) {
 		attributeMap.'about' = in_about
