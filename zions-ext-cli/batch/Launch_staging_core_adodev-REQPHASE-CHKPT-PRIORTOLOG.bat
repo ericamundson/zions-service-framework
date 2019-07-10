@@ -21,11 +21,11 @@ set tfs.token=5ygjaomvtrq6jgtxyrbpqsvahj2kuzzq6tjxgllrc76j7cbwzp4a
 
 SET db.project=corestaging
 SET spring.data.mongodb.database=adomigration_dev
-SET selected.checkpoint=none
+SET selected.checkpoint=priorToLogEntries
 
 ::RM specific variables
 SET rm.include.update=phases
-SET rm.include.phases=audit
+SET rm.include.phases=requirements
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
 SET rm.tfs.areapath=FutureCore\Requirements\Staging

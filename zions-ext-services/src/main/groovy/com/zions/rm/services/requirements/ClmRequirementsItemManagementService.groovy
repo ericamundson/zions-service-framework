@@ -120,7 +120,7 @@ class ClmRequirementsItemManagementService {
 				fieldData = getFieldData(rmItemData, field, memberMap, cacheWI, map)
 			}
 			catch (Exception e) {
-				checkpointManagementService.addLogentry("could not getChanges for ${sid} because: ${e}")
+				checkpointManagementService.addLogentry("could not getChanges for ${id} because: ${e}")
 				return
 			}
 			if (fieldData != null) {

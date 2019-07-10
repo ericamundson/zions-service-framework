@@ -25,7 +25,7 @@ SET selected.checkpoint=none
 
 ::RM specific variables
 SET rm.include.update=phases
-SET rm.include.phases=audit
+SET rm.include.phases=requirements
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
 SET rm.tfs.areapath=FutureCore\Requirements\Staging
