@@ -221,6 +221,8 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		if (includes['phases'] != null) {
 			log.info("Processing artifacts")
 			int phaseCount = 0
+			int totalProcessedItems = 0
+			int currentCount = 0
 			ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 			restartManagementService.processPhases { phase, items ->
 				//log.debug("Entering phase loop")
@@ -241,19 +243,29 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					//get list of wiData objects
 					//MongoDBCacheManagementService.getAllOfType
 					//def wiDataObjects = cacheManagementService.getAllOfType("wiData")
+					currentCount = items.size()
+					log.debug("Processing ${currentCount} items for page ${phaseCount}")
 					items.each { rmItem ->
 						String sid = "${rmItem.reference_id}"
 						//sometimes this is blank?  some kind of error!
-						if (sid && !cacheManagementService.exists(sid)) {
+						if (sid) {
+							//cacheManagementService.exists does not validate type, so we got whereUsed data in addition to wiData
+							//we only want wiData here obv
+							if (!cacheManagementService.getFromCache(sid, "wiData")) {
 							//leaving this log line in because I can count the lines in the output file to see how we're doing
-							log.debug("Datawarehouse item missing from mongodb: ${sid},page:${phaseCount},${rmItem.about}")
+							log.debug("Datawarehouse item missing from mongodb: ${sid}, page:${phaseCount}, ${rmItem.about}")
 							saveDatawarehouseItemToAdoItemManager(rmItem, clManager, tfsProject, memberMap)
+							}
+						} else {
+							log.debug("Unable to find reference id for requirement? This error should not occur if phase loop data is corect")
 						}
 					}
 					if (clManager.size() > 0) {
 						log.info("Reattempting upload of ${clManager.size()} artifacts from page ${phaseCount}")
 						clManager.flush()
 					}
+					totalProcessedItems += currentCount
+					log.debug("Audited ${totalProcessedItems} artifacts so far")
 				}
 				phaseCount++
 			}
