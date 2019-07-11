@@ -12,7 +12,6 @@ import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementServ
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cli.action.CliAction
-import com.zions.common.services.db.DatabaseQueryService
 import com.zions.common.services.query.IFilter
 import com.zions.common.services.restart.Checkpoint
 import com.zions.common.services.restart.ICheckpointManagementService
@@ -223,18 +222,19 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			int phaseCount = 0
 			int totalProcessedItems = 0
 			int currentCount = 0
+			int changeCount = 0 //kinda wanna put this in ChangeListManager but w/e
 			ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 			restartManagementService.processPhases { phase, items ->
 				//log.debug("Entering phase loop")
 				clmRequirementsItemManagementService.resetNewId()
 				
 				if (phase == 'requirements') {
-					//rmDatabaseQueryService.init()
 					log.debug("Getting content of ${items.size()} items")
 					items.each { rmItem ->
 						saveDatawarehouseItemToAdoItemManager(rmItem, clManager, tfsProject, memberMap)
 					}
 					log.debug("have ${clManager.size()} changes, about to flush clmanager for phaseCount ${phaseCount}")
+					changeCount+= clManager.size()
 					clManager.flush();
 					log.debug("finished flushing clmanager for phaseCount ${phaseCount}")
 				}
@@ -261,16 +261,45 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 						}
 					}
 					if (clManager.size() > 0) {
+						changeCount += clManager.size()
 						log.info("Reattempting upload of ${clManager.size()} artifacts from page ${phaseCount}")
 						clManager.flush()
 					}
 					totalProcessedItems += currentCount
-					log.debug("Audited ${totalProcessedItems} artifacts so far")
+					log.info("Audited ${totalProcessedItems} DW artifacts so far, found ${changeCount} total in error and attempted reupload")
 				}
 				phaseCount++
 			}
+			printCheckpointErrorLogs()
 		}
-
+		
+		if (includes['printSummary']) {	
+			//this is too memory intensive, just need the actual count from mongo
+			//workaround/current usage model is using the db explorer/cli
+			//I am sure there is a way to do this here but I do not know it
+			//def wiobjects = cacheManagementService.getAllOfType("wiData")
+			//log.info("\r\n\r\nAfter the above corrections, ${wiobjects.size()} wiData objects were found in the cache\r\nThis should match the wi count in ADO\r\n")
+			
+			printCheckpointErrorLogs()
+		}
+	}
+	
+	/**
+	 * Gets all checkpoint logs in checkpointManagementService and prints them
+	 * @return
+	 */
+	def printCheckpointErrorLogs() {
+		log.info("Attempting to find all error logs in current checkpoints...")
+		try {
+		def errorLogs = checkpointManagementService.getAllLogs()
+		log.info("The following items failed to upload and generated a checkpoint log:")
+		errorLogs.each { logEntry ->
+			log.info(logEntry)
+		}
+		} catch (Exception e) {
+			//I'm not sure that it will fail but we're about to prod release and I just don't want to bother with it if it does
+			log.error("printCheckpointErrorLogs failed: ${e}")
+		}
 	}
 	
 	/**
@@ -298,7 +327,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				try {
 					clmRequirementsManagementService.getTextArtifact(artifact,false,true)
 				} catch (Exception e) {
-					checkpointManagementService.addLogentry("getTextArtifact for ${sid} generated an exception and was not added as a change")
+					checkpointManagementService.addLogentry("${sid} : getTextArtifact for  generated an exception and was not added as a change")
 					return
 				}
 			}
@@ -306,12 +335,12 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				try {
 					clmRequirementsManagementService.getNonTextArtifact(artifact,false,true)
 				} catch (Exception e) {
-					checkpointManagementService.addLogentry("getNonTextArtifact for ${sid} generated an exception and was not added as a change")
+					checkpointManagementService.addLogentry("${sid} : getNonTextArtifact generated an exception and was not added as a change")
 					return
 				}
 			}
 			else {
-				checkpointManagementService.addLogentry("Unsupported format of $format for artifact id: ${sid}")
+				checkpointManagementService.addLogentry("${sid} : Unsupported format of $format for artifact")
 				return
 			}
 
@@ -320,7 +349,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			try {
 				reqChanges = clmRequirementsItemManagementService.getChanges(tfsProject, artifact, memberMap)
 			} catch (Exception e) {
-				checkpointManagementService.addLogentry("could not getChanges for ${sid} because: ${e}")
+				checkpointManagementService.addLogentry("${sid} : could not getChanges for because: ${e}")
 				return
 			}
 			if (reqChanges) {

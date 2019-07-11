@@ -135,6 +135,28 @@ class CheckpointManagementService implements ICheckpointManagementService {
 		return currentCheckpoint
 	}
 	
+	/**
+	 * Useful for audit to quickly list all problem items
+	 * somewhat expensive operation due to db calls
+	 * @return list of all log entry objects
+	 */
+	public Object getAllLogs() {
+		def logEntries = []
+		int i = 0
+		while (true) {
+			if (cacheManagementService.exists("${i}-${CACHE_TYPE}")) {
+				Checkpoint cp = loadCheckpoint(i)
+				if (cp.logEntries.size()>0) {
+					log.debug("Found ${cp.logEntries.size} logs in checkpoint ${i}")
+					logEntries.addAll(cp.logEntries)
+				}
+				i++
+			} else {
+				return logEntries
+			}	
+		}
+	}
+	
 	void clear() {
 		int counter = 0
 		int i = 0
