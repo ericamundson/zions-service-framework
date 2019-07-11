@@ -270,8 +270,16 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				}
 				phaseCount++
 			}
-			def wiobjects = cacheManagementService.getAllOfType("wiData")
-			log.info("\r\n\r\nAfter the above corrections, ${wiobjects.size()} wiData objects were found in the cache\r\nThis should match the wi count in ADO\r\n")
+			printCheckpointErrorLogs()
+		}
+		
+		if (includes['printSummary']) {	
+			//this is too memory intensive, just need the actual count from mongo
+			//workaround/current usage model is using the db explorer/cli
+			//I am sure there is a way to do this here but I do not know it
+			//def wiobjects = cacheManagementService.getAllOfType("wiData")
+			//log.info("\r\n\r\nAfter the above corrections, ${wiobjects.size()} wiData objects were found in the cache\r\nThis should match the wi count in ADO\r\n")
+			
 			printCheckpointErrorLogs()
 		}
 	}
@@ -281,10 +289,10 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	 * @return
 	 */
 	def printCheckpointErrorLogs() {
-		log.info("Attempting to find all error logs in checkpoints...")
+		log.info("Attempting to find all error logs in current checkpoints...")
 		try {
 		def errorLogs = checkpointManagementService.getAllLogs()
-		log.info("The following items could not be uploaded:")
+		log.info("The following items failed to upload and generated a checkpoint log:")
 		errorLogs.each { logEntry ->
 			log.info(logEntry)
 		}
