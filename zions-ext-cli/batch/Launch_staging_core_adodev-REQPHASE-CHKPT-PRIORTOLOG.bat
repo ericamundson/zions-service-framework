@@ -21,14 +21,14 @@ set tfs.token=5ygjaomvtrq6jgtxyrbpqsvahj2kuzzq6tjxgllrc76j7cbwzp4a
 
 SET db.project=corestaging
 SET spring.data.mongodb.database=adomigration_dev
-SET selected.checkpoint=none
+SET selected.checkpoint=priorToLogEntries
 
 ::RM specific variables
-SET rm.include.update=flushQueries,whereused,phases
+SET rm.include.update=phases
 SET rm.include.phases=requirements
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
-SET rm.tfs.areapath=FutureCore\Requirements\R3
+SET rm.tfs.areapath=FutureCore\Requirements\Staging
 SET rm.sql.resource=sql/core.sql
 
 ::CCM specific variables
@@ -60,7 +60,7 @@ SET log.ccm=%logdir%\translate_CCMtoADO.log
 
 ::not using these items I think
 SET cache.location=e:\cache
-SET tfs.user=robert.huet@zionsbancorp.com ::this should instead be the tfs.users in each application-xdb.properties
+SET tfs.user=robert.huet@zionsbancorp.com
 
 ::in this window, call the script that sequences other scripts
 call orchestration_master.bat

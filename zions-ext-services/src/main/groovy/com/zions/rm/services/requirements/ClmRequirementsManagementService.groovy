@@ -685,12 +685,12 @@ class DataWarehouseQueryData implements CacheWData {
 	def data
 	
 	void doData(def result) {
-		log.debug("DWQueryData serializing result doData")
+		log.debug("Saving new DataWarehouseQueryData page to mongodb")
 		data = new JsonBuilder(result).toPrettyString()
 	}
 	
 	def dataValue() {
-		log.debug("DWQueryData returning serialized result dataValue")
+		//log.debug("DWQueryData returning serialized result dataValue")
 		return new JsonSlurper().parseText(data)
 	}
 }
