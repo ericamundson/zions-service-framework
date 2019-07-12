@@ -877,7 +877,7 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
-	<wit source="Business Acceptance Criteria" target="Place Holder" translateUnmappedFields="false">
+	<wit source="Business Acceptance Criteria" target="PlaceHolder" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -1018,7 +1018,7 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
-	<wit source="Process Diagram" target="Drawing" translateUnmappedFields="false">
+	<wit source="Process Diagram" target="Diagram" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
