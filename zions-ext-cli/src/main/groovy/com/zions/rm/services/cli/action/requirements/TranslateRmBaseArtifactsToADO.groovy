@@ -292,9 +292,14 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		log.info("Attempting to find all error logs in current checkpoints...")
 		try {
 		def errorLogs = checkpointManagementService.getAllLogs()
+		if (errorLogs) {
 		log.info("The following items failed to upload and generated a checkpoint log:")
+		
 		errorLogs.each { logEntry ->
 			log.info(logEntry)
+		}
+		} else {
+			log.info("No errors were logged in the checkpoints!")
 		}
 		} catch (Exception e) {
 			//I'm not sure that it will fail but we're about to prod release and I just don't want to bother with it if it does
