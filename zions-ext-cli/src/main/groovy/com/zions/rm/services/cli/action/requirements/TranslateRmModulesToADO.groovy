@@ -277,11 +277,12 @@ class TranslateRmModulesToADO implements CliAction {
 					}
 					// If Reporting Requirement is in Reporting RRZ (or included in RSZ), do not migrate the artifact
 					else if ((module.getArtifactType()== 'Reporting RRZ' || module.getArtifactType()== 'RSZ Specification') && 
-							  module.getFormat()== 'Text' &&
+							  module.orderedArtifacts[it].getFormat()== 'Text' &&
 							 (module.orderedArtifacts[it].getArtifactType() == 'Reporting Requirement'||
 							  module.orderedArtifacts[it].getArtifactType() == 'Reporting RRZ')) {
 						module.orderedArtifacts[it].setIsDeleted(true)
 					}
+
 					// Only store first occurrence of an artifact in the module
 					if (!module.orderedArtifacts[it].getIsDuplicate()) {  
 						changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
