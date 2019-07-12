@@ -908,7 +908,7 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
-	<wit source="Business Process Flow" target="Drawing" translateUnmappedFields="false">
+	<wit source="Business Process Flow" target="Diagram" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
