@@ -160,6 +160,9 @@ class ClmRequirementsItemManagementService {
 			def fieldData = this.fieldMap["${handlerName}"].execute(data)
 			return fieldData
 		}
+		else {
+			throw new Exception("Handler not found: ${handlerName}")
+		}
 		return null
 	}
 

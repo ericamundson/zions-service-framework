@@ -512,7 +512,7 @@
 		<field source="uiDefaultValueHandler" target="Custom.DefaultValue"/>
 		<field source="uiTooltipHandler" target="Custom.Tooltip"/>
 		<field source="fsDocumentNumHandler" target="Custom.DocumentNum"/>
-		<field source="uiRemarksHandler" target="Custom.Remarks"/>
+		<field source="remarksHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
@@ -1051,10 +1051,24 @@
 			
 	<wit source="Statement and Notice Field TCS" target="Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="nameHandler" target="System.Title"/>
+		<field source="fieldNameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="sectionIDHandler" target="Custom.SectionID"/>
+		<field source="recordTypeHandler" target="Custom.RecordType"/>
+		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
+		<field source="tcsDataElementHandler" target="Custom.LogicalElement"/>
+		<field source="businessLogicHandler" target="Custom.BusinessLogic"/>
+		<field source="tcsLengthHandler" target="Custom.Length"/>
+		<field source="tcsStartPositionHandler" target="Custom.Position"/>
+		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
+		<field source="tcsFormatHandler" target="Custom.Format"/>
+		<field source="tableHandler" target="Custom.Table"/>
+		<field source="validValuesHandler" target="Custom.Values"/>
+		<field source="defaultValueHandler" target="Custom.DefaultValue"/>
+		<field source="discussionNotesRemarksHandler" target="Custom.Remarks"/>
+		<field source="uiOriginalTagNameHandler" target="Custom.OriginalTagName"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
