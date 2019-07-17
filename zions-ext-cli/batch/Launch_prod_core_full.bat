@@ -9,7 +9,7 @@ SET clm.projectAreaUri=_klNSEBNGEeSmasotILOx6w
 
 SET tfs.url=https://dev.azure.com
 SET tfs.collection=ZionsETO
-SET tfs.project=Sandbox
+SET tfs.project=BaNCS
 SET process.name=ZionsAgile
 SET tfs.projectUri={f5b48f08-0085-4814-875a-a3dbc9736967}
 SET tfs.projectFolder=FutureCore
