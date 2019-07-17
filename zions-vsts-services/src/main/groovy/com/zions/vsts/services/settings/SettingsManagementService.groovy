@@ -18,9 +18,9 @@ class SettingsManagementService {
 
 	
 	def turnOffNotifications(collection) {
-		def procs = cacheManagementService.getAllOfType('ExecutingProcess')
 		String url = "${genericRestClient.getTfsUrl()}"
 		if (!url.toLowerCase().endsWith('zionseto')) return
+		def procs = cacheManagementService.getAllOfType('ExecutingProcess')
 		def req = [defaultGroupDeliveryPreference:-1]
 		String body = new JsonBuilder(req).toPrettyString()
 		def result = genericRestClient.patch(
