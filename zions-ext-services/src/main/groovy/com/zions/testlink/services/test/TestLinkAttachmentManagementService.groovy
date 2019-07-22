@@ -30,9 +30,6 @@ import org.springframework.stereotype.Component
 class TestLinkAttachmentManagementService {
 
 	@Autowired
-	IGenericRestClient qmGenericRestClient
-
-	@Autowired
 	TestLinkClient testLinkClient
 
 	@Autowired

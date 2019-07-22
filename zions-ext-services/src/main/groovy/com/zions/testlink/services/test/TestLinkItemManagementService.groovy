@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.qm.services.test.handlers.QmBaseAttributeHandler
+import com.zions.testlink.services.test.handlers.TlBaseAttributeHandler
 import groovyx.net.http.ContentType
 
 /**
@@ -36,6 +38,8 @@ class TestLinkItemManagementService {
 	@Autowired
 	TestLinkClient testLinkClient
 	
+	@Autowired(required=false)
+	Map<String, TlBaseAttributeHandler> fieldMap;
 	int newId = -1
 	
 	def resetNewId() {
@@ -82,7 +86,7 @@ class TestLinkItemManagementService {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def exData = [:]
-		String id = "${tlItemData.webId.text()}"
+		String id = "${tlItemData.id}"
 		def cacheResult = getResultData(resultMap, testCase)
 		if (!cacheResult) return null
 		String runId = "${cacheResult.testRun.id}"
@@ -109,7 +113,7 @@ class TestLinkItemManagementService {
 	}
 	
 	private def getResultData(def resultMap, def testCase) {
-		String rqmId = "${testCase.webId.text()}-Test Case"
+		String rqmId = "${testCase.id}"
 		def adoTestCase = cacheManagementService.getFromCache(rqmId, ICacheManagementService.WI_DATA)
 		if (adoTestCase == null) return null
 		return resultMap["${adoTestCase.id}"]
@@ -121,17 +125,18 @@ class TestLinkItemManagementService {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [:]
-		String id = "${qmItemData.webId.text()}-${type}"
+		String id = "${tlItemData.id}"
 		def cacheWI = null
 		if (type.endsWith(' WI')) {
 			String atype = "${map.target}".substring(0, type.length()-3)
 			etype = URLEncoder.encode(atype, 'utf-8').replace('+', '%20')
+			id = "${id} WI"
 		}
 		cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
-		wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+		wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0&bypassRules=true&suppressNotifications=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 		if (cacheWI != null) {
 			def cid = cacheWI.id
-			wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+			wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0&bypassRules=true&suppressNotifications=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
 		} else {
@@ -179,7 +184,7 @@ class TestLinkItemManagementService {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [:]
-		String id = "${qmItemData.webId.text()}-${type}"
+		String id = "${tlItemData.id}"
 		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.PLAN_DATA)
 		wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans", query:['api-version':'5.0-preview.2'], body: [:]]
 		if (cacheWI != null) {
@@ -187,7 +192,7 @@ class TestLinkItemManagementService {
 			wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${cid}", query:['api-version':'5.0-preview.2'], body: [:]]
 		}
 		map.fields.each { field ->
-			def fieldData = getFieldData(qmItemData, id, field, memberMap, cacheWI, map)
+			def fieldData = getFieldData(tlItemData, id, field, memberMap, cacheWI, map)
 			if (fieldData != null) {
 				if (type != 'Test Case' && !type.endsWith(' WI')) {
 					if (fieldData.value != null) {
@@ -219,20 +224,38 @@ class TestLinkItemManagementService {
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [:]
-		String id = "${qmItemData.webId.text()}-${type}"
-		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.SUITE_DATA)
-		if (parent != null) {
-			String parentId = "${parent.id}"
-			String cid = "${parent.rootSuite.id}"
-			wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0-preview.3'], body: [:]]
-			wiData.body.parent = parent.rootSuite
-			if (cacheWI != null) {
-				cid = cacheWI.id
-				wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0-preview.3'], body: [:]]
-			}
+		String parentName = ''
+		String cid = ''
+		String parentId = ''
+		if (parent.rootSuite) {
+			parentName = "${parent.name}"
+			parentId = "${parent.id}"
+			cid = "${parent.rootSuite.id}"
+		} else {
+			parentName = "${parent.plan.name}"
+			parentId = "${parent.plan.id}"
+			cid = "${parent.id}"
 		}
+		String id = "${tlItemData.id}_${parentName}"
+		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.SUITE_DATA)
+		wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0-preview.3'], body: [:]]
+		if (parent.rootSuite) {
+			wiData.body.parent = parent.rootSuite
+		} else {
+			wiData.body.parent = [:]
+			wiData.body.parent.id = parent.id
+			wiData.body.parent.name = parent.name
+			wiData.body.parent.url = parent.url
+			
+			
+		}
+		if (cacheWI != null) {
+			cid = cacheWI.id
+			wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0-preview.3'], body: [:]]
+		}
+		wiData.body.suiteType = 'StaticTestSuite'
 		map.fields.each { field ->
-			def fieldData = getFieldData(qmItemData, id, field, memberMap, cacheWI, map)
+			def fieldData = getFieldData(tlItemData, id, field, memberMap, cacheWI, map)
 			if (fieldData != null) {
 				if (type != 'Test Case' && !type.endsWith(' WI')) {
 					if (fieldData.value != null) {
@@ -259,22 +282,22 @@ class TestLinkItemManagementService {
 
 	}
 	
-	private def getFieldData(def qmItemData, def id, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null) {
+	private def getFieldData(def tlItemData, def id, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null) {
 		String handlerName = "${field.source}"
-		String qmHandlerName = "Tl${handlerName.substring(0,1).toUpperCase()}${handlerName.substring(1)}"
+		String tlHandlerName = "Tl${handlerName.substring(0,1).toUpperCase()}${handlerName.substring(1)}"
 		String fValue = ""
-		if (this.fieldMap[qmHandlerName] != null) {
-			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
+		if (this.fieldMap[tlHandlerName] != null) {
+			def data = [itemData: tlItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}
 			if (resultMap != null) {
 				data['resultMap'] = resultMap
 			}
-			def fieldData = this.fieldMap[qmHandlerName].execute(data)
+			def fieldData = this.fieldMap[tlHandlerName].execute(data)
 			return fieldData
 		} else if (this.fieldMap["${handlerName}"] != null) {
-			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
+			def data = [itemData: tlItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}
@@ -289,26 +312,35 @@ class TestLinkItemManagementService {
 	}
 	
 	private def getTestMaps(tlItemData) {
-		String type = "${tlItemData.name()}"
+		
+		String type = "${tlItemData.class.simpleName}"
 		def maps = testLinkMappingManagementService.mappingData.findAll { amap ->
 			"${amap.source}" == "${type}"
 		}
 		return maps
 	}
 	
-	public def setParent(def parent, def children, def map, Closure c) {
+	public def setParent(def parent, TestCase[] children, def map, String appendId = null, Closure c) {
 		String pid = "${parent.id}"
 		String type = ICacheManagementService.PLAN_DATA
-		if (parent instanceof TestSuite) type = ICacheManagementService.SUITE_DATA
+		if (parent instanceof TestSuite) {
+			type = ICacheManagementService.SUITE_DATA
+			pid = "${pid}_${appendId}"
+		}
 		def parentData = cacheManagementService.getFromCache(pid, type)
 		if (parentData != null) {
 			def tcIds = []
 			int tot = children.size()
 			int count = 0
-			children.each { child ->
+			children.each { achild ->
 				
 				
-				String cid = "${child.id}"
+				String cid = "${achild.id}"
+				TestCase child = null
+				try {
+					child = testLinkClient.getTestCase(achild.id, null, null)
+					cid = "${child.id}"
+				} catch (e) {}
 				def childData = cacheManagementService.getFromCache(cid, ICacheManagementService.WI_DATA)
 				if (childData != null) {
 					tcIds.add("${childData.id}")

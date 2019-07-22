@@ -5,8 +5,7 @@ import com.zions.common.services.restart.IQueryHandler
 import com.zions.testlink.services.test.TestLinkClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-
-import br.eti.kinoshita.testlinkjavaapi.constants.TestCaseDetails
+import org.springframework.stereotype.Component
 import br.eti.kinoshita.testlinkjavaapi.model.TestCase
 import br.eti.kinoshita.testlinkjavaapi.model.TestPlan
 import br.eti.kinoshita.testlinkjavaapi.model.TestProject
@@ -14,7 +13,7 @@ import br.eti.kinoshita.testlinkjavaapi.model.TestSuite
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
 
-
+@Component
 class TestcaseQueryHandler implements IQueryHandler {
 	
 	@Autowired
@@ -23,14 +22,11 @@ class TestcaseQueryHandler implements IQueryHandler {
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
 
-	@Autowired
-	IGenericRestClient qmGenericRestClient
-
 
 	@Value('${testlink.projectName:}')
 	String projectName
 	
-	@Value('${item.filter:qmAllFilter}')
+	@Value('${item.filter:tlAllFilter}')
 	private String itemFilter
 
 	def currentItems
@@ -53,7 +49,10 @@ class TestcaseQueryHandler implements IQueryHandler {
 	}
 	
 	private TestSuite[] addSuites(TestSuite parent, List<TestSuite> suiteList) {
-		TestSuite[] children = testLinkClient.getTestSuitesForTestSuite(parent.id)
+		TestSuite[] children = []
+		try {
+			children = testLinkClient.getTestSuitesForTestSuite(parent.id)
+		} catch (e) {}
 		children.each { TestSuite child  ->
 			suiteList.add(child)
 			addSuites(child, suiteList)
@@ -65,7 +64,7 @@ class TestcaseQueryHandler implements IQueryHandler {
 			allSuites()
 		}
 		if (testSuites.length > 0) {
-			TestCase[] tc = testLinkClient.getTestCasesForTestSuite(testSuites[0].id, true, TestCaseDetails.FULL)
+			TestCase[] tc = testLinkClient.getTestCasesForTestSuite(testSuites[0].id, false, 'full')
 			return tc
 		}
 		return null
@@ -79,7 +78,7 @@ class TestcaseQueryHandler implements IQueryHandler {
 	}
 
 	public String getPageUrl() {
-		if (testSuites.length > 0) {
+		if (testSuites.length > 0 && page < testSuites.length-2) {
 			return testSuites[page+1].name
 		}
 		return null
@@ -88,7 +87,7 @@ class TestcaseQueryHandler implements IQueryHandler {
 	public Object nextPage() {
 		page++
 		if (testSuites.length > 0 && page < testSuites.length) {
-			TestCase[] tc = testLinkClient.getTestCasesForTestSuite(testSuites[page].id, true, TestCaseDetails.FULL)
+			TestCase[] tc = testLinkClient.getTestCasesForTestSuite(testSuites[page].id, false, 'full')
 			return tc
 		}
 		return null

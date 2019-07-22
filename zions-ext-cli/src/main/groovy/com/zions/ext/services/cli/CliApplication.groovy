@@ -66,18 +66,18 @@ public class CliApplication implements ApplicationRunner {
 			if (action != null) {
 				try {
 					action.validate(args);
-					if (settingsManagementService) {
-						settingsManagementService.turnOffNotifications('')
-					}
+//					if (settingsManagementService) {
+//						settingsManagementService.turnOffNotifications('')
+//					}
 					action.execute(args);
 				} catch (e) {
 					e.printStackTrace()
 					log.error(e)
 					System.exit(1);
 				} finally {
-					if (settingsManagementService) {
-						settingsManagementService.turnOnNotifications('')
-					}
+//					if (settingsManagementService) {
+//						settingsManagementService.turnOnNotifications('')
+//					}
 				}
 			} else {
 				log.error('No action related to command')

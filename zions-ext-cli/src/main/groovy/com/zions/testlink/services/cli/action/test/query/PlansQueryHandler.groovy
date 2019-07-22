@@ -20,14 +20,10 @@ class PlansQueryHandler implements IQueryHandler {
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
 
-	@Autowired
-	IGenericRestClient qmGenericRestClient
-
-
 	@Value('${testlink.projectName:}')
 	String projectName
 	
-	@Value('${item.filter:qmAllFilter}')
+	@Value('${item.filter:tlAllFilter}')
 	private String itemFilter
 
 	def currentItems
