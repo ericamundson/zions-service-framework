@@ -104,11 +104,12 @@ class ClmRequirementsManagementService {
 	ClmRequirementsModule getModule(String moduleUri, boolean validationOnly) {
 		boolean cacheLinks = false
 		boolean addEmbeddedCollections = false
+		def links = []
 		String uri = moduleUri.replace('resources/','publish/modules?resourceURI=')
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/xml'] );
-			
+		
 		// Extract and instantiate the ClmRequirementsmodules
 		def module = result.artifact[0]
 		String moduleType = ""
@@ -131,8 +132,26 @@ class ClmRequirementsManagementService {
 					addEmbeddedCollections = shouldAddCollectionsToModule(moduleType)
 				}				
 			}
+			else if (iName == "traceability") {
+				child.links.children().each { link ->
+					String linkType
+					String linkURI				
+					link.children().each { linkattr ->
+
+						if (linkattr.name() == 'title') {
+							linkType = "${link.title}"
+						}
+						else if (linkattr.name() == 'relation') {
+							linkURI = "${link.relation}"
+						}
+					}
+					links.add(new ModuleLink(linkType,linkURI))
+				}
+			}
 			else if (iName == "moduleContext") {
 				def kk = 0
+				def prevType = null
+				def seqNo = 0
 				child.children().each { contextBinding ->
 						String about = contextBinding.about
 						String artifactTitle = contextBinding.title
@@ -158,16 +177,26 @@ class ClmRequirementsManagementService {
 							}
 						}
 						else {
-							getNonTextArtifact(artifact, cacheLinks)
+							getNonTextArtifact(artifact, true, cacheLinks)
 						}
+						
+						// Set typeSeqNo to migrate RPE generated sequence numbers
+						if (artifact.getArtifactType()== prevType) {
+							seqNo = seqNo + 1
+							artifact.setTypeSeqNo(seqNo)
+						}
+						else {
+							seqNo = 1
+							artifact.setTypeSeqNo(seqNo)
+						}
+						prevType = artifact.getArtifactType()
 				}
-				def j = 1
 			}
 		}
 		
 		
 		// Instantiate and return the module
-		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, moduleAttributeMap,orderedArtifacts)
+		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, moduleAttributeMap,orderedArtifacts,links)
 		return clmModule
 
 	}
@@ -200,17 +229,35 @@ class ClmRequirementsManagementService {
 	//
 	/**
 	 * @param maxPage - For testing purposes
+	 * @param delta - Set to true if doing an update so we do not overwrite the queryStart (used as the beginning of delta queries)
 	 * @return
 	 */
-	def flushQueries(int maxPage = -1) {
+	def flushQueries(boolean delta = false, int maxPage = -1) {
 		Date ts = new Date()
-		cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+		Date queryEndDate;
+		
+		//if this is not a delta run, queryEndDate and the QueryStart value are identical as usual
+		if (!delta) {
+			log.info("Writing new QueryStart timestamp for RM")
+			cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'query', 'QueryStart')
+			queryEndDate = ts;
+		} else {
+			//if this is a delta run, we want a new date for cache purposes (or it will reuse the original query pages)
+			//but we want to not touch QueryStart as that is what our delta is based on
+			//in theory this could shuffle to delta from the last delta, but it makes testing a pain for now
+			def cp = cacheManagementService.getFromCache('query', 'QueryStart')
+			if (cp) {
+				cacheManagementService.saveToCache([timestamp: ts.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")], 'last', 'QueryDelta')
+				queryEndDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
+			}
+			log.info("Performing delta on update from original QueryStart date ${queryEndDate}")
+		}
 		int pageCount = 0
 		def currentItems
 		def iUrl
-//		try {
+
 		new CacheInterceptor() {}.provideCaching(this, "${pageCount}", ts, DataWarehouseQueryData) {
-			currentItems = this.queryDatawarehouseSource(ts)
+			currentItems = this.queryDatawarehouseSource(queryEndDate)
 		}
 		while (true) {
 			iUrl = this.pageUrlDb()
@@ -405,32 +452,39 @@ class ClmRequirementsManagementService {
 		}
 		return memberHrefs
 	}
-	def getNonTextArtifact(def in_artifact, boolean cacheLinks) {
+	def getNonTextArtifact(def in_artifact, boolean includeCollections, boolean cacheLinks) {
 		//log.debug("fetching non-text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/resources?resourceURI="),
 				headers: [Accept: 'application/xml'] );
 					
-		// Extract artifact attributes
-		result.children().each { artifactNode ->
-			parseTopLevelAttributes(artifactNode, in_artifact)
-			if (cacheLinks) parseLinksFromArtifactNode(artifactNode, in_artifact)
-			artifactNode.children().each { child ->
-				String iName = child.name()
-				if (iName == "collaboration" ) {
-					// Set artifact type and attributes
-					String artifactType = parseCollaborationAttributes( child, in_artifact.attributeMap)
-					in_artifact.setArtifactType(artifactType)
-				}
-				else if (iName == "wrappedResourceURI") {
-					// Set primary text
-					String primaryText = "<div>Uploaded Attachment</div>"
-					in_artifact.setDescription(primaryText)
-					String hRef = "${child}"
-					in_artifact.setFileHref(hRef)
-				}
+		// Should only be on artfact node
+		def artifactNode = result.children()[0]
+		
+		// First validate that this is not a text format (which could happen if a WrapperResource is embedded in a text artifact)
+		if ("${artifactNode.format}" == "Text") {
+			return getTextArtifact(in_artifact, includeCollections, cacheLinks)
+		}
+		
+		// Parse artifact attributes
+		parseTopLevelAttributes(artifactNode, in_artifact)
+		if (cacheLinks) parseLinksFromArtifactNode(artifactNode, in_artifact)
+		artifactNode.children().each { child ->
+			String iName = child.name()
+			if (iName == "collaboration" ) {
+				// Set artifact type and attributes
+				String artifactType = parseCollaborationAttributes( child, in_artifact.attributeMap)
+				in_artifact.setArtifactType(artifactType)
+			}
+			else if (iName == "wrappedResourceURI") {
+				// Set primary text
+				String primaryText = "<div>Uploaded Attachment</div>"
+				in_artifact.setDescription(primaryText)
+				String hRef = "${child}"
+				in_artifact.setFileHref(hRef)
 			}
 		}
+		
 		
 		return in_artifact
 
@@ -467,6 +521,8 @@ class ClmRequirementsManagementService {
 	}
 	
 	private void parseTopLevelAttributes(def artifactNode, def in_artifact) {
+		in_artifact.setFormat("${artifactNode.format}")
+		
 		String title = "${artifactNode.title}"
 		if (title == '') {
 			title= "${artifactNode.description}"
@@ -629,23 +685,26 @@ class DataWarehouseQueryData implements CacheWData {
 	def data
 	
 	void doData(def result) {
-		log.debug("DWQueryData serializing result doData")
+		log.debug("Saving new DataWarehouseQueryData page to mongodb")
 		data = new JsonBuilder(result).toPrettyString()
 	}
 	
 	def dataValue() {
-		log.debug("DWQueryData returning serialized result dataValue")
+		//log.debug("DWQueryData returning serialized result dataValue")
 		return new JsonSlurper().parseText(data)
 	}
 }
 
+@Slf4j
 class SqlLoader {
 	
 	String sqlQuery(String sqlresource) {
-		InputStream is = this.getClass().getResource(sqlresource).openStream()
+		log.debug("Sql file at ${sqlresource}")
+		if (sqlresource.startsWith('/')) sqlresource=sqlresource.substring(1)
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream(sqlresource)
 		//File sqlFile = new File(url.file)
 		String sql = is.text
+		log.debug("Retrieved SQL query: ${sql}")
 		return sql
 	}
-
 }

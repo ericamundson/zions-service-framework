@@ -13,12 +13,21 @@ class SequenceNoHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-	    try {
-	        Integer seq = Integer.parseInt(value);
-	    } catch (NumberFormatException | NullPointerException nfe) {
-			log.error("Invalid value for Sequence No: $value")
-	        return null;
-	    }
+		if (value == null || value == '') {
+			// Use generated value (will only exist when migrating modules)
+			if (itemData.getTypeSeqNo()) {
+				value = itemData.getTypeSeqNo()
+			}
+		}
+		else {
+			// Validate numeric value
+		    try {
+		        Integer seq = Integer.parseInt(value);
+		    } catch (NumberFormatException | NullPointerException nfe) {
+				throw new Exception("SequenceNoHandler threw exception, invalid value for SequenceNo: $value")
+		        return null;
+		    }
+		}
 		return value
 	}
 

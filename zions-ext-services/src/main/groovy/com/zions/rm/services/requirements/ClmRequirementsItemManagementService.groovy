@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
 
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
@@ -61,7 +62,10 @@ class ClmRequirementsItemManagementService {
 	
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
-	
+
+	@Autowired(required=false)
+	ICheckpointManagementService checkpointManagementService
+
 	int newId = -1
 	
 	
@@ -111,7 +115,14 @@ class ClmRequirementsItemManagementService {
 		
 		// Map each attribute from CLM to TFS
 		map.fields.each { field ->
-			def fieldData = getFieldData(rmItemData, field, memberMap, cacheWI, map)
+			def fieldData
+			try {
+				fieldData = getFieldData(rmItemData, field, memberMap, cacheWI, map)
+			}
+			catch (Exception e) {
+				checkpointManagementService.addLogentry("could not getChanges for ${id} because: ${e}")
+				return
+			}
 			if (fieldData != null) {
 				if (fieldData.value != null) {
 					wiData.body.add(fieldData)

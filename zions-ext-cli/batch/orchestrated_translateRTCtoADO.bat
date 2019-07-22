@@ -1,0 +1,3 @@
+java -Dspring.profiles.active=clmdb -jar e:\batch\zions-ext-cli.jar translateRTCWorkToVSTSWork --clm.user=%clm.user% --clm.password=%clm.password% --clm.url=%clm.url% --clm.pageSize=%clm.pageSize% --tfs.url=%tfs.url% --clm.projectArea=%ccm.projectArea% --ccm.template.dir=%ccm.template.dir% --wit.mapping.file=%wit.mapping.file% --tfs.project=%tfs.project% --process.name=%process.name% --wi.query=%wi.query% --wi.filter=%wi.filter% --cache.location=%cache.location% --db.project=%db.project% --spring.data.mongodb.database=%spring.data.mongodb.database% --logging.file=%log.ccm%
+pause
+exit
