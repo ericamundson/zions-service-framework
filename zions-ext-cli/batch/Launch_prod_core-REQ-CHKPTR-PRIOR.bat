@@ -21,13 +21,13 @@ set tfs.token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im9PdmN6NU1fN3AtSGpJS2
 
 SET db.project=core
 SET spring.data.mongodb.database=adomigration_prod
-SET selected.checkpoint=none
+SET selected.checkpoint=priorToLogEntries
 
 ::RM specific variables
 ::blank out include.updates to skip RM artifact migration
 ::If updating, use flushQueriesDelta instead of flushQueries in rm.include.update
 ::and use the update sql file instead of the standard one
-SET rm.include.update=flushQueries,whereused,phases
+SET rm.include.update=phases
 SET rm.include.phases=requirements
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
@@ -56,10 +56,10 @@ SET rqm.query="none"
 SET rqm.filter=allFilter
 SET rqm.tfs.areapath="FutureCore\\Test"
 
-SET logdir=E:\bin\batch\logs\prodsandbox
+SET logdir=E:\bin\batch\logs\prodcore
 ::don't need to change these regularly if you set the above folder to target environment/project
 SET log.rqm=%logdir%\translate_RQMtoADO.log
-SET log.dng=%logdir%\translate_DNGtoADO.log
+SET log.dng=%logdir%\translate_DNGtoADO_checkpointrestart.log
 SET log.ccm=%logdir%\translate_CCMtoADO.log
 
 ::not using these items I think
