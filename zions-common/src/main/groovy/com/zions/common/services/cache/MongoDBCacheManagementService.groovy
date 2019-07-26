@@ -149,6 +149,16 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 		return wis;
 	}
 
+	public Map getNoneModuleAllOfType(String type) {
+		def wis = [:]
+		List<CacheItem> items = repository.findByProjectAndType(dbProject, type)
+		
+		items.each { CacheItem item ->
+			def wi = new JsonSlurper().parseText(item.json)
+			wis[item.key] = wi
+		}
+		return wis;
+	}
 
 	@Override
 	public void deleteByType(String type) {

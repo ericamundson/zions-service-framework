@@ -3,7 +3,7 @@ package com.zions.vsts.services.extdata
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-
+import com.zions.common.services.extension.IExtensionData
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
@@ -25,7 +25,7 @@ import groovyx.net.http.ContentType
  */
 @Component
 @Slf4j
-class ExtensionDataManagementService {
+class ExtensionDataManagementService implements IExtensionData {
 	@Value('${ext.url:}')
 	String extUrl
 	

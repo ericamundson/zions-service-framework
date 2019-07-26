@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
-import br.eti.kinoshita.testlinkjavaapi.constants.TestCaseDetails
 import br.eti.kinoshita.testlinkjavaapi.model.Execution
 import br.eti.kinoshita.testlinkjavaapi.model.TestCase
 import br.eti.kinoshita.testlinkjavaapi.model.TestPlan
@@ -222,7 +221,8 @@ class TranslateTestLinkToADO implements CliAction {
 	TestLinkClient testLinkClient
 
 	@Value('${process.full.plan:false}')
-	String processFullPlan
+	boolean processFullPlan
+	
 
 	public TranslateTestLinkToADO() {
 	}
@@ -241,8 +241,6 @@ class TranslateTestLinkToADO implements CliAction {
 			}
 		} catch (e) {}
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
-		String project = data.getOptionValues('clm.projectArea')[0]
-		String templateDir = data.getOptionValues('qm.template.dir')[0]
 		String mappingFile = data.getOptionValues('test.mapping.file')[0]
 		String tlQuery = data.getOptionValues('tl.query')[0]
 		String wiFilter = data.getOptionValues('tl.filter')[0]
@@ -264,10 +262,18 @@ class TranslateTestLinkToADO implements CliAction {
 			}
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
-//		if (includes['refresh'] != null) {
-//			workManagementService.refresh(collection, tfsProject)
-//			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
-//		}
+		if (includes['cleanplans'] != null) {
+			new FlowInterceptor() {}.flowLogging(testManagementService) {
+				String query = "Select [System.Id], [System.Title] From WorkItems Where ([System.WorkItemType] = 'Test Plan') AND [System.AreaPath] = '${areaPath}' AND [Custom.ExternalID] <> ''"
+				testManagementService.cleanupTestItems(collection, tfsProject, areaPath, query)
+			}
+			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
+		}
+		if (includes['refresh'] != null) {
+			String query = "Select [System.Id], [System.Title] From WorkItems Where ([System.AreaPath] under '${areaPath}')"
+			workManagementService.refreshCacheByQuery(collection, tfsProject, query)
+			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
+		}
 		def mappingData = testLinkMappingManagementService.mappingData
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 		if (includes['phases'] != null) {
@@ -289,8 +295,16 @@ class TranslateTestLinkToADO implements CliAction {
 					def idKeyMap = [:]
 					testLinkItemManagementService.resetNewId()
 					items.each { testItem ->
-						TestCase testcase = testItem
-						int aid = Integer.parseInt(testcase.id)
+						TestCase testcasea = testItem
+						TestCase testcase = null
+						try {
+							testcase = testLinkClient.getTestCase(testcasea.id, null, null)
+						} catch (e) {}
+						if (!testcase) 
+						{
+							testcase = testcasea
+						}
+						int aid = testcase.id
 						// generate test data
 						//						String testcasexml = XmlUtil.serialize(testcase)
 						//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
@@ -315,7 +329,7 @@ class TranslateTestLinkToADO implements CliAction {
 					testLinkItemManagementService.resetNewId()
 					items.each { testItem ->
 						TestPlan testplan = testItem
-						int id = testplan.id
+						int pid = testplan.id
 						//Generate test data
 						//					String itemXml = XmlUtil.serialize(testplan)
 						//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/testplan${id}.xml")
@@ -324,46 +338,55 @@ class TranslateTestLinkToADO implements CliAction {
 						//					os.close()
 
 
+						def testcaseCallback = null
+						if (processFullPlan) {
+							testcaseCallback = { TestSuite psuite, TestCase testcasea -> 
+								TestCase testcase = null
+								try {
+									testcase = testLinkClient.getTestCase(testcasea.id, null, null)
+								} catch (e) {}
+								if (!testcase) 
+								{
+									testcase = testcasea
+								}
+								int aid = testcase.id
+								 //generate test data
+								String idtype = "${aid}-testcase"
+								if (!idKeyMap.containsKey(idtype)) {
+									def tcchanges = testLinkItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+										String tid = "${aid}".toString()
+										clManager.add(tid,val)
+									}
+									idKeyMap[idtype] = idtype
+								}
+							}
+						}
+							
 						def plan = null
 						testLinkItemManagementService.processForChanges(tfsProject, testplan, memberMap) { String key, def val ->
 							if (key.endsWith('WI')) {
-								clManager.add("${id}", val)
+								clManager.add("${pid}", val)
 							} else {
-								plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}")
+								plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${pid}")
 							}
 						}
-						TestSuite[] suites = testLinkClient.getTestSuitesForTestPlan(id)
-						suites.each { testsuite ->
-							//String tsXml = XmlUtil.serialize(testsuite)
-							int tsid = testsuite.id
-							String idtype = "${tsid}-testsuite"
-							if (!idKeyMap.containsKey(idtype)) {
-								testLinkItemManagementService.processForChanges(tfsProject, testsuite, memberMap, null, null, plan) { key, val ->
-									if (key.endsWith(' WI')) {
-										clManager.add("${tsid}", val)
-									} else {
-										String idkey = "${tsid}"
-										def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${idkey}")
-									}
-								}
-								idKeyMap[idtype] = idtype
-							}
-							if (processFullPlan == 'true') {
-								TestCase[] testcases = testLinkClient.getTestCasesForTestSuite(tsid, true, TestCaseDetails.FULL)
-								testcases.each { TestCase testcase ->
-									int aid = testcase.id
-									 //generate test data
-									idtype = "${aid}-testcase"
-									if (!idKeyMap.containsKey(idtype)) {
-										def tcchanges = testLinkItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-											String tid = "${aid}".toString()
-											clManager.add(tid,val)
-										}
-										idKeyMap[idtype] = idtype
-									}
+						TestSuite[] suites = testLinkClient.getFirstLevelSuitesForTestPlan(testplan)
+						handleTestSuites(suites, plan, testplan, null, { def parent, TestSuite testsuite -> 
+							String tsid = "${testsuite.id}_${testplan.name}"
+							def suite = null;
+							testLinkItemManagementService.processForChanges(tfsProject, testsuite, memberMap, null, null, parent) { key, val ->
+								if (key.endsWith(' WI')) {
+									String cid = "${tsid} WI"
+									
+									clManager.add("${cid}", val)
+									clManager.flush();
+								} else {
+									String idkey = "${tsid}"
+									suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${idkey}")
 								}
 							}
-						}
+							return suite
+						}, testcaseCallback)
 					}
 					clManager.flush();
 				}
@@ -371,37 +394,48 @@ class TranslateTestLinkToADO implements CliAction {
 				//apply work links
 				if (phase == 'links') {
 					def idKeyMap = [:]
-					items.each { testplan ->
+					items.each { TestPlan testplan ->
 						String webId = "${testplan.id}"
-						TestSuite[] testsuites = testLinkClient.getTestSuitesForTestPlan(webId)
-						testsuites.each { TestSuite testsuite ->
-							String tswebId = "${testsuite.id}"
-							TestCase[] testcaseList = testLinkClient.getTestCasesForTestSuite(testsuite.id, true, TestCaseDetails.FULL)
-							testLinkItemManagementService.setParent(testsuite, testcaseList, mappingData) { typeData, tcIds ->
-								testManagementService.associateCaseToSuite(typeData, tcids)
+						String planName = "${testplan.name}"
+						def plan = cacheManagementService.getFromCache(webId, ICacheManagementService.PLAN_DATA)
+						TestSuite[] suites = testLinkClient.getFirstLevelSuitesForTestPlan(testplan)
+						handleTestSuites(suites, plan, testplan, null,
+						 { def parent, TestSuite testsuite ->
+							String tswebId = "${testsuite.id}_${testplan.name}"
+							TestCase[] testcaseList = testLinkClient.getTestCasesForTestPlanSuite(testsuite.id, testplan.id, false, 'full')
+							testLinkItemManagementService.setParent(testsuite, testcaseList, mappingData, planName) { typeData, tcIds ->
+								testManagementService.associateCaseToSuite(typeData, tcIds)
 							}
-						}
+							def suiteData = cacheManagementService.getFromCache(tswebId, ICacheManagementService.SUITE_DATA)
+							return suiteData
+						}, null )
 					}
 				}
 
 				if (phase == 'executions') {
 					//def linkMapping = processTemplateService.getLinkMapping(mapping)
-					items.each { testplan ->
+					items.each { TestPlan testplan ->
 						String webId = "${testplan.id}"
-						String parentHref = "${testItem.id.text()}"
-						def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
-						TestSuite[] testsuites = testLinkClient.getTestSuitesForTestPlan(webId)
-						testsuites.each { testsuite ->
-							TestCase[] testcaseList = testLinkClient.getTestCasesForTestSuite(testsuite.id, true, TestCaseDetails.FULL)
-							testcaseList.each { testcase ->
-								Execution result = testLinkClient.getLastExecutionResult(testplan.id, testcase.id, testCase.externalId)
-								testLinkItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
-									String rwebId = "${result.id}"
-									testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
-								}
+						TestCase[] testcaseList = testLinkClient.getTestCasesForTestPlan(testplan.id, null, null, null, null, null, null, null, null, false)
+						testcaseList.each { TestCase testcasea ->
+							Execution result = testLinkClient.getLastExecutionResult(testplan.id, testcasea.id, null)
+							if (!result) return
+							TestCase testcase = null
+							try {
+								testcase = testLinkClient.getTestCase(testcasea.id, null, null)
+							} catch (e) {}
+							if (!testcase) 
+							{
+								testcase = testcasea
+							}
+							Map resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
+							testLinkItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
+								String rwebId = "${result.id}"
+								testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
 							}
 						}
 					}
+
 				}
 
 				if (phase == 'attachments') {
@@ -409,21 +443,20 @@ class TranslateTestLinkToADO implements CliAction {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					def idKeyMap = [:]
 					testLinkItemManagementService.resetNewId()
-					items.each { testplan ->
-						String webId = "${testplan.id}"
-						String parentHref = "${testItem.id.text()}"
-						def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
-						TestSuite[] testsuites = testLinkClient.getTestSuitesForTestPlan(testplan.id)
-						testsuites.each { testsuite ->
-							TestCase[] testcaseList = testLinkClient.getTestCasesForTestSuite(testsuite.id, true, TestCaseDetails.FULL)
-							testcaseList.each { TestCase testcase ->
-								String id = "${testcase.id}"
-								def files = testLinkAttachmentManagementService.cacheTestCaseAttachments(testcase)
-								def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-								if (wiChanges != null) {
-									clManager.add(id, wiChanges)
-								}
-							}
+					items.each { TestCase testcasea ->
+						TestCase testcase = null
+						try {
+							testcase = testLinkClient.getTestCase(testcasea.id, null, null)
+						} catch (e) {}
+						if (!testcase) 
+						{
+							testcase = testcasea
+						}
+						String id = "${testcase.id}"
+						def files = testLinkAttachmentManagementService.cacheTestCaseAttachments(testcasea)
+						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+						if (wiChanges != null) {
+							clManager.add(id, wiChanges)
 						}
 					}
 					clManager.flush()
@@ -433,6 +466,29 @@ class TranslateTestLinkToADO implements CliAction {
 		//extract & apply attachments.
 
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
+	}
+	
+	def handleTestCaseForTestSuites(TestSuite suite, TestPlan plan, def resultMap = null, Closure c)
+	{
+		TestCase[] tcList = testLinkClient.getTestCasesForTestPlanSuite(suite.id, plan.id, false, 'full')
+		tcList.each { TestCase tc ->
+			c.call(suite, tc)
+		}
+	}
+	
+	def handleTestSuites(TestSuite[] psuites, def parent, TestPlan plan, def resultMap = null,  Closure tsc = null, Closure tcc = null) {
+		psuites.each { TestSuite psuite ->
+			def parentData = null
+			if (tsc) {
+				parentData = tsc.call(parent, psuite)
+			}
+			if (tcc) {
+				handleTestCaseForTestSuites(psuite, plan, resultMap, tcc)
+			}
+			TestSuite[] csuites = testLinkClient.getSuitesForTestPlanSuites(plan.id, psuite.id)
+			handleTestSuites(csuites, parentData, plan, resultMap, tsc, tcc)
+		}
+		
 	}
 
 	/**

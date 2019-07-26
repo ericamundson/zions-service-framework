@@ -136,7 +136,8 @@ class WorkManagementService {
 			}
 			return key
 		} else if (eId.startsWith('TL-')) {
-			return eId.substring(3)
+			String key = "${eId.substring(3)}"
+			return key
 		}
 	}
 

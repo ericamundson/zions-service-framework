@@ -1,19 +1,21 @@
 package com.zions.testlink.services.test.handlers
 
-import br.eti.kinoshita.testlinkjavaapi.model.TestCase
 import org.springframework.stereotype.Component
 
-@Component('TlSummaryHandler')
-class SummaryHandler extends TlBaseAttributeHandler {
+@Component('TlResultStartDateHandler')
+class ResultStartDateHandler extends TlBaseAttributeHandler {
+	static int SIZE = 255
 
 	public String getFieldName() {
 		
-		return 'summary'
+		return 'starttime'
 	}
 
 	public def formatValue(def value, def data) {
 		String outVal = "${value}"
-		if (value == null || value.length() == 0) return null
+		if (value.length() == 0) {
+			return null
+		}
 		return outVal;
 	}
 
