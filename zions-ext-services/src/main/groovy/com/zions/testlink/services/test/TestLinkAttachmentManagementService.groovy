@@ -68,13 +68,15 @@ class TestLinkAttachmentManagementService {
 	 */
 	public def cacheTestCaseAttachments(def testCase) {
 		def files = []
-		Attachment[] attachments = testLinkClient.getTestCaseAttachments(testCase.id, testCase.fullExternalId)
+		Attachment[] attachments = testLinkClient.getTestCaseAttachments(testCase.id, null)
 		attachments.each { Attachment attachment ->
 			def data = attachment.content
+			byte[] dstr = Base64.decoder.decode(data)
+			ByteArrayInputStream bdata = new ByteArrayInputStream(dstr)
 			def filename = attachment.fileName
 			String id = "${testCase.id}"
 			if (filename != null) {
-				def file = cacheManagementService.saveBinaryAsAttachment(data, filename, id)
+				def file = cacheManagementService.saveBinaryAsAttachment(bdata, filename, id)
 				def item = [file: file, comment: "Added attachment ${filename}"]
 				//File cFile = saveAttachment
 				files.add(item)
@@ -90,47 +92,5 @@ class TestLinkAttachmentManagementService {
 		return files
 	}
 
-	private def handleTestSteps(ts, id) {
-		def files = []
-		int sCount = 2
-		ts.steps.step.each { step ->
-			String comment = "[TestStep=${sCount}]:"
-			step.attachment.each { attachment ->
-				String aurl = "${attachment.@href}"
-				def result = clmTestManagementService.getContent(aurl)
-				if (result.filename != null) {
-					def file = cacheManagementService.saveBinaryAsAttachment(result.data, "${result.filename}", id)
-					def item = [file: file, comment: comment]
-					//File cFile = saveAttachment
-					files.add(item)
-				}
-			}
-			sCount++
-		}
-		return files
-	}
-
-
-
-	private def getTestScript(def itemData) {
-		def tss = itemData.testscript
-		if (tss.size() > 0) {
-			String href = "${tss[0].@href}"
-			def ts = clmTestManagementService.getTestItem(href)
-			return ts
-		}
-		return null
-	}
-	
-	private def getOutType(qmItemData) {
-		String type = "${qmItemData.name()}"
-		def maps = testMappingManagementService.mappingData.findAll { amap ->
-			"${amap.source}" == "${type}"
-		}
-		if (maps.size() > 0) {
-			return maps[0].target
-		}
-		return maps
-	}
 
 }

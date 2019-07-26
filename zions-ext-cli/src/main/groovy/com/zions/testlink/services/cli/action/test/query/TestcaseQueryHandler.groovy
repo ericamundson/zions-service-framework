@@ -37,7 +37,7 @@ class TestcaseQueryHandler implements IQueryHandler {
 	
 	TestSuite[] testSuites
 	
-	private void allSuites() {
+	protected void allSuites() {
 		TestProject project = testLinkClient.getTestProjectByName(projectName)
 		TestSuite[] topSuites = testLinkClient.getFirstLevelTestSuitesForTestProject(project.id)
 		List<TestSuite> suiteList = new ArrayList<TestSuite>()
@@ -48,15 +48,20 @@ class TestcaseQueryHandler implements IQueryHandler {
 		testSuites = suiteList.toArray(new TestSuite[suiteList.size()])
 	}
 	
-	private TestSuite[] addSuites(TestSuite parent, List<TestSuite> suiteList) {
+	protected TestSuite[] addSuites(TestSuite parent, List<TestSuite> suiteList) {
 		TestSuite[] children = []
 		try {
 			children = testLinkClient.getTestSuitesForTestSuite(parent.id)
-		} catch (e) {}
-		children.each { TestSuite child  ->
-			suiteList.add(child)
-			addSuites(child, suiteList)
+		} catch (e) {
+			
 		}
+		if (children) {
+			children.each { TestSuite child  ->
+				suiteList.add(child)
+				addSuites(child, suiteList)
+			}
+		}
+		return suiteList
 	}
 	
 	public def getItems() {

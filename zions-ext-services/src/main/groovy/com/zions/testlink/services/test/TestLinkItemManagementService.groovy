@@ -130,7 +130,16 @@ class TestLinkItemManagementService {
 		if (type.endsWith(' WI')) {
 			String atype = "${map.target}".substring(0, type.length()-3)
 			etype = URLEncoder.encode(atype, 'utf-8').replace('+', '%20')
-			id = "${id} WI"
+			//id = "${id} WI"
+			if (type == 'Test Suite WI' && parent.rootSuite) {
+				String parentName = "${parent.name}"
+				id = "${id}_${parentName} WI"
+			} else if (type == 'Test Suite WI'){
+				String parentName = "${parent.plan.name}"
+				id = "${id}_${parentName} WI"
+			} else {
+				id = "${id} WI"
+			}
 		}
 		cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
 		wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0&bypassRules=true&suppressNotifications=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
@@ -145,7 +154,7 @@ class TestLinkItemManagementService {
 			wiData.body.add(idData)
 		}
 		map.fields.each { field ->
-			def fieldData = getFieldData(tlItemData, id, field, memberMap, cacheWI, map)
+			def fieldData = getFieldData(tlItemData, id, field, memberMap, cacheWI, map, null, null, parent)
 			if (fieldData != null) {
 				if (type != 'Test Case' && !type.endsWith(' WI')) {
 					if (fieldData.value != null) {
@@ -192,7 +201,7 @@ class TestLinkItemManagementService {
 			wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${cid}", query:['api-version':'5.0-preview.2'], body: [:]]
 		}
 		map.fields.each { field ->
-			def fieldData = getFieldData(tlItemData, id, field, memberMap, cacheWI, map)
+			def fieldData = getFieldData(tlItemData, id, field, memberMap, cacheWI, map, null, parent)
 			if (fieldData != null) {
 				if (type != 'Test Case' && !type.endsWith(' WI')) {
 					if (fieldData.value != null) {
@@ -282,12 +291,12 @@ class TestLinkItemManagementService {
 
 	}
 	
-	private def getFieldData(def tlItemData, def id, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null) {
+	private def getFieldData(def tlItemData, def id, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null, def parent = null) {
 		String handlerName = "${field.source}"
 		String tlHandlerName = "Tl${handlerName.substring(0,1).toUpperCase()}${handlerName.substring(1)}"
 		String fValue = ""
 		if (this.fieldMap[tlHandlerName] != null) {
-			def data = [itemData: tlItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
+			def data = [itemData: tlItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase, parent: parent]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}
@@ -297,7 +306,7 @@ class TestLinkItemManagementService {
 			def fieldData = this.fieldMap[tlHandlerName].execute(data)
 			return fieldData
 		} else if (this.fieldMap["${handlerName}"] != null) {
-			def data = [itemData: tlItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
+			def data = [itemData: tlItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase, parent: parent]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}

@@ -271,7 +271,7 @@ public class TestManagementService {
 			wis = getTestWorkItems(collection, project, teamArea, query)
 			if (!wis || wis.workItems.size() == 0) break;
 		}
-		//cacheManagementService.clear()
+		cacheManagementService.clear()
 //		File cacheL = new File(cacheLocation)
 //		cacheL.deleteDir()
 	}
@@ -459,7 +459,8 @@ public class TestManagementService {
 		}
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def query = [query: "Select [System.Id], [System.Title] From WorkItems Where ([System.WorkItemType] = 'Test Plan'  OR [System.WorkItemType] = 'Test Case') AND [System.AreaPath] = '${teamArea}' AND [Custom.ExternalID] <> ''"]
+		String wiql = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${project}' AND [System.WorkItemType] IN ('Test Plan','Test Case') AND [System.AreaPath] UNDER '${teamArea}' AND [Custom.ExternalID] Contains '${prefix}-'"
+		def query = [query: wiql]
 		if (inquery) {
 			query = [query: inquery]
 		}

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component
 @Component
 @Slf4j
 class TestLinkMappingManagementService {
-	@Autowired
 	@Value('${test.mapping.file:}')
 	String testMappingFileName
 	

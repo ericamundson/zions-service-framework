@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
-@Component('TlTestPlanCustomAttributesHandler')
-class TestPlanCustomAttributesHandler extends TlBaseAttributeHandler {
+@Component('TlTestSuiteCustomAttributesHandler')
+class TestSuiteCustomAttributesHandler extends TlBaseAttributeHandler {
 	
 
 	@Autowired(required=false)
@@ -27,7 +27,7 @@ class TestPlanCustomAttributesHandler extends TlBaseAttributeHandler {
 
 	def descMap = [:]
 	
-	public TestPlanCustomAttributesHandler() {
+	public TestSuiteCustomAttributesHandler() {
 	}
 
 	public String getFieldName() {
@@ -36,7 +36,7 @@ class TestPlanCustomAttributesHandler extends TlBaseAttributeHandler {
 	
 	def initDescMap() {
 		if (descMap.size() > 0) return descMap
-		String key = "Test Plan_Custom.CustomAttributes_${projectName}"
+		String key = "Test Suite_Custom.CustomAttributes_${projectName}"
 		def descs = extensionData.getExtensionData(key)
 		descs.descriptors.each { desc -> 
 			descMap[desc.name] = desc
@@ -66,6 +66,7 @@ class TestPlanCustomAttributesHandler extends TlBaseAttributeHandler {
 		def wiCache = data.cacheWI
 		def memberMap = data.memberMap
 		def itemMap = data.itemMap
+		def parent = data.parent
 		initDescMap()
 		
 		String name = getFieldName()
@@ -124,9 +125,16 @@ class TestPlanCustomAttributesHandler extends TlBaseAttributeHandler {
 //				}
 //			}
 //		}
-		def eId = "TL-${itemData.id} WI"
-		def aField = [op:'add', path:"/fields/Custom.ExternalID", value: eId]
-		retVal.push(aField)
+		if (parent && parent.plan) {
+			def eId = "TL-${itemData.id}_${parent.plan.name} WI"
+			def aField = [op:'add', path:"/fields/Custom.ExternalID", value: eId]
+			retVal.push(aField)
+		} else if (parent && parent.rootSuite) {
+			def eId = "TL-${itemData.id}_${parent.name} WI"
+			def aField = [op:'add', path:"/fields/Custom.ExternalID", value: eId]
+			retVal.push(aField)
+
+		}
 
 		if (cacheCheck && wiCache != null) {
 			boolean changed = false
