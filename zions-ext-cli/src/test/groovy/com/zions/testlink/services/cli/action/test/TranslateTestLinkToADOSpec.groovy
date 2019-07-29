@@ -2,6 +2,7 @@ package com.zions.testlink.services.cli.action.test
 
 import static org.junit.Assert.*
 
+import br.eti.kinoshita.testlinkjavaapi.model.Attachment
 import br.eti.kinoshita.testlinkjavaapi.model.Execution
 import br.eti.kinoshita.testlinkjavaapi.model.ExecutionStatus
 import br.eti.kinoshita.testlinkjavaapi.model.ExecutionType
@@ -79,7 +80,7 @@ class TranslateTestLinkToADOSpec extends Specification {
 	public void 'Simulate all phases plus clean'() {
 		setup: 'TestLink stubs'
 		cacheManagementService.cacheModule = 'TL'
-		restartManagementService.includePhases = 'testcase,plans,links,executions'
+		restartManagementService.includePhases = 'testcase,plans,links,executions,attachments'
 		//testManagementService.cleanupTestItems('', 'IntegrationTests', "IntegrationTests\\testlink")
 		setupTestLinkStubs()
 		
@@ -260,6 +261,22 @@ class TranslateTestLinkToADOSpec extends Specification {
 			e.status = ExecutionStatus.getExecutionStatus(ar)
 			e.testPlanId = planId
 			return e
+		}
+		
+		testLinkClient.getTestCaseAttachments(_, _) >> { args ->
+			int id = args[0]
+			if ((id % 5) == 0) {
+				File att = new File('./src/test/resources/testdata/Negative News - Keywords List.docx')
+				if (att) {
+					String data = Base64.encoder.encodeToString(att.bytes)
+					Attachment attachment = new Attachment()
+					attachment.content = data
+					attachment.fileName = 'Negative New - Keywords List.docx'
+					attachment.id = generators['integerGenerator'].gen()
+					return [attachment]
+				}
+			}
+			return []
 		}
 	}
 
