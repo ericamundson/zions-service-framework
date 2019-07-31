@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.buildship.core.launch.runconfiguration">
 <listAttribute key="arguments">
+<listEntry value="--stacktrace"/>
 <listEntry value="-PbuildType=ci"/>
 <listEntry value="-Puser.home=build"/>
 </listAttribute>
