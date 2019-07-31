@@ -10,7 +10,7 @@ import org.springframework.ldap.odm.annotations.Id
   base = "ou=TOPS", 
   objectClasses = [ 'user' ])
 @Canonical
-class User {
+final class User {
 	@Id
 	Name id
 	

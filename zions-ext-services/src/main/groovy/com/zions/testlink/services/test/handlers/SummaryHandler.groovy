@@ -1,5 +1,6 @@
 package com.zions.testlink.services.test.handlers
 
+import br.eti.kinoshita.testlinkjavaapi.model.TestCase
 import org.springframework.stereotype.Component
 
 @Component('TlSummaryHandler')

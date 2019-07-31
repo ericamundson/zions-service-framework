@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
-
+import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
@@ -312,6 +312,7 @@ class TestManagementServiceSpec extends Specification {
 	
 	def 'cleanupTestItems normal flow'() {
 		given: 'stub to query for team area test work items'
+		1 * cacheManagementService.cacheModule >> 'CCM'
 		1 * genericRestClient.getTfsUrl() >> ''
 		1 * genericRestClient.post(_) >> dataGenerationService.generate('/testdata/wiqlResult.json')
 		
@@ -321,6 +322,7 @@ class TestManagementServiceSpec extends Specification {
 			1 * genericRestClient.getTfsUrl() >> ''
 			1 * genericRestClient.delete(_) >> [:]
 		}
+		1 * cacheManagementService.cacheModule >> 'CCM'
 		1 * genericRestClient.getTfsUrl() >> ''
 		1 * genericRestClient.post(_) >> null
 		
@@ -344,6 +346,7 @@ class TestManagementServiceSpec extends Specification {
 		1 * cacheManagementService.getFromCache(_,_) >> dataGenerationService.generate('/testdata/TestPlan.json')
 		
 		and: 'stub post to create run data'
+		1 * genericRestClient.get(_) >> dataGenerationService.generate('/testdata/Suites.json')
 		1 * genericRestClient.get(_) >> dataGenerationService.generate('/testdata/points.json')
 		1 * genericRestClient.post(_) >> dataGenerationService.generate('/testdata/runData.json')
 		
@@ -352,6 +355,7 @@ class TestManagementServiceSpec extends Specification {
 		
 		and: 'stub getting map'
 		1 * genericRestClient.get(_) >> dataGenerationService.generate('/testdata/resultsMap.json')
+		1 * genericRestClient.get(_) >> null
 		
 		when: 'call method under test ensureTestRun'
 		def planData = dataGenerationService.generate('/testdata/testplanT.xml')
@@ -409,7 +413,8 @@ class TestManagementServiceSpecConfig {
 	
 	@Bean
 	ICacheManagementService cacheManagementService() {
-		return mockFactory.Mock(ICacheManagementService)
+		//CacheManagementService s
+		return mockFactory.Mock(CacheManagementService)
 	}
 	
 	@Bean

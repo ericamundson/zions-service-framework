@@ -56,10 +56,10 @@ SET rqm.query="none"
 SET rqm.filter=allFilter
 SET rqm.tfs.areapath="FutureCore\\Test"
 
-SET logdir=E:\bin\batch\logs\prodsandbox
+SET logdir=E:\bin\batch\logs\prodcore
 ::don't need to change these regularly if you set the above folder to target environment/project
 SET log.rqm=%logdir%\translate_RQMtoADO.log
-SET log.dng=%logdir%\translate_DNGtoADO.log
+SET log.dng=%logdir%\translate_DNGtoADO_delta.log
 SET log.ccm=%logdir%\translate_CCMtoADO.log
 
 ::not using these items I think

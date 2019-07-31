@@ -8,6 +8,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
+import com.zions.common.services.extension.IExtensionData
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.CheckpointManagementService
 import com.zions.common.services.restart.ICheckpointManagementService
@@ -17,6 +18,7 @@ import com.zions.ext.services.cli.action.rest.RestClient
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
 import com.zions.vsts.services.attachments.AttachmentManagementService
+import com.zions.vsts.services.extdata.ExtensionDataManagementService
 import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -62,6 +64,11 @@ public class TestLinkDBAppConfig {
 	@Bean
 	CliAction restClient() {
 		return new RestClient()
+	}
+	
+	@Bean
+	IExtensionData extensionData() {
+		return new ExtensionDataManagementService()
 	}
 	
 	

@@ -1,0 +1,46 @@
+{
+	"value": [
+		{
+			"id": 650562,
+			"name": "Sequential Credit Release",
+			"url": "https://dev.azure.com/eto-dev/TestLink/_apis/test/Plans/650561/Suites/650562",
+			"project": {
+				"id": "423b6acf-769a-47ea-a32d-5c96cd9b0261",
+				"name": "TestLink",
+				"url": "https://dev.azure.com/eto-dev/_apis/projects/TestLink"
+			},
+			"plan": {
+				"id": "650561",
+				"name": "Sequential Credit Release",
+				"url": "https://dev.azure.com/eto-dev/TestLink/_apis/test/Plans/650561"
+			},
+			"revision": 2,
+			"testCaseCount": 0,
+			"suiteType": "StaticTestSuite",
+			"testCasesUrl": "https://dev.azure.com/eto-dev/TestLink/_apis/test/Plans/650561/Suites/650562/testcases",
+			"inheritDefaultConfigurations": false,
+			"defaultConfigurations": [
+				{
+					"id": "147",
+					"name": "Windows 10"
+				}
+			],
+			"state": "In Progress",
+			"lastUpdatedBy": {
+				"displayName": "svc-cloud-vsmigration004",
+				"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
+				"_links": {
+					"avatar": {
+						"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+					}
+				},
+				"id": "7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
+				"uniqueName": "svc-cloud-vsmigration004@zionsbancorporation.onmicrosoft.com",
+				"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm",
+				"descriptor": "aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+			},
+			"lastUpdatedDate": "2019-07-23T20:09:40.57Z"
+		}
+	],
+	"count": 1
+}

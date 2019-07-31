@@ -224,10 +224,18 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		if (checked) {
 			oinput = checkBlankCollection(input)
 		}
+		def sinput = null
+		try {
+			sinput = deepcopy(oinput)
+		} catch (e) {}
 		HttpResponseDecorator resp = delegate.patch(oinput)
 		
 		if (resp.status != 200) {
 			log.error("GenericRestClient::patch -- Warning. Status: "+resp.getStatusLine());
+			if (sinput) {
+				String json = new JsonBuilder(sinput).toPrettyString()
+				log.error("Input data: ${json}");
+			}
 			return null;
 		}
 		if (withHeader) {
@@ -255,10 +263,19 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		if (checked) {
 			oinput = checkBlankCollection(input)
 		}
+		def sinput = null
+		try {
+			sinput = deepcopy(oinput)
+		} catch (e) {}
 		HttpResponseDecorator resp = delegate.post(oinput)
 		//JsonOutput t
 		if (resp.status != 200 && resp.status!= 201) {
+			
 			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
+			if (sinput) {
+				String json = new JsonBuilder(sinput).toPrettyString()
+				log.error("Input data: ${json}");
+			}
 		}
 		if (withHeader) {
 			def headerMap = [:]
@@ -324,6 +341,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		//JsonOutput t
 		if (resp.status != 200 && resp.status != 201) {
 			log.error("GenericRestClient::rateLimitPost -- Failed. Status: "+resp.getStatusLine());
+			if (retryCopy) {
+				String json = new JsonBuilder(retryCopy).toPrettyString()
+				log.error("Input data: ${json}");
+			}
 			System.sleep(300000)
 			resp = delegate.post(retryCopy)
 		}

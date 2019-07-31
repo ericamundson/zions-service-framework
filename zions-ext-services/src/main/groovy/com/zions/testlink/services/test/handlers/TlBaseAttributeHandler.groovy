@@ -15,7 +15,10 @@ abstract class TlBaseAttributeHandler implements IFieldHandler {
 		def itemMap = data.itemMap
 		
 		String name = getFieldName()
-		def aValue = itemData."${name}".text()
+		def aValue = null;
+		if (itemData.hasProperty("${name}")) {
+			aValue = itemData."${name}"
+		}
 		aValue = formatValue(aValue, data)
 		if (aValue == null) {
 			return null
