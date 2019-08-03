@@ -310,6 +310,9 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 		else if (itemData.getArtifactType() == 'Report Change') {
 			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
 		}
+		else if (itemData.getArtifactType() == 'Report Fields') {
+			outHtml = appendAttribute(outHtml, itemData, 'Sections' )
+		}
 		else if (itemData.getArtifactType() == 'Report Filter') {
 			outHtml = appendAttribute(outHtml, itemData, 'Sequence No' )
 			outHtml = appendAttribute(outHtml, itemData, 'Filter Description')
@@ -371,11 +374,24 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 			outHtml = appendAttribute(outHtml, itemData, 'TCS Recommendation')
 			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
 		}
+		else if (itemData.getArtifactType() == 'TCS Data Element') {
+			outHtml = appendAttribute(outHtml, itemData, 'Field Description')
+			outHtml = appendAttribute(outHtml, itemData, 'Parameterization Activity')
+		}
 		else if (itemData.getArtifactType() == 'TCS Existing Functionality') {
 			outHtml = appendAttribute(outHtml, itemData, 'Topic')
 			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
 		}
-		
+		else if (itemData.getArtifactType() == 'TCS Parameter') {
+			outHtml = appendAttribute(outHtml, itemData, 'Parameter Class')
+			outHtml = appendAttribute(outHtml, itemData, 'Parameter Group')
+		}
+		else if (itemData.getArtifactType() == 'Zions Data Element') {
+			outHtml = appendAttribute(outHtml, itemData, 'Field Description')
+			outHtml = appendAttribute(outHtml, itemData, 'Application')
+			outHtml = appendAttribute(outHtml, itemData, 'Field Key')
+		}
+
 		return outHtml
 	}
 	

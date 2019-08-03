@@ -8,7 +8,7 @@ class ValidValuesHandler extends RmBaseAttributeHandler {
 	@Override
 	public String getFieldName() {
 		
-		return 'ValidValues'
+		return 'Valid Values'
 	}
 
 	@Override

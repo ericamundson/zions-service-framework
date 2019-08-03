@@ -564,6 +564,7 @@
 		<field source="uiOriginalTagNameHandler" target="Custom.OriginalTagName"/>
 		<field source="uiTagNameHandler" target="Custom.TagName"/>
 		<field source="uiRevisedFieldNameHandler" target="Custom.RevisedName"/>
+		<field source="uiRevisedValuesHandler" target="Custom.RevisedValues"/>
 		<field source="uiFieldFormatHandler" target="Custom.Format"/>
 		<field source="uiFieldTypeHandler" target="Custom.FieldType"/>
 		<field source="uiFieldDisplayHandler" target="Custom.Display"/>
@@ -576,6 +577,7 @@
 		<field source="uiValuesHandler" target="Custom.Values"/>
 		<field source="uiDefaultValueHandler" target="Custom.DefaultValue"/>
 		<field source="uiTooltipHandler" target="Custom.Tooltip"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="fsDocumentNumHandler" target="Custom.DocumentNum"/>
 		<field source="remarksHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
@@ -583,7 +585,7 @@
 	
 	<wit source="Report Fields" target="Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="nameHandler" target="System.Title"/>
+		<field source="fieldNameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
@@ -600,13 +602,14 @@
 		<field source="calculationNeededHandler" target="Custom.CalculationNeeded"/>
 		<field source="indexedHandler" target="Custom.Indexed"/>
 		<field source="valueFormatHandler" target="Custom.Format"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
 		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
 	
 	<wit source="Report Field TCS" target="Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="nameHandler" target="System.Title"/>
+		<field source="fieldNameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
@@ -618,8 +621,11 @@
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="sequenceNoHandler" target="Custom.SequenceNo"/>
+		<field source="startingPositionHandler" target="Custom.Position"/>
 		<field source="labelAlignmentHandler" target="Custom.LabelAlignment"/>
 		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
+		<field source="tcsDataTypeHandler" target="Custom.DataType"/>
+		<field source="lengthHandler" target="Custom.Length"/>
 		<field source="reportPartHandler" target="Custom.ReportPart"/>
 		<field source="tableHandler" target="Custom.Table"/>
 		<field source="fieldExistsHandler" target="Custom.FieldExists"/>
@@ -647,9 +653,11 @@
 		<field source="mappingHandler" target="Custom.Mapping"/>
 		<field source="dataTypeHandler" target="Custom.DataType"/>
 		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="validValuesHandler" target="Custom.Values"/>
 		<field source="startingPositionHandler" target="Custom.Position"/>
 		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
 		<field source="formatHandler" target="Custom.Format"/>
+		<field source="sequenceNumberHandler" target="Custom.SequenceNo"/>
 		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="nameHandler" target="Custom.Values"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
@@ -998,6 +1006,7 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="tableHandler" target="Custom.Table"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1005,6 +1014,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -1094,6 +1104,9 @@
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="screenFieldFormatHandler" target="Custom.Format"/>
+		<field source="screenFieldTypeHandler" target="Custom.DataType"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
@@ -1102,6 +1115,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -1116,11 +1130,13 @@
 		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
 		<field source="tcsDataElementHandler" target="Custom.LogicalElement"/>
 		<field source="businessLogicHandler" target="Custom.BusinessLogic"/>
+		<field source="cobolPicHandler" target="Custom.CobolPic"/>
 		<field source="tcsLengthHandler" target="Custom.Length"/>
 		<field source="tcsStartPositionHandler" target="Custom.Position"/>
 		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
 		<field source="tcsFormatHandler" target="Custom.Format"/>
 		<field source="tableHandler" target="Custom.Table"/>
+		<field source="startingPositionHandler" target="Custom.Position"/>
 		<field source="validValuesHandler" target="Custom.Values"/>
 		<field source="defaultValueHandler" target="Custom.DefaultValue"/>
 		<field source="discussionNotesRemarksHandler" target="Custom.Remarks"/>
@@ -1132,6 +1148,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="remarksHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -1141,6 +1158,11 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="validValuesHandler" target="Custom.Values"/>
+		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="formatHandler" target="Custom.Format"/>
+		<field source="tableHandler" target="Custom.Table"/>
+		<field source="tcsDataTypeHandler" target="Custom.DataType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1148,6 +1170,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -1157,6 +1180,16 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="cobolPicHandler" target="Custom.CobolPic"/>
+		<field source="dmDefaultHandler" target="Custom.DefaultValue"/>
+		<field source="dmzNameHandler" target="Custom.DocumentName"/>
+		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
+		<field source="s_NoHandler" target="Custom.SequenceNo"/>
+		<field source="validValuesHandler" target="Custom.Values"/>
+		<field source="transformationLogicHandler" target="Custom.BusinessLogic"/>
+		<field source="tcsDataTypeHandler" target="Custom.DataType"/>
+		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="tableHandler" target="Custom.Table"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1191,6 +1224,7 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="uiTransNumHandler" target="Custom.TransactionNum"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1198,6 +1232,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="remarksHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -1255,6 +1290,11 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="cobolPicHandler" target="Custom.CobolPic"/>
+		<field source="mandatoryHandler" target="Custom.Mandatory"/>
+		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="tableFileNameHandler" target="Custom.Table"/>
+		<field source="zionsDataTypeHandler" target="Custom.DataType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1262,6 +1302,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	<links>
