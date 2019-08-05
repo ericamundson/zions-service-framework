@@ -16,6 +16,7 @@ import com.zions.ext.services.cli.action.rest.RestClient
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.qm.services.test.ClmTestAttachmentManagementService
 import com.zions.vsts.services.attachments.AttachmentManagementService
+import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -48,6 +49,12 @@ public class QmAppConfig {
 	JavaMailSender sender() {
 		return new JavaMailSenderImpl()
 	}
+	
+	@Bean
+	IGenericRestClient genericRestClient() {
+		return new MultiUserGenericRestClient()
+	}
+
 	
 	@Bean 
 	ICacheManagementService cacheManagementService() {

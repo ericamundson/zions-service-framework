@@ -187,11 +187,13 @@ class CacheManagementService implements ICacheManagementService {
 	@Override
 	public void deleteByType(String type) {
 		File cDir = new File("${this.cacheLocation}${File.separator}${cacheModule}")
-		cDir.eachFileRecurse(FileType.FILES) { File file ->
-			String name = file.name
-			String cname = "${type}.json" 
-			if (name.startsWith(cname)) {
-				file.delete()
+		if (cDir.exists()) {
+			cDir.eachFileRecurse(FileType.FILES) { File file ->
+				String name = file.name
+				String cname = "${type}.json" 
+				if (name.startsWith(cname)) {
+					file.delete()
+				}
 			}
 		}
 		

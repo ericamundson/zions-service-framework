@@ -120,7 +120,7 @@ class WorkManagementService {
 		def moduleMap = ['CCM': 'RTC-', 'RM':'DNG-', 'QM':'RQM-', 'TL': 'TL-']
 		String module = cacheManagementService.cacheModule
 		String eidPrefix = moduleMap[module]
-		String query = "Select [System.Id], [System.Title] From WorkItems Where ([System.AreaPath] = '${teamArea}' OR [System.AreaPath] under '${teamArea}') AND [Custom.ExternalID] CONTAINS '${eidPrefix}'"
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${project}' AND [System.AreaPath] under '${teamArea}' AND [Custom.ExternalID] CONTAINS '${eidPrefix}'"
 		refreshCacheByQuery(collection, project, query)
 	}
 	
