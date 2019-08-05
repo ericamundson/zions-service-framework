@@ -26,7 +26,7 @@ class StepsHandler extends QmBaseAttributeHandler {
 	@Value('clm.url')
 	String clmUrl
 	
-	def SPECIAL = ['&nbsp;','&copy;','&reg;','&euro;','&trade;','&larr;','&uarr;','&rarr;','&darr;']
+	def SPECIAL = ['&nbsp;','&copy;','&reg;','&euro;','&trade;','&larr;','&uarr;','&rarr;','&darr;','&ldquo;','&rdquo;','&lsquo;','&rsquo;','&ndash;']
 
 	public String getQmFieldName() {
 		
@@ -45,7 +45,7 @@ class StepsHandler extends QmBaseAttributeHandler {
 		return outVal;
 	}
 	
-	String buildStepData(ts, id) {
+	String buildStepData(ts, String id) {
 		def teststeps = ts.steps.step
 		if (teststeps.size()> 0) {
 			def writer = new StringWriter()
@@ -75,8 +75,9 @@ class StepsHandler extends QmBaseAttributeHandler {
 //							def os = action.newDataOutputStream()
 //							os << htmlDoc
 //							os.close()
-							
-							String html = StringEscapeUtils.escapeHtml(htmlDoc)
+							//htmlDoc = htmlDoc.replace('&amp;', '&')
+							//htmlDoc = StringEscapeUtils.unescapeHtml(htmlDoc)
+							String html = escapeHtml(htmlDoc)
 							parameterizedString(isformatted: 'true') {
 								mkp.yieldUnescaped html
 							}
@@ -105,7 +106,8 @@ class StepsHandler extends QmBaseAttributeHandler {
 //							def os = action.newDataOutputStream()
 //							os << htmlDoc
 //							os.close()
-							String html = StringEscapeUtils.escapeHtml(htmlDoc)
+							//htmlDoc = StringEscapeUtils.unescapeHtml(htmlDoc)
+							String html = escapeHtml(htmlDoc)
 							parameterizedString(isformatted: 'true') {
 								mkp.yieldUnescaped html
 							}
@@ -130,6 +132,14 @@ class StepsHandler extends QmBaseAttributeHandler {
 			return outVal
 		}
 		return null
+	}
+	
+	String escapeHtml(String html) {
+		String ohtml = html
+		//ohtml = ohtml.replace('&', '&amp;')
+		ohtml = ohtml.replace('<', '&lt;')
+		ohtml = ohtml.replace('>', '&gt;')
+		return ohtml
 	}
 	
 	def clearSpecial(String val) {

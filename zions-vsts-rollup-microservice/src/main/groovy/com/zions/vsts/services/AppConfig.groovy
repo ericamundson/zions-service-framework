@@ -18,7 +18,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.command.CommandManagementService
+import com.zions.common.services.rest.IGenericRestClient
+import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.vsts.services.attachments.AttachmentManagementService
+import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
 
 
@@ -48,6 +51,17 @@ public class AppConfig  {
 	AttachmentManagementService attachmentManagementService() {
 		return new AttachmentManagementService();
 	}
+	
+	@Bean
+	IGenericRestClient genericRestClient() {
+		return new MultiUserGenericRestClient()
+	}
+
+	@Bean
+	IGenericRestClient mrGenericRestClient() {
+		return new MrGenericRestClient('', '')
+	}
+
 
 	@Autowired
 	@Value('${cache.location:cache}')

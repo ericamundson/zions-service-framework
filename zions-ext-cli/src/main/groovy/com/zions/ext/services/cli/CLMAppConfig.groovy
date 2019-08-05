@@ -14,6 +14,7 @@ import com.zions.common.services.restart.IRestartManagementService
 import com.zions.common.services.restart.RestartManagementService
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.vsts.services.attachments.AttachmentManagementService
+import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -57,6 +58,11 @@ public class CLMAppConfig {
 		return new CommandManagementService();
 	}
 	
+	@Bean
+	IGenericRestClient genericRestClient() {
+		return new MultiUserGenericRestClient()
+	}
+
 	@Bean
 	IGenericRestClient mrGenericRestClient() {
 		return new MrGenericRestClient('', '')

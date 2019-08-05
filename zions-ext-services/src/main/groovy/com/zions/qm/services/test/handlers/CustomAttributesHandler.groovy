@@ -1,5 +1,6 @@
 package com.zions.qm.services.test.handlers
 
+import com.zions.common.services.extension.IExtensionData
 import com.zions.qm.services.test.ClmTestManagementService
 import com.zions.qm.services.test.TestMappingManagementService
 
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Component
 
 @Component('QmCustomAttributesHandler')
 class CustomAttributesHandler extends QmBaseAttributeHandler {
-	
+	@Autowired(required=false)
+	IExtensionData extensionData
+
 	@Autowired
 	ClmTestManagementService clmTestManagementService
 	
@@ -19,6 +22,10 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 
 	@Autowired
 	TestMappingManagementService testMappingManagementService
+	
+	@Value('${tfs.project}')
+	String tfsProjectName
+
 
 	def descMap = [:]
 	
@@ -30,7 +37,18 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 	}
 	
 	def initDescMap() {
-		descMap = clmTestManagementService.getDescriptorMap()
+		if (descMap.size() > 0) return descMap
+		String[] types = ['Test Case', 'Test Suite', 'Test Plan']
+		types.each { String type -> 
+			String key = "Test Case_Custom.CustomAttributes_${tfsProjectName}"
+			def descs = extensionData.getExtensionData(key)
+			if (descs) {
+				descs.descriptors.each { desc -> 
+					descMap[desc.name] = desc
+				}
+			}
+		}
+		//descMap = clmTestManagementService.getDescriptorMap()
 	}
 
 	public def formatValue(def value, def data) {
@@ -47,15 +65,19 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 		}
 		catMap.each { key, vals -> 
 			def desc = descMap[key]
-			def catData = [name: key, value: vals.join(';')]
-			outData.push(catData)
+			if (desc) {
+				def catData = [name: key, value: vals.join(';')]
+				outData.push(catData)
+			}
 		}
 		itemData.customAttributes.customAttribute.each { att ->
 			String name = "${att.identifier.text()}"
 			def desc = descMap[name]
-			String avalue = "${att.value.text()}"
-			def caData = [name: name, value: avalue]
-			outData.push(caData)
+			if (desc) {
+				String avalue = "${att.value.text()}"
+				def caData = [name: name, value: avalue]
+				outData.push(caData)
+			}
 		}
 		def out = [values:outData]
 		return out;
