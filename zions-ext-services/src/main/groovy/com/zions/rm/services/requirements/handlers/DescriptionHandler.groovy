@@ -374,9 +374,13 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 			outHtml = appendAttribute(outHtml, itemData, 'TCS Recommendation')
 			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
 		}
+		else if (itemData.getArtifactType() == 'TCS DB Field') {
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Copybook Field Name')
+		}
 		else if (itemData.getArtifactType() == 'TCS Data Element') {
 			outHtml = appendAttribute(outHtml, itemData, 'Field Description')
 			outHtml = appendAttribute(outHtml, itemData, 'Parameterization Activity')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Copybook Field Name')
 		}
 		else if (itemData.getArtifactType() == 'TCS Existing Functionality') {
 			outHtml = appendAttribute(outHtml, itemData, 'Topic')

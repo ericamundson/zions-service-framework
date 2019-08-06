@@ -579,7 +579,7 @@
 		<field source="uiTooltipHandler" target="Custom.Tooltip"/>
 		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="fsDocumentNumHandler" target="Custom.DocumentNum"/>
-		<field source="remarksHandler" target="Custom.Remarks"/>
+		<field source="infoCommentsRemarksHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
@@ -653,12 +653,13 @@
 		<field source="mappingHandler" target="Custom.Mapping"/>
 		<field source="dataTypeHandler" target="Custom.DataType"/>
 		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="tcsDataElementHandler" target="Custom.SourceFieldName"/>
 		<field source="validValuesHandler" target="Custom.Values"/>
 		<field source="startingPositionHandler" target="Custom.Position"/>
 		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
 		<field source="formatHandler" target="Custom.Format"/>
 		<field source="sequenceNumberHandler" target="Custom.SequenceNo"/>
-		<field source="infoCommentsHandler" target="Custom.Remarks"/>
+		<field source="infoCommentsRemarksHandler" target="Custom.Remarks"/>
 		<field source="nameHandler" target="Custom.Values"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
@@ -1007,6 +1008,8 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
 		<field source="tableHandler" target="Custom.Table"/>
+		<field source="cdeSubjectHandler" target="Custom.Subject"/>
+		<field source="cdeTierHandler" target="Custom.Tier"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1034,12 +1037,13 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
-	<wit source="Data Interface IO" target="Entity" translateUnmappedFields="false">
+	<wit source="Data Interface IO" target="IO Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="cobolPicHandler" target="Custom.CobolPic"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1050,12 +1054,19 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
-	<wit source="Data Interface TCS IO" target="Entity" translateUnmappedFields="false">
+	<wit source="Data Interface TCS IO" target="IO Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="cobolPicHandler" target="Custom.CobolPic"/>
+		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
+		<field source="defaultValuesHandler" target="Custom.DefaultValue"/>
+		<field source="endpointFieldNameHandler" target="Custom.EndpointFieldName"/>
+		<field source="esbCopybookPicSizeHandler" target="Custom.ESBCopybookPICSize"/>
+		<field source="esbTagNameInterfaceHandler" target="Custom.ESBTagName"/>
+		<field source="exampleHandler" target="Custom.Example"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1106,7 +1117,7 @@
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
 		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="screenFieldFormatHandler" target="Custom.Format"/>
-		<field source="screenFieldTypeHandler" target="Custom.DataType"/>
+		<field source="screenFieldTypeHandler" target="Custom.FieldType"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
@@ -1128,7 +1139,7 @@
 		<field source="sectionIDHandler" target="Custom.SectionID"/>
 		<field source="recordTypeHandler" target="Custom.RecordType"/>
 		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
-		<field source="tcsDataElementHandler" target="Custom.LogicalElement"/>
+		<field source="tcsDataElementHandler" target="Custom.SourceFieldName"/>
 		<field source="businessLogicHandler" target="Custom.BusinessLogic"/>
 		<field source="cobolPicHandler" target="Custom.CobolPic"/>
 		<field source="tcsLengthHandler" target="Custom.Length"/>
@@ -1187,15 +1198,23 @@
 		<field source="s_NoHandler" target="Custom.SequenceNo"/>
 		<field source="validValuesHandler" target="Custom.Values"/>
 		<field source="transformationLogicHandler" target="Custom.BusinessLogic"/>
+		<field source="mandatoryHandler" target="Custom.Mandatory"/>
+		<field source="migrationStatusHandler" target="Custom.MigrationStatus"/>
+		<field source="offsetFromHandler" target="Custom.OffsetFrom"/>
+		<field source="offsetToHandler" target="Custom.OffsetTo"/>
 		<field source="tcsDataTypeHandler" target="Custom.DataType"/>
+		<field source="dmActionTcsHandler" target="Custom.DMCategory"/>
 		<field source="lengthHandler" target="Custom.Length"/>
 		<field source="tableHandler" target="Custom.Table"/>
+		<field source="zionsFieldNameHandler" target="Custom.SourceFieldName"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="infoCommentsRemarksHandler" target="Custom.Remarks"/>
+		<field source="complianceFinanceRelatedHandler" target="System.Tags"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
@@ -1232,6 +1251,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="complianceRelatedHandler" target="System.Tags"/>
 		<field source="remarksHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
@@ -1294,6 +1314,7 @@
 		<field source="mandatoryHandler" target="Custom.Mandatory"/>
 		<field source="lengthHandler" target="Custom.Length"/>
 		<field source="tableFileNameHandler" target="Custom.Table"/>
+		<field source="internalRecordCodeHandler" target="Custom.InternalRecordCode"/>
 		<field source="zionsDataTypeHandler" target="Custom.DataType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
@@ -1302,6 +1323,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="complianceRelatedHandler" target="System.Tags"/>
 		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
