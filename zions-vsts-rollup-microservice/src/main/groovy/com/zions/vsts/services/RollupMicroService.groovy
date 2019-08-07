@@ -20,9 +20,17 @@ class RollupMicroService extends AbstractWebSocketMicroService {
 	@Autowired
 	RollupManagementService rollupManagementService
 	
+//	@Autowired
+//	public RollupMicroService(@Value('${websocket.url:}') websocketUrl) {
+//		super(websocketUrl)
+//		
+//	}
+	
 	@Autowired
-	public RollupMicroService(@Value('${websocket.url:}') websocketUrl) {
-		super(websocketUrl)
+	public RollupMicroService(@Value('${websocket.url:}') websocketUrl, 
+		@Value('${websocket.user:#{null}}') websocketUser,
+		@Value('${websocket.password:#{null}}') websocketPassword) {
+		super(websocketUrl, websocketUser, websocketPassword)
 		
 	}
 

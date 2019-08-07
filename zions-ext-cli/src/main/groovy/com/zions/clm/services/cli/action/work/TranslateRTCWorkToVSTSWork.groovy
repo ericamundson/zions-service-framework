@@ -203,6 +203,10 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
+		String cleanQuery = null
+		try {
+			cleanQuery = data.getOptionValues('clean.query')[0]
+		} catch (e) {}
 		String areaPath = ""
 		try {
 			areaPath = data.getOptionValues('tfs.areapath')[0]
@@ -254,9 +258,12 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		}
 		if (includes['clean'] != null) {
 			String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${tfsProject}' AND [Custom.ExternalID] CONTAINS 'RTC-'"
-//			if (areaPath.length()>0) {
-//				query = "Select [System.Id], [System.Title] From WorkItems Where [System.AreaPath] = '${areaPath}' AND [Custom.ExternalID] CONTAINS 'RTC-'"
-//			}
+			if (areaPath.length()>0) {
+				query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${tfsProject}' AND [System.AreaPath] = '${areaPath}' AND [Custom.ExternalID] CONTAINS 'RTC-'"
+			}
+			if (cleanQuery) {
+				query = cleanQuery
+			}
 			workManagementService.clean(collection, tfsProject, query)
 		}
 		if (includes['cleanDuplicates'] != null) {

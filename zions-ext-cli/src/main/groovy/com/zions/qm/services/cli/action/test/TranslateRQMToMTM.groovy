@@ -265,10 +265,9 @@ class TranslateRQMToMTM implements CliAction {
 			}
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
-//		if (includes['refresh'] != null) {
-//			workManagementService.refresh(collection, tfsProject)
-//			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
-//		}
+		if (includes['refresh'] != null) {
+			workManagementService.refreshCacheByTeamArea(collection, tfsProject, areaPath)
+		}
 		if (includes['flushQueries'] != null) {
 			clmTestManagementService.flushQueries(project)
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
@@ -464,12 +463,13 @@ class TranslateRQMToMTM implements CliAction {
 						String itemXml = XmlUtil.serialize(testplan)
 						String webId = "${testplan.webId.text()}"
 						String parentHref = "${testItem.id.text()}"
-						def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
+						//def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
 						testplan.testsuite.each { testsuiteRef ->
 							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
 							testsuite.testcase.each { testcaseRef ->
 								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 								String tcwebId = "${testcase.webId.text()}"
+								def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
 								def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 								executionresults.each { result ->
 									clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
@@ -483,6 +483,7 @@ class TranslateRQMToMTM implements CliAction {
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 							String tcitemXml = XmlUtil.serialize(testcase)
 							String tcwebId = "${testcase.webId.text()}"
+							def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
 							def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
 							executionresults.each { result ->
 								clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
@@ -494,7 +495,7 @@ class TranslateRQMToMTM implements CliAction {
 					}
 				}
 
-				if (phase == 'attachments') {
+				if (phase == 'qmAttachments') {
 					//def linkMapping = processTemplateService.getLinkMapping(mapping)
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					def idKeyMap = [:]
@@ -504,35 +505,33 @@ class TranslateRQMToMTM implements CliAction {
 						String itemXml = XmlUtil.serialize(testplan)
 						String webId = "${testplan.webId.text()}"
 						String parentHref = "${testItem.id.text()}"
-						def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
 						testplan.testsuite.each { testsuiteRef ->
 							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
 							testsuite.testcase.each { testcaseRef ->
 								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-								String id = "${testcase.webId.text()}-Test Case"
-								def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
-								def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-								if (wiChanges != null) {
-									clManager.add(id, wiChanges)
+								String idtype = "${testcase.webId.text()}-testcase"
+								if (!idKeyMap.containsKey(idtype)) {
+									String id = "${testcase.webId.text()}-Test Case"
+									def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
+									def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+									if (wiChanges != null) {
+										clManager.add(id, wiChanges)
+									}
+									idKeyMap[idtype] = idtype
 								}
 							}
 						}
 						testplan.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 							String id = "${testcase.webId.text()}-Test Case"
-							def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
-							def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-							if (wiChanges != null) {
-								clManager.add(id, wiChanges)
-							}
-							String tcwebId = "${testcase.webId.text()}"
-							def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
-							executionresults.each { result ->
-								def cacheData = []
-								def rfiles = clmAttachmentManagementService.cacheTestItemAttachments(result)
-								if (rfiles.size() > 0) {
-									def attResult = testManagementService.ensureResultAttachments(collection, tfsProject, rfiles, testcase, resultMap)
+							String idtype = "${testcase.webId.text()}-testcase"
+							if (!idKeyMap.containsKey(idtype)) {
+								def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
+								def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+								if (wiChanges != null) {
+									clManager.add(id, wiChanges)
 								}
+								idKeyMap[idtype] = idtype
 							}
 						}
 					}
