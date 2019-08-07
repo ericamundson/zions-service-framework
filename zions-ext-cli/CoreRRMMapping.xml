@@ -1044,6 +1044,16 @@
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
 		<field source="cobolPicHandler" target="Custom.CobolPic"/>
+		<field source="inputOrOutputHandler" target="Custom.InputOrOutput"/>
+		<field source="validValuesHandler" target="Custom.Values"/>
+		<field source="formatHandler" target="Custom.Format"/>
+		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="sourceFieldIndicatorHandler" target="Custom.SourceFieldIndicator"/>
+		<field source="iszFieldTypeHandler" target="Custom.IOFieldType"/>
+		<field source="iofLogicHandler" target="Custom.BusinessLogic"/>
+		<field source="mandatoryHandler" target="Custom.Mandatory"/>
+		<field source="fileNameHandler" target="Custom.FileName"/>
+		<field source="recordTypeHandler" target="Custom.RecordType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1056,23 +1066,45 @@
 			
 	<wit source="Data Interface TCS IO" target="IO Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="nameHandler" target="System.Title"/>
+		<field source="fieldNameOrTitleHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
 		<field source="cobolPicHandler" target="Custom.CobolPic"/>
+		<field source="primaryTextHandler" target="Custom.BusinessLogic"/>
+		<field source="inputOrOutputHandler" target="Custom.InputOrOutput"/>
+		<field source="tcsFormatHandler" target="Custom.Format"/>
+		<field source="tcsLengthHandler" target="Custom.Length"/>
+		<field source="transactionCodeHandler" target="Custom.TransactionNum"/>
+		<field source="ufeDisplayLengthHandler" target="Custom.UFEDisplayLength"/>
+		<field source="ufePicSizeHandler" target="Custom.UFEPICSize"/>
+		<field source="ufeStartPositionHandler" target="Custom.UFEStartPosition"/>
+		<field source="xmlFieldDefHandler" target="Custom.XMLFieldDef"/>
+		<field source="zionsUfeFieldHandler" target="Custom.ZionsUFEField"/>
+		<field source="tcsValidValuesHandler" target="Custom.Values"/>
+		<field source="tcsDataTypeHandler" target="Custom.DataType"/>
+		<field source="tableHandler" target="Custom.Table"/>
+		<field source="startingPositionHandler" target="Custom.Position"/>
 		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
+		<field source="sourceFieldNameHandler" target="Custom.SourceFieldName"/>
+		<field source="sourceFieldIndicatorHandler" target="Custom.SourceFieldIndicator"/>
+		<field source="mapping2Handler" target="Custom.Mapping"/>
+		<field source="mandatoryHandler" target="Custom.Mandatory"/>
 		<field source="defaultValuesHandler" target="Custom.DefaultValue"/>
 		<field source="endpointFieldNameHandler" target="Custom.EndpointFieldName"/>
 		<field source="esbCopybookPicSizeHandler" target="Custom.ESBCopybookPICSize"/>
 		<field source="esbTagNameInterfaceHandler" target="Custom.ESBTagName"/>
 		<field source="exampleHandler" target="Custom.Example"/>
+		<field source="fieldExistsHandler" target="Custom.FieldExists"/>
+		<field source="fileNameHandler" target="Custom.FileName"/>
+		<field source="recordTypeHandler" target="Custom.RecordType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="discussionNotesRemarksIofHandler" target="Custom.Remarks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>

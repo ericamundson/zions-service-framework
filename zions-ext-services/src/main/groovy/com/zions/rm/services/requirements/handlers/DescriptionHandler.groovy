@@ -46,8 +46,12 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	@Override
 	public Object formatValue(Object value, Object itemData) {		
 		String sId = itemData.getCacheID()
+		// In this section, replace Primary Text with other content
 		String outHtml = '<div></div>'
-		if (itemData.getArtifactType() == 'Data Interface TCS') {
+		if (itemData.getArtifactType() == 'Data Interface IO' || itemData.getArtifactType() == 'Data Interface TCS IO') {
+			outHtml = toHtml(itemData.getAttribute('Field Description'))
+		}
+		else if (itemData.getArtifactType() == 'Data Interface TCS') {
 			value = removeNamespace("${value}")
 			String touchpoint = itemData.getTitle()
 			String flowType = itemData.getAttribute('Flow Type')
@@ -240,6 +244,9 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 			outHtml = appendAttribute(outHtml, itemData, 'Zions View of Classification')
 			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
 		}
+		else if (itemData.getArtifactType() == 'Data Interface IO') {
+			outHtml = appendAttribute(outHtml, itemData, 'ISZ Subroutine Name')
+		}
 		else if (itemData.getArtifactType() == 'Data Interface Zions') {
 			outHtml = appendAttribute(outHtml, itemData, 'Context Diagram Num')
 			outHtml = appendAttribute(outHtml, itemData, 'ISZ App')
@@ -431,11 +438,6 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 			html = html.substring(0,endDiv) + padding + '<b>' + attrName + ': </b>' + attrVal + html.substring(endDiv)
 		}
 		return html
-	}
-	String removeNamespace(String value) {
-		String description = value.replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')
-		description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
-		return description
 	}
 	def processHtml(String html, String sId, def itemData) {
 		def htmlData
