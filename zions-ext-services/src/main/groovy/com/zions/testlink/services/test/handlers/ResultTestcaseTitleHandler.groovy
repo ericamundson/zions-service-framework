@@ -21,6 +21,8 @@ class ResultTestcaseTitleHandler extends TlBaseAttributeHandler {
 		TestCase testCase = data.testCase
 		String title = "${testCase.name}"
 		title = title.replaceAll(/[\u2018\u2019​]/, "'")
+		title = title.replaceAll(/[\u201c\u201d​]/, "\"")
+		title = title.replaceAll(/[\u00a0]/, " ")
 		
 		return title.trim();
 	}
