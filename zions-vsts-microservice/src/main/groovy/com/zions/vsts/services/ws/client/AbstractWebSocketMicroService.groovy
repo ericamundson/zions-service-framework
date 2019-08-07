@@ -37,6 +37,7 @@ import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.socket.WebSocketHttpHeaders
 import org.springframework.web.socket.client.WebSocketClient
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.messaging.WebSocketStompClient
@@ -73,11 +74,17 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 	
 	StompSession session
 	String websocketUrl
+	String websocketUser
+	String websocketPassword
 	WebSocketStompClient stompClient
 
 	@Autowired
-	public AbstractWebSocketMicroService(@Value('${websocket.url:}') websocketUrl) {
+	public AbstractWebSocketMicroService(websocketUrl, 
+		websocketUser = null, 
+		websocketPassword = null ) {
 		this.websocketUrl = websocketUrl
+		this.websocketUser = websocketUser
+		this.websocketPassword = websocketPassword
 		this.heartBeatScheduler = new ThreadPoolTaskScheduler();
 		connect()
 		startCheck();
@@ -148,7 +155,17 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 		stompClient = new WebSocketStompClient(sockJsClient);
 		stompClient.setMessageConverter(new StringMessageConverter());
 		stompClient.setAutoStartup(true);
-		stompClient.connect(websocketUrl, this);
+		if (this.websocketUser && this.websocketPassword) {
+			String plainCredentials="${websocketUser}:${websocketPassword}";
+			String base64Credentials = Base64.getEncoder().encodeToString(plainCredentials.getBytes());
+			
+			final WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
+			headers.add("Authorization", "Basic " + base64Credentials);
+			stompClient.connect(websocketUrl, headers, this);
+		} else {
+			stompClient.connect(websocketUrl, this);
+			
+		}
 	}
 	
 	@Override
