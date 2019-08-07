@@ -1,0 +1,28 @@
+2019-08-06 09:17:37.754  INFO 360 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0624 with PID 360 (C:\Users\v070339\git\zions-service-framework\zions-vsts-cli\bin\main started by v070339 in C:\Users\v070339\git\zions-service-framework\zions-vsts-services)
+2019-08-06 09:17:37.754 DEBUG 360 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-06 09:17:37.763  INFO 360 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-06 09:17:40.765  INFO 360 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 3.667 seconds (JVM running for 4.789)
+2019-08-06 09:19:19.717  INFO 2632 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0624 with PID 2632 (C:\Users\v070339\git\zions-service-framework\zions-vsts-cli\bin\main started by v070339 in C:\Users\v070339\git\zions-service-framework\zions-vsts-services)
+2019-08-06 09:19:19.732 DEBUG 2632 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-06 09:19:19.734  INFO 2632 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-06 09:19:22.643  INFO 2632 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 3.551 seconds (JVM running for 4.738)
+2019-08-06 10:19:38.326  INFO 5396 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0624 with PID 5396 (C:\Users\v070339\git\zions-service-framework\zions-vsts-cli\bin\main started by v070339 in C:\Users\v070339\git\zions-service-framework\zions-vsts-services)
+2019-08-06 10:19:38.342 DEBUG 5396 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-06 10:19:38.345  INFO 5396 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-06 10:19:41.566  INFO 5396 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 3.912 seconds (JVM running for 5.116)
+2019-08-06 14:46:49.381  INFO 4240 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0624 with PID 4240 (C:\Users\v070339\git\zions-service-framework\zions-vsts-cli\bin\main started by v070339 in C:\Users\v070339\git\zions-service-framework\zions-vsts-services)
+2019-08-06 14:46:49.397 DEBUG 4240 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-06 14:46:49.397  INFO 4240 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-06 14:46:52.668  INFO 4240 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 3.959 seconds (JVM running for 5.142)
+2019-08-06 14:50:01.114  INFO 700 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0624 with PID 700 (C:\Users\v070339\git\zions-service-framework\zions-vsts-cli\bin\main started by v070339 in C:\Users\v070339\git\zions-service-framework\zions-vsts-services)
+2019-08-06 14:50:01.114 DEBUG 700 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-06 14:50:01.127  INFO 700 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-06 14:50:04.317  INFO 700 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 3.89 seconds (JVM running for 5.121)
+2019-08-06 15:07:00.496  INFO 4500 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0624 with PID 4500 (C:\Users\v070339\git\zions-service-framework\zions-vsts-cli\bin\main started by v070339 in C:\Users\v070339\git\zions-service-framework\zions-vsts-services)
+2019-08-06 15:07:00.512 DEBUG 4500 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-06 15:07:00.518  INFO 4500 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-06 15:07:03.785  INFO 4500 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 3.976 seconds (JVM running for 5.149)
+2019-08-06 15:08:51.588  INFO 4428 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0624 with PID 4428 (C:\Users\v070339\git\zions-service-framework\zions-vsts-cli\bin\main started by v070339 in C:\Users\v070339\git\zions-service-framework\zions-vsts-services)
+2019-08-06 15:08:51.588 DEBUG 4428 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-06 15:08:51.595  INFO 4428 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-06 15:08:54.941  INFO 4428 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 4.025 seconds (JVM running for 5.203)

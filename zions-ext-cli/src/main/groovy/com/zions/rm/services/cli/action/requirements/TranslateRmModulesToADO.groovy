@@ -361,10 +361,12 @@ class TranslateRmModulesToADO implements CliAction {
 				log.error("*** ERROR: Artifact #${artifact.getID()} is heading with image or attachment in module ${module.getTitle()}")
 				errCount++
 			}
+			/*
 			else if (artifact.getIsDuplicate()) {
 				log.error("*** ERROR: Artifact #${artifact.getID()} is a duplicate instance in module ${module.getTitle()}.  This is not yet supported in ADO.")
 				errCount++
 			}
+			*/
 		}
 		return errCount
 	}

@@ -3,6 +3,7 @@
 		<wit name="Change Request"/>
 		<wit name="Actor"/>
 		<wit name="Use Case"/>
+		<wit name="Formal Use Case (Text)"/>
 		<wit name="User Story"/>
 		<wit name="Spec Proxy"/>
 		<wit name="Function Point"/>
@@ -31,6 +32,7 @@
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
 		<field source="documentTypeHandler" target="Custom.DocumentType"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>	
@@ -101,6 +103,9 @@
 	
 	<wit source="Data Requirement" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -112,11 +117,15 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Functional Requirement" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -128,11 +137,13 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Information Requirement" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -144,11 +155,15 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Interface Requirement" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -165,6 +180,9 @@
 	
 	<wit source="Reporting Requirement" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -176,11 +194,15 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Screen Requirement" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -192,11 +214,13 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Statement and Notices Requirement" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -208,6 +232,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
@@ -245,6 +270,7 @@
 	
 	<wit source="Error Message" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -256,11 +282,13 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 		
 	<wit source="Control" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -272,11 +300,13 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Interface Change" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -288,11 +318,15 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Migration Change" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -304,11 +338,15 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Parameter Change" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -320,11 +358,13 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
 	<wit source="Processing Change" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -336,11 +376,13 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
 	<wit source="Report Change" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -352,11 +394,15 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 		
 	<wit source="Screen Change" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -368,11 +414,13 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
 		
 	<wit source="Report Filter" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -384,11 +432,13 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
 		
 	<wit source="Report Group Layout" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -400,11 +450,13 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
 		
 	<wit source="Report Sort" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -416,11 +468,13 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
 		
 	<wit source="Report Summary Fields" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -432,6 +486,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
 
@@ -448,6 +503,10 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
@@ -464,6 +523,10 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
@@ -479,6 +542,8 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
@@ -499,6 +564,7 @@
 		<field source="uiOriginalTagNameHandler" target="Custom.OriginalTagName"/>
 		<field source="uiTagNameHandler" target="Custom.TagName"/>
 		<field source="uiRevisedFieldNameHandler" target="Custom.RevisedName"/>
+		<field source="uiRevisedValuesHandler" target="Custom.RevisedValues"/>
 		<field source="uiFieldFormatHandler" target="Custom.Format"/>
 		<field source="uiFieldTypeHandler" target="Custom.FieldType"/>
 		<field source="uiFieldDisplayHandler" target="Custom.Display"/>
@@ -511,14 +577,15 @@
 		<field source="uiValuesHandler" target="Custom.Values"/>
 		<field source="uiDefaultValueHandler" target="Custom.DefaultValue"/>
 		<field source="uiTooltipHandler" target="Custom.Tooltip"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="fsDocumentNumHandler" target="Custom.DocumentNum"/>
-		<field source="uiRemarksHandler" target="Custom.Remarks"/>
+		<field source="infoCommentsRemarksHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	
 	<wit source="Report Fields" target="Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="nameHandler" target="System.Title"/>
+		<field source="fieldNameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
@@ -535,13 +602,14 @@
 		<field source="calculationNeededHandler" target="Custom.CalculationNeeded"/>
 		<field source="indexedHandler" target="Custom.Indexed"/>
 		<field source="valueFormatHandler" target="Custom.Format"/>
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
 		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
 	
 	<wit source="Report Field TCS" target="Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="nameHandler" target="System.Title"/>
+		<field source="fieldNameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
@@ -553,8 +621,11 @@
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="sequenceNoHandler" target="Custom.SequenceNo"/>
+		<field source="startingPositionHandler" target="Custom.Position"/>
 		<field source="labelAlignmentHandler" target="Custom.LabelAlignment"/>
 		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
+		<field source="tcsDataTypeHandler" target="Custom.DataType"/>
+		<field source="lengthHandler" target="Custom.Length"/>
 		<field source="reportPartHandler" target="Custom.ReportPart"/>
 		<field source="tableHandler" target="Custom.Table"/>
 		<field source="fieldExistsHandler" target="Custom.FieldExists"/>
@@ -582,10 +653,13 @@
 		<field source="mappingHandler" target="Custom.Mapping"/>
 		<field source="dataTypeHandler" target="Custom.DataType"/>
 		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="tcsDataElementHandler" target="Custom.SourceFieldName"/>
+		<field source="validValuesHandler" target="Custom.Values"/>
 		<field source="startingPositionHandler" target="Custom.Position"/>
 		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
 		<field source="formatHandler" target="Custom.Format"/>
-		<field source="infoCommentsHandler" target="Custom.Remarks"/>
+		<field source="sequenceNumberHandler" target="Custom.SequenceNo"/>
+		<field source="infoCommentsRemarksHandler" target="Custom.Remarks"/>
 		<field source="nameHandler" target="Custom.Values"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
@@ -619,6 +693,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
@@ -635,6 +710,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
@@ -651,6 +727,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
@@ -667,6 +744,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
@@ -683,6 +761,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
@@ -699,6 +778,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 	
@@ -715,6 +795,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 		
@@ -731,6 +812,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
 
@@ -798,23 +880,12 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="documentNameHandler" target="Custom.DocumentName"/>
+		<field source="psaNumHandler" target="Custom.DocumentNum"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>	
-
-	<wit source="Subtopic" target="RM Feature" translateUnmappedFields="false">
-		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="nameHandler" target="System.Title"/>
-		<field source="descriptionHandler" target="System.Description"/>
-		<field source="creatorHandler" target="System.CreatedBy"/>
-		<field source="idHandler" target="Custom.ExternalID"/>
-		<field source="stateHandler" target="System.State"/>
-		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
-		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
-		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
-		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
-		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
-		<field source="areaPathHandler" target="System.AreaPath"/>		
-	</wit>
 
 	<wit source="Data Interface TCS" target="Interface" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
@@ -837,6 +908,7 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="zionsIdHandler" target="Custom.InterfaceID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
@@ -863,6 +935,7 @@
 			
 	<wit source="Accounting Change" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -874,6 +947,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -889,11 +963,14 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
 	<wit source="Business Process Change" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -905,6 +982,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -929,6 +1007,9 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="tableHandler" target="Custom.Table"/>
+		<field source="cdeSubjectHandler" target="Custom.Subject"/>
+		<field source="cdeTierHandler" target="Custom.Tier"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -936,6 +1017,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -955,12 +1037,23 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
-	<wit source="Data Interface IO" target="Entity" translateUnmappedFields="false">
+	<wit source="Data Interface IO" target="IO Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="cobolPicHandler" target="Custom.CobolPic"/>
+		<field source="inputOrOutputHandler" target="Custom.InputOrOutput"/>
+		<field source="validValuesHandler" target="Custom.Values"/>
+		<field source="formatHandler" target="Custom.Format"/>
+		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="sourceFieldIndicatorHandler" target="Custom.SourceFieldIndicator"/>
+		<field source="iszFieldTypeHandler" target="Custom.IOFieldType"/>
+		<field source="iofLogicHandler" target="Custom.BusinessLogic"/>
+		<field source="mandatoryHandler" target="Custom.Mandatory"/>
+		<field source="fileNameHandler" target="Custom.FileName"/>
+		<field source="recordTypeHandler" target="Custom.RecordType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -971,24 +1064,54 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
-	<wit source="Data Interface TCS IO" target="Entity" translateUnmappedFields="false">
+	<wit source="Data Interface TCS IO" target="IO Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="nameHandler" target="System.Title"/>
+		<field source="fieldNameOrTitleHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="cobolPicHandler" target="Custom.CobolPic"/>
+		<field source="primaryTextHandler" target="Custom.BusinessLogic"/>
+		<field source="inputOrOutputHandler" target="Custom.InputOrOutput"/>
+		<field source="tcsFormatHandler" target="Custom.Format"/>
+		<field source="tcsLengthHandler" target="Custom.Length"/>
+		<field source="transactionCodeHandler" target="Custom.TransactionNum"/>
+		<field source="ufeDisplayLengthHandler" target="Custom.UFEDisplayLength"/>
+		<field source="ufePicSizeHandler" target="Custom.UFEPICSize"/>
+		<field source="ufeStartPositionHandler" target="Custom.UFEStartPosition"/>
+		<field source="xmlFieldDefHandler" target="Custom.XMLFieldDef"/>
+		<field source="zionsUfeFieldHandler" target="Custom.ZionsUFEField"/>
+		<field source="tcsValidValuesHandler" target="Custom.Values"/>
+		<field source="tcsDataTypeHandler" target="Custom.DataType"/>
+		<field source="tableHandler" target="Custom.Table"/>
+		<field source="startingPositionHandler" target="Custom.Position"/>
+		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
+		<field source="sourceFieldNameHandler" target="Custom.SourceFieldName"/>
+		<field source="sourceFieldIndicatorHandler" target="Custom.SourceFieldIndicator"/>
+		<field source="mapping2Handler" target="Custom.Mapping"/>
+		<field source="mandatoryHandler" target="Custom.Mandatory"/>
+		<field source="defaultValuesHandler" target="Custom.DefaultValue"/>
+		<field source="endpointFieldNameHandler" target="Custom.EndpointFieldName"/>
+		<field source="esbCopybookPicSizeHandler" target="Custom.ESBCopybookPICSize"/>
+		<field source="esbTagNameInterfaceHandler" target="Custom.ESBTagName"/>
+		<field source="exampleHandler" target="Custom.Example"/>
+		<field source="fieldExistsHandler" target="Custom.FieldExists"/>
+		<field source="fileNameHandler" target="Custom.FileName"/>
+		<field source="recordTypeHandler" target="Custom.RecordType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="discussionNotesRemarksIofHandler" target="Custom.Remarks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
 	<wit source="Disclosure" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -1000,21 +1123,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
-		<field source="areaPathHandler" target="System.AreaPath"/>		
-	</wit>
-			
-	<wit source="Formal Use Case (Text)" target="Use Case" translateUnmappedFields="false">
-		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="nameHandler" target="System.Title"/>
-		<field source="descriptionHandler" target="System.Description"/>
-		<field source="creatorHandler" target="System.CreatedBy"/>
-		<field source="idHandler" target="Custom.ExternalID"/>
-		<field source="stateHandler" target="System.State"/>
-		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
-		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
-		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
-		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
-		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -1038,6 +1147,9 @@
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="screenFieldFormatHandler" target="Custom.Format"/>
+		<field source="screenFieldTypeHandler" target="Custom.FieldType"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
@@ -1046,15 +1158,32 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
 	<wit source="Statement and Notice Field TCS" target="Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="nameHandler" target="System.Title"/>
+		<field source="fieldNameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="sectionIDHandler" target="Custom.SectionID"/>
+		<field source="recordTypeHandler" target="Custom.RecordType"/>
+		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
+		<field source="tcsDataElementHandler" target="Custom.SourceFieldName"/>
+		<field source="businessLogicHandler" target="Custom.BusinessLogic"/>
+		<field source="cobolPicHandler" target="Custom.CobolPic"/>
+		<field source="tcsLengthHandler" target="Custom.Length"/>
+		<field source="tcsStartPositionHandler" target="Custom.Position"/>
+		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
+		<field source="tcsFormatHandler" target="Custom.Format"/>
+		<field source="tableHandler" target="Custom.Table"/>
+		<field source="startingPositionHandler" target="Custom.Position"/>
+		<field source="validValuesHandler" target="Custom.Values"/>
+		<field source="defaultValueHandler" target="Custom.DefaultValue"/>
+		<field source="discussionNotesRemarksHandler" target="Custom.Remarks"/>
+		<field source="uiOriginalTagNameHandler" target="Custom.OriginalTagName"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1062,6 +1191,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="remarksHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -1071,6 +1201,11 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="validValuesHandler" target="Custom.Values"/>
+		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="formatHandler" target="Custom.Format"/>
+		<field source="tableHandler" target="Custom.Table"/>
+		<field source="tcsDataTypeHandler" target="Custom.DataType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1078,6 +1213,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -1087,18 +1223,37 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="cobolPicHandler" target="Custom.CobolPic"/>
+		<field source="dmDefaultHandler" target="Custom.DefaultValue"/>
+		<field source="dmzNameHandler" target="Custom.DocumentName"/>
+		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
+		<field source="s_NoHandler" target="Custom.SequenceNo"/>
+		<field source="validValuesHandler" target="Custom.Values"/>
+		<field source="transformationLogicHandler" target="Custom.BusinessLogic"/>
+		<field source="mandatoryHandler" target="Custom.Mandatory"/>
+		<field source="migrationStatusHandler" target="Custom.MigrationStatus"/>
+		<field source="offsetFromHandler" target="Custom.OffsetFrom"/>
+		<field source="offsetToHandler" target="Custom.OffsetTo"/>
+		<field source="tcsDataTypeHandler" target="Custom.DataType"/>
+		<field source="dmActionTcsHandler" target="Custom.DMCategory"/>
+		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="tableHandler" target="Custom.Table"/>
+		<field source="zionsFieldNameHandler" target="Custom.SourceFieldName"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
 		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="infoCommentsRemarksHandler" target="Custom.Remarks"/>
+		<field source="complianceFinanceRelatedHandler" target="System.Tags"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
 	<wit source="TCS Existing Functionality" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -1110,6 +1265,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -1119,6 +1275,7 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="uiTransNumHandler" target="Custom.TransactionNum"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1126,6 +1283,8 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="complianceRelatedHandler" target="System.Tags"/>
+		<field source="remarksHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
@@ -1183,6 +1342,12 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="cobolPicHandler" target="Custom.CobolPic"/>
+		<field source="mandatoryHandler" target="Custom.Mandatory"/>
+		<field source="lengthHandler" target="Custom.Length"/>
+		<field source="tableFileNameHandler" target="Custom.Table"/>
+		<field source="internalRecordCodeHandler" target="Custom.InternalRecordCode"/>
+		<field source="zionsDataTypeHandler" target="Custom.DataType"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1190,6 +1355,8 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="complianceRelatedHandler" target="System.Tags"/>
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 	<links>

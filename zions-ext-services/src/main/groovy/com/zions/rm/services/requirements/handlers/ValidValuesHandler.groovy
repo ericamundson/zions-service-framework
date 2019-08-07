@@ -3,17 +3,17 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 
 @Component
-class UiRevisedFieldNameHandler extends RmBaseAttributeHandler {
+class ValidValuesHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public String getFieldName() {
 		
-		return 'UI Revised Field Name'
+		return 'Valid Values'
 	}
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
-		return val
+		return toHtml(val)
 	}
 
 }

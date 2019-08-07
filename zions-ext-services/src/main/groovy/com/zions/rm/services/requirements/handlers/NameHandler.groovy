@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class NameHandler extends RmBaseAttributeHandler {
-	static int SIZE = 255
 	
 	@Override
 	public String getFieldName() {
@@ -33,10 +32,7 @@ class NameHandler extends RmBaseAttributeHandler {
 			outVal = '<blank title>'
 		}
 		// Truncate if too long
-		if (outVal.length() > SIZE) {
-			outVal = outVal.substring(0, SIZE-1)
-		}
-		return outVal;
+		return truncateStringField(outVal);
 	}
 	private String stripFullPrefix(String value) {
 		def ndx = value.lastIndexOf(': ')

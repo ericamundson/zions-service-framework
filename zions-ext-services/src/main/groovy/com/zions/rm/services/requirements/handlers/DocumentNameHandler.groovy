@@ -3,16 +3,17 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 
 @Component
-class UiRevisedFieldNameHandler extends RmBaseAttributeHandler {
+class DocumentNameHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public String getFieldName() {
 		
-		return 'UI Revised Field Name'
+		return 'Document Name'
 	}
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
+		
 		return val
 	}
 

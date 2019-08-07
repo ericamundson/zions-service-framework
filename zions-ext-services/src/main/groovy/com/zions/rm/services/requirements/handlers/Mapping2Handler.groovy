@@ -3,12 +3,12 @@ package com.zions.rm.services.requirements.handlers
 import org.springframework.stereotype.Component
 
 @Component
-class UiRevisedFieldNameHandler extends RmBaseAttributeHandler {
+class Mapping2Handler extends RmBaseAttributeHandler {
 
 	@Override
 	public String getFieldName() {
-		
-		return 'UI Revised Field Name'
+		// TODO Auto-generated method stub
+		return 'Mapping2'
 	}
 
 	@Override
