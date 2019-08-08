@@ -94,7 +94,7 @@ class SmartDocManagementService {
 		def iStartDepth = module.orderedArtifacts[iStart].getDepth()
 		while(i < module.orderedArtifacts.size() && module.orderedArtifacts[i].getDepth() >= iStartDepth) {
 			def artifact = module.orderedArtifacts[i]
-			if (!artifact.isDeleted) {
+			if (!artifact.isDeleted && artifact.isMigrating) {
 				if (jsonString[jsonString.size()-1] == '}') {
 					jsonString = jsonString + ',' + '\n'
 				}

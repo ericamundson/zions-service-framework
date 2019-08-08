@@ -276,15 +276,19 @@ class TranslateRmModulesToADO implements CliAction {
 						module.orderedArtifacts[it].setDescription('') 
 					}
 					// If Reporting Requirement is in Reporting RRZ (or included in RSZ), do not migrate the artifact
-					else if ((module.getArtifactType()== 'Reporting RRZ' || module.getArtifactType()== 'RSZ Specification') && 
-							  module.orderedArtifacts[it].getFormat()== 'Text' &&
+					else if ((module.getArtifactType() == 'Reporting RRZ' || module.getArtifactType() == 'RSZ Specification') && 
+							  module.orderedArtifacts[it].getFormat() == 'Text' &&
 							 (module.orderedArtifacts[it].getArtifactType() == 'Reporting Requirement'||
 							  module.orderedArtifacts[it].getArtifactType() == 'Reporting RRZ')) {
 						module.orderedArtifacts[it].setIsDeleted(true)
 					}
+					// Do not migrate Subtopic artifacts
+					else if (module.orderedArtifacts[it].getArtifactType() == 'Subtopic') {
+						module.orderedArtifacts[it].setIsMigrating(false)
+					}
 
 					// Only store first occurrence of an artifact in the module
-					if (!module.orderedArtifacts[it].getIsDuplicate()) {  
+					if (!module.orderedArtifacts[it].getIsDuplicate() && module.orderedArtifacts[it].getIsMigrating()) {  
 						changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
 						aid = module.orderedArtifacts[it].getCacheID()
 						changes.each { key, val ->
@@ -361,12 +365,7 @@ class TranslateRmModulesToADO implements CliAction {
 				log.error("*** ERROR: Artifact #${artifact.getID()} is heading with image or attachment in module ${module.getTitle()}")
 				errCount++
 			}
-			/*
-			else if (artifact.getIsDuplicate()) {
-				log.error("*** ERROR: Artifact #${artifact.getID()} is a duplicate instance in module ${module.getTitle()}.  This is not yet supported in ADO.")
-				errCount++
-			}
-			*/
+
 		}
 		return errCount
 	}
