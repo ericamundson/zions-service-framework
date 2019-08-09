@@ -11,6 +11,7 @@ class ClmArtifact {
 	def changes = [:]
 	def adoFileInfo = []
 	def cacheWI // cached work item from ADO
+	boolean isNew = false
 	public ClmArtifact(String in_title, String in_format, String in_about) {
 		setTitle(in_title)
 		this.setAbout(in_about)
@@ -42,7 +43,7 @@ class ClmArtifact {
 		return attributeMap.'Identifier'
 	}
 	public String getCacheID() {
-		"${this.getID()}"
+		"${this.getID()}"  // Return Rational ID
 	}
 	public String setID(in_id) {
 		attributeMap.'Identifier' = in_id

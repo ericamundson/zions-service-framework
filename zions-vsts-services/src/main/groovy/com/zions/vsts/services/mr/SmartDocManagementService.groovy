@@ -40,14 +40,23 @@ class SmartDocManagementService {
 		// Do nothing
 	}
 	
-	def createSmartDoc(def module, def tfsUrl, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsAltUser, def tfsAltPassword, def mrTemplate, def mrFolder) {
+	def ensureSmartDoc(def module, def tfsUrl, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsAltUser, def tfsAltPassword, def mrTemplate, def mrFolder) {
+		String action
 		def date = new Date()
 		String body;
-		String docTitle = "${module.getTitle()}-${date.format('yyyyMMddHHmmss')}"
+		String docTitle = "${module.getTitle()}"
 		String domain = ""
 		String userPassword = ""
+		String wiDetails
 		def index = 0
-		String wiDetails = """[{"id":"${getVstsID(module)}","linkType":"","links":${getWorkitemDetails(0, module).detailString}}]"""
+		if (module.isNew) {
+			action = 'Create' // Create new SmartDoc (root document work item is new in ADO)
+			wiDetails = """[{"id":"${getVstsID(module)}","linkType":"","links":${getWorkitemDetails(0, module).detailString}}]"""
+		}
+		else {
+			action = 'Update' // Update existing SmartDoc (don't include root work item)
+			wiDetails = """${getWorkitemDetails(0, module).detailString}"""
+		}
 		body = """
 			{
 			"userId": "$tfsAltUser",
@@ -69,13 +78,13 @@ class SmartDocManagementService {
 			}
 			"""
 			println(body)
-			return doPost(body)
+			return doPost(body, action)
 		}
 		
-	private def doPost(def body) {
+	private def doPost(def body, String action) {
 		def result = mrGenericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
-			uri: "${mrGenericRestClient.getMrUrl()}/Services/ExternalService.svc/api/smartdocs/create",
+			uri: "${mrGenericRestClient.getMrUrl()}/Services/ExternalService.svc/api/smartdocs/" + action.toLowerCase(),
 			body: body,
 			headers: [accept: 'application/json']
 			

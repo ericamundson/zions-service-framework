@@ -316,23 +316,23 @@ class TranslateRmModulesToADO implements CliAction {
 				
 	
 	
-				// Create work items and SmartDoc container in Azure DevOps
+				// Create/update work items and SmartDoc container in Azure DevOps
 				if (changeList.size() > 0 && errCount == 0) {
 					// Process work item changes in Azure DevOps
 					log.info("${getCurTimestamp()} - Processing work item changes...")
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 					
-					// Create the SmartDoc
+					// Create/update the SmartDoc
 					log.info("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
-					def result = smartDocManagementService.createSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsAltUser, tfsAltPassword, mrTemplate, mrFolder)
+					def result = smartDocManagementService.ensureSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsAltUser, tfsAltPassword, mrTemplate, mrFolder)
 					if (result == null) {
-						log.info("SmartDoc creation returned null")
+						log.info("SmartDoc API returned null")
 					}
 					else if (result.error != null && result.error.code != "null") {
-						log.info("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
+						log.info("SmartDoc API failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
 					}
 					else {
-						log.info("SmartDoc creation succeeded. Result: ${result.result}")
+						log.info("SmartDoc API succeeded. Result: ${result.result}")
 					}
 
 				}
