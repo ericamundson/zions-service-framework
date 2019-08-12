@@ -1179,7 +1179,6 @@
 		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
 		<field source="tcsFormatHandler" target="Custom.Format"/>
 		<field source="tableHandler" target="Custom.Table"/>
-		<field source="startingPositionHandler" target="Custom.Position"/>
 		<field source="validValuesHandler" target="Custom.Values"/>
 		<field source="defaultValueHandler" target="Custom.DefaultValue"/>
 		<field source="discussionNotesRemarksHandler" target="Custom.Remarks"/>
