@@ -22,6 +22,8 @@ import groovyx.net.http.ContentType
  * <li>
  * Manages caching of ADO work items to optimize requests made to ADO.
  * </li>
+ * <li>Handles refresh of work item cache from imported work items query.</li>
+ * <li>Manages cleanup of a work item import via a specified query.</li>
  * </ul>
  * @author z091182
  *

@@ -10,15 +10,20 @@ import groovy.util.logging.Slf4j
 import groovyx.net.http.ContentType
 
 /**
+ * <lu>
+ * <li>
  * To create post example:  https://extmgmt.dev.azure.com/eto-dev/_apis/ExtensionManagement/InstalledExtensions/Zions/vsts-extensions-custom-attributes-control/Data/Scopes/Default/Current/Collections/eto-dev/Documents
  * post body is doc json
- * 
+ * </li>
+ * <li>
  * To update post example:  https://extmgmt.dev.azure.com/eto-dev/_apis/ExtensionManagement/InstalledExtensions/Zions/vsts-extensions-custom-attributes-control/Data/Scopes/Default/Current/Collections/eto-dev/Documents/{id}
  * post body is doc json
- * 
+ * </li>
+ * <li>
  * To GET example:  https://extmgmt.dev.azure.com/eto-dev/_apis/ExtensionManagement/InstalledExtensions/Zions/vsts-extensions-custom-attributes-control/Data/Scopes/Default/Current/Collections/eto-dev/Documents/{id}
  * get body is doc json
- * 
+ * </li>
+ * </lu><p>
  * Key example:  let id: string = wiType + '_' + this.fieldName + '_' + project
  * @author z091182
  *  
