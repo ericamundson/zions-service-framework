@@ -33,12 +33,15 @@ class ClmRequirementsModule  extends ClmArtifact {
 		return uri
 	}
 	def appendModule(ClmRequirementsModule append_module) {
+		// NOTE: We increment the depth on all appended module artifacts so as to preserve outline numbering
 		// first add the module artifact as the first module element 
-		ClmModuleElement moduleElement = new ClmModuleElement(1, append_module.getFormat(), append_module.attributeMap)
+		def startDepth = 2
+		ClmModuleElement moduleElement = new ClmModuleElement(startDepth, append_module.getFormat(), append_module.attributeMap)
 		this.orderedArtifacts.add(moduleElement)
 		
 		// now add all of the module's orderedArtifacts
 		append_module.orderedArtifacts.each { artifact->
+			artifact.incrementDepth(1)
 			this.orderedArtifacts.add(artifact)
 		}
 	}

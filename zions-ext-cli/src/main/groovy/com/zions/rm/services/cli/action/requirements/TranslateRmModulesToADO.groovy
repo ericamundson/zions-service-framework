@@ -261,10 +261,11 @@ class TranslateRmModulesToADO implements CliAction {
 				def lastSection = 0
 				0.upto(ubound, {
 	
-					// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
+					// If Heading is immediately followed by a type of artifact that should include it's title, 
+					// move Heading title to following artifact and logically delete Heading artifact
 					if (module.orderedArtifacts[it].getIsHeading() && 
 						it < module.orderedArtifacts.size()-1 && 
-						isToIncorporateTitle(module,it+1)) {
+						isToMergeWithHeading(module,it+1)) {
 						
 						module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
 						module.orderedArtifacts[it+1].setDepth(module.orderedArtifacts[it].getDepth())
@@ -303,6 +304,7 @@ class TranslateRmModulesToADO implements CliAction {
 					}
 					// Adjust depth to preserve outline numbering
 					if (lastSection > 0 && module.orderedArtifacts[it].getTfsWorkitemType() != 'Section' &&
+						module.orderedArtifacts[it].getTfsWorkitemType() != 'Document' &&
 						module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[lastSection].getDepth()){ 
 						// For all requirement content under a section, increment the depth if not already incremented so as to preserve outline numbering from DOORS
 						module.orderedArtifacts[it].incrementDepth(1)
@@ -369,7 +371,7 @@ class TranslateRmModulesToADO implements CliAction {
 		}
 		return errCount
 	}
-	boolean isToIncorporateTitle(def module, def indexOfElementToCheck) {
+	boolean isToMergeWithHeading(def module, def indexOfElementToCheck) {
 		// This function is dependent upon the type of module
 		String artifactType = module.orderedArtifacts[indexOfElementToCheck].getArtifactType()
 		String moduleType = module.getArtifactType()
