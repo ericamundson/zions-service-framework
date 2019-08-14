@@ -26,11 +26,11 @@ import groovyx.net.http.ContentType
  * @startuml
  * class ClmTestItemManagementService {
  *  ... Get ADO Test Plan/Execution field data ...
- *  + getChanges(String project, def qmItemData, def memberMap, def runData = null, def testCase = null)
+ *  + processForChanges(String project, def qmItemData, def memberMap, def resultMap = null, def testCase = null, def parent = null, Closure closure)
  * }
  * note left: @Component
  * 
- * class Map<String, IFieldHandler> {
+ * class Map<String, QmBaseAttributeHandler> {
  * }
  * note left: String is name of handler Class, IFieldHandler is actual class
  * 

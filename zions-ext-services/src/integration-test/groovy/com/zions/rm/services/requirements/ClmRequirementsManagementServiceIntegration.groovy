@@ -56,7 +56,6 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 	@Autowired
 	IGenericRestClient rmGenericRestClient
 	
-	
 	def 'Handle base requirement artifacts'() {
 		given: 'A page of requirement artifacts'
 		Date ts = new Date()

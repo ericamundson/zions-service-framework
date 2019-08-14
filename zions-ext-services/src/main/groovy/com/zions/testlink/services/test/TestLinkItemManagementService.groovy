@@ -16,7 +16,25 @@ import groovyx.net.http.ContentType
  * Handles generating data required to send to ADO to update MS Test Manager with test
  * plan data.
  * 
+ * <p>Design</p>
+ * <img src="TestLinkItemManagementService.png"/>
+ * 
  * @author z091182
+ * 
+ * @startuml
+ * class TestLinkItemManagementService [[java:com.zions.testlink.services.test.TestLinkItemManagementService]] {
+ * 	~String cacheLocation
+ * 	+TestLinkItemManagementService()
+ * 	+ processForChanges(String project, def tlItemData, def memberMap, def resultMap = null, def testCase = null, def parent = null, Closure closure)
+ * }
+ * class Map<String, TlBaseAttributeHandler> {
+ * }
+ * note left: String is name of handler Class, TlBaseAttributeHandler is actual class
+ * TestLinkItemManagementService --> TestLinkClient: @Autowired testlinkClient
+ * TestLinkItemManagementService --> ICacheManagementService: @Autowired cacheManagementService
+ * TestLinkItemManagementService --> TestLinkMappingManagementService: @Autowired testLinkMappingManagementService
+ * TestLinkItemManagementService --> Map: @Autowired fieldMap
+ * @enduml
  *
  */
 @Component
@@ -364,6 +382,7 @@ class TestLinkItemManagementService {
 		}
 		
 	}
+	
 	private String getTargetName(String name, def map) {
 		def maps = map.findAll { amap ->
 			"${amap.source}" == "${name}"

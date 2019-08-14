@@ -22,6 +22,8 @@ import groovyx.net.http.ContentType
  * <li>
  * Manages caching of ADO work items to optimize requests made to ADO.
  * </li>
+ * <li>Handles refresh of work item cache from imported work items query.</li>
+ * <li>Manages cleanup of a work item import via a specified query.</li>
  * </ul>
  * @author z091182
  *
@@ -506,12 +508,12 @@ class WorkManagementService {
 
 	public updateWorkItem(collection, project, id, data) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		def body = new JsonBuilder(data).toPrettyString()
+		//def body = new JsonBuilder(data).toPrettyString()
 		def result = genericRestClient.patch(
 				contentType: ContentType.JSON,
 				//requestContentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
-				body: body,
+				body: data,
 				query: ['api-version': '5.0', bypassRules:true],
 				headers: ['Content-Type': 'application/json-patch+json']
 

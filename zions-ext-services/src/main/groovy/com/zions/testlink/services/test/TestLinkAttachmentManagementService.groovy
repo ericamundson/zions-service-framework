@@ -12,17 +12,20 @@ import org.springframework.stereotype.Component
 /**
  * Manage caching attachments and returning data elements required to associate attachment to ADO element.
  * 
+ * <p>Design</p>
+ * <img src="TestLinkAttachmentManagementService.png"/>
+ * 
  * @author z091182
  *
  * @startuml
- * class ClmTestAttachmentManagementService [[java:com.zions.qm.services.test.ClmTestAttachmentManagementService]] {
+ * class TestLinkAttachmentManagementService [[java:com.zions.testlink.services.test.TestLinkAttachmentManagementService]] {
  * 	~String cacheLocation
- * 	+ClmTestAttachmentManagementService()
- * 	+def cacheAttachments(def testCase)
- * 	-def handleTestSteps()
- * 	-def saveAttachment(def result, String id)
- * 	-def getTestScript(def itemData)
+ * 	+TestLinkAttachmentManagementService()
+ * 	+def cacheTestCaseAttachments(def testCase)
  * }
+ * TestLinkAttachmentManagementService --> TestLinkClient: @Autowired testlinkClient
+ * TestLinkAttachmentManagementService --> ICacheManagementService: @Autowired cacheManagementService
+ * TestLinkAttachmentManagementService --> TestLinkMappingManagementService: @Autowired testLinkMappingManagementService
  * @enduml
  */
 @Component
@@ -41,24 +44,6 @@ class TestLinkAttachmentManagementService {
 	public TestLinkAttachmentManagementService() {
 	}
 
-	public def cacheTestItemAttachments(def titem) {
-		def files = []
-		String type = getOutType(titem)
-		String id = "${titem.webId.text()}-${type}"
-		testLinkClient.
-		titem.attachment.each { attachment ->
-			String aurl = "${attachment.@href}"
-			def result = clmTestManagementService.getContent(aurl)
-			if (result.filename != null) {
-				def file = cacheManagementService.saveBinaryAsAttachment(result.data, result.filename, id)
-				def item = [file: file, comment: "Added attachment ${result.filename}"]
-				//File cFile = saveAttachment
-				files.add(item)
-			}
-		}
-
-		return files
-	}
 	/**
 	 * Cache all test case attachments including script and steps.
 	 * 
