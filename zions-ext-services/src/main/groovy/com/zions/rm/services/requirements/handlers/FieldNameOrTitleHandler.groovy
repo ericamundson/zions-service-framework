@@ -18,7 +18,7 @@ class FieldNameOrTitleHandler extends RmBaseAttributeHandler {
 			// Use artifact name since Field Name is blank
 			outVal = itemData.getTitle() 
 			if (outVal == null || outVal == '') {
-				outVal = '<blank title>'
+				outVal = 'No Title'
 			}
 		}
 		else {
