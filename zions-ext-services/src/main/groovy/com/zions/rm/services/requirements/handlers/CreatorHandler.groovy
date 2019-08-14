@@ -6,23 +6,24 @@ import com.zions.rm.services.requirements.ClmRequirementsManagementService
 
 @Component
 class CreatorHandler extends RmBaseAttributeHandler {
-	@Autowired
-	ClmRequirementsManagementService clmRequirementsManagementService
-	
-	@Override
-	public String getFieldName() {
-		
-		return 'creator'
-	}
+      @Autowired
+      ClmRequirementsManagementService clmRequirementsManagementService
+      
+      @Override
+      public String getFieldName() {
+            
+            return 'creator'
+      }
 
-	@Override
-	public Object formatValue(Object value, Object itemData) {
-		String outVal = null
-		String ownerUrl = value
-		if (ownerUrl == null || ownerUrl.length() == 0) return null
-		String email = clmRequirementsManagementService.getMemberEmail(ownerUrl)
-		outVal = email.toLowerCase()
-		return outVal;
-	}
+      @Override
+      public Object formatValue(Object value, Object itemData) {
+            String outVal = null
+            String ownerUrl = value
+            if (ownerUrl == null || ownerUrl.length() == 0) return null
+            String email = clmRequirementsManagementService.getMemberEmail(ownerUrl)
+            outVal = email.toLowerCase()
+            if (outVal == '') return null
+            return outVal;
+      }
 
 }

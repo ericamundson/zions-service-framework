@@ -27,7 +27,7 @@
             "branchFilters": [
                 "+refs/heads/master",
                 "+refs/heads/release/*",
-                "+refs/heads/feature/IFB*"
+                "+refs/heads/ifb/*"
             ],
             "pathFilters": [
                 
@@ -110,21 +110,22 @@
                         "enabled": true,
                         "continueOnError": false,
                         "alwaysRun": false,
-                        "displayName": "Tag Pending",
+                        "displayName": "Get New Version and Tag",
                         "timeoutInMinutes": 0,
                         "condition": "succeeded()",
                         "task": {
                             "id": "218eff04-a485-4087-b005-e1f04527654d",
-                            "versionSpec": "1.*",
+                            "versionSpec": "3.*",
                             "definitionType": "task"
                         },
                         "inputs": {
-                            "OutputVariable": "Buildtag",
+                            "OutputVariable": "build.buildnumber",
                             "InitialVersionPrefix": "1.0.0",
                             "MasterBranchQualifier": "",
                             "ReleaseBranchQualifier": "",
                             "TagFormat": "beforeBuildId",
-                            "PendingTag": "true"
+							"NodeBuild": "false",
+                            "WriteTag": "true"
                         }
                     },
                     {
@@ -140,13 +141,13 @@
                         "refName": "Maven1",
                         "task": {
                             "id": "ac4ee482-65da-4485-a532-7b085873e532",
-                            "versionSpec": "2.*",
+                            "versionSpec": "3.*",
                             "definitionType": "task"
                         },
                         "inputs": {
                             "mavenPOMFile": "$(Parameters.mavenPOMFile)",
                             "goals": "versions:set",
-                            "options": "-DnewVersion=$(Buildtag) -DgenerateBackupPoms=false -Dmaven.repo.local=$(Build.BinariesDirectory)/.m2",
+                            "options": "-DnewVersion=$(build.buildnumber) -DgenerateBackupPoms=false -Dmaven.repo.local=$(Build.BinariesDirectory)/.m2",
                             "publishJUnitResults": "false",
                             "testResultsFiles": "**/TEST-*.xml",
                             "testRunTitle": "",
@@ -262,30 +263,6 @@
                             "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
                             "Parallel": "false",
                             "ParallelCount": "8"
-                        }
-                    },
-                    {
-                        "environment": {
-                            
-                        },
-                        "enabled": true,
-                        "continueOnError": false,
-                        "alwaysRun": false,
-                        "displayName": "Tag Build",
-                        "timeoutInMinutes": 0,
-                        "condition": "succeeded()",
-                        "task": {
-                            "id": "218eff04-a485-4087-b005-e1f04527654d",
-                            "versionSpec": "1.*",
-                            "definitionType": "task"
-                        },
-                        "inputs": {
-                            "OutputVariable": "Buildtag",
-                            "InitialVersionPrefix": "1.0.0",
-                            "MasterBranchQualifier": "",
-                            "ReleaseBranchQualifier": "",
-                            "TagFormat": "beforeBuildId",
-                            "PendingTag": "false"
                         }
                     }
                 ],

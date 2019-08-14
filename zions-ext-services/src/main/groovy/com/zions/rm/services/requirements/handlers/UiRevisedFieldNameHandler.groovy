@@ -8,7 +8,7 @@ class UiRevisedFieldNameHandler extends RmBaseAttributeHandler {
 	@Override
 	public String getFieldName() {
 		
-		return 'UI Original Tag Name'
+		return 'UI Revised Field Name'
 	}
 
 	@Override

@@ -46,81 +46,10 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	@Override
 	public Object formatValue(Object value, Object itemData) {		
 		String sId = itemData.getCacheID()
-		String outHtml
-		if (itemData.getArtifactType() == 'Report Filter') {
-			String seq = itemData.getTypeSeqNo()
-			String filterDesc = itemData.getAttribute('Filter Description')
-			outHtml = """<div><p style="margin-left: 40px">
-<b>Sequence No:</b>&nbsp$seq<br>
-<b>Filter Description:</b>&nbsp$filterDesc</p></div>"""
-		}
-		else if (itemData.getArtifactType() == 'Report Group Layout') {
-			String section = itemData.getAttribute('Sections')
-			String alignment = itemData.getAttribute('Alignment')
-			String pageBreak = itemData.getAttribute('Page Break')
-			outHtml = """<div><p style="margin-left: 40px">
-<b>Section:</b>&nbsp$section<br>
-<b>Alignment:</b>&nbsp$alignment<br>
-<b>Page Break:</b>&nbsp$pageBreak<br>
-<b>Value:</b>&nbsp${itemData.stripTags(value)}</p></div>"""
-		}		
-		else if (itemData.getArtifactType() == 'Report Sort') {
-			String seq = itemData.getTypeSeqNo()
-			String groupClause = itemData.getAttribute('Group Clause')
-			String fieldName = itemData.getAttribute('Field Name')
-			String gsb = itemData.getAttribute('Group or Sort')
-			String order = itemData.getAttribute('Sort Order')
-			String remarks = itemData.getAttribute('Info Comments')
-			outHtml = """<div><p style="margin-left: 40px">
-<b>Sequence No:</b>&nbsp$seq<br>
-<b>Group Clause:</b>&nbsp$groupClause<br>
-<b>Report Field Name:</b>&nbsp$fieldName<br>
-<b>Group / Sort / Break:</b>&nbsp$gsb<br>
-<b>Sort Order:</b>&nbsp$order<br>
-<b>Remarks: </b>&nbsp$remarks</p></div>"""
-		}
-		else if (itemData.getArtifactType() == 'Report Summary Fields') {
-			String field = itemData.getAttribute('Field Name')
-			String valFormat = itemData.getAttribute('Value Format')
-			String alignment = itemData.getAttribute('Data Alignment')
-			String calc = value
-			outHtml = """<div><p style="margin-left: 40px">
-<b>Report Field Name:</b>&nbsp$field<br>
-<b>Value Format:</b>&nbsp$valFormat<br>
-<b>Data Alignment:</b>&nbsp$alignment<br>
-<b>Field Mapping and Calculation:</b>&nbsp$calc</p></div>"""
-		}
-		else if (itemData.getArtifactType() == 'Reporting RRZ') {
-			String title = itemData.getAttribute('Report Title')
-			String pageSize = itemData.getAttribute('Page Size')
-			String pageLayout = itemData.getAttribute('Page Layout')
-			String docName = itemData.getAttribute('Document Name')
-			String docNum = itemData.getAttribute('FS Document #')
-			String audience = itemData.getAttribute('Audience')
-			String distSchedule = itemData.getAttribute('Distribution Schedule')
-			String distFormat = itemData.getAttribute('Distribution Format')
-			String distMethod = itemData.getAttribute('Non-CORE System')
-			String desc = itemData.getAttribute('Info Comments')
-			String affiliates = itemData.getAttribute('Affiliates Affected')
-			outHtml = """<div><p style="margin-left: 40px">
-<b>Report Title:</b><br>
-$title<br>
-<b>Business Requirements:</b><br>
-$docName<br>
-$docNum<br>
-<b>Description:</b><br>
-$desc<br>
-<b>Audience:</b><br>
-${audience.replaceAll(';',', ')}<br>
-<b>Distribution:</b><br>
-Distribution Schedule:&nbsp$distSchedule<br>
-Distribution Format:&nbsp$distFormat<br>
-Distribution Method:&nbsp${distMethod.replaceAll(';',', ')}<br>
-<b>General Report and Page Layout:</b><br>
-Page Size:&nbsp$pageSize<br>
-Page Orientation:&nbsp$pageLayout<br>
-<b>Input Parameters:</b><br>
-Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
+		// In this section, replace Primary Text with other content
+		String outHtml = '<div></div>'
+		if (itemData.getArtifactType() == 'Data Interface IO' || itemData.getArtifactType() == 'Data Interface TCS IO') {
+			outHtml = toHtml(itemData.getAttribute('Field Description'))
 		}
 		else if (itemData.getArtifactType() == 'Data Interface TCS') {
 			value = removeNamespace("${value}")
@@ -235,6 +164,48 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 <p dir="ltr" id="_1559767314917" style="margin-left:.25in;">$phasedImplementationImpact</p>
 </div>"""		
 		}
+		else if (itemData.getArtifactType() == 'Reporting RRZ') {
+			String title = itemData.getAttribute('Report Title')
+			String pageSize = itemData.getAttribute('Page Size')
+			String pageLayout = itemData.getAttribute('Page Layout')
+			String docName = itemData.getAttribute('Document Name')
+			String docNum = itemData.getAttribute('FS Document #')
+			String audience = itemData.getAttribute('Audience')
+			String distSchedule = itemData.getAttribute('Distribution Schedule')
+			String distFormat = itemData.getAttribute('Distribution Format')
+			String distMethod = itemData.getAttribute('Non-CORE System')
+			String desc = itemData.getAttribute('Info Comments')
+			String affiliates = itemData.getAttribute('Affiliates Affected')
+			outHtml = """<div><p style="margin-left: 40px">
+<b>Report Title:</b><br>
+$title<br>
+<b>Business Requirements:</b><br>
+$docName<br>
+$docNum<br>
+<b>Description:</b><br>
+$desc<br>
+<b>Audience:</b><br>
+${audience.replaceAll(';',', ')}<br>
+<b>Distribution:</b><br>
+Distribution Schedule:&nbsp$distSchedule<br>
+Distribution Format:&nbsp$distFormat<br>
+Distribution Method:&nbsp${distMethod.replaceAll(';',', ')}<br>
+<b>General Report and Page Layout:</b><br>
+Page Size:&nbsp$pageSize<br>
+Page Orientation:&nbsp$pageLayout<br>
+<b>Input Parameters:</b><br>
+Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
+		}
+		else if (itemData.getArtifactType() == 'Report Summary Fields') {
+			outHtml = appendAttribute(outHtml, itemData, 'Field Name')
+			outHtml = appendAttribute(outHtml, itemData, 'Sequence No')
+			outHtml = appendAttribute(outHtml, itemData, 'Section ID')
+			outHtml = appendAttribute(outHtml, itemData, 'Value Format')
+			outHtml = appendAttribute(outHtml, itemData, 'Data Alignment')
+			outHtml = appendAttribute(outHtml, itemData, 'Label Alignment')
+			outHtml = appendAttribute(outHtml, itemData, 'Calculation Needed - Y/N')
+			outHtml = appendPrimaryTextAsAttribute(outHtml, itemData, 'Field Mapping and Calculation')
+		}
 		else if (itemData.getFormat() == 'WrapperResource') {
 			// For wrapper resource (uploaded file), we need to create our own description with hyperlink to attachment
 			def fileItem = rmFileManagementService.ensureRequirementFileAttachment(itemData, itemData.getFileHref())
@@ -252,7 +223,7 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 			}
 		}
 		else if (value == null || value.length() == 0) {
-			return '<div></div>'
+			outHtml = '<div></div>'
 		}		
 		else {
 			// strip out all namespace stuff from html
@@ -262,13 +233,211 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 			outHtml = processHtml(description, sId, itemData)
 		}
 		outHtml = outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("[^\\p{ASCII}]", "")
+		
+		// Append certain fields to end of Description
+		if (itemData.getArtifactType() == 'Business Requirement') {
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+			outHtml = appendAttribute(outHtml, itemData, 'Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Current Functionality')
+			outHtml = appendAttribute(outHtml, itemData, 'Zions System Current Functionality')
+			outHtml = appendAttribute(outHtml, itemData, 'Zions View of Classification')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}
+		else if (itemData.getArtifactType() == 'Data Interface IO') {
+			outHtml = appendAttribute(outHtml, itemData, 'ISZ Subroutine Name')
+		}
+		else if (itemData.getArtifactType() == 'Data Interface Zions') {
+			outHtml = appendAttribute(outHtml, itemData, 'Context Diagram Num')
+			outHtml = appendAttribute(outHtml, itemData, 'ISZ App')
+			outHtml = appendAttribute(outHtml, itemData, 'ISZ Program Description')
+			outHtml = appendAttribute(outHtml, itemData, 'ISZ Program Type')
+			outHtml = appendAttribute(outHtml, itemData, 'Required')
+			outHtml = appendAttribute(outHtml, itemData, 'Zions App')
+		}
+		else if (itemData.getArtifactType() == 'Data Requirement') {
+			outHtml = appendAttribute(outHtml, itemData, 'Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap/NoGap')
+			outHtml = appendAttribute(outHtml, itemData, 'Details of Gap')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap Option Selected')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Current Functionality')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Recommendation')
+			outHtml = appendAttribute(outHtml, itemData, 'Entity Name')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}
+		else if (itemData.getArtifactType() == 'Functional Requirement') {
+			outHtml = appendAttribute(outHtml, itemData, 'Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap/NoGap')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap Option Selected')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}
+		else if (itemData.getArtifactType() == 'Information Requirement') {
+			outHtml = appendAttribute(outHtml, itemData, 'Gap/NoGap')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap Option Selected')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}
+		else if (itemData.getArtifactType() == 'Interface Change') {
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+		}
+		else if (itemData.getArtifactType() == 'Interface Requirement') {
+			outHtml = appendAttribute(outHtml, itemData, 'Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap/NoGap')
+			outHtml = appendAttribute(outHtml, itemData, 'Details of Gap')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap Option Selected')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Current Functionality')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Recommendation')
+			outHtml = appendAttribute(outHtml, itemData, 'Entity Name')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}		
+		else if (itemData.getArtifactType() == 'Migration Change') {
+			outHtml = appendAttribute(outHtml, itemData, 'Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap/NoGap')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}
+		else if (itemData.getArtifactType() == 'Non-Functional Requirement') {
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Current Functionality')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Recommendation')
+		}
+		else if (itemData.getArtifactType() == 'Parameter Change') {
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap/NoGap')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}
+		else if (itemData.getArtifactType() == 'Processing Change') {
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+		}
+		else if (itemData.getArtifactType() == 'Report Change') {
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+		}
+		else if (itemData.getArtifactType() == 'Report Fields') {
+			outHtml = appendAttribute(outHtml, itemData, 'Sections' )
+		}
+		else if (itemData.getArtifactType() == 'Report Filter') {
+			outHtml = appendAttribute(outHtml, itemData, 'Sequence No' )
+			outHtml = appendAttribute(outHtml, itemData, 'Filter Description')
+		}
+		else if (itemData.getArtifactType() == 'Report Group Layout') {
+			outHtml = appendAttribute(outHtml, itemData, 'Field Name')
+			outHtml = appendAttribute(outHtml, itemData, 'Sequence No' )
+			outHtml = appendAttribute(outHtml, itemData, 'Sections')
+			outHtml = appendAttribute(outHtml, itemData, 'Section ID')
+			outHtml = appendAttribute(outHtml, itemData, 'Alignment')
+			outHtml = appendAttribute(outHtml, itemData, 'Page Break')
+			outHtml = appendAttribute(outHtml, itemData, 'Group Clause')
+			outHtml = appendAttribute(outHtml, itemData, 'Group or Sort')
+			outHtml = appendAttribute(outHtml, itemData, 'Sort Order')
+		}		
+		else if (itemData.getArtifactType() == 'Report Sort') {
+			outHtml = appendAttribute(outHtml, itemData, 'Field Name')
+			outHtml = appendAttribute(outHtml, itemData, 'Sequence No' )
+			outHtml = appendAttribute(outHtml, itemData, 'Group Clause')
+			outHtml = appendAttribute(outHtml, itemData, 'Field Name')
+			outHtml = appendAttribute(outHtml, itemData, 'Group or Sort')
+			outHtml = appendAttribute(outHtml, itemData, 'Sort Order')
+			outHtml = appendAttribute(outHtml, itemData, 'Indexed')
+		}
+		else if (itemData.getArtifactType() == 'Reporting Requirement') {
+			outHtml = appendAttribute(outHtml, itemData, 'Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap/NoGap')
+			outHtml = appendAttribute(outHtml, itemData, 'Details of Gap')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap Option Selected')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Current Functionality')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Recommendation')
+			outHtml = appendAttribute(outHtml, itemData, 'Entity Name')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}
+		else if (itemData.getArtifactType() == 'Screen Change') {
+			outHtml = appendAttribute(outHtml, itemData, 'Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap/NoGap')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}		
+		else if (itemData.getArtifactType() == 'Screen Requirement') {
+			outHtml = appendAttribute(outHtml, itemData, 'Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap/NoGap')
+			outHtml = appendAttribute(outHtml, itemData, 'Details of Gap')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Current Functionality')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Recommendation')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}
+		else if (itemData.getArtifactType() == 'Statement and Notices Requirement') {
+			outHtml = appendAttribute(outHtml, itemData, 'Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Gap/NoGap')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Current Functionality')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Recommendation')
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}
+		else if (itemData.getArtifactType() == 'TCS DB Field') {
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Copybook Field Name')
+		}
+		else if (itemData.getArtifactType() == 'TCS Data Element') {
+			outHtml = appendAttribute(outHtml, itemData, 'Field Description')
+			outHtml = appendAttribute(outHtml, itemData, 'Parameterization Activity')
+			outHtml = appendAttribute(outHtml, itemData, 'TCS Copybook Field Name')
+		}
+		else if (itemData.getArtifactType() == 'TCS Existing Functionality') {
+			outHtml = appendAttribute(outHtml, itemData, 'Topic')
+			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
+		}
+		else if (itemData.getArtifactType() == 'TCS Parameter') {
+			outHtml = appendAttribute(outHtml, itemData, 'Parameter Class')
+			outHtml = appendAttribute(outHtml, itemData, 'Parameter Group')
+		}
+		else if (itemData.getArtifactType() == 'Zions Data Element') {
+			outHtml = appendAttribute(outHtml, itemData, 'Field Description')
+			outHtml = appendAttribute(outHtml, itemData, 'Application')
+			outHtml = appendAttribute(outHtml, itemData, 'Field Key')
+		}
 
 		return outHtml
 	}
-	String removeNamespace(String value) {
-		String description = value.replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')
-		description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
-		return description
+	
+	String appendAttribute(String html, def itemData, String attrName) {
+		String attrVal
+		if (attrName == 'Sequence No') {
+			attrVal = itemData.getTypeSeqNo() // First try to get generated value based on position in the module
+			if (!attrVal) { // for base artifact migration, will have to get it from the attribute
+				attrVal = itemData.getAttribute(attrName)
+			}
+		}
+		else {
+			attrVal = itemData.getAttribute(attrName)
+		}
+		String padding = ''
+		if ( attrVal && attrVal != '') {
+			def endDiv = html.lastIndexOf('</div>')
+			if (html != '<div></div>') {
+				padding = '<br>'
+			}
+			html = html.substring(0,endDiv) + padding + '<b>' + attrName + ': </b>' + attrVal + html.substring(endDiv)
+		}
+		return html
+	}
+	String appendPrimaryTextAsAttribute(String html, def itemData, String attrName) {
+		String attrVal = itemData.getAttribute('Primary Text')
+		String padding = ''
+		if ( attrVal && attrVal != '') {
+			def endDiv = html.lastIndexOf('</div>')
+			if (html != '<div></div>') {
+				padding = '<br>'
+			}
+			html = html.substring(0,endDiv) + padding + '<b>' + attrName + ': </b>' + attrVal + html.substring(endDiv)
+		}
+		return html
 	}
 	def processHtml(String html, String sId, def itemData) {
 		def htmlData

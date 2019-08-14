@@ -23,7 +23,8 @@ import org.springframework.stereotype.Component
  *
  */
 abstract class RmBaseAttributeHandler implements IFieldHandler {
-
+	static int MAX_STRING_SIZE = 255
+	
 	public Object execute(Object data) {
 		def itemData = data.itemData
 		def fieldMap = data.fieldMap
@@ -76,6 +77,19 @@ abstract class RmBaseAttributeHandler implements IFieldHandler {
 		}
 	}
 	
+	protected String removeNamespace(String value) {
+		String description = value.replace("h:div xmlns:h='http://www.w3.org/1999/xhtml'",'div').replace('<h:','<').replace('</h:','</')
+		description = description.replace('div xmlns="http://www.w3.org/1999/xhtml"','div')
+		return description
+	}
+	protected String truncateStringField(String value) {
+		if (value.length() > MAX_STRING_SIZE) {
+			value = value.substring(0, MAX_STRING_SIZE_SIZE-1)
+		}
+		return value;
+
+	}
+
 	
 	abstract String getFieldName()
 	
