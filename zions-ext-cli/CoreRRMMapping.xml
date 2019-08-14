@@ -600,7 +600,7 @@
 	
 	<wit source="Report Fields" target="Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="fieldNameHandler" target="System.Title"/>
+		<field source="fieldNameOrTitleHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
@@ -624,7 +624,7 @@
 	
 	<wit source="Report Field TCS" target="Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="fieldNameHandler" target="System.Title"/>
+		<field source="fieldNameOrTitleHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
@@ -652,7 +652,7 @@
 	
 	<wit source="Statement and Notice Field" target="Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="fieldNameHandler" target="System.Title"/>
+		<field source="fieldNameOrTitleHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
@@ -1179,7 +1179,7 @@
 			
 	<wit source="Statement and Notice Field TCS" target="Entity" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
-		<field source="fieldNameHandler" target="System.Title"/>
+		<field source="fieldNameOrTitleHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>

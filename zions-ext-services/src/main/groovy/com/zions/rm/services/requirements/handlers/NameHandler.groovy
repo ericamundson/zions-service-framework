@@ -29,7 +29,7 @@ class NameHandler extends RmBaseAttributeHandler {
 			outVal = "${value}"
 		}
 		else {
-			outVal = '<blank title>'
+			outVal = 'No Title'
 		}
 		// Truncate if too long
 		return truncateStringField(outVal);
