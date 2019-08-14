@@ -3,6 +3,7 @@ package com.zions.rm.services.requirements
 class ClmModuleElement extends ClmArtifact {
 	boolean isHeading
 	boolean isDuplicate
+	boolean isMigrating
 	int depth
 	boolean isDeleted
 
@@ -14,6 +15,7 @@ class ClmModuleElement extends ClmArtifact {
 		isHeading = (in_isHeading == "true")
 		isDeleted = false
 		isDuplicate = false  // Assume false until checkDuplicate has been run
+		isMigrating = true
 	}
 	
 	public ClmModuleElement(int in_depth, def in_format, def in_attributeMap) {
@@ -23,6 +25,7 @@ class ClmModuleElement extends ClmArtifact {
 		isHeading = false
 		isDeleted = false
 		isDuplicate = false  // Assume false until checkDuplicate has been run
+		isMigrating = true
 	}
 
 	public incrementDepth(def incr) {

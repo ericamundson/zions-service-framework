@@ -261,10 +261,11 @@ class TranslateRmModulesToADO implements CliAction {
 				def lastSection = 0
 				0.upto(ubound, {
 	
-					// If Heading is immediately followed by Supporting Material, move Heading title to Supporting Material and logically delete Heading artifact
+					// If Heading is immediately followed by a type of artifact that should include it's title, 
+					// move Heading title to following artifact and logically delete Heading artifact
 					if (module.orderedArtifacts[it].getIsHeading() && 
 						it < module.orderedArtifacts.size()-1 && 
-						isToIncorporateTitle(module,it+1)) {
+						isToMergeWithHeading(module,it+1)) {
 						
 						module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
 						module.orderedArtifacts[it+1].setDepth(module.orderedArtifacts[it].getDepth())
@@ -276,15 +277,19 @@ class TranslateRmModulesToADO implements CliAction {
 						module.orderedArtifacts[it].setDescription('') 
 					}
 					// If Reporting Requirement is in Reporting RRZ (or included in RSZ), do not migrate the artifact
-					else if ((module.getArtifactType()== 'Reporting RRZ' || module.getArtifactType()== 'RSZ Specification') && 
-							  module.orderedArtifacts[it].getFormat()== 'Text' &&
+					else if ((module.getArtifactType() == 'Reporting RRZ' || module.getArtifactType() == 'RSZ Specification') && 
+							  module.orderedArtifacts[it].getFormat() == 'Text' &&
 							 (module.orderedArtifacts[it].getArtifactType() == 'Reporting Requirement'||
 							  module.orderedArtifacts[it].getArtifactType() == 'Reporting RRZ')) {
 						module.orderedArtifacts[it].setIsDeleted(true)
 					}
+					// Do not migrate Subtopic artifacts
+					else if (module.orderedArtifacts[it].getArtifactType() == 'Subtopic') {
+						module.orderedArtifacts[it].setIsMigrating(false)
+					}
 
 					// Only store first occurrence of an artifact in the module
-					if (!module.orderedArtifacts[it].getIsDuplicate()) {  
+					if (!module.orderedArtifacts[it].getIsDuplicate() && module.orderedArtifacts[it].getIsMigrating()) {  
 						changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
 						aid = module.orderedArtifacts[it].getCacheID()
 						changes.each { key, val ->
@@ -299,6 +304,7 @@ class TranslateRmModulesToADO implements CliAction {
 					}
 					// Adjust depth to preserve outline numbering
 					if (lastSection > 0 && module.orderedArtifacts[it].getTfsWorkitemType() != 'Section' &&
+						module.orderedArtifacts[it].getTfsWorkitemType() != 'Document' &&
 						module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[lastSection].getDepth()){ 
 						// For all requirement content under a section, increment the depth if not already incremented so as to preserve outline numbering from DOORS
 						module.orderedArtifacts[it].incrementDepth(1)
@@ -312,23 +318,23 @@ class TranslateRmModulesToADO implements CliAction {
 				
 	
 	
-				// Create work items and SmartDoc container in Azure DevOps
+				// Create/update work items and SmartDoc container in Azure DevOps
 				if (changeList.size() > 0 && errCount == 0) {
 					// Process work item changes in Azure DevOps
 					log.info("${getCurTimestamp()} - Processing work item changes...")
 					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 					
-					// Create the SmartDoc
+					// Create/update the SmartDoc
 					log.info("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
-					def result = smartDocManagementService.createSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsAltUser, tfsAltPassword, mrTemplate, mrFolder)
+					def result = smartDocManagementService.ensureSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsAltUser, tfsAltPassword, mrTemplate, mrFolder)
 					if (result == null) {
-						log.info("SmartDoc creation returned null")
+						log.info("SmartDoc API returned null")
 					}
 					else if (result.error != null && result.error.code != "null") {
-						log.info("SmartDoc creation failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
+						log.info("SmartDoc API failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
 					}
 					else {
-						log.info("SmartDoc creation succeeded. Result: ${result.result}")
+						log.info("SmartDoc API succeeded. Result: ${result.result}")
 					}
 
 				}
@@ -361,16 +367,11 @@ class TranslateRmModulesToADO implements CliAction {
 				log.error("*** ERROR: Artifact #${artifact.getID()} is heading with image or attachment in module ${module.getTitle()}")
 				errCount++
 			}
-			/*
-			else if (artifact.getIsDuplicate()) {
-				log.error("*** ERROR: Artifact #${artifact.getID()} is a duplicate instance in module ${module.getTitle()}.  This is not yet supported in ADO.")
-				errCount++
-			}
-			*/
+
 		}
 		return errCount
 	}
-	boolean isToIncorporateTitle(def module, def indexOfElementToCheck) {
+	boolean isToMergeWithHeading(def module, def indexOfElementToCheck) {
 		// This function is dependent upon the type of module
 		String artifactType = module.orderedArtifacts[indexOfElementToCheck].getArtifactType()
 		String moduleType = module.getArtifactType()

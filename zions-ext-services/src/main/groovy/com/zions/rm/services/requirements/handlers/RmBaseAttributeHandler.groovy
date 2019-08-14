@@ -84,7 +84,7 @@ abstract class RmBaseAttributeHandler implements IFieldHandler {
 	}
 	protected String truncateStringField(String value) {
 		if (value.length() > MAX_STRING_SIZE) {
-			value = value.substring(0, MAX_STRING_SIZE_SIZE-1)
+			value = value.substring(0, MAX_STRING_SIZE-1)
 		}
 		return value;
 
