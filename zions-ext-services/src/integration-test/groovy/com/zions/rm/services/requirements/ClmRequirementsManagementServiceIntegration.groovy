@@ -56,7 +56,6 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 	@Autowired
 	IGenericRestClient rmGenericRestClient
 	
-	@Ignore
 	def 'Handle base requirement artifacts'() {
 		given: 'A page of requirement artifacts'
 		Date ts = new Date()
@@ -135,7 +134,6 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		links.size() == 7
 	}
 	
-	@Ignore
 	def 'Partial flush of query pages'() {
 		given: 'A valid data warehouse query'
 		
