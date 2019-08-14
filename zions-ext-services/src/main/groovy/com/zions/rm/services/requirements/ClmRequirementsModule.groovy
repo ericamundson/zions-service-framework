@@ -41,7 +41,7 @@ class ClmRequirementsModule  extends ClmArtifact {
 		
 		// now add all of the module's orderedArtifacts
 		append_module.orderedArtifacts.each { artifact->
-			artifact.incrementDepth(1)
+			artifact.incrementDepth(2)
 			this.orderedArtifacts.add(artifact)
 		}
 	}
