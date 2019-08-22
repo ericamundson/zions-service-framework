@@ -1,0 +1,349 @@
+{
+	"id": 219,
+	"identifier": "a7b8304a-d2cf-4af1-bbfc-97dc2132cfd0",
+	"name": "DTS",
+	"structureType": "area",
+	"hasChildren": true,
+	"children": [
+		{
+			"id": 221,
+			"identifier": "755a79e0-6ada-4608-90cf-736e88a85300",
+			"name": "ReleaseEngineering",
+			"structureType": "area",
+			"hasChildren": true,
+			"children": [
+				{
+					"id": 286,
+					"identifier": "a7314cb1-3815-44ed-aeaf-b11da47ac6a0",
+					"name": "Datical",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\ReleaseEngineering\\Datical",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ReleaseEngineering/Datical"
+				},
+				{
+					"id": 337,
+					"identifier": "7550fb2f-68b5-4262-b969-37557c831323",
+					"name": "XebiaLabs",
+					"structureType": "area",
+					"hasChildren": true,
+					"children": [
+						{
+							"id": 608,
+							"identifier": "4f4ce58d-461c-4e62-a45a-6245e7b7249e",
+							"name": "XLRelease",
+							"structureType": "area",
+							"hasChildren": false,
+							"path": "\\DTS\\Area\\ReleaseEngineering\\XebiaLabs\\XLRelease",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ReleaseEngineering/XebiaLabs/XLRelease"
+						},
+						{
+							"id": 609,
+							"identifier": "269e0f20-ab35-44fe-b7dd-b67a604d0de2",
+							"name": "XLDeploy",
+							"structureType": "area",
+							"hasChildren": false,
+							"path": "\\DTS\\Area\\ReleaseEngineering\\XebiaLabs\\XLDeploy",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ReleaseEngineering/XebiaLabs/XLDeploy"
+						}
+					],
+					"path": "\\DTS\\Area\\ReleaseEngineering\\XebiaLabs",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ReleaseEngineering/XebiaLabs"
+				},
+				{
+					"id": 1370,
+					"identifier": "9953fd8a-e632-429b-ade5-2ff4ef55bae0",
+					"name": "EagleEye",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\ReleaseEngineering\\EagleEye",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ReleaseEngineering/EagleEye"
+				},
+				{
+					"id": 4111,
+					"identifier": "ce6554ec-f382-4b9b-9f3d-dedf35eb6c86",
+					"name": "MainFrame",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\ReleaseEngineering\\MainFrame",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ReleaseEngineering/MainFrame"
+				}
+			],
+			"path": "\\DTS\\Area\\ReleaseEngineering",
+			"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ReleaseEngineering"
+		},
+		{
+			"id": 223,
+			"identifier": "d1d9cb7f-1833-4090-8d68-265a127ae4dc",
+			"name": "ALMOps",
+			"structureType": "area",
+			"hasChildren": true,
+			"children": [
+				{
+					"id": 251,
+					"identifier": "93b9eee1-0b43-4ab0-9dde-de5fb2968bb7",
+					"name": "CLM",
+					"structureType": "area",
+					"hasChildren": true,
+					"children": [
+						{
+							"id": 274,
+							"identifier": "a739d28f-c086-4e94-84f2-260d220801cb",
+							"name": "BI Solution",
+							"structureType": "area",
+							"hasChildren": true,
+							"children": [
+								{
+									"id": 280,
+									"identifier": "1f81f61e-c195-4c94-8c4e-4d8a52f3b385",
+									"name": "Framework",
+									"structureType": "area",
+									"hasChildren": false,
+									"path": "\\DTS\\Area\\ALMOps\\CLM\\BI Solution\\Framework",
+									"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/CLM/BI%20Solution/Framework"
+								},
+								{
+									"id": 281,
+									"identifier": "3e6717d6-0580-4b44-8b78-7d129bd4a687",
+									"name": "Business Objects",
+									"structureType": "area",
+									"hasChildren": false,
+									"path": "\\DTS\\Area\\ALMOps\\CLM\\BI Solution\\Business Objects",
+									"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/CLM/BI%20Solution/Business%20Objects"
+								},
+								{
+									"id": 282,
+									"identifier": "2101bd1f-e55d-4aeb-8b54-d00113067719",
+									"name": "File Mover",
+									"structureType": "area",
+									"hasChildren": false,
+									"path": "\\DTS\\Area\\ALMOps\\CLM\\BI Solution\\File Mover",
+									"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/CLM/BI%20Solution/File%20Mover"
+								}
+							],
+							"path": "\\DTS\\Area\\ALMOps\\CLM\\BI Solution",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/CLM/BI%20Solution"
+						},
+						{
+							"id": 275,
+							"identifier": "a073755f-8622-47bb-96ce-22a3c35e10e9",
+							"name": "FutureCore",
+							"structureType": "area",
+							"hasChildren": false,
+							"path": "\\DTS\\Area\\ALMOps\\CLM\\FutureCore",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/CLM/FutureCore"
+						}
+					],
+					"path": "\\DTS\\Area\\ALMOps\\CLM",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/CLM"
+				},
+				{
+					"id": 252,
+					"identifier": "29ae028b-7358-4557-8444-a745fb5e98f8",
+					"name": "JIRA",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\ALMOps\\JIRA",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/JIRA"
+				},
+				{
+					"id": 253,
+					"identifier": "5b99faf6-dd6d-472d-804d-9236753b5216",
+					"name": "TestLink",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\ALMOps\\TestLink",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/TestLink"
+				},
+				{
+					"id": 254,
+					"identifier": "8d792fa2-788c-4bad-82a0-1ff4645244a1",
+					"name": "Confluence",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\ALMOps\\Confluence",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/Confluence"
+				},
+				{
+					"id": 255,
+					"identifier": "72650dc5-d66a-4c18-9044-af445aedcb5a",
+					"name": "AzureDevOps",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\ALMOps\\AzureDevOps",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/AzureDevOps"
+				},
+				{
+					"id": 256,
+					"identifier": "810200fd-be00-4aa5-bc4c-a7f6bb40d1bc",
+					"name": "Migration Project",
+					"structureType": "area",
+					"hasChildren": true,
+					"children": [
+						{
+							"id": 276,
+							"identifier": "d99e83ed-fa9a-4dc6-89e3-73299dd462a6",
+							"name": "CLM to Azure DevOps",
+							"structureType": "area",
+							"hasChildren": false,
+							"path": "\\DTS\\Area\\ALMOps\\Migration Project\\CLM to Azure DevOps",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/Migration%20Project/CLM%20to%20Azure%20DevOps"
+						},
+						{
+							"id": 277,
+							"identifier": "8569a167-1414-448a-922d-b437be8a6270",
+							"name": "JIRA to Azure DevOps",
+							"structureType": "area",
+							"hasChildren": false,
+							"path": "\\DTS\\Area\\ALMOps\\Migration Project\\JIRA to Azure DevOps",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/Migration%20Project/JIRA%20to%20Azure%20DevOps"
+						},
+						{
+							"id": 278,
+							"identifier": "065cd74b-29f7-4fb3-b11a-a9367f5f826c",
+							"name": "TestLink to Azure DevOps",
+							"structureType": "area",
+							"hasChildren": false,
+							"path": "\\DTS\\Area\\ALMOps\\Migration Project\\TestLink to Azure DevOps",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/Migration%20Project/TestLink%20to%20Azure%20DevOps"
+						},
+						{
+							"id": 279,
+							"identifier": "9369d3ea-05cf-48de-857a-8826e890ef52",
+							"name": "JAMA to Azure DevOps",
+							"structureType": "area",
+							"hasChildren": false,
+							"path": "\\DTS\\Area\\ALMOps\\Migration Project\\JAMA to Azure DevOps",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/Migration%20Project/JAMA%20to%20Azure%20DevOps"
+						}
+					],
+					"path": "\\DTS\\Area\\ALMOps\\Migration Project",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/Migration%20Project"
+				},
+				{
+					"id": 4742,
+					"identifier": "653e84f6-1182-4324-b52e-932b7a44de87",
+					"name": "ModernRequirements",
+					"structureType": "area",
+					"hasChildren": true,
+					"children": [
+						{
+							"id": 4743,
+							"identifier": "247b92d8-c824-47ad-83f6-402ce2d61493",
+							"name": "Bug",
+							"structureType": "area",
+							"hasChildren": false,
+							"path": "\\DTS\\Area\\ALMOps\\ModernRequirements\\Bug",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/ModernRequirements/Bug"
+						},
+						{
+							"id": 4744,
+							"identifier": "e7e976f6-c91b-4415-8088-f3b17c4a7a9c",
+							"name": "Enhancement",
+							"structureType": "area",
+							"hasChildren": false,
+							"path": "\\DTS\\Area\\ALMOps\\ModernRequirements\\Enhancement",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/ModernRequirements/Enhancement"
+						}
+					],
+					"path": "\\DTS\\Area\\ALMOps\\ModernRequirements",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/ModernRequirements"
+				},
+				{
+					"id": 4886,
+					"identifier": "2d6b99c6-9f23-4d5d-8b90-8fec101de8cb",
+					"name": "BI",
+					"structureType": "area",
+					"hasChildren": true,
+					"children": [
+						{
+							"id": 4887,
+							"identifier": "04d633e7-011d-42c1-854c-c6ea934e8218",
+							"name": "MS Power BI",
+							"structureType": "area",
+							"hasChildren": false,
+							"path": "\\DTS\\Area\\ALMOps\\BI\\MS Power BI",
+							"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/BI/MS%20Power%20BI"
+						}
+					],
+					"path": "\\DTS\\Area\\ALMOps\\BI",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps/BI"
+				}
+			],
+			"path": "\\DTS\\Area\\ALMOps",
+			"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ALMOps"
+		},
+		{
+			"id": 273,
+			"identifier": "0460ff79-f575-42ed-a68e-9ec53f0d5f6e",
+			"name": "Management",
+			"structureType": "area",
+			"hasChildren": false,
+			"path": "\\DTS\\Area\\Management",
+			"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/Management"
+		},
+		{
+			"id": 2095,
+			"identifier": "a2d252a4-d379-4a0d-8ed5-a076b3b66eaa",
+			"name": ".Requests",
+			"structureType": "area",
+			"hasChildren": true,
+			"children": [
+				{
+					"id": 2096,
+					"identifier": "8a7701a7-e45c-4e7a-8152-2a8fe4f6f2b3",
+					"name": "ALMOps",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\.Requests\\ALMOps",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/.Requests/ALMOps"
+				},
+				{
+					"id": 2097,
+					"identifier": "2a90b70f-05be-4c9c-998e-44394c165077",
+					"name": "Release Engineering",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\.Requests\\Release Engineering",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/.Requests/Release%20Engineering"
+				},
+				{
+					"id": 2099,
+					"identifier": "a2c2b8ec-a8f3-442f-83fe-3afc3c8d8a2e",
+					"name": "Datical",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\.Requests\\Datical",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/.Requests/Datical"
+				},
+				{
+					"id": 2100,
+					"identifier": "4454e2ea-49a1-4a6e-aca4-a74f5ccba4f5",
+					"name": "XebiaLabs",
+					"structureType": "area",
+					"hasChildren": false,
+					"path": "\\DTS\\Area\\.Requests\\XebiaLabs",
+					"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/.Requests/XebiaLabs"
+				}
+			],
+			"path": "\\DTS\\Area\\.Requests",
+			"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/.Requests"
+		},
+		{
+			"id": 4113,
+			"identifier": "87b9b021-f089-42de-abba-06ad021f2a47",
+			"name": "ScrumBan",
+			"structureType": "area",
+			"hasChildren": false,
+			"path": "\\DTS\\Area\\ScrumBan",
+			"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas/ScrumBan"
+		}
+	],
+	"path": "\\DTS\\Area",
+	"_links": {
+		"self": {
+			"href": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas"
+		}
+	},
+	"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/wit/classificationNodes/Areas"
+}
