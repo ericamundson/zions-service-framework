@@ -70,7 +70,7 @@ abstract class RmBaseAttributeHandler implements IFieldHandler {
 	
 	protected String toHtml(def value) {
 		if (value == null || value == '' || value == ' ') {
-			return null
+			return '<div></div>'
 		}
 		else {
 			return "<div>${value.replace('\r\n','<br>').replace('\n','<br>')}</div>"
