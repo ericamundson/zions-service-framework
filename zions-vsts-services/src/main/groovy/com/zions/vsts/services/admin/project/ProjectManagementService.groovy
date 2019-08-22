@@ -110,6 +110,20 @@ class ProjectManagementService {
 		return result
 	}
 	
+	def getTeams(String collection, String project ) {
+		def query = ['api-version':'4.0']
+		def eproject = URLEncoder.encode(project, 'UTF-8')
+		eproject = eproject.replace('+', '%20')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${eproject}/teams",
+			headers: [Accept: 'application/json'],
+			query: query
+			)
+		if (result == null || !result.containsKey('id')) return null;
+		return result
+	}
+
 	public def ensureTeam(String collection, String project, String name) {
 		def team = getTeam(collection, project, name) 
 		if (team == null) {

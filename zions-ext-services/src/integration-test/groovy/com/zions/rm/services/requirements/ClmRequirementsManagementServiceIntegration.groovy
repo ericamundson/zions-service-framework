@@ -48,16 +48,25 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 	ClmRequirementsManagementService underTest
 	
 	@Autowired
+	ClmRequirementsItemManagementService clmRequirementsItemManagementService
+	
+	@Autowired
 	ICacheManagementService cacheManagementService
 	
 	@Autowired
 	IDatabaseQueryService databaseQueryService
 	
 	@Autowired
+	IAttachments attachmentService
+	
+	@Autowired
 	IGenericRestClient rmGenericRestClient
 	
 	def 'Handle base requirement artifacts'() {
 		given: 'A page of requirement artifacts'
+		cacheManagementService.cacheModule = "RM"
+		cacheManagementService.dbProject = 'coretest'
+		attachmentService.sendAttachment(_) >> {}
 		Date ts = new Date()
 		def items = underTest.queryDatawarehouseSource(ts)
 		def tItems = dataGenerationService.generate('/testdata/rmFirstQueryResult.json')
@@ -86,6 +95,8 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 					underTest.getNonTextArtifact(artifact,true)
 					ntCount++
 				}
+				
+				def reqChanges = clmRequirementsItemManagementService.getChanges('', artifact, [:])
 			}
 		}
 
@@ -186,7 +197,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 
 @TestConfiguration
 @Profile("integration-test")
-@ComponentScan(["com.zions.common.services.cacheaspect", "com.zions.ext.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.test"])
+@ComponentScan(["com.zions.common.services.cacheaspect", "com.zions.ext.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.test","com.zions.rm.services.requirements.handlers"])
 @PropertySource("classpath:integration-test.properties")
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 public class ClmRequirementsManagementServiceSpecConfig {
@@ -220,10 +231,31 @@ public class ClmRequirementsManagementServiceSpecConfig {
 	String sqlResourceName
 	
 	@Bean
+	IAttachments attachmentService() {
+		IAttachments o = factory.Stub(IAttachments);
+		return o
+	}
+
+	@Bean
 	ClmRequirementsManagementService underTest() {
 		return new ClmRequirementsManagementService()
 	}
+	
+	@Bean
+	ClmRequirementsItemManagementService clmRequirementsItemManagementService() {
+		return new ClmRequirementsItemManagementService()
+	}
+	
+	@Bean
+	RequirementsMappingManagementService rmMappingManagementService() {
+		return new RequirementsMappingManagementService()
+	}
 
+	@Bean
+	ClmRequirementsFileManagementService rmRequirementsFileManagementService()
+	{
+		return new ClmRequirementsFileManagementService()
+	}
 	
 	@Bean
 	ICacheManagementService cacheManagementService() {
