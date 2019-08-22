@@ -87,7 +87,13 @@ class ClmArtifact {
 		}
 	}
 	public String stripTags(String input) {
-		return input.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("&#xa0;", ' ').replaceAll("&#xc2;", ' ').replaceAll("&amp;", '&').replaceAll("\\<.*?>","")
+		if (input) {
+			return input.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("&#xa0;", ' ').replaceAll("&#xc2;", ' ').replaceAll("&amp;", '&').replaceAll("\\<.*?>","")
+		}
+		else {
+			return input
+		}
+			
 	}
 	public def getAttribute(String attrName) {
 		def val = attributeMap."$attrName"
