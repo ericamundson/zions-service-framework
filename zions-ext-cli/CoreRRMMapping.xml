@@ -675,7 +675,6 @@
 		<field source="formatHandler" target="Custom.Format"/>
 		<field source="sequenceNumberHandler" target="Custom.SequenceNo"/>
 		<field source="infoCommentsRemarksHandler" target="Custom.Remarks"/>
-		<field source="nameHandler" target="Custom.Values"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>		
 		
