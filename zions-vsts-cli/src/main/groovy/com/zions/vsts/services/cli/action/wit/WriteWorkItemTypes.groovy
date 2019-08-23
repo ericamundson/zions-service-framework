@@ -33,16 +33,32 @@ class WriteWorkItemTypes implements CliAction {
 		} catch (e) {}
 		String project = data.getOptionValues('tfs.project')[0]
 		String workItemName = data.getOptionValues('tfs.workitem.names')[0]
-		def outFile = data.getOptionValues('export.dir')[0];
-		def wits = processTemplateService.getWorkItemTypes(collection, project)
+		def outDir = data.getOptionValues('export.dir')[0];
+		def wits = processTemplateService.getWorkItemTypes(collection, project, 'layout')
+		
+		// TODO: Sort wits.value
+		
+		// see:  /zions-ext-cli/src/main/groovy/com/zions/clm/services/cli/action/wit/BuildWITStarter.groovy
 		
 		// MarkupBuilder is used to create XML
 		def writer = new StringWriter()
-		MarkupBuilder bXml = new MarkupBuilder(writer)
-		wits.value.each { wit -> 
-			def layout = processTemplateService.getWITLayout(collection, project, wit)
-			// Build XML from wit and layout
+		MarkupBuilder bXml = new MarkupBuilder(writer)  //TODO:  Study up on examples of MarkupBuilder
+		bXml.PROCESSTEMPLATE(name:'ZionsAgile') {
+			// TODO:  change wits.value to variable of sorted results.
+			wits.value.each { wit -> 
+				WORKITEMTYPE(name: "${wit.name}", referenceName: "${wit.referenceName}")
+				
+				def fields = processTemplateService.getWorkitemTemplateFields(collection, project, "${wit.referenceName}")
+				
+				// TODO: Sort layouts,  Basically anything that is a list/collection sort it.
+				// TODO: Build XML from wits and layout
+			}
 		}
+		
+		File outFile = new File("${outDir}/processTemplate.xml")
+		def o = outFile.newDataOutputStream()
+		o << writer.toString()
+		o.close();
 		return null;
 	}
 	
