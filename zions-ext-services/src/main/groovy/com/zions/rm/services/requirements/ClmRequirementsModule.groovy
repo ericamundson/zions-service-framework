@@ -83,5 +83,8 @@ class ClmRequirementsModule  extends ClmArtifact {
 		else if (artifactType == 'Statements and Notices RRZ Spec' || this.appendedDocumentType == 'Statements and Notices RRZ Spec') {
 			return '/R3/Statements and Notices'
 		}
+		else {
+			return '/' // Put it in root
+		}
 	}
 }
