@@ -182,7 +182,6 @@ class TranslateRmModulesToADO implements CliAction {
 		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
 		String mrTemplate = data.getOptionValues('mr.template')[0]
-		String mrFolder = data.getOptionValues('mr.folder')[0]
 		File mFile = new File(mappingFile)
 		
 		def mapping = new XmlSlurper().parseText(mFile.text)
@@ -326,7 +325,7 @@ class TranslateRmModulesToADO implements CliAction {
 					
 					// Create/update the SmartDoc
 					log.info("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
-					def result = smartDocManagementService.ensureSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsAltUser, tfsAltPassword, mrTemplate, mrFolder)
+					def result = smartDocManagementService.ensureSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsAltUser, tfsAltPassword, mrTemplate)
 					if (result == null) {
 						log.info("SmartDoc API returned null")
 					}
