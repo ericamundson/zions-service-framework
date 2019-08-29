@@ -32,7 +32,7 @@ class WriteWorkItemTypes implements CliAction {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String project = data.getOptionValues('tfs.project')[0]
-		String workItemName = data.getOptionValues('tfs.workitem.names')[0]
+		//String workItemName = data.getOptionValues('tfs.workitem.names')[0]
 		def outDir = data.getOptionValues('export.dir')[0];
 		def wits = processTemplateService.getWorkItemTypes(collection, project, 'layout')
 		
@@ -48,7 +48,7 @@ class WriteWorkItemTypes implements CliAction {
 			wits.value.each { wit -> 
 				WORKITEMTYPE(name: "${wit.name}", referenceName: "${wit.referenceName}")
 				
-				def fields = processTemplateService.getWorkitemTemplateFields(collection, project, "${wit.referenceName}")
+				def fields = processTemplateService.getWorkitemTemplateFields(collection, project, "${wit.name}")
 				
 				// TODO: Sort layouts,  Basically anything that is a list/collection sort it.
 				// TODO: Build XML from wits and layout
