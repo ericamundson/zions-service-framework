@@ -1,0 +1,29 @@
+2019-08-29 11:46:41.271  INFO 6536 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0527 with PID 6536 (D:\git\zions-service-framework\zions-vsts-cli\bin\main started by z091182 in D:\git\zions-service-framework\zions-vsts-cli)
+2019-08-29 11:46:41.286 DEBUG 6536 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-29 11:46:41.287  INFO 6536 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-29 11:46:46.652  INFO 6536 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 6.858 seconds (JVM running for 9.375)
+2019-08-29 11:46:47.289  WARN 6536 --- [main] c.z.c.services.rest.AGenericRestClient   : GenericRestClient::get -- Failed. Status: HTTP/1.1 404 Not Found
+2019-08-29 11:47:35.624  INFO 6648 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0527 with PID 6648 (D:\git\zions-service-framework\zions-vsts-cli\bin\main started by z091182 in D:\git\zions-service-framework\zions-vsts-cli)
+2019-08-29 11:47:35.635 DEBUG 6648 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-29 11:47:35.636  INFO 6648 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-29 11:47:41.572  INFO 6648 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 7.356 seconds (JVM running for 9.626)
+2019-08-29 11:47:42.332  WARN 6648 --- [main] c.z.c.services.rest.AGenericRestClient   : GenericRestClient::get -- Failed. Status: HTTP/1.1 404 Not Found
+2019-08-29 11:48:30.443  INFO 6652 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0527 with PID 6652 (D:\git\zions-service-framework\zions-vsts-cli\bin\main started by z091182 in D:\git\zions-service-framework\zions-vsts-cli)
+2019-08-29 11:48:30.460 DEBUG 6652 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-29 11:48:30.460  INFO 6652 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-29 11:48:35.542  INFO 6652 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 6.665 seconds (JVM running for 8.803)
+2019-08-29 11:49:11.930  WARN 6652 --- [main] c.z.c.services.rest.AGenericRestClient   : GenericRestClient::get -- Failed. Status: HTTP/1.1 404 Not Found
+2019-08-29 11:50:33.827  INFO 5632 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0527 with PID 5632 (D:\git\zions-service-framework\zions-vsts-cli\bin\main started by z091182 in D:\git\zions-service-framework\zions-vsts-cli)
+2019-08-29 11:50:33.972 DEBUG 5632 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-29 11:50:33.973  INFO 5632 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-29 11:50:40.175  INFO 5632 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 7.929 seconds (JVM running for 10.226)
+2019-08-29 11:51:38.158  WARN 5632 --- [main] c.z.c.services.rest.AGenericRestClient   : GenericRestClient::get -- Failed. Status: HTTP/1.1 404 Not Found
+2019-08-29 11:54:25.920  INFO 4160 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0527 with PID 4160 (D:\git\zions-service-framework\zions-vsts-cli\bin\main started by z091182 in D:\git\zions-service-framework\zions-vsts-cli)
+2019-08-29 11:54:25.928 DEBUG 4160 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-29 11:54:25.929  INFO 4160 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-29 11:54:30.430  INFO 4160 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 6.005 seconds (JVM running for 8.205)
+2019-08-29 11:54:49.116  WARN 4160 --- [main] c.z.c.services.rest.AGenericRestClient   : GenericRestClient::get -- Failed. Status: HTTP/1.1 404 Not Found
+2019-08-29 12:01:18.203  INFO 6568 --- [main] c.z.vsts.services.cli.CliApplication     : Starting CliApplication on UTMSDEV0527 with PID 6568 (D:\git\zions-service-framework\zions-vsts-cli\bin\main started by z091182 in D:\git\zions-service-framework\zions-vsts-cli)
+2019-08-29 12:01:18.213 DEBUG 6568 --- [main] c.z.vsts.services.cli.CliApplication     : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
+2019-08-29 12:01:18.214  INFO 6568 --- [main] c.z.vsts.services.cli.CliApplication     : No active profile set, falling back to default profiles: default
+2019-08-29 12:01:24.601  INFO 6568 --- [main] c.z.vsts.services.cli.CliApplication     : Started CliApplication in 8.005 seconds (JVM running for 10.471)

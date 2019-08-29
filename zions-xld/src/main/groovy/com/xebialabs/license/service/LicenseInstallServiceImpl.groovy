@@ -86,7 +86,7 @@ public class LicenseInstallServiceImpl implements LicenseInstallService
       return String.format("This edition of %s requires a Trial Edition license or an Enterprise Edition license.", [licenseService.getProduct()].toArray());
     } catch (AmountOfCisExceededException e) {
       logger.info("License status: ", e.getMessage());
-      return "The number of configuration items in your repository exceeds the limit on this license.";
+      //return "The number of configuration items in your repository exceeds the limit on this license.";
     } catch (LicenseViolationException e) {
       logger.info("License status: ", e.getMessage());
       return String.format("The current license is not valid (%s).", [e.getMessage() ].toArray());

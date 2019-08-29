@@ -10,6 +10,7 @@ import org.joda.time.LocalDate
 
 import com.xebialabs.license.LicensePropertyMap
 import com.xebialabs.license.License
+import com.xebialabs.license.LicenseType
 import com.xebialabs.license.LicenseParseException
 import com.xebialabs.license.LicenseProperty
 import com.xebialabs.license.LicenseViolationException
@@ -87,8 +88,8 @@ class InternalLicense extends License {
 	}
 
 	@Override
-	public int getLicenseVersion() {
-		return 3;
+	public LicenseType getLicenseVersion() {
+		return LicenseType.VERSION_3;
 	}
 	public LocalDate getLocalDateValue(LicenseProperty key) {
 		Calendar i = Calendar.instance
