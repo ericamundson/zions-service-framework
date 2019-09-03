@@ -668,7 +668,6 @@
 		<field source="mappingHandler" target="Custom.Mapping"/>
 		<field source="dataTypeHandler" target="Custom.DataType"/>
 		<field source="lengthHandler" target="Custom.Length"/>
-		<field source="tcsDataElementHandler" target="Custom.SourceFieldName"/>
 		<field source="validValuesHandler" target="Custom.Values"/>
 		<field source="startingPositionHandler" target="Custom.Position"/>
 		<field source="dataAlignmentHandler" target="Custom.DataAlignment"/>
@@ -1194,7 +1193,7 @@
 		<field source="tcsFormatHandler" target="Custom.Format"/>
 		<field source="tableHandler" target="Custom.Table"/>
 		<field source="validValuesHandler" target="Custom.Values"/>
-		<field source="defaultValueHandler" target="Custom.DefaultValue"/>
+		<field source="defaultValuesHandler" target="Custom.DefaultValue"/>
 		<field source="discussionNotesRemarksHandler" target="Custom.Remarks"/>
 		<field source="uiOriginalTagNameHandler" target="Custom.OriginalTagName"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
