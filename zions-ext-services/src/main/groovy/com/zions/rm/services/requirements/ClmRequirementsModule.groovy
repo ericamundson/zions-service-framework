@@ -10,6 +10,7 @@ class ModuleLink {
 }
 class ClmRequirementsModule  extends ClmArtifact {
 	def orderedArtifacts
+	String appendedDocumentType
 	public ClmRequirementsModule(in_title, in_format, in_about, String in_type, def in_attributes, def in_artifacts, def in_links) {
 		super(in_title, in_format, in_about)
 		this.setBaseArtifactURI(in_about) // Base URI for module is same as about href
@@ -44,6 +45,9 @@ class ClmRequirementsModule  extends ClmArtifact {
 			artifact.incrementDepth(2)
 			this.orderedArtifacts.add(artifact)
 		}
+		
+		// Set appendedDocumentType
+		this.appendedDocumentType = append_module.getArtifactType()
 	}
 	def checkForDuplicates() {
 		def ubound = this.orderedArtifacts.size() - 1
@@ -58,5 +62,29 @@ class ClmRequirementsModule  extends ClmArtifact {
 			}
 		})
 	}
-
+	def setDocumentType() {
+		
+	}
+	String getTargetFolder() {
+		// Get module artifact type 
+		String artifactType = this.getArtifactType()
+		if (artifactType == 'Functional Spec') {
+			return '/R3/Functional Specs'
+		}
+		else if (artifactType == 'Interface Spec') {
+			return '/R3/ISZ'
+		}
+		else if (artifactType == 'UI Spec') {
+			return '/R3/Screen Alignment'
+		}
+		else if (artifactType == 'Reporting RRZ' || this.appendedDocumentType == 'Reporting RRZ') {
+			return '/R3/Reporting'
+		}
+		else if (artifactType == 'Statements and Notices RRZ Spec' || this.appendedDocumentType == 'Statements and Notices RRZ Spec') {
+			return '/R3/Statements and Notices'
+		}
+		else {
+			return '/' // Put it in root
+		}
+	}
 }

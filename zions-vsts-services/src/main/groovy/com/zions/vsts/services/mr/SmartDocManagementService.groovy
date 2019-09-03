@@ -40,7 +40,7 @@ class SmartDocManagementService {
 		// Do nothing
 	}
 	
-	def ensureSmartDoc(def module, def tfsUrl, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsAltUser, def tfsAltPassword, def mrTemplate, def mrFolder) {
+	def ensureSmartDoc(def module, def tfsUrl, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsAltUser, def tfsAltPassword, def mrTemplate) {
 		String action
 		def date = new Date()
 		String body;
@@ -72,7 +72,7 @@ class SmartDocManagementService {
 			"collectionId":"$tfsCollectionGUID",
 			"docName": "$docTitle",
 			"templateName": "$mrTemplate",
-			"folder": "$mrFolder",
+			"folder": "${module.getTargetFolder()}",
 			"autoRootCreation": false,
 			"workItemDetails": ${wiDetails}
 			}
