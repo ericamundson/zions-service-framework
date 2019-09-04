@@ -81,7 +81,8 @@ class FileManagementService {
 	 * @return Work item update data
 	 */
 	def ensureAttachments(collection, project, id, files) {
-		def cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
+		String sid = "${id}"
+		def cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
