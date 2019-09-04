@@ -393,7 +393,7 @@ public class BuildManagementService {
 			}
 		} else {
 			log.debug("BuildManagementService::createBuild -- Using local resource file.  Build type: "+buildType.toString().toLowerCase()+", build stage: "+ buildStage)
-			bDef = getResource(buildType.toString().toLowerCase(), buildStage)
+			bDef = getExecutionResource(buildType.toString().toLowerCase(), buildStage)
 		}
 		if (bDef == null) {
 			log.debug("BuildManagementService::createBuild -- No usable build definition template was found. No build will be created.")
@@ -551,6 +551,53 @@ public class BuildManagementService {
 				)
 		return result
 	}
+	
+	public def getExecution(String collection, String project, String buildId) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def query = ['api-version':'5.1']
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}",
+				query: query,
+				)
+
+	}
+
+	
+	public def getExecutionWorkItems(String collection, String project, String buildId) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def query = ['api-version':'5.1']
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
+				query: query,
+				)
+
+	}
+	
+	public def getExecutionChanges(String collection, String project, String buildId, boolean includeSourceChange = false) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def query = ['api-version':'5.1', includeSourceChange: includeSourceChange]
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/changes",
+				query: query,
+				)
+
+	}
+	
+	public def getExecutionResource(String url) {
+		def query = ['api-version':'5.1']
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: url,
+				query: query,
+				)
+		return result
+	}
 
 	public def getTemplate(def collection, def project, def name) {
 		log.debug("BuildManagementService::getTemplate -- templateName = "+name)
@@ -596,7 +643,7 @@ public class BuildManagementService {
 
 	public def getBuildById(def collection, def project, def id) {
 		log.debug("BuildManagementService::getBuildById -- ID = " + id)
-		def query = ['api-version':'4.1']
+		def query = ['api-version':'5.1']
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${id}",
