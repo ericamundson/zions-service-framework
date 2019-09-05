@@ -1,7 +1,6 @@
 package com.zions.rm.services.requirements
 
 import com.zions.common.services.cache.ICacheManagementService
-import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.db.DatabaseQueryService
@@ -640,7 +639,6 @@ class ClmRequirementsManagementService {
 	//what we need: artifact id and type, then the link set to look through and get all links
 	//if how we get the type varies we can pass that in from the parent I suppose
 	//if we use datemodified as a parameter as well we can use that to set the cache date
-	@Cache(elementType=LinkInfo)
 	public List<LinkInfo> getAllLinks(String id, Date timeStamp, def artifactNode) {
 		List<LinkInfo> links = new ArrayList<LinkInfo>()
 
@@ -656,7 +654,9 @@ class ClmRequirementsManagementService {
 			def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'rm', moduleRelated: module)
 			links.add(info)
 		}
-
+		if (links.size() > 0) {
+				cacheManagementService.saveToCache(links, id, 'LinkInfo')
+		}
 		return links
 	}
 }
