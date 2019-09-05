@@ -13,9 +13,11 @@ import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 
 
 @Component
+@Slf4j
 class ZeusBuildData implements CliAction {
 	
 	@Autowired
@@ -39,6 +41,10 @@ class ZeusBuildData implements CliAction {
 		List wi = []
 		buildWorkitems.'value'.each { ref ->
 			wi.push("${ref.id}")
+		}
+		if (wi.empty) {
+			log.error("Build has no new work items!  Usually do to no new changes since prior build.")
+			System.exit(1)
 		}
 		def wis = wi.toSet()
 		def buildChanges = buildManagementService.getExecutionChanges(collection, project, buildId, true)
@@ -67,8 +73,10 @@ class ZeusBuildData implements CliAction {
 			def o = f.newDataOutputStream()
 			o << "my.version=${releaseId}${sep}"
 			o << "change.request=${changeRequest}${sep}"
-			String wiStr = wis.join(',')
-			o << "ado.workitems=${wiStr}${sep}"
+			if (wis.size() > 0) {
+				String wiStr = wis.join(',')
+				o << "ado.workitems=${wiStr}${sep}"
+			}
 			o.close()
 			f = new File("${outDir}/ZEUS.template")
 			o = f.newDataOutputStream()
