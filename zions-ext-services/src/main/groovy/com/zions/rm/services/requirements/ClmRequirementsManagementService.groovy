@@ -102,9 +102,9 @@ class ClmRequirementsManagementService {
 	}
 
 	ClmRequirementsModule getModule(String moduleUri, boolean validationOnly) {
-		boolean cacheLinks = false
+		boolean cacheLinks = !validationOnly
 		boolean addEmbeddedCollections = false
-		def links = []
+		String satisfiesLink // For associated RRZ module
 		String uri = moduleUri.replace('resources/','publish/modules?resourceURI=')
 		def result = rmGenericRestClient.get(
 				uri: uri,
@@ -121,6 +121,7 @@ class ClmRequirementsManagementService {
 		String moduleFormat = module.format
 		String moduleAbout = module.about
 		
+		
 		// Extract module attributes and members
 		module.children().each { child ->
 			String iName = child.name()
@@ -128,7 +129,6 @@ class ClmRequirementsManagementService {
 				// Set artifact type and attributes
 				moduleType = parseCollaborationAttributes(child, moduleAttributeMap )
 				if (!validationOnly) {
-					cacheLinks = true
 					addEmbeddedCollections = shouldAddCollectionsToModule(moduleType)
 				}				
 			}
@@ -145,7 +145,10 @@ class ClmRequirementsManagementService {
 							linkURI = "${link.relation}"
 						}
 					}
-					links.add(new ModuleLink(linkType,linkURI))
+					if (linkType == 'Satisfies') {
+						satisfiesLink = linkURI
+						return 
+					}
 				}
 			}
 			else if (iName == "moduleContext") {
@@ -196,7 +199,8 @@ class ClmRequirementsManagementService {
 		
 		
 		// Instantiate and return the module
-		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, moduleAttributeMap,orderedArtifacts,links)
+		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, satisfiesLink, moduleAttributeMap,orderedArtifacts)
+		if (cacheLinks) parseLinksFromArtifactNode(module, clmModule)
 		return clmModule
 
 	}
@@ -639,9 +643,7 @@ class ClmRequirementsManagementService {
 	@Cache(elementType=LinkInfo)
 	public List<LinkInfo> getAllLinks(String id, Date timeStamp, def artifactNode) {
 		List<LinkInfo> links = new ArrayList<LinkInfo>()
-//		String modified = rmItemData.Requirement.modified
-//		String identifier = rmItemData.Requirement.identifier
-//		if (id == '1570094') {log.print(XmlUtil.serialize(artifactNode))}
+
 		artifactNode.traceability.links.children().each { link ->
 			//String itemIdCurrent = child.name()
 			String rid = link.identifier //if the target is QM this will be a guid
@@ -654,13 +656,10 @@ class ClmRequirementsManagementService {
 			def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'rm', moduleRelated: module)
 			links.add(info)
 		}
-		//autowired cache elementtype=linkinfo not functiong as expected, moving on
-//		if (links.size() > 0) { 
-//		cacheManagementService.saveToCache(links, id, 'LinkInfo')
-//		}
+
 		return links
 	}
-	}
+}
 
 //This class is used by the CacheInterceptor to store the direct query results; there are similar identical classes for both CCM and QM.
 //I am unsure if the classname is why they are different and that has some impact on how the data is stored in the cache,

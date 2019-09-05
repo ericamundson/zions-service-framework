@@ -1,38 +1,17 @@
 package com.zions.rm.services.requirements
 
-class ModuleLink {
-	String type
-	String uri
-	public ModuleLink(in_type,in_uri) {
-		type = in_type
-		uri = in_uri
-	}
-}
 class ClmRequirementsModule  extends ClmArtifact {
 	def orderedArtifacts
 	String appendedDocumentType
-	public ClmRequirementsModule(in_title, in_format, in_about, String in_type, def in_attributes, def in_artifacts, def in_links) {
+	String satisfiesLink
+	public ClmRequirementsModule(String in_title, String in_format, String in_about, String in_type, String in_satisfiesLink, def in_attributes, def in_artifacts) {
 		super(in_title, in_format, in_about)
 		this.setBaseArtifactURI(in_about) // Base URI for module is same as about href
 		this.artifactType = in_type
 		this.attributeMap << in_attributes // Add to base Artifact attributes
 		this.orderedArtifacts = in_artifacts
-		this.links = in_links
+		this.satisfiesLink = in_satisfiesLink
 	}	
-
-	def getLinkForType(String in_type) {
-		// Return the first link for given type
-		String uri = null
-		if (links.size() > 0) {
-			links.each { link ->
-				if (link.type == in_type) {
-					uri = link.uri
-					return
-				}	
-			}
-		}
-		return uri
-	}
 	def appendModule(ClmRequirementsModule append_module) {
 		// NOTE: We increment the depth on all appended module artifacts so as to preserve outline numbering
 		// first add the module artifact as the first module element 
