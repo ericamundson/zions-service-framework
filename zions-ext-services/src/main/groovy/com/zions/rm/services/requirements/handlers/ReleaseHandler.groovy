@@ -13,10 +13,6 @@ class ReleaseHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
-		
-		if (itemData.getID() == '1570117') {
-			def i = 0
-		}
 		if (val == 'Not Assigned') {
 			return null
 		}
