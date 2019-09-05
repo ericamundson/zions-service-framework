@@ -13,26 +13,28 @@ class ReleaseHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
-		
-		if (itemData.getID() == '1570366') {
-			def i = 0
-		}
 		if (val == 'Not Assigned') {
 			return null
 		}
 		else {
-			if (val == 'Consumer Lending' || val == 'One DOT One' || val == 'One DOT Two - Not Used' ) {
-				val = 'R1'
+			StringJoiner joiner = new StringJoiner(';')
+			def valArray = val.split(';',0)
+			valArray.each { sval ->
+				if (sval == 'Consumer Lending' || sval == 'One DOT One' || sval == 'One DOT Two - Not Used' ) {
+					joiner.add('R1')
+				}
+				else if (sval == 'Commercial & Construction Lending' || sval == 'Two DOT One' || sval == 'Two DOT Two - Not Used' ||
+						sval == 'Two DOT Five' || sval == 'Two DOT Nine') {
+					joiner.add('R2')
+				}
+				else if (sval == 'Deposits') {
+					joiner.add('R3')
+				}
+				else if (sval == 'Roadmapped') {
+					joiner.add('Roadmapped')
+				}
 			}
-			else if (val == 'Commercial & Construction Lending' || val == 'Two DOT One' || val == 'Two DOT Two - Not Used' ||
-					val == 'Two DOT Five' || val == 'Two DOT Nine') {
-				val = 'R2'
-			}
-			else if (val == 'Deposits') {
-				val = 'R3'
-			}
-			return val
+			return val = joiner.toString()
 		}
 	}
-
 }
