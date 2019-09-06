@@ -1,5 +1,6 @@
 package com.zions.vsts.services.cli.action.build;
 
+import java.lang.reflect.Field
 import java.util.Map
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,10 +20,10 @@ import groovy.util.logging.Slf4j
 @Component
 @Slf4j
 class ZeusBuildData implements CliAction {
-	
+
 	@Autowired
 	BuildManagementService buildManagementService
-	
+
 	@Autowired
 	public ZeusBuildData() {
 	}
@@ -36,6 +37,14 @@ class ZeusBuildData implements CliAction {
 		String project = data.getOptionValues('tfs.project')[0]
 		String buildId = data.getOptionValues('build.id')[0]
 		String outDir = data.getOptionValues('out.dir')[0]
+		String inRepoDir = null
+		try {
+			inRepoDir = data.getOptionValues('in.repo.dir')[0]
+		} catch (e) {}
+		String outRepoDir = null
+		try {
+			outRepoDir = data.getOptionValues('out.repo.dir')[0]
+		} catch (e) {}
 		String changeRequest = data.getOptionValues('change.request')[0]
 		def buildWorkitems = buildManagementService.getExecutionWorkItems(collection, project, buildId)
 		List wi = []
@@ -49,47 +58,55 @@ class ZeusBuildData implements CliAction {
 		def wis = wi.toSet()
 		def buildChanges = buildManagementService.getExecutionChanges(collection, project, buildId, true)
 		def fList = []
-		buildChanges.'value'.each { bchange -> 
+		buildChanges.'value'.each { bchange ->
 			if (bchange.location) {
 				String url = "${bchange.location}/changes"
 				def changes = buildManagementService.getExecutionResource(url)
-				changes.changes.each { change -> 
+				changes.changes.each { change ->
 					if (change.item.path && !change.item.isFolder) {
 						String fpath = "${change.item.path}"
 						fList.push(fpath)
 					}
-					
 				}
 			}
 		}
-		
+
 		String sep = System.getProperty("line.separator")
 		def build = buildManagementService.getExecution(collection, project, buildId)
 		String sourceBranch = "${build.sourceBranch}"
 		//if (sourceBranch.contains("release/")) {
-			String releaseId = sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)
-			def fListSet = fList.toSet()
-			File f = new File("${outDir}/ZEUS.properties")
-			def o = f.newDataOutputStream()
-			o << "my.version=${releaseId}${sep}"
-			o << "change.request=${changeRequest}${sep}"
-			if (wis.size() > 0) {
-				String wiStr = wis.join(',')
-				o << "ado.workitems=${wiStr}${sep}"
+		String releaseId = sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)
+		def fListSet = fList.toSet()
+		File f = new File("${outDir}/ZEUS.properties")
+		def o = f.newDataOutputStream()
+		o << "my.version=${releaseId}${sep}"
+		o << "change.request=${changeRequest}${sep}"
+		if (wis.size() > 0) {
+			String wiStr = wis.join(',')
+			o << "ado.workitems=${wiStr}${sep}"
+		}
+		o.close()
+		f = new File("${outDir}/ZEUS.template")
+		o = f.newDataOutputStream()
+		String filesStr = fListSet.join("${sep}")
+		o << "${filesStr}"
+		o.close()
+		if (inRepoDir) {
+			fListSet.each { fName ->
+				def i = new File("$inRepoDir${fName}").newInputStream()
+				def ao = new File("$outRepoDir${fName}").newOutputStream()
+				ao << i
+				i.close()
+				ao.close()
 			}
-			o.close()
-			f = new File("${outDir}/ZEUS.template")
-			o = f.newDataOutputStream()
-			String filesStr = fListSet.join("${sep}")
-			o << "${filesStr}"
-			o.close()
+		}
 		//}
 		return null
 	}
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token',  'tfs.project', 'build.id', 'out.dir', 'change.request']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'build.id', 'out.dir', 'change.request']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
@@ -97,5 +114,5 @@ class ZeusBuildData implements CliAction {
 		}
 		return true
 	}
-	
+
 }
