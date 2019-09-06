@@ -92,9 +92,19 @@ class ZeusBuildData implements CliAction {
 		o << "${filesStr}"
 		o.close()
 		if (inRepoDir && outRepoDir) {
-			fListSet.each { fName ->
-				def i = new File("$inRepoDir${fName}").newInputStream()
-				def ao = new File("$outRepoDir${fName}").newOutputStream()
+			File od = new File(outRepoDir)
+			if (!od.exists()) {
+				od.mkdir()
+			}
+			fListSet.each { String fName ->
+				def i = new File("$inRepoDir${fName}").newDataInputStream()
+				def opath = fName.substring(0, fName.lastIndexOf('/'));
+				File ofd = new File("$outRepoDir${opath}")
+				if (!ofd.exists()) {
+					ofd.mkdirs()
+				}
+				File of = new File("$outRepoDir${fName}")
+				def ao = of.newDataOutputStream()
 				ao << i
 				i.close()
 				ao.close()
@@ -103,10 +113,14 @@ class ZeusBuildData implements CliAction {
 		//}
 		return null
 	}
+	
+	def ensureDirs(String fileName) {
+		
+	}
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'build.id', 'change.request']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'build.id', 'out.dir', 'change.request']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
