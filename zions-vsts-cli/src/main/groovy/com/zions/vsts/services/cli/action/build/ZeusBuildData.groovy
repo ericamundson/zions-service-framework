@@ -91,7 +91,7 @@ class ZeusBuildData implements CliAction {
 		String filesStr = fListSet.join("${sep}")
 		o << "${filesStr}"
 		o.close()
-		if (inRepoDir) {
+		if (inRepoDir && outRepoDir) {
 			fListSet.each { fName ->
 				def i = new File("$inRepoDir${fName}").newInputStream()
 				def ao = new File("$outRepoDir${fName}").newOutputStream()
@@ -106,7 +106,7 @@ class ZeusBuildData implements CliAction {
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'build.id', 'out.dir', 'change.request']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'build.id', 'change.request']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
