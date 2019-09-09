@@ -30,11 +30,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="LegacyTools\CLM\RTC\ExceptionsSystems"/>
+			<defaultvalue target="MigrationTests\ExceptionsSystems"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="LegacyTools"/>
+			<defaultvalue target="MigrationTests"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -107,11 +107,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="LegacyTools\CLM\RTC\ExceptionsSystems"/>
+			<defaultvalue target="MigrationTests\ExceptionsSystems"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="LegacyTools"/>
+			<defaultvalue target="MigrationTests"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -184,11 +184,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="LegacyTools\CLM\RTC\ExceptionsSystems"/>
+			<defaultvalue target="MigrationTests\ExceptionsSystems"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="LegacyTools"/>
+			<defaultvalue target="MigrationTests"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -261,11 +261,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="LegacyTools\CLM\RTC\ExceptionsSystems"/>
+			<defaultvalue target="MigrationTests\ExceptionsSystems"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="LegacyTools"/>
+			<defaultvalue target="MigrationTests"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -339,11 +339,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="LegacyTools\CLM\RTC\ExceptionsSystems"/>
+			<defaultvalue target="MigrationTests\ExceptionsSystems"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="LegacyTools"/>
+			<defaultvalue target="MigrationTests"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -421,11 +421,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="LegacyTools\CLM\RTC\ExceptionsSystems"/>
+			<defaultvalue target="MigrationTests\ExceptionsSystems"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="LegacyTools"/>
+			<defaultvalue target="MigrationTests"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
@@ -497,11 +497,11 @@
 		<field source="modified" target="System.ChangedDate"/> -->
 		<field source="creator" target="System.CreatedBy"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="LegacyTools\CLM\RTC\ExceptionsSystems"/>
+			<defaultvalue target="MigrationTests\ExceptionsSystems"/>
 		</field>
 		<field source="internalTags" target="System.Tags"/>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="LegacyTools"/>
+			<defaultvalue target="MigrationTests"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<value source="Show Stopper" target="1"/>
