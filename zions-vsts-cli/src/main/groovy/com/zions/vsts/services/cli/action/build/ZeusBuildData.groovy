@@ -63,8 +63,8 @@ class ZeusBuildData implements CliAction {
 				String url = "${bchange.location}/changes"
 				def changes = buildManagementService.getExecutionResource(url)
 				changes.changes.each { change ->
-					if (change.item.path && !change.item.isFolder) {
-						String fpath = "${change.item.path}"
+					String fpath = "${change.item.path}"
+					if (change.item.path && !change.item.isFolder && !fpath.startsWith('/dar')) {
 						fList.push(fpath)
 					}
 				}
