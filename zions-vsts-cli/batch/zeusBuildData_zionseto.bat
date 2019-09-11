@@ -1,1 +1,1 @@
-java -Dspring.profiles.active=default -jar e:\bin\batch\zions-vsts-cli.jar zeusBuildData  --tfs.url=https://dev.azure.com/zionseto --tfs.user=z091182 --tfs.token=ejl3unyuuxdt7kawlsxysxdlzmm7gbjucvksq72fswmzvzxbf5aa --tfs.project="Zeus" %*
+java -Dspring.profiles.active=default -jar ..\libs\zions-vsts-cli.jar zeusBuildData  --tfs.url=https://dev.azure.com/zionseto --tfs.user=z091182 --tfs.token=ejl3unyuuxdt7kawlsxysxdlzmm7gbjucvksq72fswmzvzxbf5aa --tfs.project="Zeus" %*
