@@ -65,11 +65,15 @@ class ZeusBuildData implements CliAction {
 				def changes = buildManagementService.getExecutionResource(url)
 				changes.changes.each { change ->
 					String fpath = "${change.item.path}"
-					if (change.item.path && !change.item.isFolder && !fpath.startsWith('/dar')) {
+					if (change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore')) {
 						fList.push(fpath)
 						String[] fItems = fpath.split('/')
-						String affiliate = fItems[2]
-						affiliates.push(affiliate)
+						if (fItems.size() > 3) {
+							String affiliate = fItems[2]
+							affiliates.push(affiliate)
+						} else {
+							log.info("Bad path:: ${fpath}" )
+						}
 					}
 				}
 			}
