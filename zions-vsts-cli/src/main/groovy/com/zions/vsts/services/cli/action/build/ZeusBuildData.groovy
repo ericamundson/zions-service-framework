@@ -58,6 +58,7 @@ class ZeusBuildData implements CliAction {
 		def wis = wi.toSet()
 		def buildChanges = buildManagementService.getExecutionChanges(collection, project, buildId, true)
 		def fList = []
+		def affiliates = []
 		buildChanges.'value'.each { bchange ->
 			if (bchange.location) {
 				String url = "${bchange.location}/changes"
@@ -66,11 +67,14 @@ class ZeusBuildData implements CliAction {
 					String fpath = "${change.item.path}"
 					if (change.item.path && !change.item.isFolder && !fpath.startsWith('/dar')) {
 						fList.push(fpath)
+						String[] fItems = fpath.split('/')
+						String affiliate = fItems[2]
+						affiliates.push(affiliate)
 					}
 				}
 			}
 		}
-
+		Set affiliatesList = affiliates.toSet()
 		String sep = System.getProperty("line.separator")
 		def build = buildManagementService.getExecution(collection, project, buildId)
 		String sourceBranch = "${build.sourceBranch}"
@@ -81,6 +85,8 @@ class ZeusBuildData implements CliAction {
 		def o = f.newDataOutputStream()
 		o << "my.version=${releaseId}${sep}"
 		o << "change.request=${changeRequest}${sep}"
+		String affiliatesStr = affiliatesList.join(',')
+		o << "global.affiliates.list=${affiliatesStr}${sep}"
 		if (wis.size() > 0) {
 			String wiStr = wis.join(',')
 			o << "ado.workitems=${wiStr}${sep}"
