@@ -16,10 +16,10 @@ class DiscussionNotesRemarksHandler extends RmBaseAttributeHandler {
 		String formatValue = ''
 		// First check to see if there are any remarks from zions
 		String remarks = itemData.getAttribute("Remarks")
-		if (remarks != null && remarks.length()> 0) {
+		if (remarks && remarks != "") {
 			formatValue = '<b>Zions:</b> ' + remarks
 		}
-		if (val != "") {
+		if (val && val != "") {
 			if ( formatValue != "") {
 				formatValue = formatValue + '<br><br>'
 			}
