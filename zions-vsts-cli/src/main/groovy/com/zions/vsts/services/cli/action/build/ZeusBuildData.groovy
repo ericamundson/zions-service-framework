@@ -12,9 +12,11 @@ import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
+import com.zions.vsts.services.work.WorkManagementService
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
+import groovy.xml.MarkupBuilder
 
 
 @Component
@@ -23,6 +25,8 @@ class ZeusBuildData implements CliAction {
 
 	@Autowired
 	BuildManagementService buildManagementService
+	@Autowired
+	WorkManagementService workManagementService
 
 	@Autowired
 	public ZeusBuildData() {
@@ -59,6 +63,7 @@ class ZeusBuildData implements CliAction {
 		def buildChanges = buildManagementService.getExecutionChanges(collection, project, buildId, true)
 		def fList = []
 		def affiliates = []
+		def allChanges = [:]
 		buildChanges.'value'.each { bchange ->
 			if (bchange.location) {
 				String url = "${bchange.location}/changes"
@@ -69,6 +74,9 @@ class ZeusBuildData implements CliAction {
 						fList.push(fpath)
 						String[] fItems = fpath.split('/')
 						if (fItems.size() > 3) {
+							if (!allChanges.containsKey(fpath)) {
+								allChanges[fpath] = [ parent: bchange, item: change.item ]
+							}
 							String affiliate = fItems[2]
 							affiliates.push(affiliate)
 						} else {
@@ -101,6 +109,7 @@ class ZeusBuildData implements CliAction {
 		String filesStr = fListSet.join("${sep}")
 		o << "${filesStr}"
 		o.close()
+		Map<String, File> fileMap = [:]
 		if (inRepoDir && outRepoDir) {
 			File od = new File(outRepoDir)
 			if (!od.exists()) {
@@ -118,14 +127,59 @@ class ZeusBuildData implements CliAction {
 				ao << i
 				i.close()
 				ao.close()
+				fileMap["$outRepoDir${fName}"] = of
 			}
+			detailsFile(collection, project, wis, allChanges, outDir, outRepoDir, fileMap)
 		}
 		//}
 		return null
 	}
 	
-	def ensureDirs(String fileName) {
+	def detailsFile(String collection, String project, def wis, def allChanges, outDir, outRepoDir, Map<String,File> fileMap) {
+		def writer = new StringWriter()
+		MarkupBuilder bXml = new MarkupBuilder(writer)  //TODO:  Study up on examples of MarkupBuilder
+		File outFile = new File("${outDir}/ZEUS.details.xml")
+		def fWorkitems = []
+		wis.each { id ->
+			String sId = "${id}"
+			def fWorkItem = workManagementService.getWorkItem(collection, project, sId)
+			fWorkitems.push(fWorkItem)
+		}
+		bXml.mkp.xmlDeclaration(version: "1.0", encoding: "utf-8")
+		bXml.details {
+			allChanges.each { key, change ->
+				String fpath = "${change.item.path}"
+				String[] fItems = fpath.split('/')
+				String affiliate = fItems[2]
+				entry(affiliate: "${affiliate}") {
+					String fName = "${change.item.path}"
+					File f = fileMap["${outRepoDir}${fName}"]
+					file ( "${fName}" )
+					size ( "${f.size()}" )
+					date ( "${change.parent.timestamp}" )
+					gitCommit ( "${change.parent.id}" )
+					String message = "${change.parent.message}"
+					gitMessage {  bXml.mkp.yieldUnescaped("<![CDATA[${message}]]>") }
+					fWorkitems.each { wi -> 
+						adoId ( "${wi.id}" )
+						adoTitle ( "${wi.fields.'System.Title'}" )
+						adoState ( "${wi.fields.'System.State'}" )
+						String r = ""
+						if (wi.fields.'Microsoft.VSTS.Common.ResolvedReason') {
+							r = "${wi.fields.'Microsoft.VSTS.Common.ResolvedReason'}"
+						}
+						adoResolution ( "${r}" )
+						adoType ( "${wi.fields.'System.WorkItemType'}" )
+					}
+					
+				}
+			}
+		}
 		
+		def o = outFile.newDataOutputStream()
+		o << writer.toString()
+		o.close();
+
 	}
 
 	@Override
