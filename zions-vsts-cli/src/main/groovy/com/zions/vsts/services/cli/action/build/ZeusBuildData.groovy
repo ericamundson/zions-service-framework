@@ -71,7 +71,7 @@ class ZeusBuildData implements CliAction {
 				changes.changes.each { change ->
 					String fpath = "${change.item.path}"
 					if (change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project')) {
-						fList.push(fpath)
+						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
 						if (fItems.size() > 3) {
 							if (!allChanges.containsKey(fpath)) {
@@ -115,7 +115,8 @@ class ZeusBuildData implements CliAction {
 			if (!od.exists()) {
 				od.mkdir()
 			}
-			fListSet.each { String fName ->
+			fListSet.each { String iName ->
+				String fName = "/${iName}"
 				def i = new File("$inRepoDir${fName}").newDataInputStream()
 				def opath = fName.substring(0, fName.lastIndexOf('/'));
 				File ofd = new File("$outRepoDir${opath}")
