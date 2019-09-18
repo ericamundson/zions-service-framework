@@ -13,7 +13,12 @@ class ClosedReasonHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		if (value == 'Duplicate' || value == 'Delete' || value == 'Rejected' || value == 'Deprecated' ) {
+		// Handle cleanup via the DELETE IN ADO Release value - set status to Closed
+		String releaseVals = itemData.getAttribute('Release')
+		if (releaseVals.indexOf('DELETE IN ADO') > -1) {
+			return 'Delete'
+		}
+		else if (value == 'Duplicate' || value == 'Delete' || value == 'Rejected' || value == 'Deprecated' ) {
 			return value
 		}
 		else {
