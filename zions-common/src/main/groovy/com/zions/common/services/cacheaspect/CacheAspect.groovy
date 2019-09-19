@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
 
 @Aspect
 @Configuration
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass=true)
 class CacheAspect {
 	
 	public CacheAspect() {
