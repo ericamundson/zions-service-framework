@@ -19,6 +19,49 @@ import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
 
 
+/**
+ * @author z091182
+ *
+ *@startuml ZeusComponentDesign.png
+ *
+ *cloud DTS as "ADO DTS Project" {
+ *	storage serviceframework as "zions-service-framework GIT repo" {
+ *		component ZeusBuildData as "[[https://dev.azure.com/zionseto/DTS/_git/zions-service-framework?path=%2Fzions-vsts-cli%2Fsrc%2Fmain%2Fgroovy%2Fcom%2Fzions%2Fvsts%2Fservices%2Fcli%2Faction%2Fbuild%2FZeusBuildData.groovy&version=GBdng2ado com.zions.vsts.services.cli.action.build.ZeusBuildData]] script"
+ *	}
+ *	storage retools as "re-tools GIT repo" {
+ *		component ZeusAntScript as "[[https://dev.azure.com/zionseto/DTS/_git/re-tools?path=%2Fbin%2Fzeus%2Fzeusui3.xml&version=GBmaster zeusui3.xml]] ant script"
+ *	}
+ *  ZeusBuildData --> buildArtifacts: "Creates"
+ *}
+ *cloud ZeusProjectPipeline as "ADO Zeus Project - Pipeline" {
+ *  storage buildArtifacts as "[[https://dev.azure.com/zionseto/Zeus/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=973 Zeus-release]] - Build Artifacts" {
+ *  	component zeusProperties as "Zeus.properties"
+ *  	component zeusTemplate as "Zeus.template"
+ *  	component copyChangedFile as "Changed files package"
+ *  }
+ *}
+ *cloud Zeus as "ADO Zeus Project"{
+ *  rectangle Bug as "'Bug' work item type"
+ *	actor Zeus_Developer as "Zeus Developer"
+ *	component ZeusPipeline as "[[https://dev.azure.com/zionseto/Zeus/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=973 Zeus-release]] build pipeline"
+ *	storage Zeus_GIT_repo as "Zeus GIT repo" {
+ *		rectangle release_branch as "release/<release id> git branch"
+ *  }
+ *  Bug --> Zeus_Developer: Assigned to
+ *  Zeus_Developer --> release_branch : "Provides pull request to release branch"
+ *  ZeusPipeline --> Zeus_GIT_repo : "When repo changes build activates"
+ *  ZeusPipeline --> ZeusBuildData : "Generates all build artifacts"
+ *}
+ *card XLDeploy as "XL Deploy" {
+ *  actor ReleaseManager as "Release Manager"
+ *	component ZeusApp as "Application/Zeus/Zeus" 
+ *	ZeusPipeline --> ZeusApp : "Publish Deployment Package to App"
+ *  ReleaseManager --> ZeusApp : "Request deploy to environment"
+ *  ZeusApp --> ZeusAntScript : "Specific application package makes call to ant script for specified environment"
+ *}
+ *Zeus --[hidden]> XLDeploy
+ *@enduml
+ */
 @Component
 @Slf4j
 class ZeusBuildData implements CliAction {
