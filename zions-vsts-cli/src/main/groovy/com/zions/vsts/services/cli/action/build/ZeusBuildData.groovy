@@ -115,7 +115,7 @@ class ZeusBuildData implements CliAction {
 					String fpath = "${change.item.path}"
 					String changeType = "${change.changeType}"
 					println "Type : $changeType"
-					if (changeType && !changeType == 'delete' && change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
+					if (changeType && changeType != 'delete' && change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
 						if (fItems.size() > 3) {
