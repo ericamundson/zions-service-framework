@@ -24,7 +24,7 @@ import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
-
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -60,6 +60,7 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 	 * 
 	 * Thus, not too BDD.  Although not much of our unit testing is.
 	 */
+	@Ignore
 	def 'Main flow for module with related artifacts while testing ADO change data processing'() {
 		setup: "Setup a module and module's related artifacts"
 		setupModuleAndRelatedArtifactData()
