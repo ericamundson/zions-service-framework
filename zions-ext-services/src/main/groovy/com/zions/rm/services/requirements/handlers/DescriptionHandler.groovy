@@ -232,7 +232,10 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 			// Process any embedded images and table formatting
 			outHtml = processHtml(description, sId, itemData)
 		}
-		outHtml = outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("[^\\p{ASCII}]", "")
+		// Replace messed up quotes from bulk update with proper quotes
+//		outHtml = outHtlm.replace('',"'")
+		
+		outHtml = outHtml.replace("&lt;",'<').replace("&gt;",'>') //.replaceAll("[^\\p{ASCII}]", "")
 		
 		// Append certain fields to end of Description
 		if (itemData.getArtifactType() == 'Business Requirement') {

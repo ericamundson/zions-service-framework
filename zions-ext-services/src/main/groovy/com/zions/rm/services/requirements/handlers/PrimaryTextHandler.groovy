@@ -16,7 +16,7 @@ class PrimaryTextHandler extends RmBaseAttributeHandler {
 		// strip out all namespace stuff from html
 		if (val) {
 			String description = removeNamespace("${val}")
-			return description.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("[^\\p{ASCII}]", "")
+			return description.replaceAll("&lt;",'<').replaceAll("&gt;",'>') //.replaceAll("[^\\p{ASCII}]", "")
 		}
 		else {
 			return val
