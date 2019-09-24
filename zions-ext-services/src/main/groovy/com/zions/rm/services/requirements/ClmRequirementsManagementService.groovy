@@ -396,10 +396,6 @@ class ClmRequirementsManagementService {
 		String resultStr = result.str
 		resultStr = fixSpecialCharacters(resultStr)
 		
-		if (resultStr.indexOf('Backdated') > -1) {
-			int i = 1
-		}
-		
 		// Use xmlSlurper to parse xml
 		result = new XmlSlurper().parseText(resultStr)
 		
@@ -450,7 +446,7 @@ class ClmRequirementsManagementService {
 	}
 	private String fixSpecialCharacters(String xml) {
 		// Replace special characters for single/double quotes, dashes and trash characters
-		return xml.replaceAll('Ã¢&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(2|3);', "'").replaceAll('â&#15(2|3);',"'").replaceAll('Ã&#131;Â¢&#128;&#15(2|3);',"'").replaceAll('&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(6|7);','&quot;').replace('â&#128;&#147;','-').replace('Ã&#131;Â¢&#128;&#147;','-').replace('Ã&#131;&#130;Ã&#130;', '').replace('Â ', '')
+		return xml.replaceAll('Ã¢&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(2|3);', "'").replaceAll('â&#15(2|3);',"'").replaceAll('Ã&#131;Â¢&#128;&#15(2|3);',"'").replaceAll('&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(6|7);','&quot;').replace('â&#128;&#147;','-').replace('Ã&#131;Â¢&#128;&#147;','-').replace('Ã&#131;&#130;Ã&#130;', '').replace('&#128;',"'").replace('Â ', '').replace('Â ', '').replace('Â', '')
 	}
 	private String parseHref(String inString) {
 		def hrefIndex = inString.indexOf('href=')
