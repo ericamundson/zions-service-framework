@@ -22,7 +22,7 @@ import groovy.xml.MarkupBuilder
 /**
  * @author z091182
  *
- *@startuml ZeusComponentDesign.png
+ *@startuml ZeusDesign.png
  *
  *cloud DTS as "ADO DTS Project" {
  *	storage serviceframework as "zions-service-framework GIT repo" {
@@ -37,7 +37,8 @@ import groovy.xml.MarkupBuilder
  *  storage buildArtifacts as "[[https://dev.azure.com/zionseto/Zeus/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=973 Zeus-release]] - Build Artifacts" {
  *  	component zeusProperties as "Zeus.properties"
  *  	component zeusTemplate as "Zeus.template"
- *  	component copyChangedFile as "Changed files package"
+ *  	component zeusDetailXml as "Zeus.detail.xml"
+ *  	component zeusRepoZip as "Zeus.repo.zip"
  *  }
  *}
  *cloud Zeus as "ADO Zeus Project"{
@@ -107,6 +108,7 @@ class ZeusBuildData implements CliAction {
 		def fList = []
 		def affiliates = []
 		def allChanges = [:]
+		def dList = []
 		buildChanges.'value'.each { bchange ->
 			if (bchange.location) {
 				String url = "${bchange.location}/changes"
@@ -114,8 +116,11 @@ class ZeusBuildData implements CliAction {
 				changes.changes.each { change ->
 					String fpath = "${change.item.path}"
 					String changeType = "${change.changeType}"
-					println "Type : $changeType"
-					if (changeType && changeType != 'delete' && change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
+					ZeusBuildData.log.info "Type : $changeType, Name: ${fpath.substring(1)}"
+					if (changeType == 'delete' && !dList.contains("${fpath.substring(1)}")) {
+						dList.push("${fpath.substring(1)}")
+					}
+					if (!dList.contains("${fpath.substring(1)}") && change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
 						if (fItems.size() > 3) {
@@ -125,7 +130,7 @@ class ZeusBuildData implements CliAction {
 							String affiliate = fItems[2]
 							affiliates.push(affiliate)
 						} else {
-							log.info("Bad path:: ${fpath}" )
+							ZeusBuildData.log.info("Bad path:: ${fpath}" )
 						}
 					}
 				}
