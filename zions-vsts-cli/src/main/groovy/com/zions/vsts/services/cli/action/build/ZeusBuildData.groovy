@@ -117,7 +117,7 @@ class ZeusBuildData implements CliAction {
 					String fpath = "${change.item.path}"
 					String changeType = "${change.changeType}"
 					ZeusBuildData.log.info "Type : $changeType, Name: ${fpath.substring(1)}"
-					if (changeType == 'delete' && !dList.contains("${fpath.substring(1)}")) {
+					if (changeType == 'delete' && !dList.contains("${fpath.substring(1)}") && !fileExists(inRepoDir, "${fpath.substring(1)}")) {
 						dList.push("${fpath.substring(1)}")
 					}
 					if (!dList.contains("${fpath.substring(1)}") && change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
@@ -184,6 +184,12 @@ class ZeusBuildData implements CliAction {
 		}
 		//}
 		return null
+	}
+	
+	boolean fileExists(String inRepoDir, String iName) {
+		String fName = "/${iName}"
+		def i = new File("$inRepoDir${fName}")
+		return i.exists()
 	}
 	
 	def detailsFile(String collection, String project, def wis, def allChanges, outDir, outRepoDir, Map<String,File> fileMap) {
