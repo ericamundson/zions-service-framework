@@ -238,6 +238,19 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					clManager.flush();
 					log.debug("finished flushing clmanager for phaseCount ${phaseCount}")
 				}
+				if (phase == 'links') {
+					items.each { rmItem ->
+						//saveDatawarehouseItemToAdoItemManager(rmItem, clManager, tfsProject, memberMap)
+						String sid = "${rmItem.reference_id}"
+						
+						clmRequirementsManagementService.getLinkInfoFromCache(sid)
+						
+						//get linkinfo object from cache
+						//if linkinfo item count > 0
+						//	do the needful for creating change objects with the links
+						//sometimes this is blank?  some kind of error!
+					}
+				}
 				if (phase == 'audit') {
 					//log.debug("auditing migrated artifacts")
 					//get list of wiData objects
@@ -316,9 +329,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	 * @return
 	 */
 	def saveDatawarehouseItemToAdoItemManager(def rmItem, def clManager, def tfsProject, def memberMap) {
-		String sid = "${rmItem.reference_id}"
-		//sometimes this is blank?  some kind of error!
-		if (sid) {
+
 			int id = Integer.parseInt(sid)
 			//log.debug("items.each loop for id: ${sid}")
 			String primaryTextString = "${rmItem.text}"
