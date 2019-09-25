@@ -93,7 +93,7 @@ class ZeusBuildData implements CliAction {
 		try {
 			outRepoDir = data.getOptionValues('out.repo.dir')[0]
 		} catch (e) {}
-		//String changeRequest = data.getOptionValues('change.request')[0]
+		String changeRequest = data.getOptionValues('change.request')[0]
 		def buildWorkitems = buildManagementService.getExecutionWorkItems(collection, project, buildId)
 		List wi = []
 		buildWorkitems.'value'.each { ref ->
@@ -146,6 +146,7 @@ class ZeusBuildData implements CliAction {
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()
 		o << "my.version=${releaseId}${sep}"
+		o << "change.request={{change.request}}${sep}"
 		String affiliatesStr = affiliatesList.join(',')
 		o << "global.affiliates.list=${affiliatesStr}${sep}"
 		if (wis.size() > 0) {
@@ -240,7 +241,7 @@ class ZeusBuildData implements CliAction {
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'build.id', 'out.dir']
+		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'build.id', 'out.dir', 'change.request']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
