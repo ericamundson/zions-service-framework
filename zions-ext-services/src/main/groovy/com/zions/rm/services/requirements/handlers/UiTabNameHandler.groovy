@@ -8,7 +8,7 @@ class UiTabNameHandler extends RmBaseAttributeHandler {
 	@Override
 	public String getFieldName() {
 		
-		return 'UI Field Position'
+		return 'UI Tab Name'
 	}
 
 	@Override

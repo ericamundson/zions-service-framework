@@ -1,7 +1,6 @@
 package com.zions.rm.services.requirements
 
 import com.zions.common.services.cache.ICacheManagementService
-import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.db.DatabaseQueryService
@@ -102,9 +101,9 @@ class ClmRequirementsManagementService {
 	}
 
 	ClmRequirementsModule getModule(String moduleUri, boolean validationOnly) {
-		boolean cacheLinks = false
+		boolean cacheLinks = !validationOnly
 		boolean addEmbeddedCollections = false
-		def links = []
+		String satisfiesLink // For associated RRZ module
 		String uri = moduleUri.replace('resources/','publish/modules?resourceURI=')
 		def result = rmGenericRestClient.get(
 				uri: uri,
@@ -121,6 +120,7 @@ class ClmRequirementsManagementService {
 		String moduleFormat = module.format
 		String moduleAbout = module.about
 		
+		
 		// Extract module attributes and members
 		module.children().each { child ->
 			String iName = child.name()
@@ -128,7 +128,6 @@ class ClmRequirementsManagementService {
 				// Set artifact type and attributes
 				moduleType = parseCollaborationAttributes(child, moduleAttributeMap )
 				if (!validationOnly) {
-					cacheLinks = true
 					addEmbeddedCollections = shouldAddCollectionsToModule(moduleType)
 				}				
 			}
@@ -145,7 +144,10 @@ class ClmRequirementsManagementService {
 							linkURI = "${link.relation}"
 						}
 					}
-					links.add(new ModuleLink(linkType,linkURI))
+					if (linkType == 'Satisfies') {
+						satisfiesLink = linkURI
+						return 
+					}
 				}
 			}
 			else if (iName == "moduleContext") {
@@ -196,7 +198,8 @@ class ClmRequirementsManagementService {
 		
 		
 		// Instantiate and return the module
-		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, moduleAttributeMap,orderedArtifacts,links)
+		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, satisfiesLink, moduleAttributeMap,orderedArtifacts)
+		if (cacheLinks) parseLinksFromArtifactNode(module, clmModule)
 		return clmModule
 
 	}
@@ -387,8 +390,15 @@ class ClmRequirementsManagementService {
 		//log.debug("Fetching text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
-				headers: [Accept: 'application/xml'] );
-		//log.debug("Fetching URI: ${in_artifact.getAbout()}")
+				headers: [Accept: 'application/xml'],
+			contentType: ContentType.TEXT );
+		// Replace special characters from Unicode translation
+		String resultStr = result.str
+		resultStr = fixSpecialCharacters(resultStr)
+		
+		// Use xmlSlurper to parse xml
+		result = new XmlSlurper().parseText(resultStr)
+		
 		// Extract artifact attributes
 		result.children().each { artifactNode ->
 			parseTopLevelAttributes(artifactNode, in_artifact)
@@ -434,7 +444,10 @@ class ClmRequirementsManagementService {
 		return in_artifact
 
 	}
-
+	private String fixSpecialCharacters(String xml) {
+		// Replace special characters for single/double quotes, dashes and trash characters
+		return xml.replaceAll('Ã¢&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(2|3);', "'").replaceAll('â&#15(2|3);',"'").replaceAll('Ã&#131;Â¢&#128;&#15(2|3);',"'").replaceAll('&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(6|7);','&quot;').replace('â&#128;&#147;','-').replace('Ã&#131;Â¢&#128;&#147;','-').replace('Ã&#131;&#130;Ã&#130;', '').replace('&#128;',"'").replace('Â ', '').replace('Â ', '').replace('Â', '')
+	}
 	private String parseHref(String inString) {
 		def hrefIndex = inString.indexOf('href=')
 		String href = inString.substring(hrefIndex + 6)
@@ -636,12 +649,9 @@ class ClmRequirementsManagementService {
 	//what we need: artifact id and type, then the link set to look through and get all links
 	//if how we get the type varies we can pass that in from the parent I suppose
 	//if we use datemodified as a parameter as well we can use that to set the cache date
-	@Cache(elementType=LinkInfo)
 	public List<LinkInfo> getAllLinks(String id, Date timeStamp, def artifactNode) {
 		List<LinkInfo> links = new ArrayList<LinkInfo>()
-//		String modified = rmItemData.Requirement.modified
-//		String identifier = rmItemData.Requirement.identifier
-//		if (id == '1570094') {log.print(XmlUtil.serialize(artifactNode))}
+
 		artifactNode.traceability.links.children().each { link ->
 			//String itemIdCurrent = child.name()
 			String rid = link.identifier //if the target is QM this will be a guid
@@ -654,13 +664,12 @@ class ClmRequirementsManagementService {
 			def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'rm', moduleRelated: module)
 			links.add(info)
 		}
-		//autowired cache elementtype=linkinfo not functiong as expected, moving on
-//		if (links.size() > 0) { 
-//		cacheManagementService.saveToCache(links, id, 'LinkInfo')
-//		}
+		if (links.size() > 0) {
+				cacheManagementService.saveToCache(links, id, 'LinkInfo')
+		}
 		return links
 	}
-	}
+}
 
 //This class is used by the CacheInterceptor to store the direct query results; there are similar identical classes for both CCM and QM.
 //I am unsure if the classname is why they are different and that has some impact on how the data is stored in the cache,

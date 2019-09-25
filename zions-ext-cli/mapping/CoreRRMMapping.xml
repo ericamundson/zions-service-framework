@@ -628,6 +628,7 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="whereUsedDocHandler" target="Custom.DocumentName"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -656,6 +657,7 @@
 		<field source="descriptionHandler" target="System.Description"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="entityTypeHandler" target="Custom.EntityType"/>
+		<field source="whereUsedDocHandler" target="Custom.DocumentName"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1090,8 +1092,6 @@
 		<field source="tcsLengthHandler" target="Custom.Length"/>
 		<field source="transactionCodeHandler" target="Custom.TransactionNum"/>
 		<field source="ufeDisplayLengthHandler" target="Custom.UFEDisplayLength"/>
-		<field source="ufePicSizeHandler" target="Custom.UFEPICSize"/>
-		<field source="ufeStartPositionHandler" target="Custom.UFEStartPosition"/>
 		<field source="xmlFieldDefHandler" target="Custom.XMLFieldDef"/>
 		<field source="zionsUfeFieldHandler" target="Custom.ZionsUFEField"/>
 		<field source="tcsValidValuesHandler" target="Custom.Values"/>
@@ -1101,16 +1101,14 @@
 		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
 		<field source="sourceFieldNameHandler" target="Custom.SourceFieldName"/>
 		<field source="sourceFieldIndicatorHandler" target="Custom.SourceFieldIndicator"/>
-		<field source="mapping2Handler" target="Custom.Mapping"/>
 		<field source="mandatoryHandler" target="Custom.Mandatory"/>
 		<field source="defaultValuesHandler" target="Custom.DefaultValue"/>
 		<field source="endpointFieldNameHandler" target="Custom.EndpointFieldName"/>
-		<field source="esbCopybookPicSizeHandler" target="Custom.ESBCopybookPICSize"/>
-		<field source="esbTagNameInterfaceHandler" target="Custom.ESBTagName"/>
 		<field source="exampleHandler" target="Custom.Example"/>
 		<field source="fieldExistsHandler" target="Custom.FieldExists"/>
 		<field source="fileNameHandler" target="Custom.FileName"/>
 		<field source="recordTypeHandler" target="Custom.RecordType"/>
+		<field source="whereUsedDocHandler" target="Custom.DocumentName"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
@@ -1155,14 +1153,10 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
-	<wit source="Screen Field" target="Entity" translateUnmappedFields="false">
+	<wit source="Screen Field" target="PlaceHolder" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
-		<field source="entityTypeHandler" target="Custom.EntityType"/>
-		<field source="regulationNameHandler" target="Custom.RegulationName"/>
-		<field source="screenFieldFormatHandler" target="Custom.Format"/>
-		<field source="screenFieldTypeHandler" target="Custom.FieldType"/>
 		<field source="creatorHandler" target="System.CreatedBy"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
@@ -1171,6 +1165,7 @@
 		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
 		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
 		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
 		<field source="infoCommentsHandler" target="Custom.Remarks"/>
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>

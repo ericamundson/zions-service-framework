@@ -13,8 +13,21 @@ class OffsetToHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
-		// TODO Auto-generated method stub
-		return val
+		if (val) {
+			if (val == '#VALUE!') {
+				return ''
+			}
+			else {
+				// Validate numeric value
+			    try {
+			        Integer seq = Integer.parseInt(val);
+			    } catch (NumberFormatException | NullPointerException nfe) {
+					throw new Exception("OffsetToHandler threw exception, invalid number: $val")
+			        return null;
+			    }
+			}
+		}
+		return val	
 	}
 
 }
