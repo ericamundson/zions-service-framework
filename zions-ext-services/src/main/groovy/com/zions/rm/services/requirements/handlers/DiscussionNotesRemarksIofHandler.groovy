@@ -13,13 +13,13 @@ class DiscussionNotesRemarksIofHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
-		String formatValue
+		String formatValue = ''
 		// First check to see if there are any remarks from zions
 		String remarks = itemData.getAttribute("Remarks")
-		if (remarks.length()> 0) {
+		if (remarks && remarks != "") {
 			formatValue = '<b>Remarks:</b> ' + remarks
 		}
-		if (val != "") {
+		if (val && val != "") {
 			if ( formatValue != "") {
 				formatValue = formatValue + '<br><br>'
 			}

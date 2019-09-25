@@ -96,6 +96,7 @@ import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -239,6 +240,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		workManagementService.clean('', tfsProject, query)
 	}
 	
+	@Ignore
 	def 'CCM to RM item linking'()
 	{
 		given: 'Setup of RM to ADO requirements artifacts with 8 requirements artifacts'
@@ -281,6 +283,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 
 	}
 	
+	@Ignore
 	def 'QM to RM item linking'() {
 		setup: 'Setup RM work items()'
 		setupRMToADO();

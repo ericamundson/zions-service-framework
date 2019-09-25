@@ -232,7 +232,8 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 			// Process any embedded images and table formatting
 			outHtml = processHtml(description, sId, itemData)
 		}
-		outHtml = outHtml.replaceAll("&lt;",'<').replaceAll("&gt;",'>').replaceAll("[^\\p{ASCII}]", "")
+		// Fix to special characters (Unicode from Word uploads) is now being handled in ClmRequirementsManagementService prior to xml parsing
+		outHtml = outHtml.replace("&lt;",'<').replace("&gt;",'>') //.replaceAll("[^\\p{ASCII}]", "")
 		
 		// Append certain fields to end of Description
 		if (itemData.getArtifactType() == 'Business Requirement') {

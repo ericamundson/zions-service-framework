@@ -1092,8 +1092,6 @@
 		<field source="tcsLengthHandler" target="Custom.Length"/>
 		<field source="transactionCodeHandler" target="Custom.TransactionNum"/>
 		<field source="ufeDisplayLengthHandler" target="Custom.UFEDisplayLength"/>
-		<field source="ufePicSizeHandler" target="Custom.UFEPICSize"/>
-		<field source="ufeStartPositionHandler" target="Custom.UFEStartPosition"/>
 		<field source="xmlFieldDefHandler" target="Custom.XMLFieldDef"/>
 		<field source="zionsUfeFieldHandler" target="Custom.ZionsUFEField"/>
 		<field source="tcsValidValuesHandler" target="Custom.Values"/>
@@ -1103,16 +1101,14 @@
 		<field source="dbFieldNameHandler" target="Custom.DBFieldName"/>
 		<field source="sourceFieldNameHandler" target="Custom.SourceFieldName"/>
 		<field source="sourceFieldIndicatorHandler" target="Custom.SourceFieldIndicator"/>
-		<field source="mapping2Handler" target="Custom.Mapping"/>
 		<field source="mandatoryHandler" target="Custom.Mandatory"/>
 		<field source="defaultValuesHandler" target="Custom.DefaultValue"/>
 		<field source="endpointFieldNameHandler" target="Custom.EndpointFieldName"/>
-		<field source="esbCopybookPicSizeHandler" target="Custom.ESBCopybookPICSize"/>
-		<field source="esbTagNameInterfaceHandler" target="Custom.ESBTagName"/>
 		<field source="exampleHandler" target="Custom.Example"/>
 		<field source="fieldExistsHandler" target="Custom.FieldExists"/>
 		<field source="fileNameHandler" target="Custom.FileName"/>
 		<field source="recordTypeHandler" target="Custom.RecordType"/>
+		<field source="whereUsedDocHandler" target="Custom.DocumentName"/>
 		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="stateHandler" target="System.State"/>
 		<field source="closedReasonHandler" target="Custom.ClosedReason"/>

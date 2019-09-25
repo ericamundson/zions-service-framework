@@ -57,14 +57,15 @@ abstract class RmBaseAttributeHandler implements IFieldHandler {
 		}
 
 		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: aValue]
+		
+		/* Force update on all fields
 		if (wiCache != null) {
 			String cVal = wiCache.fields."${fieldMap.target}"
 			if ("${cVal}" == "${retVal.value}") {
 				return null
 			}
-
-
 		}
+		*/
 		return retVal;
 	}
 	

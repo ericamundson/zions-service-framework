@@ -45,7 +45,7 @@ task integrationTest(type: Test) {
 }
 
 
-integrationTest.mustRunAfter test
+//integrationTest.mustRunAfter test
 
 task updateBatJarVersion(type: Copy) {
 	from('batch') {

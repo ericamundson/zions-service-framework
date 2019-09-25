@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<udm.DeploymentPackage
+	application="zions-service-framework" version="VERSION">
+	<deployables>
+		<file.Folder name="zions-vsts-cli_libs"
+			file="zions-vsts-cli/build/libs">
+			<targetPath>{{deploy.path}}</targetPath>
+			<createTargetPath>true</createTargetPath>
+			<scanPlaceholders></scanPlaceholders>
+			<preScannedPlaceholders></preScannedPlaceholders>
+		</file.Folder>
+		<file.Folder name="zions-vsts-cli_batch"
+			file="zions-vsts-cli/build/batch_out">
+			<targetPath>{{deploy.path}}</targetPath>
+			<createTargetPath>true</createTargetPath>
+			<scanPlaceholders></scanPlaceholders>
+			<preScannedPlaceholders></preScannedPlaceholders>
+		</file.Folder>
+		<file.Folder name="zions-ext-cli_libs"
+			file="zions-ext-cli/build/libs">
+			<targetPath>{{deploy.path}}</targetPath>
+			<createTargetPath>true</createTargetPath>
+			<scanPlaceholders></scanPlaceholders>
+			<preScannedPlaceholders></preScannedPlaceholders>
+		</file.Folder>
+		<file.Folder name="zions-ext-cli_batch"
+			file="zions-ext-cli/build/batch_out">
+			<targetPath>{{deploy.path}}</targetPath>
+			<createTargetPath>true</createTargetPath>
+			<scanPlaceholders></scanPlaceholders>
+			<preScannedPlaceholders></preScannedPlaceholders>
+		</file.Folder>
+		<cmd.Command name="run deploy process">
+			<commandLine>{{copy.command}} {{deploy.path}}/* {{to.location}}
+			</commandLine>
+			<order>61</order>
+			<undoOrder>61</undoOrder>
+			<runUndoCommandOnUpgrade></runUndoCommandOnUpgrade>
+		</cmd.Command>
+	</deployables>
+</udm.DeploymentPackage>

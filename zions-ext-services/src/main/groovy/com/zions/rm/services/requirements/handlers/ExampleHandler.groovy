@@ -14,7 +14,7 @@ class ExampleHandler extends RmBaseAttributeHandler {
 	@Override
 	public Object formatValue(Object val, Object itemData) {
 		
-		return val
+		return toHtml(val)
 	}
 
 }

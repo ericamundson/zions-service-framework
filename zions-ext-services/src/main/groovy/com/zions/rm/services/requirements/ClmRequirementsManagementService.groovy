@@ -390,8 +390,15 @@ class ClmRequirementsManagementService {
 		//log.debug("Fetching text artifact")
 		def result = rmGenericRestClient.get(
 				uri: in_artifact.getAbout().replace("resources/", "publish/text?resourceURI="),
-				headers: [Accept: 'application/xml'] );
-		//log.debug("Fetching URI: ${in_artifact.getAbout()}")
+				headers: [Accept: 'application/xml'],
+			contentType: ContentType.TEXT );
+		// Replace special characters from Unicode translation
+		String resultStr = result.str
+		resultStr = fixSpecialCharacters(resultStr)
+		
+		// Use xmlSlurper to parse xml
+		result = new XmlSlurper().parseText(resultStr)
+		
 		// Extract artifact attributes
 		result.children().each { artifactNode ->
 			parseTopLevelAttributes(artifactNode, in_artifact)
@@ -437,7 +444,10 @@ class ClmRequirementsManagementService {
 		return in_artifact
 
 	}
-
+	private String fixSpecialCharacters(String xml) {
+		// Replace special characters for single/double quotes, dashes and trash characters
+		return xml.replaceAll('Ã¢&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(2|3);', "'").replaceAll('â&#15(2|3);',"'").replaceAll('Ã&#131;Â¢&#128;&#15(2|3);',"'").replaceAll('&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(6|7);','&quot;').replace('â&#128;&#147;','-').replace('Ã&#131;Â¢&#128;&#147;','-').replace('Ã&#131;&#130;Ã&#130;', '').replace('&#128;',"'").replace('Â ', '').replace('Â ', '').replace('Â', '')
+	}
 	private String parseHref(String inString) {
 		def hrefIndex = inString.indexOf('href=')
 		String href = inString.substring(hrefIndex + 6)
