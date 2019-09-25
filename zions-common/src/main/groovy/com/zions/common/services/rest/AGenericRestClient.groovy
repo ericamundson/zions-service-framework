@@ -326,7 +326,13 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			
 		}
 		Map retryCopy = deepcopy(oinput)
-		HttpResponseDecorator resp = delegate.post(oinput)
+		try {
+			HttpResponseDecorator resp = delegate.post(oinput)
+		} catch (IllegalArgumentException e) {
+			log.error("rateLimitPost failed with input ${oinput.toString()} because: ${e}")
+			return
+		}
+
 		if (currentEncoder) {
 			delegate.encoder.'application/json' = currentEncoder
 			
