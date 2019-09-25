@@ -47,6 +47,7 @@ import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -75,8 +76,8 @@ class TranslateTestLinkToADOSpec extends Specification {
 	IRestartManagementService restartManagementService
 	
 	int id = 600000
-	
-
+		
+	@Ignore
 	public void 'Simulate all phases plus clean'() {
 		setup: 'TestLink stubs'
 		cacheManagementService.cacheModule = 'TL'
