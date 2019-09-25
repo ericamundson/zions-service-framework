@@ -331,7 +331,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			resp = delegate.post(oinput)
 		} catch (IllegalArgumentException e) {
 			log.error("rateLimitPost failed with input ${oinput.toString()} because: ${e}")
-			return
+			return null
 		}
 
 		if (currentEncoder) {
