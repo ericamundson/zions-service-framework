@@ -117,7 +117,7 @@ class ZeusBuildData implements CliAction {
 					String fpath = "${change.item.path}"
 					String changeType = "${change.changeType}"
 					ZeusBuildData.log.info "Type : $changeType, Name: ${fpath.substring(1)}"
-					if (changeType == 'delete' && !dList.contains("${fpath.substring(1)}") && !fileExists(inRepoDir, "${fpath.substring(1)}")) {
+					if (!fileExists(inRepoDir, "${fpath.substring(1)}") && !dList.contains("${fpath.substring(1)}")) {
 						dList.push("${fpath.substring(1)}")
 					}
 					if (!dList.contains("${fpath.substring(1)}") && change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
@@ -222,8 +222,8 @@ class ZeusBuildData implements CliAction {
 						adoTitle ( "${wi.fields.'System.Title'}" )
 						adoState ( "${wi.fields.'System.State'}" )
 						String r = ""
-						if (wi.fields.'Microsoft.VSTS.Common.ResolvedReason') {
-							r = "${wi.fields.'Microsoft.VSTS.Common.ResolvedReason'}"
+						if (wi.fields.'System.Reason') {
+							r = "${wi.fields.'System.Reason'}"
 						}
 						adoResolution ( "${r}" )
 						adoType ( "${wi.fields.'System.WorkItemType'}" )
