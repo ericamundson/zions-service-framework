@@ -329,7 +329,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 	 * @return
 	 */
 	def saveDatawarehouseItemToAdoItemManager(def rmItem, def clManager, def tfsProject, def memberMap) {
-
+		String sid = "${rmItem.reference_id}"
+		//sometimes this is blank?  some kind of error!
+		if (sid) {
 			int id = Integer.parseInt(sid)
 			//log.debug("items.each loop for id: ${sid}")
 			String primaryTextString = "${rmItem.text}"
