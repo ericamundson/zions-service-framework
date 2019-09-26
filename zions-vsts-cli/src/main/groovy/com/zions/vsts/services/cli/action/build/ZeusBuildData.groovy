@@ -165,6 +165,10 @@ class ZeusBuildData implements CliAction {
 			if (!od.exists()) {
 				od.mkdir()
 			}
+			if (fListSet.isEmpty()) {
+				log.error('No files set for update! No new changes.')
+				System.exit(1)
+			}
 			fListSet.each { String iName ->
 				String fName = "/${iName}"
 				def i = new File("$inRepoDir${fName}").newDataInputStream()
