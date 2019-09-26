@@ -525,6 +525,13 @@ class ClmRequirementsManagementService {
 		}
 	}
 	
+	public def getLinkInfoFromCache(def sid) {
+		if (!sid) {
+			return null
+		}
+		return cacheManagementService.getFromCache(sid, 'RM','LinkInfo')
+	}
+	
 	private void parseLinksFromArtifactNode(def artifactNode, def in_artifact) {
 		String modified = artifactNode.collaboration.modified
 		String identifier = artifactNode.identifier
@@ -657,7 +664,7 @@ class ClmRequirementsManagementService {
 			String rid = link.identifier //if the target is QM this will be a guid
 			String key = link.title //if we just want the string type of link it's .title, uri to type is .linkType
 			String module = link.relation.text().split('/')[3]
-			//log.debug("Found link for Artifact ${id} to ${module} item ${rid}")
+			//log.debug("Found link for Artifact ${id} to ${module} item ${rid}")0
 			if (module == 'qm') {
 				rid = link.alternative
 			}
