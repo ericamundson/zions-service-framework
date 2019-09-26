@@ -127,7 +127,7 @@ class RestartManagementService implements IRestartManagementService {
 		if (selectedCheckpoint == 'none' || selectedCheckpoint == 'update') {
 			checkpointManagementService.clear()
 		}
-		checkpointManagementService.addCheckpoint('update', 'none')
+		//checkpointManagementService.addCheckpoint('update', 'none')
 		String[] phases = includePhases.split(',')
 		// Move to checkpoint
 		boolean remaining = false
