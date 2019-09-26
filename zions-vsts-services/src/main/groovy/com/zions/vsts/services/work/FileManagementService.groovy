@@ -80,14 +80,22 @@ class FileManagementService {
 	 * @param files - list of File objects
 	 * @return Work item update data
 	 */
-	def ensureAttachments(collection, project, id, files) {
+	def ensureAttachments(collection, project, id, files, inWiData = null) {
 		String sid = "${id}"
-		def cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
-		if (cacheWI != null) {
-			def cid = cacheWI.id
-			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
-			wiData.body.add(rev)
+		def cacheWI = null
+		if (!inWiData) {
+			cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
+		}
+		if (cacheWI != null || inWiData) {
+			def wiData = null
+			if (inWiData) {
+				wiData = inWiData
+			} else {
+				def cid = cacheWI.id
+				wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+				def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
+				wiData.body.add(rev)
+			}
 			files.each { fileItem ->
 				File file = fileItem.file
 				
