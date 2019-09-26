@@ -305,6 +305,8 @@ class TranslateRQMToMTM implements CliAction {
 						String idtype = "${aid}-testcase"
 						if (!idKeyMap.containsKey(idtype)) {
 							clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+								def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
+								val = fileManagementService.ensureAttachments(collection, tfsProject, id, files, val)
 								clManager.add("${aid}-${key}", val)
 							}
 							idKeyMap[idtype] = idtype
