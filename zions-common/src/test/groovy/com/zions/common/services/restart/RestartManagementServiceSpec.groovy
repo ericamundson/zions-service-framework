@@ -32,8 +32,8 @@ class RestartManagementServiceSpec extends Specification {
 		Checkpoint cp = new Checkpoint([checkpointId: 0, pageUrl: 'http://theUrl', phase: 'test', logEntries:[]])
 		1 * checkpointManagementService.selectCheckpoint(_) >> cp
 		
-		and: 'stub checkpoint management service addCheckpoint'
-		1 * checkpointManagementService.addCheckpoint(_, _)
+//		and: 'stub checkpoint management service addCheckpoint'
+//		1 * checkpointManagementService.addCheckpoint(_, _)
 
 		and: 'stub query handler getItems'
 		1 * testQueryHandler.getItems() >> [url: 'https://stuff']
