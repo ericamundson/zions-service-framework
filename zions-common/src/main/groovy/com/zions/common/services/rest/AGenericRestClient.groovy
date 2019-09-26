@@ -329,15 +329,15 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		HttpResponseDecorator resp
 		try {
 			resp = delegate.post(oinput)
-		} catch (IllegalArgumentException e) {
-			log.error("rateLimitPost failed with input ${oinput.toString()} because: ${e}")
-			return null
+		} catch (e) {
+			throw e
+		} finally {
+			if (encoderFunction || currentEncoder) {
+				delegate.encoder.'application/json' = currentEncoder
+				
+			}
 		}
 
-		if (currentEncoder) {
-			delegate.encoder.'application/json' = currentEncoder
-			
-		}
 
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
 		int status = resp.status

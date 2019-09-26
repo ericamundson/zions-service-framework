@@ -50,7 +50,7 @@ class InternalLicense extends License {
 //		this.values.get(LicenseProperty.MAX_NUMBER_OF_CIS)
 //		this.values.set(LicenseProperty.MAX_NUMBER_OF_CIS, 'overthere.Host=500')
 //		this.values.set(LicenseProperty.MAX_NUMBER_OF_CIS, 'xl.Satellite=0')
-		initPlugins()
+		//initPlugins()
 		//this.values.set(LicenseProperty.LICENSED_PLUGINS, plugins)
 		this.values.set(LicenseProperty.SUPPORT_POLICY, '8x5')
 

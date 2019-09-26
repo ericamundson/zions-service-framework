@@ -293,7 +293,9 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 						Date ts = ccmWorkitem.modified()
 						def links = ccmWorkManagementService.getAllLinks(sid, ts, ccmWorkitem, linkMapping)
 						//new FlowInterceptor() {}.flowLogging(clManager) {
-							def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
+						def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
+						def files = attachmentsManagementService.cacheWorkItemAttachments(id)
+						wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files, wiChanges)
 //							String wiJson = new JsonBuilder(wiChanges).toPrettyString()
 //							File wiFile = new File('./src/integration-test/resources/testdata/wichanges.json')
 //							def of = wiFile.newDataOutputStream()
