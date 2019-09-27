@@ -94,7 +94,7 @@ class ClmTestItemManagementServiceSpec extends Specification {
 	}
 
 	def 'getChanges main flow with test case data'() {
-		given: g_ 'setup plan data'
+		given: g_ 'setup test case data'
 		//Plan data
 		def testcase = dataGenerationService.generate('/testdata/testcaseT.xml')
 
@@ -119,7 +119,7 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		true
 	}
 	def 'getChanges main flow with configuration data'() {
-		given: g_ 'setup of plan data'
+		given: g_ 'setup of configuration data'
 		//Plan data
 		def configuration = dataGenerationService.generate('/testdata/configurationT.xml')
 

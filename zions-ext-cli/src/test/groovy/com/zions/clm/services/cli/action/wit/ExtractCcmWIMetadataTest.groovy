@@ -31,7 +31,7 @@ public class ExtractCcmWIMetadataTest extends Specification {
 	@Test
 	def 'validate method success flow.'() {
 		
-		given: g_ 'Stub Application Arguments'
+		given: g_ 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 
 
@@ -45,21 +45,21 @@ public class ExtractCcmWIMetadataTest extends Specification {
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given:'Stub Application Arguments'
+		given:'valid Application Arguments'
 		String[] args = ['--bb.user=user']
 		def appArgs = new DefaultApplicationArguments(args)
 
 		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: t_ null
 		thrown Exception
 	}
 	
 	@Test
 	def 'execute method success flow.' () {
 		
-		given: 'Stub Application Arguments'
+		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		and: a_ 'stub extractWorkitemMetadata'

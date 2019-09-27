@@ -84,7 +84,7 @@ public class SetupTFSWorkitemAreasSpecTest extends Specification {
 	
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
@@ -97,7 +97,7 @@ public class SetupTFSWorkitemAreasSpecTest extends Specification {
 	
 	@Test
 	def 'execute ApplicationArguments success flow.' () {
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password',
 			'--ccm.projectArea=project_area', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser',
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas', '--tfs.collection=collection' ]
@@ -117,7 +117,7 @@ public class SetupTFSWorkitemAreasSpecTest extends Specification {
 		areasManagementService.processAreasData(_, _, _, _, _)
 		areasManagementService.assignTeamAreas(_, _, _)
 		
-		when: w_ 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (execute)'
 		def result = underTest.execute(appArgs)
 		
 		then: t_ 'result == null'

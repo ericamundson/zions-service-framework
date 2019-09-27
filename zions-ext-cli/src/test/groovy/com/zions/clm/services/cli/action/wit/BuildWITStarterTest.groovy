@@ -42,7 +42,7 @@ public class BuildWITStarterTest extends Specification {
 	
 	@Test
 	def 'validate method success flow.'() {
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 
 		when: w_ 'calling of method under test (validate)'
@@ -54,7 +54,7 @@ public class BuildWITStarterTest extends Specification {
 	
 	@Test
 	def 'validate method exception flow.'() {
-		given: g_'Stub with Application Arguments'
+		given: g_'invalid Application Arguments'
 		String[] args = ['--bb.user=user']
 		def appArgs = new DefaultApplicationArguments(args)
 
@@ -68,7 +68,7 @@ public class BuildWITStarterTest extends Specification {
 	@Test
 	def 'execute method success flow.' () {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 				
 		when: w_ 'calling of method under test (execute)'
@@ -81,7 +81,7 @@ public class BuildWITStarterTest extends Specification {
 	@Test
 	def 'buildStarterXml method success flow.' () {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		String inFile = 'src/main/resources/wit.csv'
 		

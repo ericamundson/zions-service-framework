@@ -47,7 +47,7 @@ public class ExtractQmMetadataSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 
@@ -72,7 +72,7 @@ public class ExtractQmMetadataSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given:'Stub with Application Arguments'
+		given:'bad Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 
@@ -85,7 +85,7 @@ public class ExtractQmMetadataSpecTest extends Specification {
 
 	@Test
 	def 'execute ApplicationArguments success flow.' () {
-		given: 'Stub with Application Arguments'
+		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs())
 
 		and: a_ null

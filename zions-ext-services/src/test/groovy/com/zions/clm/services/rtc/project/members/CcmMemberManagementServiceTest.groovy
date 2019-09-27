@@ -51,7 +51,7 @@ public class CcmMemberManagementServiceTest extends Specification {
 	}
 	
 	def 'getNextPage success flow.'() {
-		given: g_ "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get nextpage test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/nextpage.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 

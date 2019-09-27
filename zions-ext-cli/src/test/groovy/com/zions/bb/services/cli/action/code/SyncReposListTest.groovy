@@ -79,9 +79,9 @@ public class SyncReposListTest extends Specification {
 	}
 	
 	@Test
-	def 'validate method  flow.'() {
+	def 'validate method failed flow.'() {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'Invalid application arguments'
 		String[] args = []
 		def appArgs = new DefaultApplicationArguments(args)
 
@@ -95,7 +95,7 @@ public class SyncReposListTest extends Specification {
 	@Test
 	def 'validate method success flow.'() {
 		
-		given: "A stub of RQM get test item request"		
+		given: "Valid argument settings."		
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		when: w_ 'call validate'
@@ -106,7 +106,7 @@ public class SyncReposListTest extends Specification {
 	}
 	
 	@Test
-	def 'execute method  flow.'() {
+	def 'execute method failed flow.'() {
 		
 		given: g_ 'Stub with Application Arguments'
 		String[] args = []

@@ -43,7 +43,7 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'invalid Application Arguments'
 		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 
@@ -57,7 +57,7 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 	@Test
 	def 'validate method success flow.'() {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 
 
@@ -71,7 +71,7 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 	@Test
 	def 'execute method success flow.' () {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'Valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		and: a_ 'stub rest call for test plans'
@@ -88,7 +88,7 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 	@Test
 	def 'rebuildMemberData method success flow.' () {
 		
-		given: 'Stub with Application Arguments'
+		given: 'valid Application Arguments'
 		def teamInfo = new XmlSlurper().parseText(getClass().getResource('/testdata/testmember.xml').text)
 		def map = new JsonSlurper().parseText(getClass().getResource('/testdata/mbteamnamemap.json').text)
 				

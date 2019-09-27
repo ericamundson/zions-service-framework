@@ -54,7 +54,7 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 
@@ -78,7 +78,7 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
@@ -91,7 +91,7 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 
 	@Test
 	def 'execute ApplicationArguments exception flow.' () {
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'invalid Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 		//def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)

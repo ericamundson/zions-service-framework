@@ -57,7 +57,7 @@ class ClmTestManagementServiceSpecTest extends Specification {
 	}
 	
 	def 'getTestPlansViaQuery success flow.'() {
-		given: g_ "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get test plans request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testplansquery.xml').text)
 		qmGenericRestClient.get(_) >> { return testplansInfo }
 
@@ -69,7 +69,7 @@ class ClmTestManagementServiceSpecTest extends Specification {
 	}
 	
 	def 'getConfigurationsViaQuery success flow.'() {
-		given: g_ "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get configurations request"
 		def configurationsInfo = dataGenerationService.generate('/testdata/configurations.xml')
 		qmGenericRestClient.get(_) >> {
 			return configurationsInfo

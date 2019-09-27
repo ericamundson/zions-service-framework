@@ -74,8 +74,6 @@ public class SyncBBGitReposTest extends Specification{
 		
 	@Test
 	def 'validate method success flow.'() {
-		given: g_ "A stub of RQM get test item request"
-		
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		when: w_ 'call validate'

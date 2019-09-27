@@ -28,7 +28,7 @@ public class ClmWorkItemManagementServiceTest extends Specification {
 	ClmWorkItemManagementService underTest
 	
 	def 'getWorkItemHistory success flow.'() {
-		given: g_ "A stub of RQM get test item request"
+		given: g_ "A stub of CCM get work item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testplansquery.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
@@ -40,7 +40,7 @@ public class ClmWorkItemManagementServiceTest extends Specification {
 	}
 	
 	def 'getWorkItemsViaQuery success flow.'() {
-		given: g_ "A stub of RQM get test item request"
+		given: g_ "A stub of CCM get work item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testplansquery.xml').text)
 		
 		1 * clmGenericRestClient.get(_) >> testplansInfo
@@ -53,7 +53,7 @@ public class ClmWorkItemManagementServiceTest extends Specification {
 	}
 	
 	def 'getNextPage success flow.'() {
-		given: g_ "A stub of RQM get test item request"
+		given: g_ "A stub of CCM get next page work item rest request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/nextpage.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 

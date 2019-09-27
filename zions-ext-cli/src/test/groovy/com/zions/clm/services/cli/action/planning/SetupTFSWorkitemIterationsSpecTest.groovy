@@ -67,7 +67,7 @@ public class SetupTFSWorkitemIterationsSpecTest extends Specification {
 	
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password', 
 			'--ccm.projectArea=project_area', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser', 
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas' ]
@@ -83,7 +83,7 @@ public class SetupTFSWorkitemIterationsSpecTest extends Specification {
 	
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given: g_ 'Stub with Application Arguments'
+		given: g_ 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
@@ -96,7 +96,7 @@ public class SetupTFSWorkitemIterationsSpecTest extends Specification {
 	
 	@Test
 	def 'execute ApplicationArguments success flow.' () {
-		given: 'Stub with Application Arguments'
+		given: 'valid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password',
 			'--ccm.projectArea=project_area', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser',
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas' ]
