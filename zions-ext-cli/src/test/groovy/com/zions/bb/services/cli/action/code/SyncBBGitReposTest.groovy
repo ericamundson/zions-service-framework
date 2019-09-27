@@ -88,7 +88,7 @@ public class SyncBBGitReposTest extends Specification{
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given:'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 		
@@ -102,7 +102,7 @@ public class SyncBBGitReposTest extends Specification{
 	@Test
 	def 'execute method exception flow.'() {
 		
-		given:'Stub with Application Arguments'
+		given:g_ 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
