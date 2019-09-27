@@ -42,11 +42,11 @@ class ClmTestItemManagementServiceSpec extends Specification {
 //	Map<String, IFieldHandler> fieldMap
 
 	def 'getChanges main flow with test plan data'() {
-		given: 'Plan data'
+		given: g_ 'setup plan data'
 		//Plan data
 		def testplan = dataGenerationService.generate('/testdata/testplan218.xml')
 
-		and: 'team map'
+		and: a_ 'setup team map'
 		//Team map
 		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
 		def teamMap = [:]
@@ -59,21 +59,21 @@ class ClmTestItemManagementServiceSpec extends Specification {
 
 		}
 
-		when: 'call method under test (getChanges).'
+		when: w_ 'call getChanges'
 		underTest.processForChanges('DigitalBanking', testplan, teamMap) { 
 			key, item -> }
 
-		then: 'ensure change data'
+		then: t_ null
 		true
 	}
 
 	def 'getChanges main flow with test suite data'() {
-		given: 'Suite data'
+		given: g_ 'setup suite data'
 		//Plan data
 		def testsuite = dataGenerationService.generate('/testdata/testsuiteT.xml')
 		def testplan = dataGenerationService.generate('/testdata/TestPlan.json')
 
-		and: 'team map'
+		and: a_ 'team map'
 		//Team map
 		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
 		def teamMap = [:]
@@ -86,19 +86,19 @@ class ClmTestItemManagementServiceSpec extends Specification {
 
 		}
 		
-		when: 'call method under test (getChanges).'
+		when: w_ 'call method under test (getChanges).'
 		underTest.processForChanges('DigitalBanking', testsuite, teamMap, null, null, testplan) { 
 			key, item -> }
-		then: 'ensure change data'
+		then: t_ 'ensure change data'
 		true
 	}
 
 	def 'getChanges main flow with test case data'() {
-		given: 'Plan data'
+		given: g_ 'setup test case data'
 		//Plan data
 		def testcase = dataGenerationService.generate('/testdata/testcaseT.xml')
 
-		and: 'team map'
+		and: a_ 'setup team map'
 		//Team map
 		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
 		def teamMap = [:]
@@ -111,19 +111,19 @@ class ClmTestItemManagementServiceSpec extends Specification {
 
 		}
 
-		when: 'call method under test (getChanges).'
+		when: w_ 'call getChanges'
 		underTest.processForChanges('DigitalBanking', testcase, teamMap) { 
 			key, item -> }
 
-		then: 'ensure change data'
+		then: t_ null
 		true
 	}
 	def 'getChanges main flow with configuration data'() {
-		given: 'Plan data'
+		given: g_ 'setup of configuration data'
 		//Plan data
 		def configuration = dataGenerationService.generate('/testdata/configurationT.xml')
 
-		and: 'team map'
+		and: a_ 'setup team map'
 		//Team map
 		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
 		def teamMap = [:]
@@ -136,16 +136,16 @@ class ClmTestItemManagementServiceSpec extends Specification {
 
 		}
 
-		when: 'call method under test (getChanges).'
+		when: w_ 'call method under test (getChanges).'
 		underTest.processForChanges('DigitalBanking', configuration, teamMap) { 
 			key, item -> }
 
-		then: 'ensure change data'
+		then: t_ null
 		true
 	}
 
 	def 'getChanges main flow with execution result data'() {
-		given: 'Result data'
+		given: g_ 'Result data'
 		//Plan data
 		def executionresults = dataGenerationService.generate('/testdata/executionresults1.xml')
 		def erlist = executionresults.'**'.findAll { it.name() == 'executionresult' }
@@ -153,20 +153,20 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		erlist.each { item ->
 			outItems.add(item)
 		}
-		and: 'Test case data'
+		and: a_ 'Test case data'
 		def testcase = dataGenerationService.generate('/testdata/testcaseT.xml')
 
-		and: 'result map data'
+		and: a_ 'result map data'
 		def result = dataGenerationService.generate('/testdata/resultsMap.json')
 		def tcMap = [:]
 		result.'value'.each { aresult ->
 			tcMap["${aresult.testCase.id}"] = aresult
 		}
 		
-		and: 'stub call to get test case from cache'
+		and: a_ 'stub call to get test case from cache'
 		1 * cacheManagementService.getFromCache(_, _) >> dataGenerationService.generate('/testdata/testcase1.json')
 
-		and: 'team map'
+		and: a_ 'setup team map data'
 		//Team map
 		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
 		def teamMap = [:]
@@ -179,11 +179,11 @@ class ClmTestItemManagementServiceSpec extends Specification {
 
 		}
 
-		when: 'call method under test (getChanges).'
+		when: w_ 'call getChanges'
 		underTest.processForChanges('DigitalBanking', outItems[0], teamMap, tcMap, testcase) { 
 			key, item -> }
 
-		then: 'ensure change data'
+		then: t_ null
 		true
 	}
 

@@ -13,28 +13,26 @@ import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[UuidGeneratorTestConfig])
 public class UuidGeneratorTest extends Specification {
-	
+
 	@Autowired
 	UuidGenerator underTest
-	
+
 	@Test
 	def 'gen test'() {
-	
-	when:
-	def plan = underTest.gen()
-	
-	then:
-	true
-	
-	}
 
+		when: w_ 'call gen'
+		def plan = underTest.gen()
+
+		then: t_ 'No exceptions'
+		true
+	}
 }
 
 @TestConfiguration
 @Profile("test")
 class UuidGeneratorTestConfig {
 	def factory = new DetachedMockFactory()
-	
+
 	@Bean
 	UuidGenerator underTest() {
 		return new UuidGenerator()

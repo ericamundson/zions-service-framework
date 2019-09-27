@@ -41,11 +41,11 @@ public class MbFilterSpecTest extends Specification {
 	
 	@Test
 	def 'filter success flow '() {
-		given:
+		given: g_ 'work item query xml'
 		def xmlWorkItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
-		when:
+		when: w_ 'call filter'
 		def result = underTest.filter(xmlWorkItems)
-		then:
+		then: t_ null
 		result != null
 		println xmlWorkItems
 		println '---------------------------------------'

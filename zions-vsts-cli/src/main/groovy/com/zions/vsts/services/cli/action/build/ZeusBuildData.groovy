@@ -146,7 +146,7 @@ class ZeusBuildData implements CliAction {
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()
 		o << "my.version=${releaseId}${sep}"
-		o << "change.request=${changeRequest}${sep}"
+		o << "change.request={{change.request}}${sep}"
 		String affiliatesStr = affiliatesList.join(',')
 		o << "global.affiliates.list=${affiliatesStr}${sep}"
 		if (wis.size() > 0) {
@@ -164,6 +164,10 @@ class ZeusBuildData implements CliAction {
 			File od = new File(outRepoDir)
 			if (!od.exists()) {
 				od.mkdir()
+			}
+			if (fListSet.isEmpty()) {
+				log.error('No files set for update! No new changes.')
+				System.exit(1)
 			}
 			fListSet.each { String iName ->
 				String fName = "/${iName}"

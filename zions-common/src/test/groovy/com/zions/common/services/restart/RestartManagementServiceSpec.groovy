@@ -28,36 +28,36 @@ class RestartManagementServiceSpec extends Specification {
 	TestQueryHandler testQueryHandler
 
 	def 'processPhases happy path'() {
-		given: 'stub check point selection'
+		given: g_ 'stub check point selection'
 		Checkpoint cp = new Checkpoint([checkpointId: 0, pageUrl: 'http://theUrl', phase: 'test', logEntries:[]])
 		1 * checkpointManagementService.selectCheckpoint(_) >> cp
 		
-		and: 'stub checkpoint management service addCheckpoint'
-		1 * checkpointManagementService.addCheckpoint(_, _)
+//		and: a_ 'stub checkpoint management service addCheckpoint'
+//		1 * checkpointManagementService.addCheckpoint(_, _)
 
-		and: 'stub query handler getItems'
+		and: a_ 'stub query handler getItems'
 		1 * testQueryHandler.getItems() >> [url: 'https://stuff']
 		
-		and: 'stub query handler initialUrl'
+		and: a_ 'stub query handler initialUrl'
 		1 * testQueryHandler.initialUrl() >> 'http://notit'
 		
-		and: 'stub query handler getPageUrl to match checkpoint returns url'
+		and: a_ 'stub query handler getPageUrl to match checkpoint returns url'
 		1 * testQueryHandler.getPageUrl() >> 'http://theUrl'
 		
-		and: 'stub query handler nextPage'
+		and: a_ 'stub query handler nextPage'
 		1 * testQueryHandler.nextPage() >> [[entry:[stuff:'stuff']]]
 		
-		and: 'stub checkpoint management service addCheckpoint'
+		and: a_ 'stub checkpoint management service addCheckpoint'
 		1 * checkpointManagementService.addCheckpoint(_, _)
 		
-		and: 'stub query handler getPageUrl'
+		and: a_ 'stub query handler getPageUrl'
 		1 * testQueryHandler.getPageUrl() >> null
 		
 		
-		and: 'stub query handler nextItems to return null'
+		and: a_ 'stub query handler nextItems to return null'
 		1 * testQueryHandler.nextPage() >> null
 		
-		when: 'call method under test (processPhases)'
+		when: w_ 'call method under test (processPhases)'
 		boolean flag = true
 		try {
 			underTest.processPhases { phase, items -> 
@@ -66,7 +66,7 @@ class RestartManagementServiceSpec extends Specification {
 		} catch (e) {
 			flag = false
 		}
-		then:
+		then: t_ "Success == ${flag}"
 		flag
 	}
 

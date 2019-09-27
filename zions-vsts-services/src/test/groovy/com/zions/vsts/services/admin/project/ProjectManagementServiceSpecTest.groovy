@@ -26,120 +26,120 @@ class ProjectManagementServiceSpecTest extends Specification {
 	IGenericRestClient genericRestClient
 	
 	def 'getProject call with project result'() {
-		given: 'stub azure devops project request'
+		given: g_ 'stub azure devops project request'
 		// get stub data from testdata folder
 		String json = this.getClass().getResource('/testdata/project.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
 		1 * genericRestClient.get(_) >> out
 		
-		when: 'make call under test'
+		when: w_ 'make call under test'
 		def result = underTest.getProject("", "DigitalBanking")
 		
-		then:
+		then: t_ "result.id == '76e58233-44a1-4241-8d2c-09db3fbca66d'"
 		"${result.id}" == '76e58233-44a1-4241-8d2c-09db3fbca66d'
 	}
 	
 	def 'getProject call with project not found result'() {
-		given: 'stub azure devops project request'
+		given: g_ 'stub azure devops project request'
 		1 * genericRestClient.get(_) >> null
 		
-		when: 'make call under test'
+		when: w_ 'make call under test'
 		def result = underTest.getProject("", "noproject")
 		
-		then:
+		then: t_ null
 		result == null
 	}
 	
 	def 'getProjectProperties with real data result'() {
-		given: 'stub azure devops project request'
+		given: g_ 'stub azure devops project request'
 		1 * genericRestClient.get(_) >> [id: 'umsdflku48', url: 'http://dev.azure.com/uuu/project', name: 'project']
 		
-		and: 'stub azure devops project properties request'
+		and: a_ 'stub azure devops project properties request'
 		//get stub data
 		String json = this.getClass().getResource('/testdata/projectproperties.json').text
 		JsonSlurper js = new JsonSlurper()
 		def result = js.parseText(json)
 		1 * genericRestClient.get(_) >> result
 		
-		when: 'make call under test'
+		when: w_ 'make call under test'
 		def r = underTest.getProjectProperties("", 'project')
 		
-		then:
+		then: t_ "r.count == 9"
 		"${r.count}" == '9'
 	}
 	
 	def 'getProjectProperty with real data result and return value'() {
-		given: 'stub azure devops project request'
+		given: g_ 'stub azure devops project request'
 		1 * genericRestClient.get(_) >> [id: 'umsdflku48', url: 'http://dev.azure.com/uuu/project', name: 'project']
 		
-		and: 'stub azure devops project properties request'
+		and: a_ 'stub azure devops project properties request'
 		//get stub data
 		String json = this.getClass().getResource('/testdata/projectproperties.json').text
 		JsonSlurper js = new JsonSlurper()
 		def result = js.parseText(json)
 		1 * genericRestClient.get(_) >> result
 		
-		when: 'make call under test'
+		when: w_ 'make call under test'
 		String value = underTest.getProjectProperty("", 'project', 'System.CurrentProcessTemplateId')
 		
-		then:
+		then: t_ 'value == 339c195b-294c-4367-980b-870119d48b93'
 		"${value}" == '339c195b-294c-4367-980b-870119d48b93'
 	}
 		
 	def 'getProjectProperty with real data result'() {
-		given: 'stub azure devops project request'
+		given: g_ 'stub azure devops project request'
 		1 * genericRestClient.get(_) >> [id: 'umsdflku48', url: 'http://dev.azure.com/uuu/project', name: 'project']
 		
-		and: 'stub azure devops project properties request'
+		and: a_ 'stub azure devops project properties request'
 		//get stub data
 		String json = this.getClass().getResource('/testdata/projectproperties.json').text
 		JsonSlurper js = new JsonSlurper()
 		def result = js.parseText(json)
 		1 * genericRestClient.get(_) >> result
 		
-		when: 'make call under test'
+		when: w_ 'make call under test'
 		String value = underTest.getProjectProperty("", 'project', 'unknown')
 		
-		then:
+		then: t_ null
 		value == null
 	}
 
 	def 'getTeam with real data result'() {
-		given: 'stub azure devops team request'
+		given: g_ 'stub azure devops team request'
 		//get stub data
 		String teamjson = this.getClass().getResource('/testdata/projectteam.json').text
 		JsonSlurper js = new JsonSlurper()
 		def teamresult = js.parseText(teamjson)
 		1 * genericRestClient.get(_) >> teamresult
 		
-		when: 'make call under test'
+		when: w_ 'make call under test'
 		def team = underTest.getTeam("", 'DigitalBanking', 'OB')
 		
-		then:
+		then: t_ "team.name == OB"
 		"${team.name}" == 'OB'
 	}
 	
 	def 'ensureTeam test with null team return'() {
-		given: 'stub azure devops team request and return null for no team'
+		given: g_ 'stub azure devops team request and return null for no team'
 		//get stub data
 		1 * genericRestClient.get(_) >> null
 		
-		and: 'stub request to create new team'
+		and: a_ 'stub request to create new team'
 		String teamjson = this.getClass().getResource('/testdata/projectteam.json').text
 		JsonSlurper js = new JsonSlurper()
 		def teamresult = js.parseText(teamjson)
 		1 * genericRestClient.post(_) >> teamresult
 		
-		when: 'make call under test'
+		when: w_ 'make call under test'
 		def team = underTest.ensureTeam("", 'DigitalBanking', 'OB')
 		
-		then:
+		then: t_ "team.name == OB"
 		"${team.name}" == 'OB'
 	}
 	
 	def 'ensureTeam test with good return'() {
-		given: 'stub azure devops team request and return a team'
+		given: g_ 'stub azure devops team request and return a team'
 		//get stub data
 		String teamjson = this.getClass().getResource('/testdata/projectteam.json').text
 		JsonSlurper js = new JsonSlurper()
@@ -147,10 +147,10 @@ class ProjectManagementServiceSpecTest extends Specification {
 		1 * genericRestClient.get(_) >> teamresult
 		
 		
-		when: 'make call under test'
+		when: w_ 'make call under test'
 		def team = underTest.ensureTeam("", 'DigitalBanking', 'OB')
 		
-		then:
+		then: t_ "team.name == OB"
 		"${team.name}" == 'OB'
 	}
 	

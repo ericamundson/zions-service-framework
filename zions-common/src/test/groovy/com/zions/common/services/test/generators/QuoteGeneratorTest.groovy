@@ -27,10 +27,10 @@ public class QuoteGeneratorTest extends Specification {
 	
 		underTest.setLength(5)
 		
-		when:
+		when: w_ 'call init'
 		def plan = underTest.init()
 		
-		then:
+		then: t_ 'No exceptions'
 		true
 	}
 	
@@ -40,20 +40,19 @@ public class QuoteGeneratorTest extends Specification {
 	
 		underTest.setLength(0)
 		
-		when:
+		when: w_ 'call gen'
 		def plan = underTest.gen()
 		
-		then:
+		then: t_ null
 		true
 	}
 	
 	@Test
 	def 'gen exception flow' () {
-		given:
-		when:
+		when: w_ 'call gen'
 		def plan = underTest.gen()
 		
-		then:
+		then: t_ null
 		true
 		
 	}

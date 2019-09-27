@@ -13,27 +13,26 @@ import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[IntegerGeneratorTestConfig])
 public class IntegerGeneratorTest extends Specification {
-	
+
 	@Autowired
 	IntegerGenerator underTest
-	
+
 	@Test
 	def 'gen test'() {
-	
-	when:
-	def plan = underTest.gen()
-	
-	then:
-	true
-}
 
+		when: w_ 'call gen'
+		def plan = underTest.gen()
+
+		then: t_ 'No exceptions'
+		true
+	}
 }
 
 @TestConfiguration
 @Profile("test")
 class IntegerGeneratorTestConfig {
 	def factory = new DetachedMockFactory()
-	
+
 	@Bean
 	IntegerGenerator underTest() {
 		return new IntegerGenerator()

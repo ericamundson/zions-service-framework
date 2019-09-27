@@ -42,53 +42,53 @@ public class BuildWITStarterTest extends Specification {
 	
 	@Test
 	def 'validate method success flow.'() {
-		given: 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: ''
+		then: t_ 'result == true'
 		result == true
 	}
 	
 	@Test
 	def 'validate method exception flow.'() {
-		given:'Stub with Application Arguments'
+		given: g_'invalid Application Arguments'
 		String[] args = ['--bb.user=user']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'execute method success flow.' () {
 		
-		given: 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 				
-		when: 'calling of method under test (execute)'
+		when: w_ 'calling of method under test (execute)'
 		def result = underTest.execute(appArgs)
 
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'buildStarterXml method success flow.' () {
 		
-		given: 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		String inFile = 'src/main/resources/wit.csv'
 		
-		when: 'calling of method under test (buildStarterXml)'
+		when: w_ 'calling of method under test (buildStarterXml)'
 		def result = underTest.buildStarterXml(inFile)
 
-		then:
+		then: t_ null
 		true
 	}
 		

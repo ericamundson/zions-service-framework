@@ -47,6 +47,7 @@ import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -75,20 +76,20 @@ class TranslateTestLinkToADOSpec extends Specification {
 	IRestartManagementService restartManagementService
 	
 	int id = 600000
-	
-
+		
+	@Ignore
 	public void 'Simulate all phases plus clean'() {
-		setup: 'TestLink stubs'
+		setup: s_ 'TestLink stubs'
 		cacheManagementService.cacheModule = 'TL'
 		restartManagementService.includePhases = 'testcase,plans,links,executions,attachments'
 		//testManagementService.cleanupTestItems('', 'IntegrationTests', "IntegrationTests\\testlink")
 		setupTestLinkStubs()
 		
-		when: 'Run all phases'
+		when: w_ 'call execute'
 		def appArgs = new DefaultApplicationArguments(loadTLArgs())
 		underTest.execute(appArgs)
 		
-		then: 'validate ADO test plans'
+		then: t_ 'result.size() = 100'
 		def result = cacheManagementService.getAllOfType(ICacheManagementService.RESULT_DATA)
 		result.size() == 100
 		

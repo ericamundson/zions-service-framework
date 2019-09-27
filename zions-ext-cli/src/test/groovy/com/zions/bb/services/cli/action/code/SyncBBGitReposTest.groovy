@@ -74,35 +74,33 @@ public class SyncBBGitReposTest extends Specification{
 		
 	@Test
 	def 'validate method success flow.'() {
-		given: "A stub of RQM get test item request"
-		
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'call validate'
 		def testPlans = underTest.validate(appArgs)
 		
-		then: ''
+		then: t_ 'No exceptions'
 		true
 	}
 	
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given:'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'call validate'
 		def result = underTest.validate(appArgs)
 
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'execute method exception flow.'() {
 		
-		given:'Stub with Application Arguments'
+		given:g_ 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
@@ -111,18 +109,18 @@ public class SyncBBGitReposTest extends Specification{
 		def test = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects_lastpage_false.json').text)
 		1 * bBGenericRestClient.get(_) >> test
 		
-		and:
+		and: a_ 'stub importRepoDir'
 		def dummy =[]
 		codeManagmentService.importRepoDir(_, _, _, _, _, _) >> dummy
 		
-		and:
+		and: a_ 'stub ensureTeamToRepo'
 		def dummy1 =[]
 		permissionsManagementService.ensureTeamToRepo(_, _, _, _, _) >> dummy1
 					
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then:
+		then: t_ null
 		true
 		
 	}

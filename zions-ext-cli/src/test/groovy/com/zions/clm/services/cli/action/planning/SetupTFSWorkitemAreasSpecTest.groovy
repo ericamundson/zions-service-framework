@@ -68,59 +68,59 @@ public class SetupTFSWorkitemAreasSpecTest extends Specification {
 	
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: 'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password', 
 			'--ccm.projectArea=project_area', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser', 
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas' ]
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then: ''
+		then: t_ null
 		result == true
 	}
 	
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given:'Stub with Application Arguments'
+		given: g_ 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'execute ApplicationArguments success flow.' () {
-		given: 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password',
 			'--ccm.projectArea=project_area', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser',
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas', '--tfs.collection=collection' ]
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: 'Stub with project data'
+		and: a_ 'Stub with project data'
 		def theProject = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		projectManagementService.getProject(_, _) >> theProject
 		
-		and:
+		and: a_ 'stub planManagementService.getCategories(_,_)'
 		def areaData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/areadata.json').text)
 		planManagementService.getCategories(_,_)  >> areaData
 		
-		and:
+		and: a_ 'stub other data processing calls'
 		def tfsAreaData 
 		areasManagementService.getAreaData(_,_) >> tfsAreaData
 		areasManagementService.processAreasData(_, _, _, _, _)
 		areasManagementService.assignTeamAreas(_, _, _)
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (execute)'
 		def result = underTest.execute(appArgs)
 		
-		then:
+		then: t_ 'result == null'
 		result == null
 	}
 

@@ -48,7 +48,7 @@ class CcmWorkManagementServiceSpec extends Specification {
 
 
 	def 'Get ADO work item changes from CCM work items'() {
-		setup: 'a set of ccm work items of various types'
+		setup: s_ 'a set of ccm work items of various types'
 		genericRestClient.get(_) >> {
 			return null
 		}		
@@ -58,7 +58,7 @@ class CcmWorkManagementServiceSpec extends Specification {
 		def translateMap = dataGenerationService.generate('/testdata/getTranslateMapping.json')
 		def queryData = dataGenerationService.generate('/testdata/mbworkitemquery.xml')
 		
-		when: 'get ADO changes for CCM work items'
+		when: w_ 'get ADO changes for CCM work items'
 		def adoWIChangeList = []
 		queryData.workItem.each { wi ->
 			String sid = "${wi.id.text()}"
@@ -67,12 +67,12 @@ class CcmWorkManagementServiceSpec extends Specification {
 			
 		}
 		
-		then: 'validate set of ADO changes'
+		then: t_ 'validate set of ADO changes'
 		true
 	}
 	
 	def 'Get ADO work item link changes from CCM work item link relationships'() {
-		setup: 'a set of ccm work items of various types'
+		setup: s_ 'a set of ccm work items of various types'
 		genericRestClient.get(_) >> {
 			return null
 		}
@@ -82,7 +82,7 @@ class CcmWorkManagementServiceSpec extends Specification {
 		def translateMap = dataGenerationService.generate('/testdata/getTranslateMapping.json')
 		def queryData = dataGenerationService.generate('/testdata/mbworkitemquery.xml')
 
-		when: 'get ADO link changes for CCM work items'
+		when: w_ 'get ADO link changes for CCM work items'
 		queryData.workItem.each { wi ->
 			String sid = "${wi.id.text()}"
 			def changes = underTest.getWIChanges(sid, clmProjectArea, translateMap, membersMap)
@@ -101,7 +101,7 @@ class CcmWorkManagementServiceSpec extends Specification {
 			
 		}
 
-		then: 'validate set of ADO link changes'
+		then: t_ 'validate set of ADO link changes'
 		true
 	}
 	

@@ -120,7 +120,7 @@ class ProjectManagementService {
 			headers: [Accept: 'application/json'],
 			query: query
 			)
-		if (result == null || !result.containsKey('id')) return null;
+		//if (result == null || !result.containsKey('id')) return null;
 		return result
 	}
 

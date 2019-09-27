@@ -41,22 +41,22 @@ class ClmTestAttachmentManagementServiceSpec extends Specification {
 
 
 	def 'cacheTestItemAttachments main flow'() {
-		given: 'Stub of clmTestManagementService getContent call'
+		given: g_ 'Stub of clmTestManagementService getContent call'
 		String encodedStuff = "Here's some text".bytes.encodeBase64()
 		ByteArrayInputStream s = new ByteArrayInputStream("Here's some text".bytes)
 		1 * clmTestManagementService.getContent(_) >> [filename: 'file.txt', data: s]
 		
-		and: 'Stub of cache management service save binary'
+		and: a_ 'Stub of cache management service save binary'
 		File sFile = new File('stuff.txt')
 //		def os = sFile.newDataOutputStream()
 //		os << "Here's some text"
 //		os.close()
 		1 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> sFile
 		
-		and: 'test plan with single attachment'
+		and: a_ 'test plan with single attachment'
 		def titem = dataGenerationService.generate('/testdata/testplanT.xml')
 		
-		when: 'Calling method under test cacheTestItemAttachments'
+		when: w_ 'Calling method under test cacheTestItemAttachments'
 		boolean success = true
 		try {
 			underTest.cacheTestItemAttachments(titem)
@@ -64,29 +64,29 @@ class ClmTestAttachmentManagementServiceSpec extends Specification {
 			success = false
 		}
 		
-		then: 'ensure success'
+		then: t_ 'ensure success'
 	}
 	
 	def 'cacheTestCaseAttachments main flow'() {
-		given: 'Stub of clmTestManagementService getContent call'
+		given: g_ 'Stub of clmTestManagementService getContent call'
 		String encodedStuff = "Here's some text".bytes.encodeBase64()
 		ByteArrayInputStream s = new ByteArrayInputStream("Here's some text".bytes)
 		2 * clmTestManagementService.getContent(_) >> [filename: 'stuff.txt', data: s]
 		
-		and: 'Stub of cache management service save binary'
+		and: a_ 'Stub of cache management service save binary'
 		File sFile = new File('stuff.txt')
 //		def os = sFile.newDataOutputStream()
 //		os << "Here's some text"
 //		os.close()
 		2 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> sFile
 		
-		and: 'test case with single attachment'
+		and: a_ 'test case with single attachment'
 		def titem = dataGenerationService.generate('/testdata/testcaseT.xml')
 		
-		and: 'Stub return of test script' 
+		and: a_ 'Stub return of test script' 
 		1 * clmTestManagementService.getTestItem(_) >> dataGenerationService.generate('/testdata/testscriptT.xml')
 		
-		when: 'Calling method under test cacheTestItemAttachments'
+		when: w_ 'Calling method under test cacheTestItemAttachments'
 		boolean success = true
 		try {
 			underTest.cacheTestCaseAttachments(titem)
@@ -94,7 +94,7 @@ class ClmTestAttachmentManagementServiceSpec extends Specification {
 			success = false
 		}
 		
-		then: 'ensure success'
+		then: t_ 'ensure success'
 
 	}
 
