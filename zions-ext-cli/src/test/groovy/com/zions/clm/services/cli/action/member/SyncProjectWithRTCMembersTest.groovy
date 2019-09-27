@@ -43,44 +43,45 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given:'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'validate method success flow.'() {
 		
-		given: 'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: ''
+		then: t_ 'result == true'
 		result == true
 	}
 	
 	@Test
 	def 'execute method success flow.' () {
 		
-		given: 'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
+		and: a_ 'stub rest call for test plans'
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/ccmworkitemtype.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
-		when: 'calling of method under test (execute)'
+		when: w_ 'call execute'
 		def result = underTest.execute(appArgs)
 
-		then:
+		then: t_ 'result == null'
 		result == null
 	}
 	
@@ -91,10 +92,10 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 		def teamInfo = new XmlSlurper().parseText(getClass().getResource('/testdata/testmember.xml').text)
 		def map = new JsonSlurper().parseText(getClass().getResource('/testdata/mbteamnamemap.json').text)
 				
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.rebuildMemberData(teamInfo,map)
 
-		then:
+		then: t_ null
 		true
 	}
 	

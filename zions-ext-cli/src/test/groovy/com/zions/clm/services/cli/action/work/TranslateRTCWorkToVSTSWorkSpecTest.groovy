@@ -116,88 +116,88 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 	
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: 'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs('./src/test/resources/testdata/OBWITMapping.xml'))
 
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: ''
+		then: t_ null
 		result == true
 	}
 	
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given:'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'execute ApplicationArguments exception flow.' () {
-		given: 'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then: ''
+		then: t_ 'thrown FileNotFoundException'
 		thrown FileNotFoundException
 	}
 	
 	@Test
 	def 'execute ApplicationArguments Exception flow.' () {
-		given: 'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs('./src/test/resources/testdata/OBWITMapping.xml'))
 		
-		and:
+		and: a_ 'stub processTemplateService.updateWorkitemTemplates'
 		def workItems = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
 		processTemplateService.updateWorkitemTemplates(_, _, _, _) >> workItems
 		
-		and:
+		and: a_ 'stub clmWorkItemManagementService.getWorkItemsViaQuery'
 		def wititems = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
 		QueryTracking qt = new QueryTracking()
 		qt.doData(wititems)
 		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> wititems
 		
-		and:
+		and: a_ 'stub workManagementService.refreshCache'
 		def wiwChanges  = [value: ["{\"id\":\"123\", \"somejson\": \"morejson\"}"]]
 		workManagementService.refreshCache(_, _, _) >> wiwChanges
 		
-		and:
+		and: a_ 'stub processTemplateService.getTranslateMapping'
 		def translateMapping = new JsonSlurper().parseText(this.getClass().getResource('/testdata/processfields.json').text)
 		processTemplateService.getTranslateMapping(_, _, _, _)
 		
-		and:
+		and: a_ 'stub memberManagementService.getProjectMembersMap'
 		def memberMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/teammembers.json').text)
 		memberManagementService.getProjectMembersMap(_, _) >> memberMap
 		
-		and:
+		and: a_ 'stub ccmWorkManagementService.getWIChanges'
 		def wicChanges  = [value: ["{\"id\":\"123\", \"somejson\": \"morejson\"}"]]
 		ccmWorkManagementService.getWIChanges(_, _, _, _) >> wicChanges
 		
-		and:
+		and: a_ 'stub attachmentsManagementService.cacheWorkItemAttachments'
 		def files = [new File('text1.txt'), new File('text1.txt')]
 		attachmentsManagementService.cacheWorkItemAttachments(_) >> files
 		
-		and:
+		and: a_ 'stub fileManagementService.ensureAttachments'
 		def idMap = [source:"Default", value:"Something"]
 		def wiChanges = []
 		wiChanges.add(idMap)
 		fileManagementService.ensureAttachments(_, _, _, _) >> wiChanges
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then: ''
+		then: t_ 'thrown NullPointerException'
 		thrown NullPointerException
 	}
 	

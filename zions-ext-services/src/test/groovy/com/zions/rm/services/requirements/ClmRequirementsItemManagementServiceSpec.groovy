@@ -62,11 +62,11 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 	 */
 	@Ignore
 	def 'Main flow for module with related artifacts while testing ADO change data processing'() {
-		setup: "Setup a module and module's related artifacts"
+		setup: s_ "Setup a module and module's related artifacts"
 		setupModuleAndRelatedArtifactData()
 		cacheManagementService.cacheModule = 'RM'
 		
-		when: 'Run behavior to get changes for module and related artifacts'
+		when: w_ 'Run behavior to get changes for module and related artifacts'
 		String murl = "https://clm.cs.zionsbank.com/rm/resources/_frOPQFDzEeWblrEplHqOHQ"
 		def module = clmRequirementsManagementService.getModule(murl, false)
 		def memberMap = [:]
@@ -98,7 +98,7 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 			}
 		})
 		
-		then: 'Validate module and related artifact changes'
+		then: t_ 'mchanges != null && artifactChanges.size() == 191'
 		mchanges != null && artifactChanges.size() == 191
 		
 	}

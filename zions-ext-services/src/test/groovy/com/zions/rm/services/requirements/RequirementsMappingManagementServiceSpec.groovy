@@ -19,12 +19,12 @@ class RequirementsMappingManagementServiceSpec extends Specification {
 	RequirementsMappingManagementService underTest
 	
 	def 'Main flow for getMappingData'() {
-		setup: 'Nothing required'
+		setup: s_ 'Nothing required'
 		
-		when: 'Call getMappingData'
+		when: w_ 'Call getMappingData'
 		def map = underTest.getMappingData()
 		
-		then: 'Validate map'
+		then: t_ 'map.size() == 3'
 		map.size() == 3
 	}
 

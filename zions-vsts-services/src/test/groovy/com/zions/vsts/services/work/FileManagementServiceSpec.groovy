@@ -33,17 +33,17 @@ class FileManagementServiceSpec extends Specification {
 	ICacheManagementService cacheManagementService
 
 	def 'ensureAttachments main flow'() {
-		given: 'stub for WorkManagementService getCacheWI call'
+		given: g_ 'stub for WorkManagementService getCacheWI call'
 		def wiData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/cacheworkitem.json').text)
 		1 * cacheManagementService.getFromCache(_,_) >> wiData
 		
-		and: 'stub for upload attachment rest request'
+		and: a_ 'stub for upload attachment rest request'
 		1 * genericRestClient.rateLimitPost(_, _) >> [url: 'https://an.azure.location']
 		
-		when: 'call method under test ensureAttachments'
+		when: w_ 'call method under test ensureAttachments'
 		def wiUpdate = underTest.ensureAttachments('', '', 'aId', [[file: new File('dumb.png'), comment: "Added dumb.png"]])
 		
-		then: 'a valid work item change request must be returned.'
+		then: t_ 'a valid work item change request must be returned.'
 		wiUpdate.body.size() > 1
 	}
 

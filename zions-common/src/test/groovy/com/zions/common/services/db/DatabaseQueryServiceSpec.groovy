@@ -25,10 +25,10 @@ class DatabaseQueryServiceSpec extends Specification {
 	IDatabaseQueryService databaseQueryService
 
 	def 'Run db test with paging'() {
-		setup: 'Setup data'
+		setup: s_ 'Setup data'
 		setupDbData()
 		
-		when:  'call query and paging calls'
+		when: w_  'call query and paging calls'
 		boolean flag = true
 		log.info 'JVM Languages:'
 		def page = databaseQueryService.query('select * from languages')
@@ -44,10 +44,10 @@ class DatabaseQueryServiceSpec extends Specification {
 			page = databaseQueryService.nextPage()
 			if (!page) break;
 		}
-		then: 'validate query with no parms'
+		then: t_ 'validate query with no parms'
 		iUrl == 'select * from languages/11/5'
 		
-		when:'Run query with parms'
+		when: w_'Run query with parms'
 		log.info 'With parm JVM Languages:'
 		page = databaseQueryService.query("select * from languages where name = :name", [name: 'Groovy'])
 		iUrl = databaseQueryService.initialUrl()
@@ -62,10 +62,10 @@ class DatabaseQueryServiceSpec extends Specification {
 			page = databaseQueryService.nextPage()
 			if (!page) break;
 		}
-		then: 'validate query with parms'
+		then: t_ 'validate query with parms'
 		iUrl == 'select * from languages where name = :name/6/5'
 		
-		cleanup:
+		cleanup: c_ 'Cleanup db data'
 		cleanDbData()
 	}
 	

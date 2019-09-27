@@ -59,7 +59,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 	/*
 	@Test
 	def 'ensureReleases with getRelease successflow' () {
-		given:
+		given: g_
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
@@ -68,31 +68,31 @@ class ReleaseManagementServiceSpecTest extends Specification {
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		projectManagementService.getProject(_, _, _) >> project
 		//def template = new JsonSlurper().parseText(this.getClass().getResource('/testdata/templates.json').text)
-		and:
+		and: a_
 		def team = new JsonSlurper().parseText(this.getClass().getResource('/testdata/teammembers.json').text)
 		
-		and:
+		and: a_
 		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/testrepos.json').text)
 		codeManagementService.getRepos(_, _, _) >> repos
 		
-		and:
+		and: a_
 		genericRestClient.getTfsUrl() >> "visualstudio"
 		
-		when:
+		when: w_
 		def result = underTest.ensureReleases("visualstudioz", "DigitalBanking", '', '', '', team)
 		
-		then:
+		then: t_
 		result != null
 	}
 	
 	@Test
 	def 'ensureReleases with createRelease successflow' () {
-		given:
+		given: g_
 		//8 * genericRestClient.get(_) >> null
-		//and:
+		//and: a_
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		projectManagementService.getProject(_, _, _) >> project
-		and:
+		and: a_
 		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/testrepos.json').text)
 		codeManagementService.getRepos(_, _, _) >> repos
 		
@@ -100,35 +100,35 @@ class ReleaseManagementServiceSpecTest extends Specification {
 		def teamData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/projectteam.json').text)
 		memberManagementService.getTeam(_,_,_) >> teamData
 		
-		and:
+		and: a_
 		def buildDef = new JsonSlurper().parseText(this.getClass().getResource('/testdata/singlebuilddefination.json').text)
 		buildManagementService.getBuild(_, _, _) >> buildDef
 		
-		and:
+		and: a_
 		def endpoint = new JsonSlurper().parseText(this.getClass().getResource('/testdata/serviceendpoints.json').text)
 		endpointManagementService.getServiceEndpoint(_,_,_) >> endpoint
 		
-		and:
+		and: a_
 		genericRestClient.getTfsUrl() >> "visualstudio"
 		def artifacts = [:]
 		def template = new JsonSlurper().parseText(this.getClass().getResource('/testdata/singletemplate.json').text)
 		//template << artifacts
-		when:
+		when: w_
 		def result = underTest.ensureReleases("visualstudioz", "DigitalBanking", template, '', '', team)
 		
-		then:
+		then: t_
 		result != null
 	}
 	
 	@Test
 	def 'ensureReleaseFolder success flow' () {
-		given:
+		given: g_
 		genericRestClient.getTfsUrl() >> "visualstudio"
 		
-		when:
+		when: w_
 		def result = underTest.ensureReleaseFolder('', 'DigitalBanking','C\\test\\folder')
 		
-		then:
+		then: t_
 		result != null
 	}
 	*/

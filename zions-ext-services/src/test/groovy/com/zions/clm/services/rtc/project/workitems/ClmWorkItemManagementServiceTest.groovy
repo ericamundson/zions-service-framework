@@ -28,39 +28,39 @@ public class ClmWorkItemManagementServiceTest extends Specification {
 	ClmWorkItemManagementService underTest
 	
 	def 'getWorkItemHistory success flow.'() {
-		given: "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testplansquery.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
-		when: 'calling of method under test (getTestPlansViaQuery)'
+		when: w_ 'calling of method under test (getTestPlansViaQuery)'
 		def testPlans = underTest.getWorkItemHistory(22657)
 		
-		then: 'validate list of plans'
+		then: t_ 'validate list of plans'
 		testPlans.entry.size() > 0
 	}
 	
 	def 'getWorkItemsViaQuery success flow.'() {
-		given: "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testplansquery.xml').text)
 		
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
-		when: 'calling of method under test (getTestPlansViaQuery)'
+		when: w_ 'calling of method under test (getTestPlansViaQuery)'
 		def data = underTest.getWorkItemsViaQuery('')
 		
-		then: 'validate list of plans'
+		then: t_ 'validate list of plans'
 		data.entry.size() > 0
 	}
 	
 	def 'getNextPage success flow.'() {
-		given: "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/nextpage.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
-		when: 'calling of method under test (getNextPage)'
+		when: w_ 'calling of method under test (getNextPage)'
 		def data  = underTest.nextPage('https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan?token=_TJVcwOKdEeirC8bfvJTPjw&amp;page=1')
 		
-		then: 'validate list of plans'
+		then: t_ 'validate list of plans'
 		data.entry.size() > 0
 	}
 

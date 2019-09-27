@@ -47,15 +47,15 @@ public class ExtractQmMetadataSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: 'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: ''
+		then: t_ null
 		result == true
 	}
 
@@ -76,10 +76,10 @@ public class ExtractQmMetadataSpecTest extends Specification {
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 
@@ -88,13 +88,13 @@ public class ExtractQmMetadataSpecTest extends Specification {
 		given: 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs())
 
-		and:
+		and: a_ null
 		qmMetadataManagementService.extractQmMetadata(_, _) >> "<a1>some meta<a1>"
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then:
+		then: t_ 'result = null'
 		result == null
 	}
 }

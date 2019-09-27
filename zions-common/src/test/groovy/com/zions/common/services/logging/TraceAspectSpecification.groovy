@@ -24,16 +24,16 @@ class TraceAspectSpecification extends Specification {
 	SomeTraceNoLoggerClass someTraceNoLoggerClass
 	
 	def 'Main flow for tracing log'() {
-		setup: 'class to be logged'
+		setup: s_ 'class to be logged'
 		
-		when: 'execute something with class testing log'
+		when: w_ 'execute something with class testing log'
 		someTraceClass.methodOne()
 		someTraceClass.methodTwo()
 		
 		someTraceNoLoggerClass.methodOne()
 		someTraceNoLoggerClass.methodTwo()
 		
-		then: 'validate something logged'
+		then: t_ 'No exceptions'
 		true
 	}
 

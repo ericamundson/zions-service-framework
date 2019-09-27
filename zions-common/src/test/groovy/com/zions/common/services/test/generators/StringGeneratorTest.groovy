@@ -13,27 +13,26 @@ import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[StringGeneratorTestConfig])
 public class StringGeneratorTest extends Specification {
-	
+
 	@Autowired
 	StringGenerator underTest
-	
+
 	@Test
 	def 'gen test'() {
-	
-	when:
-	def plan = underTest.gen()
-	
-	then:
-	true
-}
 
+		when: w_ 'call gen'
+		def plan = underTest.gen()
+
+		then: t_ 'No exceptions'
+		true
+	}
 }
 
 @TestConfiguration
 @Profile("test")
 class StringGeneratorTestConfig {
 	def factory = new DetachedMockFactory()
-	
+
 	@Bean
 	StringGenerator underTest() {
 		return new StringGenerator()

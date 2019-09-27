@@ -67,30 +67,30 @@ public class SetupTFSWorkitemIterationsSpecTest extends Specification {
 	
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: 'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password', 
 			'--ccm.projectArea=project_area', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser', 
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas' ]
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then: ''
+		then: t_ 'result == true'
 		result == true
 	}
 	
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given:'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 	
@@ -102,24 +102,28 @@ public class SetupTFSWorkitemIterationsSpecTest extends Specification {
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas' ]
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: 'Stub with project data'
+		and: a_ 'Stub with project data'
 		def theProject = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		projectManagementService.getProject(_, _) >> theProject
 		
-		and:
+		and: a_ 'stub getIterations'
 		def iterationData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/iteration.json').text)
 		planManagementService.getIterations(_,_) >> iterationData
 		
-		and:
+		and: a_ 'stub getIterationData'
 		def tfsIterationData
 		iterationManagementService.getIterationData(_, _) >> tfsIterationData
+		
+		and: a_ 'stub processIterationData'
 		iterationManagementService.processIterationData(_,_,_,_,_)
+		
+		and: a_ 'stub ensureTeamsIterations'
 		iterationManagementService.ensureTeamsIterations(_,_,_,_)
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 		
-		then:
+		then: t_ null
 		result == null
 	}
 

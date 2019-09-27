@@ -20,35 +20,32 @@ class LoggingAspectSpecification extends Specification {
 
 	@Autowired
 	SomeClass someClass
-	
-	
-	def 'Main flow for timing log'() {
-		setup: 'class to be logged'
 
-	when: 'execute something with class testing log'
-	someClass.methodOne()
-	someClass.methodTwo()
-	
-	then: 'validate something logged'
-	true
-	}
-	
-	@Autowired
-	SomeClass2 someClass2
-	
-	def 'Flow for class without Slf4j annotation'() {
-		setup: 'class to be logged'
-		
-		when: 'execute something with class testing log'
-		someClass2.methodOne()
-		someClass2.methodTwo()
-		
-		then: 'validate something logged'
+
+	def 'Main flow for timing log'() {
+		setup: s_ 'class to be logged'
+
+		when: w_ 'execute something with class testing log'
+		someClass.methodOne()
+		someClass.methodTwo()
+
+		then: t_ 'validate something logged'
 		true
 	}
- 
 
+	@Autowired
+	SomeClass2 someClass2
 
+	def 'Flow for class without Slf4j annotation'() {
+		setup: s_ 'class to be logged'
+
+		when: w_ 'execute something with class testing log'
+		someClass2.methodOne()
+		someClass2.methodTwo()
+
+		then: t_ 'No exceptions'
+		true
+	}
 }
 
 
@@ -57,51 +54,46 @@ class LoggingAspectSpecification extends Specification {
 @ComponentScan(["com.zions.common.services.logging"])
 @PropertySource("classpath:test.properties")
 class LoggingAspectSpecificationConfig {
-	
+
 	@Bean
 	SomeClass someClass() {
 		return new SomeClass()
 	}
-	
+
 	@Bean
 	SomeClass2 someClass2() {
 		return new SomeClass2()
 	}
-	
-	
 }
 
 @Loggable
 @Slf4j
 class SomeClass {
-	
+
 	def methodOne() {
 		log.info('run methodOne')
-		
-		
 	}
-	
+
 	def methodTwo() {
 		log.info('run methodTwo')
 	}
 }
-	
+
 @Loggable
 
 
 class SomeClass2 {
-	
+
 	def methodOne() {
-		
-		
+
+
 		int  x=10, y=20;
 		/*System.out.println("Employee class");*/
 		System.out.println(x+y+" testing the aspect logging code");
-		
 	}
-	
+
 	def methodTwo() {
-		
+
 		int  x=10, y=20;
 		System.out.println(x+y+" testing the apsect logging code");
 		/*System.out.println("Employee class");*/

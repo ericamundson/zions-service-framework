@@ -21,7 +21,7 @@ class ClmGenericRestClientSpec extends Specification {
 //		
 //		ClmGenericRestClient client = new ClmGenericRestClient('https://clm.cs.zionsbank.com/rm', 'z091182', '4878Middy001')
 //		
-//		when: 'class get on client'
+//		when: w_ 'class get on client'
 //		def currentParser = client.delegate.parser.'application/xml'
 //		client.delegate.parser.'application/rdf+xml' = currentParser
 //		def response = client.get(
@@ -35,7 +35,7 @@ class ClmGenericRestClientSpec extends Specification {
 //		String xml = XmlUtil.serialize(response.data)
 //		println xml
 //		
-//		then:
+//		then: t_
 //		true
 	}
 

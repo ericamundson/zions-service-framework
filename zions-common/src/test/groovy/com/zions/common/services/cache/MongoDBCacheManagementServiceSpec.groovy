@@ -41,10 +41,10 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 
 		def result= new ByteArrayInputStream();
 
-		when: 'calling of method under test (saveBinaryAsAttachment)'
+		when: w_ 'calling of method under test (saveBinaryAsAttachment)'
 		def keyname = underTest.saveBinaryAsAttachment( result ,'','')
 		// 218-Test Plan
-		then: ''
+		then: t_ 'No failure'
 		true
 
 	}
@@ -54,11 +54,11 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: 'calling of method under test (data)'
+		when: w_ 'calling of method under test (data)'
 		def keyname = underTest.saveToCache( data ,'1',ICacheManagementService.PLAN_DATA)
 		def testplan = underTest.getFromCache( '1', 'CCM', ICacheManagementService.PLAN_DATA)
 
-		then: ''
+		then: t_ 'testplan != null'
 		testplan != null
 	}
 
@@ -67,10 +67,10 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: 'calling of method under test (getFromCache)'
+		when: w_ 'calling of method under test (getFromCache)'
 		def keyname = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
 
-		then: ''
+		then: t_ null
 		true
 	}
 }

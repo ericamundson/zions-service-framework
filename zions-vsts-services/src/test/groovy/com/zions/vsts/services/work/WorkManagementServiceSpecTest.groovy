@@ -54,71 +54,71 @@ class WorkManagementServiceSpecTest extends Specification {
 	}
 	
 	public void 'Batch call a result'() {
-		given: 'stub rateLimitPost a valid return'
+		given: g_ 'stub rateLimitPost a valid return'
 		1 * genericRestClient.rateLimitPost(_) >>  [:]
 		
-		when: 'call tested method'
+		when: w_ 'call tested method'
 		underTest.batchWIChanges('stuff', 'aproject', ['stuff'], [:])
 		
-		then:
+		then: t_ 'No failure'
 		true
 	}
 	
 	public void 'Batch call null result'() {
-		given: 'stub rateLimitPost with null return.'
+		given: g_ 'stub rateLimitPost with null return.'
 		1 * genericRestClient.rateLimitPost(_) >>  null
 		
-		when: 'Call method under test with null scenario'
+		when: w_ 'Call method under test with null scenario'
 		underTest.batchWIChanges('stuff', 'aproject', ['some stuff'], [:])
 		
-		then:
+		then: t_ 'No failure'
 		true
 	}
 
 	public void 'Batch call with more realistic data'() {
-		given: 'stub rateLimitPost with fuller data return'
+		given: g_ 'stub rateLimitPost with fuller data return'
 		1 * genericRestClient.rateLimitPost(_) >>  [value: [[body: "{\"id\":\"123\", \"somejson\": \"morejson\"}", code: 200]]]
 
-		when: 'Call method under test'
+		when: w_ 'Call method under test'
 		underTest.batchWIChanges('stuff', 'aproject', ['somestuff'], [0: '58879'])
 		
-		then:
+		then: t_ 'No exceptions'
 		true
 	}
 
 	public void 'Batch call with a failed item in batch'() {
-		given:
+		given: g_ 'stub rest call post changes with bad return'
 		1 * genericRestClient.rateLimitPost(_) >>  [value: [[body: "{\"value\": {\"Message\": \"Bad juju\"}}", code: 300]]]
-		when:
+		when: w_ 'call batchWIChanges'
 		underTest.batchWIChanges('stuff', 'aproject', ['somestuff'], [0: '58879'])
 		
-		then:
+		then: t_ null
 		true
 	}
 
 	public void 'refreshCache call with a failed item in batch'() {
-		given:
+		given: g_ 'stub call to get to refreshCache with bad item in batch'
 		1 * genericRestClient.get(_) >>  [value: ["{\"id\":\"123\", \"somejson\": \"morejson\"}"]]
-		when:
+		when: w_ 'call refreshCache'
 		underTest.refreshCache('stuff', 'aproject', ['58879'])
 		
-		then:
+		then: t_ null
 		true
 	}
 	
 	def 'clean call success flow'() {
-		given: 'setup getWorkitems stub'
+		given: g_ 'setup getWorkitems stub'
 		def workitems = new JsonSlurper().parseText(this.getClass().getResource('/testdata/workitemsquery.json').text)		
 		1 *  genericRestClient.rateLimitPost(_) >> workitems
 		1 *  genericRestClient.rateLimitPost(_) >> null
 		
-		and: 'setup deleteWorkitem stub'
+		and: a_ 'setup deleteWorkitem stub'
 		1* genericRestClient.delete(_) >> null
 		
-		when: 'call method under test (clean)'
+		when: w_ 'call method under test (clean)'
 		underTest.clean('', 'theproject', "Select [System.Id], [System.Title] From WorkItems Where ([System.WorkItemType] = 'Test Plan'  OR [System.WorkItemType] = 'Test Case') AND [System.AreaPath] = stuff")
 
-		then: 'nothing to validate'
+		then: t_ 'nothing to validate'
 		true
 	}
 	

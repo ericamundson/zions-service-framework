@@ -32,6 +32,7 @@ class CheckpointManagementServiceSpec extends Specification {
 	ICacheManagementService cacheManagementService
 
 	def 'selectCheckpoint last key'() {
+		setup: s_ 'some test checkpoints'
 		cacheManagementService.clear();
 		underTest.resetIdCounter()
 		underTest.addCheckpoint('test', 'page1')
@@ -39,14 +40,15 @@ class CheckpointManagementServiceSpec extends Specification {
 		underTest.addCheckpoint('test', 'page3')
 		underTest.addCheckpoint('test', 'page4')
 		
-		when:
+		when: w_ 'call selectCheckpoint'
 		Checkpoint cp = underTest.selectCheckpoint('last')
 		
-		then:
+		then: t_ 'cp.pageUrl == page4'
 		cp.pageUrl == 'page4'
 	}
 	
 	def 'selectCheckpoint priorToLogEntries key'() {
+		setup: s_ 'checkpoint items'
 		cacheManagementService.clear();
 		underTest.resetIdCounter()
 		underTest.addCheckpoint('test', 'page1')
@@ -56,14 +58,15 @@ class CheckpointManagementServiceSpec extends Specification {
 		underTest.addLogentry('stuff2')
 		underTest.addCheckpoint('test', 'page4')
 		
-		when:
+		when: w_ 'call selectCheckpoint with log entries'
 		Checkpoint cp = underTest.selectCheckpoint('priorToLogEntries')
 		
-		then:
+		then: t_ 'No exceptions'
 		cp.pageUrl == 'page2'
 	}
 	
 	def 'selectCheckpoint specific key'() {
+		setup: s_ 'add checkpoints'
 		cacheManagementService.clear();
 		underTest.resetIdCounter()
 		underTest.addCheckpoint('test', 'page1')
@@ -73,10 +76,10 @@ class CheckpointManagementServiceSpec extends Specification {
 		underTest.addLogentry('stuff2')
 		underTest.addCheckpoint('test', 'page4')
 		
-		when:
+		when: w_ 'call selectCheckpoint with specific key'
 		Checkpoint cp = underTest.selectCheckpoint('2-checkpoint')
 		
-		then:
+		then: t_ "cp.pageUrl == 'page3'"
 		cp.pageUrl == 'page3'
 	}
 
