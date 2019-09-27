@@ -27,14 +27,14 @@ public class CcmMemberManagementServiceTest extends Specification {
 	CcmMemberManagementService underTest
 	
 	def 'getMemberData success flow.'() {
-		given: "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/ccmworkitemtype.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
-		when: 'calling of method under test (getMemberData)'
+		when: w_ 'calling of method under test (getMemberData)'
 		def testPlans = underTest.getMemberData('project','tfsproject')
 		
-		then: ''
+		then: t_ null
 		true
 	}
 	
@@ -43,22 +43,22 @@ public class CcmMemberManagementServiceTest extends Specification {
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/workitemtype.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo*/
 		def teamInfo = new XmlSlurper().parseText(getClass().getResource('/testdata/testmember.xml').text)
-		when: 'calling of method under test (buildMemberData)'
+		when: w_ 'calling of method under test (buildMemberData)'
 		def testPlans = underTest.buildMemberData( teamInfo,'tfsproject')
 		
-		then: ''
+		then: t_ null
 		true
 	}
 	
 	def 'getNextPage success flow.'() {
-		given: "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get nextpage test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/nextpage.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
-		when: 'calling of method under test (getNextPage)'
+		when: w_ 'calling of method under test (getNextPage)'
 		def testPlans = underTest.nextPage('https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan?token=_TJVcwOKdEeirC8bfvJTPjw&amp;page=1')
 		
-		then: 'validate list of plans'
+		then: t_ 'valid list of plans'
 		testPlans.entry.size() > 0
 	}
 

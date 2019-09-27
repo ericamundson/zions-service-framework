@@ -25,14 +25,14 @@ class RollupApplicationTest extends Specification {
 	public void 'Test work send'() {
 //		File request = new File('src/test/resources/testdata/webrequest.json')
 //		String body = request.text
-//		when:
+//		when: w_
 //		def result = genericRestClient.post(
 //			contentType: ContentType.TEXT,
 //			requestContentType: ContentType.JSON,
 //			uri: 'http://localhost:8080/',
 //			body: body
 //			)
-//		then:
+//		then: t_
 //		true
 	}
 

@@ -54,15 +54,15 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: 'Stub with Application Arguments'
+		given: g_ 'valid Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: ''
+		then: t_ null
 		result == true
 	}
 
@@ -78,64 +78,41 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given:'Stub with Application Arguments'
+		given: g_ 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 
 	@Test
 	def 'execute ApplicationArguments exception flow.' () {
-		given: 'Stub with Application Arguments'
+		given: g_ 'invalid Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 		//def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)
 		
-		and:
+		and: a_ 'stub of clmWorkItemManagementService.getWorkItemsViaQuery'
 //		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
 //		QueryTracking qt = new QueryTracking()
 //		qt.doResult(workItems)
 		clmWorkItemManagementService.getWorkItemsViaQuery(_,_,_) >> {throw new  NullPointerException() }
 		//underTest.clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
 		
-		and:
 		//clmWorkItemManagementService.nextPage(_) >> workItems
 		//underTest.attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then: ''
+		then: t_ 'thrown NullPointerException'
 		thrown NullPointerException
 	}
 	
-	/*@Test
-	def 'execute ApplicationArguments success flow.' () {
-		given: 'Stub with Application Arguments'
-		String[] args = loadArgs()
-		def appArgs = new DefaultApplicationArguments(args)
-		def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)
-		
-		and:
-		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
-		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
-		//underTest.clmWorkItemManagementService.getWorkItemsViaQuery(_) >> workItems
-		
-		and:
-		//clmWorkItemManagementService.nextPage(_) >> workItems
-		//underTest.attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
-
-		when: 'calling of method under test (validate)'
-		def result = uTest.execute(appArgs)
-
-		then: ''
-		result == null
-	}*/
 }
 
 @TestConfiguration

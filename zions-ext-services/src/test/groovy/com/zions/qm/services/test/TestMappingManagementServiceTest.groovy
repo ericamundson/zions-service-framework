@@ -22,12 +22,11 @@ class TestMappingManagementServiceTest extends Specification {
 	TestMappingManagementService underTest
 
 	def 'getMappingData success flow.'() {
-		given: 'No stub.'
 		
-		when: 'calling method under test (getMappingData)'
+		when: w_ 'calling method under test (getMappingData)'
 		def mapping = underTest.getMappingData()
 		
-		then:  'validate mapping data.'
+		then: t_  'mapping.wit.size() > 0'
 		mapping.wit.size() > 0
 	}
 

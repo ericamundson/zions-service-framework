@@ -72,7 +72,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		def tItems = dataGenerationService.generate('/testdata/rmFirstQueryResult.json')
 		items.addAll(tItems)
 				
-		when: 'produce artifact data for text or non-text types'
+		when: w_ 'produce artifact data for text or non-text types'
 		int tCount = 0
 		int ntCount = 0
 		items.each { rmItem ->
@@ -101,7 +101,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		}
 
 		
-		then: 'processing has no failures and verify set of text vs non-text artifact data elements count'
+		then: t_ 'processing has no failures and verify set of text vs non-text artifact data elements count'
 		tCount > 0 || ntCount > 0
 		
 	}
@@ -115,7 +115,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		int size = moduleUris.size()
 		moduleUris.removeRange(1, size)
 		
-		when: 'Processed for module artifact details'
+		when: w_ 'Processed for module artifact details'
 		//rmGenericRestClient.outputTestDataFlag = true
 		rmGenericRestClient.outputTestDataType = 'xml'
 		rmGenericRestClient.outputTestDataPrefix = 'module'
@@ -129,7 +129,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		}
 		rmGenericRestClient.outputTestDataFlag = false
 		
-		then: 'Validate module artifacts'
+		then: t_ 'Validate module artifacts'
 		modules.size() > 0
 	}
 	
@@ -138,17 +138,17 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		setup: 'get artifact'
 		def artifact = dataGenerationService.generate('/testdata/requirementWithLinks.xml')
 		
-		when: 'determine all requirement artifact links'
+		when: w_ 'determine all requirement artifact links'
 		def links = underTest.getAllLinks('7543', new Date(), artifact.artifact)
 		
-		then: 'validate number of links are 7'
+		then: t_ 'validate number of links are 7'
 		links.size() == 7
 	}
 	
 	def 'Partial flush of query pages'() {
 		given: 'A valid data warehouse query'
 		
-		when: 'Run a partial flush of two pages of requirements artifact query'
+		when: w_ 'Run a partial flush of two pages of requirements artifact query'
 		boolean success = true
 		try {
 			underTest.flushQueries(false,2)
@@ -158,7 +158,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification {
 		}
 		def pages = cacheManagementService.getAllOfType('DataWarehouseQueryData')
 		
-		then: 'Validate no errors and there are two pages of requirements artifacts'
+		then: t_ 'Validate no errors and there are two pages of requirements artifacts'
 		success && pages.size() == 2
 		
 		cleanup:

@@ -44,88 +44,88 @@ class ClmTestManagementServiceSpecTest extends Specification {
 	ICacheManagementService cacheManagementService
 
 	def 'getTestItem success flow.'() {
-		given: "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get test item request"
 		def testcaseInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testcase.xml').text)
 		qmGenericRestClient.get(_) >> { return testcaseInfo }
 		
-		when: "calling of method under test (getTestItem)"
+		when: w_ "calling of method under test (getTestItem)"
 		String uri = 'https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/_aC9CQPfREeOd1div3hxkJQ/testcase/BS-82'
 		def testcaseData = underTest.getTestItem(uri)
 		
-		then: "validate test item"
+		then: t_ "validate test item"
 		true
 	}
 	
 	def 'getTestPlansViaQuery success flow.'() {
-		given: "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get test plans request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/testplansquery.xml').text)
 		qmGenericRestClient.get(_) >> { return testplansInfo }
 
-		when: 'calling of method under test (getTestPlansViaQuery)'
+		when: w_ 'calling of method under test (getTestPlansViaQuery)'
 		def testPlans = underTest.getTestPlansViaQuery('', 'DigitalBanking')
 		
-		then: 'validate list of plans'
+		then: t_ 'validate list of plans'
 		testPlans.entry.size() > 0
 	}
 	
 	def 'getConfigurationsViaQuery success flow.'() {
-		given: "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get configurations request"
 		def configurationsInfo = dataGenerationService.generate('/testdata/configurations.xml')
 		qmGenericRestClient.get(_) >> {
 			return configurationsInfo
 		}
 
-		when: 'calling of method under test (getConfigurationsViaQuery)'
+		when: w_ 'calling of method under test (getConfigurationsViaQuery)'
 		def configurations = underTest.getConfigurationsViaQuery('', 'DigitalBanking')
 		
-		then: 'validate list of configurations'
+		then: t_ 'validate list of configurations'
 		configurations.entry.size() > 0
 	}
 
 	def 'getNextPage success flow.'() {
-		given: "A stub of RQM get test item request"
+		given: g_ "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/nextpage.xml').text)
 		qmGenericRestClient.get(_) >> {
 			return testplansInfo
 		}
 
-		when: 'calling of method under test (getNextPage)'
+		when: w_ 'calling of method under test (getNextPage)'
 		def testPlans = underTest.nextPage('https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan?token=_TJVcwOKdEeirC8bfvJTPjw&amp;page=1')
 		
-		then: 'validate list of plans'
+		then: t_ 'validate list of plans'
 		testPlans.entry.size() > 0
 	}
 	
 	def 'getExecutionResultViaHref no execution.'() {
-		given: "A stub of RQM get execution results request"
+		given: g_ "A stub of RQM get execution results request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/executionresults.xml').text)
 		qmGenericRestClient.get(_) >> {
 			return testplansInfo
 		}
 
-		when: 'calling of method under test (getNextPage)'
+		when: w_ 'calling of method under test (getNextPage)'
 		def executionresults = underTest.getExecutionResultViaHref('123', '456', 'aproject')
 		
-		then: 'validate list of results'
+		then: t_ 'validate list of results'
 		executionresults.size() == 0
 	}
 	
 	def 'getExecutionResultViaHref success flow.'() {
-		given: "A stub of RQM get execution results request"
+		given: g_ "A stub of RQM get execution results request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/executionresults1.xml').text)
 		qmGenericRestClient.get(_) >> {
 			return testplansInfo
 		}
 
-		when: 'calling of method under test (getNextPage)'
+		when: w_ 'calling of method under test (getNextPage)'
 		def executionresults = underTest.getExecutionResultViaHref('123', '578', 'aproject')
 		
-		then: 'validate list of results'
+		then: t_ 'validate list of results'
 		executionresults.size() == 1
 	}
 	
 	def 'getContent success flow.'() {
-		given: "A stub of RQM request to get attachment with headers"
+		given: g_ "A stub of RQM request to get attachment with headers"
 		File file = new File('563414- Product Classifications Table')
 		def of = file.newDataOutputStream()
 		of.close()
@@ -133,24 +133,24 @@ class ClmTestManagementServiceSpecTest extends Specification {
 			return [data: of, headers: ['Content-Disposition': 'filename="563414- Product Classifications Table"']]
 		}
 		
-		when: 'Call method under test (getContent)'
+		when: w_ 'Call method under test (getContent)'
 		def result = underTest.getContent('http://someimage')
 		
-		then: 'Validate result data'
+		then: t_ 'Validate result data'
 		result.filename != null
 	}
 	
 	def 'flush all queries'() {
-		setup: 'qm rest calls'
+		setup: s_ 'qm rest calls'
 		cacheManagementService.cacheModule = 'QM'
 		setupFlushData()
 		
-		when:
+		when: w_ 'call flushQueries'
 		underTest.flushQueries(clmProject, 2)
 		
 		def testCasePages = cacheManagementService.getAllOfType('TestCaseQueryData')
 		
-		then:
+		then: t_ 'testCasePages.size() == 2'
 		testCasePages.size() == 2
 		
 	}

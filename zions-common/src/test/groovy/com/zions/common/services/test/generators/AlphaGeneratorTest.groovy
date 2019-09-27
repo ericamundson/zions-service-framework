@@ -21,12 +21,10 @@ public class AlphaGeneratorTest extends Specification {
 	
 	@Test
 	def 'gen test'() {
-		given: ''
-		
-		when:
+		when: w_ 'call gen'
 		def plan = underTest.gen()
 		
-		then:
+		then: t_ 'No exceptions'
 		true
 	}
 

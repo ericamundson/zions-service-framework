@@ -38,10 +38,10 @@ public class QmProjectManagementServiceTest  extends Specification {
 		1 * qmGenericRestClient.get(_) >> testplan
 	
 		
-		when: 'calling of method under test (getProject)'
+		when: w_ 'calling of method under test (getProject)'
 		def keyname = underTest.getProject('projectArea')
 		
-		then: ''
+		then: t_ null
 		true
 		
 	}

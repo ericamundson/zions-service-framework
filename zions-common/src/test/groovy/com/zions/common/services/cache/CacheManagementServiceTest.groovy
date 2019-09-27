@@ -33,10 +33,10 @@ public class CacheManagementServiceTest extends Specification {
 
 		def result= new ByteArrayInputStream();
 
-		when: 'calling of method under test (saveBinaryAsAttachment)'
+		when: w_ 'calling of method under test (saveBinaryAsAttachment)'
 		def keyname = underTest.saveBinaryAsAttachment( result ,'','')
 		// 218-Test Plan
-		then: ''
+		then: t_ ''
 		true
 
 	}
@@ -46,10 +46,10 @@ public class CacheManagementServiceTest extends Specification {
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: 'calling of method under test (data)'
+		when: w_ 'calling of method under test (data)'
 		def keyname = underTest.saveToCache( data ,'','')
 
-		then: ''
+		then: t_ 'No save failure'
 		true
 	}
 
@@ -58,10 +58,10 @@ public class CacheManagementServiceTest extends Specification {
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: 'calling of method under test (getFromCache)'
+		when: w_ 'calling of method under test (getFromCache)'
 		def keyname = underTest.getFromCache( '','')
 
-		then: ''
+		then: t_ 'No save failure'
 		true
 	}
 }

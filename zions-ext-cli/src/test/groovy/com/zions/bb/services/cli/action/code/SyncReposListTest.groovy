@@ -67,55 +67,55 @@ public class SyncReposListTest extends Specification {
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given:'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
-	def 'validate method  flow.'() {
+	def 'validate method failed flow.'() {
 		
-		given:'Stub with Application Arguments'
+		given: g_ 'Invalid application arguments'
 		String[] args = []
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: 'calling of method under test (validate)'
+		when: w_ 'call validate'
 		def result = underTest.validate(appArgs)
 
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'validate method success flow.'() {
 		
-		given: "A stub of RQM get test item request"		
+		given: "Valid argument settings."		
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: 'calling of method under test (validate)'
+		when: w_ 'call validate'
 		def testPlans = underTest.validate(appArgs)
 		
-		then: ''
+		then: t_ null
 		true
 	}
 	
 	@Test
-	def 'execute method  flow.'() {
+	def 'execute method failed flow.'() {
 		
-		given:'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		String[] args = []
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: 'calling of method under test (execute)'
+		when: w_ 'call execute'
 		def result = underTest.execute(appArgs)
 
-		then:
+		then: t_ 'thrown Exception'
 		thrown Exception
 	}
 	
@@ -123,21 +123,21 @@ public class SyncReposListTest extends Specification {
 	@Test
 	def 'execute method success flow.'() {
 		
-		given:'Stub with Application Arguments'
+		given: g_ 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and:
+		and: a_ 'stub importRepoDir call'
 		def dummy =[]
 		codeManagmentService.importRepoDir(_, _, _, _, _, _) >> dummy
 		
-		and:
+		and: a_ 'stub call to ensureTeamToRepo'
 		def dummy1 =[]
 		permissionsManagementService.ensureTeamToRepo(_, _, _, _, _) >> dummy1
 		
-		when: 'calling of method under test (execute)'
+		when: w_ 'call execute'
 		def result = underTest.execute(appArgs)
 
-		then:
+		then: t_ 'No exception'
 		true
 		
 	}

@@ -15,7 +15,7 @@ class LabelPrinter {
 	}
 	def w_(String message = null) {
 		if (message) {
-			print "when: ${message}"
+			print "when: w_ ${message}"
 		}
 		true
 	}

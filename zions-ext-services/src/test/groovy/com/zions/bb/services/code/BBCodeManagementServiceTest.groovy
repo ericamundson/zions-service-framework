@@ -30,17 +30,18 @@ public class BBCodeManagementServiceTest extends Specification {
 	
 	def 'getProjectRepoUrls for project name success flow.'(){
 		
-				
+		setup: s_ 'stub call for to get all projects'		
 		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
 		(1..3) * bBGenericRestClient.get(_) >> testplan
 		
+		and: a_ 'stub rest call for repos'
 		def test = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects_lastpage_false.json').text)
 		1 * bBGenericRestClient.get(_) >> test
 		
-		when: 'calling of method under test (getProjectRepoUrls)'
+		when: w_ 'calling of method under test (getProjectRepoUrls)'
 		def keyname = underTest.getProjectRepoUrls('almops')
 		
-		then: ''
+		then: t_ null
 		true
 		
 	}
