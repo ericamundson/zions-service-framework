@@ -243,7 +243,6 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 			outHtml = appendAttribute(outHtml, itemData, 'TCS Current Functionality')
 			outHtml = appendAttribute(outHtml, itemData, 'Zions System Current Functionality')
 			outHtml = appendAttribute(outHtml, itemData, 'Zions View of Classification')
-			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
 		}
 		else if (itemData.getArtifactType() == 'Data Interface IO') {
 			outHtml = appendAttribute(outHtml, itemData, 'ISZ Subroutine Name')
