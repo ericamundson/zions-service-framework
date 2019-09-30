@@ -30,12 +30,5 @@
 			<scanPlaceholders></scanPlaceholders>
 			<preScannedPlaceholders></preScannedPlaceholders>
 		</file.Folder>
-		<cmd.Command name="run deploy process">
-			<commandLine>{{copy.command}} {{deploy.path}}/* {{to.location}}
-			</commandLine>
-			<order>61</order>
-			<undoOrder>61</undoOrder>
-			<runUndoCommandOnUpgrade></runUndoCommandOnUpgrade>
-		</cmd.Command>
 	</deployables>
 </udm.DeploymentPackage>
