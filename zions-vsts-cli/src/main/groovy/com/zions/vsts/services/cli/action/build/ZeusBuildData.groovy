@@ -116,7 +116,7 @@ class ZeusBuildData implements CliAction {
 			String fPath = f.absolutePath
 			fPath = fPath.substring(inRepoDir.length())
 			if (fPath.endsWith('.keep')) {
-				fListWFolders.push("${fPath.substring(1)}")
+				fListWFolders.push("${fPath.substring(1).replace("\\", "/")}")
 			}
 		}
 		buildChanges.'value'.each { bchange ->
@@ -130,11 +130,11 @@ class ZeusBuildData implements CliAction {
 					if (!fileExists(inRepoDir, "${fpath.substring(1)}") && !dList.contains("${fpath.substring(1)}")) {
 						dList.push("${fpath.substring(1)}")
 					}
-					if (fpath.contains('.keep')) {
-						fListWFolders.push(fpath)
-					}
+//					if (fpath.contains('.keep')) {
+//						fListWFolders.push(fpath.replace("\\", "/"))
+//					}
 					if (!dList.contains("${fpath.substring(1)}") && change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
-						fListWFolders.push(fpath)
+						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
 						if (fItems.size() > 3) {
@@ -187,9 +187,9 @@ class ZeusBuildData implements CliAction {
 			}
 			def fListWFoldersSet = fListWFolders.toSet()
 			fListWFoldersSet.each { String iName ->
-				String fName = "$File.separatorChar${iName}"
+				String fName = "/${iName}"
 				def i = new File("$inRepoDir${fName}").newDataInputStream()
-				def opath = fName.substring(0, fName.lastIndexOf("$File.separatorChar"));
+				def opath = fName.substring(0, fName.lastIndexOf("/"));
 				File ofd = new File("$outRepoDir${opath}")
 				if (!ofd.exists()) {
 					ofd.mkdirs()
@@ -231,7 +231,7 @@ class ZeusBuildData implements CliAction {
 				String affiliate = fItems[2]
 				entry(affiliate: "${affiliate}") {
 					String fName = "${change.item.path}"
-					File f = fileMap["${outRepoDir}$File.separatorChar${fName}"]
+					File f = fileMap["${outRepoDir}/${fName}"]
 					file ( "${fName}" )
 					size ( "${f.size()}" )
 					date ( "${change.parent.timestamp}" )
