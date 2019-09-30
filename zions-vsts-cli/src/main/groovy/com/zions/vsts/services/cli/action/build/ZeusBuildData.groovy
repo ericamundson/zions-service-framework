@@ -169,10 +169,19 @@ class ZeusBuildData implements CliAction {
 			o << "ado.workitems=${wiStr}${sep}"
 		}
 		o.close()
+		if (fListSet.isEmpty()) {
+			log.error('No files set for update! No new changes.')
+			System.exit(1)
+		}
 
 		f = new File("${outDir}/ZEUS.template")
+		def oFList = []
+		fListSet.each { String fName ->
+			String n = fName.substring(fName.indexOf('/')+1)
+			oFList.push(n)
+		}
 		o = f.newDataOutputStream()
-		String filesStr = fListSet.join("${sep}")
+		String filesStr = oFList.join("${sep}")
 		o << "${filesStr}"
 		o.close()
 		Map<String, File> fileMap = [:]
@@ -180,10 +189,6 @@ class ZeusBuildData implements CliAction {
 			File od = new File(outRepoDir)
 			if (!od.exists()) {
 				od.mkdir()
-			}
-			if (fListSet.isEmpty()) {
-				log.error('No files set for update! No new changes.')
-				System.exit(1)
 			}
 			def fListWFoldersSet = fListWFolders.toSet()
 			fListWFoldersSet.each { String iName ->
