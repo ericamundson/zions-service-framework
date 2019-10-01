@@ -51,6 +51,9 @@ class SyncTesting implements CliAction {
 
 	@Value('${build.id:}')
 	String buildId
+	
+	@Value('${definition.id:}')
+	String definitionId
 
 	def resultMap = ['passed':'Passed', 'failed': 'Failed']
 
@@ -154,6 +157,9 @@ class SyncTesting implements CliAction {
 		plan['state'] = 'Active'
 		plan.area = [name:"${areaPath}"]
 		plan['iteration'] = "${project}"
+		if (definitionId && definitionId.size()>0) {
+			plan['buildDefinition'] = [ id: definitionId ]
+		}
 		if (buildId && buildId.size()>0) {
 			plan['build'] = [ id: buildId ]
 		}
