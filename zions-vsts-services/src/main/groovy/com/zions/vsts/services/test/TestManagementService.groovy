@@ -284,6 +284,27 @@ public class TestManagementService {
 		return "${planData.webId.text()}-Test Plan"
 	}
 	
+	def getPlan(String collection, String project, String planName) {
+		
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/testplan/plans",
+			query: ['api-version':'5.0-preview.1']
+			)
+		def outPlan = null
+		if (result) {
+			result.'value'.each { plan ->
+				String name = "${plan.name}"
+				if (name == planName) {
+					outPlan = plan
+					return outPlan 
+				}
+			}
+		}
+		return outPlan
+	}
+	
 	String getTestCaseId(def testcaseData) {
 		String className = testcaseData.getClass().simpleName
 		if (className == 'TestCase') {
@@ -399,7 +420,7 @@ public class TestManagementService {
 		return att != null
 	}
 	
-	private def getResultsTestcaseMap(def url) {
+	def getResultsTestcaseMap(def url) {
 		int skip = 0
 		def tcMap = [:]
 		while (true) {
@@ -599,7 +620,7 @@ public class TestManagementService {
 	
 
 	
-	private def createRunData(String collection, String project, def planData ) {
+	def createRunData(String collection, String project, def planData ) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def testpoints = getTestPoints(collection, project, planData)
 		def data = [name: "${planData.name} Run", plan: [id: planData.id], pointIds:testpoints]
@@ -614,7 +635,7 @@ public class TestManagementService {
 		return result
 	}
 	
-	private def createRunData(String collection, String project, def adoPlanData, def adoTestCaseData ) {
+	def createRunData(String collection, String project, def adoPlanData, def adoTestCaseData ) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def testpoints = getTestPoints(collection, project, adoPlanData, adoTestCaseData)
 		def data = [name: "${adoPlanData.name}-${adoTestCaseData.fields.'System.Title'} Run", plan: [id: adoPlanData.id], pointIds:testpoints]
@@ -668,7 +689,7 @@ public class TestManagementService {
 			if (!result || !result.points || result.points.size() == 0) break
 			def fpoints = result.points.findAll { point ->
 				String url = "${point.url}"
-				url.startsWith(planUrl)
+				true
 			}
 			if (fpoints && fpoints.size() > 0) {
 				fpoints.each { point -> 

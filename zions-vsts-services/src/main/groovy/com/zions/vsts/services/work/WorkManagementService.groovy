@@ -65,7 +65,7 @@ class WorkManagementService {
 	 * @param query
 	 * @return
 	 */
-	def refreshCacheByQuery(String collection, String project, String query) {
+	def refreshCacheByQuery(String collection, String project, String query, Closure keyC = null) {
 		String module = cacheManagementService.cacheModule
 		cacheManagementService.deleteByType(ICacheManagementService.WI_DATA)
 		def wis = getWorkItems(collection, project, query)
@@ -83,7 +83,12 @@ class WorkManagementService {
 			}
 			def result = batchGet(collection, project, ids)
 			result.value.each { owi ->
-				String key = getKey(owi)
+				String key = ""
+				if (keyC) {
+					key = keyC(owi)
+				} else {
+					key = getKey(owi)
+				}
 				if (eMap.containsKey(key)) {
 					def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
 					log.info("Deleting duplicate of (${module}) Element: ${key}, ADO WI: ${owi.id}")
