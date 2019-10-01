@@ -13,7 +13,7 @@ class ReleaseHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object val, Object itemData) {
-		if (val == 'Not Assigned') {
+		if (val==null || val == 'Not Assigned') {
 			return null
 		}
 		else {
