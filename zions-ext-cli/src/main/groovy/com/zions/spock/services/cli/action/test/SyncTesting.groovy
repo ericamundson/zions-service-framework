@@ -134,10 +134,14 @@ class SyncTesting implements CliAction {
 
 	def ensurePlan() {
 		def plan = testManagementService.getPlan( '', project, planName )
+		def suite = null
 		if (!plan) {
 			plan = createPlan()
-			def suite = createSuite(plan)
-		}
+			suite = createSuite(plan)
+		} 
+//		if (!suite) {
+//			suite = testManagementService.getSuite(plan, "${planName}-${mainTag} Suite")
+//		}
 		return plan
 	}
 
@@ -152,7 +156,8 @@ class SyncTesting implements CliAction {
 		plan['iteration'] = "${project}"
 		//def planData = testManagementService.sendPlanChanges('', project, plan, id)
 		def planData = postPlan(plan)
-		return planData
+		def oPlanData = testManagementService.getPlan('', project, planData.name)
+		return oPlanData
 	}
 
 	def postPlan(plan) {
