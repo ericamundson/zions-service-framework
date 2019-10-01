@@ -289,8 +289,8 @@ public class TestManagementService {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/testplan/plans",
-			query: ['api-version':'5.0-preview.1']
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/plans",
+			query: ['api-version':'5.0']
 			)
 		def outPlan = null
 		if (result) {
@@ -303,6 +303,25 @@ public class TestManagementService {
 			}
 		}
 		return outPlan
+	}
+	
+	def getSuite(def plan, String suiteName) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${plan.url}/suites",
+			query: ['api-version':'5.0']
+			)
+		def outSuite = null
+		if (result) {
+			result.'value'.each { suite ->
+				String name = "${suite.name}"
+				if (name == suiteName) {
+					outSuite = plan
+					return outSuite
+				}
+			}
+		}
+		return outSuite
 	}
 	
 	String getTestCaseId(def testcaseData) {
@@ -678,6 +697,9 @@ public class TestManagementService {
 		def data = [PointsFilter: [TestcaseIds:[adoTestCaseData.id]]]
 		String body = new JsonBuilder( data ).toString()
 		String planUrl = "${adoPlanData.url}"
+		if (!adoPlanData.url && adoPlanData._links._self.href) {
+			planUrl = "${adoPlanData._links._self.href}"
+		}
 		while (true) {
 			def result = genericRestClient.post(contentType: ContentType.JSON,
 				requestContentType: ContentType.JSON,
@@ -687,9 +709,12 @@ public class TestManagementService {
 			)
 			
 			if (!result || !result.points || result.points.size() == 0) break
-			def fpoints = result.points.findAll { point ->
+			def fpoints = []
+			result.points.each { point ->
 				String url = "${point.url}"
-				true
+				if (url.startsWith(planUrl)) {
+					fpoints.push(point)
+				}
 			}
 			if (fpoints && fpoints.size() > 0) {
 				fpoints.each { point -> 
