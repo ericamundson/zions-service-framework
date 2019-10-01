@@ -154,6 +154,9 @@ class SyncTesting implements CliAction {
 		plan['state'] = 'Active'
 		plan.area = [name:"${areaPath}"]
 		plan['iteration'] = "${project}"
+		if (buildId && buildId.size()>0) {
+			plan['build'] = [ id: buildId ]
+		}
 		//def planData = testManagementService.sendPlanChanges('', project, plan, id)
 		def planData = postPlan(plan)
 		def oPlanData = testManagementService.getPlan('', project, planData.name)
