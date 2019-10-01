@@ -208,6 +208,9 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			clmRequirementsManagementService.flushQueries(true)
 			log.info("Finished refreshing cache of main DNG query from JRS, future operations should use this cache")
 		}
+		if (includes['cleanDuplicates'] != null) {
+			workManagementService.cleanDuplicates(collection, tfsProject)
+		}
 		if (includes['whereused'] != null) {
 			log.info("fetching 'where used' lookup records")
 			if (clmRequirementsManagementService.queryForWhereUsed()) {
