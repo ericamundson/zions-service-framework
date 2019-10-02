@@ -161,7 +161,7 @@ class ZeusBuildData implements CliAction {
 		String sourceBranch = "${build.sourceBranch}"
 		//if (sourceBranch.contains("release/")) {
 		if (!releaseId || releaseId.size() == 0) {
-			releaseId = sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)
+			releaseId = "{{${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}}}"
 		}
 		def fListSet = fList.toSet()
 		File f = new File("${outDir}/ZEUS.properties")
