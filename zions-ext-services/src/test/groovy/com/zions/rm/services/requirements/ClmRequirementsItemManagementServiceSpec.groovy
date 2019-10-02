@@ -139,16 +139,20 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 			def modData = dataGenerationService.generate(module)
 			String url = "${modData.url}"
 			def data = new XmlSlurper().parseText(modData.data)
-			moduleMap[url] = data
+			moduleMap[url] = [data: data, str: modData.data]
 		}
 		
 		rmGenericRestClient.get(_) >> { args ->
 			def input = args[0]
 			String auri = "${input.uri}"
 			if (moduleMap[auri]) {
-				return moduleMap[auri]
+				if (auri.contains('publish/text?resourceURI')) {
+					return moduleMap[auri]
+				} else {
+					return moduleMap[auri].data
+				}
 			}
-			return [str: dataGenerationService.generate('testdata/requirementWithLinks.xml') ]
+			return 
 		}
 		
 		attachmentService.sendAttachment(_) >> {}
