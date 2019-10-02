@@ -4,6 +4,7 @@ import java.lang.reflect.Field
 import java.util.Map
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
@@ -75,6 +76,9 @@ class ZeusBuildData implements CliAction {
 	@Autowired
 	public ZeusBuildData() {
 	}
+	
+	@Value('${release.id:}')
+	String releaseId
 
 	@Override
 	public def execute(ApplicationArguments data) {
@@ -156,7 +160,9 @@ class ZeusBuildData implements CliAction {
 		def build = buildManagementService.getExecution(collection, project, buildId)
 		String sourceBranch = "${build.sourceBranch}"
 		//if (sourceBranch.contains("release/")) {
-		String releaseId = sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)
+		if (!releaseId || releaseId.size() == 0) {
+			releaseId = sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)
+		}
 		def fListSet = fList.toSet()
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()

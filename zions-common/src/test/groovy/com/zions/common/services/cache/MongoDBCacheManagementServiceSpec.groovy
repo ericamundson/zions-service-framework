@@ -74,7 +74,7 @@ public class MongoDBCacheManagementServiceSpec extends Specification implements 
 	}
 	
 	def 'getAllOfType test paging'() {
-		setup: s_ "Add 400 page items into cache"
+		setup: s_ "Add 400 items into cache"
 		for (int i = 0; i < 400; i++) {
 			def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 			underTest.saveToCache(data, "${i}", ICacheManagementService.PLAN_DATA)
