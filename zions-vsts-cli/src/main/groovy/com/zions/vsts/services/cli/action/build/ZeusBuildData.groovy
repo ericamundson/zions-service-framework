@@ -186,8 +186,9 @@ class ZeusBuildData implements CliAction {
 			String n = fName.substring(fName.indexOf('/')+1)
 			oFList.push(n)
 		}
+		def ofListSet = oFList.toSet()
 		o = f.newDataOutputStream()
-		String filesStr = oFList.join("${sep}")
+		String filesStr = ofListSet.join("${sep}")
 		o << "${filesStr}"
 		o.close()
 		Map<String, File> fileMap = [:]
