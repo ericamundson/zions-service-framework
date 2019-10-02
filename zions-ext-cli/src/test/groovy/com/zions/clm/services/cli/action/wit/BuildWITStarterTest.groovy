@@ -13,6 +13,7 @@ import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.members.CcmMemberManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 
@@ -21,7 +22,7 @@ import spock.mock.DetachedMockFactory
 
 
 @ContextConfiguration(classes=[BuildWITStarterTestConfig])
-public class BuildWITStarterTest extends Specification {
+public class BuildWITStarterTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient

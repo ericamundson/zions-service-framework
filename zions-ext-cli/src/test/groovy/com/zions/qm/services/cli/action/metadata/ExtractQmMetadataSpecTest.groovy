@@ -17,6 +17,7 @@ import com.zions.clm.services.ccm.project.planning.PlanManagementService
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.qm.services.metadata.QmMetadataManagementService
 import com.zions.qm.services.project.QmProjectManagementService
@@ -31,7 +32,7 @@ import com.zions.vsts.services.workitem.AreasManagementService
 import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[ExtractQmMetadataTestConfig])
-public class ExtractQmMetadataSpecTest extends Specification {
+public class ExtractQmMetadataSpecTest extends Specification implements SpockLabeler {
 
 	@Autowired
 	IGenericRestClient genericRestClient;

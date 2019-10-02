@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.clm.services.rtc.project.members.CcmMemberManagementService
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
@@ -23,7 +24,7 @@ import spock.mock.DetachedMockFactory
 
 
 @ContextConfiguration(classes=[SyncProjectWithRTCMembersTestConfig])
-public class SyncProjectWithRTCMembersTest extends Specification {
+public class SyncProjectWithRTCMembersTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	SyncProjectWithRTCMembers underTest

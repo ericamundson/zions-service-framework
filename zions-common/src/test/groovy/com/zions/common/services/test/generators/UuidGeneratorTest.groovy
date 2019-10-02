@@ -1,5 +1,6 @@
 package com.zions.common.services.test.generators;
 
+import com.zions.common.services.test.SpockLabeler
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration;
@@ -12,7 +13,7 @@ import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[UuidGeneratorTestConfig])
-public class UuidGeneratorTest extends Specification {
+public class UuidGeneratorTest extends Specification implements SpockLabeler {
 
 	@Autowired
 	UuidGenerator underTest

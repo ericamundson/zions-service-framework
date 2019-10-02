@@ -4,6 +4,7 @@ import static org.junit.Assert.*
 
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import groovy.json.JsonSlurper
 
 import org.junit.Test
@@ -18,7 +19,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[CcmMemberManagementServiceTestConfig])
-public class CcmMemberManagementServiceTest extends Specification {
+public class CcmMemberManagementServiceTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	IGenericRestClient clmGenericRestClient

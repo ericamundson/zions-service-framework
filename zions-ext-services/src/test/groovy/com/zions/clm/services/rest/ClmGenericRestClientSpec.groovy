@@ -2,6 +2,7 @@ package com.zions.clm.services.rest
 
 import static org.junit.Assert.*
 
+import com.zions.common.services.test.SpockLabeler
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 import org.apache.http.client.utils.URIBuilder
@@ -9,7 +10,7 @@ import org.junit.Test
 
 import spock.lang.Specification
 
-class ClmGenericRestClientSpec extends Specification {
+class ClmGenericRestClientSpec extends Specification implements SpockLabeler {
 
 
 	def 'test for rm folders'()  {

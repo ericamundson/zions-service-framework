@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[DataGenerationServiceSpecConfig])
-class DataGenerationServiceSpec extends Specification {
+class DataGenerationServiceSpec extends Specification implements SpockLabeler {
 	@Autowired
 	DataGenerationService underTest
 

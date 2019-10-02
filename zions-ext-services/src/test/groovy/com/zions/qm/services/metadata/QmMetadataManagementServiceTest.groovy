@@ -9,7 +9,7 @@ import groovy.json.JsonSlurper
 import groovy.xml.MarkupBuilder
 import com.zions.bb.services.code.BBCodeManagementService
 import com.zions.common.services.rest.IGenericRestClient
-
+import com.zions.common.services.test.SpockLabeler
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
@@ -22,7 +22,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[QmMetadataManagementServiceTestConfig])
-public class QmMetadataManagementServiceTest extends Specification {
+public class QmMetadataManagementServiceTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	IGenericRestClient qmGenericRestClient

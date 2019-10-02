@@ -2,6 +2,7 @@ package com.zions.rm.services.requirements
 
 import static org.junit.Assert.*
 
+import com.zions.common.services.test.SpockLabeler
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
@@ -13,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[RequirementsMappingManagementServiceSpecConfig])
-class RequirementsMappingManagementServiceSpec extends Specification {
+class RequirementsMappingManagementServiceSpec extends Specification implements SpockLabeler {
 
 	@Autowired
 	RequirementsMappingManagementService underTest

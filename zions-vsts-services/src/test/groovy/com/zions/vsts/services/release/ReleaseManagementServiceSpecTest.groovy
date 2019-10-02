@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementServiceTestConfig
@@ -31,7 +32,7 @@ import spock.mock.DetachedMockFactory
  *
  */
 @ContextConfiguration(classes=[ReleaseManagementServiceTestConfig])
-class ReleaseManagementServiceSpecTest extends Specification {
+class ReleaseManagementServiceSpecTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	private IGenericRestClient genericRestClient;

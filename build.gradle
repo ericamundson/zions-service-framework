@@ -131,6 +131,9 @@ allprojects {
 //		
 //	}
 	// End generation of framework documentation
+	sourceSets.main.resources{
+		srcDir '../common/resources'
+	}
 
 
 	test { //String activeProfile =  System.properties['spring.profiles.active']

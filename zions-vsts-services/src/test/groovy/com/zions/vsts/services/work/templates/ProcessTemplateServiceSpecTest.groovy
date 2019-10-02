@@ -12,6 +12,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
@@ -19,7 +20,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ProcessTemplateServiceSpecTestConfig])
-class ProcessTemplateServiceSpecTest extends Specification {
+class ProcessTemplateServiceSpecTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	@Value('${test.mapping.file}')

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.qm.services.project.QmProjectManagementService;
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 
 import static org.junit.Assert.*
 
@@ -24,7 +25,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[QmProjectManagementServiceTestConfig])
-public class QmProjectManagementServiceTest  extends Specification {
+public class QmProjectManagementServiceTest  extends Specification implements SpockLabeler {
 	
 	@Autowired
 	IGenericRestClient qmGenericRestClient

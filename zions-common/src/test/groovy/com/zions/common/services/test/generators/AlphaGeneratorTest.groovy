@@ -9,12 +9,13 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 
 import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[AlphaGeneratorTestConfig])
-public class AlphaGeneratorTest extends Specification {
+public class AlphaGeneratorTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	AlphaGenerator underTest

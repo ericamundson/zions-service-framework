@@ -6,6 +6,7 @@ import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.ICheckpointManagementService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
@@ -34,7 +35,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[WorkManagementServiceConfig])
-class WorkManagementServiceSpecTest extends Specification {
+class WorkManagementServiceSpecTest extends Specification implements SpockLabeler {
 
 	@Autowired
 	WorkManagementService underTest

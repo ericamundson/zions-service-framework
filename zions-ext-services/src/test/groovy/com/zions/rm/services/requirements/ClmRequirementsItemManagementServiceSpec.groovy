@@ -24,12 +24,13 @@ import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ClmRequirementsItemManagementServiceSpecConfig])
-class ClmRequirementsItemManagementServiceSpec extends Specification {
+class ClmRequirementsItemManagementServiceSpec extends Specification implements SpockLabeler {
 	
 	@Autowired
 	ClmRequirementsItemManagementService underTest
@@ -144,7 +145,10 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 		rmGenericRestClient.get(_) >> { args ->
 			def input = args[0]
 			String auri = "${input.uri}"
-			return moduleMap[auri]
+			if (moduleMap[auri]) {
+				return moduleMap[auri]
+			}
+			return [str: dataGenerationService.generate('testdata/requirementWithLinks.xml') ]
 		}
 		
 		attachmentService.sendAttachment(_) >> {}

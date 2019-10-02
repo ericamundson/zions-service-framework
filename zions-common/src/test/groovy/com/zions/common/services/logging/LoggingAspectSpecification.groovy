@@ -13,10 +13,12 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.test.SpockLabeler
+
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[LoggingAspectSpecificationConfig])
-class LoggingAspectSpecification extends Specification {
+class LoggingAspectSpecification extends Specification implements SpockLabeler {
 
 	@Autowired
 	SomeClass someClass

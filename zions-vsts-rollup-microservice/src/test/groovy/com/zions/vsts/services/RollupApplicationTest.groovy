@@ -3,6 +3,7 @@ package com.zions.vsts.services
 import static org.junit.Assert.*
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovyx.net.http.ContentType
 import org.junit.Test
@@ -17,7 +18,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[RollupApplicationTestConfig])
-class RollupApplicationTest extends Specification {
+class RollupApplicationTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	IGenericRestClient genericRestClient

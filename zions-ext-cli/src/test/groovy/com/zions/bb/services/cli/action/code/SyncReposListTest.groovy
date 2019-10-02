@@ -13,6 +13,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -23,7 +24,7 @@ import com.zions.vsts.services.permissions.PermissionsManagementService
 import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[SyncReposListTestConfig])
-public class SyncReposListTest extends Specification {
+public class SyncReposListTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	IGenericRestClient genericRestClient;

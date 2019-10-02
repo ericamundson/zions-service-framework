@@ -3,6 +3,7 @@ package com.zions.common.services.user
 import static org.junit.Assert.*
 
 import com.zions.common.services.ldap.User
+import com.zions.common.services.test.SpockLabeler
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -20,7 +21,7 @@ import spock.lang.Specification
 
 
 @ContextConfiguration(classes=[UserManagementServiceSpecConfig])
-class UserManagementServiceSpec extends Specification {
+class UserManagementServiceSpec extends Specification implements SpockLabeler {
 	@Autowired
 	UserManagementService userManagementService
 

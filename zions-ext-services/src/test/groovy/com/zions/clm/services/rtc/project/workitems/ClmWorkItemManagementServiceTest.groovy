@@ -4,6 +4,7 @@ import static org.junit.Assert.*
 
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.qm.services.test.ClmTestManagementService
 
 import org.junit.Test
@@ -19,7 +20,7 @@ import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ClmWorkItemManagementServiceTestConfig])
 
-public class ClmWorkItemManagementServiceTest extends Specification {
+public class ClmWorkItemManagementServiceTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	IGenericRestClient clmGenericRestClient

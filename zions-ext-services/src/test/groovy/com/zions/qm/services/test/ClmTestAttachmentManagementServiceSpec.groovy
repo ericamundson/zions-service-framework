@@ -15,12 +15,12 @@ import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
-
+import com.zions.common.services.test.SpockLabeler
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ClmTestAttachmentManagementServiceSpecConfig])
-class ClmTestAttachmentManagementServiceSpec extends Specification {
+class ClmTestAttachmentManagementServiceSpec extends Specification implements SpockLabeler {
 	@Autowired
 	IGenericRestClient qmGenericRestClient
 

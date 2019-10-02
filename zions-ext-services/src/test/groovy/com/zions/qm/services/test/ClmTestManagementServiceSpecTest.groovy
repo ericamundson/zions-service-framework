@@ -9,7 +9,7 @@ import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
-
+import com.zions.common.services.test.SpockLabeler
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -26,7 +26,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ClmTestManagementServiceSpecTestConfig])
-class ClmTestManagementServiceSpecTest extends Specification {
+class ClmTestManagementServiceSpecTest extends Specification implements SpockLabeler {
 	
 	@Value('${clm.projectArea:}')
 	String clmProject

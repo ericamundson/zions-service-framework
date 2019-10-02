@@ -11,12 +11,13 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.clm.services.rest.ClmGenericRestClient
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TestMappingManagementServiceSpecTestConfig])
-class TestMappingManagementServiceTest extends Specification {
+class TestMappingManagementServiceTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	TestMappingManagementService underTest

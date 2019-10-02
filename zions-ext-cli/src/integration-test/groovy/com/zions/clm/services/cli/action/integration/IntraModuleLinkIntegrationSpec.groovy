@@ -45,6 +45,7 @@ import com.zions.common.services.restart.IQueryHandler
 import com.zions.common.services.restart.IRestartManagementService
 import com.zions.common.services.restart.RestartManagementService
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.common.services.test.generators.IdSetter
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.mr.services.rest.MrGenericRestClient
@@ -101,7 +102,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[IntraModuleLinkIntegrationSpecConfig])
-class IntraModuleLinkIntegrationSpec extends Specification {
+class IntraModuleLinkIntegrationSpec extends Specification implements SpockLabeler {
 	
 	int index = 1
 	

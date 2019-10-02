@@ -11,12 +11,12 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.zions.common.services.cache.CacheManagementService;
 import com.zions.common.services.cache.CacheManagementServiceTestConfig;
-
+import com.zions.common.services.test.SpockLabeler
 import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[QuoteGeneratorTestConfig])
-public class QuoteGeneratorTest extends Specification {
+public class QuoteGeneratorTest extends Specification implements SpockLabeler {
 	
 	
 	@Autowired

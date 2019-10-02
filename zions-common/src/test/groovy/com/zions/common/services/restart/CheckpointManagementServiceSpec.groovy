@@ -6,8 +6,8 @@ import com.mongodb.Mongo
 import com.mongodb.MongoClient
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
-//import com.zions.common.services.cache.MongoDBCacheManagementService
-//import com.zions.common.services.cache.db.CacheItemRepository
+import com.zions.common.services.test.SpockLabeler
+
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -24,7 +24,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[CheckpointManagementServiceSpecConfig])
-class CheckpointManagementServiceSpec extends Specification {
+class CheckpointManagementServiceSpec extends Specification implements SpockLabeler {
 	@Autowired
 	ICheckpointManagementService underTest
 	
