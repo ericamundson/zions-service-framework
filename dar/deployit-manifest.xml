@@ -28,10 +28,6 @@
     <cmd.Command name="copy_cmd">
       <commandLine>{{copy.command}} {{to.location}}</commandLine>
       <dependencies>
-        <ci ref="zions-vsts-cli_batch" />
-        <ci ref="zions-vsts-cli_libs" />
-        <ci ref="zions-ext-cli_libs" />
-        <ci ref="zions-ext-cli_batch" />
       </dependencies>
       <order>61</order>
       <undoCommandLine>{{remove.command}} {{deploy.path}}</undoCommandLine>
