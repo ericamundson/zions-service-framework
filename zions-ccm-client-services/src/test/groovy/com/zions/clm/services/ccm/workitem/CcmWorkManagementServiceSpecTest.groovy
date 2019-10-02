@@ -4,9 +4,11 @@ import static org.junit.Assert.*
 
 import org.junit.Test
 
+import com.zions.common.services.test.SpockLabeler
+
 import spock.lang.Specification
 
-class CcmWorkManagementServiceSpecTest extends Specification {
+class CcmWorkManagementServiceSpecTest extends Specification implements SpockLabeler {
 
 	public void 'Initial test'() {
 		//fail("Not yet implemented")

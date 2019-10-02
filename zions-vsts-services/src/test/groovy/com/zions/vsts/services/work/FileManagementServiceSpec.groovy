@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
@@ -21,7 +22,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[FileManagementServiceSpecConfig])
-class FileManagementServiceSpec extends Specification {
+class FileManagementServiceSpec extends Specification implements SpockLabeler {
 	
 	@Autowired
 	IGenericRestClient genericRestClient

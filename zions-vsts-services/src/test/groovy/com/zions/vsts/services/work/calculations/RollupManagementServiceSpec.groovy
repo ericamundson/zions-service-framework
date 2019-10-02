@@ -15,6 +15,7 @@ import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.settings.SettingsManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.work.WorkManagementService
@@ -22,7 +23,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[RollupManagementServiceSpecConfig])
-class RollupManagementServiceSpec extends Specification {
+class RollupManagementServiceSpec extends Specification implements SpockLabeler {
 	@Autowired
 	RollupManagementService underTest
 	

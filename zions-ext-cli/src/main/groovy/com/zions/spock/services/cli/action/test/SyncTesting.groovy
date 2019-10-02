@@ -226,9 +226,11 @@ class SyncTesting implements CliAction {
 			def title = [op: 'add', path: '/fields/System.Title', value: "${testCase.title}"]
 			r.body.add(title)
 		}
-		String steps = buildSteps(testCase.stepsOut)
-		def s = [op: 'add', path: '/fields/Microsoft.VSTS.TCM.Steps', value: "${steps}"]
-		r.body.add(s)
+		if (testCase.result == 'passed') {
+			String steps = buildSteps(testCase.stepsOut)
+			def s = [op: 'add', path: '/fields/Microsoft.VSTS.TCM.Steps', value: "${steps}"]
+			r.body.add(s)
+		}
 		return r
 	}
 
@@ -245,6 +247,7 @@ class SyncTesting implements CliAction {
 			String htmla = '<DIV>'
 			String htmlr = '<DIV>'
 			stepsOut.each { String s ->
+				s = s.trim()
 				if (s.startsWith('given:') ||
 				s.startsWith('and:') ||
 				s.startsWith('setup:')) {

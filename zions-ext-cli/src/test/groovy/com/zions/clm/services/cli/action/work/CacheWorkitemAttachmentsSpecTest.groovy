@@ -21,6 +21,7 @@ import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.QueryTracking
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
@@ -32,7 +33,7 @@ import com.zions.vsts.services.workitem.AreasManagementService
 import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[CacheWorkitemAttachmentsTestConfig])
-public class CacheWorkitemAttachmentsSpecTest extends Specification {
+public class CacheWorkitemAttachmentsSpecTest extends Specification implements SpockLabeler {
 	
 	@Value('${test.work.items.file}')
 	String testWorkItemsFileName

@@ -25,6 +25,7 @@ import com.zions.clm.services.rtc.project.workitems.QueryTracking
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.query.IFilter
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -38,7 +39,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TranslateRTCWorkToVSTSWorkSTestConfig])
-class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
+class TranslateRTCWorkToVSTSWorkSpecTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	private Map<String, IFilter> filterMap

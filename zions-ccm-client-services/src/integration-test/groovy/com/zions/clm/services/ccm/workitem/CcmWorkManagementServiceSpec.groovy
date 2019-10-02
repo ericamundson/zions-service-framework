@@ -24,12 +24,13 @@ import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
-
+import com.zions.common.services.test.SpockLabeler
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
+
 @ContextConfiguration(classes=[CcmWorkManagementServiceSpecConfig])
-class CcmWorkManagementServiceSpec extends Specification {
+class CcmWorkManagementServiceSpec extends Specification implements SpockLabeler {
 	
 	@Autowired
 	IGenericRestClient genericRestClient

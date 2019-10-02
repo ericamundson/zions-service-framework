@@ -10,11 +10,12 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TranslateRQMToMTMSpecSpecConfig])
-class TranslateRQMToMTMSpec extends Specification {
+class TranslateRQMToMTMSpec extends Specification implements SpockLabeler {
 
 	def "Full run"() {
 		

@@ -38,6 +38,7 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.IRestartManagementService
 import com.zions.common.services.restart.RestartManagementService
 import com.zions.common.services.test.Generator
+import com.zions.common.services.test.SpockLabeler
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.testlink.services.test.TestLinkAttachmentManagementService
 import com.zions.testlink.services.test.TestLinkClient
@@ -52,7 +53,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TranslateTestLinkToADOSpecConfig])
-class TranslateTestLinkToADOSpec extends Specification {
+class TranslateTestLinkToADOSpec extends Specification implements SpockLabeler {
 	
 	@Autowired
 	Map<String, Generator> generators

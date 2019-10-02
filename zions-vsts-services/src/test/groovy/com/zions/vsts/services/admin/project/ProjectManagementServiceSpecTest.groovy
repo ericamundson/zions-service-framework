@@ -11,6 +11,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.work.WorkManagementServiceConfig
 import groovy.json.JsonSlurper
@@ -18,7 +19,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ProjectManagementServiceTestConfig])
-class ProjectManagementServiceSpecTest extends Specification {
+class ProjectManagementServiceSpecTest extends Specification implements SpockLabeler {
 	@Autowired
 	ProjectManagementService underTest
 	

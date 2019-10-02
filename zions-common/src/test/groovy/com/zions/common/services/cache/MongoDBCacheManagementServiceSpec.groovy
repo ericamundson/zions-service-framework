@@ -9,6 +9,7 @@ import com.zions.common.services.cache.db.CacheItemRepository
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 
 import org.junit.Test
 import org.slf4j.Logger
@@ -29,10 +30,10 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[MongoDBCacheManagementServiceTestConfig])
-public class MongoDBCacheManagementServiceSpec extends Specification {
+public class MongoDBCacheManagementServiceSpec extends Specification implements SpockLabeler {
 
 	@Autowired
-	ICacheManagementService underTest
+	MongoDBCacheManagementService underTest
 	
 	@Autowired
 	DataGenerationService dataGenerationService
@@ -49,7 +50,6 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 
 	}
 
-	@Test
 	def 'saveToCache for project name success flow.'(){
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
@@ -62,7 +62,6 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 		testplan != null
 	}
 
-	@Test
 	def 'getFromCache for project name success flow.'(){
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
@@ -72,6 +71,30 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 
 		then: t_ null
 		true
+	}
+	
+	def 'getAllOfType test paging'() {
+		setup: s_ "Add 400 page items into cache"
+		for (int i = 0; i < 400; i++) {
+			def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
+			underTest.saveToCache(data, "${i}", ICacheManagementService.PLAN_DATA)
+		}
+		
+		when: w_ "call getAllByType with paging"
+		boolean success = true
+		int page = 0
+		try {
+			while (true) {
+				def plans = underTest.getAllOfType(ICacheManagementService.PLAN_DATA, page)
+				if (plans.size() == 0) break;
+				page++
+			}
+		} catch (e) {
+			success = false
+		}
+		
+		then: t_ "two pages of 200 items are returned"
+		success && page == 2
 	}
 }
 
@@ -115,7 +138,7 @@ class MongoDBCacheManagementServiceTestConfig {
 	}
 	
 	@Bean
-	ICacheManagementService underTest() {
+	MongoDBCacheManagementService underTest() {
 		return new MongoDBCacheManagementService()
 	}
 

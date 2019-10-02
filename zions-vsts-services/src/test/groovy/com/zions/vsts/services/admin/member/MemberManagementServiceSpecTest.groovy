@@ -11,6 +11,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementServiceTestConfig
 import com.zions.vsts.services.tfs.rest.GenericRestClient
@@ -25,7 +26,7 @@ import spock.mock.DetachedMockFactory
  *
  */
 @ContextConfiguration(classes=[MemberManagementServiceTestConfig])
-class MemberManagementServiceSpecTest extends Specification {
+class MemberManagementServiceSpecTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	IGenericRestClient genericRestClient

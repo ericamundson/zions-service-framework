@@ -20,6 +20,7 @@ import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
@@ -31,7 +32,7 @@ import com.zions.vsts.services.workitem.AreasManagementService
 import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[AlmOpsFilterTestConfig])
-public class AlmOpsFilterSpecTest extends Specification {
+public class AlmOpsFilterSpecTest extends Specification implements SpockLabeler {
 	
 	@Value('${test.work.items.file}')
 	String testWorkItemsFileName

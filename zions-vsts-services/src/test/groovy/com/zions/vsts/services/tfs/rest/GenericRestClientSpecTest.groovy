@@ -3,6 +3,7 @@ package com.zions.vsts.services.tfs.rest
 import static org.junit.Assert.*
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import groovyx.net.http.ContentType
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
@@ -16,7 +17,7 @@ import spock.lang.Specification
 import org.springframework.spring.*
 
 
-class GenericRestClientSpecTest extends Specification {
+class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 	
 	IGenericRestClient genericRestClient
 	RESTClient delegate

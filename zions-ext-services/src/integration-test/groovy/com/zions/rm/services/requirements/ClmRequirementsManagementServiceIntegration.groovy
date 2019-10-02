@@ -29,6 +29,7 @@ import com.zions.common.services.db.IDatabaseQueryService
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import groovy.util.logging.Slf4j
 import spock.lang.Ignore
 import spock.lang.Specification
@@ -39,7 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ContextConfiguration(classes=[ClmRequirementsManagementServiceSpecConfig])
-class ClmRequirementsManagementServiceIntegration extends Specification {
+class ClmRequirementsManagementServiceIntegration extends Specification implements SpockLabeler {
 	
 	@Autowired
 	DataGenerationService dataGenerationService

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -241,7 +242,22 @@ class WorkManagementService {
 
 	def cleanDuplicates(String collection, String project) {
 		def deleted = [:]
-		def cacheWIs = cacheManagementService.getAllOfType('wiData')
+		if (cacheManagementService instanceof MongoDBCacheManagementService) {
+			MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
+			int page = 0
+			while (true) {
+				def cacheWIs = mdbCacheManagement.getAllOfType('wiData', page)
+				if (cacheWIs.size() == 0) break
+				processCacheDuplicates(collection, project, cacheWIs)
+				page++
+			}
+		} else {
+			def cacheWIs = cacheManagementService.getAllOfType('wiData')
+			processCacheDuplicates( collection, project, cacheWIs )
+		}
+	}
+	
+	private processCacheDuplicates(String collection, String project, def cacheWIs) {
 		cacheWIs.each { key, cacheWI ->
 			String eId = "${cacheWI.fields.'Custom.ExternalID'}"
 			String cid = "${cacheWI.id}"
@@ -262,6 +278,7 @@ class WorkManagementService {
 				cacheManagementService.saveToCache(wi, key, 'wiData')
 			}
 		}
+
 	}
 
 	//	def getWorkItem(String url) {

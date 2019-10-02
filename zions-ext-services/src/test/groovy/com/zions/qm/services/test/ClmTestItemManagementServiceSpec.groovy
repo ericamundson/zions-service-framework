@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.qm.services.test.handlers.NameHandler
 import com.zions.qm.services.test.handlers.QmBaseAttributeHandler
@@ -24,7 +25,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ClmTestItemManagementServiceSpecConfig])
-class ClmTestItemManagementServiceSpec extends Specification {
+class ClmTestItemManagementServiceSpec extends Specification implements SpockLabeler {
 
 	@Autowired
 	ClmTestItemManagementService underTest

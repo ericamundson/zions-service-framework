@@ -12,12 +12,12 @@ import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.members.CcmMemberManagementService
 import com.zions.common.services.rest.IGenericRestClient;
-
+import com.zions.common.services.test.SpockLabeler
 import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ExtractCcmWIMetadataTestConfig])
-public class ExtractCcmWIMetadataTest extends Specification {
+public class ExtractCcmWIMetadataTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	ExtractCcmWIMetadata underTest

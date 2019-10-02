@@ -8,11 +8,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 
+import com.zions.common.services.test.SpockLabeler
+
 import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[DateGeneratorTestConfig])
-public class DateGeneratorTest extends Specification {
+public class DateGeneratorTest extends Specification implements SpockLabeler {
 	
 	@Autowired
 	DateGenerator underTest

@@ -15,6 +15,7 @@ import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.work.WorkManagementService
@@ -24,7 +25,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TestManagementServiceSpecConfig])
-class TestManagementServiceSpec extends Specification {
+class TestManagementServiceSpec extends Specification implements SpockLabeler {
 	
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;

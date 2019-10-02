@@ -16,6 +16,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.qm.services.test.ClmTestManagementService
 import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
@@ -25,7 +26,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ClmRequirementsFileManagementServiceSpecConfig])
-class ClmRequirementsFileManagementServiceSpec extends Specification  {
+class ClmRequirementsFileManagementServiceSpec extends Specification implements SpockLabeler {
 	@Autowired
 	IGenericRestClient rmGenericRestClient
 
