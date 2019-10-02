@@ -99,7 +99,7 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 			}
 		})
 		
-		then: t_ 'mchanges != null && artifactChanges.size() == 191'
+		then: t_ 'mchanges are not null and artifactChanges size == 191'
 		mchanges != null && artifactChanges.size() == 191
 		
 	}
