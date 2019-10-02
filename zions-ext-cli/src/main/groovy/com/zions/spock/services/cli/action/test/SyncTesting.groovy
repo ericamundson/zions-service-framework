@@ -227,6 +227,7 @@ class SyncTesting implements CliAction {
 			r.body.add(title)
 		}
 		if (testCase.result == 'passed') {
+			String title = "${testCase.title}"
 			String steps = buildSteps(testCase.stepsOut)
 			def s = [op: 'add', path: '/fields/Microsoft.VSTS.TCM.Steps', value: "${steps}"]
 			r.body.add(s)
@@ -245,7 +246,7 @@ class SyncTesting implements CliAction {
 		stepxml.steps(steps: 0, last: sList.size()+1) {
 
 			String htmla = '<DIV>'
-			String htmlr = '<DIV>'
+			String htmlr = ''
 			stepsOut.each { String s ->
 				s = s.trim()
 				if (s.startsWith('given:') ||
@@ -270,7 +271,7 @@ class SyncTesting implements CliAction {
 					}
 					sCount++
 					htmla = '<DIV>'
-					htmlr = '<DIV>'
+					htmlr = ''
 
 				}
 			}
