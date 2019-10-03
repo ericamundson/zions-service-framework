@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -22,7 +23,8 @@ class AccountManagementServiceSpec extends Specification implements SpockLabeler
 
 	@Autowired
 	AccountManagementService underTest
-	
+
+	@Ignore	
 	def 'get all accounts'() {
 		when: w_ 'run getAccounts'
 		def accounts = underTest.getAccounts('')
