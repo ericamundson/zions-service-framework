@@ -655,7 +655,7 @@ public class BuildManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${result.value[0].id}",
 				query: query,
 				)
-		query = ['api-version':'4.1', 'propertyFilters':'processParameters']
+		// What is this doing ?? query = ['api-version':'4.1', 'propertyFilters':'processParameters']
 		return result1
 	}
 
@@ -703,22 +703,41 @@ public class BuildManagementService {
 			return null
 		}
 		def lastTagIdx = result.count - 1
-		return result.value[lastTagIdx]
-	
-		// parse tag name
-		/*
-		def outtags = [];
-		for (def tag in result.value) {		
-			def tagName = tag.name;
-			tagName = tagName.substring("refs/tags/".length(), tagName.length());
-			outtags.push(tagName);
-		}
-	
-		// find the latest tag
-		def latestTag  = tagName
 		
+		// check tag name to ensure that it represents a valid semantic version string
+		def tagName = result.value[lastTagIdx].name
+		tagName = tagName.substring("refs/tags/".length(), tagName.length())
+		while (notValidTag(tagName)) {
+			lastTagIdx--
+			tagName = result.value[lastTagIdx].name
+			tagName = tagName.substring("refs/tags/".length(), tagName.length())
+		}
+		def latestTag  = tagName
+
 		return latestTag
-		*/
+	}
+
+	private boolean notValidTag(def tagName) {
+		String[] versionParts
+		if (tagName.indexOf("-") > -1) {
+			// look for tag with qualifier
+			String[] tagParts = tagName.split("-")
+			versionParts = tagParts[0].split(".")
+		} else {
+			versionParts = tagName.split(".")
+		}
+		if (versionParts.length < 5) {
+			return true
+		}
+		for (int idx = 0; idx++; idx < 3) {
+			try {
+				Integer.parseInt(versionParts[idx])
+			} catch (NumberFormatException e) {
+				// Not a number so version string is invalid
+				return true
+			}
+		}
+		return false
 	}
 
 	private def createInitialBuildTag(def collection, def project, def repo, def latestTag, def branchName) {
