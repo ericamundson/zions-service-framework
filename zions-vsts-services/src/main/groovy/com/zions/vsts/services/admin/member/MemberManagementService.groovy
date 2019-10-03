@@ -58,24 +58,27 @@ public class MemberManagementService {
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${url}/${collection}/_apis/graph/users",
-			query: ['api-version': '5.1-preview.1']
+			query: ['api-version': '5.1-preview.1'],
+			withHeader: true
 			)
 			
 		while (true) {
-			result.value.each { user ->
+			result.data.value.each { user ->
 				users.add(user)
 			}
-			if (result.continuationToken) {
+			if (result.headers.'X-MS-ContinuationToken') {
 				result = genericRestClient.get(
 					contentType: ContentType.JSON,
-					uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/graph/users",
-					query: ['api-version': '5.1-preview.1', continuationToken: result.continuationToken]
+					uri: "${url}/${collection}/_apis/graph/users",
+					query: ['api-version': '5.1-preview.1', continuationToken: result.headers.'X-MS-ContinuationToken'],
+					withHeader: true
+					
 					)
 			} else {
 				break
 			}
 		}
-
+		return users
 	}
 	
 	/**
