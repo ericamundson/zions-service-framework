@@ -63,7 +63,7 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 	 */
 	//@Ignore
 	def 'Main flow for module with related artifacts while testing ADO change data processing'() {
-		setup: s_ "Setup a module and module's related artifacts"
+		setup: s_ "modules and module's related artifacts stubs"
 		setupModuleAndRelatedArtifactData()
 		cacheManagementService.cacheModule = 'RM'
 		
@@ -128,12 +128,15 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 	}
 
 	void setupModuleAndRelatedArtifactData() {
+		a_ 'Search test data resources for module data.'
 		URI uri = this.getClass().getResource('/testdata').toURI()
 		File tDir = new File(uri)
 		def moduleFiles = []
 		tDir.eachFile { File file ->
 			if (file.name.startsWith('module')) moduleFiles.add(file)
 		}
+		
+		a_ 'load all found module test data for rmGenericeRestClient stubbing'
 		def moduleMap = [:]
 		moduleFiles.each { File module ->
 			def modData = dataGenerationService.generate(module)
@@ -142,6 +145,7 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 			moduleMap[url] = [data: data, str: modData.data]
 		}
 		
+		a_ 'stub rmGenericRestClient.get to return module data and artifact data'
 		rmGenericRestClient.get(_) >> { args ->
 			def input = args[0]
 			String auri = "${input.uri}"
@@ -155,8 +159,10 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 			return 
 		}
 		
+		a_ 'stub attachmentService.sendAttachement call'
 		attachmentService.sendAttachment(_) >> {}
 		
+		a_ 'stub clmRequirementsFileManagementService.ensureRequirementFileAttachment call'
 		clmRequirementsFileManagementService.ensureRequirementFileAttachment(_, _) >> {}
 	}
 

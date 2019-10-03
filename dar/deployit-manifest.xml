@@ -26,7 +26,7 @@
       <preScannedPlaceholders></preScannedPlaceholders>
     </file.Folder>
     <cmd.Command name="copy_cmd">
-      <commandLine>{{copy.command}} {{to.location}}</commandLine>
+      <commandLine>{{copy.command}} {{from.location}} {{to.location}}</commandLine>
       <dependencies>
       </dependencies>
       <order>61</order>
