@@ -16,6 +16,7 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementServiceTestConfig
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -82,6 +83,15 @@ class MemberManagementServiceSpecTest extends Specification implements SpockLabe
 		
 		then: t_ 'validate member added to team'
 		res == null
+	}
+	
+	@Ignore
+	def 'getUsers flow.'() {
+		when: w_ 'run getUsers'
+		def users = underTest.getUsers('')
+		
+		then: t_ "user > 0"
+		users.size() > 0
 	}
 	
 	def 'getProjectMembersMap test success flow.'() {

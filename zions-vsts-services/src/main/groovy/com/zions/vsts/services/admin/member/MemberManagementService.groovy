@@ -52,6 +52,32 @@ public class MemberManagementService {
 		
 	}
 	
+	public def getUsers(String collection) {
+		def users = []
+		String url = "${genericRestClient.getTfsUrl()}".replace('//dev.', '//vssps.dev.')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${url}/${collection}/_apis/graph/users",
+			query: ['api-version': '5.1-preview.1']
+			)
+			
+		while (true) {
+			result.value.each { user ->
+				users.add(user)
+			}
+			if (result.continuationToken) {
+				result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/graph/users",
+					query: ['api-version': '5.1-preview.1', continuationToken: result.continuationToken]
+					)
+			} else {
+				break
+			}
+		}
+
+	}
+	
 	/**
 	 * Adds members/user to team.
 	 * 

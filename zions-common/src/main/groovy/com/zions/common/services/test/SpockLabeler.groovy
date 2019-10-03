@@ -1,6 +1,11 @@
 package com.zions.common.services.test
 
+import org.springframework.beans.factory.annotation.Value
+
 trait SpockLabeler {
+	@Value('${output.dir:build/spock}')
+	String outputDir
+	
 	def g_(String message = null) {
 		if (message) {
 			println "given: ${message}"
