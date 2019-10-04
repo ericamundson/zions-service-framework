@@ -17,7 +17,7 @@ import spock.lang.Specification
 import org.springframework.spring.*
 
 
-class GenericRestClientSpecTest extends Specification implements SpockLabeler {
+class GenericRestClientSpecTest extends Specification {
 	
 	IGenericRestClient genericRestClient
 	RESTClient delegate
@@ -30,12 +30,12 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 	}	
 
 	public void 'call get with successful result'() {
-		given: g_ 'make delegate calls'
+		given: 'make delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.get(_) >> resp
 		2* resp.getData() >> [stuff: 'stuff']
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -43,19 +43,19 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ 'result.stuff == stuff'
+		then: 'result.stuff == stuff'
 		"${result.stuff}" == 'stuff'
 		
 			
 	}
 
 	public void 'call get with failed result'() {
-		given: g_ 'make delegate calls'
+		given: 'make delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.get(_) >> resp
 		2* resp.getData() >> null
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -63,20 +63,20 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ 'result == null'
+		then: 'result == null'
 		result == null
 		
 			
 	}
 	
 	public void 'call put with successful result'() {
-		given: g_ 'make delegate calls'
+		given: 'make delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.put(_) >> resp
 		1* resp.getStatus() >> 200
 		1* resp.getData() >> [stuff: 'stuff']
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.put(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -84,17 +84,17 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ 'result.stuff == stuff'
+		then: 'result.stuff == stuff'
 		"${result.stuff}" == 'stuff'
 	}
 	
 	public void 'call put with bad status'() {
-		given: g_ 'stub internal delegate calls'
+		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.put(_) >> resp
 		1* resp.getStatus() >> 400
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.put(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -102,18 +102,18 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ 'result == null'
+		then: 'result == null'
 		result == null
 	}
 	
 	public void 'call delete with good status'() {
-		given: g_ 'stub internal delegate calls'
+		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.delete(_) >> resp
 		1 * resp.getStatus() >> 204
 		1 * resp.getData() >> "stuff"
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.delete(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -121,17 +121,17 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ "result == 'stuff'"
+		then: "result == 'stuff'"
 		result == 'stuff'
 	}
 	
 	public void 'call delete with bad status'() {
-		given: g_ 'stub internal delegate calls'
+		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.delete(_) >> resp
 		1 * resp.getStatus() >> 400
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.delete(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -139,18 +139,18 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ 'result == null'
+		then: 'result == null'
 		result == null
 	}
 	
 	public void 'call patch with successful result'() {
-		given: g_ 'stub internal delegate calls'
+		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.patch(_) >> resp
 		1* resp.getStatus() >> 200
 		1* resp.getData() >> [stuff: 'stuff']
 		
-		when: w_ 'make call under test'
+		when: 'make call under test'
 		def result = genericRestClient.patch(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -158,17 +158,17 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ "result.stuff == 'stuff'"
+		then: "result.stuff == 'stuff'"
 		"${result.stuff}" == 'stuff'
 	}
 	
 	public void 'call patch with bad status'() {
-		given: g_ 'stub internal delegate calls'
+		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.patch(_) >> resp
 		1* resp.getStatus() >> 400
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.patch(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -176,18 +176,18 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ 'result == null'
+		then: 'result == null'
 		result == null
 	}
 	
 	public void 'call post with successful result'() {
-		given: g_ 'stub internal delegate calls'
+		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.post(_) >> resp
 		1* resp.getStatus() >> 200
 		1* resp.getData() >> [stuff: 'stuff']
 		
-		when: w_ 'make call under test'
+		when: 'make call under test'
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -195,17 +195,17 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ "result.stuff == 'stuff'"
+		then: "result.stuff == 'stuff'"
 		"${result.stuff}" == 'stuff'
 	}
 	
 	public void 'call post with bad status'() {
-		given: g_ 'stub internal delegate calls'
+		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.post(_) >> resp
 		2* resp.getStatus() >> 400
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -213,19 +213,19 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ 'result == null'
+		then: 'result == null'
 		result == null
 	}
 	
 	public void 'call rateLimitPost data success'() {
-		given: g_ 'stub internal delegate calls'
+		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.post(_) >> resp
 		1 * resp.getLastHeader(_) >> null
 		2 * resp.getStatus() >> 200
 		1 * resp.getData() >> [stuff: 'stuff']
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -233,12 +233,12 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ "result.stuff == 'stuff'"
+		then: "result.stuff == 'stuff'"
 		"${result.stuff}" == 'stuff'
 	}
 	
 	public void 'call rateLimitPost started throttle check'() {
-		given: g_ 'stub internal delegate calls'
+		given: 'stub internal delegate calls'
 		System.metaClass.static.sleep = { long ms -> 
 			return true
 		}
@@ -249,7 +249,7 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 		2 * resp.getStatus() >> 200
 		1 * resp.getData() >> [stuff: 'stuff']
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -257,12 +257,12 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ "result.stuff == 'stuff'"
+		then: "result.stuff == 'stuff'"
 		"${result.stuff}" == 'stuff'
 	}
 	
 	public void 'call rateLimitPost bad status'() {
-		given: g_ 'stub internal delegate calls'
+		given: 'stub internal delegate calls'
 		System.metaClass.static.sleep = { long ms -> 
 			return true
 		}
@@ -276,7 +276,7 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 		1 * line.toString() >> "Batch Failed"
 		1 * resp.getData() >> [stuff: 'stuff']
 		
-		when: w_ 'call method under test'
+		when: 'call method under test'
 		def result = genericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
 			uri: "http://vsts/none/_apis/wit/workitems",
@@ -284,7 +284,7 @@ class GenericRestClientSpecTest extends Specification implements SpockLabeler {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: t_ "result.stuff == stuff"
+		then: "result.stuff == stuff"
 		"${result.stuff}" == 'stuff'
 	}
 }

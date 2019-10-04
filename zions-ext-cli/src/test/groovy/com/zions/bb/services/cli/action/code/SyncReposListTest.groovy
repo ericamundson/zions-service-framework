@@ -24,7 +24,7 @@ import com.zions.vsts.services.permissions.PermissionsManagementService
 import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[SyncReposListTestConfig])
-public class SyncReposListTest extends Specification implements SpockLabeler {
+public class SyncReposListTest extends Specification {
 	
 	@Autowired
 	IGenericRestClient genericRestClient;
@@ -68,28 +68,28 @@ public class SyncReposListTest extends Specification implements SpockLabeler {
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'validate method failed flow.'() {
 		
-		given: g_ 'Invalid application arguments'
+		given: 'Invalid application arguments'
 		String[] args = []
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'call validate'
+		when: 'call validate'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
@@ -99,24 +99,24 @@ public class SyncReposListTest extends Specification implements SpockLabeler {
 		given: "Valid argument settings."		
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: w_ 'call validate'
+		when: 'call validate'
 		def testPlans = underTest.validate(appArgs)
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	@Test
 	def 'execute method failed flow.'() {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		String[] args = []
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'call execute'
+		when: 'call execute'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
@@ -124,21 +124,21 @@ public class SyncReposListTest extends Specification implements SpockLabeler {
 	@Test
 	def 'execute method success flow.'() {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: a_ 'stub importRepoDir call'
+		and: 'stub importRepoDir call'
 		def dummy =[]
 		codeManagmentService.importRepoDir(_, _, _, _, _, _) >> dummy
 		
-		and: a_ 'stub call to ensureTeamToRepo'
+		and: 'stub call to ensureTeamToRepo'
 		def dummy1 =[]
 		permissionsManagementService.ensureTeamToRepo(_, _, _, _, _) >> dummy1
 		
-		when: w_ 'call execute'
+		when: 'call execute'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'No exception'
+		then: 'No exception'
 		true
 		
 	}

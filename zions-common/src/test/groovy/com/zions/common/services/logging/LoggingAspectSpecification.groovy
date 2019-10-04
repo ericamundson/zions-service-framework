@@ -18,20 +18,20 @@ import com.zions.common.services.test.SpockLabeler
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[LoggingAspectSpecificationConfig])
-class LoggingAspectSpecification extends Specification implements SpockLabeler {
+class LoggingAspectSpecification extends Specification {
 
 	@Autowired
 	SomeClass someClass
 
 
 	def 'Main flow for timing log'() {
-		setup: s_ 'class to be logged'
+		setup: 'class to be logged'
 
-		when: w_ 'execute something with class testing log'
+		when: 'execute something with class testing log'
 		someClass.methodOne()
 		someClass.methodTwo()
 
-		then: t_ 'validate something logged'
+		then: 'validate something logged'
 		true
 	}
 
@@ -39,13 +39,13 @@ class LoggingAspectSpecification extends Specification implements SpockLabeler {
 	SomeClass2 someClass2
 
 	def 'Flow for class without Slf4j annotation'() {
-		setup: s_ 'class to be logged'
+		setup: 'class to be logged'
 
-		when: w_ 'execute something with class testing log'
+		when: 'execute something with class testing log'
 		someClass2.methodOne()
 		someClass2.methodTwo()
 
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 }

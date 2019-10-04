@@ -15,7 +15,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TranslateRQMToMTMSpecSpecConfig])
-class TranslateRQMToMTMSpec extends Specification implements SpockLabeler {
+class TranslateRQMToMTMSpec extends Specification {
 
 	def "Full run"() {
 		

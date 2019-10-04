@@ -32,7 +32,7 @@ import com.zions.vsts.services.workitem.AreasManagementService
 import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[MbFilterTestConfig])
-public class MbFilterSpecTest extends Specification implements SpockLabeler {
+public class MbFilterSpecTest extends Specification {
 	
 	@Value('${test.work.items.file}')
 	String testWorkItemsFileName
@@ -42,11 +42,11 @@ public class MbFilterSpecTest extends Specification implements SpockLabeler {
 	
 	@Test
 	def 'filter success flow '() {
-		given: g_ 'work item query xml'
+		given: 'work item query xml'
 		def xmlWorkItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
-		when: w_ 'call filter'
+		when: 'call filter'
 		def result = underTest.filter(xmlWorkItems)
-		then: t_ null
+		then: 'No exception'
 		result != null
 		println xmlWorkItems
 		println '---------------------------------------'

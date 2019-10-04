@@ -22,7 +22,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[FileManagementServiceSpecConfig])
-class FileManagementServiceSpec extends Specification implements SpockLabeler {
+class FileManagementServiceSpec extends Specification {
 	
 	@Autowired
 	IGenericRestClient genericRestClient
@@ -34,17 +34,17 @@ class FileManagementServiceSpec extends Specification implements SpockLabeler {
 	ICacheManagementService cacheManagementService
 
 	def 'ensureAttachments main flow'() {
-		given: g_ 'stub for WorkManagementService getCacheWI call'
+		given: 'stub for WorkManagementService getCacheWI call'
 		def wiData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/cacheworkitem.json').text)
 		1 * cacheManagementService.getFromCache(_,_) >> wiData
 		
-		and: a_ 'stub for upload attachment rest request'
+		and: 'stub for upload attachment rest request'
 		1 * genericRestClient.rateLimitPost(_, _) >> [url: 'https://an.azure.location']
 		
-		when: w_ 'call method under test ensureAttachments'
+		when: 'call method under test ensureAttachments'
 		def wiUpdate = underTest.ensureAttachments('', '', 'aId', [[file: new File('dumb.png'), comment: "Added dumb.png"]])
 		
-		then: t_ 'a valid work item change request must be returned.'
+		then: 'a valid work item change request must be returned.'
 		wiUpdate.body.size() > 1
 	}
 

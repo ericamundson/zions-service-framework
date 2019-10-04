@@ -14,7 +14,7 @@ import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[IntegerGeneratorTestConfig])
-public class IntegerGeneratorTest extends Specification implements SpockLabeler {
+public class IntegerGeneratorTest extends Specification {
 
 	@Autowired
 	IntegerGenerator underTest
@@ -22,10 +22,10 @@ public class IntegerGeneratorTest extends Specification implements SpockLabeler 
 	@Test
 	def 'gen test'() {
 
-		when: w_ 'call gen'
+		when: 'call gen'
 		def plan = underTest.gen()
 
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 }

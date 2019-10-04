@@ -30,7 +30,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ClmRequirementsItemManagementServiceSpecConfig])
-class ClmRequirementsItemManagementServiceSpec extends Specification implements SpockLabeler {
+class ClmRequirementsItemManagementServiceSpec extends Specification {
 	
 	@Autowired
 	ClmRequirementsItemManagementService underTest
@@ -63,11 +63,11 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 	 */
 	//@Ignore
 	def 'Main flow for module with related artifacts while testing ADO change data processing'() {
-		setup: s_ "modules and module's related artifacts stubs"
+		setup: "modules and module's related artifacts stubs"
 		setupModuleAndRelatedArtifactData()
 		cacheManagementService.cacheModule = 'RM'
 		
-		when: w_ 'Run behavior to get changes for module and related artifacts'
+		when: 'Run behavior to get changes for module and related artifacts'
 		String murl = "https://clm.cs.zionsbank.com/rm/resources/_frOPQFDzEeWblrEplHqOHQ"
 		def module = clmRequirementsManagementService.getModule(murl, false)
 		def memberMap = [:]
@@ -99,7 +99,7 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 			}
 		})
 		
-		then: t_ 'mchanges are not null and artifactChanges size == 191'
+		then: 'mchanges are not null and artifactChanges size == 191'
 		mchanges != null && artifactChanges.size() == 191
 		
 	}
@@ -128,7 +128,6 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 	}
 
 	void setupModuleAndRelatedArtifactData() {
-		a_ 'Search test data resources for module data.'
 		URI uri = this.getClass().getResource('/testdata').toURI()
 		File tDir = new File(uri)
 		def moduleFiles = []
@@ -136,7 +135,6 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 			if (file.name.startsWith('module')) moduleFiles.add(file)
 		}
 		
-		a_ 'load all found module test data for rmGenericeRestClient stubbing'
 		def moduleMap = [:]
 		moduleFiles.each { File module ->
 			def modData = dataGenerationService.generate(module)
@@ -145,7 +143,6 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 			moduleMap[url] = [data: data, str: modData.data]
 		}
 		
-		a_ 'stub rmGenericRestClient.get to return module data and artifact data'
 		rmGenericRestClient.get(_) >> { args ->
 			def input = args[0]
 			String auri = "${input.uri}"
@@ -159,10 +156,8 @@ class ClmRequirementsItemManagementServiceSpec extends Specification implements 
 			return 
 		}
 		
-		a_ 'stub attachmentService.sendAttachement call'
 		attachmentService.sendAttachment(_) >> {}
 		
-		a_ 'stub clmRequirementsFileManagementService.ensureRequirementFileAttachment call'
 		clmRequirementsFileManagementService.ensureRequirementFileAttachment(_, _) >> {}
 	}
 

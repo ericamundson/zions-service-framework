@@ -29,7 +29,7 @@ import com.zions.vsts.services.workitem.AreasManagementService
 import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[SetupTFSWorkitemAreasTestConfig])
-public class SetupTFSWorkitemAreasSpecTest extends Specification implements SpockLabeler {
+public class SetupTFSWorkitemAreasSpecTest extends Specification {
 	
 	@Autowired
 	IGenericRestClient genericRestClient;
@@ -69,59 +69,59 @@ public class SetupTFSWorkitemAreasSpecTest extends Specification implements Spoc
 	
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password', 
 			'--ccm.projectArea=project_area', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser', 
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas' ]
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then: t_ null
+		then: 'No exception'
 		result == true
 	}
 	
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given: g_ 'invalid Application Arguments'
+		given: 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'execute ApplicationArguments success flow.' () {
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password',
 			'--ccm.projectArea=project_area', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser',
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas', '--tfs.collection=collection' ]
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: a_ 'Stub with project data'
+		and: 'Stub with project data'
 		def theProject = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		projectManagementService.getProject(_, _) >> theProject
 		
-		and: a_ 'stub planManagementService.getCategories(_,_)'
+		and: 'stub planManagementService.getCategories(_,_)'
 		def areaData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/areadata.json').text)
 		planManagementService.getCategories(_,_)  >> areaData
 		
-		and: a_ 'stub other data processing calls'
+		and: 'stub other data processing calls'
 		def tfsAreaData 
 		areasManagementService.getAreaData(_,_) >> tfsAreaData
 		areasManagementService.processAreasData(_, _, _, _, _)
 		areasManagementService.assignTeamAreas(_, _, _)
 		
-		when: w_ 'calling of method under test (execute)'
+		when: 'calling of method under test (execute)'
 		def result = underTest.execute(appArgs)
 		
-		then: t_ 'result == null'
+		then: 'result == null'
 		result == null
 	}
 

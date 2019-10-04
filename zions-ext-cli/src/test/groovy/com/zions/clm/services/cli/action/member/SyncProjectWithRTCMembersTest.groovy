@@ -24,7 +24,7 @@ import spock.mock.DetachedMockFactory
 
 
 @ContextConfiguration(classes=[SyncProjectWithRTCMembersTestConfig])
-public class SyncProjectWithRTCMembersTest extends Specification implements SpockLabeler {
+public class SyncProjectWithRTCMembersTest extends Specification {
 	
 	@Autowired
 	SyncProjectWithRTCMembers underTest
@@ -44,45 +44,45 @@ public class SyncProjectWithRTCMembersTest extends Specification implements Spoc
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given: g_ 'invalid Application Arguments'
+		given: 'invalid Application Arguments'
 		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'validate method success flow.'() {
 		
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'result == true'
+		then: 'result == true'
 		result == true
 	}
 	
 	@Test
 	def 'execute method success flow.' () {
 		
-		given: g_ 'Valid Application Arguments'
+		given: 'Valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: a_ 'stub rest call for test plans'
+		and: 'stub rest call for test plans'
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/ccmworkitemtype.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
-		when: w_ 'call execute'
+		when: 'call execute'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'result == null'
+		then: 'result == null'
 		result == null
 	}
 	
@@ -93,10 +93,10 @@ public class SyncProjectWithRTCMembersTest extends Specification implements Spoc
 		def teamInfo = new XmlSlurper().parseText(getClass().getResource('/testdata/testmember.xml').text)
 		def map = new JsonSlurper().parseText(getClass().getResource('/testdata/mbteamnamemap.json').text)
 				
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.rebuildMemberData(teamInfo,map)
 
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	

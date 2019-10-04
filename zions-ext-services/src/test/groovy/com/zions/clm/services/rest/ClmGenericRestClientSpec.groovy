@@ -10,7 +10,7 @@ import org.junit.Test
 
 import spock.lang.Specification
 
-class ClmGenericRestClientSpec extends Specification implements SpockLabeler {
+class ClmGenericRestClientSpec extends Specification {
 
 
 	def 'test for rm folders'()  {
@@ -22,7 +22,7 @@ class ClmGenericRestClientSpec extends Specification implements SpockLabeler {
 //		
 //		ClmGenericRestClient client = new ClmGenericRestClient('https://clm.cs.zionsbank.com/rm', 'z091182', '4878Middy001')
 //		
-//		when: w_ 'class get on client'
+//		when: 'class get on client'
 //		def currentParser = client.delegate.parser.'application/xml'
 //		client.delegate.parser.'application/rdf+xml' = currentParser
 //		def response = client.get(
@@ -36,7 +36,7 @@ class ClmGenericRestClientSpec extends Specification implements SpockLabeler {
 //		String xml = XmlUtil.serialize(response.data)
 //		println xml
 //		
-//		then: t_
+//		then:
 //		true
 	}
 

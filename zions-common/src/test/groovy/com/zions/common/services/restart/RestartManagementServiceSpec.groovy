@@ -17,7 +17,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[RestartManagementServiceConfig])
-class RestartManagementServiceSpec extends Specification implements SpockLabeler {
+class RestartManagementServiceSpec extends Specification {
 	
 	@Autowired
 	RestartManagementService underTest
@@ -29,36 +29,36 @@ class RestartManagementServiceSpec extends Specification implements SpockLabeler
 	TestQueryHandler testQueryHandler
 
 	def 'processPhases happy path'() {
-		given: g_ 'stub check point selection'
+		given: 'stub check point selection'
 		Checkpoint cp = new Checkpoint([checkpointId: 0, pageUrl: 'http://theUrl', phase: 'test', logEntries:[]])
 		1 * checkpointManagementService.selectCheckpoint(_) >> cp
 		
-//		and: a_ 'stub checkpoint management service addCheckpoint'
+//		and: 'stub checkpoint management service addCheckpoint'
 //		1 * checkpointManagementService.addCheckpoint(_, _)
 
-		and: a_ 'stub query handler getItems'
+		and: 'stub query handler getItems'
 		1 * testQueryHandler.getItems() >> [url: 'https://stuff']
 		
-		and: a_ 'stub query handler initialUrl'
+		and: 'stub query handler initialUrl'
 		1 * testQueryHandler.initialUrl() >> 'http://notit'
 		
-		and: a_ 'stub query handler getPageUrl to match checkpoint returns url'
+		and: 'stub query handler getPageUrl to match checkpoint returns url'
 		1 * testQueryHandler.getPageUrl() >> 'http://theUrl'
 		
-		and: a_ 'stub query handler nextPage'
+		and: 'stub query handler nextPage'
 		1 * testQueryHandler.nextPage() >> [[entry:[stuff:'stuff']]]
 		
-		and: a_ 'stub checkpoint management service addCheckpoint'
+		and: 'stub checkpoint management service addCheckpoint'
 		1 * checkpointManagementService.addCheckpoint(_, _)
 		
-		and: a_ 'stub query handler getPageUrl'
+		and: 'stub query handler getPageUrl'
 		1 * testQueryHandler.getPageUrl() >> null
 		
 		
-		and: a_ 'stub query handler nextItems to return null'
+		and: 'stub query handler nextItems to return null'
 		1 * testQueryHandler.nextPage() >> null
 		
-		when: w_ 'call method under test (processPhases)'
+		when: 'call method under test (processPhases)'
 		boolean flag = true
 		try {
 			underTest.processPhases { phase, items -> 
@@ -67,7 +67,7 @@ class RestartManagementServiceSpec extends Specification implements SpockLabeler
 		} catch (e) {
 			flag = false
 		}
-		then: t_ "Success == ${flag}"
+		then: "Success == ${flag}"
 		flag
 	}
 

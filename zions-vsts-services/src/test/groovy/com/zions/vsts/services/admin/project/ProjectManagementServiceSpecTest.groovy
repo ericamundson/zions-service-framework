@@ -19,7 +19,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ProjectManagementServiceTestConfig])
-class ProjectManagementServiceSpecTest extends Specification implements SpockLabeler {
+class ProjectManagementServiceSpecTest extends Specification {
 	@Autowired
 	ProjectManagementService underTest
 	
@@ -27,120 +27,120 @@ class ProjectManagementServiceSpecTest extends Specification implements SpockLab
 	IGenericRestClient genericRestClient
 	
 	def 'getProject call with project result'() {
-		given: g_ 'stub azure devops project request'
+		given: 'stub azure devops project request'
 		// get stub data from testdata folder
 		String json = this.getClass().getResource('/testdata/project.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
 		1 * genericRestClient.get(_) >> out
 		
-		when: w_ 'make call under test'
+		when: 'make call under test'
 		def result = underTest.getProject("", "DigitalBanking")
 		
-		then: t_ "result.id == '76e58233-44a1-4241-8d2c-09db3fbca66d'"
+		then: "result.id == '76e58233-44a1-4241-8d2c-09db3fbca66d'"
 		"${result.id}" == '76e58233-44a1-4241-8d2c-09db3fbca66d'
 	}
 	
 	def 'getProject call with project not found result'() {
-		given: g_ 'stub azure devops project request'
+		given: 'stub azure devops project request'
 		1 * genericRestClient.get(_) >> null
 		
-		when: w_ 'make call under test'
+		when: 'make call under test'
 		def result = underTest.getProject("", "noproject")
 		
-		then: t_ null
+		then: 'No exception'
 		result == null
 	}
 	
 	def 'getProjectProperties with real data result'() {
-		given: g_ 'stub azure devops project request'
+		given: 'stub azure devops project request'
 		1 * genericRestClient.get(_) >> [id: 'umsdflku48', url: 'http://dev.azure.com/uuu/project', name: 'project']
 		
-		and: a_ 'stub azure devops project properties request'
+		and: 'stub azure devops project properties request'
 		//get stub data
 		String json = this.getClass().getResource('/testdata/projectproperties.json').text
 		JsonSlurper js = new JsonSlurper()
 		def result = js.parseText(json)
 		1 * genericRestClient.get(_) >> result
 		
-		when: w_ 'make call under test'
+		when: 'make call under test'
 		def r = underTest.getProjectProperties("", 'project')
 		
-		then: t_ "r.count == 9"
+		then: "r.count == 9"
 		"${r.count}" == '9'
 	}
 	
 	def 'getProjectProperty with real data result and return value'() {
-		given: g_ 'stub azure devops project request'
+		given: 'stub azure devops project request'
 		1 * genericRestClient.get(_) >> [id: 'umsdflku48', url: 'http://dev.azure.com/uuu/project', name: 'project']
 		
-		and: a_ 'stub azure devops project properties request'
+		and: 'stub azure devops project properties request'
 		//get stub data
 		String json = this.getClass().getResource('/testdata/projectproperties.json').text
 		JsonSlurper js = new JsonSlurper()
 		def result = js.parseText(json)
 		1 * genericRestClient.get(_) >> result
 		
-		when: w_ 'make call under test'
+		when: 'make call under test'
 		String value = underTest.getProjectProperty("", 'project', 'System.CurrentProcessTemplateId')
 		
-		then: t_ 'value == 339c195b-294c-4367-980b-870119d48b93'
+		then: 'value == 339c195b-294c-4367-980b-870119d48b93'
 		"${value}" == '339c195b-294c-4367-980b-870119d48b93'
 	}
 		
 	def 'getProjectProperty with real data result'() {
-		given: g_ 'stub azure devops project request'
+		given: 'stub azure devops project request'
 		1 * genericRestClient.get(_) >> [id: 'umsdflku48', url: 'http://dev.azure.com/uuu/project', name: 'project']
 		
-		and: a_ 'stub azure devops project properties request'
+		and: 'stub azure devops project properties request'
 		//get stub data
 		String json = this.getClass().getResource('/testdata/projectproperties.json').text
 		JsonSlurper js = new JsonSlurper()
 		def result = js.parseText(json)
 		1 * genericRestClient.get(_) >> result
 		
-		when: w_ 'make call under test'
+		when: 'make call under test'
 		String value = underTest.getProjectProperty("", 'project', 'unknown')
 		
-		then: t_ null
+		then: 'No exception'
 		value == null
 	}
 
 	def 'getTeam with real data result'() {
-		given: g_ 'stub azure devops team request'
+		given: 'stub azure devops team request'
 		//get stub data
 		String teamjson = this.getClass().getResource('/testdata/projectteam.json').text
 		JsonSlurper js = new JsonSlurper()
 		def teamresult = js.parseText(teamjson)
 		1 * genericRestClient.get(_) >> teamresult
 		
-		when: w_ 'make call under test'
+		when: 'make call under test'
 		def team = underTest.getTeam("", 'DigitalBanking', 'OB')
 		
-		then: t_ "team.name == OB"
+		then: "team.name == OB"
 		"${team.name}" == 'OB'
 	}
 	
 	def 'ensureTeam test with null team return'() {
-		given: g_ 'stub azure devops team request and return null for no team'
+		given: 'stub azure devops team request and return null for no team'
 		//get stub data
 		1 * genericRestClient.get(_) >> null
 		
-		and: a_ 'stub request to create new team'
+		and: 'stub request to create new team'
 		String teamjson = this.getClass().getResource('/testdata/projectteam.json').text
 		JsonSlurper js = new JsonSlurper()
 		def teamresult = js.parseText(teamjson)
 		1 * genericRestClient.post(_) >> teamresult
 		
-		when: w_ 'make call under test'
+		when: 'make call under test'
 		def team = underTest.ensureTeam("", 'DigitalBanking', 'OB')
 		
-		then: t_ "team.name == OB"
+		then: "team.name == OB"
 		"${team.name}" == 'OB'
 	}
 	
 	def 'ensureTeam test with good return'() {
-		given: g_ 'stub azure devops team request and return a team'
+		given: 'stub azure devops team request and return a team'
 		//get stub data
 		String teamjson = this.getClass().getResource('/testdata/projectteam.json').text
 		JsonSlurper js = new JsonSlurper()
@@ -148,10 +148,10 @@ class ProjectManagementServiceSpecTest extends Specification implements SpockLab
 		1 * genericRestClient.get(_) >> teamresult
 		
 		
-		when: w_ 'make call under test'
+		when: 'make call under test'
 		def team = underTest.ensureTeam("", 'DigitalBanking', 'OB')
 		
-		then: t_ "team.name == OB"
+		then: "team.name == OB"
 		"${team.name}" == 'OB'
 	}
 	

@@ -7,7 +7,7 @@ import org.junit.Test
 
 import spock.lang.Specification
 
-class PerformRollupSchedulingSpec extends Specification implements SpockLabeler {
+class PerformRollupSchedulingSpec extends Specification {
 
 	@Test
 	public void test() {

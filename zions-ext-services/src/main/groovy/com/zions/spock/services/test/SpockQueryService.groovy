@@ -9,37 +9,34 @@ class SpockQueryService {
 	def loadAllReports(File topDir) {
 		def reports = []
 		topDir.eachFileRecurse { File file ->
-			if (file.name == 'spock-report.json') {
+			if (file.name.endsWith('.spock.xml')) {
 				reports.add( file )
 			}
 		}
 		def testCase = []
 		reports.each { File report -> 
-			String fText = report.text
-			fText = fText.replace('loadLogFile(', '{ "loadLogFile" :')
-			fText = fText.replace(')', '},')
-			fText = fText.substring(0, fText.length()-3)
-			fText = "[ ${fText} ]"
-			def logs = new JsonSlurper().parseText(fText)
-			formatToTestCaseInfo(logs, testCase)
+			def testClassXml = new XmlSlurper().parse(report)
+			formatToTestCaseInfo(testClassXml, testCase)
 		}
 		return testCase
 	}
 	
-	def formatToTestCaseInfo( logs, testCase ) {
-		logs.each { log ->
-			log.loadLogFile.each { entry -> 
-				if (entry.features) {
-					String sPackage = entry.'package'
-					String testClass = entry.name
-					def features = entry.features
-					features.each { feature ->
-						String title = "${sPackage}.${testClass}: ${feature.name}"
-						def testCaseInfo = [title: title, stepsOut: feature.output, result: feature.result]
-						testCase.add(testCaseInfo)
-					}
+	def formatToTestCaseInfo( testClassXml, testCase ) {
+		String className = "${testClassXml.@name}"
+		testClassXml.feature.each { feature -> 
+			String title = "${className}: ${feature.@name}"
+			String result = "${feature.@result}" 
+			def bs = []
+			feature.block.each { block ->
+				def b = [kind: "${block.@kind}", text: "${block.text.text()}", code: []]
+				block.code.each { code ->
+					b.code.push("${code.text()}")
 				}
+				bs.push(b)
 			}
+			def testCaseInfo = [title: title, blocks: bs, result: result]
+			testCase.add(testCaseInfo)
 		}
+	
 	}
 }

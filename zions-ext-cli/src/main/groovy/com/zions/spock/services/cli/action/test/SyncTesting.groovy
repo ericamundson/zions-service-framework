@@ -55,7 +55,7 @@ class SyncTesting implements CliAction {
 	@Value('${definition.id:}')
 	String definitionId
 
-	def resultMap = ['passed':'Passed', 'failed': 'Failed']
+	def resultMap = ['PASS':'Passed', 'FAIL': 'Failed']
 
 	@Autowired
 	WorkManagementService workManagementService
@@ -226,37 +226,38 @@ class SyncTesting implements CliAction {
 			def title = [op: 'add', path: '/fields/System.Title', value: "${testCase.title}"]
 			r.body.add(title)
 		}
-		if (testCase.result == 'passed') {
+		if (testCase.result == 'PASS') {
 			String title = "${testCase.title}"
-			String steps = buildSteps(testCase.stepsOut)
+			String steps = buildSteps(testCase.blocks)
 			def s = [op: 'add', path: '/fields/Microsoft.VSTS.TCM.Steps', value: "${steps}"]
 			r.body.add(s)
 		}
 		return r
 	}
 
-	String buildSteps(def stepsOut) {
+	String buildSteps(def blocks) {
 		def writer = new StringWriter()
 		MarkupBuilder stepxml = new MarkupBuilder(new IndentPrinter(new PrintWriter(writer), "", false))
 		int sCount = 2
-		def sList = stepsOut.findAll { item ->
-			String v = "${item}"
-			v.startsWith('then:')
+		def sList = blocks.findAll { block ->
+			String v = "${block.kind}"
+			v.startsWith('Then:')
 		}
 		stepxml.steps(steps: 0, last: sList.size()+1) {
 
 			String htmla = '<DIV>'
 			String htmlr = ''
-			stepsOut.each { String s ->
-				s = s.trim()
-				if (s.startsWith('given:') ||
-				s.startsWith('and:') ||
-				s.startsWith('setup:')) {
-					htmla += "<p>${s}</p>"
-				} else if (s.startsWith('when:')){
-					htmla += "<p>${s}<p></DIV>"
-				} else if (s.startsWith('then:')) {
-					htmlr += "<DIV><p>${s}</p></DIV>"
+			blocks.each { block ->
+				String kind = "${block.kind}"
+				if (kind.startsWith('Given:') ||
+				kind.startsWith('And:') ||
+				kind.startsWith('Setup:')) {
+					htmla += "<p><b>${block.kind}</b> <code>${block.text}</code></p>"
+					htmla += codeOut(block.code)
+				} else if (kind.startsWith('When:')){
+					htmla += "<p><b>${block.kind}</b> <code>${block.text}</code>${codeOut(block.code)}</DIV>"
+				} else if (kind.startsWith('Then:')) {
+					htmlr += "<DIV><p><b>${block.kind}</b> <code>${block.text}</code></p>${codeOut(block.code)}</DIV>"
 					step(id: sCount, type:'ValidateStep') {
 						StringEscapeUtils u
 						String htmlStr = escapeHtml(htmla)
@@ -278,6 +279,14 @@ class SyncTesting implements CliAction {
 		}
 		String outVal = writer.toString()
 		return outVal
+	}
+	
+	String codeOut(code) {
+		String o = ''
+		code.each { String l ->
+			o += "<p><code>${l}</code></p>"
+		}
+		return o
 	}
 
 	String escapeHtml(String html) {

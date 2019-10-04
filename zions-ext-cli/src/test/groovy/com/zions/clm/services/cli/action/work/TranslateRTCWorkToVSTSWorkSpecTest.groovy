@@ -39,7 +39,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TranslateRTCWorkToVSTSWorkSTestConfig])
-class TranslateRTCWorkToVSTSWorkSpecTest extends Specification implements SpockLabeler {
+class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 	
 	@Autowired
 	private Map<String, IFilter> filterMap
@@ -117,88 +117,88 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification implements SpockL
 	
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs('./src/test/resources/testdata/OBWITMapping.xml'))
 
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ null
+		then: 'No exception'
 		result == true
 	}
 	
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given: g_ 'invalid Application Arguments'
+		given: 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'execute ApplicationArguments exception flow.' () {
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'thrown FileNotFoundException'
+		then: 'thrown FileNotFoundException'
 		thrown FileNotFoundException
 	}
 	
 	@Test
 	def 'execute ApplicationArguments Exception flow.' () {
-		given: g_ 'invalid Application Arguments'
+		given: 'invalid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs('./src/test/resources/testdata/OBWITMapping.xml'))
 		
-		and: a_ 'stub processTemplateService.updateWorkitemTemplates'
+		and: 'stub processTemplateService.updateWorkitemTemplates'
 		def workItems = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
 		processTemplateService.updateWorkitemTemplates(_, _, _, _) >> workItems
 		
-		and: a_ 'stub clmWorkItemManagementService.getWorkItemsViaQuery'
+		and: 'stub clmWorkItemManagementService.getWorkItemsViaQuery'
 		def wititems = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
 		QueryTracking qt = new QueryTracking()
 		qt.doData(wititems)
 		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> wititems
 		
-		and: a_ 'stub workManagementService.refreshCache'
+		and: 'stub workManagementService.refreshCache'
 		def wiwChanges  = [value: ["{\"id\":\"123\", \"somejson\": \"morejson\"}"]]
 		workManagementService.refreshCache(_, _, _) >> wiwChanges
 		
-		and: a_ 'stub processTemplateService.getTranslateMapping'
+		and: 'stub processTemplateService.getTranslateMapping'
 		def translateMapping = new JsonSlurper().parseText(this.getClass().getResource('/testdata/processfields.json').text)
 		processTemplateService.getTranslateMapping(_, _, _, _)
 		
-		and: a_ 'stub memberManagementService.getProjectMembersMap'
+		and: 'stub memberManagementService.getProjectMembersMap'
 		def memberMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/teammembers.json').text)
 		memberManagementService.getProjectMembersMap(_, _) >> memberMap
 		
-		and: a_ 'stub ccmWorkManagementService.getWIChanges'
+		and: 'stub ccmWorkManagementService.getWIChanges'
 		def wicChanges  = [value: ["{\"id\":\"123\", \"somejson\": \"morejson\"}"]]
 		ccmWorkManagementService.getWIChanges(_, _, _, _) >> wicChanges
 		
-		and: a_ 'stub attachmentsManagementService.cacheWorkItemAttachments'
+		and: 'stub attachmentsManagementService.cacheWorkItemAttachments'
 		def files = [new File('text1.txt'), new File('text1.txt')]
 		attachmentsManagementService.cacheWorkItemAttachments(_) >> files
 		
-		and: a_ 'stub fileManagementService.ensureAttachments'
+		and: 'stub fileManagementService.ensureAttachments'
 		def idMap = [source:"Default", value:"Something"]
 		def wiChanges = []
 		wiChanges.add(idMap)
 		fileManagementService.ensureAttachments(_, _, _, _) >> wiChanges
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'thrown NullPointerException'
+		then: 'thrown NullPointerException'
 		thrown NullPointerException
 	}
 	

@@ -16,7 +16,7 @@ import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[QuoteGeneratorTestConfig])
-public class QuoteGeneratorTest extends Specification implements SpockLabeler {
+public class QuoteGeneratorTest extends Specification {
 	
 	
 	@Autowired
@@ -27,10 +27,10 @@ public class QuoteGeneratorTest extends Specification implements SpockLabeler {
 	
 		underTest.setLength(5)
 		
-		when: w_ 'call init'
+		when: 'call init'
 		def plan = underTest.init()
 		
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 	
@@ -40,19 +40,19 @@ public class QuoteGeneratorTest extends Specification implements SpockLabeler {
 	
 		underTest.setLength(0)
 		
-		when: w_ 'call gen'
+		when: 'call gen'
 		def plan = underTest.gen()
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	@Test
 	def 'gen exception flow' () {
-		when: w_ 'call gen'
+		when: 'call gen'
 		def plan = underTest.gen()
 		
-		then: t_ null
+		then: 'No exception'
 		true
 		
 	}

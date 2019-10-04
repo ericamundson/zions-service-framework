@@ -24,7 +24,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[CheckpointManagementServiceSpecConfig])
-class CheckpointManagementServiceSpec extends Specification implements SpockLabeler {
+class CheckpointManagementServiceSpec extends Specification {
 	@Autowired
 	ICheckpointManagementService underTest
 	
@@ -32,7 +32,7 @@ class CheckpointManagementServiceSpec extends Specification implements SpockLabe
 	ICacheManagementService cacheManagementService
 
 	def 'selectCheckpoint last key'() {
-		setup: s_ 'some test checkpoints'
+		setup: 'some test checkpoints'
 		cacheManagementService.clear();
 		underTest.resetIdCounter()
 		underTest.addCheckpoint('test', 'page1')
@@ -40,15 +40,15 @@ class CheckpointManagementServiceSpec extends Specification implements SpockLabe
 		underTest.addCheckpoint('test', 'page3')
 		underTest.addCheckpoint('test', 'page4')
 		
-		when: w_ 'call selectCheckpoint'
+		when: 'call selectCheckpoint'
 		Checkpoint cp = underTest.selectCheckpoint('last')
 		
-		then: t_ 'cp.pageUrl == page4'
+		then: 'cp.pageUrl == page4'
 		cp.pageUrl == 'page4'
 	}
 	
 	def 'selectCheckpoint priorToLogEntries key'() {
-		setup: s_ 'checkpoint items'
+		setup: 'checkpoint items'
 		cacheManagementService.clear();
 		underTest.resetIdCounter()
 		underTest.addCheckpoint('test', 'page1')
@@ -58,15 +58,15 @@ class CheckpointManagementServiceSpec extends Specification implements SpockLabe
 		underTest.addLogentry('stuff2')
 		underTest.addCheckpoint('test', 'page4')
 		
-		when: w_ 'call selectCheckpoint with log entries'
+		when: 'call selectCheckpoint with log entries'
 		Checkpoint cp = underTest.selectCheckpoint('priorToLogEntries')
 		
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		cp.pageUrl == 'page2'
 	}
 	
 	def 'selectCheckpoint specific key'() {
-		setup: s_ 'add checkpoints'
+		setup: 'add checkpoints'
 		cacheManagementService.clear();
 		underTest.resetIdCounter()
 		underTest.addCheckpoint('test', 'page1')
@@ -76,10 +76,10 @@ class CheckpointManagementServiceSpec extends Specification implements SpockLabe
 		underTest.addLogentry('stuff2')
 		underTest.addCheckpoint('test', 'page4')
 		
-		when: w_ 'call selectCheckpoint with specific key'
+		when: 'call selectCheckpoint with specific key'
 		Checkpoint cp = underTest.selectCheckpoint('2-checkpoint')
 		
-		then: t_ "cp.pageUrl == 'page3'"
+		then: "cp.pageUrl == 'page3'"
 		cp.pageUrl == 'page3'
 	}
 

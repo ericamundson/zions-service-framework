@@ -14,18 +14,18 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[RequirementsMappingManagementServiceSpecConfig])
-class RequirementsMappingManagementServiceSpec extends Specification implements SpockLabeler {
+class RequirementsMappingManagementServiceSpec extends Specification {
 
 	@Autowired
 	RequirementsMappingManagementService underTest
 	
 	def 'Main flow for getMappingData'() {
-		setup: s_ 'Nothing required'
+		setup: 'Nothing required'
 		
-		when: w_ 'Call getMappingData'
+		when: 'Call getMappingData'
 		def map = underTest.getMappingData()
 		
-		then: t_ 'map.size() == 3'
+		then: 'map.size() == 3'
 		map.size() == 3
 	}
 

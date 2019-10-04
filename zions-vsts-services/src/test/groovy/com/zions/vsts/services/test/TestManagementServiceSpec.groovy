@@ -25,7 +25,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TestManagementServiceSpecConfig])
-class TestManagementServiceSpec extends Specification implements SpockLabeler {
+class TestManagementServiceSpec extends Specification {
 	
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
@@ -46,28 +46,28 @@ class TestManagementServiceSpec extends Specification implements SpockLabeler {
 	DataGenerationService dataGenerationService
 
 	def 'ensureResultAttachments success sending attachment to ADO' () {
-		given: g_ 'Stub call to cacheManagementService.getFromCache'
+		given: 'Stub call to cacheManagementService.getFromCache'
 		def adoTestcase = dataGenerationService.generate('/testdata/wiData.json')
 		1 * cacheManagementService.getFromCache(_, _) >> adoTestcase		
 
 		
-		and: a_ 'Stub call to genericRestClient.get that gets attachments inside of hasAttachment (no attachment found)'
+		and: 'Stub call to genericRestClient.get that gets attachments inside of hasAttachment (no attachment found)'
 		def attachments = dataGenerationService.generate('/testdata/attachments.json')
 		1 * genericRestClient.get(_) >> attachments
 		
-		and: a_ 'Stub call to genericRestClient.post that send attachment to ADO'
+		and: 'Stub call to genericRestClient.post that send attachment to ADO'
 		1 * genericRestClient.post(_) >> [id: 4, url:'https://dev.azure.com/fabrikam/Fabrikam/_apis/test/Runs/49/Results/100000/Attachments/4']
-		and: a_ 'setup file to attach'
+		and: 'setup file to attach'
 		File file = new File('test.txt')
 		def os = file.newDataOutputStream()
 		os << 'Test text'
 		os.close()
 		def rFiles = [[file:file, comment: 'out test']]
 		
-		and: a_ 'Data for RQM test case'
+		and: 'Data for RQM test case'
 		def rqmTestCase = dataGenerationService.generate('/testdata/testcase49881.xml')
 		
-		and: a_ 'Data for result map'
+		and: 'Data for result map'
 		def results = dataGenerationService.generate('/testdata/resultsMap.json')
 		def resultMap = [:]
 		int count = 0
@@ -78,7 +78,7 @@ class TestManagementServiceSpec extends Specification implements SpockLabeler {
 			}
 			count++
 		}
-		when: w_ 'make call to method under test ensureResultAttachments'
+		when: 'make call to method under test ensureResultAttachments'
 		boolean success = true
 		try {
 			def result = underTest.ensureResultAttachments('', '', rFiles, rqmTestCase, resultMap)
@@ -86,32 +86,32 @@ class TestManagementServiceSpec extends Specification implements SpockLabeler {
 			success = false
 		}
 		
-		then: t_ 'valid result of attachment Request'
+		then: 'valid result of attachment Request'
 		success
 	}
 	
 	def 'ensureResultAttachments attachment already exists in ADO' () {
-		given: g_ 'Stub call to cacheManagementService.getFromCache'
+		given: 'Stub call to cacheManagementService.getFromCache'
 		def adoTestcase = dataGenerationService.generate('/testdata/wiData.json')
 		1 * cacheManagementService.getFromCache(_, _) >> adoTestcase		
 
 		
-		and: a_ 'Stub call to genericRestClient.get that gets attachments inside of hasAttachment (no attachment found)'
+		and: 'Stub call to genericRestClient.get that gets attachments inside of hasAttachment (no attachment found)'
 		def attachments = dataGenerationService.generate('/testdata/attachments.json')
 		1 * genericRestClient.get(_) >> attachments
 		
 
-		and: a_ 'setup file to attach'
+		and: 'setup file to attach'
 		File file = new File('textAsFileAttachment.txt')
 		def os = file.newDataOutputStream()
 		os << 'Test text'
 		os.close()
 		def rFiles = [[file:file, comment: 'out test']]
 		
-		and: a_ 'Data for RQM test case'
+		and: 'Data for RQM test case'
 		def rqmTestCase = dataGenerationService.generate('/testdata/testcase49881.xml')
 		
-		and: a_ 'Data for result map'
+		and: 'Data for result map'
 		def results = dataGenerationService.generate('/testdata/resultsMap.json')
 		def resultMap = [:]
 		int count = 0
@@ -123,7 +123,7 @@ class TestManagementServiceSpec extends Specification implements SpockLabeler {
 			count++
 		}
 		
-		when: w_ 'make call to method under test ensureResultAttachments'
+		when: 'make call to method under test ensureResultAttachments'
 		boolean success = true
 		try {
 			def result = underTest.ensureResultAttachments('', '', rFiles, rqmTestCase, resultMap)
@@ -131,121 +131,121 @@ class TestManagementServiceSpec extends Specification implements SpockLabeler {
 			success = false
 		}
 		
-		then: t_ 'validate result of attachment Request'
+		then: 'validate result of attachment Request'
 		success
 	}
 	
 	def 'sendPlanChanges with new plan item'() {
-		given: g_'Setup change data'
+		given:'Setup change data'
 		def change = dataGenerationService.generate('/testdata/changepost.json')
 		
-		and: a_ 'ensure stub of post call'
+		and: 'ensure stub of post call'
 		def plan = dataGenerationService.generate('/testdata/TestPlan.json')
 		1 * genericRestClient.post(_) >> plan
 		
-		and: a_ 'ensure stub of get work item.'
+		and: 'ensure stub of get work item.'
 		def wi = dataGenerationService.generate('/testdata/wiDataT.json')
 		1 * workManagementService.getWorkItem(_,_,_) >> wi
 
-		when: w_ 'Run method under test sendPlanChanges'
+		when: 'Run method under test sendPlanChanges'
 		boolean success = true
 		try {
 			underTest.sendPlanChanges('', '', change,'aIdk')
 		} catch (e) {
 			success = false
 		}
-		then: t_ null
+		then: 'No exception'
 		success
 	}
 	
 	def 'sendPlanChanges with update plan item'() {
-		given: g_'Setup change data'
+		given:'Setup change data'
 		def change = dataGenerationService.generate('/testdata/changepatch.json')
 		
-		and: a_ 'ensure stub of post call'
+		and: 'ensure stub of post call'
 		def plan = dataGenerationService.generate('/testdata/TestPlan.json')
 		1 * genericRestClient.patch(_) >> plan
 		
-		and: a_ 'ensure stub of get work item.'
+		and: 'ensure stub of get work item.'
 		def wi = dataGenerationService.generate('/testdata/wiDataT.json')
 		1 * workManagementService.getWorkItem(_,_,_) >> wi
 		
-		when: w_ 'Run method under test sendPlanChanges'
+		when: 'Run method under test sendPlanChanges'
 		boolean success = true
 		try {
 			underTest.sendPlanChanges('', '', change,'aIdk')
 		} catch (e) {
 			success = false
 		}
-		then: t_ null
+		then: 'No exception'
 		success
 	}
 
 	def 'sendResultChanges with new result'() {
-		given: g_'Setup change data'
+		given:'Setup change data'
 		def change = dataGenerationService.generate('/testdata/resultpost.json')
 		
-		and: a_ 'ensure stub of post call'
+		and: 'ensure stub of post call'
 		def result = dataGenerationService.generate('/testdata/result.json')
 		1 * genericRestClient.post(_) >> result
 		
-		when: w_ 'Run method under test sendResultChanges'
+		when: 'Run method under test sendResultChanges'
 		boolean success = true
 		try {
 			underTest.sendResultChanges('', '', change,'aIdk')
 		} catch (e) {
 			success = false
 		}
-		then: t_ null
+		then: 'No exception'
 		success
 	}
 	def 'sendResultChanges with update result'() {
-		given: g_'Setup change data'
+		given:'Setup change data'
 		def change = dataGenerationService.generate('/testdata/resultpatch.json')
 		
-		and: a_ 'ensure stub of post call'
+		and: 'ensure stub of post call'
 		def result = dataGenerationService.generate('/testdata/result.json')
 		1 * genericRestClient.patch(_) >> result
 		
-		when: w_ 'Run method under test sendResultChanges'
+		when: 'Run method under test sendResultChanges'
 		boolean success = true
 		try {
 			underTest.sendResultChanges('', '', change,'aIdk')
 		} catch (e) {
 			success = false
 		}
-		then: t_ null
+		then: 'No exception'
 		success
 	}
 	
 	def 'setParent with plan and child test case'() {
-		given: g_ 'Setup map data'
+		given: 'Setup map data'
 		def map = getMappingData()
 		
-		and: a_ 'setup parent data'
+		and: 'setup parent data'
 		def parentData =  dataGenerationService.generate('/testdata/TestPlan.json')
 		def parent =  dataGenerationService.generate('/testdata/testplanT.xml')
 		
-		and: a_ 'setup child test case data'
+		and: 'setup child test case data'
 		def children = []
 		for (int i = 0; i < 9; i++) {
 			def child = dataGenerationService.generate('/testdata/testcaseT.xml')
 			children.add(child)
 		}
 		
-		and: a_ 'stub parent cache request'
+		and: 'stub parent cache request'
 		1 * cacheManagementService.getFromCache(_,_) >> parentData
 		
-		and: a_ 'stub child cache calls'
+		and: 'stub child cache calls'
 		for (int i = 0; i < 9; i++) {
 			def tc1 =  dataGenerationService.generate('/testdata/testcaseT.json')
 			1 * cacheManagementService.getFromCache(_,_) >> tc1
 		}
 		
-		and: a_ 'stub a ado call to associate a test case to a plan'
+		and: 'stub a ado call to associate a test case to a plan'
 		2 * genericRestClient.post(_) >> [:]
 		
-		when: w_ 'call method under test setParent'
+		when: 'call method under test setParent'
 		boolean success = true
 		try {
 			def result = underTest.setParent(parent, children, map)
@@ -253,38 +253,38 @@ class TestManagementServiceSpec extends Specification implements SpockLabeler {
 			success = false
 		}
 		
-		then: t_ null
+		then: 'No exception'
 		success
 	}
 	
 	def 'setParent with suite and child test case'() {
-		given: g_ 'Setup map data'
+		given: 'Setup map data'
 		def map = getMappingData()
 		
-		and: a_ 'setup parent data'
+		and: 'setup parent data'
 		def parentData =  dataGenerationService.generate('/testdata/testsuiteT.json')
 		def parent =  dataGenerationService.generate('/testdata/testsuiteT.xml')
 		
-		and: a_ 'setup child test case data'
+		and: 'setup child test case data'
 		def children = []
 		for (int i = 0; i < 9; i++) {
 			def child = dataGenerationService.generate('/testdata/testcaseT.xml')
 			children.add(child)
 		}
 		
-		and: a_ 'stub parent cache request'
+		and: 'stub parent cache request'
 		1 * cacheManagementService.getFromCache(_,_) >> parentData
 		
-		and: a_ 'stub child cache calls'
+		and: 'stub child cache calls'
 		for (int i = 0; i < 9; i++) {
 			def tc1 =  dataGenerationService.generate('/testdata/testcaseT.json')
 			1 * cacheManagementService.getFromCache(_,_) >> tc1
 		}
 		
-		and: a_ 'stub a ado call to associate a test case to a plan'
+		and: 'stub a ado call to associate a test case to a plan'
 		2 * genericRestClient.post(_) >> [:]
 		
-		when: w_ 'call method under test setParent'
+		when: 'call method under test setParent'
 		boolean success = true
 		try {
 			def result = underTest.setParent(parent, children, map)
@@ -293,31 +293,31 @@ class TestManagementServiceSpec extends Specification implements SpockLabeler {
 			success = false
 		}
 		
-		then: t_ null
+		then: 'No exception'
 		success
 	}
 
 	def 'getTestRuns normal flow'() {
-		given: g_ 'Stub ado call to get projects'
+		given: 'Stub ado call to get projects'
 		1 * projectManagmentService.getProject(_,_) >> dataGenerationService.generate('/testdata/project.json')
 		
-		and: a_ 'stub ado call to get runs'
+		and: 'stub ado call to get runs'
 		1 * genericRestClient.get(_) >> [:]
 		
-		when: w_ 'call method under test getTestRuns'
+		when: 'call method under test getTestRuns'
 		def result = underTest.getTestRuns('')
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	def 'cleanupTestItems normal flow'() {
-		given: g_ 'stub to query for team area test work items'
+		given: 'stub to query for team area test work items'
 		1 * cacheManagementService.cacheModule >> 'CCM'
 		1 * genericRestClient.getTfsUrl() >> ''
 		1 * genericRestClient.post(_) >> dataGenerationService.generate('/testdata/wiqlResult.json')
 		
-		and: a_ 'stub calls to get work item and delete them'
+		and: 'stub calls to get work item and delete them'
 		for (int i = 0; i < 9; i++) {
 			1 * genericRestClient.get(_) >> dataGenerationService.generate('/testdata/wiDataT.json')
 			1 * genericRestClient.getTfsUrl() >> ''
@@ -327,7 +327,7 @@ class TestManagementServiceSpec extends Specification implements SpockLabeler {
 		1 * genericRestClient.getTfsUrl() >> ''
 		1 * genericRestClient.post(_) >> null
 		
-		when: w_ 'calling method under test cleanupTestItems'
+		when: 'calling method under test cleanupTestItems'
 		boolean success = true
 		try {
 			def result = underTest.cleanupTestItems('', '', '')
@@ -335,30 +335,30 @@ class TestManagementServiceSpec extends Specification implements SpockLabeler {
 			success = false
 		}
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	def 'ensureTestRun null result from cache'() {
-		given: g_ 'stub cache access the runData'
+		given: 'stub cache access the runData'
 		1 * cacheManagementService.getFromCache(_,_) >> null
 		
-		and: a_ 'stub get plan from cache'
+		and: 'stub get plan from cache'
 		1 * cacheManagementService.getFromCache(_,_) >> dataGenerationService.generate('/testdata/TestPlan.json')
 		
-		and: a_ 'stub post to create run data'
+		and: 'stub post to create run data'
 		1 * genericRestClient.get(_) >> dataGenerationService.generate('/testdata/Suites.json')
 		1 * genericRestClient.get(_) >> dataGenerationService.generate('/testdata/points.json')
 		1 * genericRestClient.post(_) >> dataGenerationService.generate('/testdata/runData.json')
 		
-		and: a_ 'stub saving to cache'
+		and: 'stub saving to cache'
 		1 * cacheManagementService.saveToCache(_, _, _) >> [:]
 		
-		and: a_ 'stub getting map'
+		and: 'stub getting map'
 		1 * genericRestClient.get(_) >> dataGenerationService.generate('/testdata/resultsMap.json')
 		1 * genericRestClient.get(_) >> null
 		
-		when: w_ 'call method under test ensureTestRun'
+		when: 'call method under test ensureTestRun'
 		def planData = dataGenerationService.generate('/testdata/testplanT.xml')
 		boolean success = true
 		try {
@@ -367,7 +367,7 @@ class TestManagementServiceSpec extends Specification implements SpockLabeler {
 			success = false
 		}
 		
-		then: t_ null
+		then: 'No exception'
 		success
 	}
 	

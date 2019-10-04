@@ -22,7 +22,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[CacheManagementServiceTestConfig])
-public class CacheManagementServiceTest extends Specification implements SpockLabeler {
+public class CacheManagementServiceTest extends Specification {
 
 	@Autowired
 	CacheManagementService underTest
@@ -35,10 +35,10 @@ public class CacheManagementServiceTest extends Specification implements SpockLa
 
 		def result= new ByteArrayInputStream();
 
-		when: w_ 'calling of method under test (saveBinaryAsAttachment)'
+		when: 'calling of method under test (saveBinaryAsAttachment)'
 		def keyname = underTest.saveBinaryAsAttachment( result ,'','')
 		// 218-Test Plan
-		then: t_ ''
+		then: 'No exception'
 		true
 
 	}
@@ -48,10 +48,10 @@ public class CacheManagementServiceTest extends Specification implements SpockLa
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: w_ 'calling of method under test (data)'
+		when: 'calling of method under test (data)'
 		def keyname = underTest.saveToCache( data ,'','')
 
-		then: t_ 'No save failure'
+		then: 'No save failure'
 		true
 	}
 
@@ -60,10 +60,10 @@ public class CacheManagementServiceTest extends Specification implements SpockLa
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: w_ 'calling of method under test (getFromCache)'
+		when: 'calling of method under test (getFromCache)'
 		def keyname = underTest.getFromCache( '','')
 
-		then: t_ 'No save failure'
+		then: 'No save failure'
 		true
 	}
 }

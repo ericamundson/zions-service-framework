@@ -25,7 +25,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[QmProjectManagementServiceTestConfig])
-public class QmProjectManagementServiceTest  extends Specification implements SpockLabeler {
+public class QmProjectManagementServiceTest  extends Specification {
 	
 	@Autowired
 	IGenericRestClient qmGenericRestClient
@@ -39,10 +39,10 @@ public class QmProjectManagementServiceTest  extends Specification implements Sp
 		1 * qmGenericRestClient.get(_) >> testplan
 	
 		
-		when: w_ 'calling of method under test (getProject)'
+		when: 'calling of method under test (getProject)'
 		def keyname = underTest.getProject('projectArea')
 		
-		then: t_ null
+		then: 'No exception'
 		true
 		
 	}
