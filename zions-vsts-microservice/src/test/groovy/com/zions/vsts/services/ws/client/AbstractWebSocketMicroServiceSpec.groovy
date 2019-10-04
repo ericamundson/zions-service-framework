@@ -7,7 +7,7 @@ import org.junit.Test
 
 import spock.lang.Specification
 
-class AbstractWebSocketMicroServiceSpec extends Specification implements SpockLabeler {
+class AbstractWebSocketMicroServiceSpec extends Specification {
 
 	def 'Connect to host for events'() {
 		//fail("Not yet implemented")

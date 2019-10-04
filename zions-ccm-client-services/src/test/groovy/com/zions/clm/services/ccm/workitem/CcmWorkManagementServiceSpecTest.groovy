@@ -8,7 +8,7 @@ import com.zions.common.services.test.SpockLabeler
 
 import spock.lang.Specification
 
-class CcmWorkManagementServiceSpecTest extends Specification implements SpockLabeler {
+class CcmWorkManagementServiceSpecTest extends Specification {
 
 	public void 'Initial test'() {
 		//fail("Not yet implemented")

@@ -13,7 +13,7 @@ import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[UuidGeneratorTestConfig])
-public class UuidGeneratorTest extends Specification implements SpockLabeler {
+public class UuidGeneratorTest extends Specification {
 
 	@Autowired
 	UuidGenerator underTest
@@ -21,10 +21,10 @@ public class UuidGeneratorTest extends Specification implements SpockLabeler {
 	@Test
 	def 'gen test'() {
 
-		when: w_ 'call gen'
+		when: 'call gen'
 		def plan = underTest.gen()
 
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 }

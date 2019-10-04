@@ -19,17 +19,17 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[AccountManagementServiceSpecConfig])
-class AccountManagementServiceSpec extends Specification implements SpockLabeler {
+class AccountManagementServiceSpec extends Specification {
 
 	@Autowired
 	AccountManagementService underTest
 
 	@Ignore	
 	def 'get all accounts'() {
-		when: w_ 'run getAccounts'
+		when: 'run getAccounts'
 		def accounts = underTest.getAccounts('')
 		
-		then: t_ 'return size is > 0'
+		then: 'return size is > 0'
 		accounts.value.size() > 0
 	}
 

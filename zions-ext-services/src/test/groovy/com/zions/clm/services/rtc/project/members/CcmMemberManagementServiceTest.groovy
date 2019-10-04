@@ -19,7 +19,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[CcmMemberManagementServiceTestConfig])
-public class CcmMemberManagementServiceTest extends Specification implements SpockLabeler {
+public class CcmMemberManagementServiceTest extends Specification {
 	
 	@Autowired
 	IGenericRestClient clmGenericRestClient
@@ -28,14 +28,14 @@ public class CcmMemberManagementServiceTest extends Specification implements Spo
 	CcmMemberManagementService underTest
 	
 	def 'getMemberData success flow.'() {
-		given: g_ "A stub of RQM get test item request"
+		given: "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/ccmworkitemtype.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
-		when: w_ 'calling of method under test (getMemberData)'
+		when: 'calling of method under test (getMemberData)'
 		def testPlans = underTest.getMemberData('project','tfsproject')
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
@@ -44,22 +44,22 @@ public class CcmMemberManagementServiceTest extends Specification implements Spo
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/workitemtype.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo*/
 		def teamInfo = new XmlSlurper().parseText(getClass().getResource('/testdata/testmember.xml').text)
-		when: w_ 'calling of method under test (buildMemberData)'
+		when: 'calling of method under test (buildMemberData)'
 		def testPlans = underTest.buildMemberData( teamInfo,'tfsproject')
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	def 'getNextPage success flow.'() {
-		given: g_ "A stub of RQM get nextpage test item request"
+		given: "A stub of RQM get nextpage test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/nextpage.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
-		when: w_ 'calling of method under test (getNextPage)'
+		when: 'calling of method under test (getNextPage)'
 		def testPlans = underTest.nextPage('https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testplan?token=_TJVcwOKdEeirC8bfvJTPjw&amp;page=1')
 		
-		then: t_ 'valid list of plans'
+		then: 'valid list of plans'
 		testPlans.entry.size() > 0
 	}
 

@@ -25,7 +25,7 @@ import com.zions.vsts.services.permissions.PermissionsManagementService
 import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[SyncBBGitReposTestConfig])
-public class SyncBBGitReposTest extends Specification implements SpockLabeler {
+public class SyncBBGitReposTest extends Specification {
 	
 	@Autowired
 	IGenericRestClient genericRestClient;
@@ -77,31 +77,31 @@ public class SyncBBGitReposTest extends Specification implements SpockLabeler {
 	def 'validate method success flow.'() {
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: w_ 'call validate'
+		when: 'call validate'
 		def testPlans = underTest.validate(appArgs)
 		
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 	
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: w_ 'call validate'
+		when: 'call validate'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'execute method exception flow.'() {
 		
-		given:g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
@@ -110,18 +110,18 @@ public class SyncBBGitReposTest extends Specification implements SpockLabeler {
 		def test = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects_lastpage_false.json').text)
 		1 * bBGenericRestClient.get(_) >> test
 		
-		and: a_ 'stub importRepoDir'
+		and: 'stub importRepoDir'
 		def dummy =[]
 		codeManagmentService.importRepoDir(_, _, _, _, _, _) >> dummy
 		
-		and: a_ 'stub ensureTeamToRepo'
+		and: 'stub ensureTeamToRepo'
 		def dummy1 =[]
 		permissionsManagementService.ensureTeamToRepo(_, _, _, _, _) >> dummy1
 					
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then: t_ null
+		then: 'No exception'
 		true
 		
 	}

@@ -32,7 +32,7 @@ import spock.mock.DetachedMockFactory
  *
  */
 @ContextConfiguration(classes=[ReleaseManagementServiceTestConfig])
-class ReleaseManagementServiceSpecTest extends Specification implements SpockLabeler {
+class ReleaseManagementServiceSpecTest extends Specification {
 	
 	@Autowired
 	private IGenericRestClient genericRestClient;
@@ -60,7 +60,7 @@ class ReleaseManagementServiceSpecTest extends Specification implements SpockLab
 	/*
 	@Test
 	def 'ensureReleases with getRelease successflow' () {
-		given: g_
+		given:
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
@@ -69,31 +69,31 @@ class ReleaseManagementServiceSpecTest extends Specification implements SpockLab
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		projectManagementService.getProject(_, _, _) >> project
 		//def template = new JsonSlurper().parseText(this.getClass().getResource('/testdata/templates.json').text)
-		and: a_
+		and:
 		def team = new JsonSlurper().parseText(this.getClass().getResource('/testdata/teammembers.json').text)
 		
-		and: a_
+		and:
 		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/testrepos.json').text)
 		codeManagementService.getRepos(_, _, _) >> repos
 		
-		and: a_
+		and:
 		genericRestClient.getTfsUrl() >> "visualstudio"
 		
-		when: w_
+		when:
 		def result = underTest.ensureReleases("visualstudioz", "DigitalBanking", '', '', '', team)
 		
-		then: t_
+		then:
 		result != null
 	}
 	
 	@Test
 	def 'ensureReleases with createRelease successflow' () {
-		given: g_
+		given:
 		//8 * genericRestClient.get(_) >> null
-		//and: a_
+		//and:
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		projectManagementService.getProject(_, _, _) >> project
-		and: a_
+		and:
 		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/testrepos.json').text)
 		codeManagementService.getRepos(_, _, _) >> repos
 		
@@ -101,35 +101,35 @@ class ReleaseManagementServiceSpecTest extends Specification implements SpockLab
 		def teamData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/projectteam.json').text)
 		memberManagementService.getTeam(_,_,_) >> teamData
 		
-		and: a_
+		and:
 		def buildDef = new JsonSlurper().parseText(this.getClass().getResource('/testdata/singlebuilddefination.json').text)
 		buildManagementService.getBuild(_, _, _) >> buildDef
 		
-		and: a_
+		and:
 		def endpoint = new JsonSlurper().parseText(this.getClass().getResource('/testdata/serviceendpoints.json').text)
 		endpointManagementService.getServiceEndpoint(_,_,_) >> endpoint
 		
-		and: a_
+		and:
 		genericRestClient.getTfsUrl() >> "visualstudio"
 		def artifacts = [:]
 		def template = new JsonSlurper().parseText(this.getClass().getResource('/testdata/singletemplate.json').text)
 		//template << artifacts
-		when: w_
+		when:
 		def result = underTest.ensureReleases("visualstudioz", "DigitalBanking", template, '', '', team)
 		
-		then: t_
+		then:
 		result != null
 	}
 	
 	@Test
 	def 'ensureReleaseFolder success flow' () {
-		given: g_
+		given:
 		genericRestClient.getTfsUrl() >> "visualstudio"
 		
-		when: w_
+		when:
 		def result = underTest.ensureReleaseFolder('', 'DigitalBanking','C\\test\\folder')
 		
-		then: t_
+		then:
 		result != null
 	}
 	*/

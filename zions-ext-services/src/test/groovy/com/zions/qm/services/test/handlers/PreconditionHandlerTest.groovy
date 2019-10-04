@@ -7,7 +7,7 @@ import org.junit.Test
 
 import spock.lang.Specification
 
-class PreconditionHandlerTest extends Specification implements SpockLabeler {
+class PreconditionHandlerTest extends Specification {
 
 	@Test
 	def 'main flow'() {

@@ -22,7 +22,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[QmMetadataManagementServiceTestConfig])
-public class QmMetadataManagementServiceTest extends Specification implements SpockLabeler {
+public class QmMetadataManagementServiceTest extends Specification {
 	
 	@Autowired
 	IGenericRestClient qmGenericRestClient
@@ -38,10 +38,10 @@ public class QmMetadataManagementServiceTest extends Specification implements Sp
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/qmmetadata.xml').text)
 		1 * qmGenericRestClient.get(_) >> testplansInfo
 
-		when: w_ 'calling of method under test (loadSchema)'
+		when: 'calling of method under test (loadSchema)'
 		def testPlans = underTest.loadSchema('','')
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
@@ -51,15 +51,15 @@ public class QmMetadataManagementServiceTest extends Specification implements Sp
 		String typeName = 'qm:richTextSection'
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/qmmetadata2.xml').text)
 		1 * qmGenericRestClient.get(_) >> testplansInfo
-		when: w_ 'call determineType'
+		when: 'call determineType'
 		def testPlans = underTest.determineType( testplansInfo , typeName)
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	def 'generateCustomFields success flow.'() {
-		given: g_ "A stub of RQM get test item request"		
+		given: "A stub of RQM get test item request"		
 		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/categoryrepo.json').text)
 		1 * qmGenericRestClient.get(_) >> testplan
 		
@@ -69,22 +69,22 @@ public class QmMetadataManagementServiceTest extends Specification implements Sp
 		def xmlWriter = new StringWriter()
 		def xmlMarkup = new MarkupBuilder(xmlWriter)
 
-		when: w_ 'calling of method under test (generateCustomFields)'
+		when: 'calling of method under test (generateCustomFields)'
 		def testPlans = underTest.generateCustomFields('projectArea','TestCase', xmlMarkup )
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	def 'getQMSchema success flow.'() {
-		given: g_ "A stub of RQM get test item request"
+		given: "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/qmmetadata.xml').text)
 		1 * qmGenericRestClient.get(_) >> testplansInfo
 
-		when: w_ 'calling of method under test (getQMSchema)'
+		when: 'calling of method under test (getQMSchema)'
 		def testPlans = underTest.getQMSchema()
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 		
@@ -92,10 +92,10 @@ public class QmMetadataManagementServiceTest extends Specification implements Sp
 		
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/schema.xml').text)
 		
-		when: w_ 'call findSchema'
+		when: 'call findSchema'
 		def testPlans = underTest.findSchema( testplansInfo ,'testcase')
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
@@ -104,37 +104,37 @@ public class QmMetadataManagementServiceTest extends Specification implements Sp
 		//def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/qmmetadata.xml').text)
 		File file = new File("src/test/resources/testdata")
 		
-		given: g_ "A stub of RQM get test item request"
+		given: "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/qmmetadata.xml').text)
 		1 * qmGenericRestClient.get(_) >> testplansInfo
 		
 		def testplans = new XmlSlurper().parseText(this.getClass().getResource('/testdata/schema.xml').text)
 		
-		when: w_ 'call extractQmMetadata'
+		when: 'call extractQmMetadata'
 		def testPlans = underTest.extractQmMetadata( 'projectArea' , file )
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	def 'generateComplexFields success flow.'() {
 		
-		given: g_ "A stub of RQM get test item request"
+		given: "A stub of RQM get test item request"
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/qmmetadata2.xml').text)
 		def complexType = new XmlSlurper().parseText(this.getClass().getResource('/testdata/qmmetadata3.xml').text)
 		
 		def xmlWriter = new StringWriter()
 		def xmlMarkup = new MarkupBuilder(xmlWriter)
-		when: w_ 'call generateComplexFields'
+		when: 'call generateComplexFields'
 		def testPlans = underTest.generateComplexFields( 'projectArea','testplan', testplansInfo , complexType , xmlMarkup )
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	def 'generateCategoryFields success flow.'() {
 		
-		given: g_ "A stub of RQM get test item request"
+		given: "A stub of RQM get test item request"
 		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/projectrepo.json').text)
 		1 * qmGenericRestClient.get(_) >> testplan
 		
@@ -144,10 +144,10 @@ public class QmMetadataManagementServiceTest extends Specification implements Sp
 		def xmlWriter = new StringWriter()
 		def xmlMarkup = new MarkupBuilder(xmlWriter)
 		
-		when: w_ 'calling of method under test (getCategories)'
+		when: 'calling of method under test (getCategories)'
 		def testPlans = underTest.generateCategoryFields('projectArea','testplan', xmlMarkup )
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 

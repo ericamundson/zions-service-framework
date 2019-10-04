@@ -20,7 +20,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[BBCodeManagementServiceTestConfig])
-public class BBCodeManagementServiceTest extends Specification implements SpockLabeler {
+public class BBCodeManagementServiceTest extends Specification {
 	
 	@Autowired
 	IGenericRestClient bBGenericRestClient
@@ -30,18 +30,18 @@ public class BBCodeManagementServiceTest extends Specification implements SpockL
 	
 	def 'getProjectRepoUrls for project name success flow.'(){
 		
-		setup: s_ 'stub call for to get all projects'		
+		setup: 'stub call for to get all projects'		
 		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
 		(1..3) * bBGenericRestClient.get(_) >> testplan
 		
-		and: a_ 'stub rest call for repos'
+		and: 'stub rest call for repos'
 		def test = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects_lastpage_false.json').text)
 		1 * bBGenericRestClient.get(_) >> test
 		
-		when: w_ 'calling of method under test (getProjectRepoUrls)'
+		when: 'calling of method under test (getProjectRepoUrls)'
 		def keyname = underTest.getProjectRepoUrls('almops')
 		
-		then: t_ null
+		then: 'No exception'
 		true
 		
 	}

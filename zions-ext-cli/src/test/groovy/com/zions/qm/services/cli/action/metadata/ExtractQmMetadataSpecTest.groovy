@@ -32,7 +32,7 @@ import com.zions.vsts.services.workitem.AreasManagementService
 import groovy.json.JsonSlurper
 
 @ContextConfiguration(classes=[ExtractQmMetadataTestConfig])
-public class ExtractQmMetadataSpecTest extends Specification implements SpockLabeler {
+public class ExtractQmMetadataSpecTest extends Specification {
 
 	@Autowired
 	IGenericRestClient genericRestClient;
@@ -48,15 +48,15 @@ public class ExtractQmMetadataSpecTest extends Specification implements SpockLab
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ null
+		then: 'No exception'
 		result == true
 	}
 
@@ -77,10 +77,10 @@ public class ExtractQmMetadataSpecTest extends Specification implements SpockLab
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 
@@ -89,13 +89,13 @@ public class ExtractQmMetadataSpecTest extends Specification implements SpockLab
 		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs())
 
-		and: a_ null
+		and: null
 		qmMetadataManagementService.extractQmMetadata(_, _) >> "<a1>some meta<a1>"
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'result = null'
+		then: 'result = null'
 		result == null
 	}
 }

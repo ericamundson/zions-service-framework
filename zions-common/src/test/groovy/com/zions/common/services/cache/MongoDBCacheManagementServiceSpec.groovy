@@ -30,7 +30,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[MongoDBCacheManagementServiceTestConfig])
-public class MongoDBCacheManagementServiceSpec extends Specification implements SpockLabeler {
+public class MongoDBCacheManagementServiceSpec extends Specification {
 
 	@Autowired
 	MongoDBCacheManagementService underTest
@@ -42,10 +42,10 @@ public class MongoDBCacheManagementServiceSpec extends Specification implements 
 
 		def result= new ByteArrayInputStream();
 
-		when: w_ 'calling of method under test (saveBinaryAsAttachment)'
+		when: 'calling of method under test (saveBinaryAsAttachment)'
 		def keyname = underTest.saveBinaryAsAttachment( result ,'','')
 		// 218-Test Plan
-		then: t_ 'No failure'
+		then: 'No failure'
 		true
 
 	}
@@ -54,11 +54,11 @@ public class MongoDBCacheManagementServiceSpec extends Specification implements 
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: w_ 'calling of method under test (data)'
+		when: 'calling of method under test (data)'
 		def keyname = underTest.saveToCache( data ,'1',ICacheManagementService.PLAN_DATA)
 		def testplan = underTest.getFromCache( '1', 'CCM', ICacheManagementService.PLAN_DATA)
 
-		then: t_ 'testplan != null'
+		then: 'testplan != null'
 		testplan != null
 	}
 
@@ -66,21 +66,21 @@ public class MongoDBCacheManagementServiceSpec extends Specification implements 
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: w_ 'calling of method under test (getFromCache)'
+		when: 'calling of method under test (getFromCache)'
 		def keyname = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
 
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	def 'getAllOfType test paging'() {
-		setup: s_ "Add 400 items into cache"
+		setup: "Add 400 items into cache"
 		for (int i = 0; i < 400; i++) {
 			def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 			underTest.saveToCache(data, "${i}", ICacheManagementService.PLAN_DATA)
 		}
 		
-		when: w_ "call getAllByType with paging"
+		when: "call getAllByType with paging"
 		boolean success = true
 		int page = 0
 		try {
@@ -93,7 +93,7 @@ public class MongoDBCacheManagementServiceSpec extends Specification implements 
 			success = false
 		}
 		
-		then: t_ "two pages of 200 items are returned"
+		then: "two pages of 200 items are returned"
 		success && page == 2
 	}
 }

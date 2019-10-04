@@ -40,7 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ContextConfiguration(classes=[ClmRequirementsManagementServiceSpecConfig])
-class ClmRequirementsManagementServiceIntegration extends Specification implements SpockLabeler {
+class ClmRequirementsManagementServiceIntegration extends Specification {
 	
 	@Autowired
 	DataGenerationService dataGenerationService
@@ -73,7 +73,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification implemen
 		def tItems = dataGenerationService.generate('/testdata/rmFirstQueryResult.json')
 		items.addAll(tItems)
 				
-		when: w_ 'produce artifact data for text or non-text types'
+		when: 'produce artifact data for text or non-text types'
 		int tCount = 0
 		int ntCount = 0
 		items.each { rmItem ->
@@ -102,7 +102,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification implemen
 		}
 
 		
-		then: t_ 'processing has no failures and verify set of text vs non-text artifact data elements count'
+		then: 'processing has no failures and verify set of text vs non-text artifact data elements count'
 		tCount > 0 || ntCount > 0
 		
 	}
@@ -116,7 +116,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification implemen
 		int size = moduleUris.size()
 		moduleUris.removeRange(1, size)
 		
-		when: w_ 'Processed for module artifact details'
+		when: 'Processed for module artifact details'
 		//rmGenericRestClient.outputTestDataFlag = true
 		rmGenericRestClient.outputTestDataType = 'xml'
 		rmGenericRestClient.outputTestDataPrefix = 'module'
@@ -130,7 +130,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification implemen
 		}
 		rmGenericRestClient.outputTestDataFlag = false
 		
-		then: t_ 'Validate module artifacts'
+		then: 'Validate module artifacts'
 		modules.size() > 0
 	}
 	
@@ -139,17 +139,17 @@ class ClmRequirementsManagementServiceIntegration extends Specification implemen
 		setup: 'get artifact'
 		def artifact = dataGenerationService.generate('/testdata/requirementWithLinks.xml')
 		
-		when: w_ 'determine all requirement artifact links'
+		when: 'determine all requirement artifact links'
 		def links = underTest.getAllLinks('7543', new Date(), artifact.artifact)
 		
-		then: t_ 'validate number of links are 7'
+		then: 'validate number of links are 7'
 		links.size() == 7
 	}
 	
 	def 'Partial flush of query pages'() {
 		given: 'A valid data warehouse query'
 		
-		when: w_ 'Run a partial flush of two pages of requirements artifact query'
+		when: 'Run a partial flush of two pages of requirements artifact query'
 		boolean success = true
 		try {
 			underTest.flushQueries(false,2)
@@ -159,7 +159,7 @@ class ClmRequirementsManagementServiceIntegration extends Specification implemen
 		}
 		def pages = cacheManagementService.getAllOfType('DataWarehouseQueryData')
 		
-		then: t_ 'Validate no errors and there are two pages of requirements artifacts'
+		then: 'Validate no errors and there are two pages of requirements artifacts'
 		success && pages.size() == 2
 		
 		cleanup:

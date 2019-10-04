@@ -53,7 +53,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TranslateTestLinkToADOSpecConfig])
-class TranslateTestLinkToADOSpec extends Specification implements SpockLabeler {
+class TranslateTestLinkToADOSpec extends Specification {
 	
 	@Autowired
 	Map<String, Generator> generators
@@ -80,17 +80,17 @@ class TranslateTestLinkToADOSpec extends Specification implements SpockLabeler {
 		
 	@Ignore
 	public void 'Simulate all phases plus clean'() {
-		setup: s_ 'TestLink stubs'
+		setup: 'TestLink stubs'
 		cacheManagementService.cacheModule = 'TL'
 		restartManagementService.includePhases = 'testcase,plans,links,executions,attachments'
 		//testManagementService.cleanupTestItems('', 'IntegrationTests', "IntegrationTests\\testlink")
 		setupTestLinkStubs()
 		
-		when: w_ 'call execute'
+		when: 'call execute'
 		def appArgs = new DefaultApplicationArguments(loadTLArgs())
 		underTest.execute(appArgs)
 		
-		then: t_ 'result.size() = 100'
+		then: 'result.size() = 100'
 		def result = cacheManagementService.getAllOfType(ICacheManagementService.RESULT_DATA)
 		result.size() == 100
 		

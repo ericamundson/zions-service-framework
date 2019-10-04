@@ -15,17 +15,17 @@ import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[AlphaGeneratorTestConfig])
-public class AlphaGeneratorTest extends Specification implements SpockLabeler {
+public class AlphaGeneratorTest extends Specification {
 	
 	@Autowired
 	AlphaGenerator underTest
 	
 	@Test
 	def 'gen test'() {
-		when: w_ 'call gen'
+		when: 'call gen'
 		def plan = underTest.gen()
 		
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 

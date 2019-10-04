@@ -21,23 +21,23 @@ import spock.lang.Specification
 
 
 @ContextConfiguration(classes=[UserManagementServiceSpecConfig])
-class UserManagementServiceSpec extends Specification implements SpockLabeler {
+class UserManagementServiceSpec extends Specification {
 	@Autowired
 	UserManagementService userManagementService
 
 	public 'Find user info'() {
 		
-		when: w_ 'Access user by id'
+		when: 'Access user by id'
 		//boolean auth = userManagementService.authenticate('z091182', '4878Middy002')
 		User testU = userManagementService.getUserById('z004421')
 		
-		then: t_ 'validate user found'
+		then: 'validate user found'
 		testU != null
 		
-		when: w_ 'Access user by email'
+		when: 'Access user by email'
 		User eU = userManagementService.getUserByEmail('Michael.Angelastro@zionsbancorp.com')
 		
-		then: t_ 'validate user found'
+		then: 'validate user found'
 		eU != null
 
 	}

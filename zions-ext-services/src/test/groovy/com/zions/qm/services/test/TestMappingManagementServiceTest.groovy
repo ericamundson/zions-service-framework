@@ -17,17 +17,17 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TestMappingManagementServiceSpecTestConfig])
-class TestMappingManagementServiceTest extends Specification implements SpockLabeler {
+class TestMappingManagementServiceTest extends Specification {
 	
 	@Autowired
 	TestMappingManagementService underTest
 
 	def 'getMappingData success flow.'() {
 		
-		when: w_ 'calling method under test (getMappingData)'
+		when: 'calling method under test (getMappingData)'
 		def mapping = underTest.getMappingData()
 		
-		then: t_  'mapping.wit.size() > 0'
+		then:  'mapping.wit.size() > 0'
 		mapping.wit.size() > 0
 	}
 

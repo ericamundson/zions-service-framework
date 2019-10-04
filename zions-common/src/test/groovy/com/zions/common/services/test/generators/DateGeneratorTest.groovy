@@ -14,7 +14,7 @@ import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[DateGeneratorTestConfig])
-public class DateGeneratorTest extends Specification implements SpockLabeler {
+public class DateGeneratorTest extends Specification {
 	
 	@Autowired
 	DateGenerator underTest
@@ -22,10 +22,10 @@ public class DateGeneratorTest extends Specification implements SpockLabeler {
 	@Test
 	def 'gen test'() {
 	
-//		when: w_
+//		when:
 //		def plan = underTest.gen()
 //		
-//		then: t_
+//		then:
 //		true
 	
 	}
