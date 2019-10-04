@@ -222,6 +222,10 @@ class SyncTesting implements CliAction {
 		r.body.add(state)
 		def tag = [op: 'add', path: '/fields/System.Tags', value: "${mainTag}"]
 		r.body.add(tag)
+		def automate = [op: 'add', path: '/fields/Custom.Automate', value: true]
+		r.body.add(automate)
+		def automatedState = [op: 'add', path: '/fields/Custom.AutomationState', value: 'Ready']
+		r.body.add(automatedState)
 		if (!tc) {
 			def title = [op: 'add', path: '/fields/System.Title', value: "${testCase.title}"]
 			r.body.add(title)
