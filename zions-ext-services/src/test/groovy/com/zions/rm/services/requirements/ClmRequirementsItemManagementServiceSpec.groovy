@@ -70,6 +70,14 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 		when: 'Run behavior to get changes for module and related artifacts'
 		String murl = "https://clm.cs.zionsbank.com/rm/resources/_frOPQFDzEeWblrEplHqOHQ"
 		def module = clmRequirementsManagementService.getModule(murl, false)
+		def result = processModuleAndArtifacts( module )
+		
+		then: 'mchanges are not null and artifactChanges size == 191'
+		result.mchanges != null && result.artifactChanges.size() == 191
+		
+	}
+	
+	def processModuleAndArtifacts(module) {
 		def memberMap = [:]
 		def mchanges = underTest.getChanges('IntegrationTests', module, memberMap)
 		def aid = module.getCacheID()
@@ -98,10 +106,7 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 				
 			}
 		})
-		
-		then: 'mchanges are not null and artifactChanges size == 191'
-		mchanges != null && artifactChanges.size() == 191
-		
+		return [mchanges: mchanges, artifactChanges: artifactChanges]
 	}
 	
 	boolean isToIncorporateTitle(def module, def indexOfElementToCheck) {

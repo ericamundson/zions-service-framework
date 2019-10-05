@@ -218,8 +218,10 @@ class SyncTesting implements CliAction {
 		r.body.add(areaPath)
 		def iPath = [op: 'add', path: '/fields/System.IterationPath', value: "${project}"]
 		r.body.add(iPath)
-		def state = [op: 'add', path: '/fields/System.State', value: "Design"]
+		def state = [op: 'add', path: '/fields/System.State', value: "Ready"]
 		r.body.add(state)
+		def reason = [op: 'add', path: '/fields/System.Reason', value: "Completed"]
+		r.body.add(reason)
 		def tag = [op: 'add', path: '/fields/System.Tags', value: "${mainTag}"]
 		r.body.add(tag)
 		def automate = [op: 'add', path: '/fields/Custom.Automate', value: true]
@@ -230,55 +232,73 @@ class SyncTesting implements CliAction {
 			def title = [op: 'add', path: '/fields/System.Title', value: "${testCase.title}"]
 			r.body.add(title)
 		}
-		if (testCase.result == 'PASS') {
+		//if (testCase.result == 'PASS') {
 			String title = "${testCase.title}"
 			String steps = buildSteps(testCase.blocks)
 			def s = [op: 'add', path: '/fields/Microsoft.VSTS.TCM.Steps', value: "${steps}"]
 			r.body.add(s)
-		}
+		//}
 		return r
 	}
 
 	String buildSteps(def blocks) {
 		def writer = new StringWriter()
 		MarkupBuilder stepxml = new MarkupBuilder(new IndentPrinter(new PrintWriter(writer), "", false))
-		int sCount = 2
-		def sList = blocks.findAll { block ->
-			String v = "${block.kind}"
-			v.startsWith('Then:')
+		def steps = []
+		def stepi = [actionBlocks: [], resultBlocks: []]
+		def side = 'action'
+		steps.add(stepi)
+		blocks.each { block ->
+			String k = "${block.kind}"
+			if ((k == 'Setup:' || k == 'Given:')  && stepi.actionBlocks.size() > 0) {
+				stepi = [actionBlocks: [], resultBlocks: []]
+				steps.add(stepi)
+				side = 'action'
+			if (k == 'When:' && stepi.resultBlocks.size() > 0)
+				stepi = [actionBlocks: [], resultBlocks: []]
+				steps.add(stepi)
+				side = 'action'
+			} else if (k == 'Then:') {
+				side = 'result'
+			}
+			if (side == 'action') {
+				stepi.actionBlocks.add(block)
+			} else if (side == 'result') {
+				stepi.resultBlocks.add(block)
+			}
 		}
-		stepxml.steps(steps: 0, last: sList.size()+1) {
+		if (steps.size() == 0) return ''
+		int sCount = 2
+		stepxml.steps(steps: 0, last: steps.size()+1) {
 
 			String htmla = '<DIV>'
-			String htmlr = ''
-			blocks.each { block ->
-				String kind = "${block.kind}"
-				if (kind.startsWith('Given:') ||
-				kind.startsWith('And:') ||
-				kind.startsWith('Setup:')) {
-					htmla += "<p><b>${block.kind}</b> <code>${block.text}</code></p>"
-					htmla += codeOut(block.code)
-				} else if (kind.startsWith('When:')){
-					htmla += "<p><b>${block.kind}</b> <code>${block.text}</code>${codeOut(block.code)}</DIV>"
-				} else if (kind.startsWith('Then:')) {
+			String htmlr = '<DIV>'
+					//htmla += "<p><b>${block.kind}</b> <code>${block.text}</code></p>"
+					//htmla += codeOut(block.code)
+			steps.each { stepo ->
+				stepo.actionBlocks.each { block -> 
+					htmla += "<DIV><p><b>${block.kind}</b> <code>${block.text}</code></p>${codeOut(block.code)}</DIV>"
+				}
+				stepo.resultBlocks.each { block -> 
 					htmlr += "<DIV><p><b>${block.kind}</b> <code>${block.text}</code></p>${codeOut(block.code)}</DIV>"
-					step(id: sCount, type:'ValidateStep') {
-						StringEscapeUtils u
-						String htmlStr = escapeHtml(htmla)
-						parameterizedString(isformatted: 'true') {
-							mkp.yieldUnescaped htmlStr
-						}
-						htmlStr = escapeHtml(htmlr)
-						parameterizedString(isformatted: 'true') {
-							mkp.yieldUnescaped htmlStr
-						}
-
+				}
+				htmla += "</DIV>"
+				htmlr += "</DIV>"
+				step(id: sCount, type:'ValidateStep') {
+					//StringEscapeUtils u
+					String htmlStr = escapeHtml(htmla)
+					parameterizedString(isformatted: 'true') {
+						mkp.yieldUnescaped htmlStr
 					}
-					sCount++
-					htmla = '<DIV>'
-					htmlr = ''
+					htmlStr = escapeHtml(htmlr)
+					parameterizedString(isformatted: 'true') {
+						mkp.yieldUnescaped htmlStr
+					}
 
 				}
+				sCount++
+				htmla = '<DIV>'
+				htmlr = '<DIV>'
 			}
 		}
 		String outVal = writer.toString()
@@ -295,7 +315,7 @@ class SyncTesting implements CliAction {
 
 	String escapeHtml(String html) {
 		String ohtml = html
-		//ohtml = ohtml.replace('&', '&amp;')
+		ohtml = ohtml.replace('&', '&amp;')
 		ohtml = ohtml.replace('<', '&lt;')
 		ohtml = ohtml.replace('>', '&gt;')
 		return ohtml
