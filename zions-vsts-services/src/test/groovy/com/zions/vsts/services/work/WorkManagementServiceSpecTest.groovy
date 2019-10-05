@@ -4,8 +4,10 @@ import static org.junit.Assert.*
 
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.ICheckpointManagementService
+import com.zions.common.services.test.DataGenerationService
 import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
@@ -44,15 +46,19 @@ class WorkManagementServiceSpecTest extends Specification {
 	IGenericRestClient genericRestClient
 	
 	@Autowired
-	ICacheManagementService cacheManagmentService
+	ICacheManagementService cacheManagementService
 	
 	@Autowired
 	ICheckpointManagementService checkpointManagementService
+	
+	@Autowired
+	DataGenerationService dataGenerationService
 	
 	def "Injected services are mocks"() {
 		expect:
 		new MockUtil().isMock(genericRestClient)
 	}
+	
 	
 	public void 'Batch call a result'() {
 		given: 'stub rateLimitPost a valid return'
@@ -123,11 +129,37 @@ class WorkManagementServiceSpecTest extends Specification {
 		true
 	}
 	
+	def 'cleanDuplicates mdb flow'() {
+		setup: 'stub for mdb cache management'
+		cacheManagementService = Stub(MongoDBCacheManagementService)
+		MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
+		mdbCacheManagement.getAllOfType(_, _) >> { args ->
+			int page = args[1]
+			if (page == 2) {
+				return [:]
+			} else {
+				int i = 22
+				def r = [:]
+				0.upto(20, {
+					String key = "${i}"
+					def wi = dataGenerationService.generate('/testdata/wiDataT.json')
+					wi.id = "${i+200}"
+					wi.fields.'Custom.ExternalID' = key
+					r[key] = wi 
+					i++
+				})
+				return r
+			}
+		}
+		
+		and: 'stub generic rest client for rateLimitPost dup check'
+	}
+
 }
 
 @TestConfiguration
 @Profile("test")
-@ComponentScan("com.zions.common.services.restart")
+@ComponentScan(["com.zions.common.services.restart", "com.zions.common.services.test"])
 @PropertySource("classpath:test.properties")
 class WorkManagementServiceConfig {
 	def mockFactory = new DetachedMockFactory()
@@ -148,7 +180,7 @@ class WorkManagementServiceConfig {
 	}
 	
 	@Bean
-	ICacheManagementService cacheManagmentService() {
+	ICacheManagementService cacheManagementService() {
 		return new CacheManagementService(cacheLocation)
 	}
 	

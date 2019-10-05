@@ -74,13 +74,12 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 	}
 	
 	def 'getAllOfType test paging'() {
-		setup: "Add 400 items into cache"
+		setup: 'Add 400 items into cache'
 		for (int i = 0; i < 400; i++) {
 			def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 			underTest.saveToCache(data, "${i}", ICacheManagementService.PLAN_DATA)
-		}
-		
-		when: "call getAllByType with paging"
+		}		
+		when: 'call getAllByType with paging'
 		boolean success = true
 		int page = 0
 		try {
@@ -91,9 +90,8 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 			}
 		} catch (e) {
 			success = false
-		}
-		
-		then: "two pages of 200 items are returned"
+		}		
+		then: 'two pages of 200 items are returned'
 		success && page == 2
 	}
 }

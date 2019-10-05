@@ -30,7 +30,12 @@ class SpockQueryService {
 			feature.block.each { block ->
 				def b = [kind: "${block.@kind}", text: "${block.text.text()}", code: []]
 				block.code.each { code ->
-					b.code.push("${code.text()}")
+					String t = "${code.text()}"
+					t = t.replace('\t', '  ')
+					if (t.startsWith('   ')) {
+						t = t.substring(4)
+					}
+					b.code.push(t)
 				}
 				bs.push(b)
 			}
