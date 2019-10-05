@@ -254,7 +254,7 @@ class SyncTesting implements CliAction {
 				stepi = [actionBlocks: [], resultBlocks: []]
 				steps.add(stepi)
 				side = 'action'
-			if (k == 'When:' && stepi.resultBlocks.size() > 0)
+			} else if (k == 'When:' && stepi.resultBlocks.size() > 0) {
 				stepi = [actionBlocks: [], resultBlocks: []]
 				steps.add(stepi)
 				side = 'action'
