@@ -133,17 +133,17 @@ class WorkManagementServiceSpecTest extends Specification {
 		setup: 'stub for mdb cache management'
 		cacheManagementService = Stub(MongoDBCacheManagementService)
 		MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
+		def r = [:]
 		mdbCacheManagement.getAllOfType(_, _) >> { args ->
 			int page = args[1]
 			if (page == 2) {
 				return [:]
 			} else {
 				int i = 22
-				def r = [:]
 				0.upto(20, {
 					String key = "${i}"
 					def wi = dataGenerationService.generate('/testdata/wiDataT.json')
-					wi.id = "${i+200}"
+					wi.id = i+200
 					wi.fields.'Custom.ExternalID' = key
 					r[key] = wi 
 					i++
@@ -152,7 +152,53 @@ class WorkManagementServiceSpecTest extends Specification {
 			}
 		}
 		
-		and: 'stub generic rest client for rateLimitPost dup check'
+		and: 'stub generic rest client for rateLimitPost that produces a duplicate work item returns to exercise delete'
+		genericRestClient = Stub(GenericRestClient)
+		genericRestClient.rateLimitPost(_) >> { args ->
+			def req = args[0]
+			String body = "${req.body}"
+			def rwi = null
+			def result = [workItems:[]]
+			r.each { key, wi ->
+				if (body.contains("[Custom.ExternalID] = '${key}'")) {
+					rwi = wi
+					return
+				}
+			}
+			result.workItems.add(rwi)
+			
+			// setup duplicate
+			if (rwi.id == 200 + 30) {
+				def wi = dataGenerationService.generate('/testdata/wiDataT.json')
+				wi.id = 500
+				wi.fields.'Custom.ExternalID' = rwi.fields.'Custom.ExternalID'
+				result.workItems.add(wi)
+			}
+			return result
+		}
+		
+		and: 'stub genericRestClient for do nothing delete'
+		genericRestClient.delete(_) >> { args ->
+			return []
+		}
+		
+		and: 'Set updated classes members'
+		underTest.genericRestClient = genericRestClient
+		underTest.cacheManagementService = cacheManagementService
+		
+		when: 'call cleanDuplicates'
+		boolean success = true
+		try {
+			def result = underTest.cleanDuplicates('', 'Dummy')
+		} catch (e) { 
+			e.printStackTrace()
+			success = false 
+		}
+		
+		then: 'No exception'
+		success
+		
+		
 	}
 
 }
