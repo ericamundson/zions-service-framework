@@ -277,10 +277,10 @@ class SyncTesting implements CliAction {
 					//htmla += codeOut(block.code)
 			steps.each { stepo ->
 				stepo.actionBlocks.each { block -> 
-					htmla += "<DIV><p><b>${block.kind}</b> <code>${block.text}</code></p>${codeOut(block.code)}</DIV>"
+					htmla += "<DIV><p><b>${block.kind}</b>  <em><code>${block.text}</code></em></p>${codeOut(block.code)}</DIV><p></p>"
 				}
 				stepo.resultBlocks.each { block -> 
-					htmlr += "<DIV><p><b>${block.kind}</b> <code>${block.text}</code></p>${codeOut(block.code)}</DIV>"
+					htmlr += "<DIV><p><b>${block.kind}</b>  <em><code>${block.text}</code></em></p>${codeOut(block.code)}</DIV><p></p>"
 				}
 				htmla += "</DIV>"
 				htmlr += "</DIV>"
