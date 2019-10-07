@@ -53,7 +53,7 @@ class GenericRestClient extends AGenericRestClient {
 		this.token = token;
 		this.user = user;
 		delegate = new RESTClient(tfsUrl)
-		//delegate.ignoreSSLIssues()
+		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		setProxy()
 		setCredentials(user, token);
