@@ -89,7 +89,22 @@ abstract class RmBaseAttributeHandler implements IFieldHandler {
 		return value;
 
 	}
-
+	protected def stringToNumber(def val, String handlerName) {
+		if (val) {
+			if (val == 'NA' || val == "YYYYMMDD") {
+				return null
+			}
+			else {
+				// Validate numeric value
+				try {
+					Integer seq = Integer.parseInt(val.trim().replaceAll(' bytes?','').replace(' - PACKED','').replace('PACKED ','').replace('x(','').replace('X(','').replace(')/MM/DD/YYYY','').replace(')',''))
+				} catch (NumberFormatException | NullPointerException nfe) {
+					throw new Exception("$handlerName threw exception, invalid number: $val")
+					return null;
+				}
+			}
+		}
+	}
 	
 	abstract String getFieldName()
 	
