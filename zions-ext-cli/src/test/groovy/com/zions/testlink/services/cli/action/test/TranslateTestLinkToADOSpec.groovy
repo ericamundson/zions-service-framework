@@ -38,6 +38,7 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.IRestartManagementService
 import com.zions.common.services.restart.RestartManagementService
 import com.zions.common.services.test.Generator
+import com.zions.common.services.test.SpockLabeler
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.testlink.services.test.TestLinkAttachmentManagementService
 import com.zions.testlink.services.test.TestLinkClient
@@ -79,17 +80,17 @@ class TranslateTestLinkToADOSpec extends Specification {
 		
 	@Ignore
 	public void 'Simulate all phases plus clean'() {
-		setup: s_ 'TestLink stubs'
+		setup: 'TestLink stubs'
 		cacheManagementService.cacheModule = 'TL'
 		restartManagementService.includePhases = 'testcase,plans,links,executions,attachments'
 		//testManagementService.cleanupTestItems('', 'IntegrationTests', "IntegrationTests\\testlink")
 		setupTestLinkStubs()
 		
-		when: w_ 'call execute'
+		when: 'call execute'
 		def appArgs = new DefaultApplicationArguments(loadTLArgs())
 		underTest.execute(appArgs)
 		
-		then: t_ 'result.size() = 100'
+		then: 'result.size() = 100'
 		def result = cacheManagementService.getAllOfType(ICacheManagementService.RESULT_DATA)
 		result.size() == 100
 		

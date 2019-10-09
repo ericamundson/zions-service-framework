@@ -12,7 +12,7 @@ import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.members.CcmMemberManagementService
 import com.zions.common.services.rest.IGenericRestClient;
-
+import com.zions.common.services.test.SpockLabeler
 import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
@@ -31,14 +31,14 @@ public class ExtractCcmWIMetadataTest extends Specification {
 	@Test
 	def 'validate method success flow.'() {
 		
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'result == true'
+		then: 'result == true'
 		result == true
 	}
 	
@@ -49,10 +49,10 @@ public class ExtractCcmWIMetadataTest extends Specification {
 		String[] args = ['--bb.user=user']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ null
+		then: 'No exception'
 		thrown Exception
 	}
 	
@@ -62,14 +62,14 @@ public class ExtractCcmWIMetadataTest extends Specification {
 		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: a_ 'stub extractWorkitemMetadata'
+		and: 'stub extractWorkitemMetadata'
 		def sample =[]
 		ccmWIMetadataManagementService.extractWorkitemMetadata( _ , _) >> []
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	

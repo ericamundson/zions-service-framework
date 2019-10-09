@@ -2,6 +2,7 @@ package com.zions.clm.services.rest
 
 import static org.junit.Assert.*
 
+import com.zions.common.services.test.SpockLabeler
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
 import org.apache.http.client.utils.URIBuilder
@@ -21,7 +22,7 @@ class ClmGenericRestClientSpec extends Specification {
 //		
 //		ClmGenericRestClient client = new ClmGenericRestClient('https://clm.cs.zionsbank.com/rm', 'z091182', '4878Middy001')
 //		
-//		when: w_ 'class get on client'
+//		when: 'class get on client'
 //		def currentParser = client.delegate.parser.'application/xml'
 //		client.delegate.parser.'application/rdf+xml' = currentParser
 //		def response = client.get(
@@ -35,7 +36,7 @@ class ClmGenericRestClientSpec extends Specification {
 //		String xml = XmlUtil.serialize(response.data)
 //		println xml
 //		
-//		then: t_
+//		then:
 //		true
 	}
 

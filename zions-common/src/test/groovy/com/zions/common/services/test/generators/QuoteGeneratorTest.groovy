@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.zions.common.services.cache.CacheManagementService;
 import com.zions.common.services.cache.CacheManagementServiceTestConfig;
-
+import com.zions.common.services.test.SpockLabeler
 import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
 
@@ -27,10 +27,10 @@ public class QuoteGeneratorTest extends Specification {
 	
 		underTest.setLength(5)
 		
-		when: w_ 'call init'
+		when: 'call init'
 		def plan = underTest.init()
 		
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 	
@@ -40,19 +40,19 @@ public class QuoteGeneratorTest extends Specification {
 	
 		underTest.setLength(0)
 		
-		when: w_ 'call gen'
+		when: 'call gen'
 		def plan = underTest.gen()
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	@Test
 	def 'gen exception flow' () {
-		when: w_ 'call gen'
+		when: 'call gen'
 		def plan = underTest.gen()
 		
-		then: t_ null
+		then: 'No exception'
 		true
 		
 	}

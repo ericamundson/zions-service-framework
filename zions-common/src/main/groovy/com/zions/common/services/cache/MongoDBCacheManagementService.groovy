@@ -7,6 +7,8 @@ import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
@@ -26,6 +28,8 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	 */
 	@Autowired(required=false)
 	MongoTemplate mongoTemplate
+	
+	private static int PAGE_SIZE = 200
 
 	/**
 	 * Query controller for cache items being managed
@@ -137,15 +141,34 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	}
 
 
-	@Override
-	public Object getAllOfType(String type) {
+	//@Override
+	public Object getAllOfType(String type, int page = -1) {
 		def wis = [:]
-		List<CacheItem> items = repository.findByProjectAndModuleAndType(dbProject, cacheModule, type)
-		
-		items.each { CacheItem item -> 
-			def wi = new JsonSlurper().parseText(item.json)
-			wis[item.key] = wi
+		if (page == -1) {
+			List<CacheItem> items = repository.findByProjectAndModuleAndType(dbProject, cacheModule, type)
+			items.each { CacheItem item -> 
+				def wi = new JsonSlurper().parseText(item.json)
+				wis[item.key] = wi
+			}
+			return wis
 		}
+		
+		try {
+			PageRequest r = PageRequest.of(page, PAGE_SIZE)
+			Page<CacheItem> p = repository.findByProjectAndModuleAndType(dbProject, cacheModule, type, r)
+			if (p.content && p.content.size() > 0) {
+				p.content.each { CacheItem item ->
+					def wi = new JsonSlurper().parseText(item.json)
+					wis[item.key] = wi
+				}
+			} else {
+				return wis
+			}
+		} catch (e) {
+			log.warn("No more pages!")
+		}
+		
+		
 		return wis;
 	}
 

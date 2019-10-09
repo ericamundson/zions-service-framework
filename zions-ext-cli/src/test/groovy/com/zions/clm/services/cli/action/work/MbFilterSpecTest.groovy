@@ -20,6 +20,7 @@ import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
@@ -41,11 +42,11 @@ public class MbFilterSpecTest extends Specification {
 	
 	@Test
 	def 'filter success flow '() {
-		given: g_ 'work item query xml'
+		given: 'work item query xml'
 		def xmlWorkItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
-		when: w_ 'call filter'
+		when: 'call filter'
 		def result = underTest.filter(xmlWorkItems)
-		then: t_ null
+		then: 'No exception'
 		result != null
 		println xmlWorkItems
 		println '---------------------------------------'

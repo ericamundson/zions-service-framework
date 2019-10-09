@@ -15,6 +15,7 @@ import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.settings.SettingsManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.work.WorkManagementService
@@ -36,25 +37,25 @@ class RollupManagementServiceSpec extends Specification {
 	WorkManagementService workManagementService
 
 	def 'rollup happy path'() {
-		given: g_ 'stub of get work item of feature type'
+		given: 'stub of get work item of feature type'
 		1 * workManagementService.getWorkItem(_, _, _) >> dataGenerationService.generate('/testdata/wiDataFeature.json')
 		
-		and: a_ 'stub of get category'
+		and: 'stub of get category'
 		1 * workManagementService.getCategory(_,_,_) >> 'Feature Category'
 		
-		and: a_ 'stub of inside get child data, get children of Feature  (a story)'
+		and: 'stub of inside get child data, get children of Feature  (a story)'
 		def storyData = dataGenerationService.generate('/testdata/wiDataUserStory.json')
 		1 * workManagementService.getChildren(_,_,_) >> [storyData]
 		
 		1 * workManagementService.getCategory(_,_,_) >> 'Requirement Category'
 				
-		and: a_ 'stub of get work item of story type'
+		and: 'stub of get work item of story type'
 		1 * workManagementService.getWorkItem(_, _, _) >> storyData
 		
-		and: a_ 'stub of get category for story'
+		and: 'stub of get category for story'
 		1 * workManagementService.getCategory(_,_,_) >> 'Requirement Category'
 		
-		and: a_ 'stub of inside get child data, get children of story (Tasks)'
+		and: 'stub of inside get child data, get children of story (Tasks)'
 		def tasks = []
 		for (int i = 0; i < 3; i++) {
 			def taskData = dataGenerationService.generate('/testdata/wiDataTask.json')
@@ -64,13 +65,13 @@ class RollupManagementServiceSpec extends Specification {
 		
 		3 * workManagementService.getCategory(_,_,_) >> 'Task Category'
 		
-		and: a_ 'stub of get work item of story type'
+		and: 'stub of get work item of story type'
 		1 * workManagementService.getWorkItem(_, _, _) >> storyData
 
-		and: a_ 'stub save story and feature'
+		and: 'stub save story and feature'
 		2 * workManagementService.updateWorkItem(_,_,_,_)
 		
-		when: w_ 'Call underTest (rollup)'
+		when: 'Call underTest (rollup)'
 		boolean flag = true
 		try {
 			underTest.rollup('1234', false, '')
@@ -78,7 +79,7 @@ class RollupManagementServiceSpec extends Specification {
 			flag = false
 		}
 		
-		then: t_ null
+		then: 'No exception'
 		flag
 		
 	}

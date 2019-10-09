@@ -13,6 +13,7 @@ import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.workitem.metadata.CcmWIMetadataManagementService
 import com.zions.clm.services.rtc.project.members.CcmMemberManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 
@@ -42,53 +43,53 @@ public class BuildWITStarterTest extends Specification {
 	
 	@Test
 	def 'validate method success flow.'() {
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'result == true'
+		then: 'result == true'
 		result == true
 	}
 	
 	@Test
 	def 'validate method exception flow.'() {
-		given: g_'invalid Application Arguments'
+		given:'invalid Application Arguments'
 		String[] args = ['--bb.user=user']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'execute method success flow.' () {
 		
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 				
-		when: w_ 'calling of method under test (execute)'
+		when: 'calling of method under test (execute)'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'buildStarterXml method success flow.' () {
 		
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		String inFile = 'src/main/resources/wit.csv'
 		
-		when: w_ 'calling of method under test (buildStarterXml)'
+		when: 'calling of method under test (buildStarterXml)'
 		def result = underTest.buildStarterXml(inFile)
 
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 		

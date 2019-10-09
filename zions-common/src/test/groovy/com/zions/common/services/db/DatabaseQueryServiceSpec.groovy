@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.test.SpockLabeler
+
 import spock.lang.Specification
 
 
@@ -25,10 +27,10 @@ class DatabaseQueryServiceSpec extends Specification {
 	IDatabaseQueryService databaseQueryService
 
 	def 'Run db test with paging'() {
-		setup: s_ 'Setup data'
+		setup: 'Setup data'
 		setupDbData()
 		
-		when: w_  'call query and paging calls'
+		when:  'call query and paging calls'
 		boolean flag = true
 		log.info 'JVM Languages:'
 		def page = databaseQueryService.query('select * from languages')
@@ -44,10 +46,10 @@ class DatabaseQueryServiceSpec extends Specification {
 			page = databaseQueryService.nextPage()
 			if (!page) break;
 		}
-		then: t_ 'validate query with no parms'
+		then: 'validate query with no parms'
 		iUrl == 'select * from languages/11/5'
 		
-		when: w_'Run query with parms'
+		when:'Run query with parms'
 		log.info 'With parm JVM Languages:'
 		page = databaseQueryService.query("select * from languages where name = :name", [name: 'Groovy'])
 		iUrl = databaseQueryService.initialUrl()
@@ -62,10 +64,10 @@ class DatabaseQueryServiceSpec extends Specification {
 			page = databaseQueryService.nextPage()
 			if (!page) break;
 		}
-		then: t_ 'validate query with parms'
+		then: 'validate query with parms'
 		iUrl == 'select * from languages where name = :name/6/5'
 		
-		cleanup: c_ 'Cleanup db data'
+		cleanup: 'Cleanup db data'
 		cleanDbData()
 	}
 	

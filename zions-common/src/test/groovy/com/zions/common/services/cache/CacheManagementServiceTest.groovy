@@ -6,6 +6,8 @@ import groovy.json.JsonSlurper
 
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
+
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -33,10 +35,10 @@ public class CacheManagementServiceTest extends Specification {
 
 		def result= new ByteArrayInputStream();
 
-		when: w_ 'calling of method under test (saveBinaryAsAttachment)'
+		when: 'calling of method under test (saveBinaryAsAttachment)'
 		def keyname = underTest.saveBinaryAsAttachment( result ,'','')
 		// 218-Test Plan
-		then: t_ ''
+		then: 'No exception'
 		true
 
 	}
@@ -46,10 +48,10 @@ public class CacheManagementServiceTest extends Specification {
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: w_ 'calling of method under test (data)'
+		when: 'calling of method under test (data)'
 		def keyname = underTest.saveToCache( data ,'','')
 
-		then: t_ 'No save failure'
+		then: 'No save failure'
 		true
 	}
 
@@ -58,10 +60,10 @@ public class CacheManagementServiceTest extends Specification {
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: w_ 'calling of method under test (getFromCache)'
+		when: 'calling of method under test (getFromCache)'
 		def keyname = underTest.getFromCache( '','')
 
-		then: t_ 'No save failure'
+		then: 'No save failure'
 		true
 	}
 }

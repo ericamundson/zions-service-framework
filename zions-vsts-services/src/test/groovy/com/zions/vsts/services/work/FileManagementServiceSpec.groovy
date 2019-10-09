@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
@@ -33,17 +34,17 @@ class FileManagementServiceSpec extends Specification {
 	ICacheManagementService cacheManagementService
 
 	def 'ensureAttachments main flow'() {
-		given: g_ 'stub for WorkManagementService getCacheWI call'
+		given: 'stub for WorkManagementService getCacheWI call'
 		def wiData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/cacheworkitem.json').text)
 		1 * cacheManagementService.getFromCache(_,_) >> wiData
 		
-		and: a_ 'stub for upload attachment rest request'
+		and: 'stub for upload attachment rest request'
 		1 * genericRestClient.rateLimitPost(_, _) >> [url: 'https://an.azure.location']
 		
-		when: w_ 'call method under test ensureAttachments'
+		when: 'call method under test ensureAttachments'
 		def wiUpdate = underTest.ensureAttachments('', '', 'aId', [[file: new File('dumb.png'), comment: "Added dumb.png"]])
 		
-		then: t_ 'a valid work item change request must be returned.'
+		then: 'a valid work item change request must be returned.'
 		wiUpdate.body.size() > 1
 	}
 

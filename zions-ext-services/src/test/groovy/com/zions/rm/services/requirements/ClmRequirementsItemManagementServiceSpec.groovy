@@ -24,6 +24,7 @@ import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
@@ -60,15 +61,23 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 	 * 
 	 * Thus, not too BDD.  Although not much of our unit testing is.
 	 */
-	@Ignore
+	//@Ignore
 	def 'Main flow for module with related artifacts while testing ADO change data processing'() {
-		setup: s_ "Setup a module and module's related artifacts"
+		setup: "modules and module's related artifacts stubs"
 		setupModuleAndRelatedArtifactData()
 		cacheManagementService.cacheModule = 'RM'
 		
-		when: w_ 'Run behavior to get changes for module and related artifacts'
+		when: 'Run behavior to get changes for module and related artifacts'
 		String murl = "https://clm.cs.zionsbank.com/rm/resources/_frOPQFDzEeWblrEplHqOHQ"
 		def module = clmRequirementsManagementService.getModule(murl, false)
+		def result = processModuleAndArtifacts( module )
+		
+		then: 'mchanges are not null and artifactChanges size == 191'
+		result.mchanges != null && result.artifactChanges.size() == 191
+		
+	}
+	
+	def processModuleAndArtifacts(module) {
 		def memberMap = [:]
 		def mchanges = underTest.getChanges('IntegrationTests', module, memberMap)
 		def aid = module.getCacheID()
@@ -97,10 +106,7 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 				
 			}
 		})
-		
-		then: t_ 'mchanges != null && artifactChanges.size() == 191'
-		mchanges != null && artifactChanges.size() == 191
-		
+		return [mchanges: mchanges, artifactChanges: artifactChanges]
 	}
 	
 	boolean isToIncorporateTitle(def module, def indexOfElementToCheck) {
@@ -133,18 +139,26 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 		tDir.eachFile { File file ->
 			if (file.name.startsWith('module')) moduleFiles.add(file)
 		}
+		
 		def moduleMap = [:]
 		moduleFiles.each { File module ->
 			def modData = dataGenerationService.generate(module)
 			String url = "${modData.url}"
 			def data = new XmlSlurper().parseText(modData.data)
-			moduleMap[url] = data
+			moduleMap[url] = [data: data, str: modData.data]
 		}
 		
 		rmGenericRestClient.get(_) >> { args ->
 			def input = args[0]
 			String auri = "${input.uri}"
-			return moduleMap[auri]
+			if (moduleMap[auri]) {
+				if (auri.contains('publish/text?resourceURI')) {
+					return moduleMap[auri]
+				} else {
+					return moduleMap[auri].data
+				}
+			}
+			return 
 		}
 		
 		attachmentService.sendAttachment(_) >> {}

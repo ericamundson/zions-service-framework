@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.qm.services.test.handlers.NameHandler
 import com.zions.qm.services.test.handlers.QmBaseAttributeHandler
@@ -42,11 +43,11 @@ class ClmTestItemManagementServiceSpec extends Specification {
 //	Map<String, IFieldHandler> fieldMap
 
 	def 'getChanges main flow with test plan data'() {
-		given: g_ 'setup plan data'
+		given: 'setup plan data'
 		//Plan data
 		def testplan = dataGenerationService.generate('/testdata/testplan218.xml')
 
-		and: a_ 'setup team map'
+		and: 'setup team map'
 		//Team map
 		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
 		def teamMap = [:]
@@ -59,21 +60,21 @@ class ClmTestItemManagementServiceSpec extends Specification {
 
 		}
 
-		when: w_ 'call getChanges'
+		when: 'call getChanges'
 		underTest.processForChanges('DigitalBanking', testplan, teamMap) { 
 			key, item -> }
 
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 
 	def 'getChanges main flow with test suite data'() {
-		given: g_ 'setup suite data'
+		given: 'setup suite data'
 		//Plan data
 		def testsuite = dataGenerationService.generate('/testdata/testsuiteT.xml')
 		def testplan = dataGenerationService.generate('/testdata/TestPlan.json')
 
-		and: a_ 'team map'
+		and: 'team map'
 		//Team map
 		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
 		def teamMap = [:]
@@ -86,19 +87,19 @@ class ClmTestItemManagementServiceSpec extends Specification {
 
 		}
 		
-		when: w_ 'call method under test (getChanges).'
+		when: 'call method under test (getChanges).'
 		underTest.processForChanges('DigitalBanking', testsuite, teamMap, null, null, testplan) { 
 			key, item -> }
-		then: t_ 'ensure change data'
+		then: 'ensure change data'
 		true
 	}
 
 	def 'getChanges main flow with test case data'() {
-		given: g_ 'setup test case data'
+		given: 'setup test case data'
 		//Plan data
 		def testcase = dataGenerationService.generate('/testdata/testcaseT.xml')
 
-		and: a_ 'setup team map'
+		and: 'setup team map'
 		//Team map
 		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
 		def teamMap = [:]
@@ -111,19 +112,19 @@ class ClmTestItemManagementServiceSpec extends Specification {
 
 		}
 
-		when: w_ 'call getChanges'
+		when: 'call getChanges'
 		underTest.processForChanges('DigitalBanking', testcase, teamMap) { 
 			key, item -> }
 
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	def 'getChanges main flow with configuration data'() {
-		given: g_ 'setup of configuration data'
+		given: 'setup of configuration data'
 		//Plan data
 		def configuration = dataGenerationService.generate('/testdata/configurationT.xml')
 
-		and: a_ 'setup team map'
+		and: 'setup team map'
 		//Team map
 		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
 		def teamMap = [:]
@@ -136,16 +137,16 @@ class ClmTestItemManagementServiceSpec extends Specification {
 
 		}
 
-		when: w_ 'call method under test (getChanges).'
+		when: 'call method under test (getChanges).'
 		underTest.processForChanges('DigitalBanking', configuration, teamMap) { 
 			key, item -> }
 
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 
 	def 'getChanges main flow with execution result data'() {
-		given: g_ 'Result data'
+		given: 'Result data'
 		//Plan data
 		def executionresults = dataGenerationService.generate('/testdata/executionresults1.xml')
 		def erlist = executionresults.'**'.findAll { it.name() == 'executionresult' }
@@ -153,20 +154,20 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		erlist.each { item ->
 			outItems.add(item)
 		}
-		and: a_ 'Test case data'
+		and: 'Test case data'
 		def testcase = dataGenerationService.generate('/testdata/testcaseT.xml')
 
-		and: a_ 'result map data'
+		and: 'result map data'
 		def result = dataGenerationService.generate('/testdata/resultsMap.json')
 		def tcMap = [:]
 		result.'value'.each { aresult ->
 			tcMap["${aresult.testCase.id}"] = aresult
 		}
 		
-		and: a_ 'stub call to get test case from cache'
+		and: 'stub call to get test case from cache'
 		1 * cacheManagementService.getFromCache(_, _) >> dataGenerationService.generate('/testdata/testcase1.json')
 
-		and: a_ 'setup team map data'
+		and: 'setup team map data'
 		//Team map
 		def teamInfo = dataGenerationService.generate('/testdata/teammembers.json')
 		def teamMap = [:]
@@ -179,11 +180,11 @@ class ClmTestItemManagementServiceSpec extends Specification {
 
 		}
 
-		when: w_ 'call getChanges'
+		when: 'call getChanges'
 		underTest.processForChanges('DigitalBanking', outItems[0], teamMap, tcMap, testcase) { 
 			key, item -> }
 
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 

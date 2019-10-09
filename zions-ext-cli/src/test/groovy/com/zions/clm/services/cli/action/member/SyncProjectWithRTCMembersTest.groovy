@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.clm.services.rtc.project.members.CcmMemberManagementService
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
@@ -43,45 +44,45 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given: g_ 'invalid Application Arguments'
+		given: 'invalid Application Arguments'
 		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'validate method success flow.'() {
 		
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'result == true'
+		then: 'result == true'
 		result == true
 	}
 	
 	@Test
 	def 'execute method success flow.' () {
 		
-		given: g_ 'Valid Application Arguments'
+		given: 'Valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: a_ 'stub rest call for test plans'
+		and: 'stub rest call for test plans'
 		def testplansInfo = new XmlSlurper().parseText(this.getClass().getResource('/testdata/ccmworkitemtype.xml').text)
 		1 * clmGenericRestClient.get(_) >> testplansInfo
 
-		when: w_ 'call execute'
+		when: 'call execute'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'result == null'
+		then: 'result == null'
 		result == null
 	}
 	
@@ -92,10 +93,10 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 		def teamInfo = new XmlSlurper().parseText(getClass().getResource('/testdata/testmember.xml').text)
 		def map = new JsonSlurper().parseText(getClass().getResource('/testdata/mbteamnamemap.json').text)
 				
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.rebuildMemberData(teamInfo,map)
 
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	

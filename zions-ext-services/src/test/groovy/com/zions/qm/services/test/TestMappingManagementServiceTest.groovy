@@ -11,6 +11,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.clm.services.rest.ClmGenericRestClient
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
@@ -23,10 +24,10 @@ class TestMappingManagementServiceTest extends Specification {
 
 	def 'getMappingData success flow.'() {
 		
-		when: w_ 'calling method under test (getMappingData)'
+		when: 'calling method under test (getMappingData)'
 		def mapping = underTest.getMappingData()
 		
-		then: t_  'mapping.wit.size() > 0'
+		then:  'mapping.wit.size() > 0'
 		mapping.wit.size() > 0
 	}
 

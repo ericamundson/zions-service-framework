@@ -1,0 +1,42 @@
+<%
+    def stats = utils.stats( data )
+ %>
+ 
+<testcase name="${utils.getSpecClassName( data )}">
+
+	<summary
+	totruns="${stats.totalRuns}"
+	successrate="${fmt.toPercentage(stats.successRate)}"
+	failures="${stats.failures}"
+	errors="${stats.errors}"
+	skipped="${stats.skipped}"
+	totaltime="${fmt.toTimeDuration(stats.time)}" />
+
+
+<%
+    features.eachFeature { name, result, blocks, iterations, params ->
+ 		def iterationTimes = iterations.collect { it.time ?: 0L }
+ 		def totalTime = fmt.toTimeDuration( iterationTimes.sum() )
+%>
+	<feature name="${name}" result="${result}" time="${totalTime}">
+<%
+        for ( block in blocks ) {
+ %>
+ 
+	<block kind="${block.kind}">
+		<text><![CDATA[${block.text}]]></text>
+<%
+          if ( block.sourceCode ) {
+              block.sourceCode.each { codeLine ->
+                  out << '<code><![CDATA[' << codeLine << ']]></code>' << '\n'
+              }
+          }
+          out << '</block>'
+
+        }
+ %>
+	</feature>
+<% 
+	} 
+%>
+</testcase>

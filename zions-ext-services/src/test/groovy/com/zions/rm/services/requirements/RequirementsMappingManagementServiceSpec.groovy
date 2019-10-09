@@ -2,6 +2,7 @@ package com.zions.rm.services.requirements
 
 import static org.junit.Assert.*
 
+import com.zions.common.services.test.SpockLabeler
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
@@ -19,12 +20,12 @@ class RequirementsMappingManagementServiceSpec extends Specification {
 	RequirementsMappingManagementService underTest
 	
 	def 'Main flow for getMappingData'() {
-		setup: s_ 'Nothing required'
+		setup: 'Nothing required'
 		
-		when: w_ 'Call getMappingData'
+		when: 'Call getMappingData'
 		def map = underTest.getMappingData()
 		
-		then: t_ 'map.size() == 3'
+		then: 'map.size() == 3'
 		map.size() == 3
 	}
 

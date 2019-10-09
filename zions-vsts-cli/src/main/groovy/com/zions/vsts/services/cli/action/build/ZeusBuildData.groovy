@@ -4,6 +4,7 @@ import java.lang.reflect.Field
 import java.util.Map
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
@@ -75,6 +76,9 @@ class ZeusBuildData implements CliAction {
 	@Autowired
 	public ZeusBuildData() {
 	}
+	
+	@Value('${release.id:}')
+	String releaseId
 
 	@Override
 	public def execute(ApplicationArguments data) {
@@ -106,9 +110,19 @@ class ZeusBuildData implements CliAction {
 		def wis = wi.toSet()
 		def buildChanges = buildManagementService.getExecutionChanges(collection, project, buildId, true)
 		def fList = []
+		def fListWFolders = []
 		def affiliates = []
 		def allChanges = [:]
 		def dList = []
+		//load keeps
+		File iRepo = new File(inRepoDir)
+		iRepo.eachFileRecurse { File f ->
+			String fPath = f.absolutePath
+			fPath = fPath.substring(inRepoDir.length())
+			if (fPath.endsWith('.keep')) {
+				fListWFolders.push("${fPath.substring(1).replace("\\", "/")}")
+			}
+		}
 		buildChanges.'value'.each { bchange ->
 			if (bchange.location) {
 				String url = "${bchange.location}/changes"
@@ -120,7 +134,11 @@ class ZeusBuildData implements CliAction {
 					if (!fileExists(inRepoDir, "${fpath.substring(1)}") && !dList.contains("${fpath.substring(1)}")) {
 						dList.push("${fpath.substring(1)}")
 					}
+//					if (fpath.contains('.keep')) {
+//						fListWFolders.push(fpath.replace("\\", "/"))
+//					}
 					if (!dList.contains("${fpath.substring(1)}") && change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
+						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
 						if (fItems.size() > 3) {
@@ -128,6 +146,7 @@ class ZeusBuildData implements CliAction {
 								allChanges[fpath] = [ parent: bchange, item: change.item ]
 							}
 							String affiliate = fItems[2]
+
 							affiliates.push(affiliate)
 						} else {
 							ZeusBuildData.log.info("Bad path:: ${fpath}" )
@@ -141,7 +160,9 @@ class ZeusBuildData implements CliAction {
 		def build = buildManagementService.getExecution(collection, project, buildId)
 		String sourceBranch = "${build.sourceBranch}"
 		//if (sourceBranch.contains("release/")) {
-		String releaseId = sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)
+		if (!releaseId || releaseId.size() == 0) {
+			releaseId = "{{${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}}}"
+		}
 		def fListSet = fList.toSet()
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()
@@ -154,9 +175,20 @@ class ZeusBuildData implements CliAction {
 			o << "ado.workitems=${wiStr}${sep}"
 		}
 		o.close()
+		if (fListSet.isEmpty()) {
+			log.error('No files set for update! No new changes.')
+			System.exit(1)
+		}
+
 		f = new File("${outDir}/ZEUS.template")
+		def oFList = []
+		fListSet.each { String fName ->
+			String n = fName.substring(fName.indexOf('/')+1)
+			oFList.push(n)
+		}
+		def ofListSet = oFList.toSet()
 		o = f.newDataOutputStream()
-		String filesStr = fListSet.join("${sep}")
+		String filesStr = ofListSet.join("${sep}")
 		o << "${filesStr}"
 		o.close()
 		Map<String, File> fileMap = [:]
@@ -165,14 +197,11 @@ class ZeusBuildData implements CliAction {
 			if (!od.exists()) {
 				od.mkdir()
 			}
-			if (fListSet.isEmpty()) {
-				log.error('No files set for update! No new changes.')
-				System.exit(1)
-			}
-			fListSet.each { String iName ->
+			def fListWFoldersSet = fListWFolders.toSet()
+			fListWFoldersSet.each { String iName ->
 				String fName = "/${iName}"
 				def i = new File("$inRepoDir${fName}").newDataInputStream()
-				def opath = fName.substring(0, fName.lastIndexOf('/'));
+				def opath = fName.substring(0, fName.lastIndexOf("/"));
 				File ofd = new File("$outRepoDir${opath}")
 				if (!ofd.exists()) {
 					ofd.mkdirs()
@@ -189,13 +218,13 @@ class ZeusBuildData implements CliAction {
 		//}
 		return null
 	}
-	
+
 	boolean fileExists(String inRepoDir, String iName) {
 		String fName = "/${iName}"
 		def i = new File("$inRepoDir${fName}")
 		return i.exists()
 	}
-	
+
 	def detailsFile(String collection, String project, def wis, def allChanges, outDir, outRepoDir, Map<String,File> fileMap) {
 		def writer = new StringWriter()
 		MarkupBuilder bXml = new MarkupBuilder(writer)  //TODO:  Study up on examples of MarkupBuilder
@@ -214,14 +243,14 @@ class ZeusBuildData implements CliAction {
 				String affiliate = fItems[2]
 				entry(affiliate: "${affiliate}") {
 					String fName = "${change.item.path}"
-					File f = fileMap["${outRepoDir}${fName}"]
+					File f = fileMap["${outRepoDir}/${fName}"]
 					file ( "${fName}" )
 					size ( "${f.size()}" )
 					date ( "${change.parent.timestamp}" )
 					gitCommit ( "${change.parent.id}" )
 					String message = "${change.parent.message}"
 					gitMessage {  bXml.mkp.yieldUnescaped("<![CDATA[${message}]]>") }
-					fWorkitems.each { wi -> 
+					fWorkitems.each { wi ->
 						adoId ( "${wi.id}" )
 						adoTitle ( "${wi.fields.'System.Title'}" )
 						adoState ( "${wi.fields.'System.State'}" )
@@ -232,11 +261,11 @@ class ZeusBuildData implements CliAction {
 						adoResolution ( "${r}" )
 						adoType ( "${wi.fields.'System.WorkItemType'}" )
 					}
-					
+
 				}
 			}
 		}
-		
+
 		def o = outFile.newDataOutputStream()
 		o << writer.toString()
 		o.close();

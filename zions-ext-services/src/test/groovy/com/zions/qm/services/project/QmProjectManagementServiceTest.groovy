@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.qm.services.project.QmProjectManagementService;
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 
 import static org.junit.Assert.*
 
@@ -38,10 +39,10 @@ public class QmProjectManagementServiceTest  extends Specification {
 		1 * qmGenericRestClient.get(_) >> testplan
 	
 		
-		when: w_ 'calling of method under test (getProject)'
+		when: 'calling of method under test (getProject)'
 		def keyname = underTest.getProject('projectArea')
 		
-		then: t_ null
+		then: 'No exception'
 		true
 		
 	}

@@ -3,6 +3,7 @@ package com.zions.vsts.services
 import static org.junit.Assert.*
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovyx.net.http.ContentType
 import org.junit.Test
@@ -25,14 +26,14 @@ class RollupApplicationTest extends Specification {
 	public void 'Test work send'() {
 //		File request = new File('src/test/resources/testdata/webrequest.json')
 //		String body = request.text
-//		when: w_
+//		when:
 //		def result = genericRestClient.post(
 //			contentType: ContentType.TEXT,
 //			requestContentType: ContentType.JSON,
 //			uri: 'http://localhost:8080/',
 //			body: body
 //			)
-//		then: t_
+//		then:
 //		true
 	}
 

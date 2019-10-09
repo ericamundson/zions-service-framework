@@ -9,6 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 
 import spock.lang.Specification;
 import spock.mock.DetachedMockFactory
@@ -21,10 +22,10 @@ public class AlphaGeneratorTest extends Specification {
 	
 	@Test
 	def 'gen test'() {
-		when: w_ 'call gen'
+		when: 'call gen'
 		def plan = underTest.gen()
 		
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 

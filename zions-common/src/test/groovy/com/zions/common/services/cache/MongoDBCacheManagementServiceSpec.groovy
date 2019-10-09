@@ -9,6 +9,7 @@ import com.zions.common.services.cache.db.CacheItemRepository
 import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 
 import org.junit.Test
 import org.slf4j.Logger
@@ -32,7 +33,7 @@ import spock.mock.DetachedMockFactory
 public class MongoDBCacheManagementServiceSpec extends Specification {
 
 	@Autowired
-	ICacheManagementService underTest
+	MongoDBCacheManagementService underTest
 	
 	@Autowired
 	DataGenerationService dataGenerationService
@@ -41,37 +42,57 @@ public class MongoDBCacheManagementServiceSpec extends Specification {
 
 		def result= new ByteArrayInputStream();
 
-		when: w_ 'calling of method under test (saveBinaryAsAttachment)'
+		when: 'calling of method under test (saveBinaryAsAttachment)'
 		def keyname = underTest.saveBinaryAsAttachment( result ,'','')
 		// 218-Test Plan
-		then: t_ 'No failure'
+		then: 'No failure'
 		true
 
 	}
 
-	@Test
 	def 'saveToCache for project name success flow.'(){
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: w_ 'calling of method under test (data)'
+		when: 'calling of method under test (data)'
 		def keyname = underTest.saveToCache( data ,'1',ICacheManagementService.PLAN_DATA)
 		def testplan = underTest.getFromCache( '1', 'CCM', ICacheManagementService.PLAN_DATA)
 
-		then: t_ 'testplan != null'
+		then: 'testplan != null'
 		testplan != null
 	}
 
-	@Test
 	def 'getFromCache for project name success flow.'(){
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
 
-		when: w_ 'calling of method under test (getFromCache)'
+		when: 'calling of method under test (getFromCache)'
 		def keyname = underTest.getFromCache( '1',ICacheManagementService.PLAN_DATA)
 
-		then: t_ null
+		then: 'No exception'
 		true
+	}
+	
+	def 'getAllOfType test paging'() {
+		setup: 'Add 400 items into cache'
+		for (int i = 0; i < 400; i++) {
+			def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
+			underTest.saveToCache(data, "${i}", ICacheManagementService.PLAN_DATA)
+		}		
+		when: 'call getAllByType with paging'
+		boolean success = true
+		int page = 0
+		try {
+			while (true) {
+				def plans = underTest.getAllOfType(ICacheManagementService.PLAN_DATA, page)
+				if (plans.size() == 0) break;
+				page++
+			}
+		} catch (e) {
+			success = false
+		}		
+		then: 'two pages of 200 items are returned'
+		success && page == 2
 	}
 }
 
@@ -115,7 +136,7 @@ class MongoDBCacheManagementServiceTestConfig {
 	}
 	
 	@Bean
-	ICacheManagementService underTest() {
+	MongoDBCacheManagementService underTest() {
 		return new MongoDBCacheManagementService()
 	}
 

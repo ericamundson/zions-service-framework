@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.test.SpockLabeler
+
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[LoggingAspectSpecificationConfig])
@@ -23,13 +25,13 @@ class LoggingAspectSpecification extends Specification {
 
 
 	def 'Main flow for timing log'() {
-		setup: s_ 'class to be logged'
+		setup: 'class to be logged'
 
-		when: w_ 'execute something with class testing log'
+		when: 'execute something with class testing log'
 		someClass.methodOne()
 		someClass.methodTwo()
 
-		then: t_ 'validate something logged'
+		then: 'validate something logged'
 		true
 	}
 
@@ -37,13 +39,13 @@ class LoggingAspectSpecification extends Specification {
 	SomeClass2 someClass2
 
 	def 'Flow for class without Slf4j annotation'() {
-		setup: s_ 'class to be logged'
+		setup: 'class to be logged'
 
-		when: w_ 'execute something with class testing log'
+		when: 'execute something with class testing log'
 		someClass2.methodOne()
 		someClass2.methodTwo()
 
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 }

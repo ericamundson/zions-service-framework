@@ -4,8 +4,11 @@ import static org.junit.Assert.*
 
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.restart.ICheckpointManagementService
+import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
@@ -43,90 +46,166 @@ class WorkManagementServiceSpecTest extends Specification {
 	IGenericRestClient genericRestClient
 	
 	@Autowired
-	ICacheManagementService cacheManagmentService
+	ICacheManagementService cacheManagementService
 	
 	@Autowired
 	ICheckpointManagementService checkpointManagementService
+	
+	@Autowired
+	DataGenerationService dataGenerationService
 	
 	def "Injected services are mocks"() {
 		expect:
 		new MockUtil().isMock(genericRestClient)
 	}
 	
+	
 	public void 'Batch call a result'() {
-		given: g_ 'stub rateLimitPost a valid return'
+		given: 'stub rateLimitPost a valid return'
 		1 * genericRestClient.rateLimitPost(_) >>  [:]
 		
-		when: w_ 'call tested method'
+		when: 'call tested method'
 		underTest.batchWIChanges('stuff', 'aproject', ['stuff'], [:])
 		
-		then: t_ 'No failure'
+		then: 'No failure'
 		true
 	}
 	
 	public void 'Batch call null result'() {
-		given: g_ 'stub rateLimitPost with null return.'
+		given: 'stub rateLimitPost with null return.'
 		1 * genericRestClient.rateLimitPost(_) >>  null
 		
-		when: w_ 'Call method under test with null scenario'
+		when: 'Call method under test with null scenario'
 		underTest.batchWIChanges('stuff', 'aproject', ['some stuff'], [:])
 		
-		then: t_ 'No failure'
+		then: 'No failure'
 		true
 	}
 
 	public void 'Batch call with more realistic data'() {
-		given: g_ 'stub rateLimitPost with fuller data return'
+		given: 'stub rateLimitPost with fuller data return'
 		1 * genericRestClient.rateLimitPost(_) >>  [value: [[body: "{\"id\":\"123\", \"somejson\": \"morejson\"}", code: 200]]]
 
-		when: w_ 'Call method under test'
+		when: 'Call method under test'
 		underTest.batchWIChanges('stuff', 'aproject', ['somestuff'], [0: '58879'])
 		
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 
 	public void 'Batch call with a failed item in batch'() {
-		given: g_ 'stub rest call post changes with bad return'
+		given: 'stub rest call post changes with bad return'
 		1 * genericRestClient.rateLimitPost(_) >>  [value: [[body: "{\"value\": {\"Message\": \"Bad juju\"}}", code: 300]]]
-		when: w_ 'call batchWIChanges'
+		when: 'call batchWIChanges'
 		underTest.batchWIChanges('stuff', 'aproject', ['somestuff'], [0: '58879'])
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 
 	public void 'refreshCache call with a failed item in batch'() {
-		given: g_ 'stub call to get to refreshCache with bad item in batch'
+		given: 'stub call to get to refreshCache with bad item in batch'
 		1 * genericRestClient.get(_) >>  [value: ["{\"id\":\"123\", \"somejson\": \"morejson\"}"]]
-		when: w_ 'call refreshCache'
+		when: 'call refreshCache'
 		underTest.refreshCache('stuff', 'aproject', ['58879'])
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	def 'clean call success flow'() {
-		given: g_ 'setup getWorkitems stub'
+		given: 'setup getWorkitems stub'
 		def workitems = new JsonSlurper().parseText(this.getClass().getResource('/testdata/workitemsquery.json').text)		
 		1 *  genericRestClient.rateLimitPost(_) >> workitems
 		1 *  genericRestClient.rateLimitPost(_) >> null
 		
-		and: a_ 'setup deleteWorkitem stub'
+		and: 'setup deleteWorkitem stub'
 		1* genericRestClient.delete(_) >> null
 		
-		when: w_ 'call method under test (clean)'
+		when: 'call method under test (clean)'
 		underTest.clean('', 'theproject', "Select [System.Id], [System.Title] From WorkItems Where ([System.WorkItemType] = 'Test Plan'  OR [System.WorkItemType] = 'Test Case') AND [System.AreaPath] = stuff")
 
-		then: t_ 'nothing to validate'
+		then: 'nothing to validate'
 		true
 	}
 	
+	def 'cleanDuplicates mdb flow'() {
+		setup: 'stub for mdb cache management'
+		cacheManagementService = Stub(MongoDBCacheManagementService)
+		MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
+		def r = [:]
+		mdbCacheManagement.getAllOfType(_, _) >> { args ->
+			int page = args[1]
+			if (page == 2) {
+				return [:]
+			} else {
+				int i = 22
+				0.upto(20, {
+					String key = "${i}"
+					def wi = dataGenerationService.generate('/testdata/wiDataT.json')
+					wi.id = i+200
+					wi.fields.'Custom.ExternalID' = key
+					r[key] = wi 
+					i++
+				})
+				return r
+			}
+		}
+		
+		and: 'stub generic rest client for rateLimitPost that produces a duplicate work item returns to exercise delete'
+		genericRestClient = Stub(GenericRestClient)
+		genericRestClient.rateLimitPost(_) >> { args ->
+			def req = args[0]
+			String body = "${req.body}"
+			def rwi = null
+			def result = [workItems:[]]
+			r.each { key, wi ->
+				if (body.contains("[Custom.ExternalID] = '${key}'")) {
+					rwi = wi
+					return
+				}
+			}
+			result.workItems.add(rwi)
+			
+			// setup duplicate
+			if (rwi.id == 200 + 30) {
+				def wi = dataGenerationService.generate('/testdata/wiDataT.json')
+				wi.id = 500
+				wi.fields.'Custom.ExternalID' = rwi.fields.'Custom.ExternalID'
+				result.workItems.add(wi)
+			}
+			return result
+		}
+		
+		and: 'stub genericRestClient for do nothing delete'
+		genericRestClient.delete(_) >> { args ->
+			return []
+		}
+		
+		and: 'Set updated classes members'
+		underTest.genericRestClient = genericRestClient
+		underTest.cacheManagementService = cacheManagementService
+		
+		when: 'call cleanDuplicates'
+		boolean success = true
+		try {
+			def result = underTest.cleanDuplicates('', 'Dummy')
+		} catch (e) { 
+			e.printStackTrace()
+			success = false 
+		}
+		
+		then: 'No exception'
+		success
+		
+		
+	}
+
 }
 
 @TestConfiguration
 @Profile("test")
-@ComponentScan("com.zions.common.services.restart")
+@ComponentScan(["com.zions.common.services.restart", "com.zions.common.services.test"])
 @PropertySource("classpath:test.properties")
 class WorkManagementServiceConfig {
 	def mockFactory = new DetachedMockFactory()
@@ -147,7 +226,7 @@ class WorkManagementServiceConfig {
 	}
 	
 	@Bean
-	ICacheManagementService cacheManagmentService() {
+	ICacheManagementService cacheManagementService() {
 		return new CacheManagementService(cacheLocation)
 	}
 	

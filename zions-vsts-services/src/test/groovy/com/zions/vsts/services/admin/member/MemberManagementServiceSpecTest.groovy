@@ -6,15 +6,19 @@ import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementServiceTestConfig
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -34,72 +38,89 @@ class MemberManagementServiceSpecTest extends Specification {
 	ProjectManagementService projectManagementService
 	
 	@Autowired
+	DataGenerationService dataGenerationService
+	
+	@Autowired
 	MemberManagementService underTest
 	
 	def 'addMemberToTeams test success flow.'() {
-		given: g_ 'stub project management service ensureTeam'
+		given: 'stub project management service ensureTeam'
 		def teamInfo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/projectteam.json').text)
 		1 * projectManagementService.ensureTeam(_, _, _) >> teamInfo
 		
-		and: a_ 'stub azure call to get entitlement.'
+		and: 'stub azure call to get entitlement.'
 		def entitlements = new JsonSlurper().parseText(this.getClass().getResource('/testdata/memberentitlements.json').text)
 		1 * genericRestClient.get(_) >> entitlements
 		
-		and: a_ 'stub azure devops request adding member to a team'
+		and: 'stub azure devops request adding member to a team'
 		1 * genericRestClient.post(_) >> [:]
 		
-		when: w_ 'call method (addMemberToTeams) under test.'
+		when: 'call method (addMemberToTeams) under test.'
 		def teamList = new JsonSlurper().parseText(this.getClass().getResource('/testdata/oneteam.json').text)
 		def res = underTest.addMemberToTeams("", 'Matthew.Holbrook2@zionsbancorp.com', teamList.value)
 		
-		then: t_ 'validate member added to team'
+		then: 'validate member added to team'
 		res == null
 	}
 	
 	def 'addMemberToTeams test success flow and member not current user.'() {
-		given: g_ 'stub project management service ensureTeam'
+		given: 'stub project management service ensureTeam'
 		def teamInfo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/projectteam.json').text)
 		1 * projectManagementService.ensureTeam(_, _, _) >> teamInfo
 		
-		and: a_ 'stub azure call to get entitlement.'
+		and: 'stub azure call to get entitlement.'
 		def entitlements = new JsonSlurper().parseText(this.getClass().getResource('/testdata/memberentitlements.json').text)
 		1 * genericRestClient.get(_) >> entitlements
 		
-		and: a_ 'stub azure devops request adding member to a team'
+		and: 'stub azure devops request adding member to a team'
 		1 * genericRestClient.post(_) >> [:]
 		
-		and: a_ 'stub azure call to get entitlement with John Milman'
+		and: 'stub azure call to get entitlement with John Milman'
 		def entitlements2 = new JsonSlurper().parseText(this.getClass().getResource('/testdata/memberentitlements2.json').text)
 		1 * genericRestClient.get(_) >> entitlements2
 		
-		and: a_ 'stub azure call to patch entitlements to stakeholder'
+		and: 'stub azure call to patch entitlements to stakeholder'
 		1 * genericRestClient.patch(_) >> [:]
 
-		when: w_ 'call method (addMemberToTeams) under test.'
+		when: 'call method (addMemberToTeams) under test.'
 		def teamList = new JsonSlurper().parseText(this.getClass().getResource('/testdata/oneteam.json').text)
 		def res = underTest.addMemberToTeams("", 'John.Milman@zionsbancorp.com', teamList.value)
 		
-		then: t_ 'validate member added to team'
+		then: 'validate member added to team'
 		res == null
 	}
 	
+	//@Ignore
+	def 'getUsers flow.'() {
+		setup: 'stub first rest call with has more header'
+		def result = dataGenerationService.generate('/testdata/users.json')
+		1 * genericRestClient.get(_) >> [data: result, headers: ['X-MS-ContinuationToken': '12345']]
+		1 * genericRestClient.get(_) >> [data: result, headers: []]
+		
+		when: 'run getUsers'
+		def users = underTest.getUsers('')
+		
+		then: "user > 0"
+		users.size() > 0
+	}
+	
 	def 'getProjectMembersMap test success flow.'() {
-		given: g_ 'stub project management service getProject'
+		given: 'stub project management service getProject'
 		def projectInfo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		1 * projectManagementService.getProject(_, _) >> projectInfo
 		
-		and: a_ 'stub azure devops request to get all teams'
+		and: 'stub azure devops request to get all teams'
 		def teamsInfo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/oneteam.json').text)
 		1 * genericRestClient.get(_) >> teamsInfo
 		
-		and: a_ 'stub azure devops get team members call'
+		and: 'stub azure devops get team members call'
 		def membersInfo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/teammembers.json').text)
 		1 * genericRestClient.get(_) >> membersInfo
 		
-		when: w_ 'call method (getProjectMembersMap) under test.'
+		when: 'call method (getProjectMembersMap) under test.'
 		def members = underTest.getProjectMembersMap("", 'DigitalBanking')
 		
-		then: t_ 'members.size() == 43'
+		then: 'members.size() == 43'
 		members.size() == 43
 	}
 	
@@ -108,25 +129,26 @@ class MemberManagementServiceSpecTest extends Specification {
 	 * @return
 	 */
 	def 'getTeam test success flow.'() {
-		given: g_  'stub azure devops team request'
+		given:  'stub azure devops team request'
 		def team = new JsonSlurper().parseText(this.getClass().getResource('/testdata/projectteam.json').text)
 		1 * genericRestClient.get(_) >> team
 		
-		when: w_ 'call method under test (getTeam)'
+		when: 'call method under test (getTeam)'
 		def projectInfo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		def teamInfo = underTest.getTeam("", projectInfo, 'OB')
 		
-		then: t_ "teamInfo.name == OB"
+		then: "teamInfo.name == OB"
 		"${teamInfo.name}" == 'OB'
 	}
 }
 
 @TestConfiguration
 @Profile("test")
+@ComponentScan(["com.zions.common.services.test"])
 @PropertySource("classpath:test.properties")
 class MemberManagementServiceTestConfig {
 	def mockFactory = new DetachedMockFactory()
-	
+		
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return mockFactory.Mock(GenericRestClient, name: 'genericRestClient')

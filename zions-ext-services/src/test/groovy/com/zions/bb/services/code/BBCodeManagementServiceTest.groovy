@@ -7,7 +7,7 @@ import com.zions.qm.services.test.ClmTestManagementService
 import groovy.json.JsonSlurper
 import com.zions.bb.services.code.BBCodeManagementService
 import com.zions.common.services.rest.IGenericRestClient
-
+import com.zions.common.services.test.SpockLabeler
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
@@ -30,18 +30,18 @@ public class BBCodeManagementServiceTest extends Specification {
 	
 	def 'getProjectRepoUrls for project name success flow.'(){
 		
-		setup: s_ 'stub call for to get all projects'		
+		setup: 'stub call for to get all projects'		
 		def testplan = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects.json').text)
 		(1..3) * bBGenericRestClient.get(_) >> testplan
 		
-		and: a_ 'stub rest call for repos'
+		and: 'stub rest call for repos'
 		def test = new JsonSlurper().parseText(getClass().getResource('/testdata/allprojects_lastpage_false.json').text)
 		1 * bBGenericRestClient.get(_) >> test
 		
-		when: w_ 'calling of method under test (getProjectRepoUrls)'
+		when: 'calling of method under test (getProjectRepoUrls)'
 		def keyname = underTest.getProjectRepoUrls('almops')
 		
-		then: t_ null
+		then: 'No exception'
 		true
 		
 	}

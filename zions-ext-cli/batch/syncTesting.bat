@@ -1,0 +1,1 @@
+java -Dspring.profiles.active=spock -jar ..\libs\zions-ext-cli.jar syncTesting --tfs.url=https://dev.azure.com/zionseto %*

@@ -1,5 +1,6 @@
 package com.zions.common.services.test.generators;
 
+import com.zions.common.services.test.SpockLabeler
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration;
@@ -20,10 +21,10 @@ public class UuidGeneratorTest extends Specification {
 	@Test
 	def 'gen test'() {
 
-		when: w_ 'call gen'
+		when: 'call gen'
 		def plan = underTest.gen()
 
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 }

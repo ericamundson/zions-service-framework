@@ -49,6 +49,8 @@ public class BuildManagementService {
 	@Autowired
 	MemberManagementService memberManagementService
 	
+	private boolean isYAMLPipeline = false
+	
 	public BuildManagementService() {
 	}
 
@@ -138,63 +140,79 @@ public class BuildManagementService {
 		Integer ciBldId = -1
 		def ciBldName = ""
 		def buildFolderName = ""
-		def build = getBuild(collection, projectData, repo, 'ci')
-		if (build.count == 0) {
-			buildTemplate = getBuildTemplate(collection, projectData, repo, 'ci', ciTemplate)
-			if (buildTemplate == null) {
-				log.error("BuildManagementService::ensureBuildsForBranch -- CI build template not found.")
-				//return null
-			} else {
-				log.debug("BuildManagementService::ensureBuildsForBranch -- Using CI build template ${buildTemplate.name}")
-
-				// make sure build folder is available for the repo
-				createBuildFolder(collection, projectData, "${repo.name}")
-				buildFolderCreated = true
-				buildFolderName = "${repo.name}"
-				log.debug("BuildManagementService::ensureBuildsForBranch -- Build folder created for ${repo.name}")
-				def ciBuild = createBuildFromTemplate(collection, projectData, repo, buildTemplate, 'ci', "${repo.name}")
-				if (ciBuild == null ) {
-					log.error("BuildManagementService::ensureBuildsForBranch -- CI Build creation failed!")
-				} else {
-					ciBldId = Integer.parseInt("${ciBuild.id}")
-					ciBldName = "${ciBuild.name}"
-					log.debug("BuildManagementService::ensureBuildsForBranch -- CI Build created: "+ciBldName)
-				}
-			}
-		} else {
-			log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing CI Build. Setting Id for return to "+build.value[0].id)
-			ciBldId = build.value[0].id
-			//ciBldName = "${build.name}"
-			// assume if build was found that folder is already created
-			buildFolderCreated = true
-		}
 		Integer relBldId = -1
 		def relBldName = ""
-		def build1 = getBuild(collection, projectData, repo, 'release')
-		if (build1.count == 0) {
-			buildTemplate = getBuildTemplate(collection, projectData, repo, 'release', releaseTemplate)
-			if (buildTemplate == null) {
-				log.error("BuildManagementService::ensureBuildsForBranch -- Release build template not found.")
-				// Not returning null here and stopping since the CI build was created so let's go ahead and create the build validation policy
-				//return null
-			} else {
-				log.debug("BuildManagementService::ensureBuildsForBranch -- Using Release build template ${buildTemplate.name}")
-				// make sure build folder is available for the repo
-				if (!buildFolderCreated) {
-					createBuildFolder(collection, projectData, folder)
-				}
-				def relBd = createBuildFromTemplate(collection, projectData, repo, buildTemplate, 'release', "${repo.name}")
-				if (relBd == null ) {
-					log.error("BuildManagementService::ensureBuildsForBranch -- Release Build creation failed!")
-				} else {
-					relBldId = Integer.parseInt("${relBd.id}")
-					relBldName = "${relBd.name}"
-					log.debug("BuildManagementService::ensureBuildsForBranch -- Release build created: "+relBldName)
-				}
+		// check for YAML pipeline in use
+		def pipelineFileName = "azure-pipelines.yml"
+		def azurePipelinesFile = codeManagementService.getBuildPropertiesFile(collection, repo.project, repo, pipelineFileName, "master")
+		if (azurePipelinesFile != null) {
+			// indicate the repo/branch is using a YAML pipeline
+			this.isYAMLPipeline = true
+		}
+		if (this.isYAMLPipeline) {
+			// look for default pipeline build def to use for build validation policy
+			def yamlBuild = getBuild(collection, projectData, "${repo.name} CI")
+			if (yamlBuild != null) {
+				log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing YAML CI Build. Setting Id for return to ${yamlBuild.id}")
+				ciBldId = Integer.parseInt("${yamlBuild.id}")
 			}
 		} else {
-			log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing Release Build for ${repo.name}.")
-			//relBldId = build1.value[0].id
+			def build = getBuild(collection, projectData, repo, 'ci')
+			if (build.count == 0) {
+				buildTemplate = getBuildTemplate(collection, projectData, repo, 'ci', ciTemplate)
+				if (buildTemplate == null) {
+					log.error("BuildManagementService::ensureBuildsForBranch -- CI build template not found.")
+					//return null
+				} else {
+					log.debug("BuildManagementService::ensureBuildsForBranch -- Using CI build template ${buildTemplate.name}")
+	
+					// make sure build folder is available for the repo
+					createBuildFolder(collection, projectData, "${repo.name}")
+					buildFolderCreated = true
+					buildFolderName = "${repo.name}"
+					log.debug("BuildManagementService::ensureBuildsForBranch -- Build folder created for ${repo.name}")
+					def ciBuild = createBuildFromTemplate(collection, projectData, repo, buildTemplate, 'ci', "${repo.name}")
+					if (ciBuild == null ) {
+						log.error("BuildManagementService::ensureBuildsForBranch -- CI Build creation failed!")
+					} else {
+						ciBldId = Integer.parseInt("${ciBuild.id}")
+						ciBldName = "${ciBuild.name}"
+						log.debug("BuildManagementService::ensureBuildsForBranch -- CI Build created: "+ciBldName)
+					}
+				}
+			} else {
+				log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing CI Build. Setting Id for return to "+build.value[0].id)
+				ciBldId = build.value[0].id
+				//ciBldName = "${build.name}"
+				// assume if build was found that folder is already created
+				buildFolderCreated = true
+			}
+			def build1 = getBuild(collection, projectData, repo, 'release')
+			if (build1.count == 0) {
+				buildTemplate = getBuildTemplate(collection, projectData, repo, 'release', releaseTemplate)
+				if (buildTemplate == null) {
+					log.error("BuildManagementService::ensureBuildsForBranch -- Release build template not found.")
+					// Not returning null here and stopping since the CI build was created so let's go ahead and create the build validation policy
+					//return null
+				} else {
+					log.debug("BuildManagementService::ensureBuildsForBranch -- Using Release build template ${buildTemplate.name}")
+					// make sure build folder is available for the repo
+					if (!buildFolderCreated) {
+						createBuildFolder(collection, projectData, folder)
+					}
+					def relBd = createBuildFromTemplate(collection, projectData, repo, buildTemplate, 'release', "${repo.name}")
+					if (relBd == null ) {
+						log.error("BuildManagementService::ensureBuildsForBranch -- Release Build creation failed!")
+					} else {
+						relBldId = Integer.parseInt("${relBd.id}")
+						relBldName = "${relBd.name}"
+						log.debug("BuildManagementService::ensureBuildsForBranch -- Release build created: "+relBldName)
+					}
+				}
+			} else {
+				log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing Release Build for ${repo.name}.")
+				//relBldId = build1.value[0].id
+			}
 		}
 		def returnObject = [folderName: buildFolderName,
 							ciBuildId: ciBldId,
@@ -637,7 +655,7 @@ public class BuildManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${result.value[0].id}",
 				query: query,
 				)
-		query = ['api-version':'4.1', 'propertyFilters':'processParameters']
+		// What is this doing ?? query = ['api-version':'4.1', 'propertyFilters':'processParameters']
 		return result1
 	}
 
@@ -685,22 +703,41 @@ public class BuildManagementService {
 			return null
 		}
 		def lastTagIdx = result.count - 1
-		return result.value[lastTagIdx]
-	
-		// parse tag name
-		/*
-		def outtags = [];
-		for (def tag in result.value) {		
-			def tagName = tag.name;
-			tagName = tagName.substring("refs/tags/".length(), tagName.length());
-			outtags.push(tagName);
-		}
-	
-		// find the latest tag
-		def latestTag  = tagName
 		
+		// check tag name to ensure that it represents a valid semantic version string
+		def tagName = result.value[lastTagIdx].name
+		tagName = tagName.substring("refs/tags/".length(), tagName.length())
+		while (notValidTag(tagName)) {
+			lastTagIdx--
+			tagName = result.value[lastTagIdx].name
+			tagName = tagName.substring("refs/tags/".length(), tagName.length())
+		}
+		def latestTag  = tagName
+
 		return latestTag
-		*/
+	}
+
+	private boolean notValidTag(def tagName) {
+		String[] versionParts
+		if (tagName.indexOf("-") > -1) {
+			// look for tag with qualifier
+			String[] tagParts = tagName.split("-")
+			versionParts = tagParts[0].split(".")
+		} else {
+			versionParts = tagName.split(".")
+		}
+		if (versionParts.length < 5) {
+			return true
+		}
+		for (int idx = 0; idx++; idx < 3) {
+			try {
+				Integer.parseInt(versionParts[idx])
+			} catch (NumberFormatException e) {
+				// Not a number so version string is invalid
+				return true
+			}
+		}
+		return false
 	}
 
 	private def createInitialBuildTag(def collection, def project, def repo, def latestTag, def branchName) {

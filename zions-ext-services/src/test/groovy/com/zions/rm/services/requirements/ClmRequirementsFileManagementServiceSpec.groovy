@@ -16,6 +16,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.qm.services.test.ClmTestManagementService
 import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
@@ -25,7 +26,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[ClmRequirementsFileManagementServiceSpecConfig])
-class ClmRequirementsFileManagementServiceSpec extends Specification  {
+class ClmRequirementsFileManagementServiceSpec extends Specification {
 	@Autowired
 	IGenericRestClient rmGenericRestClient
 
@@ -45,7 +46,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 	ClmRequirementsFileManagementService underTest
 	
 	def 'requirement file attachment main flow'() {
-		given: g_ 'Module Element has a embedded file resource'
+		given: 'Module Element has a embedded file resource'
 		String wrappedResourceFilename = 'stuff.txt'
 		def ritem = new ClmModuleElement(wrappedResourceFilename, 1, 'Wrapped Resource', 'false', 'https://...')
 		ritem.setID('123456')
@@ -53,19 +54,19 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 		def url = 'https:\\path'
 		def altFilename = 'alt name'
 		
-		and: a_ 'Cache file resource to an uploadable location'
+		and: 'Cache file resource to an uploadable location'
 		File attFile = new File('attachment.txt')
 		1 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> attFile
 		
-		and: a_ 'Send file resource to target system'
+		and: 'Send file resource to target system'
 		1 * attachmentService.sendAttachment(_) >> [url: 'http://path']
 		
-		and: a_ 'Encode resource for target upload.'
+		and: 'Encode resource for target upload.'
 		String encodedStuff = "Here's some text".bytes.encodeBase64()
 		ByteArrayInputStream s = new ByteArrayInputStream("Here's some text".bytes)
 		1 * clmRequirementsManagementService.getContent(_) >> [headers: ['Content-Disposition': 'filename=\"stuff.txt\";'], data: s]
 		
-		when: w_ 'Make call to ensure target system has resource'
+		when: 'Make call to ensure target system has resource'
 		boolean success = true
 		try {
 			underTest.ensureRequirementFileAttachment(ritem,url)
@@ -73,7 +74,7 @@ class ClmRequirementsFileManagementServiceSpec extends Specification  {
 			success = false
 		}
 		
-		then: t_ null
+		then: 'No exception'
 		success
 	}
 

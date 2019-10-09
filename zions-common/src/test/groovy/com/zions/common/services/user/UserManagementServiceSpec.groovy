@@ -3,6 +3,7 @@ package com.zions.common.services.user
 import static org.junit.Assert.*
 
 import com.zions.common.services.ldap.User
+import com.zions.common.services.test.SpockLabeler
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -26,17 +27,17 @@ class UserManagementServiceSpec extends Specification {
 
 	public 'Find user info'() {
 		
-		when: w_ 'Access user by id'
+		when: 'Access user by id'
 		//boolean auth = userManagementService.authenticate('z091182', '4878Middy002')
 		User testU = userManagementService.getUserById('z004421')
 		
-		then: t_ 'validate user found'
+		then: 'validate user found'
 		testU != null
 		
-		when: w_ 'Access user by email'
+		when: 'Access user by email'
 		User eU = userManagementService.getUserByEmail('Michael.Angelastro@zionsbancorp.com')
 		
-		then: t_ 'validate user found'
+		then: 'validate user found'
 		eU != null
 
 	}

@@ -9,6 +9,6 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="listProjectsAndTeams --tfs.url=https://dev.azure.com/eto-dev  --tfs.user=z091182 --tfs.token=&quot;ejl3unyuuxdt7kawlsxysxdlzmm7gbjucvksq72fswmzvzxbf5aa&quot;  --export.dir=c:\eto-dev_projects"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="listProjectsAndTeams --tfs.url=https://dev.azure.com/zionseto  --tfs.user=z091182 --tfs.token=&quot;mvlre2gbzodn7u5urvpot3ppnr73ywacyzwqpift4aaucakzhnza&quot;  --export.dir=c:\eto-dev_projects"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
 </launchConfiguration>

@@ -45,6 +45,7 @@ import com.zions.common.services.restart.IQueryHandler
 import com.zions.common.services.restart.IRestartManagementService
 import com.zions.common.services.restart.RestartManagementService
 import com.zions.common.services.test.DataGenerationService
+import com.zions.common.services.test.SpockLabeler
 import com.zions.common.services.test.generators.IdSetter
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.mr.services.rest.MrGenericRestClient
@@ -200,20 +201,20 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		setupRQMToADO()
 
 
-		and: a_ 'Setup of CCM to ADO work item elements with link data with 4 bugs that will link to test results'
+		and: 'Setup of CCM to ADO work item elements with link data with 4 bugs that will link to test results'
 		setupCCMToADOForQMLinks()
 				
-		when: w_ 'call RQM data,links,execution phase'
+		when: 'call RQM data,links,execution phase'
 		def appArgs = new DefaultApplicationArguments(loadQMArgs())
 		//restartManagementService.selectedCheckpoint = 'last'
 		cacheManagementService.cacheModule = 'QM'
 		restartManagementService.includePhases = 'plans,links,executions'
 		qmtoAdo.execute(appArgs)
 		
-		then: t_ 'Validate rqm data'
+		then: 'Validate rqm data'
 		true
 		
-		when: w_ 'Call CCM workdata,worklinks phase'
+		when: 'Call CCM workdata,worklinks phase'
 		appArgs = new DefaultApplicationArguments(loadCCMArgs())
 		cacheManagementService.cacheModule = 'CCM'
 		restartManagementService.includePhases = 'workdata,worklinks'
@@ -229,7 +230,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 			}
 		}
 
-		then: t_ 'validate correct number of associated bugs to test results'
+		then: 'validate correct number of associated bugs to test results'
 		resultCount == 4
 		
 		cleanup: 'Remove all ADO changes'
@@ -246,10 +247,10 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		given: 'Setup of RM to ADO requirements artifacts with 8 requirements artifacts'
 		setupRMToADO()
 		
-		and: a_ 'Setup of CCM to ADO work items with links to the 8 requirements artifacts'
+		and: 'Setup of CCM to ADO work items with links to the 8 requirements artifacts'
 		setupCCMToADOForRMLinks()
 		
-		when: w_ 'Run translation from RRM to ADO requirement artifacts'
+		when: 'Run translation from RRM to ADO requirement artifacts'
 		def appArgs = new DefaultApplicationArguments(loadRMArgs())
 		//restartManagementService.selectedCheckpoint = 'last'
 		cacheManagementService.cacheModule = 'RM'
@@ -259,17 +260,17 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		def wiData = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
 		
 		
-		then: t_ 'validate existence of requirements work items in ADO'
+		then: 'validate existence of requirements work items in ADO'
 		wiData.size() == 8
 		
-		when: w_ 'Run translation of CCM to ADO work items'
+		when: 'Run translation of CCM to ADO work items'
 		appArgs = new DefaultApplicationArguments(loadCCMArgs())
 		cacheManagementService.cacheModule = 'CCM'
 		restartManagementService.queryHandlers = ['workdataQueryHandler': workdataQueryHandler, 'worklinksQueryHandler': worklinksQueryHandler]
 		restartManagementService.includePhases = 'workdata,worklinks'
 		ccmToAdo.execute(appArgs)
 
-		then: t_ 'validate existence of work items with links to Requirement type work items in ADO'
+		then: 'validate existence of work items with links to Requirement type work items in ADO'
 		true
 		
 		cleanup: 'Cleanup all ADO changes for next integration run.'
@@ -288,10 +289,10 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		setup: 'Setup RM work items()'
 		setupRMToADO();
 		
-		and: a_ 'Setup QM with RM linking'
+		and: 'Setup QM with RM linking'
 		setupQMToADOForRMLinks()
 		
-		when: w_ 'Run RM to ADO element translation'
+		when: 'Run RM to ADO element translation'
 		def appArgs = new DefaultApplicationArguments(loadRMArgs())
 		//restartManagementService.selectedCheckpoint = 'last'
 		cacheManagementService.cacheModule = 'RM'
@@ -300,10 +301,10 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		rmBaseToAdo.execute(appArgs)
 		def wiData = cacheManagementService.getAllOfType(ICacheManagementService.WI_DATA)
 				
-		then: t_ 'validate existence of requirements work items in ADO'
+		then: 'validate existence of requirements work items in ADO'
 		wiData.size() == 8
 		
-		when: w_ 'Run QM to ADO element translation'
+		when: 'Run QM to ADO element translation'
 		appArgs = new DefaultApplicationArguments(loadQMArgs())
 		//restartManagementService.selectedCheckpoint = 'last'
 		restartManagementService.queryHandlers = ['plansQueryHandler': plansQueryHandler, 'executionsQueryHandler': executionsQueryHandler, 'linksQueryHandler': linksQueryHandler]
@@ -311,7 +312,7 @@ class IntraModuleLinkIntegrationSpec extends Specification {
 		cacheManagementService.cacheModule = 'QM'
 		qmtoAdo.execute(appArgs)
 
-		then: t_ 'Validate QM to RM links'
+		then: 'Validate QM to RM links'
 		true
 		
 		cleanup:

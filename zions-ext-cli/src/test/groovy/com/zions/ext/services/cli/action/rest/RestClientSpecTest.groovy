@@ -19,6 +19,7 @@ import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
@@ -79,33 +80,33 @@ public class RestClientSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		String[] args = loadArgs('get','json', jsonResponseFileName)
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ null
+		then: 'No exception'
 		result == true
 	}
 
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given: g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'execute ApplicationArguments success flow for json.' () {
-		given: g_ 'rest calls'
+		given: 'rest calls'
 		String json = this.getClass().getResource('/testdata/jsonResponse.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
@@ -116,7 +117,7 @@ public class RestClientSpecTest extends Specification {
 		genericRestClient.delete(_) >> out
 		genericRestClient.default(_) >> out
 		
-		when: w_ 'calling of method under test (execute)'
+		when: 'calling of method under test (execute)'
 		def resultGet = underTest.execute(new DefaultApplicationArguments(loadArgs('get','json',jsonResponseFileName)))
 		def resultPost = underTest.execute(new DefaultApplicationArguments(loadArgs('post','json',jsonResponseFileName)))
 		def resultPatch = underTest.execute(new DefaultApplicationArguments(loadArgs('patch','json',jsonResponseFileName)))
@@ -124,7 +125,7 @@ public class RestClientSpecTest extends Specification {
 		def resultDelete = underTest.execute(new DefaultApplicationArguments(loadArgs('delete','json',jsonResponseFileName)))
 		def resultDefault = underTest.execute(new DefaultApplicationArguments(loadArgs('default','json',jsonResponseFileName)))
 		
-		then: t_ null
+		then: 'No exception'
 		resultGet == null
 		resultPost == null
 		resultPatch == null
@@ -135,7 +136,7 @@ public class RestClientSpecTest extends Specification {
 	
 	@Test
 	def 'execute ApplicationArguments success flow for xml.' () {
-		given: g_ 'stub of rest calls'
+		given: 'stub of rest calls'
 		def out = '<a1>adf</a1>'
 		genericRestClient.get(_) >> out
 		genericRestClient.post(_) >> out
@@ -144,7 +145,7 @@ public class RestClientSpecTest extends Specification {
 		genericRestClient.delete(_) >> out
 		genericRestClient.default(_) >> out
 		
-		when: w_ 'calling of method under test (execute)'
+		when: 'calling of method under test (execute)'
 		def resultGet = underTest.execute(new DefaultApplicationArguments(loadArgs('get','xml',xmlResponseFileName)))
 		def resultPost = underTest.execute(new DefaultApplicationArguments(loadArgs('post','xml',xmlResponseFileName)))
 		def resultPatch = underTest.execute(new DefaultApplicationArguments(loadArgs('patch','xml',xmlResponseFileName)))
@@ -152,7 +153,7 @@ public class RestClientSpecTest extends Specification {
 		def resultDelete = underTest.execute(new DefaultApplicationArguments(loadArgs('delete','xml',xmlResponseFileName)))
 		def resultDefault = underTest.execute(new DefaultApplicationArguments(loadArgs('default','xml',xmlResponseFileName)))
 		
-		then: t_ null
+		then: 'No exception'
 		resultGet == null
 		resultPost == null
 		resultPatch == null

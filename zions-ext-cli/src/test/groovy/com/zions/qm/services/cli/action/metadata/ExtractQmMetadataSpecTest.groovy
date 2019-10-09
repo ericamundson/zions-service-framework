@@ -17,6 +17,7 @@ import com.zions.clm.services.ccm.project.planning.PlanManagementService
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.qm.services.metadata.QmMetadataManagementService
 import com.zions.qm.services.project.QmProjectManagementService
@@ -47,15 +48,15 @@ public class ExtractQmMetadataSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ null
+		then: 'No exception'
 		result == true
 	}
 
@@ -76,10 +77,10 @@ public class ExtractQmMetadataSpecTest extends Specification {
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 
@@ -88,13 +89,13 @@ public class ExtractQmMetadataSpecTest extends Specification {
 		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs())
 
-		and: a_ null
+		and: null
 		qmMetadataManagementService.extractQmMetadata(_, _) >> "<a1>some meta<a1>"
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'result = null'
+		then: 'result = null'
 		result == null
 	}
 }

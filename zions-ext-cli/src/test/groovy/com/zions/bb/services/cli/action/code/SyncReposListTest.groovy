@@ -13,6 +13,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -67,28 +68,28 @@ public class SyncReposListTest extends Specification {
 	@Test
 	def 'validate method exception flow.'() {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		String[] args = ['--tfs.collection=defaultcollection']
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
 	@Test
 	def 'validate method failed flow.'() {
 		
-		given: g_ 'Invalid application arguments'
+		given: 'Invalid application arguments'
 		String[] args = []
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'call validate'
+		when: 'call validate'
 		def result = underTest.validate(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
@@ -98,24 +99,24 @@ public class SyncReposListTest extends Specification {
 		given: "Valid argument settings."		
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: w_ 'call validate'
+		when: 'call validate'
 		def testPlans = underTest.validate(appArgs)
 		
-		then: t_ null
+		then: 'No exception'
 		true
 	}
 	
 	@Test
 	def 'execute method failed flow.'() {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		String[] args = []
 		def appArgs = new DefaultApplicationArguments(args)
 
-		when: w_ 'call execute'
+		when: 'call execute'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
@@ -123,21 +124,21 @@ public class SyncReposListTest extends Specification {
 	@Test
 	def 'execute method success flow.'() {
 		
-		given: g_ 'Stub with Application Arguments'
+		given: 'Stub with Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: a_ 'stub importRepoDir call'
+		and: 'stub importRepoDir call'
 		def dummy =[]
 		codeManagmentService.importRepoDir(_, _, _, _, _, _) >> dummy
 		
-		and: a_ 'stub call to ensureTeamToRepo'
+		and: 'stub call to ensureTeamToRepo'
 		def dummy1 =[]
 		permissionsManagementService.ensureTeamToRepo(_, _, _, _, _) >> dummy1
 		
-		when: w_ 'call execute'
+		when: 'call execute'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'No exception'
+		then: 'No exception'
 		true
 		
 	}

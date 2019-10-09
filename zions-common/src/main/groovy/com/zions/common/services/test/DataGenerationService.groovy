@@ -53,14 +53,17 @@ class DataGenerationService {
 	 * @param resource - class path resource name
 	 * @return Parser result, either Xml or Json
 	 */
-	def generate(String resource) {
+	def generate(String resource, boolean raw = false) {
 		URL url = this.getClass().getResource(resource)
 		File template = new File(url.file)
 		String outData = parse(template)
-		if (resource.endsWith('.json')) {
-			return new JsonSlurper().parseText(outData)
-		} 
-		return new XmlSlurper().parseText(outData)
+		if (!raw) {
+			if (resource.endsWith('.json')) {
+				return new JsonSlurper().parseText(outData)
+			} 
+			return new XmlSlurper().parseText(outData)
+		}
+		return outData
 	}
 
 	private def parse(File template) {

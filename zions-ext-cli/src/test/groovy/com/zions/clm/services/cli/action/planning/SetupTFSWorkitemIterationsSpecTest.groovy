@@ -17,6 +17,7 @@ import com.zions.clm.services.ccm.project.planning.PlanManagementService
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
@@ -67,30 +68,30 @@ public class SetupTFSWorkitemIterationsSpecTest extends Specification {
 	
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password', 
 			'--ccm.projectArea=project_area', '--tfs.url=http://localhost:8080/tfs', '--tfs.user=tfsuser', 
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas' ]
 		def appArgs = new DefaultApplicationArguments(args)
 		
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then: t_ 'result == true'
+		then: 'result == true'
 		result == true
 	}
 	
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given: g_ 'invalid Application Arguments'
+		given: 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 	
@@ -102,28 +103,28 @@ public class SetupTFSWorkitemIterationsSpecTest extends Specification {
 			'--tfs.token=tfstoken', '--tfs.project=tfsproject', '--tfs.root.area=tfsrootareas' ]
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		and: a_ 'Stub with project data'
+		and: 'Stub with project data'
 		def theProject = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		projectManagementService.getProject(_, _) >> theProject
 		
-		and: a_ 'stub getIterations'
+		and: 'stub getIterations'
 		def iterationData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/iteration.json').text)
 		planManagementService.getIterations(_,_) >> iterationData
 		
-		and: a_ 'stub getIterationData'
+		and: 'stub getIterationData'
 		def tfsIterationData
 		iterationManagementService.getIterationData(_, _) >> tfsIterationData
 		
-		and: a_ 'stub processIterationData'
+		and: 'stub processIterationData'
 		iterationManagementService.processIterationData(_,_,_,_,_)
 		
-		and: a_ 'stub ensureTeamsIterations'
+		and: 'stub ensureTeamsIterations'
 		iterationManagementService.ensureTeamsIterations(_,_,_,_)
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 		
-		then: t_ null
+		then: 'No exception'
 		result == null
 	}
 

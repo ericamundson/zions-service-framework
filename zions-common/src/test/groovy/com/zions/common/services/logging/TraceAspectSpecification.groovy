@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
+import com.zions.common.services.test.SpockLabeler
+
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[TraceAspectSpecificationConfig])
@@ -24,16 +26,16 @@ class TraceAspectSpecification extends Specification {
 	SomeTraceNoLoggerClass someTraceNoLoggerClass
 	
 	def 'Main flow for tracing log'() {
-		setup: s_ 'class to be logged'
+		setup: 'class to be logged'
 		
-		when: w_ 'execute something with class testing log'
+		when: 'execute something with class testing log'
 		someTraceClass.methodOne()
 		someTraceClass.methodTwo()
 		
 		someTraceNoLoggerClass.methodOne()
 		someTraceNoLoggerClass.methodTwo()
 		
-		then: t_ 'No exceptions'
+		then: 'No exceptions'
 		true
 	}
 

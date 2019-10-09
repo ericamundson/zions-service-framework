@@ -27,7 +27,7 @@ class PolicyManagementServiceSpec {
 	PolicyManagementService underTest
 
 	def 'ensurePolicies main flow.'() {
-//		when: w_  'buildManagementService.ensureBuildsForBranch stub'
+//		when:  'buildManagementService.ensureBuildsForBranch stub'
 //		1 * buildManagementService.ensureBuildsForBranch(_, _, _) >> [ciBuildId: 3456]
 	}
 

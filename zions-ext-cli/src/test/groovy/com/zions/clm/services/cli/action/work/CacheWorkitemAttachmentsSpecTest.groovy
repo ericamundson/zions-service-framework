@@ -21,6 +21,7 @@ import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.QueryTracking
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient;
+import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
@@ -54,15 +55,15 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments success flow.'() {
-		given: g_ 'valid Application Arguments'
+		given: 'valid Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 
-		then: t_ null
+		then: 'No exception'
 		result == true
 	}
 
@@ -78,25 +79,25 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 
 	@Test
 	def 'validate ApplicationArguments exception flow.'() {
-		given: g_ 'invalid Application Arguments'
+		given: 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
 		def appArgs = new DefaultApplicationArguments(args)
 		
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.validate(appArgs)
 		
-		then: t_ 'thrown Exception'
+		then: 'thrown Exception'
 		thrown Exception
 	}
 
 	@Test
 	def 'execute ApplicationArguments exception flow.' () {
-		given: g_ 'invalid Application Arguments'
+		given: 'invalid Application Arguments'
 		String[] args = loadArgs()
 		def appArgs = new DefaultApplicationArguments(args)
 		//def uTest = new CacheWorkitemAttachments(attachmentsManagementService, clmWorkItemManagementService)
 		
-		and: a_ 'stub of clmWorkItemManagementService.getWorkItemsViaQuery'
+		and: 'stub of clmWorkItemManagementService.getWorkItemsViaQuery'
 //		def workItems = new XmlSlurper().parse(new File(testWorkItemsFileName))
 //		QueryTracking qt = new QueryTracking()
 //		qt.doResult(workItems)
@@ -106,10 +107,10 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 		//clmWorkItemManagementService.nextPage(_) >> workItems
 		//underTest.attachmentsManagementService.rtcRepositoryClient.shutdownPlatform()
 
-		when: w_ 'calling of method under test (validate)'
+		when: 'calling of method under test (validate)'
 		def result = underTest.execute(appArgs)
 
-		then: t_ 'thrown NullPointerException'
+		then: 'thrown NullPointerException'
 		thrown NullPointerException
 	}
 	
