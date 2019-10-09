@@ -76,7 +76,7 @@ class SyncTesting implements CliAction {
 	@Override
 	public Object execute(ApplicationArguments data) {
 		String query = "SELECT [System.Id],[System.WorkItemType],[System.Title],[Microsoft.VSTS.Common.Priority],[System.AssignedTo],[System.AreaPath] FROM WorkItems WHERE [System.TeamProject] = '${project}' AND [System.WorkItemType] IN GROUP 'Microsoft.TestCaseCategory' AND [System.AreaPath] UNDER '${areaPath}' AND [System.Tags] CONTAINS '${mainTag}'"
-		//		testManagementService.cleanupTestItems('', project, areaPath, wiql)
+		//testManagementService.cleanupTestItems('', project, areaPath, query)
 		workManagementService.refreshCacheByQuery('', project, query) { wi ->
 			String title = "${wi.fields.'System.Title'}"
 			return title.bytes.encodeBase64()
