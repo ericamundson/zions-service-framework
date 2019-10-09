@@ -66,7 +66,13 @@ class FetchFolderHiearchyFromRM implements CliAction {
 			String includeList = data.getOptionValues('include.folders')[0]
 			topLevelFolders.addAll(includeList.split(','))
 		} catch (e) {}
-
+		
+		//debug on first folder
+		def debugmode=false
+		if (debugmode) {
+			def folderUri = 'https://clm.cs.zionsbank.com/rm/folders/_uZuJwTwJEee08p3tkkFuGw'
+			def idList = getArtifactIDList(projectURI, oslcNs, oslcSelect, oslcWhere, folderUri)
+		}
 
 		println("${getCurTimestamp()} - Querying DNG Folders from list of parents ...")
 		//For every input parent folder, we should get all child folders and add them to a list
@@ -87,7 +93,7 @@ class FetchFolderHiearchyFromRM implements CliAction {
 //		}
 
 		//def results = clmRequirementsManagementService.queryForFolders("https://clm.cs.zionsbank.com/rm/folders/_mxVp8L1REeS5FIAyBUGhBQ")
-		
+
 		//get all requirements in each folder and write a csv
 		File oFile = new File(outputFile)
 		oFile.createNewFile() 
@@ -95,7 +101,7 @@ class FetchFolderHiearchyFromRM implements CliAction {
 		def requirementIds = []
 		
 		folderUris.each { folderUri ->
-			log.info("Querying folder: ${folderUri}")
+		//	log.info("Querying folder: ${folderUri}")
 			def idList = getArtifactIDList(projectURI, oslcNs, oslcSelect, oslcWhere, folderUri)			
 				idList.each { id ->
 				oFile.append(id + ",\"Deposits\"\n")
@@ -110,36 +116,37 @@ class FetchFolderHiearchyFromRM implements CliAction {
 		def artifactIDs = []
 		oslcWhere = oslcWhere.replace('ztargetfolder',folderUri)
 		
-		log.info("Querying DNG Artifacts Within Folder" )
+		//log.info("Querying DNG Artifacts Within Folder" )
 		def results = clmRequirementsManagementService.queryForArtifacts(projectURI, oslcNs, oslcSelect, oslcWhere)
 		// Continue until all pages have been processed
-		log.debug("Returned from query with $artifactIDs.size()" )
+		//log.debug("Returned from query with $artifactIDs.size()" )
 		def page = 1
-		while (true) {
-			int count = 0
-			if (results.Description.children().size() > 0 ) {
-	
+		 while (results.Description.children().size() > 0 ) {
+//			int count = 0	
 			results.Description.children().each { member ->
 				artifactIDs.add("${member.children().identifier.text()}")
 				//log.info(mem.text())
 			}
 			//artifactIDs = results.depthFirst.findAll{ it.name() == "identifier"}
-			log.info("$artifactIDs.size() Base Artifacts were retrieved")
 			
 			// Process next page
-			String nextUrl = "${results.ResponseInfo.nextPage.@'rdf:resource'}"
+			//log.debug("${results.ResponseInfo.attributes().size()}")
+		    def nxtPage = results.'**'.find { p ->
+			"${p.name()}" == 'nextPage'
+            }
+			if (nxtPage) {
+			String nextUrl = nxtPage.@'rdf:resource' 
 			if (nextUrl != '') {
 				page++
-				log.info("Retrieving page ${page}...")
+			//	log.info("Retrieving page ${page}...")
 				results = clmRequirementsManagementService.nextPage(nextUrl)
+			}		
+			} else
+			{
+				log.info("$artifactIDs.size() Base Artifacts were retrieved")
+				return artifactIDs
 			}
-			
-			}
-			return artifactIDs
-			
 		}
-		
-		log.info("Retrieved all artifacts in folder: " + folderUri)
 
 	}
 	
@@ -147,21 +154,21 @@ class FetchFolderHiearchyFromRM implements CliAction {
 	def getNestedFolders(String parentUri) {
 		def folderUriList = []
 		folderUriList.add(parentUri)
-		log.info("Added folder $parentUri")
+		//log.info("Added folder $parentUri")
 		def results = clmRequirementsManagementService.queryForFolders(parentUri)
 //debug only:
 		//def results = getDebugTestResults()	
 //end debug
 		
-		log.debug(results.toString())
+		//log.debug(results.toString())
 		//may need to assert that the results are valid/have a 200 response
 //		if (results.Description.children().size() > 0) {
 		results.Description.children().each { member ->
 			def folderUri = member.folder.@'rdf:about'.text()
-			log.debug("${getCurTimestamp()} - about to retrieve children of " + folderUri)
+		//	log.debug("${getCurTimestamp()} - about to retrieve children of " + folderUri)
 			//recurse this function to get children
 			folderUriList.addAll(getNestedFolders(folderUri))
-			log.debug("${getCurTimestamp()} - retrieved children of " + folderUri)
+		//	log.debug("${getCurTimestamp()} - retrieved children of " + folderUri)
 		}
 //		} else {  }
 		return folderUriList
