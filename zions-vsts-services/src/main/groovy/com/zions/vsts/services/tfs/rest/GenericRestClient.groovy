@@ -11,6 +11,7 @@ import java.util.Map
 import org.apache.http.Header
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
+import org.apache.http.client.HttpClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -58,6 +59,27 @@ class GenericRestClient extends AGenericRestClient {
 		setProxy()
 		setCredentials(user, token);
 		checked = true;
+		retryConnect()
+	}
+	
+	private retryConnect() {
+		def result = null
+		for (int i = 0; i < 5; i++) {
+			try {
+				result = delegate.get(
+					contentType: 'application/json',
+					uri: "${tfsUrl}/_apis/projects",
+					headers: [Accept: 'application/json'],
+					query: ['api-version': '5.0']
+					)
+				
+				break;
+			} catch (javax.net.ssl.SSLHandshakeException e) {
+				log.error('SSL handshake failed!')
+				System.sleep((i+1)*1000)
+			}
+		}
+		if (!result) throw new Exception("Failed to connect to ADO!")
 	}
 	
 	/* (non-Javadoc)

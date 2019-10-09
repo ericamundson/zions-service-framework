@@ -131,8 +131,8 @@ class WorkManagementServiceSpecTest extends Specification {
 	
 	def 'cleanDuplicates mdb flow'() {
 		setup: 'stub for mdb cache management'
-		cacheManagementService = Stub(MongoDBCacheManagementService)
-		MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
+		underTest.cacheManagementService = Stub(MongoDBCacheManagementService)
+		MongoDBCacheManagementService mdbCacheManagement = underTest.cacheManagementService
 		def r = [:]
 		mdbCacheManagement.getAllOfType(_, _) >> { args ->
 			int page = args[1]
@@ -153,8 +153,8 @@ class WorkManagementServiceSpecTest extends Specification {
 		}
 		
 		and: 'stub generic rest client for rateLimitPost that produces a duplicate work item returns to exercise delete'
-		genericRestClient = Stub(GenericRestClient)
-		genericRestClient.rateLimitPost(_) >> { args ->
+		underTest.genericRestClient = Stub(GenericRestClient)
+		underTest.genericRestClient.rateLimitPost(_) >> { args ->
 			def req = args[0]
 			String body = "${req.body}"
 			def rwi = null
@@ -178,14 +178,10 @@ class WorkManagementServiceSpecTest extends Specification {
 		}
 		
 		and: 'stub genericRestClient for do nothing delete'
-		genericRestClient.delete(_) >> { args ->
+		underTest.genericRestClient.delete(_) >> { args ->
 			return []
 		}
-		
-		and: 'Set updated classes members'
-		underTest.genericRestClient = genericRestClient
-		underTest.cacheManagementService = cacheManagementService
-		
+				
 		when: 'call cleanDuplicates'
 		boolean success = true
 		try {
@@ -198,7 +194,10 @@ class WorkManagementServiceSpecTest extends Specification {
 		then: 'No exception'
 		success
 		
-		
+		cleanup: 'Set updated classes members back'
+		underTest.genericRestClient = genericRestClient
+		underTest.cacheManagementService = cacheManagementService
+
 	}
 
 }
