@@ -220,13 +220,15 @@ class TranslateRmModulesToADO implements CliAction {
 			def mappingData = rmMappingManagementService.mappingData
 			log.info('Getting ADO Project Members...')
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-			log.info("${getCurTimestamp()} - Querying DNG Modules for $rmQuery ...")
+			log.info("${getCurTimestamp()} - Querying Module Migration List for $rmQuery ...")
 			def moduleUris = clmRequirementsManagementService.queryForModules(rmQuery)
+			def moduleCount = 0
 			moduleUris.each { moduleUri ->
+				moduleCount++
 				int count = 0
 				def changeList = []
 				def idMap = [:]
-				log.info("${getCurTimestamp()} - Getting data for module: $moduleUri")
+				log.info("${getCurTimestamp()} - Retrieving module $moduleCount of ${moduleUris.size()} using uri: $moduleUri")
 				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri,false)
 				// For RSZ modules, we need to append the linked RRZ module
 				if (module.getArtifactType()== "RSZ Specification") {
@@ -386,8 +388,7 @@ class TranslateRmModulesToADO implements CliAction {
 			shouldMerge = true 
 		}
 		else if ((moduleType == 'UI Spec') &&
-			   (artifactType == 'Screen Change' ||
-				artifactType == 'User Interface Flow'))	{
+			   (artifactType == 'User Interface Flow'))	{
 			shouldMerge = true 
 		}
 		else if ((moduleType == 'Interface Spec') &&
