@@ -240,11 +240,11 @@ class WorkManagementService {
 		cacheManagementService.clear()
 	}
 
-	def cleanDuplicates(String collection, String project) {
+	def cleanDuplicates(String collection, String project, int inpage = 0) {
 		def deleted = [:]
 		if (cacheManagementService instanceof MongoDBCacheManagementService) {
 			MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
-			int page = 0
+			int page = inpage
 			while (true) {
 				def cacheWIs = mdbCacheManagement.getAllOfType('wiData', page)
 				if (cacheWIs.size() == 0) break
