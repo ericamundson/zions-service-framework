@@ -20,13 +20,7 @@ class SequenceNoHandler extends RmBaseAttributeHandler {
 			}
 		}
 		else {
-			// Validate numeric value
-		    try {
-		        Integer seq = Integer.parseInt(value);
-		    } catch (NumberFormatException | NullPointerException nfe) {
-				throw new Exception("SequenceNoHandler threw exception, invalid value for SequenceNo: $value")
-		        return null;
-		    }
+		    return stringToNumber(value, 'SequenceNoHandlerHandler')
 		}
 		return value
 	}
