@@ -73,7 +73,7 @@ class WorkManagementService {
 		if (!wis || !wis.workItems) return
 		def wiList = wis.workItems
 		int j = 0
-		def eMap = [:]
+		//def eMap = [:]
 		while (true) {
 			def ids = []
 			def keys = []
@@ -90,13 +90,17 @@ class WorkManagementService {
 				} else {
 					key = getKey(owi)
 				}
-				if (eMap.containsKey(key)) {
-					def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
+				def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
+				if (cacheWI) {
 					log.info("Deleting duplicate of (${module}) Element: ${key}, ADO WI: ${owi.id}")
 					String url = "${owi.url}"
-					deleteWorkitem(url)
+					if (isTestItem()) {
+						deleteTestItem(collection, project, cacheWI)
+					} else {
+						deleteWorkitem(url)
+					}
 				} else {
-					eMap[key] = key
+					//eMap[key] = key
 					cacheManagementService.saveToCache(owi, key, ICacheManagementService.WI_DATA)
 				}
 			}
@@ -109,6 +113,11 @@ class WorkManagementService {
 				wiList = wis.workItems
 			}
 		}
+	}
+	
+	boolean isTestItem() {
+		String module = cacheManagementService.cacheModule
+		return module.equals('SPOCK') || module.equals('TL') || module.equals('QM')
 	}
 	
 	/**
@@ -240,11 +249,11 @@ class WorkManagementService {
 		cacheManagementService.clear()
 	}
 
-	def cleanDuplicates(String collection, String project) {
+	def cleanDuplicates(String collection, String project, int inpage = 0) {
 		def deleted = [:]
 		if (cacheManagementService instanceof MongoDBCacheManagementService) {
 			MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
-			int page = 0
+			int page = inpage
 			while (true) {
 				def cacheWIs = mdbCacheManagement.getAllOfType('wiData', page)
 				if (cacheWIs.size() == 0) break
@@ -422,6 +431,17 @@ class WorkManagementService {
 				)
 		return result
 
+	}
+	
+	def deleteTestItem(String collection, String project, def wi) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/test/testcases/${wi.id}"
+		def result = genericRestClient.delete(
+			uri: url,
+			contentType: ContentType.JSON,
+			query: [destroy: true, 'api-version': '5.0-preview.1']
+			)
+		return result
 	}
 
 	def refreshCache(def collection, def project, def cacheIds) {

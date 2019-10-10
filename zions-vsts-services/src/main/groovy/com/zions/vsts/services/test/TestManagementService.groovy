@@ -259,12 +259,12 @@ public class TestManagementService {
 							)
 					} else if (type == 'Test Case'){
 						String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/testplan/testcases/${wi.id}"
-						genericRestClient.delete(
+						def result = genericRestClient.delete(
 							uri: url,
 							contentType: ContentType.JSON,
 							query: [destroy: true, 'api-version': '5.0-preview.1']
 							)
-		
+						
 					}
 				}
 			}

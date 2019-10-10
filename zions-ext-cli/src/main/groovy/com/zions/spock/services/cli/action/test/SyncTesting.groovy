@@ -12,6 +12,7 @@ import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.WorkManagementService
 import groovy.json.JsonBuilder
+import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
 import groovyx.net.http.ContentType
 import org.apache.commons.lang.StringEscapeUtils
@@ -23,6 +24,7 @@ import org.apache.commons.lang.StringEscapeUtils
  *
  */
 @Component
+@Slf4j
 class SyncTesting implements CliAction {
 
 	@Autowired
@@ -74,7 +76,7 @@ class SyncTesting implements CliAction {
 	@Override
 	public Object execute(ApplicationArguments data) {
 		String query = "SELECT [System.Id],[System.WorkItemType],[System.Title],[Microsoft.VSTS.Common.Priority],[System.AssignedTo],[System.AreaPath] FROM WorkItems WHERE [System.TeamProject] = '${project}' AND [System.WorkItemType] IN GROUP 'Microsoft.TestCaseCategory' AND [System.AreaPath] UNDER '${areaPath}' AND [System.Tags] CONTAINS '${mainTag}'"
-		//		testManagementService.cleanupTestItems('', project, areaPath, wiql)
+		//testManagementService.cleanupTestItems('', project, areaPath, query)
 		workManagementService.refreshCacheByQuery('', project, query) { wi ->
 			String title = "${wi.fields.'System.Title'}"
 			return title.bytes.encodeBase64()
@@ -103,13 +105,17 @@ class SyncTesting implements CliAction {
 			String key = "${tc.title}".bytes.encodeBase64()
 
 			String outcome = "${tc.result}"
-			println "Outcome:  ${outcome}"
+			log.info "Outcome:  ${outcome}"
 			if (resultMap[outcome]) {
 				def adoTestCase = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
 				def runData = testManagementService.createRunData('', project, plan, adoTestCase)
 				def resultTestCaseMap = testManagementService.getResultsTestcaseMap("${runData.url}/results")
 				def resultData = resultTestCaseMap["${adoTestCase.id}"]
-				sendExecution(resultData, tc)
+				if (resultData) {
+					sendExecution(resultData, tc)
+				} else {
+					log.warn "Test case:  <${tc.title}> couldn't get result data"
+				}
 			}
 		}
 	}
@@ -188,7 +194,7 @@ class SyncTesting implements CliAction {
 		def s = [:]
 		s.parent = parent.rootSuite
 		s.suiteType = 'dynamicTestSuite'
-		String query = "SELECT [System.Id],[System.WorkItemType],[System.Title],[Microsoft.VSTS.Common.Priority],[System.AssignedTo],[System.AreaPath] FROM WorkItems WHERE [System.TeamProject] = '${project}' AND [System.WorkItemType] IN GROUP 'Microsoft.TestCaseCategory' AND [System.AreaPath] UNDER '${areaPath}' AND [System.Tags] CONTAINS '${mainTag}'"
+		String query = "SELECT [System.Id],[System.WorkItemType],[System.Title],[Microsoft.VSTS.Common.Priority],[System.AssignedTo],[System.AreaPath] FROM WorkItems WHERE [System.TeamProject] = '${project}' AND [System.WorkItemType] IN GROUP 'Microsoft.TestCaseCategory' AND [System.AreaPath] UNDER '${areaPath}' AND [System.Tags] CONTAINS '${mainTag}' ORDER BY [System.Title] ASC"
 		s.queryString = query
 		s.name = "${planName}-${mainTag} Suite"
 		s['iteration'] = project
