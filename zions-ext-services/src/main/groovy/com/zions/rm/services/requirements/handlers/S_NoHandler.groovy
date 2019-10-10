@@ -20,7 +20,7 @@ class S_NoHandler extends RmBaseAttributeHandler {
 			}
 		}
 		else {
-		    return stringToNumber(val, 'S_NoHandlerHandler')
+		    return stringToNumber(value, 'S_NoHandlerHandler')
 		}
 		return value
 	}
