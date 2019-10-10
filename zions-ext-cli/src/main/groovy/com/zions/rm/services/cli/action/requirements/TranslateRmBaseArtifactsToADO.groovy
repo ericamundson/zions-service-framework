@@ -187,7 +187,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
-
+		
 		log.info('Getting ADO Project Members...')
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 
@@ -210,6 +210,12 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 		}
 		if (includes['cleanDuplicates'] != null) {
 			workManagementService.cleanDuplicates(collection, tfsProject)
+		}
+		if (includes['refreshCacheByQuery']) {
+			log.info("Syncing mongodb to ADO reality and removing duplicates from ado\r\nCache will be deleted now...")
+			String query = "SELECT [System.Id],[System.WorkItemType],[System.Title],[Microsoft.VSTS.Common.Priority],[System.AssignedTo],[System.AreaPath] FROM WorkItems WHERE [System.TeamProject] = '${tfsProject}' AND [System.AreaPath] UNDER '${areaPath}' AND [Custom.ExternalID] contains 'DNG-'"
+			//		testManagementService.cleanupTestItems('', project, areaPath, wiql)
+			workManagementService.refreshCacheByQuery(collection, tfsProject, query)
 		}
 		if (includes['whereused'] != null) {
 			log.info("fetching 'where used' lookup records")
