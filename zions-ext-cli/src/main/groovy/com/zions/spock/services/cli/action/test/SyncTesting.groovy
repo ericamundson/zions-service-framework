@@ -101,6 +101,8 @@ class SyncTesting implements CliAction {
 
 	def buildAndExecute(def allTestCase) {
 		def plan = ensurePlan()
+		def runData = testManagementService.createRunData('', project, plan)
+		def resultTestCaseMap = testManagementService.getResultsTestcaseMap("${runData.url}/results")
 		allTestCase.each { tc ->
 			String key = "${tc.title}".bytes.encodeBase64()
 
@@ -108,8 +110,8 @@ class SyncTesting implements CliAction {
 			log.info "Outcome:  ${outcome}"
 			if (resultMap[outcome]) {
 				def adoTestCase = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
-				def runData = testManagementService.createRunData('', project, plan, adoTestCase)
-				def resultTestCaseMap = testManagementService.getResultsTestcaseMap("${runData.url}/results")
+				//def runData = testManagementService.createRunData('', project, plan, adoTestCase)
+				//def resultTestCaseMap = testManagementService.getResultsTestcaseMap("${runData.url}/results")
 				def resultData = resultTestCaseMap["${adoTestCase.id}"]
 				if (resultData) {
 					sendExecution(resultData, tc)
