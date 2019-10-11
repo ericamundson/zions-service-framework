@@ -98,6 +98,10 @@ class ZeusBuildData implements CliAction {
 			outRepoDir = data.getOptionValues('out.repo.dir')[0]
 		} catch (e) {}
 		String changeRequest = data.getOptionValues('change.request')[0]
+		String releaseDate = null
+		try {
+			releaseDate = data.getOptionValues('release.date')[0]
+		} catch (e) {}
 		def buildWorkitems = buildManagementService.getExecutionWorkItems(collection, project, buildId)
 		List wi = []
 		buildWorkitems.'value'.each { ref ->
@@ -174,6 +178,9 @@ class ZeusBuildData implements CliAction {
 			String wiStr = wis.join(',')
 			o << "ado.workitems=${wiStr}${sep}"
 		}
+		if (releaseDate) {
+			o << "release.date=${releaseDate}${sep}"
+		}
 		o.close()
 		if (fListSet.isEmpty()) {
 			log.error('No files set for update! No new changes.')
@@ -189,7 +196,7 @@ class ZeusBuildData implements CliAction {
 		def ofListSet = oFList.toSet()
 		o = f.newDataOutputStream()
 		String filesStr = ofListSet.join("${sep}")
-		o << "${filesStr}"
+		o << "${filesStr}${sep}"
 		o.close()
 		Map<String, File> fileMap = [:]
 		if (inRepoDir && outRepoDir) {
