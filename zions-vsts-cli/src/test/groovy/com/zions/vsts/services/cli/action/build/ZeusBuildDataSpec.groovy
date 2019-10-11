@@ -23,6 +23,7 @@ import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.work.WorkManagementService
 import groovy.json.JsonSlurper
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -37,6 +38,7 @@ class ZeusBuildDataSpec extends Specification {
 	@Autowired
 	DataGenerationService dataGenerationService
 
+	@Ignore
 	def 'execute standard flow'() {
 		setup: 'test data for stubs'
 		URI uri = this.getClass().getResource('/testdata').toURI()
