@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<note>
+  <add key="CAR_IND" value="True" />
+  <add key="CAR_THRESHOLD" value="80" />
+  <add key="DEVICE_NAME" value="DIGITALCHECK" />
+  <add key="TEMPLOCATION" value="[SpecialFolder.ProgramFiles]\VSoft\VSoft Teller Capture\data\temp" />
+  <add key="CaptureFilePath" value="[SpecialFolder.ProgramFiles]\VSoft\VSoft Teller Capture\data\capture" />
+  <add key="SORTPATTREN_FILEPATH" value="[SpecialFolder.ProgramFiles]\VSoft\VSoft Teller Capture\data\config" />
+  <add key="LogFilePath" value="[SpecialFolder.ProgramFiles]\VSoft\VSoft Teller Capture\data\logs" />
+  <add key="LogoFullName" value="[SpecialFolder.ProgramFiles]\VSoft\VSoft Teller Capture\images\vsoft_bi.bmp" />
+  <add key="CarConfigPath" value="[SpecialFolder.ProgramFiles]\VSoft\CAR\Parm" />
+  <add key="CarTable" value="[SpecialFolder.ProgramFiles]\VSoft\CAR\Table\vsoft.tbl" />
+  <add key="VALIDATOR_XML_SERVICE_URL" value="https://vsoft.cs.zionsbank.com/edeskteller/tellergateway/TellerStation.asmx" />
+  <add key="UploadFilePath" value="C:\VSoft\data\teller\Transactions" />
+  <add key="SPN_ID" value="730" />
+  <add key="INST_ID" value="0" />
+  <add key="BRANCH_ID" value="0" />
+  <add key="BranchXMLDownloadTime" value="0" />
+  <add key="SortPatternDownloadTime" value="0" />
+  <add key="ScanDepositType" value="4" />
+  <add key="ThemeColor" value="Navy" />
+  <add key="InitializeDisconnected" value="False" />
+  <add key="UploadMethod" value="HTTP" />
+  <add key="AllowUnbalancedTransactions" value="False" />
+  <add key="AllowSPNRejectOverride" value="False" />
+  <add key="NetworkDeviceNames" value="EXCELLA_ETHER, STX_ETHER, EXCELLA_USB, STX_USB" />
+  <add key="ENDORSEMENT_TYPE" value="Electronic" />
+  <add key="ENDORSEMENT_DIRECTION" value="Vertical" />
+  <add key="ENDORSEMENT_STRING" value="%NAME%%BRANCHCITY%%BRANCHADDRESS%%DATETIMESEQ%%CR TO THE A/C OF WITHIN NAMED PAYEE%%ACCOUNT%%ROUTING%" />
+  <add key="AllowFraudCheckOverride" value="True" />
+  <add key="EnableRealTimeFraudDetection" value="False" />
+  <add key="IVS_SERVICE_URL" value="http://localhost/IVS/VSoftFraudSvc.asmx" />
+  <add key="AllowSortPatternRejectOverride" value="True" />
+  <add key="CarProvider" value="Orbograph" />
+  <add key="ORBOGRAPH_WEBAPI_URL" value="https://vsoftorb.cs.zionsbank.com/VSoft.Teller.CentralizedOrbograph.Service/" />
+</note>

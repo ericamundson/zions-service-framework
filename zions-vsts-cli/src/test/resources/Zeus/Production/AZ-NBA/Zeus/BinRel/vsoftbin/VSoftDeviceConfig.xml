@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <CTConfiguration>
+    <ProcessingRulesConfiguration xmlns="urn:schemas-paymentsystems-unisys-com:WebDeviceService:2008-01-01">
+      <OverridePrinting>true</OverridePrinting>
+      <ProvideIQResults>false</ProvideIQResults>
+      <WaitForAck>false</WaitForAck>
+    </ProcessingRulesConfiguration>
+    <FeederConfiguration xmlns="urn:schemas-paymentsystems-unisys-com:WebDeviceService:2008-01-01">
+      <DisableStartButton>true</DisableStartButton>
+      <DoubleDocumentLengthThreshold>93</DoubleDocumentLengthThreshold>
+    </FeederConfiguration>
+    <ReaderConfiguration xmlns="urn:schemas-paymentsystems-unisys-com:WebDeviceService:2008-01-01">
+      <MicrReader />
+      <OcrReader>
+        <Font>A1OCRANS</Font>
+        <Frame>
+          <Top>10</Top>
+          <Left>10</Left>
+        </Frame>
+        <Unisys>
+          <ReportFontSwitching>false</ReportFontSwitching>
+          <Switch>
+            <String />
+            <Position>0</Position>
+            <CharacterSet>0</CharacterSet>
+          </Switch>
+        </Unisys>
+      </OcrReader>
+      <OcrReader>
+        <Font>A1OCRANS</Font>
+        <Frame>
+          <Top>10</Top>
+          <Left>10</Left>
+        </Frame>
+        <Unisys>
+          <ReportFontSwitching>false</ReportFontSwitching>
+          <Switch>
+            <String />
+            <Position>0</Position>
+            <CharacterSet>0</CharacterSet>
+          </Switch>
+        </Unisys>
+      </OcrReader>
+    </ReaderConfiguration>
+    <ImageConfiguration xmlns="urn:schemas-paymentsystems-unisys-com:WebDeviceService:2008-01-01">
+      <FrontImageConfiguration>
+        <Enabled>true</Enabled>
+        <JpegConfiguration>
+          <Resolution>120</Resolution>
+          <Enabled>false</Enabled>
+        </JpegConfiguration>
+        <CcittConfiguration>
+          <Threshold>50</Threshold>
+          <Resolution>200</Resolution>
+        </CcittConfiguration>
+        <SnippetConfiguration>
+          <DocTypeList />
+          <Resolution>240</Resolution>
+	    <Enabled>false</Enabled>
+        </SnippetConfiguration>
+      </FrontImageConfiguration>
+      <RearImageConfiguration>
+        <Enabled>true</Enabled>
+        <JpegConfiguration>
+          <Resolution>120</Resolution>
+          <Enabled>false</Enabled>
+        </JpegConfiguration>
+        <CcittConfiguration>
+          <Threshold>50</Threshold>
+          <Resolution>200</Resolution>
+        </CcittConfiguration>
+      </RearImageConfiguration>
+    </ImageConfiguration>
+    <ImageQualityConfiguration xmlns="urn:schemas-paymentsystems-unisys-com:WebDeviceService:2008-01-01">
+      <Index xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">9</Index>
+      <EngineConfiguration xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">
+        <Iqf2Config>
+          <FrontImageThresholds>
+            <MaximumFrontRearImageWidthDifference>4</MaximumFrontRearImageWidthDifference>
+            <MaximumFrontRearImageHeightDifference>5</MaximumFrontRearImageHeightDifference>
+            <MinimumFramedImageWidth>57</MinimumFramedImageWidth>
+            <MinimumFramedImageHeight>22</MinimumFramedImageHeight>
+            <MaximumFramedImageWidth>90</MaximumFramedImageWidth>
+            <MaximumFramedImageHeight>45</MaximumFramedImageHeight>
+            <MaximumUpperLeftCornerFoldTearWidth>5</MaximumUpperLeftCornerFoldTearWidth>
+            <MaximumUpperLeftCornerFoldTearHeight>5</MaximumUpperLeftCornerFoldTearHeight>
+            <MaximumUpperRightCornerFoldTearWidth>4</MaximumUpperRightCornerFoldTearWidth>
+            <MaximumUpperRightCornerFoldTearHeight>4</MaximumUpperRightCornerFoldTearHeight>
+            <MaximumLowerLeftCornerFoldTearWidth>4</MaximumLowerLeftCornerFoldTearWidth>
+            <MaximumLowerLeftCornerFoldTearHeight>4</MaximumLowerLeftCornerFoldTearHeight>
+            <MaximumLowerRightCornerFoldTearWidth>4</MaximumLowerRightCornerFoldTearWidth>
+            <MaximumLowerRightCornerFoldTearHeight>4</MaximumLowerRightCornerFoldTearHeight>
+            <MaximumTopEdgeFoldTearWidth>5</MaximumTopEdgeFoldTearWidth>
+            <MaximumTopEdgeFoldTearHeight>5</MaximumTopEdgeFoldTearHeight>
+            <MaximumBottomEdgeFoldTearWidth>5</MaximumBottomEdgeFoldTearWidth>
+            <MaximumBottomEdgeFoldTearHeight>4</MaximumBottomEdgeFoldTearHeight>
+            <MaximumLeftEdgeFoldTearWidth>5</MaximumLeftEdgeFoldTearWidth>
+            <MaximumLeftEdgeFoldTearHeight>5</MaximumLeftEdgeFoldTearHeight>
+            <MaximumRightEdgeFoldTearWidth>4</MaximumRightEdgeFoldTearWidth>
+            <MaximumRightEdgeFoldTearHeight>5</MaximumRightEdgeFoldTearHeight>
+            <MaximumPiggyWidth>5</MaximumPiggyWidth>
+            <MaximumPiggyHeight>5</MaximumPiggyHeight>
+            <MinimumAspectRatio>15</MinimumAspectRatio>
+            <MaximumAspectRatio>31</MaximumAspectRatio>
+            <PositiveSkewAngle>30</PositiveSkewAngle>
+            <NegativeSkewAngle>30</NegativeSkewAngle>
+            <MinimumPercentOfBlackPixels>21</MinimumPercentOfBlackPixels>
+            <MaximumPercentBrightness>649</MaximumPercentBrightness>
+            <MinimumPercentContrast>230</MinimumPercentContrast>
+            <MaximumPercentOfBlackPixels>390</MaximumPercentOfBlackPixels>
+            <MinimumPercentBrightness>330</MinimumPercentBrightness>
+            <UnisysMaximumPercentOfVerticalTransitions>1000</UnisysMaximumPercentOfVerticalTransitions>
+            <MaximumBlackWhiteStreakHeight>24</MaximumBlackWhiteStreakHeight>
+            <MaximumGrayLevelStreakHeight>12</MaximumGrayLevelStreakHeight>
+            <MaximumGrayLevelStreakCount>3</MaximumGrayLevelStreakCount>
+            <MaximumBlackWhiteStreakCount>3</MaximumBlackWhiteStreakCount>
+            <MaximumLeftEdgeOverScan>2</MaximumLeftEdgeOverScan>
+            <MaximumRightEdgeOverScan>2</MaximumRightEdgeOverScan>
+            <MaximumTopEdgeOverScan>2</MaximumTopEdgeOverScan>
+            <MaximumBottomEdgeOverScan>2</MaximumBottomEdgeOverScan>
+            <MinimumImageFocusScore>46</MinimumImageFocusScore>
+            <MaximumSpotNoiseDensity>575</MaximumSpotNoiseDensity>
+            <MaximumBlackStreakPercentage>990</MaximumBlackStreakPercentage>
+            <MaximumGrayLevelStreakContrast>400</MaximumGrayLevelStreakContrast>
+            <MaximumBlackStreakHeightToBeDetected>50</MaximumBlackStreakHeightToBeDetected>
+            <MaximumGrayLevelStreakHeightToBeDetected>25</MaximumGrayLevelStreakHeightToBeDetected>
+            <MinimumCarbonStripHeight>3</MinimumCarbonStripHeight>
+            <MarginWidth>25</MarginWidth>
+            <LightPixelPercentile>90</LightPixelPercentile>
+            <DarkPixelPercentile>10</DarkPixelPercentile>
+            <DynamicRangeSampleSize>64</DynamicRangeSampleSize>
+            <CarbonStripBlackDarkness>60</CarbonStripBlackDarkness>
+            <CarbonStripGrayDarkness>40</CarbonStripGrayDarkness>
+            <MinimumCompressedImageSize>6</MinimumCompressedImageSize>
+            <MaximumCompressedImageSize>900</MaximumCompressedImageSize>
+          </FrontImageThresholds>
+          <RearImageThresholds>
+            <MaximumFrontRearImageWidthDifference>4</MaximumFrontRearImageWidthDifference>
+            <MaximumFrontRearImageHeightDifference>5</MaximumFrontRearImageHeightDifference>
+            <MinimumFramedImageWidth>57</MinimumFramedImageWidth>
+            <MinimumFramedImageHeight>22</MinimumFramedImageHeight>
+            <MaximumFramedImageWidth>90</MaximumFramedImageWidth>
+            <MaximumFramedImageHeight>45</MaximumFramedImageHeight>
+            <MaximumUpperLeftCornerFoldTearWidth>4</MaximumUpperLeftCornerFoldTearWidth>
+            <MaximumUpperLeftCornerFoldTearHeight>4</MaximumUpperLeftCornerFoldTearHeight>
+            <MaximumUpperRightCornerFoldTearWidth>5</MaximumUpperRightCornerFoldTearWidth>
+            <MaximumUpperRightCornerFoldTearHeight>5</MaximumUpperRightCornerFoldTearHeight>
+            <MaximumLowerLeftCornerFoldTearWidth>4</MaximumLowerLeftCornerFoldTearWidth>
+            <MaximumLowerLeftCornerFoldTearHeight>4</MaximumLowerLeftCornerFoldTearHeight>
+            <MaximumLowerRightCornerFoldTearWidth>4</MaximumLowerRightCornerFoldTearWidth>
+            <MaximumLowerRightCornerFoldTearHeight>4</MaximumLowerRightCornerFoldTearHeight>
+            <MaximumTopEdgeFoldTearWidth>5</MaximumTopEdgeFoldTearWidth>
+            <MaximumTopEdgeFoldTearHeight>5</MaximumTopEdgeFoldTearHeight>
+            <MaximumBottomEdgeFoldTearWidth>5</MaximumBottomEdgeFoldTearWidth>
+            <MaximumBottomEdgeFoldTearHeight>4</MaximumBottomEdgeFoldTearHeight>
+            <MaximumLeftEdgeFoldTearWidth>4</MaximumLeftEdgeFoldTearWidth>
+            <MaximumLeftEdgeFoldTearHeight>5</MaximumLeftEdgeFoldTearHeight>
+            <MaximumRightEdgeFoldTearWidth>5</MaximumRightEdgeFoldTearWidth>
+            <MaximumRightEdgeFoldTearHeight>5</MaximumRightEdgeFoldTearHeight>
+            <MaximumPiggyWidth>5</MaximumPiggyWidth>
+            <MaximumPiggyHeight>5</MaximumPiggyHeight>
+            <MinimumAspectRatio>15</MinimumAspectRatio>
+            <MaximumAspectRatio>31</MaximumAspectRatio>
+            <PositiveSkewAngle>30</PositiveSkewAngle>
+            <NegativeSkewAngle>30</NegativeSkewAngle>
+            <MinimumPercentOfBlackPixels>5</MinimumPercentOfBlackPixels>
+            <MaximumPercentBrightness>900</MaximumPercentBrightness>
+            <MinimumPercentContrast>120</MinimumPercentContrast>
+            <MaximumPercentOfBlackPixels>390</MaximumPercentOfBlackPixels>
+            <MinimumPercentBrightness>375</MinimumPercentBrightness>
+            <UnisysMaximumPercentOfVerticalTransitions>1000</UnisysMaximumPercentOfVerticalTransitions>
+            <MaximumBlackWhiteStreakHeight>24</MaximumBlackWhiteStreakHeight>
+            <MaximumGrayLevelStreakHeight>12</MaximumGrayLevelStreakHeight>
+            <MaximumGrayLevelStreakCount>3</MaximumGrayLevelStreakCount>
+            <MaximumBlackWhiteStreakCount>3</MaximumBlackWhiteStreakCount>
+            <MaximumLeftEdgeOverScan>2</MaximumLeftEdgeOverScan>
+            <MaximumRightEdgeOverScan>2</MaximumRightEdgeOverScan>
+            <MaximumTopEdgeOverScan>2</MaximumTopEdgeOverScan>
+            <MaximumBottomEdgeOverScan>2</MaximumBottomEdgeOverScan>
+            <MinimumImageFocusScore>35</MinimumImageFocusScore>
+            <MaximumSpotNoiseDensity>575</MaximumSpotNoiseDensity>
+            <MaximumBlackStreakPercentage>990</MaximumBlackStreakPercentage>
+            <MaximumGrayLevelStreakContrast>400</MaximumGrayLevelStreakContrast>
+            <MaximumBlackStreakHeightToBeDetected>50</MaximumBlackStreakHeightToBeDetected>
+            <MaximumGrayLevelStreakHeightToBeDetected>25</MaximumGrayLevelStreakHeightToBeDetected>
+            <MinimumCarbonStripHeight>2</MinimumCarbonStripHeight>
+            <MarginWidth>25</MarginWidth>
+            <LightPixelPercentile>90</LightPixelPercentile>
+            <DarkPixelPercentile>10</DarkPixelPercentile>
+            <DynamicRangeSampleSize>64</DynamicRangeSampleSize>
+            <CarbonStripBlackDarkness>60</CarbonStripBlackDarkness>
+            <CarbonStripGrayDarkness>40</CarbonStripGrayDarkness>
+          </RearImageThresholds>
+          <FrontCcittMaskIQFdata>
+            <X9100Flags>UndersizeImage FoldedTornDocumentCorners FoldedTornDocumentEdges ExcessiveDocumentSkew OversizeImage PiggybackDocument ImageTooLight ImageTooDark HorizontalStreaksPresentInImage BelowMinimumCompressedImageSize AboveMaximumCompressedImageSize ExcessiveSpotNoiseInImage CarbonStripDetected</X9100Flags>
+            <UnisysFlags>BOLLateErrorDetected HardwareFramerErrorDetected TopTruncated BottomTruncated PercentOfVerticalTransitions</UnisysFlags>
+          </FrontCcittMaskIQFdata>
+          <RearCcittMaskIQFdata>           
+          </RearCcittMaskIQFdata>
+          <FrontJpegMaskIQFdata>            
+          </FrontJpegMaskIQFdata>
+          <RearJpegMaskIQFdata>            
+          </RearJpegMaskIQFdata>
+          <SnippetMaskIQFdata>            
+          </SnippetMaskIQFdata>
+        </Iqf2Config>
+      </EngineConfiguration>
+      <ImageSizeParameter xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">
+        <ImageDescription xmlns="urn:schemas-paymentsystems-unisys-com:Imaging:2006-09-15">
+          <Side>Front</Side>
+          <Depth>BlackWhite</Depth>
+        </ImageDescription>
+        <CompressedSize>
+          <MinimumCompressedImageSize>60</MinimumCompressedImageSize>
+          <MaximumCompressedImageSize>9000</MaximumCompressedImageSize>
+        </CompressedSize>
+      </ImageSizeParameter>
+      <ImageSizeParameter xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">
+        <ImageDescription xmlns="urn:schemas-paymentsystems-unisys-com:Imaging:2006-09-15">
+          <Side>Front</Side>
+          <Depth>Grayscale</Depth>
+        </ImageDescription>
+        <CompressedSize>
+          <MinimumCompressedImageSize>300</MinimumCompressedImageSize>
+          <MaximumCompressedImageSize>8000</MaximumCompressedImageSize>
+        </CompressedSize>
+      </ImageSizeParameter>
+      <ImageSizeParameter xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">
+        <ImageDescription xmlns="urn:schemas-paymentsystems-unisys-com:Imaging:2006-09-15">
+          <Side>Rear</Side>
+          <Depth>BlackWhite</Depth>
+        </ImageDescription>
+        <CompressedSize>
+          <MinimumCompressedImageSize>60</MinimumCompressedImageSize>
+          <MaximumCompressedImageSize>8000</MaximumCompressedImageSize>
+        </CompressedSize>
+      </ImageSizeParameter>
+      <ImageSizeParameter xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">
+        <ImageDescription xmlns="urn:schemas-paymentsystems-unisys-com:Imaging:2006-09-15">
+          <Side>Rear</Side>
+          <Depth>Grayscale</Depth>
+        </ImageDescription>
+        <CompressedSize>
+          <MinimumCompressedImageSize>300</MinimumCompressedImageSize>
+          <MaximumCompressedImageSize>8000</MaximumCompressedImageSize>
+        </CompressedSize>
+      </ImageSizeParameter>
+      <ImageSizeParameter xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">
+        <ImageDescription xmlns="urn:schemas-paymentsystems-unisys-com:Imaging:2006-09-15">
+          <Side>Snippet</Side>
+          <Depth>Grayscale</Depth>
+        </ImageDescription>
+        <CompressedSize>
+          <MinimumCompressedImageSize>200</MinimumCompressedImageSize>
+          <MaximumCompressedImageSize>25000</MaximumCompressedImageSize>
+        </CompressedSize>
+      </ImageSizeParameter>
+      <ImageSizeParameter xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">
+        <ImageDescription xmlns="urn:schemas-paymentsystems-unisys-com:Imaging:2006-09-15">
+          <Side>Front</Side>
+          <Depth>Color</Depth>
+        </ImageDescription>
+        <CompressedSize>
+          <MinimumCompressedImageSize>60</MinimumCompressedImageSize>
+          <MaximumCompressedImageSize>9000</MaximumCompressedImageSize>
+        </CompressedSize>
+      </ImageSizeParameter>
+      <ImageSizeParameter xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">
+        <ImageDescription xmlns="urn:schemas-paymentsystems-unisys-com:Imaging:2006-09-15">
+          <Side>Rear</Side>
+          <Depth>Color</Depth>
+        </ImageDescription>
+        <CompressedSize>
+          <MinimumCompressedImageSize>60</MinimumCompressedImageSize>
+          <MaximumCompressedImageSize>9000</MaximumCompressedImageSize>
+        </CompressedSize>
+      </ImageSizeParameter>
+      <ImageSizeParameter xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">
+        <ImageDescription xmlns="urn:schemas-paymentsystems-unisys-com:Imaging:2006-09-15">
+          <Side>Snippet</Side>
+          <Depth>BlackWhite</Depth>
+        </ImageDescription>
+        <CompressedSize>
+          <MinimumCompressedImageSize>100</MinimumCompressedImageSize>
+          <MaximumCompressedImageSize>25000</MaximumCompressedImageSize>
+        </CompressedSize>
+      </ImageSizeParameter>
+      <ImageSizeParameter xmlns="urn:schemas-paymentsystems-unisys-com:ImageQuality:2006-09-15">
+        <ImageDescription xmlns="urn:schemas-paymentsystems-unisys-com:Imaging:2006-09-15">
+          <Side>Snippet</Side>
+          <Depth>Color</Depth>
+        </ImageDescription>
+        <CompressedSize>
+          <MinimumCompressedImageSize>100</MinimumCompressedImageSize>
+          <MaximumCompressedImageSize>25000</MaximumCompressedImageSize>
+        </CompressedSize>
+      </ImageSizeParameter>
+    </ImageQualityConfiguration>
+    <FrankConfiguration xmlns="urn:schemas-paymentsystems-unisys-com:WebDeviceService:2008-01-01">
+      <Rear />
+      <Front>
+      <Enabled>false</Enabled>
+	<Position>14</Position>
+    </Front>
+    </FrankConfiguration>
+    <EndorseConfiguration xmlns="urn:schemas-paymentsystems-unisys-com:WebDeviceService:2008-01-01">
+    <Rear>
+      <Enabled>true</Enabled>
+      <Position>14</Position>
+      <FontName>User</FontName>
+      <EndorseText>
+        <EndorseText />
+      </EndorseText>
+      <PrintQuality>Premium</PrintQuality>
+    </Rear>
+    <Front>
+      <FontName />
+      <EndorseText />
+    </Front>
+  </EndorseConfiguration>
+   <UnitConfiguration xmlns="urn:schemas-paymentsystems-unisys-com:WebDeviceService:2008-01-01">
+      <WebServicesConfiguration>
+        <ApplicationPorts>
+          <WsEventingSubscriptionManager>5060</WsEventingSubscriptionManager>
+        </ApplicationPorts>
+      </WebServicesConfiguration>
+      <AlertList>
+        <Alert>
+          <TrackEvent>Jam</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>FeederEmpty</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>StartFlowMethod</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>StopFlowMethod</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ReadyToFlow</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>SkewedDocument</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>DoubleDocument</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>FatalError</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ButtonClick</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ClientEvent1</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ClientEvent2</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ClientEvent3</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ClientEvent4</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ClientEvent5</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ClientEvent6</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ClientEvent7</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ClientEvent8</TrackEvent>
+        </Alert>
+        <Alert>
+          <TrackEvent>ClientEvent9</TrackEvent>
+        </Alert>
+      </AlertList>
+      <SndpUnitConfiguration>
+        <NetworkConfiguration>
+          <HostName />
+          <DHCP>true</DHCP>
+          <Static>
+            <IpAddress />
+            <SubnetMask />
+            <DefaultGateway />
+          </Static>
+        </NetworkConfiguration>
+      </SndpUnitConfiguration>
+    </UnitConfiguration>
+  </CTConfiguration>

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<udm.DeploymentPackage application="Zeus" version="VERSION">
+  <deployables>
+    <file.File name="ZEUS.properties" file="ZEUS.properties">
+      <targetPath>{{deploy.path}}</targetPath>
+      <createTargetPath>true</createTargetPath>
+      <scanPlaceholders></scanPlaceholders>
+      <preScannedPlaceholders></preScannedPlaceholders>
+    </file.File>
+    <file.File name="ZEUS.template" file="zeus.template">
+      <targetPath>{{deploy.path}}</targetPath>
+      <createTargetPath>true</createTargetPath>
+      <scanPlaceholders></scanPlaceholders>
+      <preScannedPlaceholders></preScannedPlaceholders>
+    </file.File>
+    <file.File name="ZEUS.details.xml" file="ZEUS.details.xml">
+      <targetPath>{{deploy.path}}</targetPath>
+      <createTargetPath>true</createTargetPath>
+      <scanPlaceholders></scanPlaceholders>
+      <preScannedPlaceholders></preScannedPlaceholders>
+    </file.File>
+    <cmd.Command name="unzip repo">
+      <commandLine>{{unzip.command}} {{deploy.path}}\zeus.repo.zip -d {{deploy.path}}</commandLine>
+      <order>61</order>
+      <undoOrder>61</undoOrder>
+      <runUndoCommandOnUpgrade></runUndoCommandOnUpgrade>
+    </cmd.Command>
+    <cmd.Command name="run deploy process">
+      <commandLine>{{ant.command}} -Dscm.root="{{deploy.path}}\repo\Production" -Drun.template.dir="{{deploy.path}}" -DpropFile="{{deploy.path}}\ZEUS.properties" -Dmy.action={{my.action}} {{ant.action}}</commandLine>
+      <order>62</order>
+      <undoOrder>62</undoOrder>
+      <runUndoCommandOnUpgrade></runUndoCommandOnUpgrade>
+    </cmd.Command>
+    <cmd.Command name="remove repo">
+      <commandLine>{{remove.command}} {{deploy.path}}\repo</commandLine>
+      <order>63</order>
+      <undoOrder>63</undoOrder>
+      <runUndoCommandOnUpgrade></runUndoCommandOnUpgrade>
+    </cmd.Command>
+    <file.Archive name="zeus.repo.zip" file="zeus.repo.zip">
+      <targetPath>{{deploy.path}}</targetPath>
+      <createTargetPath>true</createTargetPath>
+      <scanPlaceholders></scanPlaceholders>
+      <preScannedPlaceholders></preScannedPlaceholders>
+    </file.Archive>
+  </deployables>
+</udm.DeploymentPackage>
