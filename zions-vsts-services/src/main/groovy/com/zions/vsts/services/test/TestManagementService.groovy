@@ -639,10 +639,13 @@ public class TestManagementService {
 	
 
 	
-	def createRunData(String collection, String project, def planData ) {
+	def createRunData(String collection, String project, def planData, String buildId = null ) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def testpoints = getTestPoints(collection, project, planData)
 		def data = [name: "${planData.name} Run", plan: [id: planData.id], pointIds:testpoints]
+		if (buildId && buildId.size() > 0) {
+			data.build = [id: buildId]
+		}
 		String body = new JsonBuilder( data ).toString()
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
@@ -654,10 +657,13 @@ public class TestManagementService {
 		return result
 	}
 	
-	def createRunData(String collection, String project, def adoPlanData, def adoTestCaseData ) {
+	def createRunData(String collection, String project, def adoPlanData, def adoTestCaseData, String buildId = null  ) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def testpoints = getTestPoints(collection, project, adoPlanData, adoTestCaseData)
 		def data = [name: "${adoPlanData.name}-${adoTestCaseData.fields.'System.Title'} Run", plan: [id: adoPlanData.id], pointIds:testpoints]
+		if (buildId && buildId.size() > 0) {
+			data.build = [id: buildId]
+		}
 		String body = new JsonBuilder( data ).toString()
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
