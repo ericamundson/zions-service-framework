@@ -59,7 +59,7 @@ class GenericRestClient extends AGenericRestClient {
 		setProxy()
 		setCredentials(user, token);
 		checked = true;
-		retryConnect()
+		//retryConnect()
 	}
 	
 	private retryConnect() {
@@ -76,7 +76,7 @@ class GenericRestClient extends AGenericRestClient {
 				break;
 			} catch (javax.net.ssl.SSLHandshakeException e) {
 				log.error('SSL handshake failed!')
-				System.sleep((i+1)*1000)
+				System.sleep((i+1)*2000)
 			}
 		}
 		if (!result) throw new Exception("Failed to connect to ADO!")

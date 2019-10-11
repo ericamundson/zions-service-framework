@@ -199,6 +199,76 @@ class WorkManagementServiceSpecTest extends Specification {
 		underTest.cacheManagementService = cacheManagementService
 
 	}
+	
+	def 'refreshCacheByQuery CCM flow'() {
+		setup: 'stub for cache management'
+		underTest.cacheManagementService = Stub(CacheManagementService)
+		underTest.cacheManagementService.cacheModule = 'CCM'
+		underTest.cacheManagementService.deleteByType(_) >> {
+			
+		}
+		underTest.cacheManagementService.saveToCache(_,_,_) >> {
+			
+		}
+		underTest.cacheManagementService.getFromCache(_,_) >> { args ->
+			String key = args[0]
+			if (key.equals('53')) {
+				String akey = "RTC-${53}"
+				def wi = dataGenerationService.generate('/testdata/wiDataT.json')
+				wi.id = 352
+				wi.fields.'Custom.ExternalID' = key
+				return wi
+			} else {
+				return null
+			}
+		}
+
+		and: 'stub for work item rest calls'
+		underTest.genericRestClient = Stub(GenericRestClient)
+		def wis = [workItems : []]
+		underTest.genericRestClient.rateLimitPost(_) >> { args ->
+			String body = args[0].body
+			if (body.contains('AND [System.Id] > ')) {
+				return [workItems:[]]
+			}
+			0.upto(200, { i ->
+				def wi = [id: i + 300]
+				wis.workItems.add(wi)
+			})
+			return wis
+		}
+		underTest.genericRestClient.post(_) >> { args ->
+			def wiso = [value:[]]
+			0.upto(200, { i ->
+				String key = "RTC-${i+1}"
+				def wi = dataGenerationService.generate('/testdata/wiDataT.json')
+				wi.id = i+300
+				wi.fields.'Custom.ExternalID' = key
+				wiso.value.add(wi)
+			})
+			return wiso
+		}
+			
+		and: 'stub for any work item deletes'
+		underTest.genericRestClient(_) >> { args ->
+			
+		}
+		
+		when: 'call refreshCacheByQuery'
+		boolean success = true
+		try {
+			underTest.refreshCacheByQuery('', 'None', 'None')
+		} catch (e) {
+			success = false
+		}
+		
+		then: 'No exceptions'
+		success
+		
+		cleanup: 'reset members to configured instance'
+		underTest.genericRestClient = genericRestClient
+		underTest.cacheManagementService = cacheManagementService
+	}
 
 }
 

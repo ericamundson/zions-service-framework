@@ -146,7 +146,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			File dir = new File(this.outputTestDataLocation)
 			File of = new File(dir, "${this.outputTestDataPrefix}${ts}.json")
 			def os = of.newDataOutputStream()
-			def info = [url: "${url}", query: query, type: "${this.outputTestDataType}", data: "new JsonBuilder(data).toPrettyString()}"]
+			def info = [url: "${url}", query: query, type: "${this.outputTestDataType}", data: "${new JsonBuilder(data).toPrettyString()}"]
 			os << "${new JsonBuilder(info).toPrettyString()}";
 			os.close()
 		} else if (this.outputTestDataType == 'xml') {
