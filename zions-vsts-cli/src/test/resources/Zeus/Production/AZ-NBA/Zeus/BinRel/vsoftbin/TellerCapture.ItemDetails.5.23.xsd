@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Audit" nillable="true" type="Audit" />
+  <xs:complexType name="Audit">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="PreAudit" type="ItemAudit" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PostAudit" type="ItemAudit" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ItemAudit">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="bofd_rt" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Created_on" type="xs:long" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Rel_Seq_Num" type="xs:int" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MicrData" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TranCode" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Selector_Id" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Cr_Ind" type="xs:boolean" />
+      <xs:element minOccurs="1" maxOccurs="1" name="OnUs_Ind" type="xs:boolean" />
+      <xs:element minOccurs="0" maxOccurs="1" name="P44" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Reject_Code" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Canadian_Flag" type="xs:boolean" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Float_Days" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Application_Id" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Virtual_Ind" type="xs:int" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RAW_SERIAL" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RAW_ROUTING" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RAW_ONUS" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="CAR_SCORE" type="xs:int" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Serial" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Routing" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Account" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Amount" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ItemAudit" nillable="true" type="ItemAudit" />
+  <xs:element name="SerializedFormats" type="SerializedFormats" />
+  <xs:simpleType name="SerializedFormats">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Binary" />
+      <xs:enumeration value="Document" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ObjectXMLSerializer" nillable="true" type="ObjectXMLSerializer" />
+  <xs:complexType name="ObjectXMLSerializer" />
+  <xs:element name="Transactions" nillable="true" type="ItemDetails" />
+  <xs:complexType name="ItemDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="MicrData" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TranCode" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Selector_id" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Cr_Ind" type="xs:boolean" />
+      <xs:element minOccurs="1" maxOccurs="1" name="OnUs_Ind" type="xs:boolean" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Reject_Code" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Canadian_Flag" type="xs:boolean" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Float_Days" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Application_Id" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Virtual_Ind" type="xs:int" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RAW_ROUTING" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RAW_ONUS" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="CAR_SCORE" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Document_Type" type="xs:int" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Audits" type="ArrayOfAudit" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Serial" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Routing" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="bofd_rt" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Rel_Seq_Num" type="xs:int" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RemovalReason" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Account" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Amount" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RAW_SERIAL" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="P44" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EndorsementValue" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FrontImageB64" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="BackImageB64" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="BackImageCleanB64" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IAResults" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="Sequence" type="xs:long" use="required" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfAudit">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Audit" nillable="true" type="Audit" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Transaction" type="Transaction_Header" />
+  <xs:complexType name="Transaction_Header">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="TellerID" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TransactionId" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CreditAccount" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="DebitAmount" type="xs:decimal" />
+      <xs:element minOccurs="1" maxOccurs="1" name="CreditAmount" type="xs:decimal" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Credit_Item_Count" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Debit_Item_Count" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Check_Count" type="xs:int" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Inst_Id" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Branch_Id" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="BusinessDate" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Items" type="ArrayOfItemDetails" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TellerCaptureVersion" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="DateTimeValue" type="xs:date" use="required" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfItemDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" nillable="true" type="ItemDetails" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DocumentTypes" type="DocumentTypes" />
+  <xs:simpleType name="DocumentTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DepositTicket" />
+      <xs:enumeration value="Check" />
+      <xs:enumeration value="CashIn" />
+      <xs:enumeration value="CashOut" />
+      <xs:enumeration value="NonCheck21Debit" />
+      <xs:enumeration value="NonCheck21Credit" />
+      <xs:enumeration value="SharedBranchDeposit" />
+      <xs:enumeration value="None" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="OrderTypes" type="OrderTypes" />
+  <xs:simpleType name="OrderTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CreditFirst" />
+      <xs:enumeration value="DebitFirst" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="RemoveItems" nillable="true" type="RemoveItems" />
+  <xs:complexType name="RemoveItems">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="TransactionId" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Items" type="ArrayOfRemovedItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfRemovedItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RemovedItem" nillable="true" type="RemovedItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RemovedItem">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="SequenceNumber" type="xs:long" />
+      <xs:element minOccurs="1" maxOccurs="1" name="RelSequenceNumber" type="xs:int" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RemoveReason" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RemovedItem" nillable="true" type="RemovedItem" />
+  <xs:element name="VirtualItem" nillable="true" type="VirtualItem" />
+  <xs:complexType name="VirtualItem" />
+  <xs:element name="VirtualDepositTicket" nillable="true" type="VirtualDepositTicket" />
+  <xs:complexType name="VirtualDepositTicket">
+    <xs:complexContent mixed="false">
+      <xs:extension base="VirtualItem" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="StringAmount" type="StringAmount" />
+  <xs:complexType name="StringAmount" />
+  <xs:element name="ArrayOfDocumentItem" nillable="true" type="ArrayOfDocumentItem" />
+  <xs:complexType name="ArrayOfDocumentItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DocumentItem" nillable="true" type="DocumentItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentItem">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="DocumentId" type="xs:int" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FrontImageB64" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="BackImageB64" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="BackImageCleanB64" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DocumentItem" nillable="true" type="DocumentItem" />
+</xs:schema>
