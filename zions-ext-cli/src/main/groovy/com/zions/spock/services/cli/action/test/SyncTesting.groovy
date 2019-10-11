@@ -57,7 +57,7 @@ class SyncTesting implements CliAction {
 	@Value('${definition.id:}')
 	String definitionId
 
-	def resultMap = ['PASS':'Passed', 'FAIL': 'Failed']
+	def resultMap = ['PASS':'Passed', 'FAIL': 'Failed', 'IGNORED': 'NotExecuted']
 
 	@Autowired
 	WorkManagementService workManagementService
