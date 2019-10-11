@@ -348,7 +348,7 @@ public class TestManagementService {
 		return resultTestCaseMap
 	}
 	
-	public def ensureTestRun(String collection, String project, def planData, def testcaseData) {
+	public def ensureTestRunForTestCase(String collection, String project, def planData, def testcaseData) {
 		String pid = getPlanId(planData)
 		String tcid = getTestCaseId(testcaseData)
 		String key = "${tcid}_${pid}"
@@ -358,7 +358,7 @@ public class TestManagementService {
 			def adoPlanData = cacheManagementService.getFromCache(pid, ICacheManagementService.PLAN_DATA)
 			def adoTestCaseData = cacheManagementService.getFromCache(tcid, ICacheManagementService.WI_DATA)
 			
-			runData = createRunData(collection, project, adoPlanData, adoTestCaseData)
+			runData = createRunDataForTestCase(collection, project, adoPlanData, adoTestCaseData)
 			if (runData != null) {
 				cacheManagementService.saveToCache(runData, key, ICacheManagementService.RUN_DATA)
 			}
@@ -639,10 +639,10 @@ public class TestManagementService {
 	
 
 	
-	def createRunData(String collection, String project, def planData, String buildId = null ) {
+	def createRunData(String collection, String project, def planData, String buildId = null, boolean automated = false ) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def testpoints = getTestPoints(collection, project, planData)
-		def data = [name: "${planData.name} Run", plan: [id: planData.id], pointIds:testpoints]
+		def data = [name: "${planData.name} Run", plan: [id: planData.id], pointIds:testpoints, automated: automated]
 		if (buildId && buildId.size() > 0) {
 			data.build = [id: buildId]
 		}
@@ -657,10 +657,10 @@ public class TestManagementService {
 		return result
 	}
 	
-	def createRunData(String collection, String project, def adoPlanData, def adoTestCaseData, String buildId = null  ) {
+	def createRunDataForTestCase(String collection, String project, def adoPlanData, def adoTestCaseData, String buildId = null, boolean automated = false  ) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def testpoints = getTestPoints(collection, project, adoPlanData, adoTestCaseData)
-		def data = [name: "${adoPlanData.name}-${adoTestCaseData.fields.'System.Title'} Run", plan: [id: adoPlanData.id], pointIds:testpoints]
+		def data = [name: "${adoPlanData.name}-${adoTestCaseData.fields.'System.Title'} Run", plan: [id: adoPlanData.id], pointIds:testpoints, automated: automated]
 		if (buildId && buildId.size() > 0) {
 			data.build = [id: buildId]
 		}

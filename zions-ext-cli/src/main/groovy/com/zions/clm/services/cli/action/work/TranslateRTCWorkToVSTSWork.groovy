@@ -223,34 +223,6 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		//refresh.
 		if (includes['refresh'] != null) {
 			log.info("Refreshing cache.")
-//			Checkpoint cp = cacheManagementService.getFromCache('query', 'QueryStart')
-//			int page=0
-//			Date currentTimestamp = new Date()
-//			if (cp) {
-//				currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.getTimeStamp())
-//				
-//			}
-//			String pageId = "${page}"
-//			def workItems
-//			new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
-//				workItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
-//			}
-//			while (true) {
-//				def changeList = []
-//				def filtered = filtered(workItems, wiFilter)
-//				filtered.each { workitem ->
-//					int id = Integer.parseInt(workitem.id.text())
-//					changeList.add(id)
-//				}
-//				def wiChanges = workManagementService.refreshCache(collection, tfsProject, changeList)
-//				def rel = workItems.@rel
-//				if ("${rel}" != 'next') break
-//				page++
-//				pageId = "${page}"
-//				new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
-//					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
-//				}
-//			}
 			workManagementService.refreshCacheByTeamArea(collection, tfsProject, areaPath)
 		}
 		if (includes['flushQueries'] != null) {
@@ -266,9 +238,9 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 			}
 			workManagementService.clean(collection, tfsProject, query)
 		}
-		if (includes['cleanDuplicates'] != null) {
-			workManagementService.cleanDuplicates(collection, tfsProject)
-		}
+//		if (includes['cleanDuplicates'] != null) {
+//			workManagementService.cleanDuplicates(collection, tfsProject)
+//		}
 		boolean testData = false
 		def translateMapping
 		new TestDataInterceptor() {}.provideTestData(processTemplateService, './src/test/resources/testdata', !testData, ['getTranslateMapping', 'getLinkMapping']) {
@@ -296,23 +268,12 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 						def wiChanges = ccmWorkManagementService.getWIChanges(id, tfsProject, translateMapping, memberMap)
 						def files = attachmentsManagementService.cacheWorkItemAttachments(id)
 						wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files, wiChanges)
-//							String wiJson = new JsonBuilder(wiChanges).toPrettyString()
-//							File wiFile = new File('./src/integration-test/resources/testdata/wichanges.json')
-//							def of = wiFile.newDataOutputStream()
-//							of << wiJson
-//							of.close()
-							if (wiChanges != null) {
-								clManager.add("${id}", wiChanges)
-							}
-						//}
+						if (wiChanges != null) {
+							clManager.add("${id}", wiChanges)
+						}
 					}
 					clManager.flush();
-					//				def rel = workItems.@rel
-					//				if ("${rel}" != 'next') break
-					//					workItems = clmWorkItemManagementService.nextPage(workItems.@href)
-					//			}
 				}
-				//		workManagementService.testBatchWICreate(collection, tfsProject)
 				//apply work links
 				if (phase == 'worklinks' || phase == 'update' || phase == 'other') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
