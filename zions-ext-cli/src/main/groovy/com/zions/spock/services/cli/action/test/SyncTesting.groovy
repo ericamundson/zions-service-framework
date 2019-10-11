@@ -101,7 +101,7 @@ class SyncTesting implements CliAction {
 
 	def buildAndExecute(def allTestCase) {
 		def plan = ensurePlan()
-		def runData = testManagementService.createRunData('', project, plan, buildId)
+		def runData = testManagementService.createRunData('', project, plan, buildId, true)
 		def resultTestCaseMap = testManagementService.getResultsTestcaseMap("${runData.url}/results")
 		allTestCase.each { tc ->
 			String key = "${tc.title}".bytes.encodeBase64()
