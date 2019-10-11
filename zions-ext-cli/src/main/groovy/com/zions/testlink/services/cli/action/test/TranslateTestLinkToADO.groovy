@@ -305,12 +305,6 @@ class TranslateTestLinkToADO implements CliAction {
 							testcase = testcasea
 						}
 						int aid = testcase.id
-						// generate test data
-						//						String testcasexml = XmlUtil.serialize(testcase)
-						//						resultFile = new File("../zions-ext-services/src/test/resources/testdata/testcase${aid}.xml")
-						//						os = resultFile.newDataOutputStream()
-						//						os << testcasexml
-						//						os.close()
 						String idtype = "${aid}-testcase"
 						if (!idKeyMap.containsKey(idtype)) {
 							testLinkItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
@@ -330,12 +324,6 @@ class TranslateTestLinkToADO implements CliAction {
 					items.each { testItem ->
 						TestPlan testplan = testItem
 						int pid = testplan.id
-						//Generate test data
-						//					String itemXml = XmlUtil.serialize(testplan)
-						//					File resultFile = new File("../zions-ext-services/src/test/resources/testdata/testplan${id}.xml")
-						//					def os = resultFile.newDataOutputStream()
-						//					os << itemXml
-						//					os.close()
 
 
 						def testcaseCallback = null
@@ -428,7 +416,7 @@ class TranslateTestLinkToADO implements CliAction {
 							{
 								testcase = testcasea
 							}
-							Map resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
+							Map resultMap = testManagementService.ensureTestRunForTestCase(collection, tfsProject, testplan, testcase)
 							testLinkItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
 								String rwebId = "${result.id}"
 								testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
