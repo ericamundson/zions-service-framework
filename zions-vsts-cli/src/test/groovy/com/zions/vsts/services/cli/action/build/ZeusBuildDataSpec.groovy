@@ -146,7 +146,9 @@ class ZeusBuildDataSpec extends Specification {
 			'--change.request={{change.request}}',
 			"--in.repo.dir=${iRepoDir}",
 			'--out.repo.dir=build/repo', 
-			'--release.date={{release.date}}'
+			'--release.date={{release.date}}',
+			'--rollup=false'
+			
 		]
 		return args
 	}
