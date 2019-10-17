@@ -87,6 +87,54 @@ class ZeusBuildDataSpec extends Specification {
 		success
 	}
 	
+	def 'execute rollup flow'() {
+		setup: 'test data for stubs'
+		URI uri = this.getClass().getResource('/testdata').toURI()
+		File tDir = new File(uri)
+		def testFiles = []
+		tDir.eachFile { File file ->
+			if (file.name.startsWith('rollup')) testFiles.add(file)
+		}
+		
+		and: 'set execute arguments'
+		URI zuri = this.getClass().getResource('/Zeus').toURI()
+		File ztDir = new File(zuri)
+		String zPath = ztDir.absolutePath
+		def appArgs = new DefaultApplicationArguments(loadRollupArgs(zPath))
+
+		and: 'ADO rest data'
+		def rMap = [:]
+		testFiles.each { File f ->
+			def request = dataGenerationService.generate(f)
+			def data = new JsonSlurper().parseText(request.data)
+			String url = "${request.url}"
+			rMap[url] = data
+		}
+				
+		and: 'stub genericRestClient calls'
+		genericRestClient.get(_) >> { args ->
+			def d = args[0]
+			String auri = "${d.uri}"
+			if (!auri.startsWith('https://dev.azure')) {
+				auri = "https://dev.azure.com/zionseto${d.uri}"
+			}
+			def out = rMap[auri]
+			return out
+		}
+		
+		when: 'run execute'
+		boolean success = true
+		try {
+			zeusBuildData.execute(appArgs)
+		} catch (e) {
+			e.printStackTrace()
+			success = false
+		}
+		
+		then: 'No exception'
+		success
+	}
+
 	private String[] loadArgs(String iRepoDir) {
 		String[] args = [
 			'--tfs.url=https://dev.azure.com/zionseto', 
@@ -102,6 +150,22 @@ class ZeusBuildDataSpec extends Specification {
 		]
 		return args
 	}
+	private String[] loadRollupArgs(String iRepoDir) {
+		String[] args = [
+			'--tfs.url=https://dev.azure.com/zionseto',
+			'--tfs.user=svc-cloud-vsmigration',
+			'--tfs.token=me6cvg6ggjbhbcy4aj5v2xb7hnfvjtfzf4bud6wf5wkmxe2z6slq',
+			'--tfs.project=Zeus',
+			'--build.id=15677',
+			'--out.dir=build/',
+			'--change.request={{change.request}}',
+			"--in.repo.dir=${iRepoDir}",
+			'--out.repo.dir=build/repo',
+			'--release.date={{release.date}}',
+			'--rollup=true'
+		]
+		return args
+	}
 
 }
 
@@ -113,7 +177,7 @@ class ZeusBuildDataSpecConfig {
 	def factory = new DetachedMockFactory()
 	
 	@Autowired
-	@Value('${cache.location:cache}')
+	@Value('${cache.location:build/cache}')
 	String cacheLocation
 
 	@Bean

@@ -18,9 +18,32 @@ import groovyx.net.http.ContentType
 import org.apache.commons.lang.StringEscapeUtils
 
 /**
- * List out project and team data.
+ * Create spock report with test plan and associated test case.
  * 
- * @author Matt
+ * <p><b>Design:</b></p>
+ * <img src="SyncTesting_class_diagram.png"/>
+ * @author z091182
+ * 
+ * @startuml SyncTesting_class_diagram.png
+ * annotation Autowired
+ * annotation Component
+ * class SyncTesting {
+ * 
+ * .. called by CliApplication to execute test case reporting behavior ..
+ * +execute(ApplicationArguments args)
+ * 
+ * }
+ * SyncTesting .. Autowired : annotate members for Spring instance
+ * SyncTesting .. Component: define type as Spring object
+ * package com.zions.vsts.services.work {
+ * SyncTesting --> WorkManagementService: @Autowired workManagmentService
+ * }
+ * SyncTesting --> com.zions.spock.services.test.SpockQueryService: @Autowired spockQueryService
+ * SyncTesting --> com.zions.common.services.cache.ICacheManagementService: @Autowired cacheManagementService
+ * SyncTesting --> com.zions.vsts.services.test.TestManagementService: @Autowired testManagementService
+ * SyncTesting --> com.zions.common.services.rest.IGenericRestClient: @Autowired genericRestClient
+ * @enduml
+ * 
  *
  */
 @Component
@@ -73,6 +96,10 @@ class SyncTesting implements CliAction {
 	@Autowired
 	IGenericRestClient genericRestClient
 
+	/**
+	 *  
+	 * @see com.zions.common.services.cli.action.CliAction#execute(org.springframework.boot.ApplicationArguments)
+	 */
 	@Override
 	public Object execute(ApplicationArguments data) {
 		String query = "SELECT [System.Id],[System.WorkItemType],[System.Title],[Microsoft.VSTS.Common.Priority],[System.AssignedTo],[System.AreaPath] FROM WorkItems WHERE [System.TeamProject] = '${project}' AND [System.WorkItemType] IN GROUP 'Microsoft.TestCaseCategory' AND [System.AreaPath] UNDER '${areaPath}' AND [System.Tags] CONTAINS '${mainTag}'"
@@ -107,7 +134,7 @@ class SyncTesting implements CliAction {
 			String key = "${tc.title}".bytes.encodeBase64()
 
 			String outcome = "${tc.result}"
-			log.info "Outcome:  ${outcome}"
+			log.info "Test case <${tc.title}>, outcome:  ${outcome}"
 			if (resultMap[outcome]) {
 				def adoTestCase = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
 				//def runData = testManagementService.createRunData('', project, plan, adoTestCase)

@@ -94,7 +94,7 @@ class RollupManagementServiceSpecConfig {
 	def mockFactory = new DetachedMockFactory()
 	
 	@Autowired
-	@Value('${cache.location}')
+	@Value('${cache.location:build/cache}')
 	String cacheLocation
 	
 	@Bean

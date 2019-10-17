@@ -558,6 +558,28 @@ public class BuildManagementService {
 				)
 		return result
 	}
+	
+	public def getRelatedBuilds(def collection, def project, def build) {
+		//log.debug("BuildManagementService::getBuild -- buildName = "+repo.name+"-"+qualifier)
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		//def builds = []
+		//int s = 'refs/heads/'.length()
+		String bName = "${build.sourceBranch}"
+		String repoId = "${build.repository.id}"
+		String defId = "${build.definition.id}"
+		def query = ['api-version':'5.1','branchName': bName, definitions: defId ]
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds",
+				query: query,
+				)
+		def builds = []
+		if (result) {
+			builds.addAll(result.'value')
+		}
+		return builds
+	}
 
 	public def getDRBuild(def collection, def project, def repo, def qualifier) {
 		log.debug("BuildManagementService::getDRBuild -- buildName = "+repo.name+"-dr-"+qualifier)
@@ -587,24 +609,79 @@ public class BuildManagementService {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		def query = ['api-version':'5.1']
+		def wis = []
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
 				query: query,
 				)
-
+		if (result) {
+			result.'value'.each { build ->
+				wis.add(build)
+			}
+		}
+		return wis
 	}
 	
+	public def getExecutionWorkItemsByBuilds(String collection, String project, def builds) {
+		def wis = []
+		builds.each { build -> 
+			String bid = "${build.id}"
+			def owis = getExecutionWorkItems(collection, project, bid)
+			wis.addAll(owis)
+		}
+//		def swis = wis.toSet()
+		return wis
+	}
+	
+	public def getTags(String collection, String project, String prefix = null) {
+		def tags = []
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def query = ['api-version':'5.1']
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/tags",
+				query: query,
+				)
+				
+		if (result) {
+			result.each { tag ->
+				String stag = "${tag}"
+				if (!prefix || (prefix && stag.startsWith(prefix))) {
+					tags.add(stag)
+				}
+			}
+		}
+		return tags
+	}
+
 	public def getExecutionChanges(String collection, String project, String buildId, boolean includeSourceChange = false) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		def query = ['api-version':'5.1', includeSourceChange: includeSourceChange]
+		def changes = []
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/changes",
 				query: query,
 				)
-
+		if (result) {
+			result.'value'.each { change ->
+				changes.add(change)
+			}
+		}
+		return changes
+	}
+	
+	public def getExecutionChangesByBuilds(String collection, String project, def builds, boolean includeSourceChange = false) {
+		def changes = []
+		builds.each { build ->
+			String bid = "${build.id}"
+			def ochanges = getExecutionChanges(collection, project, bid, includeSourceChange)
+			changes.addAll(ochanges)
+		}
+		return changes
 	}
 	
 	public def getExecutionResource(String url) {

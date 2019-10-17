@@ -79,6 +79,9 @@ class ZeusBuildData implements CliAction {
 	
 	@Value('${release.id:}')
 	String releaseId
+	
+	@Value('${rollup:false}')
+	boolean rollup
 
 	@Override
 	public def execute(ApplicationArguments data) {
@@ -102,9 +105,25 @@ class ZeusBuildData implements CliAction {
 		try {
 			releaseDate = data.getOptionValues('release.date')[0]
 		} catch (e) {}
-		def buildWorkitems = buildManagementService.getExecutionWorkItems(collection, project, buildId)
+		def build = buildManagementService.getExecution(collection, project, buildId)
+		String sourceBranch = "${build.sourceBranch}"
+		//if (sourceBranch.contains("release/")) {
+		if (!releaseId || releaseId.size() == 0) {
+			releaseId = "{{${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}}}"
+		}
+		def builds = null
+		if (rollup) {
+			builds = buildManagementService.getRelatedBuilds(collection, project, build)
+		}
+		def buildWorkitems = null
+		if (!builds) {
+			buildWorkitems = buildManagementService.getExecutionWorkItems(collection, project, buildId)
+		} else {
+			buildWorkitems = buildManagementService.getExecutionWorkItemsByBuilds(collection, project, builds)
+			
+		}
 		List wi = []
-		buildWorkitems.'value'.each { ref ->
+		buildWorkitems.each { ref ->
 			wi.push("${ref.id}")
 		}
 		if (wi.empty) {
@@ -112,7 +131,12 @@ class ZeusBuildData implements CliAction {
 			System.exit(1)
 		}
 		def wis = wi.toSet()
-		def buildChanges = buildManagementService.getExecutionChanges(collection, project, buildId, true)
+		def buildChanges = null
+		if (!builds) {
+			buildChanges = buildManagementService.getExecutionChanges(collection, project, buildId, true)
+		} else {
+			buildChanges = buildManagementService.getExecutionChangesByBuilds(collection, project, builds, true)
+		}
 		def fList = []
 		def fListWFolders = []
 		def affiliates = []
@@ -127,7 +151,7 @@ class ZeusBuildData implements CliAction {
 				fListWFolders.push("${fPath.substring(1).replace("\\", "/")}")
 			}
 		}
-		buildChanges.'value'.each { bchange ->
+		buildChanges.each { bchange ->
 			if (bchange.location) {
 				String url = "${bchange.location}/changes"
 				def changes = buildManagementService.getExecutionResource(url)
@@ -141,7 +165,7 @@ class ZeusBuildData implements CliAction {
 //					if (fpath.contains('.keep')) {
 //						fListWFolders.push(fpath.replace("\\", "/"))
 //					}
-					if (!dList.contains("${fpath.substring(1)}") && change.item.path && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
+					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
 						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
@@ -161,12 +185,6 @@ class ZeusBuildData implements CliAction {
 		}
 		Set affiliatesList = affiliates.toSet()
 		String sep = System.getProperty("line.separator")
-		def build = buildManagementService.getExecution(collection, project, buildId)
-		String sourceBranch = "${build.sourceBranch}"
-		//if (sourceBranch.contains("release/")) {
-		if (!releaseId || releaseId.size() == 0) {
-			releaseId = "{{${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}}}"
-		}
 		def fListSet = fList.toSet()
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()
