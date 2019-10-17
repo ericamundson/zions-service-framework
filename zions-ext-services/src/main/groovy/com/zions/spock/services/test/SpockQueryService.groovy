@@ -26,6 +26,14 @@ class SpockQueryService {
 		testClassXml.feature.each { feature -> 
 			String title = "${className}: ${feature.@name}"
 			String result = "${feature.@result}" 
+			String durationStr = "${feature.@time}"
+			int durI = 0
+			if (durationStr && durationStr.contains(' seconds')) {
+				int l = ' seconds'.length()
+				durationStr = durationStr.substring(0, durationStr.length() - l)
+				double duration = Double.parseDouble(durationStr)
+				durI = duration * 1000
+			}
 			def bs = []
 			feature.block.each { block ->
 				def b = [kind: "${block.@kind}", text: "${block.text.text()}", code: []]
@@ -39,7 +47,7 @@ class SpockQueryService {
 				}
 				bs.push(b)
 			}
-			def testCaseInfo = [title: title, blocks: bs, result: result]
+			def testCaseInfo = [title: title, blocks: bs, duration: durI, result: result]
 			testCase.add(testCaseInfo)
 		}
 	

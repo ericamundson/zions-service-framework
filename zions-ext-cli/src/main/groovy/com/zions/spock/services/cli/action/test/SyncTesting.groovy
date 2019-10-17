@@ -162,6 +162,7 @@ class SyncTesting implements CliAction {
 		String outcome = "${tc.result}"
 		ex.outcome = "${resultMap[outcome]}"
 		ex.state = 'Completed'
+		ex.durationInMs = tc.duration
 		if (buildId && buildId.size()>0) {
 			ex.build = [ id: buildId ]
 		}
@@ -169,6 +170,7 @@ class SyncTesting implements CliAction {
 		testManagementService.sendResultChanges('', project, exData, key)
 
 	}
+	
 
 	def ensurePlan() {
 		def plan = testManagementService.getPlan( '', project, planName )
