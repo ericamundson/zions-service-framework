@@ -76,6 +76,7 @@ class ZeusBuildDataSpec extends Specification {
 		
 		when: 'run execute'
 		boolean success = true
+		zeusBuildData.rollup = false
 		try {
 			zeusBuildData.execute(appArgs)
 		} catch (e) {
@@ -124,6 +125,7 @@ class ZeusBuildDataSpec extends Specification {
 		
 		when: 'run execute'
 		boolean success = true
+		zeusBuildData.rollup = true
 		try {
 			zeusBuildData.execute(appArgs)
 		} catch (e) {
