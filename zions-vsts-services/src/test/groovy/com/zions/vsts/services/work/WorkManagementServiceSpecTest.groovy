@@ -250,7 +250,7 @@ class WorkManagementServiceSpecTest extends Specification {
 		}
 			
 		and: 'stub for any work item deletes'
-		underTest.genericRestClient(_) >> { args ->
+		underTest.genericRestClient.delete(_) >> { args ->
 			
 		}
 		
