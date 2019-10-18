@@ -581,7 +581,7 @@ class ClmRequirementsManagementService {
 //				cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
 //			}
 			if (info) {
-				log.debug("Suspect links for ${sid}")
+			//	log.debug("Suspect links for ${sid}")
 			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
@@ -590,7 +590,7 @@ class ClmRequirementsManagementService {
 				closure.call('WorkItem', wiData)
 			}
 			} else {
-				log.debug("No links for ${sid}")
+				//log.debug("No links for ${sid}")
 			}
 
 		}
