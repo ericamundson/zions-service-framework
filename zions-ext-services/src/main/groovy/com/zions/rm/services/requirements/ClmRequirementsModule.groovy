@@ -44,26 +44,56 @@ class ClmRequirementsModule  extends ClmArtifact {
 	def setDocumentType() {
 		
 	}
+	/*
 	String getTargetFolder() {
 		// Get module artifact type 
-		String artifactType = this.getArtifactType()
-		if (artifactType == 'Functional Spec') {
+		String wiType = this.getTfsWorkItemType()
+		if (wiType == 'Functional Spec') {
 			return '/R3/Functional Specs'
 		}
-		else if (artifactType == 'Interface Spec') {
+		else if (wiType == 'Interface Spec') {
 			return '/R3/ISZ'
 		}
-		else if (artifactType == 'UI Spec') {
+		else if (wiType == 'UI Spec') {
 			return '/R3/Screen Alignment'
 		}
-		else if (artifactType == 'Reporting RRZ' || this.appendedDocumentType == 'Reporting RRZ') {
+		else if (wiType == 'Reporting RRZ' || wiType == 'Reporting RSZ') {
 			return '/R3/Reporting'
 		}
-		else if (artifactType == 'Statements and Notices RRZ Spec' || this.appendedDocumentType == 'Statements and Notices RRZ Spec') {
+		else if (wiType == 'SnF RRZ' || wiType == 'SnF RSZ') {
 			return '/R3/Statements and Notices'
 		}
 		else {
 			return '/' // Put it in root
 		}
 	}
+	String getMetaTemplate() {
+		// Get module artifact type
+		String wiType = this.getTfsWorkItemType()
+		if (wiType == 'Functional Spec') {
+			return 'DNG-Functional Specification'
+		}
+		else if (wiType == 'Interface Spec') {
+			return 'DNG-ISZ'
+		}
+		else if (wiType == 'UI Spec') {
+			return 'DNG-UI Specification'
+		}
+		else if (wiType == 'Reporting RRZ') {
+			return 'DNG-Reporting RRZ'
+		}
+		else if (wiType == 'Reporting RSZ') {
+			return 'DNG-Reporting RSZ'
+		}
+		else if (wiType == 'SnF RRZ') {
+			return 'DNG-SnF RRZ'
+		}
+		else if (wiType == 'SnF RSZ') {
+			return 'DNG-SnF RSZ'
+		}
+		else {
+			return 'Basic' 
+		}
+	}
+	*/
 }

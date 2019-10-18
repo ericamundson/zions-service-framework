@@ -226,6 +226,7 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 				log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
 			}
 		}
+		//def linkMapping = processTemplateService.getLinkMapping(mapping)
 		if (includes['phases'] != null) {
 			log.info("Processing artifacts")
 			int phaseCount = 0
@@ -248,17 +249,28 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 					log.debug("finished flushing clmanager for phaseCount ${phaseCount}")
 				}
 				if (phase == 'links') {
+//					items.each { rmItem ->
+//						//saveDatawarehouseItemToAdoItemManager(rmItem, clManager, tfsProject, memberMap)
+//						String sid = "${rmItem.reference_id}"
+//						
+//						clmRequirementsManagementService.getLinkInfoFromCache(sid)
+//						
+//						//get linkinfo object from cache
+//						//if linkinfo item count > 0
+//						//	do the needful for creating change objects with the links
+//						//sometimes this is blank?  some kind of error!
+//					}
+//					
 					items.each { rmItem ->
-						//saveDatawarehouseItemToAdoItemManager(rmItem, clManager, tfsProject, memberMap)
-						String sid = "${rmItem.reference_id}"
-						
-						clmRequirementsManagementService.getLinkInfoFromCache(sid)
-						
-						//get linkinfo object from cache
-						//if linkinfo item count > 0
-						//	do the needful for creating change objects with the links
-						//sometimes this is blank?  some kind of error!
+						int id = Integer.parseInt("${rmItem.reference_id}")
+						clmRequirementsManagementService.getWILinkChanges(id, tfsProject) { key, changes ->
+							if (key == 'WorkItem') {
+								clManager.add("${id}", changes)
+							}
+						}
 					}
+					log.debug("Flushing links for phaseCount ${phaseCount}")
+					clManager.flush();
 				}
 				if (phase == 'audit') {
 					//log.debug("auditing migrated artifacts")
