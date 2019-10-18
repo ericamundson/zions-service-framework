@@ -95,11 +95,15 @@ class ClmRequirementsManagementService {
 				headers: [Accept: 'application/xml'] );
 		def moduleList = []
 		// Get all module uris from collection
-		def modules =  result.'**'.findAll { p ->
+		if (result) {
+			def modules =  result.'**'.findAll { p ->
 			"${p.name()}" == 'relation'
+			}
+			modules.forEach { node ->
+				moduleList.add("${node}") }
 		}
-		modules.forEach { node ->
-			moduleList.add("${node}")
+		else {
+			log.info("Nothing returned from DNG query: $uri")
 		}
 		return moduleList
 	}
@@ -450,7 +454,7 @@ class ClmRequirementsManagementService {
 	}
 	private String fixSpecialCharacters(String xml) {
 		// Replace special characters for single/double quotes, dashes and trash characters
-		return xml.replaceAll('Ã¢&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(2|3);', "'").replaceAll('â&#15(2|3);',"'").replaceAll('Ã&#131;Â¢&#128;&#15(2|3);',"'").replaceAll('&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(6|7);','&quot;').replace('â&#128;&#147;','-').replace('Ã&#131;Â¢&#128;&#147;','-').replace('Ã&#131;&#130;Ã&#130;', '').replace('&#128;',"'").replace('Â ', '').replace('Â ', '').replace('Â', '')
+		return xml.replaceAll('Ã¢&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(2|3);', "'").replaceAll('â&#15(2|3);',"'").replaceAll('Ã&#131;Â¢&#128;&#15(2|3);',"'").replaceAll('&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(6|7);','&quot;').replace('â&#128;&#147;','-').replace('Ã&#131;Â¢&#128;&#147;','-').replace('Ã&#131;&#130;Ã&#130;', '').replace('&#128;',"'").replace('Â ', ' ').replace('Â ', ' ').replace('Â', '')
 	}
 	private String parseHref(String inString) {
 		def hrefIndex = inString.indexOf('href=')

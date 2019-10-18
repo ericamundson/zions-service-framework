@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter
 @Component
 @Slf4j
 class SmartDocManagementService {
+	ServerAltCreds serverAltCreds
 	class WorkItemDetails {
 		WorkItemDetails(String details, Integer i) {
 			detailString = details
@@ -29,6 +30,27 @@ class SmartDocManagementService {
 		String detailString
 		Integer index
 	}
+	class ServerAltCreds {
+		def curIndex
+		def serverCount
+		def serverCreds = []
+		ServerAltCreds() {
+			curIndex = -1
+			serverCreds = [[user: 'svc-cloud-vsmigration@zionsbancorporation.onmicrosoft.com', pswd: 'me6cvg6ggjbhbcy4aj5v2xb7hnfvjtfzf4bud6wf5wkmxe2z6slq'],[user: 'svc-cloud-vsmigration002@zionsbancorporation.onmicrosoft.com', pswd: 'vcbqfunfkfyqxk2i5wgldk3qeqzixocljalgzbzqsubynpciq2da'],[user: 'svc-cloud-vsmigration003@zionsbancorporation.onmicrosoft.com', pswd: 'ideocq4d6kzq4ild6qj25ysobtxno7jccvpn6xozrmgxjnndkura'],[user: 'svc-cloud-vsmigration004@zionsbancorporation.onmicrosoft.com', pswd: 'ms4zekfl2436dyvpvv4apwcjamonoeq5wjnmowgq6aymkrlykv2a'],[user: 'rbhuet', pswd: 'Asc3ndant']] //in_altCreds
+			if (serverCreds) serverCount = serverCreds.size()
+			
+		}
+		def getNextCreds() {
+			curIndex++
+			if (curIndex >= serverCount) curIndex = 0
+			return serverCreds[curIndex]
+		}
+	}
+/*	
+	@Autowired
+	@Value('${tfs.serverAltCreds}')
+	String tfsServerAltCreds
+*/
 
 	@Autowired(required=false)
 	private IGenericRestClient mrGenericRestClient
@@ -37,10 +59,10 @@ class SmartDocManagementService {
 	ICacheManagementService cacheManagementService
 	
 	public SmartDocManagementService() {
-		// Do nothing
+		serverAltCreds = new ServerAltCreds()
 	}
 	
-	def ensureSmartDoc(def module, def tfsUrl, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def tfsAltUser, def tfsAltPassword, def mrTemplate) {
+	def ensureSmartDoc(def module, def tfsUrl, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def mrTemplate, def mrFolder) {
 		String action
 		def date = new Date()
 		String body;
@@ -49,6 +71,7 @@ class SmartDocManagementService {
 		String userPassword = ""
 		String wiDetails
 		def index = 0
+		def altCreds = serverAltCreds.getNextCreds()
 		if (module.isNew) {
 			action = 'Create' // Create new SmartDoc (root document work item is new in ADO)
 			wiDetails = """[{"id":"${getVstsID(module)}","linkType":"","links":${getWorkitemDetails(0, module).detailString}}]"""
@@ -59,8 +82,8 @@ class SmartDocManagementService {
 		}
 		body = """
 			{
-			"userId": "$tfsAltUser",
-			"userPassword":"$tfsAltPassword",
+			"userId": "${altCreds.user}",
+			"userPassword":"${altCreds.pswd}",
 			"serverUrl":"$tfsUrl/$collection",
 			"domain":"$domain",
 			"projectUri":"$tfsProjectURI",
@@ -72,7 +95,7 @@ class SmartDocManagementService {
 			"collectionId":"$tfsCollectionGUID",
 			"docName": "$docTitle",
 			"templateName": "$mrTemplate",
-			"folder": "${module.getTargetFolder()}",
+			"folder": "$mrFolder",
 			"autoRootCreation": false,
 			"workItemDetails": ${wiDetails}
 			}
