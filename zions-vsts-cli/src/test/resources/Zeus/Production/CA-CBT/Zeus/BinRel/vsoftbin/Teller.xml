@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TellerDetails xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Teller>
+    <Business_Date>20190308</Business_Date>
+    <Inst_Id>140</Inst_Id>
+    <Branch_Id>101</Branch_Id>
+    <WorkStation_Id>UT-108D-032JGX</WorkStation_Id>
+    <Teller_Id>82</Teller_Id>
+    <Last_Sequence_No>100020002</Last_Sequence_No>
+  </Teller>
+</TellerDetails>

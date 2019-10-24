@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ErrorMessages>
+  <Error Code="-1" Message="User canceled the FCC scan window" />
+  <Error Code="-2" Message="Device error" />
+  <Error Code="-3" Message="Generic exception while communicating to the Aggregator" />
+  <Error Code="-4" Message="Invalid parameter" />
+  <Error Code="-5" Message="Invalid institution" />
+  <Error Code="-6" Message="Invalid branch" />
+  <Error Code="-7" Message="Teller configuration error" />
+  <Error Code="-8" Message="Transaction file is not accessible" />
+  <Error Code="-9" Message="Incomplete transaction file" />
+  <Error Code="-10" Message="Transaction file moved to the NotSent folder" />
+  <Error Code="-11" Message="Transaction cannot be found" />
+  <Error Code="-12" Message="Retry to transmit NotSent transaction still failed" />
+  <Error Code="-13" Message="Transaction not started - TCStartEditTran is not called yet" />
+  <Error Code="-14" Message="Invalid Teller ID" />
+  <Error Code="-15" Message="Invalid Session ID" />
+  <Error Code="-16" Message="No virtual credit" />
+  <Error Code="-17" Message="Virtual Doc ID is not defined" />
+  <Error Code="-18" Message="Cannot remove item" />
+  <Error Code="-19" Message="Cannot delete transaction" />
+  <Error Code="-20" Message="Incorrect bond item" />
+  <Error Code="-21" Message="Failed to create SpnLookup" />
+  <Error Code="-99" Message="Other error" />
+</ErrorMessages>

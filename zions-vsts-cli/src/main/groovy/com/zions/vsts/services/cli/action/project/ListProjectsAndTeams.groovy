@@ -24,22 +24,22 @@ class ListProjectsAndTeams implements CliAction {
 
 	@Override
 	public Object execute(ApplicationArguments args) {
-		def projects = projectManagementService.getProjects('')
-		projects.'value'.each { project -> 
-			// TODO: Do some code to write project stuff
-			String pName = "${project.name}"
-			println "project: ${pName}"
-			def teams = projectManagementService.getTeams('', pName)
-			teams.value.each { team ->
-				println "     team:  ${team.name}"
-			}
-			// TODO: Loop to write some team stuff.
-		}
-//		def users = memberManagementService.getUsers('')
-//		
-//		users.each { user -> 
-//			println user.displayName
+//		def projects = projectManagementService.getProjects('')
+//		projects.'value'.each { project -> 
+//			// TODO: Do some code to write project stuff
+//			String pName = "${project.name}"
+//			println "project: ${pName}"
+//			def teams = projectManagementService.getTeams('', pName)
+//			teams.value.each { team ->
+//				println "     team:  ${team.name}"
+//			}
+//			// TODO: Loop to write some team stuff.
 //		}
+		def users = memberManagementService.getUsers('')
+		
+		users.each { user -> 
+			println user.displayName
+		}
 		return null
 	}
 

@@ -1,0 +1,8 @@
+{
+    "url": "https://dev.azure.com/ZionsETO/_apis/git/repositories/84fef424-8673-4193-8628-504d64cb285f/commits/8c3521288810afb93ef75a01ba219a0ff716e004/changes",
+    "query": {
+        "api-version": "5.1"
+    },
+    "type": "json",
+    "data": "{\n    \"changeCounts\": {\n        \"Add\": 1\n    },\n    \"changes\": [\n        {\n            \"item\": {\n                \"objectId\": \"a1fc39c070f4f8ba52f278c15cd4d2121d07c8a8\",\n                \"gitObjectType\": \"blob\",\n                \"commitId\": \"8c3521288810afb93ef75a01ba219a0ff716e004\",\n                \"path\": \"/.gitignore\",\n                \"url\": \"https://dev.azure.com/ZionsETO/43518088-539f-4983-819e-af90f4c48c72/_apis/git/repositories/84fef424-8673-4193-8628-504d64cb285f/items/.gitignore?versionType=Commit&version=8c3521288810afb93ef75a01ba219a0ff716e004\"\n            },\n            \"changeType\": \"add\"\n        }\n    ]\n}"
+}

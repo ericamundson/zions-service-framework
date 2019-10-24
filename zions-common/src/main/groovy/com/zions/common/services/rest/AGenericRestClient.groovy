@@ -140,20 +140,26 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		return resp.data;
 	}
 	
-	def writeTestData(def data, String url, def query) {
+	def writeTestData(def data, String url, def query, def method = 'get', def body = null) {
 		long ts = new Date().time
 		if (this.outputTestDataType == 'json') {
 			File dir = new File(this.outputTestDataLocation)
 			File of = new File(dir, "${this.outputTestDataPrefix}${ts}.json")
 			def os = of.newDataOutputStream()
-			def info = [url: "${url}", query: query, type: "${this.outputTestDataType}", data: "new JsonBuilder(data).toPrettyString()}"]
+			def info = [method: method, url: "${url}", query: query, type: "${this.outputTestDataType}", data: "${new JsonBuilder(data).toPrettyString()}"]
+			if (body) {
+				info.body = body
+			}
 			os << "${new JsonBuilder(info).toPrettyString()}";
 			os.close()
 		} else if (this.outputTestDataType == 'xml') {
 			File dir = new File(this.outputTestDataLocation)
 			File of = new File(dir, "${this.outputTestDataPrefix}${ts}.json")
 			def os = of.newDataOutputStream()
-			def info = [url: "${url}", query: query, type: "${this.outputTestDataType}", data: "${new XmlUtil().serialize(data)}"]
+			def info = [method: method, url: "${url}", query: query, type: "${this.outputTestDataType}", data: "${new XmlUtil().serialize(data)}"]
+			if (body) {
+				info.body = body
+			}
 			os << "${new JsonBuilder(info).toPrettyString()}";
 			os.close()
 		}
@@ -254,6 +260,18 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def post(Map input) {
+		String url
+		def query = null
+		def body = null
+		if (outputTestDataFlag) {
+			url = "${input.uri}"
+			if (input.query) {
+				query = input.query
+			}
+			if (input.body) {
+				body = input.body
+			}
+		}
 		boolean withHeader = false
 		if (input.withHeader) {
 			withHeader = input.withHeader
@@ -284,6 +302,9 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			}
 			def result = [data: resp.data, headers: headerMap]
 			return result
+		}
+		if (outputTestDataFlag) {
+			writeTestData(resp.data, url, query, 'post', body)
 		}
 		return resp.data;
 	}

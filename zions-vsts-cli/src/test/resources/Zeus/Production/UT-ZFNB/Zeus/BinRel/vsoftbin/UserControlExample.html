@@ -1,0 +1,425 @@
+<html>
+<head></head>
+<body onload="Load();">
+<form id="Form1">
+<table width="100%">
+<tr><td valign="top">
+
+<input type="button" onclick="RunTeller();" name="RunTeller1" value="Scan Checks" /> <br />
+<input type="button" onclick="GetCheckList();" name="GetCheckList1" value="Get Check List" /> 
+<input type="button" onclick="GetXMLList();" name="GetXml" value="Get XML" /> 
+<p></p>
+<input type="button" onclick="TransmitFile();" name="btnTransmitFile" value="Transmit" /> 
+<input type="button" onclick="DeleteFile();" name="btnDeleteFile" value="Delete" /> 
+<hr />
+<input type="button" onclick="ScanDocuments();" name="ScanDocs1" 
+        value="Scan Non Check Documents" style="width: 214px" />  <br />
+<input type="button" onclick="GetDocumentList();" name="GetDocumentList1" value="Get Document List" /> 
+
+
+</td><td valign="top">
+<table style="border-style:solid;border-color:Gray;border-width:thin;border-collapse:collapse;margin:1,1,1,1" cellpadding="1" width="300">
+<tr><td style="font-size: x-small;font-family:Arial;color:Blue" colspan="2"><i>tellerControl1.Start Parameters</i></td></tr>
+<tr><td style="font-size: x-small;font-family:Arial">Date:</td><td><input type="text" id="txtDate" value="" /></td></tr>
+<tr><td style="font-size: x-small;font-family:Arial">Teller Id:</td><td><input type="text" id="txtTellerId" value="" /></td></tr>
+<tr><td style="font-size: x-small;font-family:Arial">Credit Account:</td><td><input type="text" id="txtCreditAccount" value="" /></td></tr>
+<tr><td style="font-size: x-small;font-family:Arial">Credit Amount:<br /><font size=1 color="blue">(No decimals, 10.00 is 1000)</font></td><td><input type="text" id="txtCreditAmount" value="" /></td></tr>
+<!--<tr><td style="font-size: x-small;font-family:Arial">Debit Amount:</td><td><input type="text" id="depositAmount" name="depositAmount" value="" /></td></tr>-->
+<tr><td style="font-size: x-small;font-family:Arial">Transaction ID:</td><td><input type="text" id="tranId" name="tranId" value="" /></td></tr>
+
+</table>
+<table><tr><td style="font-size: x-small;font-family:Arial">Return Value:</td><td><input type="text" id="txtReturnValue" name="tranId" value="" /></td></tr></table>
+</td>
+<td valign="top" style="font-size: x-small;font-family:Arial;color:Blue;">
+<div style="border-style:solid;border-color:Gray;border-width:thin;border-collapse:collapse;margin:1,1,1,1">
+<input type="checkbox" id="chkBankOfFirstDeposit" onclick="BankOfFirstDepositEnabled();" />&nbsp;<i>Bank of First Deposit</i>
+<table width="100%">
+<tr><td style="font-size: x-small;font-family:Arial">Name</td><td style="font-size: x-small;font-family:Arial"><input type="text" id="txtBofdName" /></td></tr>
+<tr><td style="font-size: x-small;font-family:Arial">Routing</td><td style="font-size: x-small;font-family:Arial"><input type="text" id="txtBofdRouting" /></td></tr>
+<tr><td style="font-size: x-small;font-family:Arial" colspan="2"><input type="checkbox" id="chkScanDepositTicket" />ScanDepositTicket</td></tr>
+<tr><td style="font-size: x-small;font-family:Arial" colspan="2"><input type="checkbox" id="chkIsSharedBranch" onclick="SharedBranchDepositTicket();" />IsSharedBranch</td></tr>
+</table>
+</div>
+&nbsp;
+<div style="border-style:solid;border-color:Gray;border-width:thin;border-collapse:collapse;margin:1,1,1,1">&nbsp;
+<i>Predefined Items</i> <br />
+<font size=1>(No decimals, 10.00 is 1000)</font>
+<table>
+<tr valign="top"><td style="font-size: x-small;font-family:Arial"><input type="checkbox" id="chkCashIn" onclick="CashIn_Clicked('chkCashIn', 'txtCashIn');" value="CashIn" />Cash In</td><td style="font-size: x-small;font-family:Arial" align="right">  <input id="txtCashIn" type="text" style="width: 80px;" value="0" /></td></tr>
+<tr><td style="font-size: x-small;font-family:Arial"><input  type="checkbox" id="chkCashOut" onclick="CashIn_Clicked('chkCashOut', 'txtCashOut');" value="CashOut" />Cash Out</td><td style="font-size: x-small;font-family:Arial" align="right"> <input id="txtCashOut" type="text" style="width: 80px" value="0" /></td></tr>
+</table>
+</div>
+
+</td>
+<td valign="top">&nbsp;<object id="vsoftScanner" classid="clsid:75ABFAD1-3181-33FE-8694-F1A18D02B942" style="width: 76px; height: 60px" ></object></td>
+</tr>
+</table>
+<hr />
+<table>
+<tr><td><input type="button" onclick="ClearTextArea();" name="ClearBox" value="Clear" /> <br /></td></tr>
+<tr><td width="500">Returned List</td><td width="500"><!--Remove Item List--></td></tr>
+<tr><td id="CheckListTable"></td><td id="RemoveItemTable"></td></tr>
+<tr><td>
+<!-- <input type="button" onclick="Reopen();" name="ReopenButton" value="Reopen" /> -->
+<!--
+<input type="button" onclick="ScanMicrList();" name="MicrList" value="MicrList" />
+<input type="button" onclick="Reopen1();" name="ReOpen" value="ReOpen" />
+<input type="button" onclick="Scan();" name="OpenNew" value="TotalAmount" />
+<input type="button" onclick="ScanCheckAmountList();" name="CheckAmountList" value="CheckAmountList" />
+<input type="button" onclick="TransmitFile();" name="Transmit" value="Transmit" /> 
+-->
+
+</td></tr>
+<tr><td align=right>
+
+</td></tr></table>
+<textarea id="txtCallback" style="width: 100%; height: 300px"></textarea>
+<script type="text/javascript">
+var vsoftScanner = document.getElementById('vsoftScanner');
+var transId;
+//vsoftScanner.attachEvent('ItemCreated', vsoftScanner_ItemCreated);
+function GetXMLList() {
+    var data = vsoftScanner.GetTransactionXml();
+    FillTextArea(data);
+}
+function GetCheckList() {
+    var data = vsoftScanner.GetMicrList();
+    FillTextArea(data);
+    ShowCheckList(data);
+    
+}
+function RunTeller() {
+    ClearTextArea();
+    RunTeller_BankOfFirstDeposit();
+    RunTeller_PredefinedDocuments();
+
+    var date = RunTeller_GetValue('txtDate');
+    var teller = RunTeller_GetValue('txtTellerId');
+    var account = RunTeller_GetValue('txtCreditAccount');
+    var amount = RunTeller_GetValue('txtCreditAmount');
+    var tranId = RunTeller_GetValue('tranId');
+
+    var rc = vsoftScanner.TCStartEditTran(date, teller, tranId, account, amount);
+    
+    SetReturnValue(rc);
+
+    var tranId = vsoftScanner.GetTransactionId();
+    SetTransactionId(tranId);
+
+
+}
+function ScanDocuments() {
+    ClearTextArea();
+    var date = RunTeller_GetValue('txtDate');
+    var teller = RunTeller_GetValue('txtTellerId');
+    var account = RunTeller_GetValue('txtCreditAccount');
+    var amount = RunTeller_GetValue('txtCreditAmount');
+    var tranId = RunTeller_GetValue('tranId');
+
+    var rc = vsoftScanner.ScanDocuments(date, teller, tranId);
+
+    SetReturnValue(rc);
+
+    var tranId = vsoftScanner.GetTransactionId();
+    SetTransactionId(tranId);
+
+
+}
+function GetDocumentList() {
+    var xml = vsoftScanner.DocumentListToXml;
+    FillTextArea(xml);
+}
+function RunTeller_GetValue(id) {
+    var txt = document.getElementById(id);
+    var val = txt.value;
+    return val;
+}
+function RunTeller_BankOfFirstDeposit() {
+
+    var chkBankOfFirstDeposit = document.getElementById('chkBankOfFirstDeposit');
+    var txtName = document.getElementById('txtBofdName');
+    var txtRouting = document.getElementById('txtBofdRouting');
+    var chkScanDepositTicket = document.getElementById('chkScanDepositTicket');
+    var chkIsSharedBranch = document.getElementById('chkIsSharedBranch');
+
+    if (!chkBankOfFirstDeposit.checked)
+        return;
+
+    vsoftScanner.AddBankOfFirstDeposit(txtRouting.value, txtName.value, chkIsSharedBranch.checked, chkScanDepositTicket.checked);
+}
+function RunTeller_PredefinedDocuments() {
+    var chkCashIn = document.getElementById('chkCashIn');
+    if (chkCashIn.checked) {
+        var txtCashIn = document.getElementById('txtCashIn');
+        vsoftScanner.AddPredefinedItem(1, txtCashIn.value);
+    }
+
+    var chkCashOut = document.getElementById('chkCashOut');
+    if (chkCashOut.checked) {
+        var txtCashOut = document.getElementById('txtCashOut');
+        vsoftScanner.AddPredefinedItem(2, txtCashOut.value);
+    }
+    
+}
+function Load() {
+    CashIn_Clicked('chkCashIn', 'txtCashIn');
+    CashIn_Clicked('chkCashOut', 'txtCashOut');
+    BankOfFirstDepositEnabled();
+    SharedBranchDepositTicket();
+    Load_Date();
+    Load_TellerId();
+    Load_CreditAccount();
+
+
+
+}
+function Load_CreditAccount() {
+    var tellerId = Math.floor(Math.random() * 10000) + '0000' + Math.floor(Math.random() * 1000);
+    var txtTellerId = document.getElementById('txtCreditAccount');
+    txtTellerId.value = tellerId;
+}
+function Load_TellerId() {
+    var tellerId = Math.floor(Math.random() * 10000);
+    var txtTellerId = document.getElementById('txtTellerId');
+    txtTellerId.value = tellerId;
+}
+function Load_Date() {
+    var myDate = new Date();
+    var txtDate = document.getElementById('txtDate');
+
+    var dateString;
+    if ((myDate.getMonth() + 1).toString().length == 1) {
+        dateString = '0';
+    } else {
+        dateString = '';
+    }
+    
+    dateString += (myDate.getMonth() + 1) + '/';
+
+
+    if (myDate.getDate().toString().length == 1)
+        dateString += '0'
+    dateString += myDate.getDate() + '/' + myDate.getFullYear();
+
+
+    txtDate.value = dateString; 
+}
+function CashIn_Clicked(chk, txt) {
+    var chkCashIn = document.getElementById(chk);
+    var txtCashIn = document.getElementById(txt);
+
+    if (chkCashIn != null && txtCashIn != null) {
+        txtCashIn.disabled = !chkCashIn.checked;
+        if (!txtCashIn.disabled) {
+            txtCashIn.focus();
+        }
+    }
+}
+function SharedBranchDepositTicket() {
+
+    var chkIsSharedBranch = document.getElementById('chkIsSharedBranch');
+    var txtName = document.getElementById('txtBofdName');
+    var txtBofd = document.getElementById('txtBofdRouting');
+
+    if (chkIsSharedBranch.checked) {
+        txtName.value = 'Shared Branch';
+        txtBofd.value = '063000021';
+    } else {
+        txtName.value = 'VSoft Institution';
+        txtBofd.value = '789456123';
+    }
+
+
+}
+function BankOfFirstDepositEnabled() {
+
+    var chkBankOfFirstDeposit = document.getElementById('chkBankOfFirstDeposit');
+    var txtName = document.getElementById('txtBofdName');
+    var txtBofd = document.getElementById('txtBofdRouting');
+    var chkScanDepositTicket = document.getElementById('chkScanDepositTicket');
+    var chkIsSharedBranch = document.getElementById('chkIsSharedBranch');
+
+    txtName.disabled = !chkBankOfFirstDeposit.checked;
+    txtBofd.disabled = !chkBankOfFirstDeposit.checked;
+    chkScanDepositTicket.disabled = !chkBankOfFirstDeposit.checked;
+    chkIsSharedBranch.disabled = !chkBankOfFirstDeposit.checked;
+
+    if (!txtName.disabled) {
+        txtName.focus();
+    }
+}
+
+
+function SetReturnValue(s) {
+    var mod = document.getElementById('txtReturnValue');
+    mod.value = s;
+}
+function SetTransactionId(s) {
+    var mod = document.getElementById('tranId');
+    mod.value = s;
+}
+function ClearTextArea() {
+    var txtCallback = document.getElementById('txtCallback');
+    txtCallback.value = '';
+}
+function FillTextArea(s){
+    var txtCallback =  document.getElementById('txtCallback');
+    txtCallback.value = txtCallback.value + s + '\r\n'
+}
+function vsoftScanner_ItemCreated(e){
+    FillTextArea(e.Sequence);
+   //alert(e.Sequence); 
+   //vsoftScanner.UpdateItem( e.Sequence, 'remove'); 
+} 
+function Reopen1(){
+    if (transId != null && transId.length > 0){
+       var mod =  document.getElementById('tranId'); 
+      //alert(mod.value); 
+       var data =  vsoftScanner.ReturnMicrList1('11/21/2007', '12335', '11', 2,  transId, mod.value);
+       FillTextArea(data); 
+   } 
+}
+function ScanMicrList(){
+    var data = vsoftScanner.ReturnMicrList('11/21/2007', '12335', '11', 2, "", "063000021", "First Union Bank");
+   FillTextArea(data); 
+   if (data.length > 0){ 
+      transId = data.split(",")[0];
+      alert(transId);
+   }
+}
+
+
+function ScanCheckAmountList(){
+    var data = vsoftScanner.ReturnCheckAmountList('05/01/2007', '12335', '11', 2);
+    alert(data);
+}
+
+function Scan(){
+
+    var data = vsoftScanner.ReturnTotalDebitAmount('05/01/2007', '12335', '11', 2);
+    alert(data);
+
+}
+function GetTranId(){
+    var tranIdBox =  document.getElementById('tranId');
+    var tranId = tranIdBox.value; 
+    return tranId; 
+}
+
+function TransmitFile() {
+    var date = RunTeller_GetValue('txtDate');
+    var teller = RunTeller_GetValue('txtTellerId');
+    var tranId = RunTeller_GetValue('tranId');
+    
+    var rc = vsoftScanner.PostTransactionTransmitFile(date, teller, tranId); 
+   alert(rc);
+}
+function DeleteFile() {
+    var date = RunTeller_GetValue('txtDate');
+    var teller = RunTeller_GetValue('txtTellerId');
+    var tranId = RunTeller_GetValue('tranId');
+
+    var rc = vsoftScanner.DeleteTransaction(date, teller, tranId);
+    alert(rc);
+
+}
+
+</script>
+
+<script type="text/javascript">
+
+function ShowCheckList(data) {
+    // get the reference for the body
+    var body = document.getElementById('CheckListTable');
+    if (body == null) {
+        alert('Error finding CheckListTable');
+        return;
+    }
+        
+    // creates a <table> element and a <tbody> element
+    var tbl = document.createElement("table");
+    tbl.setAttribute("id", "ItemTable");
+    var tblBody = document.createElement("tbody");
+
+    // creating all cells
+    var dataRows = data.toString().split("|");
+    var j;
+    //for (var j = 0; j < 2; j++) {
+    var rowHeader = document.createElement("tr");
+    var titles = "TransactionId, Sequence/Rel, Amount, Routing, Account, Onus, TranCode"
+    var titleArray = titles.split(",");
+    var i;
+    var cellHeader;
+    var cellTextHeader;
+    cellHeader = document.createElement("td");
+    cellTextHeader = document.createTextNode("Remove");
+    cellHeader.appendChild(cellTextHeader);
+    rowHeader.appendChild(cellHeader);
+    for (i in titleArray) {
+        cellHeader = document.createElement("td");
+        cellTextHeader = document.createTextNode(titleArray[i]);
+        cellHeader.appendChild(cellTextHeader);
+        rowHeader.appendChild(cellHeader);
+    }
+    tblBody.appendChild(rowHeader);
+
+
+    var cell;
+    var cellText;
+    
+    
+    for(j in dataRows){
+        // creates a table row
+        var row = document.createElement("tr");
+        var dataCol = dataRows[j].split(",");
+
+        //for (var i = 0; i < 2; i++) {
+        for(i in dataCol){
+            // Create a <td> element and a text node, make the text
+            // node the contents of the <td>, and put the <td> at
+            // the end of the table row
+            if (i == 0) {
+                cell = document.createElement("td");
+                cellText = document.createElement("input");
+                cellText.setAttribute("type", "checkbox");
+                cellText.setAttribute("id", "chk" + dataCol[1]);
+                //alert(cellText.getAttribute('id').toString());
+                
+                cellText.attachEvent("onclick", RemoveClicked);
+                cell.appendChild(cellText);
+                row.appendChild(cell);
+            }
+            cell = document.createElement("td");
+            cell.setAttribute("id", "cell+" + i + "+" + dataCol[1]);
+            //alert(cell.getAttribute("id").toString());
+            cellText = document.createTextNode(dataCol[i]);
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+        }
+
+        // add the row to the end of the table body0.+
+        tblBody.appendChild(row);
+    }
+
+    // put the <tbody> in the <table>
+    tbl.appendChild(tblBody);
+    // appends <table> into <body>
+    body.appendChild(tbl);
+    // sets the border attribute of tbl to 2;
+    tbl.setAttribute("border", "2");
+}
+function RemoveClicked() {
+    
+}
+</script>
+</form>
+<!--<script  for="vsoftScanner" event="ItemCreated(e)" language="javascript">
+ function vsoftScanner::ItemCreated(e){
+    var txtCallback =  document.getElementById('txtCallback');
+    txtCallback.value = txtCallback.value + e.Sequence + '\r\n';
+   //document.write(e.ToString() + "<br />"); 
+    //alert('Item Detail Created: ' + e.ToXML());
+} 
+</script>-->
+</body>
+</html>
