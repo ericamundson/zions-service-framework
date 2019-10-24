@@ -27,7 +27,7 @@ SET selected.checkpoint=none
 ::blank out include.updates to skip RM artifact migration
 ::If updating, use flushQueriesDelta instead of flushQueries in rm.include.update
 ::and use the update sql file instead of the standard one
-SET rm.include.update=flushQueries,whereused,phases
+SET rm.include.update=cleanLinks,flushQueries,whereused,phases
 SET rm.include.phases=requirements
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
