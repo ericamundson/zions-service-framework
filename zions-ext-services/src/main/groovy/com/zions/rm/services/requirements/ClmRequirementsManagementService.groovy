@@ -604,8 +604,14 @@ class ClmRequirementsManagementService {
 				String module = info.moduleRelated
 				def url = null
 				//def linkMap = linkMapping[info.type]
-				def linkMap = 'System.LinkTypes.Related'
 				def linkType = info.type
+				def linkMap = 'System.LinkTypes.Related'
+				if (linkType == 'Interface For') {
+					linkMap = 'System.LinkTypes.Hierarchy-Forward'
+				}
+				if (linkType == 'Interface') {
+					linkMap = 'System.LinkTypes.Hierarchy-Reverse'
+				}
 				def runId = null
 				def linkId = null
 				if (linkMap) {
