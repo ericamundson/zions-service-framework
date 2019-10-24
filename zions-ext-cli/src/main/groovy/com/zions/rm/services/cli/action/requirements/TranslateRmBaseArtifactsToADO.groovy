@@ -198,6 +198,10 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			}
 			workManagementService.clean(collection,tfsProject, query)
 		}
+		if (includes['cleanLinks'] != null) {
+			cacheManagementService.deleteByType('LinkInfo')
+			log.info("All LinkInfo objects have been deleted from cache, please run full requirements migration to rebuild")
+		}
 		if (includes['flushQueries'] != null) {
 			log.info("Refreshing cache of main DNG query from JRS")
 			clmRequirementsManagementService.flushQueries()
