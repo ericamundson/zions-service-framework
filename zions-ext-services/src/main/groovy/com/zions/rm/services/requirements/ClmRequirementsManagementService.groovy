@@ -623,7 +623,7 @@ class ClmRequirementsManagementService {
 						}
 					}
 					if (linkId && !linkExists(cacheWI, linkMap, linkId, runId) && "${linkId}" != "${cacheWI.id}") {
-						def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap}", url: url, attributes:[comment: "${linkType}"]]]
+						def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap}", url: url, attributes:[comment: "DNG Link: ${linkType}"]]]
 						wiData.body.add(change)
 					}
 				}
