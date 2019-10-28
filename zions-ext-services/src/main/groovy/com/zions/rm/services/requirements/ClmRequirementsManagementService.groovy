@@ -89,19 +89,28 @@ class ClmRequirementsManagementService {
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/xml'] );
-		def moduleList = []
+		def moduleList = [:]
 		// Get all module uris from collection
 		if (result) {
 			def modules =  result.'**'.findAll { p ->
-			"${p.name()}" == 'relation'
+			"${p.name()}" == 'Link'
 			}
 			modules.forEach { node ->
-				moduleList.add("${node}") }
+				Integer id
+				String ref
+				node.children().forEach { child ->
+					if ("${child.name()}" == 'identifier') id = "$child".toInteger()
+					if ("${child.name()}" == 'relation') ref = "$child"
+				}
+				if (id && ref) {
+					moduleList.put(id,ref) 
+				}
+			}
 		}
 		else {
 			log.info("Nothing returned from DNG query: $uri")
 		}
-		return moduleList
+		return moduleList.sort()
 	}
 
 	ClmRequirementsModule getModule(String moduleUri, boolean validationOnly) {
@@ -111,7 +120,14 @@ class ClmRequirementsManagementService {
 		String uri = moduleUri.replace('resources/','publish/modules?resourceURI=')
 		def result = rmGenericRestClient.get(
 				uri: uri,
-				headers: [Accept: 'application/xml'] );
+				headers: [Accept: 'application/xml'],
+			contentType: ContentType.TEXT );
+		// Replace special characters from Unicode translation
+		String resultStr = result.str
+		resultStr = fixSpecialCharacters(resultStr)
+		
+		// Use xmlSlurper to parse xml
+		result = new XmlSlurper().parseText(resultStr)
 		
 		// Extract and instantiate the ClmRequirementsmodules
 		def module = result.artifact[0]
