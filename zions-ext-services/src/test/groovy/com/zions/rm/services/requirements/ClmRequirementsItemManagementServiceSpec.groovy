@@ -61,7 +61,7 @@ class ClmRequirementsItemManagementServiceSpec extends Specification {
 	 * 
 	 * Thus, not too BDD.  Although not much of our unit testing is.
 	 */
-	//@Ignore
+	@Ignore
 	def 'Main flow for module with related artifacts while testing ADO change data processing'() {
 		setup: "modules and module's related artifacts stubs"
 		setupModuleAndRelatedArtifactData()
