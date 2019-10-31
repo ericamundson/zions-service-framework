@@ -27,8 +27,8 @@ SET selected.checkpoint=none
 ::blank out include.updates to skip RM artifact migration
 ::If updating, use flushQueriesDelta instead of flushQueries in rm.include.update
 ::and use the update sql file instead of the standard one
-SET rm.include.update=cleanLinks,flushQueries,whereused,phases
-SET rm.include.phases=requirements
+SET rm.include.update=phases
+SET rm.include.phases=links
 SET rm.mapping.file=.\mapping\CoreRRMMapping.xml
 SET rm.filter=allFilter
 SET rm.tfs.areapath=BaNCS\Requirements\R3
@@ -59,7 +59,7 @@ SET rqm.tfs.areapath="FutureCore\\Test"
 SET logdir=E:\bin\batch\logs\prodcore
 ::don't need to change these regularly if you set the above folder to target environment/project
 SET log.rqm=%logdir%\translate_RQMtoADO.log
-SET log.dng=%logdir%\translate_DNGtoADO_full.log
+SET log.dng=%logdir%\translate_DNGtoADO_audit.log
 SET log.ccm=%logdir%\translate_CCMtoADO.log
 
 ::not using these items I think

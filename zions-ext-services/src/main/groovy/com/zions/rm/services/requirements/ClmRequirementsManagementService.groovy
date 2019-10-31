@@ -65,6 +65,10 @@ class ClmRequirementsManagementService {
 	String clmPageSize
 	
 	@Autowired
+	@Value('${tfs.url}')
+	String tfsUrl
+	
+	@Autowired
 	IGenericRestClient rmGenericRestClient
 	
 	@Autowired
@@ -89,15 +93,28 @@ class ClmRequirementsManagementService {
 		def result = rmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/xml'] );
-		def moduleList = []
+		def moduleList = [:]
 		// Get all module uris from collection
-		def modules =  result.'**'.findAll { p ->
-			"${p.name()}" == 'relation'
+		if (result) {
+			def modules =  result.'**'.findAll { p ->
+			"${p.name()}" == 'Link'
+			}
+			modules.forEach { node ->
+				Integer id
+				String ref
+				node.children().forEach { child ->
+					if ("${child.name()}" == 'identifier') id = "$child".toInteger()
+					if ("${child.name()}" == 'relation') ref = "$child"
+				}
+				if (id && ref) {
+					moduleList.put(id,ref) 
+				}
+			}
 		}
-		modules.forEach { node ->
-			moduleList.add("${node}")
+		else {
+			log.info("Nothing returned from DNG query: $uri")
 		}
-		return moduleList
+		return moduleList.sort()
 	}
 
 	ClmRequirementsModule getModule(String moduleUri, boolean validationOnly) {
@@ -107,7 +124,14 @@ class ClmRequirementsManagementService {
 		String uri = moduleUri.replace('resources/','publish/modules?resourceURI=')
 		def result = rmGenericRestClient.get(
 				uri: uri,
-				headers: [Accept: 'application/xml'] );
+				headers: [Accept: 'application/xml'],
+			contentType: ContentType.TEXT );
+		// Replace special characters from Unicode translation
+		String resultStr = result.str
+		resultStr = fixSpecialCharacters(resultStr)
+		
+		// Use xmlSlurper to parse xml
+		result = new XmlSlurper().parseText(resultStr)
 		
 		// Extract and instantiate the ClmRequirementsmodules
 		def module = result.artifact[0]
@@ -446,7 +470,7 @@ class ClmRequirementsManagementService {
 	}
 	private String fixSpecialCharacters(String xml) {
 		// Replace special characters for single/double quotes, dashes and trash characters
-		return xml.replaceAll('Ã¢&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(2|3);', "'").replaceAll('â&#15(2|3);',"'").replaceAll('Ã&#131;Â¢&#128;&#15(2|3);',"'").replaceAll('&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(6|7);','&quot;').replace('â&#128;&#147;','-').replace('Ã&#131;Â¢&#128;&#147;','-').replace('Ã&#131;&#130;Ã&#130;', '').replace('&#128;',"'").replace('Â ', '').replace('Â ', '').replace('Â', '')
+		return xml.replaceAll('Ã¢&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(2|3);', "'").replaceAll('â&#15(2|3);',"'").replaceAll('Ã&#131;Â¢&#128;&#15(2|3);',"'").replaceAll('&#128;&#15(2|3);',"'").replaceAll('â&#128;&#15(6|7);','&quot;').replace('â&#128;&#147;','-').replace('Ã&#131;Â¢&#128;&#147;','-').replace('Ã&#131;&#130;Ã&#130;', '').replace('&#128;',"'").replace('Â ', ' ').replace('Â ', ' ').replace('Â', '')
 	}
 	private String parseHref(String inString) {
 		def hrefIndex = inString.indexOf('href=')
@@ -532,6 +556,127 @@ class ClmRequirementsManagementService {
 		return cacheManagementService.getFromCache(sid, 'RM','LinkInfo')
 	}
 	
+	void getWILinkChanges(int id, String project, Closure closure) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+//		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+//		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
+//		IWorkItem workItem = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, null);
+//		Date modified = workItem.modified()
+		String sid = "${id}"
+		def cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
+		if (cacheWI != null) {
+			def cid = cacheWI.id
+			List<LinkInfo> info = getLinkInfoFromCache(sid)
+//			def resultLinks = getLinks('affects_execution_result',info)
+//			resultLinks.each { LinkInfo link ->
+//				def result = cacheManagementService.getFromCache(link.itemIdRelated, 'QM', ICacheManagementService.RESULT_DATA)
+//				if (result) {
+//					String title = "${result.testCaseTitle}"
+//					
+//					def resultChanges = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${result.testRun.id}/results/${result.id}", query:['api-version':'5.0-preview.5'], body: []]
+//					def data = [id: result.id, testCaseTitle: title, associatedBugs: []]
+//					def wis = []
+//					if (result.associatedBugs) {
+//						result.associatedBugs.each { bug ->
+//							String bid = "${bug.id}"
+//							wis.add(bid)
+//						}
+//						data.associatedBugs.addAll(result.associatedBugs)
+//					}
+//					String wid = "${cid}"
+//					if (!wis.contains(wid)) {
+//						data.associatedBugs.add([id:wid])
+//						resultChanges.body.add(data)
+//						def changes = [resultChanges: resultChanges, rid: link.itemIdRelated]
+//						closure.call('Result', changes)
+//					}
+//				}
+//			}
+//			
+//			if (resultLinks.size() > 0) {
+//				cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
+//			}
+			if (info) {
+			//	log.debug("Suspect links for ${sid}")
+			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
+			wiData.body.add(rev)
+			wiData = generateWILinkChanges(wiData, info, cacheWI)
+			if (wiData.body.size() > 1) {
+				closure.call('WorkItem', wiData)
+			}
+			} else {
+				//log.debug("No links for ${sid}")
+			}
+
+		}
+	}
+		
+	def generateWILinkChanges(def wiData, links, cacheWI) {
+			//def linksList = links.split(',')
+			links = getLinks(links)
+			links.each { LinkInfo info ->
+				String id = info.itemIdRelated
+				String module = info.moduleRelated
+				def url = null
+				//def linkMap = linkMapping[info.type]
+				def linkType = info.type
+				def linkMap = 'System.LinkTypes.Related'
+				if (linkType == 'Interface For') {
+					linkMap = 'System.LinkTypes.Hierarchy-Forward'
+				}
+				if (linkType == 'Interface') {
+					linkMap = 'System.LinkTypes.Hierarchy-Reverse'
+				}
+				def runId = null
+				def linkId = null
+				if (linkMap) {
+					if (module == 'rm') {
+						def linkWI = cacheManagementService.getFromCache(id, 'RM', ICacheManagementService.WI_DATA)
+						if (linkWI) {
+							linkId = linkWI.id
+							url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
+						}
+					}
+					if (linkId && !linkExists(cacheWI, linkMap, linkId, runId) && "${linkId}" != "${cacheWI.id}") {
+						def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap}", url: url, attributes:[comment: "DNG Link: ${linkType}"]]]
+						wiData.body.add(change)
+					}
+				}
+			}
+			return wiData
+		}
+	
+		/**
+		 * Check work item cache to see if link exists on work item.
+		 *
+		 * @param cacheWI
+		 * @param targetName
+		 * @param linkId
+		 * @return
+		 */
+		boolean linkExists(cacheWI, targetName, linkId, String runId = null) {
+			def url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
+			if (runId) {
+				url = "${tfsUrl}/_TestManagement/Runs?_a=resultSummary&runId=${runId}&resultId=${linkId}"
+			}
+			def link = cacheWI.relations.find { rel ->
+				"${rel.rel}" == "${targetName}" && url == "${rel.url}"
+			}
+			return link != null
+		}
+	
+	List<LinkInfo> getLinks(links) {
+		List<LinkInfo> linkinfos = new ArrayList<LinkInfo>()
+		links.findAll { link ->
+			def info = new LinkInfo(type: "${link.type}", itemIdCurrent: "${link.itemIdCurrent}", itemIdRelated: "${link.itemIdRelated}", moduleCurrent: "${link.moduleCurrent}", moduleRelated: "${link.moduleRelated}")
+			if (info.getModuleRelated() == 'rm') {
+				linkinfos.add(info)
+			}
+		}
+		return linkinfos
+	}
+
 	private void parseLinksFromArtifactNode(def artifactNode, def in_artifact) {
 		String modified = artifactNode.collaboration.modified
 		String identifier = artifactNode.identifier

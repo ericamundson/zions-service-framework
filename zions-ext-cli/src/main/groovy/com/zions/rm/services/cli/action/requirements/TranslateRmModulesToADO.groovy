@@ -174,14 +174,13 @@ class TranslateRmModulesToADO implements CliAction {
 		String tfsProjectURI = data.getOptionValues('tfs.projectUri')[0]
 		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
 		String tfsCollectionGUID = data.getOptionValues('tfs.collectionId')[0]
-		String tfsAltUser = data.getOptionValues('tfs.altuser')[0]
-		String tfsAltPassword = data.getOptionValues('tfs.altpassword')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
 		} catch (e) {}
 		String tfsProject = data.getOptionValues('tfs.project')[0]
 		String mrTemplate = data.getOptionValues('mr.template')[0]
+		String mrFolder = data.getOptionValues('mr.folder')[0]
 		File mFile = new File(mappingFile)
 		
 		def mapping = new XmlSlurper().parseText(mFile.text)
@@ -198,8 +197,10 @@ class TranslateRmModulesToADO implements CliAction {
 		if (includes['validation'] != null) {
 			log.info('Validating module data...')
 			def moduleUris = clmRequirementsManagementService.queryForModules(rmQuery)
+			def moduleCount = 0
 			moduleUris.each { moduleUri ->
-				log.info("${getCurTimestamp()} - Getting next module: $moduleUri")
+				moduleCount++
+				log.info("${getCurTimestamp()} - Retrieving module $moduleCount of ${moduleUris.size()} using uri: $moduleUri")
 				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri,true)
 				log.info("${getCurTimestamp()} - Processing Module: ${module.getTitle()} ...")
 				// Check all artifacts for "Heading"/"Row type" inconsistencies, then abort on this module if any were found
@@ -228,8 +229,10 @@ class TranslateRmModulesToADO implements CliAction {
 				int count = 0
 				def changeList = []
 				def idMap = [:]
-				log.info("${getCurTimestamp()} - Retrieving module $moduleCount of ${moduleUris.size()} using uri: $moduleUri")
-				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri,false)
+				
+				log.info("${getCurTimestamp()} - Retrieving module $moduleCount of ${moduleUris.size()} id: ${moduleUri.key}")
+				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri.value,false)
+				
 				// For RSZ modules, we need to append the linked RRZ module
 				if (module.getArtifactType()== "RSZ Specification") {
 					// Get linked RRZ module URI
@@ -317,8 +320,6 @@ class TranslateRmModulesToADO implements CliAction {
 
 				})
 				
-	
-	
 				// Create/update work items and SmartDoc container in Azure DevOps
 				if (changeList.size() > 0 && errCount == 0) {
 					// Process work item changes in Azure DevOps
@@ -327,7 +328,7 @@ class TranslateRmModulesToADO implements CliAction {
 					
 					// Create/update the SmartDoc
 					log.info("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
-					def result = smartDocManagementService.ensureSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, tfsAltUser, tfsAltPassword, mrTemplate)
+					def result = smartDocManagementService.ensureSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, mrTemplate, mrFolder)
 					if (result == null) {
 						log.info("SmartDoc API returned null")
 					}
@@ -412,7 +413,7 @@ class TranslateRmModulesToADO implements CliAction {
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'tfs.altuser','tfs.altpassword', 'rm.mapping.file', 'rm.query', 'rm.filter', 'mr.url', 'mr.template', 'mr.folder']
+		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'tfs.user', 'tfs.projectUri', 'tfs.teamGuid', 'tfs.url', 'tfs.collection', 'tfs.collectionId', 'tfs.user', 'tfs.project', 'tfs.areapath', 'tfs.serverAltCreds', 'rm.mapping.file', 'rm.query', 'rm.filter', 'mr.url', 'mr.template', 'mr.folder']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
