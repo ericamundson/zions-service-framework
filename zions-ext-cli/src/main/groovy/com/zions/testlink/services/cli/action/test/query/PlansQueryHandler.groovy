@@ -23,7 +23,7 @@ class PlansQueryHandler implements IQueryHandler {
 	@Value('${testlink.projectName:}')
 	String projectName
 	
-	@Value('${item.filter:tlAllFilter}')
+	@Value('${plans.filter:tlAllFilter}')
 	private String itemFilter
 
 	def currentItems

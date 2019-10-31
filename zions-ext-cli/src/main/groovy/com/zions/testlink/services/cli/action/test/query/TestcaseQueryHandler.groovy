@@ -26,7 +26,7 @@ class TestcaseQueryHandler implements IQueryHandler {
 	@Value('${testlink.projectName:}')
 	String projectName
 	
-	@Value('${item.filter:tlAllFilter}')
+	@Value('${tc.filter:tlAllFilter}')
 	private String itemFilter
 
 	def currentItems

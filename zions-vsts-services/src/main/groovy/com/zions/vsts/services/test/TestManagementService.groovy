@@ -264,7 +264,6 @@ public class TestManagementService {
 							contentType: ContentType.JSON,
 							query: [destroy: true, 'api-version': '5.0-preview.1']
 							)
-						
 					}
 				}
 			}
@@ -331,10 +330,24 @@ public class TestManagementService {
 		}
 		return "${testcaseData.webId.text()}-Test Case"
 	}
+	
+	private def deleteRun(def runData) {
+		def r = genericRestClient.delete(
+				uri: "${runData.url}",
+				query: ['api-version': '5.1']
+			)
+		return r
+	}
 
-	public def ensureTestRun(String collection, String project, def planData) {
+	public def ensureTestRun(String collection, String project, def planData, boolean refresh = false) {
 		String pid = getPlanId(planData)
 		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
+		
+		if (refresh && runData) {
+			deleteRun(runData)
+			runData = null
+			//cacheManagementService.deleteFromCache(pid, ICacheManagementService.RUN_DATA)
+		}
 		
 		if (runData == null) {
 			def parentData = cacheManagementService.getFromCache(pid, ICacheManagementService.PLAN_DATA)

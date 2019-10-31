@@ -1,0 +1,122 @@
+<witmapping>
+	<wit source="testplan"  target="Test Plan" translateUnmappedFields="false" notWorkItem="true">
+		<field source="nameHandler" target="name"/>
+		<field source="descriptionHandler" target="description"/>
+		<field source="planOwnerHandler" target="owner"/>
+		<field source="stateHandler" target="state">
+			<defaultvalue target="Active"/>
+		</field>
+		<field source="planBlankHandler" target="area">
+			<defaultvalue target="WebCMS\ABT"/>
+		</field>
+		<field source="blankHandler" target="iteration">
+			<defaultvalue target="WebCMS"/>		
+		</field>
+	</wit>
+	<wit source="testsuite"  target="Test Suite" translateUnmappedFields="false" notWorkItem="true">
+		<field source="nameHandler" target="name"/>
+		<field source="descriptionHandler" target="description"/>
+		<field source="planOwnerHandler" target="owner"/>
+		<field source="stateHandler" target="state">
+			<defaultvalue target="Active"/>
+		</field>
+		<field source="planBlankHandler" target="area">
+			<defaultvalue target="WebCMS\ABT"/>
+		</field>
+		<field source="blankHandler" target="iteration">
+			<defaultvalue target="WebCMS"/>		
+		</field>
+	</wit>
+	<wit source="testcase"  target="Test Case" translateUnmappedFields="false">
+		<field source="nameHandler" target="System.Title"/>
+		<field source="testCasePriorityHandler" target="Microsoft.VSTS.Common.Priority">
+			<defaultvalue target="4"/>
+			<value source="0" target="1"/>
+			<value source="1" target="2"/>
+			<value source="2" target="3"/>
+		</field>
+		<field source="testCaseDescriptionHandler" target="System.Description"/>
+		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
+		<field source="preconditionHandler" target="Custom.PreCondition"/>
+		<field source="postconditionHandler" target="Custom.PostCondition"/>
+		<field source="stateHandler" target="System.State">
+			<defaultvalue target="Design"/>
+		</field>
+		<field source="blankHandler" target="System.AreaPath">
+			<defaultvalue target="WebCMS\ABT"/>
+		</field>
+		<field source="blankHandler" target="System.IterationPath">
+			<defaultvalue target="WebCMS"/>		
+		</field>
+		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
+		<excluded>
+			<field name="Execution_Count"/>
+			<field name="Risk_Model__RE__Calculation"/>
+			<field name="Test_Case_Risk"/>
+			<field name="Unresolved_Defect_Count"/>
+			<field name="Test_Case_Important_Level"/>
+			<field name="Active"/>
+			<field name="Environment"/>
+			<field name="UAT_Groups"/>
+			<field name="Vendor_Priority"/>
+			<field name="Workstream"/>
+			<field name="Business_Approval"/>
+			<field name="Execution_Planning"/>
+			<field name="Automated_TC_Name"/>
+			<field name="_k5J38USxEeiuULVYIY76YA"/>
+			<field name="_k5l80ESxEeiuULVYIY76YA"/>
+			<field name="_k4meUUSxEeiuULVYIY76YA"/>
+			<field name="Vendor_TC_Name"/>
+			<field name="Test_Team"/>
+		</excluded>
+	</wit>
+	<wit source="executionresult"  target="Result" translateUnmappedFields="false">
+		<field source="resultIdHandler" target="id"/>
+		<field source="resultStartDateHandler" target="startedDate"/>
+		<field source="resultTestCaseReferenceHandler" target="testCaseReferenceId"/>
+		<field source="blankHandler" target="priority">
+			<defaultvalue target="2"/>		
+		</field>
+		
+		<field source="resultStateHandler" target="outcome">
+			<defaultvalue target="InProgress"/>		
+			<value source="com.ibm.rqm.execution.common.state.passed" target="Passed"/>
+			<value source="com.ibm.rqm.execution.common.state.paused" target="Paused"/> 
+			<value source="com.ibm.rqm.execution.common.state.inprogress" target="InProgress"/> 
+			<value source="com.ibm.rqm.execution.common.state.notrun" target="NotExecuted"/> 
+			<value source="com.ibm.rqm.execution.common.state.perm_failed" target="Failed"/> 
+			<value source="com.ibm.rqm.execution.common.state.incomplete" target="InProgress"/> 
+			<value source="com.ibm.rqm.execution.common.state.inconclusive" target="Inconclusive"/> 
+			<value source="com.ibm.rqm.execution.common.state.part_blocked" target="Blocked"/> 
+			<value source="com.ibm.rqm.execution.common.state.deferred" target="NotExecuted"/> 
+			<value source="com.ibm.rqm.execution.common.state.failed" target="Failed"/> 
+			<value source="com.ibm.rqm.execution.common.state.error" target="Error"/> 
+			<value source="com.ibm.rqm.execution.common.state.blocked" target="Blocked"/> 		
+			</field>
+		<!--  
+		<field source="resultStateHandler" target="state">
+			<defaultvalue target="Unspecified"/>		
+			<value source="com.ibm.rqm.execution.common.state.passed" target="Completed"/>
+			<value source="com.ibm.rqm.execution.common.state.perm_failed" target="Completed"/> 
+			<value source="com.ibm.rqm.execution.common.state.deferred" target="Completed"/> 
+			<value source="com.ibm.rqm.execution.common.state.failed" target="Completed"/> 
+			<value source="com.ibm.rqm.execution.common.state.error" target="Completed"/> 
+			<value source="com.ibm.rqm.execution.common.state.blocked" target="Completed"/> 		
+		</field> -->
+		<!-- <field source="resultOwnerHandler" target="owner"/> -->
+		
+	</wit>
+	<wit source="configuration"  target="Configuration" translateUnmappedFields="false">
+		<field source="nameHandler" target="name"/>
+		<field source="summaryHandler" target="description"/>
+		<field source="blankHandler" target="state">
+			<defaultvalue target="Active"/>
+		</field>
+	</wit>
+	 
+	<wit source="testplan"  target="Test Plan WI" translateUnmappedFields="false">
+		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
+	</wit> 
+	
+</witmapping>

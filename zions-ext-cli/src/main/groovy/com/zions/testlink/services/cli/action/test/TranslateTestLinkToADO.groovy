@@ -243,7 +243,7 @@ class TranslateTestLinkToADO implements CliAction {
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
 		String mappingFile = data.getOptionValues('test.mapping.file')[0]
 		String tlQuery = data.getOptionValues('tl.query')[0]
-		String wiFilter = data.getOptionValues('tl.filter')[0]
+		//String wiFilter = data.getOptionValues('tl.filter')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -308,7 +308,12 @@ class TranslateTestLinkToADO implements CliAction {
 						String idtype = "${aid}-testcase"
 						if (!idKeyMap.containsKey(idtype)) {
 							testLinkItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-								clManager.add("${aid}", val)
+								def files = testLinkAttachmentManagementService.cacheTestCaseAttachments(testcasea)
+								String tid = "${aid}".toString()
+								val = fileManagementService.ensureAttachments(collection, tfsProject, tid, files, val)
+								if (val) {
+									clManager.add(tid,val)
+								}
 							}
 							idKeyMap[idtype] = idtype
 						}
@@ -343,13 +348,17 @@ class TranslateTestLinkToADO implements CliAction {
 								if (!idKeyMap.containsKey(idtype)) {
 									def tcchanges = testLinkItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
 										String tid = "${aid}".toString()
-										clManager.add(tid,val)
+										def files = testLinkAttachmentManagementService.cacheTestCaseAttachments(testcasea)
+										val = fileManagementService.ensureAttachments(collection, tfsProject, tid, files, val)
+										if (val) {
+											clManager.add(tid,val)
+										}
 									}
 									idKeyMap[idtype] = idtype
 								}
 							}
 						}
-							
+						
 						def plan = null
 						testLinkItemManagementService.processForChanges(tfsProject, testplan, memberMap) { String key, def val ->
 							if (key.endsWith('WI')) {
@@ -358,6 +367,7 @@ class TranslateTestLinkToADO implements CliAction {
 								plan = testManagementService.sendPlanChanges(collection, tfsProject, val, "${pid}")
 							}
 						}
+							
 						TestSuite[] suites = testLinkClient.getFirstLevelSuitesForTestPlan(testplan)
 						handleTestSuites(suites, plan, testplan, null, { def parent, TestSuite testsuite -> 
 							String tsid = "${testsuite.id}_${testplan.name}"
@@ -498,7 +508,7 @@ class TranslateTestLinkToADO implements CliAction {
 	 * @see com.zions.common.services.cli.action.CliAction#validate(org.springframework.boot.ApplicationArguments)
 	 */
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.project', 'tfs.areapath', 'test.mapping.file', 'tl.query', 'tl.filter']
+		def required = ['tfs.url', 'tfs.user', 'tfs.project', 'tfs.areapath', 'test.mapping.file', 'tl.query']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

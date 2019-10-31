@@ -1,6 +1,7 @@
 package com.zions.vsts.services.work
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
@@ -44,6 +45,9 @@ class FileManagementService {
 	
 	@Autowired(required=true)
 	private ICacheManagementService cacheManagementService;
+	
+	@Value('${tfs.areapath:}')
+	String areaPath
 
 	public FileManagementService() {
 		
@@ -62,8 +66,8 @@ class FileManagementService {
 	
 	private def encodeBytes( Object data ) throws UnsupportedEncodingException {
 	    if ( data instanceof File ) {
-	        def entity = new org.apache.http.entity.ByteArrayEntity( (File) data, "application/json" );
-	        entity.setContentType( "application/json" );
+	        def entity = new org.apache.http.entity.ByteArrayEntity( (byte[]) data, ContentType.BINARY );
+	        entity.setContentType( ContentType.BINARY );
 	        return entity
 	    } else {
 	        throw new IllegalArgumentException( 
@@ -83,9 +87,7 @@ class FileManagementService {
 	def ensureAttachments(collection, project, id, files, inWiData = null) {
 		String sid = "${id}"
 		def cacheWI = null
-		if (!inWiData) {
-			cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
-		}
+		cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
 		if (cacheWI != null || inWiData) {
 			def wiData = null
 			if (inWiData) {
@@ -100,7 +102,10 @@ class FileManagementService {
 				File file = fileItem.file
 				
 				if (file && !linkExists(cacheWI, file)) {
-					def area = cacheWI.fields.'System.AreaPath'
+					def area = areaPath
+					if (cacheWI) {
+						area = cacheWI.fields.'System.AreaPath'
+					}
 					def uploadData = uploadAttachment(collection, project, area, file)
 					if (uploadData != null) {
 						String comment = "${fileItem.comment}"
@@ -120,6 +125,7 @@ class FileManagementService {
 	
 	private boolean linkExists(cacheWI, file) {
 		String fileName = "${file.name}"
+		if (!cacheWI) return false
 		def link = cacheWI.relations.find { rel ->
 			def name = ""
 			if (rel.attributes != null && rel.attributes.name != null) {
@@ -152,7 +158,7 @@ class FileManagementService {
 		def earea = URLEncoder.encode(area, 'utf-8').replace('+', '%20')
 		def result = genericRestClient.rateLimitPost([
 			contentType: ContentType.JSON,
-			requestContentType: ContentType.JSON,
+			requestContentType: ContentType.BINARY,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/attachments",
 			body: bytes,
 			query: ['api-version': '5.0-preview.3', uploadType: 'Simple', areaPath: earea, fileName: efilename]],
