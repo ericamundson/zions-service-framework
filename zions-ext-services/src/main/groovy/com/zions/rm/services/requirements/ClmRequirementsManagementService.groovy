@@ -1,6 +1,7 @@
 package com.zions.rm.services.requirements
 
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.db.DatabaseQueryService
@@ -551,37 +552,7 @@ class ClmRequirementsManagementService {
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			List<LinkInfo> info = getLinkInfoFromCache(sid)
-//			def resultLinks = getLinks('affects_execution_result',info)
-//			resultLinks.each { LinkInfo link ->
-//				def result = cacheManagementService.getFromCache(link.itemIdRelated, 'QM', ICacheManagementService.RESULT_DATA)
-//				if (result) {
-//					String title = "${result.testCaseTitle}"
-//					
-//					def resultChanges = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${result.testRun.id}/results/${result.id}", query:['api-version':'5.0-preview.5'], body: []]
-//					def data = [id: result.id, testCaseTitle: title, associatedBugs: []]
-//					def wis = []
-//					if (result.associatedBugs) {
-//						result.associatedBugs.each { bug ->
-//							String bid = "${bug.id}"
-//							wis.add(bid)
-//						}
-//						data.associatedBugs.addAll(result.associatedBugs)
-//					}
-//					String wid = "${cid}"
-//					if (!wis.contains(wid)) {
-//						data.associatedBugs.add([id:wid])
-//						resultChanges.body.add(data)
-//						def changes = [resultChanges: resultChanges, rid: link.itemIdRelated]
-//						closure.call('Result', changes)
-//					}
-//				}
-//			}
-//			
-//			if (resultLinks.size() > 0) {
-//				cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
-//			}
 			if (info) {
-			//	log.debug("Suspect links for ${sid}")
 			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
@@ -650,15 +621,43 @@ class ClmRequirementsManagementService {
 			return link != null
 		}
 	
-	List<LinkInfo> getLinks(links) {
-		List<LinkInfo> linkinfos = new ArrayList<LinkInfo>()
-		links.findAll { link ->
-			def info = new LinkInfo(type: "${link.type}", itemIdCurrent: "${link.itemIdCurrent}", itemIdRelated: "${link.itemIdRelated}", moduleCurrent: "${link.moduleCurrent}", moduleRelated: "${link.moduleRelated}")
-			if (info.getModuleRelated() == 'rm') {
-				linkinfos.add(info)
+
+		List<LinkInfo> getLinks(links) {
+			List<LinkInfo> linkinfos = new ArrayList<LinkInfo>()
+			links.findAll { link ->
+				def info = new LinkInfo(type: "${link.type}", itemIdCurrent: "${link.itemIdCurrent}", itemIdRelated: "${link.itemIdRelated}", moduleCurrent: "${link.moduleCurrent}", moduleRelated: "${link.moduleRelated}")
+				if (info.getModuleRelated() == 'rm') {
+					linkinfos.add(info)
+				}
 			}
+			return linkinfos
 		}
-		return linkinfos
+	
+		/*
+		 * bout to get mad silly
+		 * We go through all LinkInfo objects just to get their parent id
+		 */
+	def processLinks() {
+		if (cacheManagementService instanceof MongoDBCacheManagementService) {
+			MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
+			int page = 0
+			while (true) {
+				def linkinfos = mdbCacheManagement.getAllOfType('LinkInfo', page)
+				if (linkinfos.size() == 0) break
+				linkinfos.findAll { link ->
+					def cid = "${link.itemIdCurrent}"
+					List<LinkInfo> links = getLinks(linkinfos)
+					def cacheWI = cacheManagementService.getFromCache(cid, 'RM', 'wiData')
+					def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+					def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
+					wiData.body.add(rev)
+					wiData = generateWILinkChanges(wiData, links, cacheWI)
+				}
+				page++
+			}
+		} else {
+			def cacheWIs = cacheManagementService.getAllOfType('wiData')
+		}
 	}
 
 	private void parseLinksFromArtifactNode(def artifactNode, def in_artifact) {
