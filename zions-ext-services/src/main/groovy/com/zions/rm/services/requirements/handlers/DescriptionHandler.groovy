@@ -267,6 +267,9 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 			outHtml = appendAttribute(outHtml, itemData, 'Entity Name')
 			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
 		}
+		else if (itemData.getArtifactType() == 'Data Scenario') {
+			outHtml = appendAttribute(outHtml, itemData, 'Vendor ID Tracking #')
+		}
 		else if (itemData.getArtifactType() == 'Functional Requirement') {
 			outHtml = appendAttribute(outHtml, itemData, 'Topic')
 			outHtml = appendAttribute(outHtml, itemData, 'Sub-Topic')
@@ -313,6 +316,14 @@ Affiliate:&nbsp${affiliates.replaceAll(';',', ')}</p></div>"""
 		}
 		else if (itemData.getArtifactType() == 'Processing Change') {
 			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
+		}
+		else if (itemData.getArtifactType() == 'Regulatory') {
+			outHtml = appendAttribute(outHtml, itemData, 'Control ID')
+			outHtml = appendAttribute(outHtml, itemData, 'Control Type' )
+			outHtml = appendAttribute(outHtml, itemData, 'Control Nature')
+			outHtml = appendAttribute(outHtml, itemData, 'Validation Approach')
+			outHtml = appendAttribute(outHtml, itemData, 'Owner Organization')
+			outHtml = appendAttribute(outHtml, itemData, 'Validation Team')
 		}
 		else if (itemData.getArtifactType() == 'Report Change') {
 			outHtml = appendAttribute(outHtml, itemData, 'Affiliates Affected')
