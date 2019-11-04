@@ -80,6 +80,8 @@ class SmartDocManagementService {
 			action = 'Update' // Update existing SmartDoc (don't include root work item)
 			wiDetails = """${getWorkitemDetails(0, module).detailString}"""
 		}
+		// Need to replace characters that will cause the Modern Requirements API to fail
+		def docName = "$docTitle".replace('/','-').replace(':','-')
 		body = """
 			{
 			"userId": "${altCreds.user}",
@@ -93,7 +95,7 @@ class SmartDocManagementService {
 			"teamGuid":"$tfsTeamGUID",
 			"collectionName":"$collection",
 			"collectionId":"$tfsCollectionGUID",
-			"docName": "$docTitle",
+			"docName": "$docName",
 			"templateName": "$mrTemplate",
 			"folder": "$mrFolder",
 			"autoRootCreation": false,

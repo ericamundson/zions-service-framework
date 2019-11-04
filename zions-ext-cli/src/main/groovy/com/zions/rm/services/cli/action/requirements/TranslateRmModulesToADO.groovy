@@ -230,8 +230,8 @@ class TranslateRmModulesToADO implements CliAction {
 				def changeList = []
 				def idMap = [:]
 				
-				log.info("${getCurTimestamp()} - Retrieving module $moduleCount of ${moduleUris.size()} using uri: $moduleUri")
-				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri,false)
+				log.info("${getCurTimestamp()} - Retrieving module $moduleCount of ${moduleUris.size()} id: ${moduleUri.key}")
+				ClmRequirementsModule module = clmRequirementsManagementService.getModule(moduleUri.value,false)
 				
 				// For RSZ modules, we need to append the linked RRZ module
 				if (module.getArtifactType()== "RSZ Specification") {
