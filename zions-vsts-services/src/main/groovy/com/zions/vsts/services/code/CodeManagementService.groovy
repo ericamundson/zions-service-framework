@@ -12,6 +12,7 @@ import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j;
 import groovyx.net.http.ContentType
+import groovyx.net.http.HttpResponseException
 
 @Component
 @Slf4j
@@ -102,11 +103,10 @@ class CodeManagementService {
 		return repos
 
 	}
-	
 
 	public def listTopLevel(def collection, def project, def repo) {
 		//log.debug("CodeManagementService::listTopLevel -- collection: ${collection}, project: ${project.id}, repo: ${repo.id}")
-		def query = ['api-version':'4.1','scopePath':'/', 'recursionLevel':'OneLevel', latestProcessedChange:true, 'versionDescriptor.version':'master','versionDescriptor.versionOptions':'firstParent']
+		def query = ['api-version':'5.1','scopePath':'/', 'recursionLevel':'OneLevel', latestProcessedChange:true, 'versionDescriptor.version':'master','versionDescriptor.versionOptions':'firstParent']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/items",
@@ -117,19 +117,27 @@ class CodeManagementService {
 
 	}
 
-	public def getBuildPropertiesFile(def collection, def project, def repo, def filename, def branchName) {
-		log.debug("CodeManagementService::getBuildPropertiesFile -- collection: ${collection}, project: ${project.name}, repo: ${repo.name}, filename: ${filename}, branchName: ${branchName}")
+	public def getFileContent(def collection, def project, def repo, def filename, def branchName) {
+		log.debug("CodeManagementService::getFileContent -- collection: ${collection}, project: ${project.name}, repo: ${repo.name}, filename: ${filename}, branchName: ${branchName}")
 		String filePath = "/${filename}"
-		def query = ['api-version':'4.1','path':filePath, 'includeContent':true, 'versionDescriptor.version':"${branchName}",'versionDescriptor.versionType':'branch']
-		def result = genericRestClient.get(
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.name}/_apis/git/repositories/${repo.name}/items",
-			query: query
-		)
-		log.debug("CodeManagementService::getBuildPropertiesFile -- Return result: "+result)
+		def query = ['api-version':'5.1','path':filePath, 'includeContent':true, 'versionDescriptor.version':"${branchName}",'versionDescriptor.versionType':'branch']
+		def result
+		try {
+			result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.name}/_apis/git/repositories/${repo.name}/items",
+				query: query
+			)
+			log.debug("CodeManagementService::getFileContent -- Return result: "+result)
+		} catch (HttpResponseException hre) {
+			// check for Not Found
+			if (hre.getStatusCode() == 404) {
+				log.debug("CodeManagementService::getFileContent -- File ${filename} not found")
+				result = null
+			}
+		}
 		if (result == null) return null
 		return result.content
-
 	}
 
 	public def importRepo(String collection, String project, String repoName, String importUrl, String bbUser, String bbPassword) {

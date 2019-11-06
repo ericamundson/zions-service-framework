@@ -30,7 +30,7 @@ tfs:
 # prod
   url: https://dev.azure.com/ZionsETO
   user: svc-cloud-vsbuildagent@zionsbancorporation.onmicrosoft.com
-  token: i7lgdocpaar45qlx3wbmr5bfros6j6jhuxbjc7b5twucufn2w43a
+  token: hpwk4nbqnk4sm2fia5ww6ais4lvp2fiiu6zwvnbinbwf7akpxira
   project: dummy
   collection:
   build:
