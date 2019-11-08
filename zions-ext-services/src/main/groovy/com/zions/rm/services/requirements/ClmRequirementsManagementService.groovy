@@ -441,20 +441,28 @@ class ClmRequirementsManagementService {
 					in_artifact.setDescription(primaryTextString)
 
 					if (includeCollections && primaryTextString.indexOf('WrapperResource')==-1) {
-						// Check to see if this artifact has an embedded collection in "showContent" mode
+						// Check to see if this artifact has an embedded collection is "maximised" mode
 						def memberHrefs = []
-						def collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent')
-						if (collectionIndex > -1) { // Embedded Collection, parse all member hrefs for that collection
+						if ( primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator maximised') > -1 ) {
 							memberHrefs = parseCollectionHrefs(richTextBody)
 							in_artifact.setDescription('') // Remove description, since it is now redundant
 						}
-						
-						// Check to see if this artifact has an embedded collection in "minimized" mode
-						collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimised')
-						if (collectionIndex > -1) { // Minimized Collection, get href for the collection artifact
-							String hrefCollection = parseHref(primaryTextString.substring(collectionIndex))
-							memberHrefs = getCollectionMemberHrefs(hrefCollection)
-
+						else {
+							// Check to see if this artifact has an embedded collection in "minimized" mode
+							def collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimised')
+							if (collectionIndex > -1) { // Minimized Collection, get href for the collection artifact
+								String hrefCollection = parseHref(primaryTextString.substring(collectionIndex))
+								memberHrefs = getCollectionMemberHrefs(hrefCollection)
+							}
+							else if (in_artifact.getArtifactType() == 'Screen Field Configuration') {
+								//Check to see if this is a screen field config artifact and it has a link to a collection
+								def collectionLnkIndex = primaryTextString.indexOf('<h:a')
+								if ( collectionLnkIndex > -1) { // Link to Collection
+									String hrefCollection = parseHref(primaryTextString.substring(collectionLnkIndex))
+									memberHrefs = getCollectionMemberHrefs(hrefCollection)
+		
+								}
+							}
 						}
 						
 						// If there are collection members to be retrieved, then retrieve them
