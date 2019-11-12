@@ -443,7 +443,8 @@ class ClmRequirementsManagementService {
 					if (includeCollections && primaryTextString.indexOf('WrapperResource')==-1) {
 						// Check to see if this artifact has an embedded collection is "maximised" mode
 						def memberHrefs = []
-						if ( primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator maximised') > -1 ) {
+						if ( primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator maximised') > -1 ||
+							 primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent') > -1) {
 							memberHrefs = parseCollectionHrefs(richTextBody)
 							in_artifact.setDescription('') // Remove description, since it is now redundant
 						}
@@ -454,7 +455,7 @@ class ClmRequirementsManagementService {
 								String hrefCollection = parseHref(primaryTextString.substring(collectionIndex))
 								memberHrefs = getCollectionMemberHrefs(hrefCollection)
 							}
-							else if (in_artifact.getArtifactType() == 'Screen Field Configuration') {
+							else if (in_artifact.getArtifactType() == 'Screen Field Configuration' || in_artifact.getArtifactType() == 'Screen Requirement') {
 								//Check to see if this is a screen field config artifact and it has a link to a collection
 								def collectionLnkIndex = primaryTextString.indexOf('<h:a')
 								if ( collectionLnkIndex > -1) { // Link to Collection
