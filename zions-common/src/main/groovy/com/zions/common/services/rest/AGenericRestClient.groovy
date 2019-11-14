@@ -342,8 +342,12 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		}
 		def currentEncoder = null
 		if (encoderFunction) {
-			currentEncoder = delegate.encoder.'application/json'
-			delegate.encoder.'application/json' = encoderFunction
+			String requestContentType = 'application/json'
+			if (oinput.requestContentType) {
+				requestContentType  = "${oinput.requestContentType}"
+			}
+			currentEncoder = delegate.encoder."${requestContentType}"
+			delegate.encoder."${requestContentType}" = encoderFunction
 			
 		}
 		Map retryCopy = deepcopy(oinput)
@@ -354,7 +358,11 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			throw e
 		} finally {
 			if (encoderFunction || currentEncoder) {
-				delegate.encoder.'application/json' = currentEncoder
+				String requestContentType = 'application/json'
+				if (oinput.requestContentType) {
+					requestContentType  = "${oinput.requestContentType}"
+				}
+				delegate.encoder."${requestContentType}" = currentEncoder
 				
 			}
 		}
@@ -374,7 +382,20 @@ abstract class AGenericRestClient implements IGenericRestClient {
 				log.error("Input data: ${json}");
 			}
 			System.sleep(300000)
-			resp = delegate.post(retryCopy)
+			try {
+				resp = delegate.post(retryCopy)
+			} catch (e) {
+				throw e
+			} finally {
+				if (encoderFunction || currentEncoder) {
+					String requestContentType = 'application/json'
+					if (oinput.requestContentType) {
+						requestContentType  = "${oinput.requestContentType}"
+					}
+					delegate.encoder."${requestContentType}" = currentEncoder
+					
+				}
+			}
 		}
 		if (withHeader) {
 			def headerMap = [:]

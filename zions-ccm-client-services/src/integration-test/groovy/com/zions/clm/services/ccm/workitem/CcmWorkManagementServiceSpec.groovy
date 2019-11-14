@@ -106,6 +106,28 @@ class CcmWorkManagementServiceSpec extends Specification {
 		true
 	}
 	
+	def 'Perform personal query on cmm'() {
+		setup: 'Initial query class'
+		
+		when: 'call runQuery'
+		boolean success = true
+		try {
+			underTest.multiQuery(['R3 Migration Task Query', 'R3 Migration Anomaly Query', 'R3 Migration Decision Query'], 'Zions FutureCore Program (Change Management)')
+			while (true) {
+				def wis = underTest.multiNext()
+				String pageUrl = underTest.multiPageUrl()
+				println "page:  ${pageUrl}"
+				wis.each { wi ->
+					println "     id: ${wi.id}, summary: ${wi.summary}"
+				}
+				if (!wis) break
+			}
+		} catch (e) {}
+		
+		then:
+		success
+	}
+	
 	def setupWorkitemStubForChanges() {
 		genericRestClient.get(_) >> {
 			return null

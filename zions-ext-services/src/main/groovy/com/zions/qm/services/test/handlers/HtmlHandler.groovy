@@ -2,6 +2,7 @@ package com.zions.qm.services.test.handlers
 
 import org.apache.commons.lang.StringEscapeUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.attachments.IAttachments
@@ -9,6 +10,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.qm.services.test.ClmTestManagementService
 import groovy.xml.MarkupBuilder
 import groovy.xml.XmlUtil
+import java.nio.charset.StandardCharsets
 
 class HtmlHandler extends QmBaseAttributeHandler {
 	@Autowired
@@ -19,6 +21,9 @@ class HtmlHandler extends QmBaseAttributeHandler {
 	
 	@Autowired
 	ICacheManagementService cacheManagementService
+	
+	@Value('${clm.url:}')
+	String clmUrl
 
 	public String getQmFieldName() {
 		return ''
@@ -45,8 +50,11 @@ class HtmlHandler extends QmBaseAttributeHandler {
 			htmlDoc = htmlDoc.replace(' dir="ltr"', '')
 			htmlDoc = processImages(htmlDoc, id)
 			htmlDoc = htmlDoc.replace('<?xml version="1.0" encoding="UTF-8"?>', '')
-			String outString = new String(htmlDoc.bytes, 'utf-8')
-			return outString
+			//StandardCharsets g
+			//String outString = new String(htmlDoc.bytes, StandardCharsets.US_ASCII)
+			//htmlDoc = new String(htmlDoc.getBytes('UTF-8'))
+			//htmlDoc = htmlDoc.replace('Â', '')
+			return htmlDoc
 		}
 		return null
 	}

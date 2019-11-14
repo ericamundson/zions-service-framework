@@ -216,10 +216,10 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 
 		def mapping = new XmlSlurper().parseText(mFile.text)
 		def ccmWits = loadCCMWITs(templateDir)
-		//Update TFS wit definitions.
-		if (includes['meta'] != null) {
-			def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, ccmWits)
-		}
+//		//Update TFS wit definitions.
+//		if (includes['meta'] != null) {
+//			def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, ccmWits)
+//		}
 		//refresh.
 		if (includes['refresh'] != null) {
 			log.info("Refreshing cache.")
@@ -259,8 +259,8 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					ccmWorkManagementService.resetNewId()
 					items.each { workitem ->
-						int id = Integer.parseInt(workitem.id.text())
-						String sid = "${workitem.id.text()}"
+						int id = Integer.parseInt(workitem.id)
+						String sid = "${workitem.id}"
 						def ccmWorkitem = ccmWorkManagementService.getWorkitem(sid)
 						Date ts = ccmWorkitem.modified()
 						def links = ccmWorkManagementService.getAllLinks(sid, ts, ccmWorkitem, linkMapping)
@@ -278,7 +278,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				if (phase == 'worklinks' || phase == 'update' || phase == 'other') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					items.each { workitem ->
-						int id = Integer.parseInt(workitem.id.text())
+						int id = Integer.parseInt(workitem.id)
 						ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping) { key, changes ->
 							if (key == 'WorkItem') {
 								clManager.add("${id}", changes)
@@ -296,18 +296,18 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				}
 
 				//extract & apply attachments.
-				if (phase == 'attachments' || phase == 'update' || phase == 'other') {
-					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
-					items.each { workitem ->
-						int id = Integer.parseInt(workitem.id.text())
-						def files = attachmentsManagementService.cacheWorkItemAttachments(id)
-						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-						if (wiChanges != null) {
-							clManager.add("${id}",wiChanges)
-						}
-					}
-					clManager.flush()
-				}
+//				if (phase == 'attachments' || phase == 'update' || phase == 'other') {
+//					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+//					items.each { workitem ->
+//						int id = Integer.parseInt(workitem.id)
+//						def files = attachmentsManagementService.cacheWorkItemAttachments(id)
+//						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
+//						if (wiChanges != null) {
+//							clManager.add("${id}",wiChanges)
+//						}
+//					}
+//					clManager.flush()
+//				}
 			}
 		}
 		ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()

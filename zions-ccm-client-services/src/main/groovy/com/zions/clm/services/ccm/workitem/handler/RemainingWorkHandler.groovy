@@ -26,7 +26,7 @@ class RemainingWorkHandler extends CcmBaseAttributeHandler {
 	
 	def mappingData = null;
 
-	public ImplementedDateHandler() {}
+	public RemainingWorkHandler() {}
 
 
 	public Object execute(Object data) {

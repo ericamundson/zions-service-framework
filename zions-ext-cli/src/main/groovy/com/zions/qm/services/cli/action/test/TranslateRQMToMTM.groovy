@@ -223,6 +223,12 @@ class TranslateRQMToMTM implements CliAction {
 	
 	@Value('${process.full.plan:false}')
 	String processFullPlan
+	
+	@Value('${refresh.run:false}')
+	boolean refreshRun
+	
+	@Value('${update.links:false}')
+	boolean updateLinks
 
 	public TranslateRQMToMTM() {
 	}
@@ -301,7 +307,9 @@ class TranslateRQMToMTM implements CliAction {
 							clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
 								def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
 								val = fileManagementService.ensureAttachments(collection, tfsProject, "${aid}-${key}", files, val)
-								clManager.add("${aid}-${key}", val)
+								if (val) {
+									clManager.add("${aid}-${key}", val)
+								}
 							}
 							idKeyMap[idtype] = idtype
 						}
@@ -356,7 +364,9 @@ class TranslateRQMToMTM implements CliAction {
 											String tid = "${aid}-${key}".toString()
 											def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
 											val = fileManagementService.ensureAttachments(collection, tfsProject, tid, files, val)
-											clManager.add(tid,val)
+											if (val) {
+												clManager.add("${aid}-${key}", val)
+											}
 										}
 										idKeyMap[idtype] = idtype
 									}
@@ -375,7 +385,9 @@ class TranslateRQMToMTM implements CliAction {
 										String tid = "${aid}-${key}".toString()
 										def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
 										val = fileManagementService.ensureAttachments(collection, tfsProject, tid, files, val)
-										clManager.add(tid,val)
+										if (val) {
+											clManager.add("${aid}-${key}", val)
+										}
 									}
 									idKeyMap[idtype] = idtype
 								}
@@ -426,7 +438,7 @@ class TranslateRQMToMTM implements CliAction {
 									idKeyMap[idtype] = idtype
 								}
 							}
-							testManagementService.setParent(testsuite, tcs, mappingData)
+							testManagementService.setParent(testsuite, tcs, mappingData, updateLinks)
 						}
 						def tcs = []
 						testplan.testcase.each { testcaseRef ->
@@ -443,7 +455,7 @@ class TranslateRQMToMTM implements CliAction {
 								idKeyMap[idtype] = idtype
 							}
 						}
-						testManagementService.setParent(testplan, tcs, mappingData)
+						testManagementService.setParent(testplan, tcs, mappingData, updateLinks)
 					}
 					clManager.flush()
 				}
@@ -455,7 +467,7 @@ class TranslateRQMToMTM implements CliAction {
 						String itemXml = XmlUtil.serialize(testplan)
 						String webId = "${testplan.webId.text()}"
 						String parentHref = "${testItem.id.text()}"
-						def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan)
+						def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, refreshRun)
 						testplan.testsuite.each { testsuiteRef ->
 							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
 							testsuite.testcase.each { testcaseRef ->
@@ -463,6 +475,7 @@ class TranslateRQMToMTM implements CliAction {
 								String tcwebId = "${testcase.webId.text()}"
 								//def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
 								def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
+								executionresults = getLastResult(executionresults)
 								executionresults.each { result ->
 									clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
 										String rwebId = "${result.webId.text()}-${key}"
@@ -477,6 +490,7 @@ class TranslateRQMToMTM implements CliAction {
 							String tcwebId = "${testcase.webId.text()}"
 							//def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
 							def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
+							executionresults = getLastResult(executionresults)
 							executionresults.each { result ->
 								clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
 									String rwebId = "${result.webId.text()}-${key}"
@@ -486,6 +500,7 @@ class TranslateRQMToMTM implements CliAction {
 						}
 					}
 				}
+				
 
 				if (phase == 'qmAttachments') {
 					//def linkMapping = processTemplateService.getLinkMapping(mapping)
@@ -534,6 +549,26 @@ class TranslateRQMToMTM implements CliAction {
 		//extract & apply attachments.
 
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
+	}
+	
+	def getLastResult(executionresults) {
+		def rs = []
+		if (executionresults.size() > 1) {
+			def ro = null
+			def rDate = null
+			executionresults = executionresults.sort { r ->
+				String dStr = "${r.updated.text()}"
+				Date d = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dStr)
+				if (rDate == null || rDate <= d) {
+					rDate = d
+					ro = r
+				}
+			}
+			rs.add(ro)
+		} else if (executionresults == 1){
+			rs.add(executionresults.get(0))
+		}
+		return rs
 	}
 
 	/**

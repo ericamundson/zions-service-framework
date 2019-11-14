@@ -19,7 +19,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="FutureCore\Work"/>
+			<defaultvalue target="BaNCS\Work"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -30,7 +30,7 @@
 			<value source="Invalid" target="Removed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="FutureCore"/>
+			<defaultvalue target="BaNCS"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -105,7 +105,37 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="FutureCore\Work"/>
+			<defaultvalue target="BaNCS\Testing\Teams\Others"/>
+			<value source="BaNCS Product: Test" target="BaNCS\Testing\Teams\Product"/>
+			<value source="Business Unit: CDA" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: ELO" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: EML" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: RLC" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: Secondary" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: UAT Triage" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Data Migration: Test" target="BaNCS\Testing\Teams\Data Migration"/>
+			<value source="EIM: EDW Test" target="BaNCS\Testing\Teams\EIM"/>
+			<value source="Finance: EDW" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Evolv" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Evolv - TI" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: FAH" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Financial Accounting Hub" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Frontier" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Loan Operations" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: ODS" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: R3 BaNCS Finance" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Recon" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Interfaces: UAT" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="Interfaces: BaNCS Test" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="Interfaces: Tier 2" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="N/A" target="BaNCS\Testing\Teams\NoTeamAssignment"/>
+			<value source="NFR: Test" target="BaNCS\Testing\Teams\NFR"/>
+			<value source="ODS Data" target="BaNCS\Testing\Teams\ODS Data"/>
+			<value source="R2R" target="BaNCS\Testing\Teams\R2R"/>
+			<value source="Reports: BaNCS Test" target="BaNCS\Testing\Teams\Reports"/>
+			<value source="Reports: ODS Test" target="BaNCS\Testing\Teams\Reports"/>
+			<value source="Rollout" target="BaNCS\Testing\Teams\Rollout"/>
+			<value source="SNF: Test" target="BaNCS\Testing\Teams\SNF"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -113,10 +143,12 @@
 			<value source="In Progress" target="Active"/>
 			<value source="Ready for Testing" target="Active"/>
 			<value source="Done" target="Closed"/>
-			<value source="Invalid" target="Removed"/>
+			<value source="Invalid" target="Closed"/>
 		</field>
+		<field source="rtcTimelineHandler" target="Custom.RTCTimeline"/>
+		
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="FutureCore"/>
+			<defaultvalue target="BaNCS"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -127,10 +159,10 @@
 			<value source="Unassigned" target="4"/>			
 		</field>
 		<field source="internalSeverity" target="Microsoft.VSTS.Common.Severity">
-			<defaultvalue target="Low"/>
-			<value source="Blocker" target="High"/>
-			<value source="Critical" target="High"/>
-			<value source="Major" target="Medium"/>
+			<defaultvalue target="Low - 4"/>
+			<value source="S1 - Blocker - Application Crashes, Loss of Data, or Data Corruption" target="Critical - 1"/>
+			<value source="S2 - Critical - None or Unacceptable Workaround, Major Feature Failure" target="High - 2"/>
+			<value source="S3 - Major - Acceptable Workaround" target="Medium - 3"/>
 		</field>
 		<!-- 
 		<field source="modifiedBy" target="System.ChangedBy"/>
@@ -192,7 +224,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="FutureCore\Work"/>
+			<defaultvalue target="BaNCS\Work"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -203,7 +235,7 @@
 			<value source="Invalid" target="Removed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="FutureCore"/>
+			<defaultvalue target="BaNCS"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -278,7 +310,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="FutureCore\Work"/>
+			<defaultvalue target="BaNCS\Work"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -289,7 +321,7 @@
 			<value source="Invalid" target="Removed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="FutureCore"/>
+			<defaultvalue target="BaNCS"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -347,8 +379,13 @@
 		<newfields>
 		</newfields>
 	</wit>
-	<wit source="Decision"  target="Idea" translateUnmappedFields="false">
+	<wit source="Decision"  target="Decision" translateUnmappedFields="false">
 		<field source="idHandler" target="Custom.ExternalID"/>
+		<!-- Custom field migration  -->
+		<field source="com.ibm.team.workitem.decision.final.date" target="Custom.Date"/>
+		<field source="com.ibm.team.workitem.decision.final" target="Microsoft.VSTS.CMMI.Minutes"/>
+		<field source="rtcTimelineHandler" target="Custom.RTCTimeline"/>
+		
 		<field source="historyToDiscussionHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
@@ -364,18 +401,47 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="FutureCore\Work"/>
+			<defaultvalue target="BaNCS\Testing\Teams\Others"/>
+			<value source="BaNCS Product: Test" target="BaNCS\Testing\Teams\Product"/>
+			<value source="Business Unit: CDA" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: ELO" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: EML" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: RLC" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: Secondary" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: UAT Triage" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Data Migration: Test" target="BaNCS\Testing\Teams\Data Migration"/>
+			<value source="EIM: EDW Test" target="BaNCS\Testing\Teams\EIM"/>
+			<value source="Finance: EDW" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Evolv" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Evolv - TI" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: FAH" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Financial Accounting Hub" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Frontier" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Loan Operations" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: ODS" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: R3 BaNCS Finance" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Recon" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Interfaces: UAT" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="Interfaces: BaNCS Test" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="Interfaces: Tier 2" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="N/A" target="BaNCS\Testing\Teams\NoTeamAssignment"/>
+			<value source="NFR: Test" target="BaNCS\Testing\Teams\NFR"/>
+			<value source="ODS Data" target="BaNCS\Testing\Teams\ODS Data"/>
+			<value source="R2R" target="BaNCS\Testing\Teams\R2R"/>
+			<value source="Reports: BaNCS Test" target="BaNCS\Testing\Teams\Reports"/>
+			<value source="Reports: ODS Test" target="BaNCS\Testing\Teams\Reports"/>
+			<value source="Rollout" target="BaNCS\Testing\Teams\Rollout"/>
+			<value source="SNF: Test" target="BaNCS\Testing\Teams\SNF"/>
 		</field>
 		<field source="internalState" target="System.State">
-			<defaultvalue target="New"/>
+			<defaultvalue target="Active"/>
 			<value source="New" target="New"/>
-			<value source="In Progress" target="Active"/>
-			<value source="Ready for Testing" target="Active"/>
 			<value source="Done" target="Closed"/>
-			<value source="Invalid" target="Removed"/>
+			<value source="Defered" target="Closed"/>
+			<value source="Invalid" target="Closed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="FutureCore"/>
+			<defaultvalue target="BaNCS"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -451,7 +517,7 @@
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="FutureCore\Work"/>
+			<defaultvalue target="BaNCS\Work"/>
 		</field>
 		<!--  
 New 	
@@ -484,7 +550,7 @@ Removed
 			<value source="Invalid" target="Removed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="FutureCore"/>
+			<defaultvalue target="BaNCS"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -559,7 +625,7 @@ Removed
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="FutureCore\Work"/>
+			<defaultvalue target="BaNCS\Work"/>
 		</field>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="New"/>
@@ -570,7 +636,7 @@ Removed
 			<value source="Invalid" target="Removed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="FutureCore"/>
+			<defaultvalue target="BaNCS"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="2"/>
@@ -628,12 +694,34 @@ Removed
 		<newfields>
 		</newfields>
 	</wit>
-	<wit source="Anomaly"  target="Anomaly" translateUnmappedFields="false">
+	<wit source="Anomaly"  target="Bug" translateUnmappedFields="false">
+	    <!--  
+	    o environment will need mapped
+	    o build will need new field
+	    o found in
+	    o fix in
+	    o root cause
+	     -->
 		<field source="idHandler" target="Custom.ExternalID"/>
-		<field source="blankHandler" target="Custom.Classification">
-			<defaultvalue target="Anomaly"/>
-		</field>
-		<field source="historyToDiscussionHandler" target="System.History"/>
+		
+		<!-- Need custom handler for classification -->
+		<field source="com.ibm.workitem.anomaly.tab.classification" target="Custom.Classification"/>
+		<field source="com.zions.workitem.attribute.DefectColor" target="Custom.Color"/>
+		<field source="com.zions.workitem.attribute.enviroments" target="Custom.BaNCSEnvironment"/>
+		<field source="com.zions.workitem.attribute.FoundInBuild" target="Custom.a357e270-0f08-405f-8b72-791eab63b406"/>
+		<field source="com.zions.workitem.attribute.FoundInDrop" target="Custom.FoundInDrop"/>
+		<field source="com.zions.workitem.attribute.FixedInBuild" target="Custom.FixedInBuild"/>
+		<field source="com.zions.workitem.attribute.FixedInDrop01" target="Custom.FixedInDrop"/>
+		<field source="com.zions.workitem.attribute.com.zions.workitem.attribute.MiddleFile" target="Custom.DMMiddleFile"/>
+		<field source="com.zions.workitem.attribute.rootcauseclassification" target="Custom.RootCauseClassification"/>
+		<field source="com.zions.workitem.attribute.anomaly.rootcause_large" target="Custom.RootCauseComment"/>
+		<field source="com.zions.workitem.attribute.anomaly.requirement_large" target="Custom.RequirementChangesNeeded"/>
+		<field source="com.ibm.workitem.anomaly.tab.releasefixed" target="Custom.ReleaseFixedIn"/>
+		<field source="com.ibm.workitem.anomaly.tab.releasefound" target="Custom.d44fd5d1-63ab-420a-a73c-c6640f378779"/>
+		<field source="com.ibm.workitem.anomaly.tab.releasetarget" target="Custom.ReleaseTargetedTo"/>
+		<field source="rtcTimelineHandler" target="Custom.RTCTimeline"/>
+		
+		<field source="commentsIntoHistoryHandler" target="System.History"/>
 		<field source="remainingWorkHandler" target="Microsoft.VSTS.Scheduling.RemainingWork"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ResolvedDate"/>
 		<field source="resolutionDate" target="Microsoft.VSTS.Common.ClosedDate"/>
@@ -642,38 +730,71 @@ Removed
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
-		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason"/>
+		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason">
+			<defaultvalue target=""/>
+		</field>
 		<field source="summaryHandler" target="System.Title"/>
 		<field source="description" target="System.Description"/>
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
 		<field source="timeSpent" target="Microsoft.VSTS.Scheduling.CompletedWork"/>
 		<field source="category" target="System.AreaPath">
-			<defaultvalue target="FutureCore\Work"/>
+			<defaultvalue target="BaNCS\Testing\Teams\Others"/>
+			<value source="BaNCS Product: Test" target="BaNCS\Testing\Teams\Product"/>
+			<value source="Business Unit: CDA" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: ELO" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: EML" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: RLC" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: Secondary" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: UAT Triage" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Data Migration: Test" target="BaNCS\Testing\Teams\Data Migration"/>
+			<value source="EIM: EDW Test" target="BaNCS\Testing\Teams\EIM"/>
+			<value source="Finance: EDW" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Evolv" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Evolv - TI" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: FAH" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Financial Accounting Hub" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Frontier" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Loan Operations" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: ODS" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: R3 BaNCS Finance" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Recon" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Interfaces: UAT" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="Interfaces: BaNCS Test" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="Interfaces: Tier 2" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="N/A" target="BaNCS\Testing\Teams\NoTeamAssignment"/>
+			<value source="NFR: Test" target="BaNCS\Testing\Teams\NFR"/>
+			<value source="ODS Data" target="BaNCS\Testing\Teams\ODS Data"/>
+			<value source="R2R" target="BaNCS\Testing\Teams\R2R"/>
+			<value source="Reports: BaNCS Test" target="BaNCS\Testing\Teams\Reports"/>
+			<value source="Reports: ODS Test" target="BaNCS\Testing\Teams\Reports"/>
+			<value source="Rollout" target="BaNCS\Testing\Teams\Rollout"/>
+			<value source="SNF: Test" target="BaNCS\Testing\Teams\SNF"/>
 		</field>
 		<field source="internalState" target="System.State">
-			<defaultvalue target="New"/>
+			<defaultvalue target="Active"/>
 			<value source="New" target="New"/>
-			<value source="In Progress" target="Active"/>
-			<value source="Implemented" target="Resolved"/>
-			<value source="Done" target="Closed"/>
-			<value source="Invalid" target="Removed"/>
+			<value source="Resolved" target="Resolved"/>
+			<value source="Resolved - Fix" target="Resolved"/>
+			<value source="Resolved - Non Fix" target="Resolved"/>
+			<value source="Closed" target="Closed"/>
+			<value source="Invalid" target="Closed"/>
 		</field>
 		<field source="target" target="System.IterationPath">
-			<defaultvalue target="FutureCore"/>
+			<defaultvalue target="BaNCS"/>
 		</field>
 		<field source="internalPriority" target="Microsoft.VSTS.Common.Priority">
-			<defaultvalue target="2"/>
+			<defaultvalue target="skip"/>
 			<value source="P1 - Show Stopper" target="1"/>
-			<value source="P2 - Must Have" target="1"/>
-			<value source="P3 - Should Have" target="2"/>
-			<value source="P4 - Could Have" target="3"/>
-			<value source="Unassigned" target="4"/>			
+			<value source="P2 - Must Have" target="2"/>
+			<value source="P3 - Should Have" target="3"/>
+			<value source="P4 - Could Have" target="4"/>
 		</field>
 		<field source="internalSeverity" target="Microsoft.VSTS.Common.Severity">
-			<defaultvalue target="Low"/>
-			<value source="S1 - Blocker - Application Crashes, Loss of Data, or Data Corruption" target="High"/>
-			<value source="S2 - Critical - None or Unacceptable Workaround, Major Feature Failure" target="High"/>
-			<value source="	S3 - Major - Acceptable Workaround" target="Medium"/>
+			<defaultvalue target="4 - Low"/>
+			<value source="S1 - Blocker - Application Crashes, Loss of Data, or Data Corruption" target="1 - Critical"/>
+			<value source="S2 - Critical - None or Unacceptable Workaround, Major Feature Failure" target="2 - High"/>
+			<value source="S3 - Major - Acceptable Workaround" target="3 - Medium"/>
+			<value source="Unassigned" target=""/>
 		</field>
 		<!-- 
 		<field source="modifiedBy" target="System.ChangedBy"/>
@@ -730,7 +851,7 @@ Removed
 		<link source="affects_requirement" target="System.LinkTypes.Related" module="RM"/>
 		<link source="tracks_requirement" target="System.LinkTypes.Related" module="RM"/>
 		<link source="related_test_case" target="System.LinkTypes.Related" module="QM" key="Test Case"/>
-		<link source="related_test_plan" target="System.LinkTypes.Related" module="QM" key="Test Plan WI"/>
+		<link source="related_test_plan" target="System.LinkTypes.Related" module="QM" key="Test Suite WI"/>
 		<link source="tested_by_test_case" target="Microsoft.VSTS.Common.TestedBy-Forward" module="QM" key="Test Case"/>
 		<link source="affects_execution_result" target="Result" module="QM" key="Result"/>
 		<!--  <link source="related_execution_record" target="Hyperlink" module="QM"/> -->

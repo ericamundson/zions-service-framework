@@ -129,6 +129,8 @@ class ClmTestManagementService {
 	 */
 	def getTestItem(String uri) {
 		uri = uri.replace(' ', '+')
+		uri = uri.replace('|', '%7C')
+//		uri = URLEncoder.encode(uri, 'UTF-8')
 		def result = qmGenericRestClient.get(
 			//contentType: ContentType.XML,
 			uri: uri,
@@ -282,6 +284,7 @@ class ClmTestManagementService {
 		def result = qmGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/xml'] );
+		//println new XmlUtil().serialize(result)
 		return result
 	}
 	
@@ -370,7 +373,7 @@ class ClmTestManagementService {
 			def erlist = result.'**'.findAll { it.name() == 'executionresult' }
 			
 			erlist.each { item ->
-				String itemxml = XmlUtil.serialize(item)
+				//String itemxml = XmlUtil.serialize(item)
 				outItems.add(item)
 			}
 			def nextLink = result.'**'.find { node ->

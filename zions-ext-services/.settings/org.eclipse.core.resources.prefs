@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/groovydoc/org/codehaus/groovy/tools/groovydoc/gstringTemplates/classLevel/classDocName.html=UTF-8
+encoding//src/main/groovy/com/zions/qm/services/test/handlers/NameHandler.groovy=UTF-8
 encoding//src/main/groovy/com/zions/testlink/services/test/handlers/NameHandler.groovy=UTF-8
 encoding//src/main/groovy/com/zions/testlink/services/test/handlers/ResultTestcaseTitleHandler.groovy=UTF-8
+encoding//src/test/resources/testdata/title.txt=UTF-8

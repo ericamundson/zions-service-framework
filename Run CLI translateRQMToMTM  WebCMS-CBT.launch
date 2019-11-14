@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-ext-cli/src/main/groovy/com/zions/ext/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="translateRQMToMTM --clm.url=https://clm.cs.zionsbank.com --clm.user=z091182  --tfs.url=https://dev.azure.com/${string_prompt} --tfs.user=z091182  --clm.projectArea=&quot;_UG5WQFXHEea4DNHMyk7tfg&quot; --qm.template.dir=&quot;d:\qm_templates&quot; --test.mapping.file=&quot;./WebCMSRQMMapping-CBT.xml&quot; --tfs.project=&quot;WebCMS&quot; --process.name=&quot;ZionsAgile&quot; --include.update=phases --include.phases=executions --qm.query=none --qm.filter=QmAllFilter --tfs.areapath=&quot;WebCMS\\CBT&quot; --cache.location=d:/webcms_cbt_cache_${string_prompt} --selected.checkpoint=none --process.full.plan=true --qm.tc.query=none --ext.url=https://extmgmt.dev.azure.com/${string_prompt} --ext.collection=${string_prompt}"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=qm"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>

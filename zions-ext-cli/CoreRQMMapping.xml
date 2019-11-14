@@ -1,5 +1,11 @@
 <witmapping>
-	<wit source="testplan"  target="Test Plan" translateUnmappedFields="false" notWorkItem="true">
+
+	<wit source="testplan"  target="Test Suite" translateUnmappedFields="false" notWorkItem="true">
+	<!--  Nov 16th  
+	 o Only r3 related test plans
+	 o Only Active state.
+	 o All RQM plans will go into a single test plan as suites in ADO.
+	 -->
 		<field source="nameHandler" target="name"/>
 		<field source="descriptionHandler" target="description"/>
 		<field source="planOwnerHandler" target="owner"/>
@@ -7,13 +13,18 @@
 			<defaultvalue target="Active"/>
 		</field>
 		<field source="planBlankHandler" target="area">
-			<defaultvalue target="FutureCore\Test"/>
+			<defaultvalue target="BaNCS\Testing\Releases\R3"/>
 		</field>
 		<field source="blankHandler" target="iteration">
-			<defaultvalue target="FutureCore"/>		
+			<defaultvalue target="BaNCS"/>		
 		</field>
 	</wit>
 	<wit source="testsuite"  target="Test Suite" translateUnmappedFields="false" notWorkItem="true">
+	<!--  Nov 16th  
+	 o Only r3 related test plans
+	 o Only Active state.
+	 o All RQM plans will go into a single test plan as suites in ADO.
+	 -->
 		<field source="nameHandler" target="name"/>
 		<field source="descriptionHandler" target="description"/>
 		<field source="planOwnerHandler" target="owner"/>
@@ -21,13 +32,17 @@
 			<defaultvalue target="Active"/>
 		</field>
 		<field source="planBlankHandler" target="area">
-			<defaultvalue target="FutureCore\Test"/>
+			<defaultvalue target="BaNCS\Testing\Releases\R3"/>
 		</field>
 		<field source="blankHandler" target="iteration">
-			<defaultvalue target="FutureCore"/>		
+			<defaultvalue target="BaNCS"/>		
 		</field>
 	</wit>
 	<wit source="testcase"  target="Test Case" translateUnmappedFields="false">
+	<!-- 
+	Nov 16
+	o Category Test_Team will map to teamArea.  Mark will get mapping.
+	 -->
 		<field source="nameHandler" target="System.Title"/>
 		<field source="testCasePriorityHandler" target="Microsoft.VSTS.Common.Priority">
 			<defaultvalue target="4"/>
@@ -41,17 +56,49 @@
 		<field source="preconditionHandler" target="Custom.PreCondition"/>
 		<field source="postconditionHandler" target="Custom.PostCondition"/>
 		<field source="stateHandler" target="System.State">
-			<defaultvalue target="Ready"/>
-			<value source="com.ibm.rqm.planning.common.new" target="Design"/>
-			<value source="com.ibm.rqm.planning.common.underreview" target="Ready for Peer"/>
-			<value source="com.ibm.rqm.planning.common.retired" target="Closed"/>
-			<value source="com.ibm.rqm.planning.common.approved" target="Ready"/>
+			<defaultvalue target="Design"/>
+			<value source="Draft" target="Design"/>
+			<value source="Ready for Peer Review" target="Ready for Peer"/>
+			<value source="Ready for Business Review" target="Ready for Business"/>
+			<value source="Final Approved" target="Approved"/>
+			<value source="Retired" target="Closed"/>
 		</field>
-		<field source="blankHandler" target="System.AreaPath">
-			<defaultvalue target="FutureCore\Test"/>
+		<!-- testTeamHandler not created. -->
+		<field source="coreTestCaseTeamAreaHandler" target="System.AreaPath">
+			<defaultvalue target="BaNCS\Testing\Teams\Others"/>
+			<value source="BaNCS Product: Test" target="BaNCS\Testing\Teams\Product"/>
+			<value source="Business Unit: CDA" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: ELO" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: EML" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: RLC" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: Secondary" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Business Unit: UAT Triage" target="BaNCS\Testing\Teams\Business Units"/>
+			<value source="Data Migration: Test" target="BaNCS\Testing\Teams\Data Migration"/>
+			<value source="EIM: EDW Test" target="BaNCS\Testing\Teams\EIM"/>
+			<value source="Finance: EDW" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Evolv" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Evolv - TI" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: FAH" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Financial Accounting Hub" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Frontier" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Loan Operations" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: ODS" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: R3 BaNCS Finance" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Finance: Recon" target="BaNCS\Testing\Teams\Finance"/>
+			<value source="Interfaces: UAT" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="Interfaces: BaNCS Test" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="Interfaces: Tier 2" target="BaNCS\Testing\Teams\Interface"/>
+			<value source="N/A" target="BaNCS\Testing\Teams\NoTeamAssignment"/>
+			<value source="NFR: Test" target="BaNCS\Testing\Teams\NFR"/>
+			<value source="ODS Data" target="BaNCS\Testing\Teams\ODS Data"/>
+			<value source="R2R" target="BaNCS\Testing\Teams\R2R"/>
+			<value source="Reports: BaNCS Test" target="BaNCS\Testing\Teams\Reports"/>
+			<value source="Reports: ODS Test" target="BaNCS\Testing\Teams\Reports"/>
+			<value source="Rollout" target="BaNCS\Testing\Teams\Rollout"/>
+			<value source="SNF: Test" target="BaNCS\Testing\Teams\SNF"/>
 		</field>
 		<field source="blankHandler" target="System.IterationPath">
-			<defaultvalue target="FutureCore"/>		
+			<defaultvalue target="BaNCS"/>		
 		</field>
 		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
 		<excluded>
@@ -78,34 +125,34 @@
 	<wit source="executionresult"  target="Result" translateUnmappedFields="false">
 		<field source="resultIdHandler" target="id"/>
 		<field source="resultStartDateHandler" target="startedDate"/>
-		<field source="resultTestcaseTitleHandler" target="testCaseTitle"/>
+		<field source="resultTestcaseReferenceHandler" target="testCaseReferenceId"/>
 		<field source="blankHandler" target="priority">
 			<defaultvalue target="2"/>		
 		</field>
 		
 		<field source="resultStateHandler" target="outcome">
-			<defaultvalue target="Active"/>		
+			<defaultvalue target="Unspecified"/>		
 			<value source="com.ibm.rqm.execution.common.state.passed" target="Passed"/>
-			<value source="com.ibm.rqm.execution.common.state.paused" target="Active"/> 
-			<value source="com.ibm.rqm.execution.common.state.inprogress" target="Active"/> 
-			<value source="com.ibm.rqm.execution.common.state.notrun" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.paused" target="Paused"/> 
+			<value source="com.ibm.rqm.execution.common.state.inprogress" target="InProgress"/> 
+			<value source="com.ibm.rqm.execution.common.state.notrun" target="NotExecuted"/> 
 			<value source="com.ibm.rqm.execution.common.state.perm_failed" target="Failed"/> 
-			<value source="com.ibm.rqm.execution.common.state.incomplete" target="Active"/> 
-			<value source="com.ibm.rqm.execution.common.state.inconclusive" target="Active"/> 
-			<value source="com.ibm.rqm.execution.common.state.part_blocked" target="Block"/> 
-			<value source="com.ibm.rqm.execution.common.state.deferred" target="Not applicable"/> 
+			<value source="com.ibm.rqm.execution.common.state.incomplete" target="Paused"/> 
+			<value source="com.ibm.rqm.execution.common.state.inconclusive" target="Inconclusive"/> 
+			<value source="com.ibm.rqm.execution.common.state.part_blocked" target="Blocked"/> 
+			<value source="com.ibm.rqm.execution.common.state.deferred" target="NotExecuted"/> 
 			<value source="com.ibm.rqm.execution.common.state.failed" target="Failed"/> 
 			<value source="com.ibm.rqm.execution.common.state.error" target="Failed"/> 
-			<value source="com.ibm.rqm.execution.common.state.blocked" target="Block"/> 		
+			<value source="com.ibm.rqm.execution.common.state.blocked" target="Blocked"/> 		
 			</field>
 		<field source="resultStateHandler" target="state">
-			<defaultvalue target="Pending"/>		
-			<value source="com.ibm.rqm.execution.common.state.passed" target="Completed"/>
+			<defaultvalue target="Completed"/>		
+			<!--  <value source="com.ibm.rqm.execution.common.state.passed" target="Completed"/>
 			<value source="com.ibm.rqm.execution.common.state.perm_failed" target="Completed"/> 
 			<value source="com.ibm.rqm.execution.common.state.deferred" target="Completed"/> 
 			<value source="com.ibm.rqm.execution.common.state.failed" target="Completed"/> 
 			<value source="com.ibm.rqm.execution.common.state.error" target="Completed"/> 
-			<value source="com.ibm.rqm.execution.common.state.blocked" target="Completed"/> 		
+			<value source="com.ibm.rqm.execution.common.state.blocked" target="Completed"/> 	-->	
 		</field>
 		<!-- <field source="resultOwnerHandler" target="owner"/> -->
 		
@@ -117,11 +164,12 @@
 			<defaultvalue target="Active"/>
 		</field>
 	</wit>
-	<wit source="testplan"  target="Test Plan WI" translateUnmappedFields="false">
+	<wit source="testplan"  target="Test Suite WI" translateUnmappedFields="false">
 		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
-	</wit>
+	</wit> 
 	<wit source="testsuite"  target="Test Suite WI" translateUnmappedFields="false">
 		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
-	</wit>
+	</wit> 
+
 	
 </witmapping>

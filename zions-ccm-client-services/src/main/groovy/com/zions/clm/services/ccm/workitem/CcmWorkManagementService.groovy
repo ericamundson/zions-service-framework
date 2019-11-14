@@ -8,15 +8,27 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import com.ibm.team.links.common.IReference
 import com.ibm.team.links.common.registry.IEndPointDescriptor
+import com.ibm.team.process.client.IProcessClientService
+import com.ibm.team.process.common.IProjectArea
 import com.ibm.team.repository.client.ITeamRepository
+import com.ibm.team.repository.common.IContributor
+import com.ibm.team.repository.common.TeamRepositoryException
+import com.ibm.team.workitem.client.IQueryClient
 import com.ibm.team.workitem.client.IWorkItemClient
 import com.ibm.team.workitem.common.IWorkItemCommon
 import com.ibm.team.workitem.common.model.AttributeTypes
 import com.ibm.team.workitem.common.model.IAttribute
 import com.ibm.team.workitem.common.model.IWorkItem
 import com.ibm.team.workitem.common.model.IWorkItemReferences
+import com.ibm.team.workitem.common.model.ItemProfile
+import com.ibm.team.workitem.common.query.IQueryDescriptor
+import com.ibm.team.workitem.common.query.IQueryResult
+import com.ibm.team.workitem.common.query.IResolvedResult
+import com.ibm.team.workitem.common.query.QueryTypes
+import com.ibm.team.workitem.common.query.ResultSize
 import com.zions.clm.services.ccm.client.CcmGenericRestClient
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
+import com.zions.clm.services.ccm.utils.ProcessAreaUtil
 import com.zions.clm.services.ccm.utils.ReferenceUtil
 import com.zions.clm.services.ccm.workitem.handler.CcmBaseAttributeHandler
 import com.zions.common.services.cache.ICacheManagementService
@@ -61,6 +73,15 @@ class CcmWorkManagementService {
 	
 	@Autowired(required=false)
 	CcmGenericRestClient ccmGenericRestClient
+	
+	IQueryResult<IResolvedResult> resolvedResults = null
+	//def queryResults = null
+	
+	List<String> queryList = null
+	String projectName
+	int queryIndex = 0
+	String queryName = 'none'
+	int pageIndex = 0
 	
 	Map<String, String> itemMap = ['testcase': 'Test Case', 'testsuite': 'Test Suite', 'testplan': 'Test Case', 'executionresult': 'Result']
 	
@@ -334,14 +355,19 @@ class CcmWorkManagementService {
 					}
 				}
 			}
-			if ("${fieldMap.outType}" == 'integer') {
-				val = Integer.parseInt(val)
-			} else if ("${fieldMap.outType}" == 'double') {
-				val = Double.parseDouble(val)
-			} else if ("${fieldMap.outType}" == 'boolean') {
-				val = Boolean.parseBoolean(val)
+			if ("${val}" != 'skip') {
+				if ("${fieldMap.outType}" == 'integer') {
+					val = Integer.parseInt(val)
+				} else if ("${fieldMap.outType}" == 'double') {
+					val = Double.parseDouble(val)
+				} else if ("${fieldMap.outType}" == 'boolean') {
+					val = Boolean.parseBoolean(val)
+				}
 			}
 			if ("${val}" != "${cValue}") {
+				if ("${val}" == 'skip') {
+					return [op:'add', path: "/fields/${fieldMap.target}", value: '']
+				}
 				return [op:'add', path: "/fields/${fieldMap.target}", value: val]
 			} else {
 				return null
@@ -360,12 +386,17 @@ class CcmWorkManagementService {
 				}
 			}
 		}
-		if ("${fieldMap.outType}" == 'integer') {
-			val = Integer.parseInt(val)
-		} else if ("${fieldMap.outType}" == 'double') {
-			val = Double.parseDouble(val)
-		} else if ("${fieldMap.outType}" == 'boolean') {
-			val = Boolean.parseBoolean(val)
+		if ("${val}" != 'skip') {
+			if ("${fieldMap.outType}" == 'integer') {
+				val = Integer.parseInt(val)
+			} else if ("${fieldMap.outType}" == 'double') {
+				val = Double.parseDouble(val)
+			} else if ("${fieldMap.outType}" == 'boolean') {
+				val = Boolean.parseBoolean(val)
+			}
+		}
+		if ("${val}" == 'skip') {
+			return [op:'add', path: "/fields/${fieldMap.target}", value: '']
 		}
 		return [op:'add', path:"/fields/${fieldMap.target}", value: val]
 		
@@ -453,6 +484,133 @@ class CcmWorkManagementService {
 		return rtcRepositoryClient.getMonitor()
 	}
 
+	public static IQueryDescriptor findSharedQuery(	IProjectArea projectArea,
+			List sharingTargets, String queryName,  IProgressMonitor monitor)
+			throws TeamRepositoryException {
+		// Get the required client libraries
+				QueryTypes t
+		ITeamRepository teamRepository = (ITeamRepository)projectArea.getOrigin();
+		IWorkItemClient workItemClient = (IWorkItemClient) teamRepository.getClientLibrary(IWorkItemClient.class);
+		IQueryClient queryClient = workItemClient.getQueryClient();
+		IQueryDescriptor queryToRun = null;
+		List queries = queryClient.findSharedQueries(projectArea.getProjectArea(),
+			sharingTargets, QueryTypes.WORK_ITEM_QUERY,
+		IQueryDescriptor.FULL_PROFILE, monitor);
+		// Find a query with a matching name
+		for (Iterator iterator = queries.iterator(); iterator.hasNext();) {
+			IQueryDescriptor iQueryDescriptor = (IQueryDescriptor) iterator.next();
+			if (iQueryDescriptor.getName().equals(queryName)) {
+				queryToRun = iQueryDescriptor;
+				break;
+			}
+		}
+		return queryToRun;
+	}
+	
+	public static IQueryDescriptor findPersonalQuery(IProjectArea projectArea,
+		String queryName, IProgressMonitor monitor)
+		throws TeamRepositoryException {
+		// Get the required client libraries
+		ITeamRepository teamRepository = (ITeamRepository)projectArea.getOrigin();
+		IWorkItemClient workItemClient = (IWorkItemClient) teamRepository.getClientLibrary(
+			IWorkItemClient.class);
+		IQueryClient queryClient = workItemClient.getQueryClient();
+		// Get the current user.
+		IContributor loggedIn = teamRepository.loggedInContributor();
+		IQueryDescriptor queryToRun = null;
+		// Get all queries of the user in this project area.
+		List queries = queryClient.findPersonalQueries(
+			projectArea.getProjectArea(), loggedIn,
+			QueryTypes.WORK_ITEM_QUERY,
+			IQueryDescriptor.FULL_PROFILE, monitor);
+		// Find a query with a matching name
+		for (Iterator iterator = queries.iterator(); iterator.hasNext();) {
+			IQueryDescriptor iQueryDescriptor = (IQueryDescriptor) iterator.next();
+			if (iQueryDescriptor.getName().equals(queryName)) {
+				queryToRun = iQueryDescriptor;
+				break;
+			}
+		}
+		return queryToRun;
+	}
+	
+	public def multiQuery(List<String> queryList, String projectName) {
+		this.queryList = queryList
+		this.projectName = projectName
+		this.resolvedResults = null
+		this.pageIndex = 0
+		this.queryName = 'none'
+		this.queryIndex = 0
+	}
+	
+	public def multiNext() {
+		def retVal = null
+		if (!resolvedResults) {
+			queryName = queryList.get(queryIndex)
+			retVal = runQuery(queryName, projectName)
+			queryIndex++
+		} else {
+			retVal = nextPage()
+			pageIndex++
+			if (!retVal && queryIndex < queryList.size()) {
+				queryName = queryList.get(queryIndex)
+				retVal = runQuery(queryName, projectName)
+				queryIndex++
+				pageIndex = 0
+			}
+		}
+		return retVal
+	}
+	
+	public String multiPageUrl() {
+		return "${queryName}-${pageIndex}"
+	}
+	
+	public def runQuery(String queryName, String projectName) {
+		//ProcessAreaUtil u
+		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		IProcessClientService clientService = teamRepository.getClientLibrary(IProcessClientService.class)
+		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(projectName, clientService, getMonitor())
+		List sharingTargets = new ArrayList();
+		// Add desired sharing targets
+		sharingTargets.add(projectArea);
+		IQueryDescriptor sharedQuery = findPersonalQuery(projectArea, queryName, getMonitor());
+		
+//		IWorkItemClient workItemClient = (IWorkItemClient) teamRepository.getClientLibrary(IWorkItemClient.class);
+//		IQueryClient queryClient = workItemClient.getQueryClient();
+//		IQueryResult unresolvedResults = queryClient.getQueryResults(sharedQuery);
+		
+		IWorkItemClient workItemClient = (IWorkItemClient) teamRepository.getClientLibrary(IWorkItemClient.class);
+		IQueryClient queryClient = workItemClient.getQueryClient();
+		// Set the load profile
+		ItemProfile loadProfile = IWorkItem.SMALL_PROFILE;
+		resolvedResults = queryClient.getResolvedQueryResults(sharedQuery, loadProfile)
+		resolvedResults.setLimit(Integer.MAX_VALUE)
+		ResultSize limit = resolvedResults.getResultSize(getMonitor())
+	
+		resolvedResults.setPageSize(200)
+		
+		return nextPage()
+	}
+	
+	public def nextPage() {
+		def wil = []
+		if (resolvedResults.hasNext(null)) {
+			List<IResolvedResult> page = resolvedResults.nextPage(null)
+			for (IResolvedResult r: page) {
+				IWorkItem workItem = r.getItem();
+				String summary = workItem.getHTMLSummary().getPlainText()
+				Date modified = workItem.modified()
+				String mDateStr = modified.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+				def wiOut = [id: "${workItem.id}", summary: summary, modified: mDateStr]
+				wil.add(wiOut)
+				
+			}
+			return wil
+		}
+		return null
+		
+	}
 }
 
 
