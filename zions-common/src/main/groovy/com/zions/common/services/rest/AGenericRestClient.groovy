@@ -382,7 +382,20 @@ abstract class AGenericRestClient implements IGenericRestClient {
 				log.error("Input data: ${json}");
 			}
 			System.sleep(300000)
-			resp = delegate.post(retryCopy)
+			try {
+				resp = delegate.post(retryCopy)
+			} catch (e) {
+				throw e
+			} finally {
+				if (encoderFunction || currentEncoder) {
+					String requestContentType = 'application/json'
+					if (oinput.requestContentType) {
+						requestContentType  = "${oinput.requestContentType}"
+					}
+					delegate.encoder."${requestContentType}" = currentEncoder
+					
+				}
+			}
 		}
 		if (withHeader) {
 			def headerMap = [:]

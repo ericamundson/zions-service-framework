@@ -1,5 +1,6 @@
 package com.zions.clm.services.cli.action.work.query
 
+import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
 import com.zions.clm.services.rtc.project.workitems.ClmWorkItemManagementService
 import com.zions.clm.services.rtc.project.workitems.QueryTracking
 import com.zions.common.services.cache.CacheInterceptorService
@@ -18,6 +19,12 @@ class BaseQueryHandler implements IQueryHandler {
 	
 	@Autowired
 	ClmWorkItemManagementService clmWorkItemManagementService
+	
+	@Autowired
+	CcmWorkManagementService ccmWorkManagementService
+	
+	@Value('${clm.query.names:}')
+	String[] clmQueryNames
 	
 	@Autowired
 	ICacheManagementService cacheManagementService
@@ -47,34 +54,40 @@ class BaseQueryHandler implements IQueryHandler {
 			currentTimestamp = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", cp.timestamp)
 			
 		}
+		
+		List<String> queryNames = []
+		queryNames.addAll(Arrays.asList(clmQueryNames))
 		String pageId = "${page}"
+		ccmWorkManagementService.multiQuery(queryNames, projectName)
 		new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
-			currentItems = clmWorkItemManagementService.getWorkItemsViaQuery(wiQuery)
+			currentItems = ccmWorkManagementService.multiNext()
 		}
 		return currentItems
 	}
 
 	public String initialUrl() {
-		def encoded = URLEncoder.encode(wiQuery, 'UTF-8')
-		encoded = encoded.replace('+', '%20')
-		String uri = this.clmGenericRestClient.clmUrl + "/ccm/rpt/repository/workitem?fields=" + encoded;
+//		def encoded = URLEncoder.encode(wiQuery, 'UTF-8')
+//		encoded = encoded.replace('+', '%20')
+		String uri = ccmWorkManagementService.multiPageUrl();
 		return uri
 	}
 
 	public String getPageUrl() {
-		def rel = currentItems.@rel
-		if ("${rel}" != 'next') return null
-		return currentItems.@href
+//		def rel = currentItems.@rel
+//		if ("${rel}" != 'next') return null
+		//page++
+		return ccmWorkManagementService.multiPageUrl();
 	}
 
 	public Object nextPage() {
-		def rel = currentItems.@rel
-		if ("${rel}" != 'next') return null
+//		def rel = currentItems.@rel
+//		if ("${rel}" != 'next') return null
 		page++
 		String pageId = "${page}"
 		new CacheInterceptor() {}.provideCaching(clmWorkItemManagementService, pageId, currentTimestamp, QueryTracking) {
-			String url = "${currentItems.@href}"
-			currentItems = clmWorkItemManagementService.nextPage(url)
+			//String url = "${currentItems.@href}"
+			//currentItems = clmWorkItemManagementService.nextPage(url)
+			currentItems = ccmWorkManagementService.multiNext()
 		}
 		return currentItems
 	}
@@ -87,7 +100,7 @@ class BaseQueryHandler implements IQueryHandler {
 		String key = "${item.id.text()}"
 		def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
 		if (!cacheWI) return true
-		String sDate = "${item.modified.text()}"
+		String sDate = "${item.modified}"
 		Date clmDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
 		String modified = cacheWI.fields['System.ChangedDate']
 		if (modified != null && modified.length()> 0) {

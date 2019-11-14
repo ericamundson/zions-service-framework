@@ -27,11 +27,11 @@ class AllFilter implements IFilter {
 
 	public def filter(def workItems) {
 		List<String> excluded = ["Track Build Item", "Retrospective",  "Adoption Item", "Infrastrucure Request"]
-		return workItems.workItem.findAll { wi ->
-			String type = "${wi.type.name.text()}"
+		return workItems.findAll { wi ->
+			//String type = "${wi.type.name.text()}"
 			//String archivedTarget = "${wi.target.archived.text()}"
-			boolean val = !excluded.contains(type)
-			return val
+			//boolean val = !excluded.contains(type)
+			return true
 		}
 	}
 

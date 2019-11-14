@@ -17,8 +17,8 @@ import com.zions.common.services.work.handler.IFieldHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-@Component('CcmRemainingWorkHandler')
-class RemainingWorkHandler extends CcmBaseAttributeHandler {
+@Component('CcmRtcTimelineHandler')
+class RtcTimelineHandler extends CcmBaseAttributeHandler {
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired
@@ -26,7 +26,7 @@ class RemainingWorkHandler extends CcmBaseAttributeHandler {
 	
 	def mappingData = null;
 
-	public RemainingWorkHandler() {}
+	public RtcTimelineHandler() {}
 
 
 	public Object execute(Object data) {
@@ -34,25 +34,8 @@ class RemainingWorkHandler extends CcmBaseAttributeHandler {
 		def fieldMap = data.fieldMap
 		def wiCache = data.cacheWI
 		def wiMap = data.wiMap
-		String sValDuration = workitemAttributeManager.getStringRepresentation(wi, wi.getProjectArea(), 'duration')
-		String sValTimeSpent  = workitemAttributeManager.getStringRepresentation(wi, wi.getProjectArea(), 'timeSpent')
-		double duration = 0;
-		try {
-			duration = Double.parseDouble(sValDuration)
-		} catch (err) {}
-		double timeSpent = 0;
-		try {
-			timeSpent = Double.parseDouble(sValTimeSpent);
-		} catch (err) {}
-		double retNumber = duration - timeSpent;
-		if (retNumber < 0) {
-			retNumber = 0.0;
-		}
-		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: "${retNumber}"]
-		String state = determineState(wi, wiMap)
-		if ("${state}" == 'Closed') {
-			retVal = [op:'add', path:"/fields/${fieldMap.target}", value: '']
-		}
+		String target = workitemAttributeManager.getStringRepresentation(wi, wi.getProjectArea(), 'target')
+		def retVal = [op:'add', path:"/fields/${fieldMap.target}", value: "${target}"]
 		if (wiCache != null) {
 			def cVal = wiCache.fields["${fieldMap.target}"]
 			if ("${cVal}" == "${retVal.value}") {

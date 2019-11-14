@@ -1,0 +1,40 @@
+{
+	"id": 802207,
+	"name": "R3 Finance Test",
+	"url": "https://dev.azure.com/eto-dev/BaNCS/_apis/test/Plans/795605/Suites/802207",
+	"project": {
+		"id": "9a110e4c-60bb-4e52-ae2b-66e32fd4982c",
+		"name": "BaNCS",
+		"url": "https://dev.azure.com/eto-dev/_apis/projects/BaNCS"
+	},
+	"plan": {
+		"id": "795605",
+		"name": "FC R3 Migrated (From RQM)",
+		"url": "https://dev.azure.com/eto-dev/BaNCS/_apis/test/Plans/795605"
+	},
+	"parent": {
+		"id": "795606",
+		"name": "FC R3 Migrated (From RQM)",
+		"url": "https://dev.azure.com/eto-dev/BaNCS/_apis/test/Plans/795605/Suites/795606"
+	},
+	"revision": 1,
+	"testCaseCount": 0,
+	"suiteType": "StaticTestSuite",
+	"testCasesUrl": "https://dev.azure.com/eto-dev/BaNCS/_apis/test/Plans/795605/Suites/802207/testcases",
+	"inheritDefaultConfigurations": true,
+	"state": "In Progress",
+	"lastUpdatedBy": {
+		"displayName": "svc-cloud-vsmigration",
+		"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+			}
+		},
+		"id": "535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+		"uniqueName": "svc-cloud-vsmigration@zionsbancorporation.onmicrosoft.com",
+		"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy",
+		"descriptor": "aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+	},
+	"lastUpdatedDate": "2019-11-08T13:48:59.487Z"
+}
