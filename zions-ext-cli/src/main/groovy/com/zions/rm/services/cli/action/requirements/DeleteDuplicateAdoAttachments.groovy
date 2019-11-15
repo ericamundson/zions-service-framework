@@ -91,6 +91,7 @@ class DeleteDuplicateAdoAttachments implements CliAction {
 			//Save Description and rev
 			String description = "${wiResult.data.value.fields.'System.Description'}"
 			Integer revNum = wiResult.data.value.rev[0]
+			String cid = "${wiResult.data.value.fields.'Custom.ExternalID'[0]}".replace('DNG-','')
 			//Save attachments
 			def attachments = wiResult.data.value.relations
 			def ndx = 0
@@ -110,7 +111,7 @@ class DeleteDuplicateAdoAttachments implements CliAction {
 			// Get json changes for REST call
 			changes = getAttachmentDeletionChanges(id, revNum, description, attachmentMap, createdDates, relationsIndex)
 			if (changes != null) {
-				clManager.add("${id}", changes)
+				clManager.add("${cid}", changes)
 				//log.debug("adding changes for requirement ${id}")
 			}
 		}
