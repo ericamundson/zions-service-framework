@@ -238,7 +238,7 @@ class ClmRequirementsManagementService {
 	}
 	
 	def nextPageDb() {
-		log.debug("Retrieving nextPage from databasequeryservice")
+		//log.debug("Retrieving nextPage from databasequeryservice")
 		return databaseQueryService.nextPage()
 	}
 	
@@ -360,31 +360,42 @@ class ClmRequirementsManagementService {
 	
 	//single giant query but should cache ok
 	def queryForWhereUsed() {
-		String uri = this.rmBGenericRestClient.clmUrl + "/rs/query/11126/dataservice?report=11099&limit=-1&basicAuthenticationEnabled=true"
-		def results = rmBGenericRestClient.get(
-				uri: uri,
-				headers: [Accept: 'application/rdf+xml'] );
-		log.info("Fetched whereUsed info from JRS, now storing to cache")
-		if (results != null) {
-			def prevID = null
-			def whereUsedList = []
-			results.children().each { p ->
-				def id = "${p.REFERENCE_ID}"
-				if (prevID != null && id != prevID) { // Save whereUsed for this id
-					cacheManagementService.saveToCache(whereUsedList, prevID, 'whereUsedData')
-					whereUsedList.clear()
-				}
-				whereUsedList.add([name: "${p.MODULE_NAME}", url: "${p.URL2}"])
-				
-				prevID = id
+//		String uri = this.rmBGenericRestClient.clmUrl + "/rs/query/11126/dataservice?report=11099&limit=-1&basicAuthenticationEnabled=true"
+//		def results = rmBGenericRestClient.get(
+//				uri: uri,
+//				headers: [Accept: 'application/rdf+xml'] );
+		String selectStatement = new SqlLoader().sqlQuery('/sql/whereUsed.sql')
+		databaseQueryService.init()
+		def results = databaseQueryService.query(selectStatement)
+		log.info("Processing whereUsed info from data warehouse query...")
+		cacheManagementService.deleteByType("whereUsedData")
+		while (results) {
+			processWhereUsedPage(results)
+			results = this.nextPageDb()
+		}
+//		else {
+//			log.info("Null results from fetching whereUsed cache, something went wrong I wager")
+//			return false
+//		}
+	}
+	
+	def processWhereUsedPage(def results) {
+		//log.info("Fetched whereUsed info from JRS, now storing to cache")
+		def prevID = null
+		def whereUsedList = []
+		results.each { p ->
+			def id = "${p.reference_id}"
+			//log.debug("${id}")
+			if (prevID != null && id != prevID) { // Save whereUsed for this id
+				cacheManagementService.saveToCache(whereUsedList, prevID, 'whereUsedData')
+				whereUsedList.clear()
 			}
-			log.debug("Stored ${whereUsedList.size()} whereUsed records")
-			return true
+			whereUsedList.add([name: "${p.module_name}", url: "${p.url2}"])
+			//log.debug("name: ${p.module_name}, url: ${p.url2}")
+			prevID = id
 		}
-		else {
-			log.info("Null results from fetching whereUsed cache, something went wrong I wager")
-			return false
-		}
+		//log.debug("Stored ${whereUsedList.size()} whereUsed records")
+		return true
 	}
 	
 	//cool, hardcoded logic!
