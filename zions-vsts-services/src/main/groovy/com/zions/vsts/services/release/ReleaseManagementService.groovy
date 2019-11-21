@@ -69,6 +69,8 @@ public class ReleaseManagementService {
 		if (isDRBranch) {
 			return ensureDRRelease(collection, projectData, repo, buildId)
 		}
+		def createdFlag = false
+		def foundFlag = false
 		log.debug("ReleaseManagementService::ensureReleaseForBuild -- Looking for existing release definition for ${repo.name}")
 		def releaseDef = getRelease(collection, projectData, "${repo.name}")
 		if (releaseDef == null) {
@@ -90,11 +92,26 @@ public class ReleaseManagementService {
 
 			if (template == null) {
 				log.debug("ReleaseManagementService::ensureReleaseForBuild -- No usable template found. Unable to create release definition")
-				return null
+				//return null
 			}
 
-			return createReleaseForBuild(collection, projectData, repo, template, buildId)
+			releaseDef = createReleaseForBuild(collection, projectData, repo, template, buildId)
+		} else {
+			// found existing release definition for the repo
+			foundFlag = true
 		}
+		//return releaseDef
+		def relDefName = ""
+		if (releaseDef != null && !foundFlag) {
+			createdFlag = true
+			relDefName = "${releaseDef.name}"
+		}
+		def returnObject = [relDefCreated: createdFlag,
+							relDefFound: foundFlag,
+							releaseDefName: relDefName]
+
+		return returnObject
+		
 	}
 
 	private def createReleaseForBuild(collection, project, repo, template, buildId) {

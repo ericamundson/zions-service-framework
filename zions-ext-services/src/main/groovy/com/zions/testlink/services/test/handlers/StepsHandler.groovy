@@ -48,7 +48,11 @@ class StepsHandler extends TlBaseAttributeHandler {
 				steststeps.each { TestCaseStep astep ->
 					step(id: sCount, type:'ValidateStep') {
 						if (astep.actions.length() > 0) {
-							String htmlDoc = "<DIV><P>${astep.actions}</P></DIV>"
+							String aStr = "${astep.actions}"
+							aStr = aStr.replaceAll(/<!--[\s\S]*?-->/) {
+								return ''
+							}
+							String htmlDoc = "<DIV><P>${aStr}</P></DIV>"
 							
 							String html = StringEscapeUtils.escapeHtml(htmlDoc)
 							parameterizedString(isformatted: 'true') {
@@ -61,7 +65,12 @@ class StepsHandler extends TlBaseAttributeHandler {
 							}
 						}
 						if (astep.expectedResults.length() > 0) {
-							String htmlDoc = "<DIV><P>${astep.expectedResults}</P></DIV>"
+							String aStr = "${astep.expectedResults}"
+							aStr = aStr.replaceAll(/<!--[\s\S]*?-->/) {
+								return ''
+							}
+							String htmlDoc = "<DIV><P>${aStr}</P></DIV>"
+							//String htmlDoc = "<DIV><P>${astep.expectedResults}</P></DIV>"
 							String html = StringEscapeUtils.escapeHtml(htmlDoc)
 							parameterizedString(isformatted: 'true') {
 								mkp.yieldUnescaped html

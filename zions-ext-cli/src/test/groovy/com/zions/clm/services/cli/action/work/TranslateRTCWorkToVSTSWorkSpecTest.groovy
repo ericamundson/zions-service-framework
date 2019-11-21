@@ -34,7 +34,7 @@ import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import groovy.json.JsonSlurper
 import com.zions.vsts.services.tfs.rest.GenericRestClient
-
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -154,7 +154,7 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 		thrown FileNotFoundException
 	}
 	
-	@Test
+	@Ignore
 	def 'execute ApplicationArguments Exception flow.' () {
 		given: 'invalid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs('./src/test/resources/testdata/OBWITMapping.xml'))

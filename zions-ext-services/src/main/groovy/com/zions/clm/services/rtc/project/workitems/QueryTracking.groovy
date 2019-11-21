@@ -2,6 +2,8 @@ package com.zions.clm.services.rtc.project.workitems
 
 import com.zions.common.services.cacheaspect.CacheRequired
 import com.zions.common.services.cacheaspect.CacheWData
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 import groovy.transform.Canonical
 import groovy.xml.XmlUtil
 
@@ -20,14 +22,14 @@ class QueryTracking implements CacheWData {
 	 * @see com.zions.common.services.cacheaspect.CacheWData#doData(java.lang.Object)
 	 */
 	void doData(def result) {
-		data = new XmlUtil().serialize(result)
+		data = new JsonBuilder(result).toPrettyString()
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.zions.common.services.cacheaspect.CacheWData#dataValue()
 	 */
 	def dataValue() {
-		return new XmlSlurper().parseText(data)
+		return new JsonSlurper().parseText(data)
 	}
 
 }

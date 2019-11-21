@@ -48,9 +48,9 @@ class BaseQueryHandler implements IQueryHandler {
 			
 		}
 		String pageId = "${page}"
-		new CacheInterceptor() {}.provideCaching(clmTestManagementService, pageId, currentTimestamp, TestPlanQueryData) {
+		//new CacheInterceptor() {}.provideCaching(clmTestManagementService, pageId, currentTimestamp, TestPlanQueryData) {
 			currentItems = clmTestManagementService.getTestPlansViaQuery(qmQuery, projectName)
-		}
+		//}
 		return currentItems
 	}
 
@@ -91,9 +91,9 @@ class BaseQueryHandler implements IQueryHandler {
 		if (nextLink == null) return null
 		this.page++
 		String pageId = "${page}"
-		new CacheInterceptor() {}.provideCaching(clmTestManagementService, pageId, currentTimestamp, TestPlanQueryData) {
+		//new CacheInterceptor() {}.provideCaching(clmTestManagementService, pageId, currentTimestamp, TestPlanQueryData) {
 			currentItems = clmTestManagementService.nextPage(nextLink.@href)
-		}
+		//}
 		return currentItems
 	}
 

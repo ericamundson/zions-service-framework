@@ -5,6 +5,7 @@ import com.zions.qm.services.test.ClmTestManagementService
 import com.zions.qm.services.test.TestMappingManagementService
 
 import groovy.json.JsonBuilder
+import java.nio.charset.Charset
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -40,7 +41,7 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 		if (descMap.size() > 0) return descMap
 		String[] types = ['Test Case', 'Test Suite', 'Test Plan']
 		types.each { String type -> 
-			String key = "Test Case_Custom.CustomAttributes_${tfsProjectName}"
+			String key = "${type}_Custom.CustomAttributes_${tfsProjectName}"
 			def descs = extensionData.getExtensionData(key)
 			if (descs) {
 				descs.descriptors.each { desc -> 
@@ -58,6 +59,8 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 		itemData.category.each { cat -> 
 			String name = "${cat.@term}".replace(' ', '_')
 			String avalue = "${cat.@value}"
+			avalue = avalue.replaceAll("[^\\x00-\\x7F]", "");
+			
 			if (!catMap["${name}"]) {
 				catMap["${name}"] = []
 			}
@@ -75,6 +78,7 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 			def desc = descMap[name]
 			if (desc) {
 				String avalue = "${att.value.text()}"
+				avalue = avalue.replaceAll("[^\\x00-\\x7F]", "");
 				def caData = [name: name, value: avalue]
 				outData.push(caData)
 			}

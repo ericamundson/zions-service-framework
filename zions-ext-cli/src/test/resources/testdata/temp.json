@@ -1,0 +1,101 @@
+{
+	"id": 703456,
+	"rev": 1,
+	"fields": {
+		"System.AreaPath": "TestLink\\DPS",
+		"System.TeamProject": "TestLink",
+		"System.IterationPath": "TestLink",
+		"System.WorkItemType": "Test Case",
+		"System.State": "Design",
+		"System.Reason": "New",
+		"System.AssignedTo": {
+			"displayName": "svc-cloud-vsmigration",
+			"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+				}
+			},
+			"id": "535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+			"uniqueName": "svc-cloud-vsmigration@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy",
+			"descriptor": "aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+		},
+		"System.CreatedDate": "2019-10-22T15:18:12.51Z",
+		"System.CreatedBy": {
+			"displayName": "svc-cloud-vsmigration",
+			"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+				}
+			},
+			"id": "535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+			"uniqueName": "svc-cloud-vsmigration@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy",
+			"descriptor": "aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+		},
+		"System.ChangedDate": "2019-10-22T15:18:12.51Z",
+		"System.ChangedBy": {
+			"displayName": "svc-cloud-vsmigration",
+			"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+				}
+			},
+			"id": "535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+			"uniqueName": "svc-cloud-vsmigration@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy",
+			"descriptor": "aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+		},
+		"System.CommentCount": 0,
+		"System.Title": "1074027: Reg D Limits",
+		"Microsoft.VSTS.Common.StateChangeDate": "2019-10-22T15:18:12.51Z",
+		"Microsoft.VSTS.Common.ActivatedDate": "2019-10-22T15:18:12.51Z",
+		"Microsoft.VSTS.Common.ActivatedBy": {
+			"displayName": "svc-cloud-vsmigration",
+			"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+				}
+			},
+			"id": "535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+			"uniqueName": "svc-cloud-vsmigration@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy",
+			"descriptor": "aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+		},
+		"Microsoft.VSTS.TCM.AutomationStatus": "Not Automated",
+		"Custom.ExternalID": "TL-1074027",
+		"Custom.Automate": false,
+		"Custom.AutomationState": "Not Automated",
+		"System.Description": "<h5><a name=33318-FR-1310_0><span style=\"font-family:&quot;Calibri&quot;,sans-serif;\">4.1.2.1.8<span style=\"font-weight:normal;font-stretch:normal;font-size:7pt;line-height:normal;font-family:&quot;Times New Roman&quot;;\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span></span><span style=\"font-family:&quot;Calibri&quot;,sans-serif;\">Reg D Limits</span></a><span style=\"font-family:&quot;Calibri&quot;,sans-serif;\"></span></h5>\n<p><span lang=en-US style=\"font-family:Calibri, sans-serif;\">Reg D transaction limits remain unchanged, from the mirrored product, at six per 30-day service charge cycle (includes transfers to/from another account or to third parties by preauthorized, automatic, telephone, or computer transfer or by check, debit card, or similar order to third parties).</span><span lang=en-US style=\"font-family:Calibri, sans-serif;\"> </span><span style=\"font-size:8pt;font-family:Calibri, sans-serif;\">(<a href=\"https://zionsbancorp.jamacloud.com/perspective.req?projectId=26194&amp;docId=2777948\"><span style=\"color:windowtext;text-decoration:none;\">33318-FR-1310</span></a>)</span>&nbsp;</p>",
+		"Microsoft.VSTS.TCM.Steps": "<steps steps='0' last='2'><step id='2' type='ValidateStep'><parameterizedString isformatted='true'>&lt;DIV&gt;&lt;P&gt;&lt;div&gt;Login to Aviva&lt;/div&gt;&lt;div&gt;Access CICSD00E&lt;/div&gt;&lt;div&gt;Press ESC or F3&lt;/div&gt;&lt;div&gt;Type MENU press enter&lt;/div&gt;&lt;div&gt;Change Affiliate per test (chng,###)&lt;/div&gt;&lt;div&gt;Select 5 MICM MENU&lt;/div&gt;&lt;div&gt;Select 1 MICM Master File Maintenance&lt;/div&gt;&lt;div&gt;Enter 3003 and enter&lt;/div&gt;&lt;div&gt;Enter ### REGION&amp;nbsp;&lt;/div&gt;&lt;div&gt;Enter ## ## ## Effective Date (or tab past for latest)&lt;/div&gt;&lt;div&gt;Enter 04 APPLICATION&lt;/div&gt;&lt;div&gt;Enter ### INT Parm&lt;/div&gt;&lt;div&gt;Locate REG D TRANS&lt;/div&gt;&lt;/P&gt;&lt;/DIV&gt;</parameterizedString><parameterizedString isformatted='true'>&lt;DIV&gt;&lt;P&gt;&lt;p&gt;REG D TRANS = 6&lt;/p&gt;&lt;/P&gt;&lt;/DIV&gt;</parameterizedString></step></steps>",
+		"Custom.CustomAttributes": "Test 1"
+	},
+	"_links": {
+		"self": {
+			"href": "https://dev.azure.com/eto-dev/423b6acf-769a-47ea-a32d-5c96cd9b0261/_apis/wit/workItems/703456"
+		},
+		"workItemUpdates": {
+			"href": "https://dev.azure.com/eto-dev/423b6acf-769a-47ea-a32d-5c96cd9b0261/_apis/wit/workItems/703456/updates"
+		},
+		"workItemRevisions": {
+			"href": "https://dev.azure.com/eto-dev/423b6acf-769a-47ea-a32d-5c96cd9b0261/_apis/wit/workItems/703456/revisions"
+		},
+		"workItemComments": {
+			"href": "https://dev.azure.com/eto-dev/423b6acf-769a-47ea-a32d-5c96cd9b0261/_apis/wit/workItems/703456/comments"
+		},
+		"html": {
+			"href": "https://dev.azure.com/eto-dev/423b6acf-769a-47ea-a32d-5c96cd9b0261/_workitems/edit/703456"
+		},
+		"workItemType": {
+			"href": "https://dev.azure.com/eto-dev/423b6acf-769a-47ea-a32d-5c96cd9b0261/_apis/wit/workItemTypes/Test%20Case"
+		},
+		"fields": {
+			"href": "https://dev.azure.com/eto-dev/423b6acf-769a-47ea-a32d-5c96cd9b0261/_apis/wit/fields"
+		}
+	},
+	"url": "https://dev.azure.com/eto-dev/423b6acf-769a-47ea-a32d-5c96cd9b0261/_apis/wit/workItems/703456"
+}

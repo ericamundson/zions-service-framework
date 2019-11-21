@@ -102,10 +102,10 @@ public class AttachmentsManagementService {
 			return save
 		} catch (FileNotFoundException e) {
 			// do nothing
-			log.warn(e)
+			log.warn(e.getMessage())
 		} catch (IOException e) {
 			// do nothing
-			log.warn(e)
+			log.warn(e.message)
 		}
 	
 	}

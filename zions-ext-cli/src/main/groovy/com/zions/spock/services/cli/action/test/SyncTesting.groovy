@@ -97,6 +97,29 @@ class SyncTesting implements CliAction {
 	IGenericRestClient genericRestClient
 
 	/**
+	 * 
+	 * <p><b>Flow:</b></p>
+	 * <img src="execute_sequence_diagram.png"/>
+	 * 
+	 * @startuml execute_sequence_diagram.png
+	 * participant "SyncTesting:this" as this
+	 * participant "WorkManagementService:workManagementService" as wms
+	 * participant "File:reportSearchPath" as searchPath
+	 * participant "SpockQueryService:spockQueryService" as queryService
+	 * this -> wms: refreshCacheByQuery('', project, query, keyClosure): void
+	 * this -> searchPath: exists: boolean as exists
+	 * alt exists == true
+	 *    participant "ChangeListManager:clManager" as clm
+	 *    this -> clm: <<new>>
+	 * 	  this -> queryService: loadAllReports(searchPath) : allTestCase
+	 *    loop allTestCase.each testCase
+	 *    	 this -> this: buildRequest(testCase) : request
+	 *       this -> clm: add(request)
+	 *    end
+	 *    this -> clm: flush()
+	 *    this -> this: buildAndExecute(allTestCase)
+	 * end
+	 * @enduml
 	 *  
 	 * @see com.zions.common.services.cli.action.CliAction#execute(org.springframework.boot.ApplicationArguments)
 	 */
@@ -126,6 +149,32 @@ class SyncTesting implements CliAction {
 		return null
 	}
 
+	/**
+	 * <p><b>Flow:</b></p>
+	 * <img src="buildAndExecute_sequence_diagram.png"/>
+	 * 
+	 * @param allTestCase
+	 * @return
+	 * 
+	 * @startuml buildAndExecute_sequence_diagram.png
+	 * participant "SyncTesting:this" as this
+	 * participant "TestManagementService:testManagementService" as testManagementService
+	 * participant "ICacheManagementService:cacheManagementService" as cacheManagementService
+	 * this -> this: ensurePlan()
+	 * this -> testManagementService: createRunData('', project, plan, buildId, true): runData
+	 * this -> testManagementService: getResultsTestcaseMap("${runData.url}/results"): resultTestCaseMap
+	 * participant "Map:resultTestCaseMap" as resultTestCaseMap
+	 * testManagementService -> resultTestCaseMap: <<create>>
+	 * Activate  resultTestCaseMap
+	 * loop allTestCase.each tc
+	 *   this -> cacheManagementService: getFromCache(key, ICacheManagementService.WI_DATA) : adoTestCase
+	 *   this -> resultTestCaseMap: get("${adoTestCase.id}"): resultData
+	 *   alt resultData
+	 *     this -> this: sendExecution(resultData, tc)
+	 *   end
+	 * end
+	 * @enduml
+	 */
 	def buildAndExecute(def allTestCase) {
 		def plan = ensurePlan()
 		def runData = testManagementService.createRunData('', project, plan, buildId, true)
@@ -149,6 +198,11 @@ class SyncTesting implements CliAction {
 		}
 	}
 
+	/**
+	 * @param resultData
+	 * @param tc
+	 * @return
+	 */
 	def sendExecution(resultData, tc) {
 		String key = "${tc.title}".bytes.encodeBase64()
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')

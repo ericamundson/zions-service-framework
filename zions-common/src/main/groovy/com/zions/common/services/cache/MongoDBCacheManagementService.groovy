@@ -110,12 +110,12 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 			}
 			return save
 		} catch (FileNotFoundException e) {
-			log.error(e)
+			log.error(e.getMessage())
 		} catch (IOException e) {
-			log.error(e)
+			log.error(e.getMessage())
 		} catch (NullPointerException e) {
 			// weird, this happened to artifact 74184
-			log.error(e)
+			log.error(e.getMessage())
 		}
 		
 	

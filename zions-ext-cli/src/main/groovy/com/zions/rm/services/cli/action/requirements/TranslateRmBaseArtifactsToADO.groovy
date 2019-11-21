@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component
 import com.zions.clm.services.ccm.workitem.CcmWorkManagementService
 import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
@@ -229,6 +230,40 @@ class TranslateRmBaseArtifactsToADO implements CliAction {
 			else {
 				log.error('***Error retrieving "Where Used" lookup.  Check the log for details')
 			}
+		}
+		if (includes['linkViaCache']) {
+//			if (cacheManagementService instanceof MongoDBCacheManagementService) {
+//				MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
+				int page = 0
+				ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+				while (true) {
+					def linkinfos = cacheManagementService.getAllOfType('LinkInfo', page)
+					if (linkinfos.size() == 0) break
+					//List<LinkInfo> = clmRequirementsManagementService.get
+					//need key here
+					linkinfos.each { link ->
+						int id = Integer.parseInt("${link.key}")
+						clmRequirementsManagementService.getWILinkChanges(id, tfsProject) { key, changes ->
+							if (key == 'WorkItem') {
+								clManager.add("${id}", changes)
+							}
+						}
+						//List<LinkInfo> links = getLinks(linkinfos)
+//						def cacheWI = cacheManagementService.getFromCache(cid, 'RM', 'wiData')
+//						def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+//						def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
+//						wiData.body.add(rev)
+//						wiData = generateWILinkChanges(wiData, links, cacheWI)
+					}
+					//page++
+					if (clManager.size() > 0) {
+						log.info("Flushing ${clManager.size()} links from page ${page}")
+						clManager.flush()
+					}
+					page++
+				}
+//			}
+//			clMaager.flush();
 		}
 		//def linkMapping = processTemplateService.getLinkMapping(mapping)
 		if (includes['phases'] != null) {

@@ -20,7 +20,7 @@ class SequenceNumberHandler extends RmBaseAttributeHandler {
 			}
 		}
 		else {
-		    return stringToNumber(val, 'SequenceNumberHandlerHandler')
+		    return stringToNumber(value, 'SequenceNumberHandlerHandler')
 		}
 		return value
 	}

@@ -6,14 +6,18 @@ import org.springframework.stereotype.Component;
 
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
+import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.qm.services.test.handlers.QmBaseAttributeHandler
+import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import groovyx.net.http.ContentType
+import com.zions.common.services.cacheaspect.CacheInterceptor
+
 
 /**
  * Class responsible for processing RQM test planning data to generate Azure Devops test data.
@@ -60,6 +64,9 @@ public class ClmTestItemManagementService {
 
 	@Autowired
 	TestMappingManagementService testMappingManagementService
+	
+	@Value('${check.updated:false}')
+	boolean checkUpdated
 		
 	int newId = -1
 	
@@ -87,7 +94,9 @@ public class ClmTestItemManagementService {
 		String sid = "${qmItemData.webId.text()}-${oType}"
 		String tss = "${qmItemData.updated.text()}"
 		Date ts = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", tss)
-		List<LinkInfo> links = getAllLinks(sid, ts, qmItemData)
+		new CacheInterceptor() {}.provideCaching(this, sid, ts, LinkHolder) {
+			List<LinkInfo> links = getAllLinks(sid, ts, qmItemData)
+		}
 
 	}
 	
@@ -105,7 +114,10 @@ public class ClmTestItemManagementService {
 		def cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
 		if (!cacheWI) return
 		Date ts = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", tss)
-		List<LinkInfo> links = getAllLinks(sid, ts, qmItemData)
+		List<LinkInfo> links = []
+		new CacheInterceptor() {}.provideCaching(this, sid, ts, LinkHolder) {
+			links = getAllLinks(sid, ts, qmItemData)
+		}
 		if (links.size() == 0) return
 		String cid = "${cacheWI.id}"
 		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
@@ -191,10 +203,10 @@ public class ClmTestItemManagementService {
 		def cacheResult = getResultData(resultMap, testCase)
 		if (!cacheResult) return null
 		String runId = "${cacheResult.testRun.id}"
-		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0-preview.5'], body: []]
+		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0'], body: []]
 		if (cacheResult != null) {
 			def cid = cacheResult.id
-			exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results/${cid}", query:['api-version':'5.0-preview.5'], body: []]
+			exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results/${cid}", query:['api-version':'5.0'], body: []]
 		}
 		def bodyItem = [:]
 		map.fields.each { field ->
@@ -257,6 +269,19 @@ public class ClmTestItemManagementService {
 		return resultMap["${adoTestCase.id}"]
 	}
 	
+	public boolean isModified(Object item, def cacheWI) {
+		if (!cacheWI) return true
+		if (!checkUpdated) return true
+		String sDate = "${item.updated.text()}"
+		sDate = sDate.substring(0, 19)
+		Date clmDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss", sDate);
+		sDate = "${cacheWI.fields.'System.ChangedDate'}"
+		sDate = sDate.substring(0, 19)
+		Date adoDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss", sDate);
+		return clmDate.time >= adoDate.time;
+	}
+
+	
 	private def generateItemData(def qmItemData, def map, String project, def memberMap, def parent = null) {
 		String type = map.target
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
@@ -270,6 +295,7 @@ public class ClmTestItemManagementService {
 				etype = URLEncoder.encode(atype, 'utf-8').replace('+', '%20')
 			}
 			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
+			if (type == 'Test Case' && !isModified(qmItemData, cacheWI)) return null
 			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0&bypassRules=true&suppressNotifications=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			if (cacheWI != null) {
 				def cid = cacheWI.id
@@ -291,14 +317,31 @@ public class ClmTestItemManagementService {
 		} else if (type == 'Test Suite'){
 			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.SUITE_DATA)
 			if (parent != null) {
-				String parentId = "${parent.id}"
-				String cid = "${parent.rootSuite.id}"
-				wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0-preview.3'], body: [:]]
-				wiData.body.parent = parent.rootSuite
+				String cid = ''
+				String parentId = ''
+				if (parent.rootSuite) {
+					parentId = "${parent.id}"
+					cid = "${parent.rootSuite.id}"
+				} else {
+					parentId = "${parent.plan.id}"
+					cid = "${parent.id}"
+				}
+				wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0'], body: [:]]
+				if (parent.rootSuite) {
+					wiData.body.parent = parent.rootSuite
+				} else {
+					wiData.body.parent = [:]
+					wiData.body.parent.id = parent.id
+					wiData.body.parent.name = parent.name
+					wiData.body.parent.url = parent.url
+					
+					
+				}
 				if (cacheWI != null) {
 					cid = cacheWI.id
-					wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0-preview.3'], body: [:]]
+					wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${parentId}/suites/${cid}", query:['api-version':'5.0'], body: [:]]
 				}
+				wiData.body.suiteType = 'StaticTestSuite'
 			}
 		}
 		
@@ -374,7 +417,7 @@ public class ClmTestItemManagementService {
 	 * @param testItem - CLM test element
 	 * @return link data
 	 */
-	@Cache(elementType = LinkInfo)
+	//@Cache(elementType = LinkInfo)
 	public List<LinkInfo> getAllLinks(String id, Date timeStamp, testItem) {
 		List<LinkInfo> links = new ArrayList<LinkInfo>()
 		String itype = "${testItem.name()}"
@@ -403,5 +446,29 @@ public class ClmTestItemManagementService {
 		return maps
 	}
 	
+	
 
+}
+
+class LinkHolder implements CacheWData {
+	
+	String data 
+
+	@Override
+	public void doData(Object result) {
+		data = new JsonBuilder(result).toPrettyString()
+		
+	}
+
+	@Override
+	public Object dataValue() {
+		List<LinkInfo> info = []
+		def infoData = new JsonSlurper().parseText(data)
+		infoData.each { map ->
+			def aInfo = LinkInfo.newInstance(map)
+			info.add(info)
+		}
+		return info;
+	}
+	
 }

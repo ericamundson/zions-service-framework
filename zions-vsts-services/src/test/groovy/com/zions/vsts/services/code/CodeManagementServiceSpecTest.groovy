@@ -115,8 +115,8 @@ class CodeManagementServiceSpecTest extends Specification {
 	}
 	
 	@Test
-	def 'getBuildPropertiesFile success flow' () {
-		given: 'Stub of rest call to get build properties'
+	def 'getFileContent success flow' () {
+		given: 'Stub of rest call to get file content'
 		String file = this.getClass().getResource('/testdata/dts-re-build.properties').text
 		//JsonSlurper js = new JsonSlurper()
 		//def out = js.parseText(json)
@@ -127,8 +127,8 @@ class CodeManagementServiceSpecTest extends Specification {
 		
 		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repos.json').text)
 		
-		when: 'Call to get build properties'
-		def result = underTest.getBuildPropertiesFile("eto-dev", project, repos,'', "master")
+		when: 'Call to get file content'
+		def result = underTest.getFileContent("eto-dev", project, repos,'', "master")
 
 		then: 'result != null'
 		result != null

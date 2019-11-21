@@ -49,7 +49,7 @@ public class BuildManagementService {
 	@Autowired
 	MemberManagementService memberManagementService
 	
-	private boolean isYAMLPipeline = false
+	//private boolean isYAMLPipeline = false
 	
 	public BuildManagementService() {
 	}
@@ -143,18 +143,34 @@ public class BuildManagementService {
 		Integer relBldId = -1
 		def relBldName = ""
 		// check for YAML pipeline in use
+		boolean isYAMLPipeline = false
 		def pipelineFileName = "azure-pipelines.yml"
-		def azurePipelinesFile = codeManagementService.getBuildPropertiesFile(collection, repo.project, repo, pipelineFileName, "master")
+		def azurePipelinesFile = codeManagementService.getFileContent(collection, repo.project, repo, pipelineFileName, "master")
 		if (azurePipelinesFile != null) {
 			// indicate the repo/branch is using a YAML pipeline
-			this.isYAMLPipeline = true
+			isYAMLPipeline = true
 		}
-		if (this.isYAMLPipeline) {
+		if (isYAMLPipeline) {
 			// look for default pipeline build def to use for build validation policy
 			def yamlBuild = getBuild(collection, projectData, "${repo.name} CI")
 			if (yamlBuild != null) {
 				log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing YAML CI Build. Setting Id for return to ${yamlBuild.id}")
 				ciBldId = Integer.parseInt("${yamlBuild.id}")
+			} else {
+				buildTemplate = getYAMLTemplate()
+				// make sure build folder is available for the repo
+				createBuildFolder(collection, projectData, "${repo.name}")
+				buildFolderCreated = true
+				buildFolderName = "${repo.name}"
+				log.debug("BuildManagementService::ensureBuildsForBranch -- Build folder created for ${repo.name}")
+				def ciBuild = createYAMLBuildDef(collection, projectData, repo, buildTemplate, "${repo.name}")
+				if (ciBuild == null ) {
+					log.error("BuildManagementService::ensureBuildsForBranch -- YAML CI Build creation failed!")
+				} else {
+					ciBldId = Integer.parseInt("${ciBuild.id}")
+					ciBldName = "${ciBuild.name}"
+					log.debug("BuildManagementService::ensureBuildsForBranch -- YAML CI Build created: "+ciBldName)
+				}
 			}
 		} else {
 			def build = getBuild(collection, projectData, repo, 'ci')
@@ -331,6 +347,12 @@ public class BuildManagementService {
 		return bDef
 	}
 
+	def getYAMLTemplate() {
+		def bDef = null
+		bDef = getResource("YAML", "CI", "template-yaml")
+		return bDef
+	}
+
 	def reviseReleaseLabels(def collection, def projectData, String repoList, String releaseLabel) {
 		def repos = codeManagementService.getRepos(collection, projectData)
 		def repoNames = repoList.split(',')
@@ -495,6 +517,37 @@ public class BuildManagementService {
 		bDef.repository.defaultBranch = "${repo.defaultBranch}"
 		bDef.retentionSettings = getRetentionSettings(collection)
 		def queueData = getQueue(collection, project, "On-Prem DR")
+		if (queueData != null) {
+			bDef.queue = queueData
+			bDef.process.phases.each { phase ->
+				phase.target.queue = queueData
+			}
+		}
+		return writeBuildDefinition(collection, project, bDef)
+	}
+
+	def createYAMLBuildDef(def collection, def project, def repo, def bDef, def folder) {
+		// set all the necessary properties and post the request
+		bDef.remove('authoredBy')
+		bDef.name = "${repo.name} CI"
+		bDef.id = -1
+		//bDef.draftOf = null
+		bDef.path = "${folder}"
+		bDef.counters = [:]
+		bDef.comment = "CI validation build for ${repo.name}"
+		bDef.createdDate = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+		bDef.project = project
+		bDef.badgeEnabled = false
+		//bDef.properties = [source: 'AllDefinitions']
+	
+		bDef.repository.id = "${repo.id}"
+		bDef.repository.name = "${repo.name}"
+		bDef.repository.url = "${repo.url}"
+		bDef.repository.defaultBranch = "${repo.defaultBranch}"
+		//bDef.retentionSettings = getRetentionSettings(collection)
+		// using a resource (json) file as the template, ensure the correct agent queue 
+		def queueData = getQueue(collection, project, "${this.queue}")
+		log.debug("BuildManagementService::createBuildDefinition - Queue = ${queueData}")
 		if (queueData != null) {
 			bDef.queue = queueData
 			bDef.process.phases.each { phase ->
@@ -773,37 +826,43 @@ public class BuildManagementService {
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/refs",
-			query: query,
+			query: query
 		)
-		if (result.count == 0) {
+		def resultCount = 0
+		if (result != null) {
+			resultCount = result.count
+		}
+		if (resultCount == 0) {
 			log.debug("BuildManagementService::getLatestTag -- No tags found for project ${project.name} and repo ${repo.name}")
 			return null
 		}
-		def lastTagIdx = result.count - 1
-		
+		def lastTagIdx = resultCount - 1
+		def latestTag = result.value[lastTagIdx]
 		// check tag name to ensure that it represents a valid semantic version string
-		def tagName = result.value[lastTagIdx].name
+		def tagName = latestTag.name
 		tagName = tagName.substring("refs/tags/".length(), tagName.length())
-		while (notValidTag(tagName)) {
+		while (notValidTag(tagName) && lastTagIdx > 0) {
 			lastTagIdx--
-			tagName = result.value[lastTagIdx].name
+			latestTag = result.value[lastTagIdx]
+			tagName = latestTag.name
 			tagName = tagName.substring("refs/tags/".length(), tagName.length())
 		}
-		def latestTag  = tagName
 
 		return latestTag
 	}
 
 	private boolean notValidTag(def tagName) {
-		String[] versionParts
-		if (tagName.indexOf("-") > -1) {
+		log.debug("BuildManagementService::notValidTag -- Validing Tag ${tagName}")
+		String tag = tagName
+		if (tag.indexOf("-") > -1) {
 			// look for tag with qualifier
-			String[] tagParts = tagName.split("-")
-			versionParts = tagParts[0].split(".")
-		} else {
-			versionParts = tagName.split(".")
+			String[] tagParts = tag.split("-")
+			tag = tagParts[0]
 		}
-		if (versionParts.length < 5) {
+		String[] versionParts = tag.split("\\.")
+
+		if (versionParts.length < 3) {
+			log.debug("BuildManagementService::notValidTag -- Did not find all 3 parts for version number")
 			return true
 		}
 		for (int idx = 0; idx++; idx < 3) {
@@ -811,6 +870,7 @@ public class BuildManagementService {
 				Integer.parseInt(versionParts[idx])
 			} catch (NumberFormatException e) {
 				// Not a number so version string is invalid
+				log.debug("BuildManagementService::notValidTag -- Version part " + idx + ", '${versionParts[idx]}' is not a number")
 				return true
 			}
 		}
@@ -820,6 +880,11 @@ public class BuildManagementService {
 	private def createInitialBuildTag(def collection, def project, def repo, def latestTag, def branchName) {
 		String versionTag = latestTag.name.substring("refs/tags/".length())
 		log.debug("BuildManagementService::createInitialBuildTag  -- versionTag = ${versionTag}")
+		if (versionTag.indexOf("-") > -1) {
+			// look for tag with qualifier
+			String[] tagParts = versionTag.split("-")
+			versionTag = tagParts[0]
+		}
 		def parts = versionTag.tokenize(".")
 		def version = parts[0] + '.' + parts[1] + '.' + parts[2]
 		log.debug("BuildManagementService::createInitialBuildTag  -- Version = ${version}")

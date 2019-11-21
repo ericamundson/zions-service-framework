@@ -90,7 +90,7 @@ public class WorkitemAttributeManager  {
 	RtcRepositoryClient rtcRepositoryClient
 	
 	@Autowired
-	@Value('${vsts.area.prefix}')
+	@Value('${vsts.area.prefix:}')
 	String areaPrefix
 	
 	@Autowired

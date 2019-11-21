@@ -20,7 +20,7 @@ class ResultTestCaseReferenceHandler extends QmBaseAttributeHandler {
 
 	public def formatValue(def value, def data) {
 		def testCase = data.testCase
-		String tId = "${testCase.webId}"
+		String tId = "${testCase.webId.text()}-Test Case"
 		def adoTestCase = cacheManagementService.getFromCache(tId, ICacheManagementService.WI_DATA)
 		if (adoTestCase == null) return null
 		//def outVal = [id: adoTestCase.id, name: "${adoTestCase.fields.'System.Title'}", url: "${adoTestCase._links.self.href}"]
