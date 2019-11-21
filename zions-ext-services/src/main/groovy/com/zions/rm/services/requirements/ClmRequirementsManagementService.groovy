@@ -371,8 +371,11 @@ class ClmRequirementsManagementService {
 		cacheManagementService.deleteByType("whereUsedData")
 		while (results) {
 			processWhereUsedPage(results)
+			this.pageUrlDb()
 			results = this.nextPageDb()
 		}
+		return true;
+		
 //		else {
 //			log.info("Null results from fetching whereUsed cache, something went wrong I wager")
 //			return false
