@@ -34,7 +34,10 @@ import com.zions.clm.services.ccm.workitem.handler.CcmBaseAttributeHandler
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.ldap.User
 import com.zions.common.services.link.LinkInfo
+import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.user.UserManagementService
 import com.zions.common.services.work.handler.IFieldHandler
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
@@ -62,6 +65,7 @@ class CcmWorkManagementService {
 	
 	@Autowired
 	ICacheManagementService cacheManagementService
+	
 
 	@Autowired
 	@Value('${cache.location}')
@@ -73,6 +77,9 @@ class CcmWorkManagementService {
 	
 	@Autowired(required=false)
 	CcmGenericRestClient ccmGenericRestClient
+	
+	@Autowired(required=false)
+	UserManagementService userManagementService
 	
 	IQueryResult<IResolvedResult> resolvedResults = null
 	//def queryResults = null
@@ -150,6 +157,7 @@ class CcmWorkManagementService {
 			resultLinks.each { LinkInfo link ->
 				def result = cacheManagementService.getFromCache(link.itemIdRelated, 'QM', ICacheManagementService.RESULT_DATA)
 				if (result) {
+					//log.info("Has execution result: ${result.id}, key: ${link.itemIdRelated}")
 					String title = "${result.testCaseTitle}"
 					
 					def resultChanges = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${result.testRun.id}/results/${result.id}", query:['api-version':'5.0-preview.5'], body: []]
@@ -220,7 +228,7 @@ class CcmWorkManagementService {
 						url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
 					}
 				}
-				if (linkId && !linkExists(cacheWI, linkMap.target, linkId, runId) && "${linkId}" != "${cacheWI.id}") {
+				if (linkId && !linkExists(cacheWI, linkMap.target, linkId, wiData, runId) && "${linkId}" != "${cacheWI.id}") {
 					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap.@target}", url: url, attributes:[comment: "${linkMap.@source}"]]]
 					wiData.body.add(change)
 				}
@@ -238,16 +246,49 @@ class CcmWorkManagementService {
 	 * @param linkId
 	 * @return
 	 */
-	boolean linkExists(cacheWI, targetName, linkId, String runId = null) {
-		def url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
+	boolean linkExists(cacheWI, targetName, linkId, wiData, String runId = null) {
+		//String url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
+		String lid = "/${linkId}"
 		if (runId) {
-			url = "${tfsUrl}/_TestManagement/Runs?_a=resultSummary&runId=${runId}&resultId=${linkId}"
+			//url = "${tfsUrl}/_TestManagement/Runs?_a=resultSummary&runId=${runId}&resultId=${linkId}"
+			lid = ".${linkId}"
 		}
+//		def wlink = wiData.body.find { change ->
+//			String eurl = "${change.url}"
+//			eurl.endsWith(lid)
+//		}
+//		if (wlink != null) return true
+		
 		def link = cacheWI.relations.find { rel ->
-			"${rel.rel}" == "${targetName}" && url == "${rel.url}"
+			String eUrl = "${rel.url}"
+			eUrl.endsWith(lid)
 		}
 		return link != null
 	}
+	
+	boolean canChange(prevWI, cacheWI, field, String key) {
+		if (!cacheWI) return true
+		boolean flag = true
+		String tName = "${field.target}"
+		def fModified = cacheManagementService.getFromCache("${key}-${tName}", 'changedField')
+		if (fModified) {
+			def cVal = cacheWI.fields."${tName}"
+			String changedDate = "${cacheWI.fields.'System.ChangedDate'}"
+			cacheManagementService.saveToCache([changeDate: changedDate, value: cVal], "${key}-${tName}", 'changedField')
+			return false
+		}
+		if (!prevWI) return true
+		def cVal = cacheWI.fields."${tName}"
+		String changedDate = "${cacheWI.fields.'System.ChangedDate'}"
+		def pVal = prevWI.fields."${tName}"
+		flag = "${pVal}" == "${cVal}"
+		if (!flag) {
+			log.info("ADO field change cached:  key: ${key}-${tName}, date: ${changedDate}, value: ${cVal}.")
+			cacheManagementService.saveToCache([changeDate: changedDate, value: cVal], "${key}-${tName}", 'changedField')
+		}
+		return flag
+	}
+
 
 	/**
 	 * Generate work item VSTS change request from RTC datat.
@@ -267,6 +308,7 @@ class CcmWorkManagementService {
 		def wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0&bypassRules=true&suppressNotifications=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 		String sid = "${id}"
 		def cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
+		def prevWI = cacheManagementService.getFromCache(sid, 'wiPrevious')
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0&bypassRules=true&suppressNotifications=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
@@ -278,14 +320,16 @@ class CcmWorkManagementService {
 			wiData.body.add(idData)
 		}
 		wiMap.fieldMaps.each { fieldMap -> 
-			def fieldData = getFieldData(workItem, fieldMap, cacheWI, memberMap, wiMap)
-			if (fieldData != null) {
-				if (!(fieldData instanceof ArrayList)) {
-					wiData.body.add(fieldData)
-				} else {
-					fieldData.each { fData ->
-						if (fData.value != null) {
-							wiData.body.add(fData)
+			if (canChange(prevWI, cacheWI,  fieldMap, sid)) {
+				def fieldData = getFieldData(workItem, fieldMap, cacheWI, memberMap, wiMap)
+				if (fieldData != null) {
+					if (!(fieldData instanceof ArrayList)) {
+						wiData.body.add(fieldData)
+					} else {
+						fieldData.each { fData ->
+							if (fData.value != null) {
+								wiData.body.add(fData)
+							}
 						}
 					}
 				}
@@ -298,6 +342,13 @@ class CcmWorkManagementService {
 		//String json = new JsonBuilder(wiData).toPrettyString()
 		WorkitemChanges data = new WorkitemChanges(changes: wiData)
 		return data
+	}
+	
+	User getUserByEmail(String email) {
+		try {
+			return userManagementService.getUserByEmail(email)
+		} catch (e) {}
+		return null
 	}
 		
 	/**
@@ -324,6 +375,8 @@ class CcmWorkManagementService {
 				def data = [workItem: workItem, memberMap: memberMap, fieldMap: fieldMap, cacheWI: cacheWI, wiMap: wiMap]
 				return this.fieldMap["${attributId}"].execute(data)
 			}
+			
+			
 
 			if (fValue == null) return null
 		}
@@ -333,10 +386,17 @@ class CcmWorkManagementService {
 		IAttribute attribute = workItemClient.findAttribute(workItem.getProjectArea(), attributId, null);
 		if (attribute != null) {
 			String attribType = attribute.getAttributeType()
-			if (attribType.equals(AttributeTypes.CONTRIBUTOR) && memberMap[fValue.toLowerCase()] == null) {
-				return null
-			} else if (attribType.equals(AttributeTypes.CONTRIBUTOR) && memberMap[fValue.toLowerCase()] != null) {
+			User user = null
+			if (attribType.equals(AttributeTypes.CONTRIBUTOR)) {
+				user = getUserByEmail(fValue)
+			}
+			if (attribType.equals(AttributeTypes.CONTRIBUTOR) && memberMap[fValue.toLowerCase()] != null) {
 				fValue = "${memberMap[fValue.toLowerCase()].uniqueName}"
+			} else if (user) {
+				fValue = "${user.email.toLowerCase()}"
+			}
+			if (attribType.equals(AttributeTypes.CONTRIBUTOR) && memberMap[fValue.toLowerCase()] == null && !user) {
+				return null
 			}
 		}
 		String cValue = ""
@@ -442,7 +502,7 @@ class CcmWorkManagementService {
 		if (cId.startsWith('http')) {
 			try {
 				String url = cId
-				def result = ccmGenericRestClient.get(
+				def result = qmGenericRestClient.get(
 				contentType: ContentType.XML,
 				uri: cId,
 				headers: [Accept: 'application/rdf+xml'] );

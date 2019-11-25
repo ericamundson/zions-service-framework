@@ -1,16 +1,19 @@
 package com.zions.qm.services.test.handlers
 
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.extension.IExtensionData
 import com.zions.qm.services.test.ClmTestManagementService
 import com.zions.qm.services.test.TestMappingManagementService
 
 import groovy.json.JsonBuilder
+import groovy.util.logging.Slf4j
 import java.nio.charset.Charset
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component('QmCustomAttributesHandler')
+@Slf4j
 class CustomAttributesHandler extends QmBaseAttributeHandler {
 	@Autowired(required=false)
 	IExtensionData extensionData
@@ -26,7 +29,9 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 	
 	@Value('${tfs.project}')
 	String tfsProjectName
-
+	
+	@Autowired
+	ICacheManagementService cacheManagementService
 
 	def descMap = [:]
 	
@@ -55,6 +60,8 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 	public def formatValue(def value, def data) {
 		def outData = [];
 		def itemData = data.itemData
+		def wiCache = data.cacheWI
+		def prevWI = data.prevWI
 		def catMap = [:]
 		itemData.category.each { cat -> 
 			String name = "${cat.@term}".replace(' ', '_')
@@ -66,9 +73,10 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 			}
 			catMap["${name}"].push(avalue)
 		}
+		String eid = getKey(wiCache)
 		catMap.each { key, vals -> 
 			def desc = descMap[key]
-			if (desc) {
+			if (desc && canChange(prevWI, wiCache, desc.fieldName, eid)) {
 				def catData = [name: key, value: vals.join(';')]
 				outData.push(catData)
 			}
@@ -76,7 +84,7 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 		itemData.customAttributes.customAttribute.each { att ->
 			String name = "${att.identifier.text()}"
 			def desc = descMap[name]
-			if (desc) {
+			if (desc && canChange(prevWI, wiCache, desc.fieldName, eid)) {
 				String avalue = "${att.value.text()}"
 				avalue = avalue.replaceAll("[^\\x00-\\x7F]", "");
 				def caData = [name: name, value: avalue]
@@ -91,6 +99,7 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 		def itemData = data.itemData
 		def fieldMap = data.fieldMap
 		def wiCache = data.cacheWI
+		def prevWI = data.prevWI
 		def memberMap = data.memberMap
 		def itemMap = data.itemMap
 		initDescMap()
@@ -136,6 +145,7 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 				String fieldName = descMap[val.name].fieldName
 				if (fieldName) {
 					def aField = getExisting(retVal, fieldName)
+					//String fieldName = 
 					if (!aField) {
 						aField = [op:'add', path:"/fields/${fieldName}", value: val.value]
 						retVal.push(aField)
@@ -176,6 +186,37 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 		return exist
 	}
 	
+	boolean canChange(prevWI, cacheWI, String tName, String key) {
+		if (!cacheWI) return true
+		boolean flag = true
+		//String tName = "${field.target}"
+		def fModified = cacheManagementService.getFromCache("${key}-${tName}", 'changedField')
+		if (fModified) {
+			def cVal = cacheWI.fields."${tName}"
+			String changedDate = "${cacheWI.fields.'System.ChangedDate'}"
+			cacheManagementService.saveToCache([changeDate: changedDate, value: cVal], "${key}-${tName}", 'changedField')
+			return false
+		}
+		if (!prevWI) return true
+		def cVal = cacheWI.fields."${tName}"
+		String changedDate = "${cacheWI.fields.'System.ChangedDate'}"
+		def pVal = prevWI.fields."${tName}"
+		flag = "${pVal}" == "${cVal}"
+		if (!flag) {
+			log.info("ADO field change cached:  key: ${key}-${tName}, date: ${changedDate}, value: ${cVal}.")
+			cacheManagementService.saveToCache([changeDate: changedDate, value: cVal], "${key}-${tName}", 'changedField')
+		}
+		return flag
+	}
 
+	private String getKey(def wi) {
+		String eId = "${wi.fields['Custom.ExternalID']}"
+		String wiType = "${wi.fields.'System.WorkItemType'}"
+		String key = "${eId.substring(4)}-${wiType}"
+		if (wiType != 'Test Case') {
+			key = "${key} WI"
+		}
+		return key
+	}
 
 }

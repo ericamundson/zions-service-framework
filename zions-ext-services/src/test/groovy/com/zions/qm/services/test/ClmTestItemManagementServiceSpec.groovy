@@ -11,9 +11,10 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
-
+import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
 import com.zions.common.services.test.SpockLabeler
 import com.zions.common.services.work.handler.IFieldHandler
@@ -39,6 +40,9 @@ class ClmTestItemManagementServiceSpec extends Specification {
 	@Autowired
 	ICacheManagementService cacheManagementService
 	
+	@Autowired
+	IGenericRestClient qmGenericRestClient
+	
 //	@Autowired
 //	Map<String, IFieldHandler> fieldMap
 
@@ -46,6 +50,11 @@ class ClmTestItemManagementServiceSpec extends Specification {
 		given: 'setup plan data'
 		//Plan data
 		def testplan = dataGenerationService.generate('/testdata/testplan218.xml')
+		
+//		and: 'stub rest client for links'
+//		def result = qmGenericRestClient.get(_) >> {
+//			return null
+//		}
 
 		and: 'setup team map'
 		//Team map
@@ -210,6 +219,10 @@ class ClmTestItemManagementServiceSpecConfig {
 		return factory.Mock(CacheManagementService)
 	}
 
+	@Bean
+	IGenericRestClient qmGenericRestClient() {
+		return factory.Stub(ClmGenericRestClient)
+	}
 
 	@Bean
 	TestMappingManagementService testMappingManagementService() {

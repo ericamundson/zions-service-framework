@@ -1,0 +1,192 @@
+{
+	"id": 594188,
+	"rev": 3,
+	"fields": {
+		"System.Id": 594188,
+		"System.AreaId": 780,
+		"System.AreaPath": "BaNCS",
+		"System.TeamProject": "BaNCS",
+		"System.NodeName": "BaNCS",
+		"System.AreaLevel1": "BaNCS",
+		"System.Rev": 3,
+		"System.AuthorizedDate": "2019-11-16T06:11:42.433Z",
+		"System.RevisedDate": "9999-01-01T00:00:00Z",
+		"System.IterationId": 775,
+		"System.IterationPath": "BaNCS",
+		"System.IterationLevel1": "BaNCS",
+		"System.WorkItemType": "Bug",
+		"System.State": "Closed",
+		"System.Reason": "New",
+		"System.AssignedTo": {
+			"displayName": "Alan Glock",
+			"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/fd720d8c-f560-61a3-b567-92ef619cde31",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.ZmQ3MjBkOGMtZjU2MC03MWEzLWI1NjctOTJlZjYxOWNkZTMx"
+				}
+			},
+			"id": "fd720d8c-f560-61a3-b567-92ef619cde31",
+			"uniqueName": "Alan.Glock@zionsbancorp.com",
+			"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.ZmQ3MjBkOGMtZjU2MC03MWEzLWI1NjctOTJlZjYxOWNkZTMx",
+			"descriptor": "aad.ZmQ3MjBkOGMtZjU2MC03MWEzLWI1NjctOTJlZjYxOWNkZTMx"
+		},
+		"System.CreatedDate": "2019-01-31T11:22:05.99Z",
+		"System.CreatedBy": {
+			"displayName": "Mallesh Neralla",
+			"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/3356eceb-ea89-6a23-9665-10d8f4f20a0c",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MzM1NmVjZWItZWE4OS03YTIzLTk2NjUtMTBkOGY0ZjIwYTBj"
+				}
+			},
+			"id": "3356eceb-ea89-6a23-9665-10d8f4f20a0c",
+			"uniqueName": "mallesh.neralla@zionsbancorp.com",
+			"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MzM1NmVjZWItZWE4OS03YTIzLTk2NjUtMTBkOGY0ZjIwYTBj",
+			"descriptor": "aad.MzM1NmVjZWItZWE4OS03YTIzLTk2NjUtMTBkOGY0ZjIwYTBj"
+		},
+		"System.ChangedDate": "2019-11-16T06:11:42.433Z",
+		"System.ChangedBy": {
+			"displayName": "svc-cloud-vsmigration003",
+			"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/03771858-794c-6d69-8b73-a58d7e9ceeb9",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5"
+				}
+			},
+			"id": "03771858-794c-6d69-8b73-a58d7e9ceeb9",
+			"uniqueName": "svc-cloud-vsmigration003@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5",
+			"descriptor": "aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5"
+		},
+		"System.AuthorizedAs": {
+			"displayName": "svc-cloud-vsmigration003",
+			"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/03771858-794c-6d69-8b73-a58d7e9ceeb9",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5"
+				}
+			},
+			"id": "03771858-794c-6d69-8b73-a58d7e9ceeb9",
+			"uniqueName": "svc-cloud-vsmigration003@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5",
+			"descriptor": "aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5"
+		},
+		"System.PersonId": 42696384,
+		"System.Watermark": 767371,
+		"System.CommentCount": 1,
+		"System.Title": "FS-EXCP-15/Posting Excp Item details Inquiry does not correctly display all the item data and navigation functions not correct when navigating from Undecisioned Posting Excp Inquiry",
+		"System.BoardColumn": "Closed",
+		"System.BoardColumnDone": false,
+		"Microsoft.VSTS.Common.StateChangeDate": "2019-11-15T07:49:14.797Z",
+		"Microsoft.VSTS.Common.ResolvedDate": "2019-07-22T11:20:20.623Z",
+		"Microsoft.VSTS.Common.ResolvedBy": {
+			"displayName": "Kathy Gray",
+			"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/792f12cb-b580-6ea1-a2d8-dc2dd31cfcbc",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.NzkyZjEyY2ItYjU4MC03ZWExLWEyZDgtZGMyZGQzMWNmY2Jj"
+				}
+			},
+			"id": "792f12cb-b580-6ea1-a2d8-dc2dd31cfcbc",
+			"uniqueName": "Kathy.Gray@zionsbancorp.com",
+			"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.NzkyZjEyY2ItYjU4MC03ZWExLWEyZDgtZGMyZGQzMWNmY2Jj",
+			"descriptor": "aad.NzkyZjEyY2ItYjU4MC03ZWExLWEyZDgtZGMyZGQzMWNmY2Jj"
+		},
+		"Microsoft.VSTS.Common.ClosedDate": "2019-07-22T11:20:20.623Z",
+		"Microsoft.VSTS.Common.ClosedBy": {
+			"displayName": "Kathy Gray",
+			"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/792f12cb-b580-6ea1-a2d8-dc2dd31cfcbc",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.NzkyZjEyY2ItYjU4MC03ZWExLWEyZDgtZGMyZGQzMWNmY2Jj"
+				}
+			},
+			"id": "792f12cb-b580-6ea1-a2d8-dc2dd31cfcbc",
+			"uniqueName": "Kathy.Gray@zionsbancorp.com",
+			"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.NzkyZjEyY2ItYjU4MC03ZWExLWEyZDgtZGMyZGQzMWNmY2Jj",
+			"descriptor": "aad.NzkyZjEyY2ItYjU4MC03ZWExLWEyZDgtZGMyZGQzMWNmY2Jj"
+		},
+		"Microsoft.VSTS.Common.Priority": 2,
+		"Microsoft.VSTS.Common.Severity": "2 - High",
+		"Microsoft.VSTS.Common.ValueArea": "Business",
+		"Custom.ExternalID": "RTC-190048",
+		"Custom.Classification": "Defect",
+		"Custom.ReleaseFoundIn": "R3",
+		"Custom.ReleaseTargetedTo": "R3",
+		"WEF_06AFFE912203414FBC225360214709C2_System.ExtensionMarker": true,
+		"WEF_06AFFE912203414FBC225360214709C2_Kanban.Column": "Closed",
+		"WEF_06AFFE912203414FBC225360214709C2_Kanban.Column.Done": false,
+		"WEF_0CA69276999A444392949B528742866B_System.ExtensionMarker": true,
+		"WEF_0CA69276999A444392949B528742866B_Kanban.Column": "Closed",
+		"WEF_0CA69276999A444392949B528742866B_Kanban.Column.Done": false,
+		"WEF_E65A3744F36940DA9C743BC593113A9A_System.ExtensionMarker": true,
+		"WEF_E65A3744F36940DA9C743BC593113A9A_Kanban.Column": "Closed",
+		"WEF_E65A3744F36940DA9C743BC593113A9A_Kanban.Column.Done": false,
+		"WEF_12376DF0B7314C86B3DA8855C22F47F6_System.ExtensionMarker": true,
+		"WEF_12376DF0B7314C86B3DA8855C22F47F6_Kanban.Column": "Closed",
+		"WEF_12376DF0B7314C86B3DA8855C22F47F6_Kanban.Column.Done": false,
+		"Custom.FoundinProd": false,
+		"Custom.ReleaseFixedIn": "R3",
+		"Custom.Color": "Red",
+		"Custom.BaNCSEnvironment": "TEST10",
+		"Custom.RootCauseClassification": "Code - TCS",
+		"Custom.a357e270-0f08-405f-8b72-791eab63b406": "N/A",
+		"Custom.FoundInDrop": "R3 \u2013 17.3.1.3 \u2013 01/04/2019",
+		"Custom.FixedInBuild": "N/A",
+		"Custom.RTCTimeline": "null",
+		"System.Description": "Step to Reproduce:<br><br>Step to Reproduce:<br><br>1.&nbsp; Menu Selection :&nbsp; Miscellaneous/ EXCEPTIONS/Posting Exception Undecisioned Inquiry<br>2.&nbsp; Select Tran Date To and Tran Date from&nbsp; =&nbsp; 01/01/2025, From Amount = $25000, click submit<br>3.&nbsp; Select Journal nbr 100000618 hyperlink<br><br><br>Expected Results: The data associated with the Journal nbr 100000618 selected on the Posting Exception Undecisioned Inquiry must be displayed on Posting Excp Item details Inquiry<br><br>Actual Results:&nbsp; The data associated with the Journal nbr selected on the Posting Exception Undecisioned Inquiry was not completely displayed&nbsp; for Journal nbr 100000618 on Posting Excp Item details&nbsp; Inquiry and some fields are not formatted correctly.&nbsp; Previous Transaction/Next Transaction buttons are not functioning correctly and not enable/disabled correctly.<br><br><br><br>Customer/User Impact: User<br><br>Reproducibility: 100%",
+		"System.Tags": "EXCP"
+	},
+	"relations": [
+		{
+			"rel": "AttachedFile",
+			"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/attachments/04b9af6d-b41f-49a4-b95b-ac9b43dfd461",
+			"attributes": {
+				"authorizedDate": "2019-11-15T07:49:14.797Z",
+				"id": 3239993,
+				"resourceCreatedDate": "2019-11-15T07:49:14.797Z",
+				"resourceModifiedDate": "2019-11-15T07:49:14.797Z",
+				"revisedDate": "9999-01-01T00:00:00Z",
+				"comment": "Added attachment Defect Retested_190048.xlsx",
+				"name": "Defect Retested_190048.xlsx"
+			}
+		},
+		{
+			"rel": "AttachedFile",
+			"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/attachments/de63d06e-8109-42cb-9591-1b4586b32a07",
+			"attributes": {
+				"authorizedDate": "2019-11-15T07:49:14.797Z",
+				"id": 3239994,
+				"resourceCreatedDate": "2019-11-15T07:49:14.797Z",
+				"resourceModifiedDate": "2019-11-15T07:49:14.797Z",
+				"revisedDate": "9999-01-01T00:00:00Z",
+				"comment": "Added attachment 190048_FS15_Issue#6.docx",
+				"name": "190048_FS15_Issue#6.docx"
+			}
+		}
+	],
+	"_links": {
+		"self": {
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/594188"
+		},
+		"workItemUpdates": {
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/594188/updates"
+		},
+		"workItemRevisions": {
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/594188/revisions"
+		},
+		"workItemComments": {
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/594188/comments"
+		},
+		"html": {
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_workitems/edit/594188"
+		},
+		"workItemType": {
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Bug"
+		},
+		"fields": {
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/fields"
+		}
+	},
+	"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/594188"
+}

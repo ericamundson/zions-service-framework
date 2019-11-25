@@ -97,7 +97,7 @@ class BaseQueryHandler implements IQueryHandler {
 	}
 
 	public boolean isModified(Object item) {
-		String key = "${item.id.text()}"
+		String key = "${item.id}"
 		def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
 		if (!cacheWI) return true
 		String sDate = "${item.modified}"

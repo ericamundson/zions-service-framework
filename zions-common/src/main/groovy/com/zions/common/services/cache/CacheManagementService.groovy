@@ -75,7 +75,11 @@ class CacheManagementService implements ICacheManagementService {
 	/* (non-Javadoc)
 	 * @see com.zions.common.services.cache.ICacheManagementService#saveToCache(java.lang.Object, java.lang.String, java.lang.String)
 	 */
-	public def saveToCache(def data, String id, String type) {
+	public def saveToCache(def data, String id, String type, Closure c = null) {
+		if (c) {
+			def currentItem = getFromCache(id, type)
+			c(currentItem)
+		}
 		File cacheDir = new File(this.cacheLocation)
 		if (!cacheDir.exists()) {
 			cacheDir.mkdir();
@@ -92,7 +96,11 @@ class CacheManagementService implements ICacheManagementService {
 		def w  = cacheData.newDataOutputStream()
 		w << new JsonBuilder(data).toPrettyString()
 		w.close()
-
+		
+		if (c) {
+			def currentItem = getFromCache(id, type)
+			c(currentItem)
+		}
 	}
 
 	/**
@@ -185,10 +193,31 @@ class CacheManagementService implements ICacheManagementService {
 	 * @see com.zions.common.services.cache.ICacheManagementService#deleteByType(java.lang.String)
 	 */
 	@Override
-	public void deleteByType(String type) {
+	public void deleteByType(String type, Closure c = null) {
+		if (c) {
+			def items = getAllOfType(type)
+			items.each { item ->
+				c(item)
+			}
+		}
 		File cDir = new File("${this.cacheLocation}${File.separator}${cacheModule}")
 		if (cDir.exists()) {
 			cDir.eachFileRecurse(FileType.FILES) { File file ->
+				String name = file.name
+				String cname = "${type}.json" 
+				if (name.startsWith(cname)) {
+					file.delete()
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public void deleteByIdAndByType(String id, String type) {
+		if (exists(id)) {
+			File cacheItem = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}");
+			cacheItem.eachFileRecurse(FileType.FILES) { File file ->
 				String name = file.name
 				String cname = "${type}.json" 
 				if (name.startsWith(cname)) {

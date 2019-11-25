@@ -1168,9 +1168,9 @@ public class WorkitemAttributeManager  {
 			List<?> items = (List<?>) value;
 			for (Object object : items) {
 				String tag = calculateString(object)
-				if (StringUtils.isAlphanumeric(tag)) {
+				//if (StringUtils.isAlphanumeric(tag)) {
 					resultList.add(tag);
-				}
+				//}
 			}
 		}
 		if (resultList.size() == 0) {

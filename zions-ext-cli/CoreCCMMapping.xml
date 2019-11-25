@@ -717,7 +717,7 @@ Removed
 		<field source="com.zions.workitem.attribute.anomaly.rootcause_large" target="Custom.RootCauseComment"/>
 		<field source="com.zions.workitem.attribute.anomaly.requirement_large" target="Custom.RequirementChangesNeeded"/>
 		<field source="com.ibm.workitem.anomaly.tab.releasefixed" target="Custom.ReleaseFixedIn"/>
-		<field source="com.ibm.workitem.anomaly.tab.releasefound" target="Custom.d44fd5d1-63ab-420a-a73c-c6640f378779"/>
+		<field source="com.ibm.workitem.anomaly.tab.releasefound" target="Custom.ReleaseFoundIn"/>
 		<field source="com.ibm.workitem.anomaly.tab.releasetarget" target="Custom.ReleaseTargetedTo"/>
 		<field source="rtcTimelineHandler" target="Custom.RTCTimeline"/>
 		
@@ -730,9 +730,6 @@ Removed
 		<field source="resolver" target="Microsoft.VSTS.Common.ResolvedBy"/>
 		<field source="startDate" target="Microsoft.VSTS.Scheduling.StartDate"/>
 		<field source="creationDate" target="System.CreatedDate"/>
-		<field source="internalResolution" target="Microsoft.VSTS.Common.ResolvedReason">
-			<defaultvalue target=""/>
-		</field>
 		<field source="summaryHandler" target="System.Title"/>
 		<field source="description" target="System.Description"/>
 		<field source="duration" target="Microsoft.VSTS.Scheduling.OriginalEstimate"/>
@@ -770,6 +767,7 @@ Removed
 			<value source="Rollout" target="BaNCS\Testing\Teams\Rollout"/>
 			<value source="SNF: Test" target="BaNCS\Testing\Teams\SNF"/>
 		</field>
+		<field source="coreSubStateHandler" target="Custom.SubState"/>
 		<field source="internalState" target="System.State">
 			<defaultvalue target="Active"/>
 			<value source="New" target="New"/>
@@ -842,7 +840,7 @@ Removed
 		<link source="parent" target="System.LinkTypes.Hierarchy-Reverse"/>
 		<!--  <link source="child" target="System.LinkTypes.Hierarchy-Reverse"/>-->
 		<link source="successor" target="System.LinkTypes.Dependency"/>
-		<link source="duplicate" target="System.LinkTypes.Duplicate-Reverse"/>
+		<link source="duplicate" target="System.LinkTypes.Related"/>
 		<link source="copied" target="System.LinkTypes.Related"/>
 		<link source="mentions" target="System.LinkTypes.Related"/>
 		<link source="resolves" target="System.LinkTypes.Related"/>

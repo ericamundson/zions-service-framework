@@ -23,15 +23,19 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.data.ldap.repository.config.EnableLdapRepositories
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
+import org.springframework.ldap.core.LdapTemplate
+import org.springframework.ldap.core.support.LdapContextSource
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("clmdb")
-@ComponentScan(["com.zions.vsts.services","com.zions.clm.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.cacheaspect"])
+@ComponentScan(["com.zions.vsts.services","com.zions.clm.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.ldap", "com.zions.common.services.user"])
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
+@EnableLdapRepositories(basePackages = "com.zions.common.services.ldap")
 public class CLMDBAppConfig {
 	
 	@Autowired
@@ -80,6 +84,33 @@ public class CLMDBAppConfig {
 	
 	public @Bean MongoTemplate mongoTemplate() throws Exception {
 		return new MongoTemplate(mongoClient(), database);
+	}
+	
+	//LDAP
+	@Value('${ldap.url:}')
+	String ldapUrl
+	@Value('${ldap.partitionSuffix:}')
+	String ldapPartitionSuffix
+	@Value('${ldap.principal:}')
+	String ldapPrincipal
+	@Value('${ldap.password:}')
+	String ldapPassword
+
+	@Bean
+	public LdapContextSource contextSource() {
+		LdapContextSource contextSource = new LdapContextSource();
+		 
+		contextSource.setUrl(ldapUrl);
+		contextSource.setBase(ldapPartitionSuffix);
+		contextSource.setUserDn(ldapPrincipal);
+		contextSource.setPassword(ldapPassword);
+		 
+		return contextSource;
+	}
+	
+	@Bean
+	public LdapTemplate ldapTemplate() {
+		return new LdapTemplate(contextSource());
 	}
 
 

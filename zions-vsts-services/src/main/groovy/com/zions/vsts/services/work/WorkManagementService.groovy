@@ -46,6 +46,9 @@ class WorkManagementService {
 
 	@Value('${id.tracking.field:}')
 	private String idTrackingField
+	
+	@Value('${track.ado.changes:false}')
+	boolean trackAdoChanges
 
 	private categoriesMap = [:]
 
@@ -66,9 +69,18 @@ class WorkManagementService {
 	 * @param query
 	 * @return
 	 */
-	def refreshCacheByQuery(String collection, String project, String query, Closure keyC = null) {
+	def refreshCacheByQuery(String collection, String project, String query, String planId = null, Closure keyC = null) {
 		String module = cacheManagementService.cacheModule
-		cacheManagementService.deleteByType(ICacheManagementService.WI_DATA)
+		if (trackAdoChanges) {
+			// Backup previous cache.
+			cacheManagementService.deleteByType(ICacheManagementService.WI_DATA) { key, wi ->
+				if (!cacheManagementService.getFromCache(key, 'wiPrevious')) {
+					cacheManagementService.saveToCache(wi, key, 'wiPrevious')
+				}
+			}
+		} else {
+			cacheManagementService.deleteByType(ICacheManagementService.WI_DATA)
+		}
 		def wis = getWorkItems(collection, project, query)
 		if (!wis || !wis.workItems) return
 		def wiList = wis.workItems
@@ -95,13 +107,27 @@ class WorkManagementService {
 					log.info("Deleting duplicate of (${module}) Element: ${key}, ADO WI: ${owi.id}")
 					String url = "${owi.url}"
 					if (isTestItem()) {
-						deleteTestItem(collection, project, cacheWI)
+						deleteTestItem(collection, project, owi)
 					} else {
 						deleteWorkitem(url)
 					}
 				} else {
 					//eMap[key] = key
 					cacheManagementService.saveToCache(owi, key, ICacheManagementService.WI_DATA)
+					if (trackAdoChanges) {
+						def previous = cacheManagementService.getFromCache(key, 'wiPrevious')
+						
+						// Remove items from backup that are equivalent to elements being cached.
+						// This will be used to determine field changes.
+						String prev = "${previous.rev}"
+						String rev = "${owi.rev}"
+						if (prev == rev) {
+							cacheManagementService.deleteByIdAndByType(key, 'wiPrevious')
+						}
+					}
+					if (cacheManagementService.cacheModule == 'QM' && planId) {
+						refreshTestItemCache(collection, project, key, owi, planId)
+					}
 				}
 			}
 			if (j == wiList.size()) {
@@ -113,6 +139,26 @@ class WorkManagementService {
 				wiList = wis.workItems
 			}
 		}
+	}
+	
+	def refreshTestItemCache(collection, project, String key, def wiCache, String planId) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		if (key.endsWith('Test Suite WI')) {
+			String suiteId = "${wiCache.id}"
+			def result = genericRestClient.get(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/testplan/Plans/${planId}/suites/${suiteId}",
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '5.0-preview.1']
+				)
+			if (result) {
+				key = key.substring(0, key.length()-3)
+				cacheManagementService.saveToCache(result, key, ICacheManagementService.SUITE_DATA)
+			}
+		}
+
 	}
 	
 	boolean isTestItem() {
@@ -133,12 +179,12 @@ class WorkManagementService {
 	 * @param teamArea - ADO work item team area.
 	 * @return none
 	 */
-	def refreshCacheByTeamArea(String collection, String project, String teamArea) {
+	def refreshCacheByTeamArea(String collection, String project, String teamArea, String planId = null) {
 		def moduleMap = ['CCM': 'RTC-', 'RM':'DNG-', 'QM':'RQM-', 'TL': 'TL-']
 		String module = cacheManagementService.cacheModule
 		String eidPrefix = moduleMap[module]
 		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${project}' AND [System.AreaPath] under '${teamArea}' AND [Custom.ExternalID] CONTAINS '${eidPrefix}'"
-		refreshCacheByQuery(collection, project, query)
+		refreshCacheByQuery(collection, project, query, planId)
 	}
 	
 	private String getKey(def wi) {
@@ -572,7 +618,9 @@ class WorkManagementService {
 			result.value.each { resp ->
 				if (count == 0) {
 					def issue = new JsonSlurper().parseText(resp.body)
-					log.error "Failed to save full batch of work items, Error:  ${issue.'value'.Message}"
+					log.error "Failed to save full batch of work items:  WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}"
+					def wiCache = cacheManagementService.getFromCache(idMap[count], ICacheManagementService.WI_DATA)
+					cacheManagementService.saveToCache([item:wiCache, error: issue.'value'.Message] , idMap[count], 'wiErrored')
 					if (checkpointManagementService != null) {
 						checkpointManagementService.addLogentry("Failed to save full batch of work items, Error:  ${issue.'value'.Message}")
 					} 
@@ -582,9 +630,12 @@ class WorkManagementService {
 						def wi = new JsonSlurper().parseText(resp.body)
 						String id = idMap[count]
 						cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
+						//cacheManagementService.deleteByIdAndByType(idMap[count], 'wiPrevious')
 					} else {
 						def issue = new JsonSlurper().parseText(resp.body)
 						log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+						def wiCache = cacheManagementService.getFromCache(idMap[count], ICacheManagementService.WI_DATA)
+						cacheManagementService.saveToCache([item:wiCache, error: issue.'value'.Message] , idMap[count], 'wiErrored')
 						if (checkpointManagementService != null) {
 							checkpointManagementService.addLogentry("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
 						}
@@ -598,6 +649,7 @@ class WorkManagementService {
 					def wi = new JsonSlurper().parseText(resp.body)
 					String id = idMap[count]
 					cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
+					//cacheManagementService.deleteByIdAndByType(idMap[count], 'wiPrevious')
 				} else {
 					def issue = new JsonSlurper().parseText(resp.body)
 					log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")

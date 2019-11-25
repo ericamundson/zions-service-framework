@@ -35,6 +35,7 @@ class ChangeListManager {
 		if (count == 0) return;
 		log.info("Flushing ChangeListManager")
 		workManagementService.batchWIChanges(collection, project, changeList, idMap)
+		log.info("Flushed ChangeListManager")
 		changeList = []
 		idMap = [:]
 		count = 0

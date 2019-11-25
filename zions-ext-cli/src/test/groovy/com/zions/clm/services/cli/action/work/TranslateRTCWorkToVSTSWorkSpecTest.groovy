@@ -154,7 +154,7 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 		thrown FileNotFoundException
 	}
 	
-	@Ignore
+	//@Ignore
 	def 'execute ApplicationArguments Exception flow.' () {
 		given: 'invalid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs('./src/test/resources/testdata/OBWITMapping.xml'))
@@ -163,11 +163,11 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 		def workItems = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
 		processTemplateService.updateWorkitemTemplates(_, _, _, _) >> workItems
 		
-		and: 'stub clmWorkItemManagementService.getWorkItemsViaQuery'
-		def wititems = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
-		QueryTracking qt = new QueryTracking()
-		qt.doData(wititems)
-		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> wititems
+//		and: 'stub clmWorkItemManagementService.getWorkItemsViaQuery'
+//		def wititems = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
+//		QueryTracking qt = new QueryTracking()
+//		qt.doData(wititems)
+//		clmWorkItemManagementService.getWorkItemsViaQuery(_) >> wititems
 		
 		and: 'stub workManagementService.refreshCache'
 		def wiwChanges  = [value: ["{\"id\":\"123\", \"somejson\": \"morejson\"}"]]

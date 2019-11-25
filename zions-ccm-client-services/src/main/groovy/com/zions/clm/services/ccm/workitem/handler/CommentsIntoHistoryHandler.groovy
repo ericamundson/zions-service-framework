@@ -57,7 +57,8 @@ class CommentsIntoHistoryHandler extends CcmBaseAttributeHandler {
 		def retVal = null
 		if (wiCache != null) {
 			String modified = wiCache.fields['System.ChangedDate']
-			Date modDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", modified)
+			modified = modified.substring(0, "yyyy-MM-ddTHH:mm:ss".length())
+			Date modDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss", modified)
 			String outHTML = formatAllToHTMLOut(comments, modDate)
 			if (outHTML == null) {
 				return null
