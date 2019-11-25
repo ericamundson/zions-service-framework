@@ -29,8 +29,11 @@ interface CacheItemRepository extends MongoRepository<CacheItem, String> {
 	List<CacheItem> deleteByProjectAndModule(String project, String module);
 	
 	List<CacheItem> deleteByProjectAndModuleAndKey(String project, String module, String key);
+
+	List<CacheItem> deleteByProjectAndModuleAndKeyAndType(String project, String module, String key, String type);
 	
 	Long deleteCacheItemByProjectAndModule(String project, String module);
 	
 	Long deleteCacheItemByProjectAndModuleAndType(String project, String module, String type);
+	Long deleteCacheItemByProjectAndModuleAndKeyAndType(String project, String module, String key, String type);
 }

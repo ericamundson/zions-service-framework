@@ -63,6 +63,24 @@ class ClmTestAttachmentManagementService {
 
 		return files
 	}
+	
+	public def cacheTestItemAttachmentsAsBinary(def titem) {
+		def binaries = []
+		String type = getOutType(titem)
+		String id = "${titem.webId.text()}-${type}"
+		titem.attachment.each { attachment ->
+			String aurl = "${attachment.@href}"
+			def result = clmTestManagementService.getContent(aurl)
+			if (result.filename != null && result.data) {
+				def item = [data: result.data, filename: result.filename, comment: "Added attachment ${result.filename}"]
+				//File cFile = saveAttachment
+				binaries.add(item)
+			}
+		}
+
+		return binaries
+	}
+
 	/**
 	 * Cache all test case attachments including script and steps.
 	 * 

@@ -1,78 +1,138 @@
 {
-	"id": 455084,
-	"rev": 1,
+	"id": 578145,
+	"rev": 11,
 	"fields": {
-		"System.AreaPath": "FutureCore\\Work",
-		"System.TeamProject": "FutureCore",
-		"System.IterationPath": "FutureCore",
-		"System.WorkItemType": "Task",
-		"System.State": "New",
-		"System.Reason": "New",
-		"System.CreatedDate": "2019-06-12T16:00:49.47Z",
-		"System.CreatedBy": {
-			"displayName": "svc-cloud-vsmigration004",
-			"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
+		"System.AreaPath": "BaNCS\\FN\\R3\\Prd\\Teller",
+		"System.TeamProject": "BaNCS",
+		"System.IterationPath": "BaNCS",
+		"System.WorkItemType": "Test Case",
+		"System.State": "Approved",
+		"System.Reason": "Moved out of state Ready for Business",
+		"System.AssignedTo": {
+			"displayName": "Krati Gupta",
+			"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/4870a370-4471-6932-9b27-aad3c7e44fd0",
 			"_links": {
 				"avatar": {
-					"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+					"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.NDg3MGEzNzAtNDQ3MS03OTMyLTliMjctYWFkM2M3ZTQ0ZmQw"
 				}
 			},
-			"id": "7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
-			"uniqueName": "svc-cloud-vsmigration004@zionsbancorporation.onmicrosoft.com",
-			"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm",
-			"descriptor": "aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+			"id": "4870a370-4471-6932-9b27-aad3c7e44fd0",
+			"uniqueName": "krati.gupta@zionsbancorp.com",
+			"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.NDg3MGEzNzAtNDQ3MS03OTMyLTliMjctYWFkM2M3ZTQ0ZmQw",
+			"descriptor": "aad.NDg3MGEzNzAtNDQ3MS03OTMyLTliMjctYWFkM2M3ZTQ0ZmQw"
 		},
-		"System.ChangedDate": "2019-06-14T18:57:30.22Z",
+		"System.CreatedDate": "2019-11-14T14:24:40.283Z",
+		"System.CreatedBy": {
+			"displayName": "svc-cloud-vsmigration002",
+			"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/243e7e32-3990-6d9d-9c51-fa9f2b030e9c",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MjQzZTdlMzItMzk5MC03ZDlkLTljNTEtZmE5ZjJiMDMwZTlj"
+				}
+			},
+			"id": "243e7e32-3990-6d9d-9c51-fa9f2b030e9c",
+			"uniqueName": "svc-cloud-vsmigration002@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MjQzZTdlMzItMzk5MC03ZDlkLTljNTEtZmE5ZjJiMDMwZTlj",
+			"descriptor": "aad.MjQzZTdlMzItMzk5MC03ZDlkLTljNTEtZmE5ZjJiMDMwZTlj"
+		},
+		"System.ChangedDate": "2019-11-22T15:15:43.06Z",
 		"System.ChangedBy": {
 			"displayName": "svc-cloud-vsmigration004",
-			"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
+			"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
 			"_links": {
 				"avatar": {
-					"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+					"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
 				}
 			},
 			"id": "7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
 			"uniqueName": "svc-cloud-vsmigration004@zionsbancorporation.onmicrosoft.com",
-			"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm",
+			"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm",
 			"descriptor": "aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
 		},
-		"System.CommentCount": 1,
-		"System.Title": "Investigation: 201780: Insurance accrual of 0.005 preventing loan from closing",
-		"Microsoft.VSTS.Scheduling.RemainingWork": 0.0,
-		"Microsoft.VSTS.Common.StateChangeDate": "2019-06-14T18:57:30.22Z",
+		"System.CommentCount": 0,
+		"System.Title": "FS-DDA-025/Ticklers Alerts and Authorizations/Verify system will support an Add Alert screen",
+		"Microsoft.VSTS.Common.StateChangeDate": "2019-11-21T15:45:53.72Z",
+		"Microsoft.VSTS.Common.ActivatedDate": "2019-11-14T14:24:40.283Z",
+		"Microsoft.VSTS.Common.ActivatedBy": {
+			"displayName": "svc-cloud-vsmigration002",
+			"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/243e7e32-3990-6d9d-9c51-fa9f2b030e9c",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MjQzZTdlMzItMzk5MC03ZDlkLTljNTEtZmE5ZjJiMDMwZTlj"
+				}
+			},
+			"id": "243e7e32-3990-6d9d-9c51-fa9f2b030e9c",
+			"uniqueName": "svc-cloud-vsmigration002@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MjQzZTdlMzItMzk5MC03ZDlkLTljNTEtZmE5ZjJiMDMwZTlj",
+			"descriptor": "aad.MjQzZTdlMzItMzk5MC03ZDlkLTljNTEtZmE5ZjJiMDMwZTlj"
+		},
 		"Microsoft.VSTS.Common.Priority": 4,
-		"Microsoft.VSTS.Common.Severity": "Low",
-		"Custom.ExternalID": "RTC-201781",
-		"System.Description": "Reported by Cynthia:<br><br>118-49050004002851 term loan not moving to settled status, payoff amount coming as 0.00.&nbsp; Per TCS, there is an accrual of 0.005 in force placed insurance interest that is preventing this from moving. <br><br>Need data fix. <br><br>Also, this may be related to 83696 or even 150971 but since both of those are tracking bucket differences, finance outages etc. It was decided to open this one so we can specifically track why the loan is not closing as expected, even with the accrual.",
-		"System.History": "<div style=\"border:2px solid black;\">\n  <div>\n    <strong>Yogesh Goklani:</strong>\n    2019-06-14T18:07:11.485Z\n  </div>\n  <div><table class=changes><tr><td class=HistoryColumn0>Owned By&nbsp;</td><td class=HistoryColumn1>Yogesh Goklani&nbsp;&nbsp;\u2192&nbsp;&nbsp;Niket Agrawal</td></tr></table></div>\n</div>\n<div style=\"border:2px solid black;\">\n  <div>\n    <strong>Jennifer Curtis:</strong>\n    2019-06-12T22:01:18.400Z\n  </div>\n  <div><table class=changes><tr><td class=HistoryColumn0>Filed Against&nbsp;</td><td class=HistoryColumn1>Unassigned&nbsp;&nbsp;\u2192&nbsp;&nbsp;TCS: Dev</td></tr><tr><td class=HistoryColumn0>Owned By&nbsp;</td><td class=HistoryColumn1>Unassigned&nbsp;&nbsp;\u2192&nbsp;&nbsp;Yogesh Goklani</td></tr></table></div>\n</div>\n<div style=\"border:2px solid black;\">\n  <div>\n    <strong>Jennifer Curtis:</strong>\n    2019-06-12T22:00:50.019Z\n  </div>\n  <div><table class=changes><tr><td style=\"white-space:nowrap;\" rowspan=1>Comments [<a href=\"https://clm.cs.zionsbank.com/ccm/resource/itemOid/com.ibm.team.workitem.WorkItem/_iccPsI1dEemr2PCAng1a5A?path=internalComments%5b1%5d\">#1</a>]&nbsp;</td><td><b>All Comments are required to be written on the Parent Work Item</b></td></tr></table></div>\n</div>\n<div style=\"border:2px solid black;\">\n  <div>\n    <strong>Jennifer Curtis:</strong>\n    2019-06-12T22:00:49.720Z\n  </div>\n  <div><table class=changes><tr><td>Parent Link&nbsp;</td><td>Added:\n<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"https://clm.cs.zionsbank.com/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/201780\">/ccm/oslc/workitems/201780</a>\n<br></td></tr></table></div>\n</div>\n<div style=\"border:2px solid black;\">\n  <div>\n    <strong>Jennifer Curtis:</strong>\n    2019-06-12T22:00:49.512Z\n  </div>\n  <div><table class=changes><tr><td class=HistoryColumn0>Summary&nbsp;</td><td class=HistoryColumn1>Investigation: 201780: Insurance accrual of 0.005 preventing loan from closing</td></tr><tr><td class=HistoryColumn0>Description&nbsp;</td><td class=HistoryColumn1>Reported by Cynthia:<br><br>118-49050004002851 term loan not moving to settled status, payoff amount coming as 0.00.&nbsp; Per TCS, there is an accrual of 0.005 in force placed insurance interest that is preventing this from moving. <br><br>Need data fix. <br><br>Also, this may be related to 83696 or even 150971 but since both of those are tracking bucket differences, finance outages etc. It was decided to open this one so we can specifically track why the loan is not closing as expected, even with the accrual.</td></tr><tr><td class=HistoryColumn0>Type&nbsp;</td><td class=HistoryColumn1>Task</td></tr><tr><td class=HistoryColumn0>Project Area&nbsp;</td><td class=HistoryColumn1>Zions FutureCore Program (Change Management)</td></tr><tr><td class=HistoryColumn0>Restricted Access&nbsp;</td><td class=HistoryColumn1>Zions FutureCore Program (Change Management)</td></tr><tr><td>Subscribed By&nbsp;</td><td>Added:\n<br>&nbsp;&nbsp;&nbsp;&nbsp;Jennifer Curtis\n<br></td></tr><tr><td class=HistoryColumn0>Id&nbsp;</td><td class=HistoryColumn1>201781</td></tr><tr><td class=HistoryColumn0>Creation Date&nbsp;</td><td class=HistoryColumn1>Jun 12, 2019, 4:00 PM</td></tr><tr><td class=HistoryColumn0>Triage Task Type&nbsp;</td><td class=HistoryColumn1>Investigation</td></tr><tr><td class=HistoryColumn0>Requested For&nbsp;</td><td class=HistoryColumn1>Sprint 057 - May 27 thru Jun 09</td></tr><tr><td class=HistoryColumn0>Created By&nbsp;</td><td class=HistoryColumn1>Jennifer Curtis</td></tr></table></div>\n</div>"
+		"Microsoft.VSTS.TCM.AutomationStatus": "Not Automated",
+		"Custom.ExternalID": "RQM-142144",
+		"Custom.AutomationState": "Not Automated",
+		"Custom.Automate": false,
+		"Custom.TestAutomationStatus": "No",
+		"Custom.TestComplianceRelated": "N/A",
+		"Custom.TestFinanceImpact": "No",
+		"Custom.TestRunCalendar": "Day Mode - Fast",
+		"Custom.TestTestTeam": "BaNCS Product: Test",
+		"Custom.TestTestType": "Functional Test",
+		"System.Description": "<div style=\"border:2px solid black;\">\n  <div>\n    RQM Test Case Description:\n  </div>\n  <div>Verify the system will support an Add Alert screen</div>\n</div>\n<div style=\"border:2px solid black;\">\n  <div>\n    RQM Test Script Description:\n  </div>\n  <div>Verify system will support an Add Alert screen</div>\n</div>",
+		"Microsoft.VSTS.TCM.Steps": "<steps steps='0' last='5'><step id='2' type='ValidateStep'><parameterizedString isformatted='true'>&lt;DIV&gt;&lt;P&gt;&lt;div&gt;  &lt;p&gt;Precondition: Ticklers parameters must be present in the system&lt;/p&gt;&lt;/div&gt;&lt;/P&gt;&lt;/DIV&gt;</parameterizedString><parameterizedString isformatted='true'>&lt;DIV&gt;&lt;P&gt;&lt;div&gt;Precondition must be met&lt;/div&gt;&lt;/P&gt;&lt;/DIV&gt;</parameterizedString></step><step id='3' type='ValidateStep'><parameterizedString isformatted='true'>&lt;DIV&gt;&lt;P&gt;&lt;div&gt;&lt;Day 0&gt; Navigate to Operations --&gt; Demand Accounts --&gt; Enter customer name --&gt; Submit --&gt; click on customer number --&gt; account number --&gt; Alerts --&gt; Add alert&lt;/div&gt;&lt;/P&gt;&lt;/DIV&gt;</parameterizedString><parameterizedString isformatted='true'>&lt;DIV&gt;&lt;P&gt;&lt;div&gt;  &lt;div&gt;Add Alert\u00a0screen must be displayed&lt;/div&gt;&lt;/div&gt;&lt;/P&gt;&lt;/DIV&gt;</parameterizedString></step><step id='4' type='ValidateStep'><parameterizedString isformatted='true'>&lt;DIV&gt;&lt;P&gt;&lt;div&gt;  &lt;div&gt;&lt;Day 0&gt; Verify the following are fields on the Add Alert screen:&lt;/div&gt;  &lt;p&gt;Account Number&lt;/p&gt;  &lt;p&gt;Customer Number&lt;/p&gt;  &lt;p&gt;Alert Code \u00a0- Select Alert Button&lt;/p&gt;  &lt;p&gt;Alert Description&lt;/p&gt;  &lt;p&gt;Start Date \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 Expiration Date \u00a0 \u00a0 \u00a0 \u00a0 \u00a0Remark&lt;/p&gt;  &lt;p&gt;Status \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 Create Date&lt;/p&gt;  &lt;p&gt;User ID \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 \u00a0 User Name&lt;/p&gt;  &lt;p&gt;Submit, Reset&lt;/p&gt;&lt;/div&gt;&lt;/P&gt;&lt;/DIV&gt;</parameterizedString><parameterizedString isformatted='true'>&lt;DIV&gt;&lt;P&gt;&lt;div&gt;The screen must be displayed correctly&lt;/div&gt;&lt;/P&gt;&lt;/DIV&gt;</parameterizedString></step><step id='5' type='ValidateStep'><parameterizedString isformatted='true'>&lt;DIV&gt;&lt;P&gt;&lt;div&gt;  &lt;div&gt;&lt;Day 0&gt; Enter details and submit\u00a0&lt;/div&gt;&lt;/div&gt;&lt;/P&gt;&lt;/DIV&gt;</parameterizedString><parameterizedString isformatted='true'>&lt;DIV&gt;&lt;P&gt;&lt;div&gt;ok message must be displayed&lt;/div&gt;&lt;/P&gt;&lt;/DIV&gt;</parameterizedString></step></steps>",
+		"Custom.PreCondition": "\n<div><div><div><p>Transaction Item :Deposit Correction transactions.<br></br>Product : DDA Product<br></br>User : Authorized User.<br></br>Screen : Deposit correction Transaction Screen.<br></br>A deposit transaction must have been transmitted on the same business day.<br></br><br></br>&nbsp;</p></div></div></div>",
+		"System.Tags": "TEPI005"
 	},
-	"commentVersionRef": {
-		"commentId": 2294016,
-		"version": 1,
-		"url": "https://dev.azure.com/eto-dev/b95a29af-917f-4762-b4bc-c716e7a33b18/_apis/wit/workItems/455084/comments/2294016/versions/1"
-	},
+	"relations": [
+		{
+			"rel": "System.LinkTypes.Related",
+			"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/596189",
+			"attributes": {
+				"isLocked": false,
+				"comment": "relatedChangeRequest",
+				"name": "Related"
+			}
+		},
+		{
+			"rel": "System.LinkTypes.Related",
+			"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/288530",
+			"attributes": {
+				"isLocked": false,
+				"comment": "requirement",
+				"name": "Related"
+			}
+		},
+		{
+			"rel": "System.LinkTypes.Related",
+			"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/288786",
+			"attributes": {
+				"isLocked": false,
+				"comment": "requirement",
+				"name": "Related"
+			}
+		}
+	],
 	"_links": {
 		"self": {
-			"href": "https://dev.azure.com/eto-dev/b95a29af-917f-4762-b4bc-c716e7a33b18/_apis/wit/workItems/455084"
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/578145"
 		},
 		"workItemUpdates": {
-			"href": "https://dev.azure.com/eto-dev/b95a29af-917f-4762-b4bc-c716e7a33b18/_apis/wit/workItems/455084/updates"
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/578145/updates"
 		},
 		"workItemRevisions": {
-			"href": "https://dev.azure.com/eto-dev/b95a29af-917f-4762-b4bc-c716e7a33b18/_apis/wit/workItems/455084/revisions"
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/578145/revisions"
 		},
 		"workItemComments": {
-			"href": "https://dev.azure.com/eto-dev/b95a29af-917f-4762-b4bc-c716e7a33b18/_apis/wit/workItems/455084/comments"
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/578145/comments"
 		},
 		"html": {
-			"href": "https://dev.azure.com/eto-dev/b95a29af-917f-4762-b4bc-c716e7a33b18/_workitems/edit/455084"
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_workitems/edit/578145"
 		},
 		"workItemType": {
-			"href": "https://dev.azure.com/eto-dev/b95a29af-917f-4762-b4bc-c716e7a33b18/_apis/wit/workItemTypes/Task"
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Test%20Case"
 		},
 		"fields": {
-			"href": "https://dev.azure.com/eto-dev/b95a29af-917f-4762-b4bc-c716e7a33b18/_apis/wit/fields"
+			"href": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/fields"
 		}
 	},
-	"url": "https://dev.azure.com/eto-dev/b95a29af-917f-4762-b4bc-c716e7a33b18/_apis/wit/workItems/455084"
+	"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItems/578145"
 }

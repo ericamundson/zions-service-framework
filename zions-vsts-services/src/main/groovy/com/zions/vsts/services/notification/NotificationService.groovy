@@ -20,7 +20,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 @Component
 @Slf4j
 public class NotificationService {
-	@Autowired
 	@Value('${email.recipient.address:}')
 	private String recipientEmailAddress
 	
@@ -63,4 +62,23 @@ public class NotificationService {
         }
         return "success";
     }
+	
+	public def sendActionCompleteNotification(String action, String phasesRun) {
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		try {
+            helper.setTo("${recipientEmailAddress}")
+			String body = "The following batch action has completed: ${action}, phases:  ${phasesRun}."
+			helper.setText(body)
+			helper.setSubject("Batch ${action} completed!")
+			
+			sender.send(message)
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error"
+		}
+		return "success";
+
+	}
 }

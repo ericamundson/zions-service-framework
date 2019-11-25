@@ -8,6 +8,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
 import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.link.LinkInfo
+import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.qm.services.test.handlers.QmBaseAttributeHandler
@@ -67,12 +68,19 @@ public class ClmTestItemManagementService {
 	
 	@Value('${check.updated:false}')
 	boolean checkUpdated
+	
+	@Value('${update.cache.only:false}')
+	boolean updateCacheOnly
+	
+	@Autowired
+	IGenericRestClient qmGenericRestClient
 		
 	int newId = -1
 	
-	Map<String, String> itemMap = ['testcase': 'Test Case', 'testsuite': 'Test Suite', 'testplan': 'Test Case']
+	Map<String, String> itemMap = ['testcase': 'Test Case', 'testsuite': 'Test Suite', 'testplan': 'Test Plan']
 	
-	Map<String, String> wiNameMap = ['testcase': 'Test Case', 'testsuite': 'Test Suite WI', 'testplan': 'Test Plan WI']
+	Map<String, String> wiNameMap = ['testcase': 'Test Case', 'testsuite': 'Test Suite WI', 'testplan': 'Test Suite WI']
+	//Map<String, String> wiNameMap = ['testcase': 'Test Case', 'testsuite': 'Test Suite WI', 'testplan': 'Test Plan WI']
 	
 	
 	def resetNewId() {
@@ -100,6 +108,52 @@ public class ClmTestItemManagementService {
 
 	}
 	
+	String resolveId(String cId, String module) {
+		String id = null
+		if (cId.startsWith('http')) {
+			try {
+				String url = cId
+				def result = qmGenericRestClient.get(
+				contentType: ContentType.XML,
+				uri: cId,
+				headers: [Accept: 'application/rdf+xml'] );
+				if (!result) {
+					return null
+				}
+				//println new XmlUtil().serialize(result)
+				if (module == 'CCM') {
+					def identifier = result.'**'.find { node ->
+				
+						node.name() == 'identifier'
+					}
+//					String xml = new XmlUtil().serialize(result)
+//					File outXml = new File('clm.xml')
+//					def os = outXml.newDataOutputStream()
+//					os << xml
+//					os.close()
+					//id = "${identifier.text()}"
+					id = null
+				} else if (module == 'RM') {
+					def identifier = result.'**'.find { node ->
+				
+						node.name() == 'identifier'
+					}
+//					String xml = new XmlUtil().serialize(result)
+//					File outXml = new File('clm.xml')
+//					def os = outXml.newDataOutputStream()
+//					os << xml
+//					os.close()
+
+					id = "${identifier.text()}"
+				}
+			} catch (e) {}
+		} else {
+			id = cId
+		}
+		return id
+	}
+
+	
 	/**
 	 * Entry point for processing ADO work item link changes.
 	 * 
@@ -115,9 +169,9 @@ public class ClmTestItemManagementService {
 		if (!cacheWI) return
 		Date ts = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", tss)
 		List<LinkInfo> links = []
-		new CacheInterceptor() {}.provideCaching(this, sid, ts, LinkHolder) {
-			links = getAllLinks(sid, ts, qmItemData)
-		}
+		//new CacheInterceptor() {}.provideCaching(this, sid, ts, LinkHolder) {
+		links = getAllLinks(sid, ts, qmItemData)
+		//}
 		if (links.size() == 0) return
 		String cid = "${cacheWI.id}"
 		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
@@ -126,10 +180,14 @@ public class ClmTestItemManagementService {
 		links.each { LinkInfo info ->
 			String id = info.itemIdRelated
 			String module = info.moduleRelated
+			id = resolveId(id, module)
 			def url = null
 			def runId = null
 			def linkId = null
-			def linkWI = cacheManagementService.getFromCache(id, module, ICacheManagementService.WI_DATA)
+			def linkWI = null
+			if (id) {
+				linkWI = cacheManagementService.getFromCache(id, module, ICacheManagementService.WI_DATA)
+			}
 			if (linkWI) {
 				linkId = linkWI.id
 				url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
@@ -161,13 +219,13 @@ public class ClmTestItemManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	void processForChanges(String project, def qmItemData, def memberMap, def resultMap = null, def testCase = null, def parent = null, Closure closure) {
+	void processForChanges(String project, def qmItemData, def memberMap, def resultMap = null, def testCase = null, def parent = null, def exData = null, Closure closure) {
 		def maps = getTestMaps(qmItemData)
 		def outItems = [:]
 		maps.each { map ->
 			def item = null;
 			if ("${map.target}" == 'Result') {
-				item = generateExecutionData(qmItemData, map, project, memberMap, resultMap, testCase)
+				item = generateExecutionData(qmItemData, map, project, memberMap, resultMap, testCase, exData)
 
 			} else if ("${map.target}" == 'Configuration') {
 				item = generateConfigurationData(qmItemData, map, project, memberMap)
@@ -194,19 +252,26 @@ public class ClmTestItemManagementService {
 	 * @param testCase - RQM testcase data
 	 * @return ADO 'Result' rest object
 	 */
-	private def generateExecutionData(def qmItemData, def map, String project, def memberMap, def resultMap, def testCase) {
+	private def generateExecutionData(def qmItemData, def map, String project, def memberMap, def resultMap, def testCase, def inExData = null) {
 		String type = map.target
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def exData = [:]
 		String id = "${qmItemData.webId.text()}"
+//		String cacheId = "${id}-Result"
+//		def cacheData = cacheManagementService.getFromCache(cacheId, ICacheManagementService.RESULT_DATA)
 		def cacheResult = getResultData(resultMap, testCase)
 		if (!cacheResult) return null
 		String runId = "${cacheResult.testRun.id}"
-		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0'], body: []]
-		if (cacheResult != null) {
-			def cid = cacheResult.id
-			exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results/${cid}", query:['api-version':'5.0'], body: []]
+		if (inExData) {
+			exData = inExData
+		} else {
+			
+			exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0'], body: []]
+			if (cacheResult) {
+				def cid = cacheResult.id
+				exData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${runId}/results", query:['api-version':'5.0'], body: []]
+			}
 		}
 		def bodyItem = [:]
 		map.fields.each { field ->
@@ -221,7 +286,15 @@ public class ClmTestItemManagementService {
 		if (bodyItem.size() == 0) {
 			return null
 		}
-		exData.body.add(bodyItem)
+		String iId = "${bodyItem.id}"
+		def bodyOut = exData.body.findAll { item ->
+			String cId = "${item.id}"
+			cId == iId
+		}
+		//String outcome = "${bodyItem.outcome}"
+		if (!bodyOut || bodyOut.size() == 0) {
+			exData.body.add(bodyItem)
+		}
 		return exData
 	}
 	
@@ -233,7 +306,8 @@ public class ClmTestItemManagementService {
 		def exData = [:]
 		String id = "${qmItemData.name.text()}-${type}"
 		def cacheConfig = cacheManagementService.getFromCache(id, ICacheManagementService.CONFIGURATION_DATA)
-
+		if (!cacheConfig && updateCacheOnly) return null
+		
 		exData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Configurations", query:['api-version':'5.0-preview.2'], body: []]
 		if (cacheConfig != null) {
 			def cid = cacheConfig.id
@@ -289,12 +363,15 @@ public class ClmTestItemManagementService {
 		def wiData = [:]
 		String id = "${qmItemData.webId.text()}-${type}"
 		def cacheWI = null
+		def prevWI = null
 		if (type == 'Test Case' || type.endsWith(' WI')) {
 			if (type.endsWith(' WI')) {
 				String atype = "${map.target}".substring(0, type.length()-3)
 				etype = URLEncoder.encode(atype, 'utf-8').replace('+', '%20')
 			}
 			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
+			prevWI = cacheManagementService.getFromCache(id, 'wiPrevious')
+			if (!cacheWI && updateCacheOnly) return null
 			if (type == 'Test Case' && !isModified(qmItemData, cacheWI)) return null
 			wiData = [method:'PATCH', uri: "/${eproject}/_apis/wit/workitems/\$${etype}?api-version=5.0&bypassRules=true&suppressNotifications=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			if (cacheWI != null) {
@@ -309,6 +386,7 @@ public class ClmTestItemManagementService {
 			}
 		} else if (type == 'Test Plan'){
 			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.PLAN_DATA)
+			if (!cacheWI && updateCacheOnly) return null
 			wiData = [method: 'post', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans", query:['api-version':'5.0-preview.2'], body: [:]]
 			if (cacheWI != null) {
 				def cid = cacheWI.id
@@ -316,6 +394,7 @@ public class ClmTestItemManagementService {
 			}
 		} else if (type == 'Test Suite'){
 			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.SUITE_DATA)
+			if (!cacheWI && updateCacheOnly) return null
 			if (parent != null) {
 				String cid = ''
 				String parentId = ''
@@ -346,25 +425,26 @@ public class ClmTestItemManagementService {
 		}
 		
 		map.fields.each { field ->
-			def fieldData = getFieldData(qmItemData, id, field, memberMap, cacheWI, map)
-			if (fieldData != null) {
-				if (type != 'Test Case' && !type.endsWith(' WI')) {
-					if (fieldData.value != null) {
-						wiData.body["${field.target}"] = fieldData.value
-					}
-				} else {
-					if (!(fieldData instanceof List)) {
-						wiData.body.add(fieldData)
+			if (canChange(prevWI, cacheWI, field, id)) {
+				def fieldData = getFieldData(qmItemData, id, field, memberMap, cacheWI, map, null, null, prevWI)
+				if (fieldData != null) {
+					if (type != 'Test Case' && !type.endsWith(' WI')) {
+						if (fieldData.value != null) {
+							wiData.body["${field.target}"] = fieldData.value
+						}
 					} else {
-						fieldData.each { fData ->
-							if (fData.value != null) {
-								wiData.body.add(fData)
+						if (!(fieldData instanceof List)) {
+							wiData.body.add(fieldData)
+						} else {
+							fieldData.each { fData ->
+								if (fData.value != null) {
+									wiData.body.add(fData)
+								}
 							}
 						}
 					}
 				}
 			}
-			
 		}
 		if (type != 'Test Case') {
 			if (wiData.body.size() == 0) {
@@ -380,12 +460,35 @@ public class ClmTestItemManagementService {
 
 	}
 	
-	private def getFieldData(def qmItemData, def id, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null) {
+	boolean canChange(prevWI, cacheWI, field, String key) {
+		if (!cacheWI) return true
+		boolean flag = true
+		String tName = "${field.target}"
+		def fModified = cacheManagementService.getFromCache("${key}-${tName}", 'changedField')
+		if (fModified) {
+			def cVal = cacheWI.fields."${tName}"
+			String changedDate = "${cacheWI.fields.'System.ChangedDate'}"
+			cacheManagementService.saveToCache([changeDate: changedDate, value: cVal], "${key}-${tName}", 'changedField')
+			return false
+		}
+		if (!prevWI) return true
+		def cVal = cacheWI.fields."${tName}"
+		String changedDate = "${cacheWI.fields.'System.ChangedDate'}"
+		def pVal = prevWI.fields."${tName}"
+		flag = "${pVal}" == "${cVal}"
+		if (!flag) {
+			log.info("ADO field change cached:  key: ${key}-${tName}, date: ${changedDate}.")
+			cacheManagementService.saveToCache([changeDate: changedDate, value: cVal], "${key}-${tName}", 'changedField')
+		}
+		return flag
+	}
+	
+	private def getFieldData(def qmItemData, def id, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null, def prevWI = null) {
 		String handlerName = "${field.source}"
 		String qmHandlerName = "Qm${handlerName.substring(0,1).toUpperCase()}${handlerName.substring(1)}"
 		String fValue = ""
 		if (this.fieldMap[qmHandlerName] != null) {
-			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
+			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, prevWI: prevWI, itemMap: map, resultMap: resultMap, testCase: testCase]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}
@@ -395,7 +498,7 @@ public class ClmTestItemManagementService {
 			def fieldData = this.fieldMap[qmHandlerName].execute(data)
 			return fieldData
 		} else if (this.fieldMap["${handlerName}"] != null) {
-			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, itemMap: map, resultMap: resultMap, testCase: testCase]
+			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, prevWI: prevWI, itemMap: map, resultMap: resultMap, testCase: testCase]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}

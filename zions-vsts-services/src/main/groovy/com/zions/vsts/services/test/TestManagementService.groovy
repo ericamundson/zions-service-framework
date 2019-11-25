@@ -93,6 +93,8 @@ public class TestManagementService {
 	 */
 	public def sendResultChanges(String collection, String project, def executionResult, String id) {
 		//def executionResult = inexecutionResult.Result
+		String json = new JsonBuilder(executionResult).toPrettyString()
+		//log.info("Processing execution result: ${json}")
 		String method = "${executionResult.method}"
 		executionResult.remove('method')
 		def result = null
@@ -107,14 +109,57 @@ public class TestManagementService {
 		}
 		if (result != null) {
 			def eResult = getResult(nuri)
+			//String rjson = new JsonBuilder(executionResult).toPrettyString()
+			//log.info("Finished execution result: ${rjson}")
+			result = eResult
 			cacheManagementService.saveToCache(eResult, id, ICacheManagementService.RESULT_DATA)
 		}
 //		if (result == null) {
 //			checkpointManagementService.addLogentry("Unable to save test result with id:  ${id}")
 //		}
+		
 		return result
 	}
 	
+	/**
+	 * Send changes for test case test results.
+	 *
+	 * @param collection ADO organization
+	 * @param project ADO project name
+	 * @param executionResult data for result data
+	 * @param id cache identity
+	 * @return ADO test result representation
+	 */
+	public def sendResultChangesMulti(String collection, String project, def executionResult, def ids) {
+		//def executionResult = inexecutionResult.Result
+		String method = "${executionResult.method}"
+		executionResult.remove('method')
+		def result = null
+		String nuri = "${genericRestClient.getTfsUrl()}${executionResult.uri}"
+		executionResult.uri = nuri
+		// For test data.
+		//String jsonBody = new JsonBuilder(executionResult).toPrettyString()
+		if (method == 'post') {
+			result = genericRestClient.post(executionResult)
+		} else if (method == 'patch') {
+			result = genericRestClient.patch(executionResult)
+		}
+//		if (result != null) {
+//			int i = 0
+//			result.value.each { r ->
+//				String uri = "${nuri}/${r.id}"
+//				def eResult = getResult(uri)
+//				String key = "${r.id}"
+//				String id = ids[key]
+//				cacheManagementService.saveToCache(eResult, id, ICacheManagementService.RESULT_DATA)
+//			}
+//		}
+//		if (result == null) {
+//			checkpointManagementService.addLogentry("Unable to save test result with id:  ${id}")
+//		}
+		return result
+	}
+
 	public def resetToActive(def testcase, def resultMap) {
 		String key = "${testcase.id}"
 		def result = resultMap[key]
@@ -133,6 +178,40 @@ public class TestManagementService {
 			return rresult
 		}
 		return null
+	}
+	
+	public def resetTestPointsToActive(def suite, def points) {
+		String key = "${suite.webId.text()}-Test Suite"
+		def adoSuite = cacheManagementService.getFromCache(key, ICacheManagementService.SUITE_DATA)
+		if (adoSuite) {
+			String spoints = points.join(',')
+			String projectId = "${adoSuite.project.id}"
+			String suiteId = "${adoSuite.id}"
+			String planId = "${adoSuite.plan.id}"
+			def body = [ 'resetToActive': true ]
+			def rresult = genericRestClient.patch(
+					uri: "${genericRestClient.getTfsUrl()}/${projectId}/_apis/test/Plans/${planId}/Suites/${suiteId}/points/${spoints}",
+					contentType: ContentType.JSON,
+					requestContentType: ContentType.JSON,
+					body: body,
+					query: ['api-version': '5.0']
+				)
+			return rresult
+		}
+		return null
+	}
+	
+	public String getTestPoint(def testcase, def resultMap) {
+		String key = "${testcase.id}"
+		def result = resultMap[key]
+		if (result) {
+			String projectId = "${result.project.id}"
+			String planId = "${result.testPlan.id}"
+			String pointId = "${result.testPoint.id}"
+			return pointId
+		}
+		return null
+
 	}
 	
 	/**
@@ -389,7 +468,7 @@ public class TestManagementService {
 		return resultTestCaseMap
 	}
 	
-	public def ensureTestRunForTestCase(String collection, String project, def planData, def testcaseData) {
+	public def ensureTestRunForTestCaseAndPlan(String collection, String project, def planData, def testcaseData, def testCasePointsMap = null) {
 		String pid = getPlanId(planData)
 		String tcid = getTestCaseId(testcaseData)
 		String key = "${tcid}_${pid}"
@@ -399,7 +478,7 @@ public class TestManagementService {
 			def adoPlanData = cacheManagementService.getFromCache(pid, ICacheManagementService.PLAN_DATA)
 			def adoTestCaseData = cacheManagementService.getFromCache(tcid, ICacheManagementService.WI_DATA)
 			
-			runData = createRunDataForTestCase(collection, project, adoPlanData, adoTestCaseData)
+			runData = createRunDataForTestCase(collection, project, adoPlanData, adoTestCaseData, testCasePointsMap)
 			if (runData != null) {
 				cacheManagementService.saveToCache(runData, key, ICacheManagementService.RUN_DATA)
 			}
@@ -408,11 +487,112 @@ public class TestManagementService {
 		return resultTestCaseMap
 	}
 	
+	public def ensureTestRunForTestCaseAndSuite(String collection, String project, def suiteData, def testcaseData, boolean refresh = false, def testCasePointsMap = null) {
+		String tcid = getTestCaseId(testcaseData)
+		String sid = getSuiteId(suiteData)
+		//String pid = getPlanId(suiteData)
+		String key = "${tcid}_${sid}"
+		def runData = cacheManagementService.getFromCache(key, ICacheManagementService.RUN_DATA)
+		if (refresh && runData) {
+			deleteRun(runData)
+			//setRunToInprogress(runData)
+			runData = null
+			//cacheManagementService.deleteFromCache(pid, ICacheManagementService.RUN_DATA)
+		}
+		String pkey = "${tcid}_${pid}"
+		def prunData = cacheManagementService.getFromCache(pkey, ICacheManagementService.RUN_DATA)
+		if (prunData) {
+			deleteRun(prunData)
+			cacheManagementService.deleteById(pkey)
+		}
+		
+		if (runData == null) {
+			def adoSuiteData = cacheManagementService.getFromCache(sid, ICacheManagementService.SUITE_DATA)
+			def adoTestCaseData = cacheManagementService.getFromCache(tcid, ICacheManagementService.WI_DATA)
+			if (!adoSuiteData || adoTestCaseData) return [:]
+			runData = createRunDataForTestCase(collection, project, adoSuiteData, adoTestCaseData, null, false, testCasePointsMap)
+			if (runData != null) {
+				cacheManagementService.saveToCache(runData, key, ICacheManagementService.RUN_DATA)
+			}
+		}
+		def resultTestCaseMap = getResultsTestcaseMap("${runData.url}/results")
+		return resultTestCaseMap
+	}
+	
+	public def cleanSuiteRun(String collection, String project, def suiteData) {
+		String pid = getSuiteId(suiteData)
+		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
+		if (runData) {
+			deleteRun(runData)
+			//setRunToInprogress(runData)
+			runData = null
+			//cacheManagementService.deleteFromCache(pid, ICacheManagementService.RUN_DATA)
+		}
+
+	}
+	
+	def ensureAttachments(def adoresult, def binaries, rwebId) {
+		def attachmentCache = cacheManagementService.getFromCache(rwebId, 'resultAttachments')
+		boolean added = false
+		binaries.each { binary ->
+			if (!resultAttachmentExists(binary, adoresult, attachmentCache)) {
+				sendResultAttachment(adoresult, binary)
+				added = true
+			}
+		}
+		if (added) {
+			def ratt = getResultAttachments(adoresult)
+			cacheManagementService.saveToCache(ratt, rwebId, 'resultAttachments')
+		}
+		
+	}
+	
+	def sendResultAttachment(adoResult, binary) {
+		ByteArrayInputStream bs = binary.data
+		def octet = bs.bytes.encodeBase64()
+		def body = [attachmentType: 'GeneralAttachment', comment: binary.comment, fileName: binary.filename, stream: octet]
+		def result = genericRestClient.post(
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri: "${adoResult.url}",
+			body: body,
+			//headers: [Accept: 'application/json'],
+			query: ['api-version': '5.1-preview.1', ]
+			)
+
+	}
+	
+	def getResultAttachments(adoResult) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${adoResult.url}/attachments",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'5.0-preview.1']
+			)
+		return result
+	}
+	
+	boolean resultAttachmentExists(binary, cacheItem) {
+		if (!cacheItem) return false
+		String fileName = "${binary.filename}"
+		def b = cacheItem.value { a ->
+			String fn = "${a.fileName}"
+			fileName == fn
+		}
+		if (b) return true
+		return false
+	}
+
 	public def ensureTestRunForTestSuite(String collection, String project, def suiteData, boolean refresh = false) {
 		String pid = getSuiteId(suiteData)
 		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
+		if (runData) {
+			setRunToInprogress(runData)
+		}
 		if (refresh && runData) {
 			deleteRun(runData)
+			//setRunToInprogress(runData)
 			runData = null
 			//cacheManagementService.deleteFromCache(pid, ICacheManagementService.RUN_DATA)
 		}
@@ -427,6 +607,17 @@ public class TestManagementService {
 		}
 		def resultTestCaseMap = getResultsTestcaseMap("${runData.url}/results")
 		return resultTestCaseMap
+	}
+	
+	def setRunToInprogress(runData) {
+		def body = [ state: 'InProgress']
+		def r = genericRestClient.patch(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			uri: "${runData.url}",
+			query: ['api-version': '5.1']
+		)
+		return r
 	}
 
 	public def getTestRuns(def project) {
@@ -474,7 +665,7 @@ public class TestManagementService {
 				}
 				if (tcIds.size() == 5 || (count+1==tot && tcIds.size() > 0)) {
 					if ("${pname}" == 'testplan') {
-						associateCaseToPlan(parentData, tcIds, update)
+						//associateCaseToPlan(parentData, tcIds, update)
 					} else if ("${pname}" == 'testsuite') {
 						associateCaseToSuite(parentData, tcIds, update)
 					}
@@ -488,17 +679,23 @@ public class TestManagementService {
 	}
 
 	
-	public def setParent(def parent, def children, def map, boolean update = false) {
+	public def setParent(def parent, def children, def map) {
 		String pname = "${parent.name()}"
 		String ptname = getTargetName(pname, map)
 		String pid = "${parent.webId.text()}-${ptname}"
 		String type = ICacheManagementService.PLAN_DATA
 		if (ptname == 'Test Suite') type = ICacheManagementService.SUITE_DATA
 		def parentData = cacheManagementService.getFromCache(pid, type)
-		if (parentData != null) {
+		String suiteUrl = null
+		if ("${ptname}" == 'Test Plan' && parentData) {
+			suiteUrl = "${parentData.rootSuite.url}"
+		} else if ("${ptname}" == 'Test Suite' && parentData) {
+			suiteUrl = "${parentData.url}"
+		}
+
+		if (parentData != null && suiteUrl) {
 			def tcIds = []
 			int tot = children.size()
-			int count = 0
 			children.each { child ->
 				String cname = "${child.name()}"
 				
@@ -508,19 +705,26 @@ public class TestManagementService {
 				String cid = "${child.webId.text()}-${ctname}"
 				def childData = cacheManagementService.getFromCache(cid, ICacheManagementService.WI_DATA)
 				if (childData != null) {
-					tcIds.add("${childData.id}")
+					String id = "${childData.id}"
+					tcIds.add(id)
 				}
-				if (tcIds.size() == 5 || (count+1==tot && tcIds.size() > 0)) {
-					if ("${ptname}" == 'Test Plan') {
-						associateCaseToPlan(parentData, tcIds, update)
-					} else if ("${ptname}" == 'Test Suite') {
-						associateCaseToSuite(parentData, tcIds, update)
-					}
-					tcIds = []
-				}
-				count++
 			}
-			
+			def tcMap = getSuiteTestCaseMap(suiteUrl)
+			tcIds = this.filterIds(tcIds, tcMap)
+			if (tcIds.size() > 0) {
+				def oIds = []
+				tcIds.each { id ->
+					oIds.add(id)
+					if (oIds.size() == 5) {
+						associateCaseToSuite(suiteUrl, oIds)
+						oIds = []
+					}
+				}
+				if (oIds.size() > 0) {
+					associateCaseToSuite(suiteUrl, oIds)
+				}
+			}
+
 		}
 		
 	}
@@ -552,13 +756,51 @@ public class TestManagementService {
 			skip += 200
 			if (!result || !result.'value' || result.'value'.size() == 0) break
 			result.'value'.each { aresult ->
-				tcMap["${aresult.testCase.id}"] = aresult
+				if (aresult.testCase) {
+					tcMap["${aresult.testCase.id}"] = aresult
+				}
 			}
 		}
 		return tcMap
 
 	}
 	
+	public def getResultsMap(def url) {
+		int skip = 0
+		def rMap = [:]
+		while (true) {
+			def result = genericRestClient.get(
+				uri: url,
+				contentType: ContentType.JSON,
+				query: [destroy: true, 'api-version': '5.0',detailsToInclude:'WorkItems', '$top': 200, '$skip': skip]
+				)
+			skip += 200
+			if (!result || !result.'value' || result.'value'.size() == 0) break
+			result.'value'.each { aresult ->
+				rMap["${aresult.id}"] = aresult
+			}
+		}
+		return rMap
+
+	}
+	
+	def cacheSuiteResults(def suite, def keyMap) {
+		String pid = getSuiteId(suite)
+		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
+		if (runData) {
+			def resultMap = getResultsMap("${runData.url}/results")
+			keyMap.each { rid, cacheKeys ->
+				String rKey = "${rid}"
+				def result = resultMap[rKey]
+				if (result) {
+					cacheKeys.each { cKey ->
+						cacheManagementService.saveToCache(result, cKey, ICacheManagementService.RESULT_DATA)
+					}
+				}
+			}
+		}
+		
+	}
 	private def getResult(String uri) {
 		def result = genericRestClient.get(
 			uri: uri,
@@ -628,21 +870,16 @@ public class TestManagementService {
 	
 	
 	
-	private def associateCaseToPlan(def planData, def tcids, boolean update = false) {
-		String suiteUrl = "${planData.rootSuite.url}"
-		//def ids = filterTestCaseIds(suiteUrl, tcids)
-		if (tcids.size()>0) {
-			String tcIds = tcids.join(',')
-			addTestCase(suiteUrl, tcIds, update)
-		}
-	}
+//	private def associateCaseToPlan(def suiteUrl, def tcids, boolean update = false) {
+//		String suiteUrl = "${planData.rootSuite.url}"
+//		//def ids = filterTestCaseIds(suiteUrl, tcids)
+//		if (tcids.size()>0) {
+//			String tcIds = tcids.join(',')
+//			addTestCase(suiteUrl, tcIds, update)
+//		}
+//	}
 	
-	private def addTestCase(String suiteUrl, String tcIds, boolean update = false) {
-		if (update) {
-			def oid = filterIds(suiteUrl, tcIds)
-			if (oid.size() == 0) return
-			tcIds = oid.join(',')
-		}
+	private def addTestCase(String suiteUrl, String tcIds) {
 		String tcUrl = "${suiteUrl}/testcases/${tcIds}"
 		
 		def result = genericRestClient.post(
@@ -651,34 +888,28 @@ public class TestManagementService {
 			uri: tcUrl,
 			query: ['api-version':'5.0']
 			)
-		if (update) {
-			String key = suiteUrl.bytes.encodeBase64()
-			def tcMap = getSuiteTestCaseMap(suiteUrl)
-			cacheManagementService.saveToCache(tcMap, key, 'SuiteTCMap')
-		}
 		return result
 	}
 	
-	private filterIds(String suiteUrl, String tcIds) {
-		def tcMap = [:]
+	private def refreshTestCaseMap(String suiteUrl) {
 		String key = suiteUrl.bytes.encodeBase64()
-		
-		tcMap = cacheManagementService.getFromCache(key, 'SuiteTCMap')
-		if (!tcMap) {
-			tcMap = getSuiteTestCaseMap(suiteUrl)
-			cacheManagementService.saveToCache(tcMap, key, 'SuiteTCMap')
-		}
-		String[] idList = tcIds.split(',')
-		def oid = []
+		def tcMap = getSuiteTestCaseMap(suiteUrl)
+		cacheManagementService.saveToCache(tcMap, key, 'SuiteTCMap')
+		return tcMap
+	}
+	
+	private def filterIds(def idList, def tcMap) {
+		Set<String> oid = []
 		idList.each { id -> 
+			String key = "${id}"
 			if (!tcMap.containsKey(id)) {
-				oid.add(id)
+				oid.add(key)
 			}
 		}
 		return oid
 	}
 	
-	private def getSuiteTestCaseMap(String suiteUrl) {
+	public def getSuiteTestCaseMap(String suiteUrl) {
 		def tcMap = [:]
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
@@ -723,11 +954,10 @@ public class TestManagementService {
 //
 //	}
 	
-	public def associateCaseToSuite(def suiteData, def tcids, boolean update = false) {
-		String suiteUrl = "${suiteData.url}"
+	public def associateCaseToSuite(def suiteUrl, def tcids) {
 		if (tcids.size()>0) {
 			String tcIds = tcids.join(',')
-			addTestCase(suiteUrl, tcIds, update)
+			addTestCase(suiteUrl, tcIds)
 		}
 	}
 	
@@ -821,10 +1051,18 @@ public class TestManagementService {
 		return result
 	}
 
-	def createRunDataForTestCase(String collection, String project, def adoPlanData, def adoTestCaseData, String buildId = null, boolean automated = false  ) {
+	def createRunDataForTestCase(String collection, String project, def adoSuiteData, def adoTestCaseData, String buildId = null, boolean automated = false, def testcasePointsMap = null  ) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		def testpoints = getTestPoints(collection, project, adoPlanData, adoTestCaseData)
-		def data = [name: "${adoPlanData.name}-${adoTestCaseData.fields.'System.Title'} Run", plan: [id: adoPlanData.id], pointIds:testpoints, automated: automated]
+		def testpoints = []
+		if (!adoTestCaseData) return null
+		if (testcasePointsMap) {
+			String tid = "${adoTestCaseData.id}"
+			def pid = testcasePointsMap[tid]
+			testpoints.add(pid)
+		} else {
+			testpoints = getTestPointsForTestCase(adoSuiteData, adoTestCaseData)
+		}
+		def data = [name: "${adoSuiteData.name}-${adoTestCaseData.fields.'System.Title'} Run", plan: [id: adoSuiteData.plan.id], pointIds:testpoints, automated: automated]
 		if (buildId && buildId.size() > 0) {
 			data.build = [id: buildId]
 		}
@@ -876,6 +1114,77 @@ public class TestManagementService {
 		}
 		return retVal
 	}
+	
+	private def getTestPointsForSuite(def adoSuite) {
+		def retVal = []
+		int skip = 0
+		String url = "${adoSuite.url}/points"
+		while (true) {
+			def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: url,
+				query: ['api-version':'5.0-preview.2', '$top': 200, '$skip': skip]
+			)
+			
+			if (!result || !result.value || result.count == 0) break
+			result.value.each { point ->
+				retVal.add(point.id)
+			}
+			skip += 200
+		}
+		return retVal
+	}
+	
+	private def getTestPointsForTestCase(def adoSuite, def adoTestCase) {
+		def retVal = []
+		int skip = 0
+		String url = "${adoSuite.url}/points"
+		if (adoSuite.rootSuite) {
+			url = "${adoSuite.rootSuite.url}/points"
+		}
+		String tid = "${adoTestCase.id}"
+		while (true) {
+			def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: url,
+				query: ['api-version':'5.0-preview.2', '$top': 200, '$skip': skip]
+			)
+			
+			if (!result || !result.value || result.count == 0) break
+			result.value.each { point ->
+				String ptid = "${point.testCase.id}"
+				if (tid == ptid) {
+					retVal.add(point.id)
+					return
+				}
+			}
+			if (retVal.size() > 0) break
+			skip += 200
+		}
+		return retVal
+	}
+	
+	public def getSuiteTestPointMap(def adoSuite) {
+		def retVal = [:]
+		int skip = 0
+		String url = "${adoSuite.url}/points"
+		while (true) {
+			def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: url,
+				query: ['api-version':'5.0-preview.2', '$top': 200, '$skip': skip]
+			)
+			
+			if (!result || !result.value || result.count == 0) break
+			result.value.each { point ->
+				String ptid = "${point.testCase.id}"
+				retVal[ptid] = point.id
+			}
+			skip += 200
+		}
+		return retVal
+	}
+
 	private def getTestPoints(String collection, String project, def adoPlanData, def adoTestCaseData ) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def retVal = []

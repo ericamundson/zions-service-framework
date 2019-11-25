@@ -1,6 +1,7 @@
 package com.zions.ext.services.cli
 
 import com.mongodb.MongoClient
+import com.mongodb.MongoClientOptions
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.CacheManagementService
@@ -97,10 +98,15 @@ public class QmDBAppConfig {
 
 	@Value('${spring.data.mongodb.database:adomigration_dev}')
 	String database
+	
+	@Bean
+	public MongoClientOptions mongoOptions() {
+		return MongoClientOptions.builder().maxConnectionIdleTime(1000 * 60 * 8).socketTimeout(30000).build();
+	}
 
 	@Bean
 	MongoClient mongoClient() throws UnknownHostException {
-		return new MongoClient(dbHost);
+		return new MongoClient(dbHost, mongoOptions());
 	}
 	
 	public @Bean MongoTemplate mongoTemplate() throws Exception {

@@ -277,10 +277,12 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 				//apply work links
 				if (phase == 'worklinks' || phase == 'update' || phase == 'other') {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+					def linkItems = [:]
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id)
 						ccmWorkManagementService.getWILinkChanges(id, tfsProject, linkMapping) { key, changes ->
 							if (key == 'WorkItem') {
+								//cleanRelated(linkItems, changes)
 								clManager.add("${id}", changes)
 							} else if (key == 'Result') {
 								def resultChanges = changes.resultChanges
@@ -294,6 +296,7 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 					}
 					clManager.flush();
 				}
+				
 
 				//extract & apply attachments.
 //				if (phase == 'attachments' || phase == 'update' || phase == 'other') {
@@ -312,6 +315,40 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 		}
 		ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
 	}
+	
+	def cleanRelated(linkItems, changes) {
+		String inId = "${changes.uri}"
+		inId = inId.substring(inId.lastIndexOf('/')+1)
+		inId = inId.substring(0, inId.lastIndexOf('?'))
+		linkItems[inId] = changes
+		log.info( "WI id being added for check: ${inId}")
+		changes.body.each { link ->
+			if (link.value && link.path == '/relations/-') {
+				String id = "${link.value.url}"
+				id = id.substring(id.lastIndexOf('/')+1)
+				String json = new JsonBuilder(link).toPrettyString()
+				log.info("WI id link being checked: ${id}\n ${json}")
+				if (linkItems[id]) {
+					def markToDelete = linkItems[id]
+					def dItem = markToDelete.body.find { mlink ->
+						boolean flag = false
+						if (mlink.value && mlink.path == '/relations/-') {
+							String mid = "${mlink.value.url}"
+							mid = mid.substring(mid.lastIndexOf('/')+1)
+							if (mid == inId) {
+								flag = true
+							}
+						}
+						flag
+					}
+					if (dItem) {
+						markToDelete.body.remove(dItem)
+					}
+				}
+			}
+		}
+	}
+
 
 //	def filtered(def workItems, String filter) {
 //		if (this.filterMap[filter] != null) {

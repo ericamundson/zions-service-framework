@@ -207,17 +207,23 @@ class WorkManagementServiceSpecTest extends Specification {
 		underTest.cacheManagementService.deleteByType(_) >> {
 			
 		}
+		underTest.cacheManagementService.deleteByIdAndByType(_,_) >> {
+			
+		}
 		underTest.cacheManagementService.saveToCache(_,_,_) >> {
 			
 		}
 		underTest.cacheManagementService.getFromCache(_,_) >> { args ->
 			String key = args[0]
+			String type = args[1]
 			if (key.equals('53')) {
 				String akey = "RTC-${53}"
 				def wi = dataGenerationService.generate('/testdata/wiDataT.json')
 				wi.id = 352
 				wi.fields.'Custom.ExternalID' = key
 				return wi
+			} else if (type == 'wiPrevious') {
+				return [rev: 1]
 			} else {
 				return null
 			}
