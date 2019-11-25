@@ -619,8 +619,8 @@ class WorkManagementService {
 				if (count == 0) {
 					def issue = new JsonSlurper().parseText(resp.body)
 					log.error "Failed to save full batch of work items:  WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}"
-					def wiCache = cacheManagementService.getFromCache(idMap[count], ICacheManagementService.WI_DATA)
-					cacheManagementService.saveToCache([item:wiCache, error: issue.'value'.Message] , idMap[count], 'wiErrored')
+//					def wiCache = cacheManagementService.getFromCache(idMap[count], ICacheManagementService.WI_DATA)
+//					cacheManagementService.saveToCache([item:wiCache, error: issue.'value'.Message] , idMap[count], 'wiErrored')
 					if (checkpointManagementService != null) {
 						checkpointManagementService.addLogentry("Failed to save full batch of work items, Error:  ${issue.'value'.Message}")
 					} 
@@ -634,8 +634,8 @@ class WorkManagementService {
 					} else {
 						def issue = new JsonSlurper().parseText(resp.body)
 						log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
-						def wiCache = cacheManagementService.getFromCache(idMap[count], ICacheManagementService.WI_DATA)
-						cacheManagementService.saveToCache([item:wiCache, error: issue.'value'.Message] , idMap[count], 'wiErrored')
+//						def wiCache = cacheManagementService.getFromCache(idMap[count], ICacheManagementService.WI_DATA)
+//						cacheManagementService.saveToCache([item:wiCache, error: issue.'value'.Message] , idMap[count], 'wiErrored')
 						if (checkpointManagementService != null) {
 							checkpointManagementService.addLogentry("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
 						}
@@ -653,6 +653,8 @@ class WorkManagementService {
 				} else {
 					def issue = new JsonSlurper().parseText(resp.body)
 					log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
+					def wiCache = cacheManagementService.getFromCache(idMap[count], ICacheManagementService.WI_DATA)
+					cacheManagementService.saveToCache([item:wiCache, error: issue.'value'.Message] , idMap[count], 'wiErrored')
 					if (checkpointManagementService != null) {
 						checkpointManagementService.addLogentry("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
 					}
