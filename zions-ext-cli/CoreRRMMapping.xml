@@ -1094,6 +1094,23 @@
 		<field source="areaPathHandler" target="System.AreaPath"/>		
 	</wit>
 			
+	<wit source="Business Scenario" target="PlaceHolder" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="closedReasonHandler" target="Custom.ClosedReason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="aboutHandler" target="Custom.SourceItemLink"/>		
+		<field source="whereUsedHandler" target="Custom.SourceContextLinks"/>
+		<field source="releaseHandler" target="Custom.ReleaseInfo"/>		
+		<field source="regulationNameHandler" target="Custom.RegulationName"/>
+		<field source="infoCommentsHandler" target="Custom.Remarks"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+			
 	<wit source="Business Acceptance Criteria" target="PlaceHolder" translateUnmappedFields="false">
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
