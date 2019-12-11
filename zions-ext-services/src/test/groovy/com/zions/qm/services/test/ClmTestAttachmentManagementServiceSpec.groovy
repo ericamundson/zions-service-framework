@@ -51,7 +51,7 @@ class ClmTestAttachmentManagementServiceSpec extends Specification {
 //		def os = sFile.newDataOutputStream()
 //		os << "Here's some text"
 //		os.close()
-		1 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> sFile
+		//1 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> sFile
 		
 		and: 'test plan with single attachment'
 		def titem = dataGenerationService.generate('/testdata/testplanT.xml')
@@ -78,7 +78,7 @@ class ClmTestAttachmentManagementServiceSpec extends Specification {
 //		def os = sFile.newDataOutputStream()
 //		os << "Here's some text"
 //		os.close()
-		2 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> sFile
+		//2 * cacheManagementService.saveBinaryAsAttachment(_,_,_) >> sFile
 		
 		and: 'test case with single attachment'
 		def titem = dataGenerationService.generate('/testdata/testcaseT.xml')

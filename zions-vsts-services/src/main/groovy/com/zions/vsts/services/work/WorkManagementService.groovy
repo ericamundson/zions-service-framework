@@ -112,7 +112,7 @@ class WorkManagementService {
 					if (isTestItem()) {
 						deleteTestItem(collection, project, owi)
 					} else {
-						deleteWorkitem(url)
+						deleteWorkitem(url, owi)
 					}
 				} else {
 					//eMap[key] = key
@@ -122,10 +122,12 @@ class WorkManagementService {
 						
 						// Remove items from backup that are equivalent to elements being cached.
 						// This will be used to determine field changes.
-						String prev = "${previous.rev}"
-						String rev = "${owi.rev}"
-						if (prev == rev) {
-							cacheManagementService.deleteByIdAndByType(key, 'wiPrevious')
+						if (previous) {
+							String prev = "${previous.rev}"
+							String rev = "${owi.rev}"
+							if (prev == rev) {
+								cacheManagementService.deleteByIdAndByType(key, 'wiPrevious')
+							}
 						}
 					}
 					if (cacheManagementService.cacheModule == 'QM' && planId) {
@@ -288,7 +290,7 @@ class WorkManagementService {
 					repeatedDelete = true
 					return
 				}
-				deleteWorkitem(wi.url)
+				deleteWorkitem(wi.url, wi)
 				deleted[wi.id] = wi
 			}
 			if (repeatedDelete) break
@@ -298,22 +300,22 @@ class WorkManagementService {
 		cacheManagementService.clear()
 	}
 
-	def cleanDuplicates(String collection, String project, int inpage = 0) {
-		def deleted = [:]
-		if (cacheManagementService instanceof MongoDBCacheManagementService) {
-			MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
-			int page = inpage
-			while (true) {
-				def cacheWIs = mdbCacheManagement.getAllOfType('wiData', page)
-				if (cacheWIs.size() == 0) break
-				processCacheDuplicates(collection, project, cacheWIs)
-				page++
-			}
-		} else {
-			def cacheWIs = cacheManagementService.getAllOfType('wiData')
-			processCacheDuplicates( collection, project, cacheWIs )
-		}
-	}
+//	def cleanDuplicates(String collection, String project, int inpage = 0) {
+//		def deleted = [:]
+//		if (cacheManagementService instanceof MongoDBCacheManagementService) {
+//			MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
+//			int page = inpage
+//			while (true) {
+//				def cacheWIs = mdbCacheManagement.getAllOfType('wiData', page)
+//				if (cacheWIs.size() == 0) break
+//				processCacheDuplicates(collection, project, cacheWIs)
+//				page++
+//			}
+//		} else {
+//			def cacheWIs = cacheManagementService.getAllOfType('wiData')
+//			processCacheDuplicates( collection, project, cacheWIs )
+//		}
+//	}
 	
 	private processCacheDuplicates(String collection, String project, def cacheWIs) {
 		cacheWIs.each { key, cacheWI ->
@@ -472,7 +474,11 @@ class WorkManagementService {
 		return catMap[witype]
 	}
 
-	def deleteWorkitem(String url) {
+	def deleteWorkitem(String url, def wi) {
+		if (wi.fields) {
+			String changedBy = "${wi.fields.'System.ChangedBy'.displayName}".toLowerCase()
+			if (!changedBy.startsWith('svc-cloud-vs')) return null
+		}
 		def result = genericRestClient.delete(
 				uri: url,
 				//headers: [Accept: 'application/json'],
@@ -483,6 +489,8 @@ class WorkManagementService {
 	}
 	
 	def deleteTestItem(String collection, String project, def wi) {
+		String changedBy = "${wi.fields.'System.ChangedBy'.displayName}".toLowerCase()
+		if (!changedBy.startsWith('svc-cloud-vs')) return null
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		String url = "${genericRestClient.getTfsUrl()}/${eproject}/_apis/test/testcases/${wi.id}"
 		def result = genericRestClient.delete(

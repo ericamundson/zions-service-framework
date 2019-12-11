@@ -57,12 +57,12 @@ class TestLinkAttachmentManagementService {
 		attachments.each { Attachment attachment ->
 			def data = attachment.content
 			byte[] dstr = Base64.decoder.decode(data)
-			ByteArrayInputStream bdata = new ByteArrayInputStream(dstr)
+			//ByteArrayInputStream bdata = new ByteArrayInputStream(dstr)
 			def filename = attachment.fileName
 			String id = "${testCase.id}"
 			if (filename != null) {
-				def file = cacheManagementService.saveBinaryAsAttachment(bdata, filename, id)
-				def item = [file: file, comment: "Added attachment ${filename}"]
+				//def file = cacheManagementService.saveBinaryAsAttachment(bdata, filename, id)
+				def item = [file: dstr, fileName: filename, comment: "Added attachment ${filename}"]
 				//File cFile = saveAttachment
 				files.add(item)
 			}

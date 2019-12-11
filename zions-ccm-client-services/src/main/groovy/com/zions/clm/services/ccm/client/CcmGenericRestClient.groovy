@@ -94,15 +94,15 @@ public class CcmGenericRestClient extends AGenericRestClient {
 			);
 
 		} catch (NoSuchAlgorithmException e) {
-			log.error(e)
+			log.error(e.message)
 		} catch (KeyManagementException e) {
-			log.error(e)
+			log.error(e.message)
 		} catch (ClientProtocolException e) {
-			log.error(e)
+			log.error(e.message)
 		} catch (IOException e) {
-			log.error(e)
+			log.error(e.message)
 		} catch (KeyStoreException e) {
-			log.error(e)
+			log.error(e.message)
 		}
 	}
 	

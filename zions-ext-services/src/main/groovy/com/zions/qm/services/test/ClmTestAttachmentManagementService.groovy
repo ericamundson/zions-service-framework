@@ -54,8 +54,11 @@ class ClmTestAttachmentManagementService {
 			String aurl = "${attachment.@href}"
 			def result = clmTestManagementService.getContent(aurl)
 			if (result.filename != null) {
-				def file = cacheManagementService.saveBinaryAsAttachment(result.data, result.filename, id)
-				def item = [file: file, comment: "Added attachment ${result.filename}"]
+				String fName = cleanTextContent(result.filename)
+				//def file = cacheManagementService.saveBinaryAsAttachment(result.data, fName, id)
+				ByteArrayInputStream s = result.data
+				def file = s.bytes
+				def item = [file: file, fileName: fName, comment: "Added attachment ${fName}"]
 				//File cFile = saveAttachment
 				files.add(item)
 			}
@@ -66,19 +69,55 @@ class ClmTestAttachmentManagementService {
 	
 	public def cacheTestItemAttachmentsAsBinary(def titem) {
 		def binaries = []
-		String type = getOutType(titem)
-		String id = "${titem.webId.text()}-${type}"
+//		String type = getOutType(titem)
+//		String id = "${titem.webId.text()}-${type}"
 		titem.attachment.each { attachment ->
 			String aurl = "${attachment.@href}"
 			def result = clmTestManagementService.getContent(aurl)
 			if (result.filename != null && result.data) {
-				def item = [data: result.data, filename: result.filename, comment: "Added attachment ${result.filename}"]
+				String fName = cleanTextContent(result.filename)
+				def item = [data: result.data, filename: fName, comment: "Added attachment ${fName}"]
 				//File cFile = saveAttachment
 				binaries.add(item)
 			}
 		}
 
 		return binaries
+	}
+	
+	public def cacheStepAttachmentsAsBinary(def titem) {
+		def binaries = []
+//		String type = getOutType(titem)
+//		String id = "${titem.webId.text()}-${type}"
+		titem.stepAttachment.each { attachment ->
+			String aurl = "${attachment.@href}"
+			def result = clmTestManagementService.getContent(aurl)
+			if (result.filename != null && result.data) {
+				String fName = cleanTextContent(result.filename)
+				def item = [data: result.data, filename: fName, comment: "Added attachment ${fName}"]
+				//File cFile = saveAttachment
+				binaries.add(item)
+			}
+		}
+
+		return binaries
+	}
+	
+	private static String cleanTextContent(String text)
+	{
+		if (text.lastIndexOf('\\') > -1) {
+			text = text.substring(text.lastIndexOf('\\')+1)
+		}
+		// strips off all non-ASCII characters
+		text = text.replaceAll("[^\\x00-\\x7F]", "");
+ 
+		// erases all the ASCII control characters
+		text = text.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+		 
+		// removes non-printable characters from Unicode
+		text = text.replaceAll("\\p{C}", "");
+ 
+		return text.trim();
 	}
 
 	/**
@@ -95,8 +134,11 @@ class ClmTestAttachmentManagementService {
 			String aurl = "${attachment.@href}"
 			def result = clmTestManagementService.getContent(aurl)
 			if (result.filename != null) {
-				def file = cacheManagementService.saveBinaryAsAttachment(result.data, result.filename, id)
-				def item = [file: file, comment: "Added attachment ${result.filename}"]
+				String fName = cleanTextContent(result.filename)
+				//def file = cacheManagementService.saveBinaryAsAttachment(result.data, fName, id)
+				ByteArrayInputStream s = result.data
+				byte[] file = s.bytes
+				def item = [file: file, fileName: fName, comment: "Added attachment ${fName}"]
 				//File cFile = saveAttachment
 				files.add(item)
 			}
@@ -120,8 +162,11 @@ class ClmTestAttachmentManagementService {
 				String aurl = "${attachment.@href}"
 				def result = clmTestManagementService.getContent(aurl)
 				if (result.filename != null) {
-					def file = cacheManagementService.saveBinaryAsAttachment(result.data, "${result.filename}", id)
-					def item = [file: file, comment: comment]
+					String fName = ClmTestAttachmentManagementService.cleanTextContent(result.filename)
+					//def file = cacheManagementService.saveBinaryAsAttachment(result.data, fName, id)
+					ByteArrayInputStream s = result.data
+					byte[] file = s.bytes
+					def item = [file: file, fileName: fName, comment: "Added attachment ${fName}"]
 					//File cFile = saveAttachment
 					files.add(item)
 				}

@@ -101,7 +101,7 @@ class BaseQueryHandler implements IQueryHandler {
 		def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
 		if (!cacheWI) return true
 		String sDate = "${item.modified}"
-		Date clmDate = new Date().parse("yyyy-MM-dd'T'HH:mm:ss.SSSZ", sDate);
+		Date clmDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", sDate);
 		String modified = cacheWI.fields['System.ChangedDate']
 		if (modified != null && modified.length()> 0) {
 			if (modified.lastIndexOf('.') > -1) {

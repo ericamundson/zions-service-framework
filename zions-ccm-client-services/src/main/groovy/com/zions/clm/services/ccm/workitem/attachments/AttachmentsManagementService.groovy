@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component;
 import com.ibm.team.links.common.IReference
 import com.ibm.team.repository.client.ITeamRepository
+import com.ibm.team.repository.common.IContent
 import com.ibm.team.workitem.client.IAuditableClient
 import com.ibm.team.workitem.client.IWorkItemClient
 import com.ibm.team.workitem.common.IWorkItemCommon
@@ -52,7 +53,7 @@ public class AttachmentsManagementService {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		IWorkItemClient workItemClient = teamRepository.getClientLibrary(IWorkItemClient.class)
 		IWorkItem workItem = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, null);
-		
+		if (!workItem) return []
 		IWorkItemCommon common = (IWorkItemCommon) teamRepository.getClientLibrary(IWorkItemCommon.class);
 		IWorkItemReferences workitemReferences = common.resolveWorkItemReferences(workItem, null);
 		List references = workitemReferences.getReferences(WorkItemEndPoints.ATTACHMENT);
@@ -62,16 +63,38 @@ public class AttachmentsManagementService {
 			IAuditableClient auditableClient = (IAuditableClient) teamRepository.getClientLibrary(IAuditableClient.class);
 			IAttachment attachment = (IAttachment) auditableClient.resolveAuditable((IAttachmentHandle) attachHandle,
 				IAttachment.DEFAULT_PROFILE, null);
-			def file = saveAttachment(attachment, id);
+			String fName = cleanTextContent(attachment.getName())
+			//def file = saveAttachment(attachment, fName, id);
+			ByteArrayOutputStream s = new ByteArrayOutputStream()
+			teamRepository.contentManager().retrieveContent(attachment.getContent(), s, null);
+			byte[] file = s.toByteArray()
+			
 			if (file != null) {
-				def item = [file: file, comment: "Added attachment ${file.name}"]
+				def item = [file: file, fileName: fName, comment: "Added attachment ${fName}"]
 				files.add(item)
 			}
 		}	
 		return files
 	}
 	
-	def saveAttachment(IAttachment attachment, int id) {
+	private static String cleanTextContent(String text)
+	{
+		if (text.lastIndexOf('\\') > -1) {
+			text = text.substring(text.lastIndexOf('\\')+1)
+		}
+		// strips off all non-ASCII characters
+		text = text.replaceAll("[^\\x00-\\x7F]", "");
+ 
+		// erases all the ASCII control characters
+		text = text.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+		 
+		// removes non-printable characters from Unicode
+		text = text.replaceAll("\\p{C}", "");
+ 
+		return text.trim();
+	}
+
+	def saveAttachment(IAttachment attachment, String fName, int id) {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		try {
 			File cacheDir = new File(this.cacheLocation)
@@ -91,10 +114,11 @@ public class AttachmentsManagementService {
 			if (!attachmentDir.exists()) {
 				attachmentDir.mkdir()
 			}
-			File save = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}attachments${File.separator}${attachment.getName()}");
+			File save = new File("${this.cacheLocation}${File.separator}${cacheModule}${File.separator}${id}${File.separator}attachments${File.separator}${fName}");
 			
 			OutputStream out = save.newDataOutputStream()
 			try {
+				IContent c = attachment.getContent()
 				teamRepository.contentManager().retrieveContent(attachment.getContent(), out, null);
 			} finally {
 				out.close();

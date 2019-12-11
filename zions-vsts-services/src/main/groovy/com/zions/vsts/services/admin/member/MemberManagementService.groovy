@@ -235,6 +235,7 @@ public class MemberManagementService {
 					uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectData.id}/teams/${teamData.id}/members",
 					query: ['api-version': '5.0']
 					)
+			if (!result) return
 			result.value.each { ridentity ->
 				def identity = ridentity.identity
 				String uid = "${identity.uniqueName}"

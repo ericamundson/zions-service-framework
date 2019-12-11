@@ -386,6 +386,43 @@ class ClmTestManagementService {
 		}
 		return outItems
 	}
+	def getExecutionResultViaHrefAndSuiteId(String tcWebId, String suiteWebId, String projectName) {
+		def project = URLEncoder.encode(projectName, 'UTF-8')
+		//project = project.replace('+', '%20')
+		String tchref = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/testcase/urn:com.ibm.rqm:testcase:${tcWebId}"
+		String tphref = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/testsuite/urn:com.ibm.rqm:testsuite:${suiteWebId}"
+		def outItems = []
+		String query = "feed/entry/content/executionresult[testcase/@href='${tchref}' and testsuite/@href='${tphref}']/*"
+		String uri = this.qmGenericRestClient.clmUrl + "/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/${project}/executionresult";
+		def result = qmGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/xml'],
+				query: [fields: query] );
+			
+		// generate unit test data.
+//		String resultsxml = XmlUtil.serialize(result)
+//		File resultFile = new File('../zions-ext-services/src/test/resources/testdata/executionresults1.xml')
+//		def os = resultFile.newDataOutputStream()
+//		os << resultsxml
+//		os.close()
+		
+		while (true) {
+			def erlist = result.'**'.findAll { it.name() == 'executionresult' }
+			
+			erlist.each { item ->
+				//String itemxml = XmlUtil.serialize(item)
+				outItems.add(item)
+			}
+			def nextLink = result.'**'.find { node ->
+				
+				node.name() == 'link' && node.@rel == 'next'
+			}
+			if (nextLink == null) break
+			result = nextPage(nextLink.@href)
+
+		}
+		return outItems
+	}
 
 	/**
 	 * Get next page for any test element query

@@ -156,11 +156,11 @@ class CcmWorkManagementService {
 			def resultLinks = getLinks('affects_execution_result',info)
 			resultLinks.each { LinkInfo link ->
 				def result = cacheManagementService.getFromCache(link.itemIdRelated, 'QM', ICacheManagementService.RESULT_DATA)
-				if (result) {
+				if (result && result.id) {
 					//log.info("Has execution result: ${result.id}, key: ${link.itemIdRelated}")
 					String title = "${result.testCaseTitle}"
 					
-					def resultChanges = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${result.testRun.id}/results/${result.id}", query:['api-version':'5.0-preview.5'], body: []]
+					def resultChanges = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${result.testRun.id}/results", query:['api-version':'5.0'], body: []]
 					def data = [id: result.id, testCaseTitle: title, associatedBugs: []]
 					def wis = []
 					if (result.associatedBugs) {
@@ -422,6 +422,8 @@ class CcmWorkManagementService {
 					val = Double.parseDouble(val)
 				} else if ("${fieldMap.outType}" == 'boolean') {
 					val = Boolean.parseBoolean(val)
+				} else if ("${fieldMap.outType}" == 'string' && "${val}".length() > 255) {
+					val = 	"${val}".substring(0, 255-1)
 				}
 			}
 			if ("${val}" != "${cValue}") {
@@ -453,6 +455,9 @@ class CcmWorkManagementService {
 				val = Double.parseDouble(val)
 			} else if ("${fieldMap.outType}" == 'boolean') {
 				val = Boolean.parseBoolean(val)
+			} else if ("${fieldMap.outType}" == 'string' && "${val}".length() > 255) {
+				val = 	"${val}".substring(0, 255-1)
+
 			}
 		}
 		if ("${val}" == 'skip') {
@@ -502,7 +507,7 @@ class CcmWorkManagementService {
 		if (cId.startsWith('http')) {
 			try {
 				String url = cId
-				def result = qmGenericRestClient.get(
+				def result = ccmGenericRestClient.get(
 				contentType: ContentType.XML,
 				uri: cId,
 				headers: [Accept: 'application/rdf+xml'] );
