@@ -1,91 +1,97 @@
 {
-    "id": 12345,
-    "rev": 1,
-    "fields": {
-        "System.AreaPath": "DigitalBanking\\OB",
-        "System.TeamProject": "DigitalBanking",
-        "System.IterationPath": "DigitalBanking",
-        "System.WorkItemType": "Test Case",
-        "System.State": "Design",
-        "System.Reason": "New",
-        "System.AssignedTo": {
-            "displayName": "rationalmigration",
-            "id": null
-        },
-        "System.CreatedDate": "2018-12-18T17:48:24.447Z",
-        "System.CreatedBy": {
-            "displayName": "Eric Amundson",
-            "url": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
-            "_links": {
-                "avatar": {
-                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
-                }
-            },
-            "id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
-            "uniqueName": "eric.amundson2@zionsbancorp.com",
-            "imageUrl": "https://dev.azure.com/eto-dev/_api/_common/identityImage?id=34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
-            "descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
-        },
-        "System.ChangedDate": "2018-12-18T17:48:24.447Z",
-        "System.ChangedBy": {
-            "displayName": "Eric Amundson",
-            "url": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
-            "_links": {
-                "avatar": {
-                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
-                }
-            },
-            "id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
-            "uniqueName": "eric.amundson2@zionsbancorp.com",
-            "imageUrl": "https://dev.azure.com/eto-dev/_api/_common/identityImage?id=34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
-            "descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
-        },
-        "System.CommentCount": 0,
-        "System.Title": "Credit Card Advance - Create Transfer",
-        "Microsoft.VSTS.Common.StateChangeDate": "2018-12-18T17:48:24.447Z",
-        "Microsoft.VSTS.Common.ActivatedDate": "2018-12-18T17:48:24.447Z",
-        "Microsoft.VSTS.Common.ActivatedBy": {
-            "displayName": "Eric Amundson",
-            "url": "https://app.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
-            "_links": {
-                "avatar": {
-                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
-                }
-            },
-            "id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
-            "uniqueName": "eric.amundson2@zionsbancorp.com",
-            "imageUrl": "https://dev.azure.com/eto-dev/_api/_common/identityImage?id=34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
-            "descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
-        },
-        "Microsoft.VSTS.Common.Priority": 2,
-        "Microsoft.VSTS.TCM.AutomationStatus": "Not Automated",
-        "Custom.Automate": false,
-        "Custom.AutomationState": "Not Automated",
-        "System.Description": "<div style=\"border:2px solid black;\">\n  <div>\n    RTC Test Case Description:\n  </div>\n  <div>A customer is allowed to make a payment to a credit card, current or future dated\n\n A customer is allowed to take an advance from a credit card, current or future dated.  The preview screen for a credit card advance will include a warning message for an affiliate specific fee.</div>\n</div>\n<div style=\"border:2px solid black;\">\n  <div>\n    RTC Test Suite Description:\n  </div>\n  <div>A customer is allowed to make a payment to a credit card, current or future dated\n\n A customer is allowed to take an advance from a credit card, current or future dated.  The preview screen for a credit card advance will include a warning message for an affiliate specific fee.</div>\n</div>",
-        "Microsoft.VSTS.TCM.Steps": "<steps steps='0' last='2'>\n  <step id='2' type='ValidateStep'>\n    <parameterizedString isFormatted='true'>&lt;div&gt;Log into the UI with a personal OB client that has a Visa enabled for Advances&lt;br/&gt;From the My Bank page click on the Transfers tab&lt;br/&gt;Click on 'Create Transfer'&lt;br/&gt;Select the Visa account in the From field&lt;br/&gt;Select a DDA or SAV account in the To field&lt;br/&gt;Enter '20.00' in the Amount field&lt;br/&gt;Leave the Delivery Date as today's date&lt;br/&gt;The Memo field is optional&lt;br/&gt;Click 'Preview Transfer' &lt;br/&gt;Validate the data on the Confirmation popup - note the warning message regarding an advance fee, then hit 'Submit'&lt;/div&gt;\r\n</parameterizedString>\n    <parameterizedString isFormatted='true'>&lt;div&gt;The transfer succeeds. &lt;br/&gt;\r\n  &lt;br/&gt;The current dated transfers display in MLFI - automation phase II.&lt;/div&gt;\r\n</parameterizedString>\n  </step>\n</steps>"
-    },
-    "_links": {
-        "self": {
-            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/27228"
-        },
-        "workItemUpdates": {
-            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/27228/updates"
-        },
-        "workItemRevisions": {
-            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/27228/revisions"
-        },
-        "workItemComments": {
-            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/27228/comments"
-        },
-        "html": {
-            "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=27228"
-        },
-        "workItemType": {
-            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItemTypes/Test%20Case"
-        },
-        "fields": {
-            "href": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/fields"
-        }
-    },
-    "url": "https://dev.azure.com/eto-dev/76e58233-44a1-4241-8d2c-09db3fbca66d/_apis/wit/workItems/27228"
+	"id": 878448,
+	"rev": 2,
+	"fields": {
+		"System.AreaPath": "BaNCS\\Testing\\Teams\\Product",
+		"System.TeamProject": "BaNCS",
+		"System.IterationPath": "BaNCS",
+		"System.WorkItemType": "Test Case",
+		"System.State": "Design",
+		"System.Reason": "New",
+		"System.AssignedTo": {
+			"displayName": "Aniket.Kadam@zionsbancorp.com",
+			"id": null
+		},
+		"System.CreatedDate": "2019-11-20T06:46:12.763Z",
+		"System.CreatedBy": {
+			"displayName": "svc-cloud-vsmigration003",
+			"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/03771858-794c-6d69-8b73-a58d7e9ceeb9",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5"
+				}
+			},
+			"id": "03771858-794c-6d69-8b73-a58d7e9ceeb9",
+			"uniqueName": "svc-cloud-vsmigration003@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5",
+			"descriptor": "aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5"
+		},
+		"System.ChangedDate": "2019-11-22T11:41:25.7Z",
+		"System.ChangedBy": {
+			"displayName": "svc-cloud-vsmigration003",
+			"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/03771858-794c-6d69-8b73-a58d7e9ceeb9",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5"
+				}
+			},
+			"id": "03771858-794c-6d69-8b73-a58d7e9ceeb9",
+			"uniqueName": "svc-cloud-vsmigration003@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5",
+			"descriptor": "aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5"
+		},
+		"System.CommentCount": 0,
+		"System.Title": "FS-TEL-026/Verify that, In the Cash Out Counter screen, the system will calculate the Total Drawer Cash Out as follows:Total Drawer Cash Out = Total Amount:Bills + Total Amount:Coins",
+		"Microsoft.VSTS.Common.StateChangeDate": "2019-11-20T06:46:12.763Z",
+		"Microsoft.VSTS.Common.ActivatedDate": "2019-11-20T06:46:12.763Z",
+		"Microsoft.VSTS.Common.ActivatedBy": {
+			"displayName": "svc-cloud-vsmigration003",
+			"url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/03771858-794c-6d69-8b73-a58d7e9ceeb9",
+			"_links": {
+				"avatar": {
+					"href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5"
+				}
+			},
+			"id": "03771858-794c-6d69-8b73-a58d7e9ceeb9",
+			"uniqueName": "svc-cloud-vsmigration003@zionsbancorporation.onmicrosoft.com",
+			"imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5",
+			"descriptor": "aad.MDM3NzE4NTgtNzk0Yy03ZDY5LThiNzMtYTU4ZDdlOWNlZWI5"
+		},
+		"Microsoft.VSTS.Common.Priority": 4,
+		"Microsoft.VSTS.TCM.AutomationStatus": "Not Automated",
+		"Custom.ExternalID": "RQM-132426",
+		"Custom.Automate": false,
+		"Custom.AutomationState": "Not Automated",
+		"Custom.TestComplianceRelated": "N/A",
+		"Custom.TestFinanceImpact": "No",
+		"Custom.TestTestTeam": "BaNCS Product: Test",
+		"Custom.TestTestType": "Functional Test",
+		"Custom.TestAutomationStatus": "No",
+		"System.Description": "<div style=\"border:2px solid black;\">\n  <div>\n    RQM Test Case Description:\n  </div>\n  <div>In the Cash Out Counter screen, the system will calculate the Total Drawer Cash Out as follows:\nTotal Drawer Cash Out = Total Amount:Bills + Total Amount:Coins\nSuccess criteria: In the Cash Out Counter screen, the system must calculate the Total Drawer Cash Out as follows:\nTotal Drawer Cash Out = Total Amount:Bills + Total Amount:Coins</div>\n</div>",
+		"Custom.CustomAttributes": "Test 1"
+	},
+	"_links": {
+		"self": {
+			"href": "https://dev.azure.com/eto-dev/7d441d20-11b2-45ee-b71b-8cdbc2370f20/_apis/wit/workItems/878448"
+		},
+		"workItemUpdates": {
+			"href": "https://dev.azure.com/eto-dev/7d441d20-11b2-45ee-b71b-8cdbc2370f20/_apis/wit/workItems/878448/updates"
+		},
+		"workItemRevisions": {
+			"href": "https://dev.azure.com/eto-dev/7d441d20-11b2-45ee-b71b-8cdbc2370f20/_apis/wit/workItems/878448/revisions"
+		},
+		"workItemComments": {
+			"href": "https://dev.azure.com/eto-dev/7d441d20-11b2-45ee-b71b-8cdbc2370f20/_apis/wit/workItems/878448/comments"
+		},
+		"html": {
+			"href": "https://dev.azure.com/eto-dev/7d441d20-11b2-45ee-b71b-8cdbc2370f20/_workitems/edit/878448"
+		},
+		"workItemType": {
+			"href": "https://dev.azure.com/eto-dev/7d441d20-11b2-45ee-b71b-8cdbc2370f20/_apis/wit/workItemTypes/Test%20Case"
+		},
+		"fields": {
+			"href": "https://dev.azure.com/eto-dev/7d441d20-11b2-45ee-b71b-8cdbc2370f20/_apis/wit/fields"
+		}
+	},
+	"url": "https://dev.azure.com/eto-dev/7d441d20-11b2-45ee-b71b-8cdbc2370f20/_apis/wit/workItems/878448"
 }

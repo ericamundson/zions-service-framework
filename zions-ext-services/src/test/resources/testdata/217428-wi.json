@@ -1,0 +1,81 @@
+{
+	"id": 107396,
+	"configuration": {
+		"id": "35",
+		"name": "Generic"
+	},
+	"project": {
+		"id": "f5b48f08-0085-4814-875a-a3dbc9736967",
+		"name": "BaNCS",
+		"url": "https://dev.azure.com/ZionsETO/_apis/projects/BaNCS"
+	},
+	"startedDate": "2017-05-10T17:57:10.597Z",
+	"completedDate": "2017-05-10T18:02:41.307Z",
+	"durationInMs": 330710.0,
+	"outcome": "Passed",
+	"revision": 2,
+	"state": "Completed",
+	"testCase": {
+		"id": "828345",
+		"name": "FS-LON-046-ADD-648/2.5.3/Output/Joint Owner Customer Record Linked to Global Limit"
+	},
+	"testPoint": {
+		"id": "163816"
+	},
+	"testRun": {
+		"id": "1096138",
+		"name": "Release Two Cycle 1A Test Plan - Master Run",
+		"url": "https://dev.azure.com/ZionsETO/BaNCS/_apis/test/Runs/1096138"
+	},
+	"lastUpdatedDate": "2019-12-10T18:41:45.557Z",
+	"priority": 2,
+	"createdDate": "2019-12-10T17:21:19.803Z",
+	"url": "https://dev.azure.com/ZionsETO/BaNCS/_apis/test/Runs/1096138/Results/107396",
+	"failureType": "None",
+	"testCaseTitle": "FS-LON-046-ADD-648/2.5.3/Output/Joint Owner Customer Record Linked to Global Limit",
+	"testCaseRevision": 1,
+	"customFields": [],
+	"testPlan": {
+		"id": "820283"
+	},
+	"testCaseReferenceId": 22324074,
+	"owner": {
+		"displayName": "svc-cloud-vsmigration004",
+		"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+			}
+		},
+		"id": "7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
+		"uniqueName": "svc-cloud-vsmigration004@zionsbancorporation.onmicrosoft.com",
+		"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm",
+		"descriptor": "aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+	},
+	"runBy": {
+		"displayName": "svc-cloud-vsmigration004",
+		"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+			}
+		},
+		"id": "7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
+		"uniqueName": "svc-cloud-vsmigration004@zionsbancorporation.onmicrosoft.com",
+		"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm",
+		"descriptor": "aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+	},
+	"lastUpdatedBy": {
+		"displayName": "svc-cloud-vsmigration004",
+		"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+			}
+		},
+		"id": "7d053df0-3743-68a4-b4e8-0cddf5ddb2af",
+		"uniqueName": "svc-cloud-vsmigration004@zionsbancorporation.onmicrosoft.com",
+		"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm",
+		"descriptor": "aad.N2QwNTNkZjAtMzc0My03OGE0LWI0ZTgtMGNkZGY1ZGRiMmFm"
+	}
+}

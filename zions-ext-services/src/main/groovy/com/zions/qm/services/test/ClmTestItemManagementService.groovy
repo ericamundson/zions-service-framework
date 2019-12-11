@@ -86,6 +86,9 @@ public class ClmTestItemManagementService {
 	def resetNewId() {
 		newId = -1
 	}
+	
+	@Value('${refresh.run:false}')
+	boolean refreshRun
 
 	public ClmTestItemManagementService() {
 		
@@ -258,7 +261,10 @@ public class ClmTestItemManagementService {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def exData = [:]
 		String id = "${qmItemData.webId.text()}"
-//		String cacheId = "${id}-Result"
+		String cacheId = "${id}-Result"
+		if (refreshRun) {
+			cacheManagementService.deleteByIdAndByType(cacheId, 'resultAttachments')
+		}
 //		def cacheData = cacheManagementService.getFromCache(cacheId, ICacheManagementService.RESULT_DATA)
 		def cacheResult = getResultData(resultMap, testCase)
 		if (!cacheResult) return null
@@ -275,7 +281,7 @@ public class ClmTestItemManagementService {
 		}
 		def bodyItem = [:]
 		map.fields.each { field ->
-			def fieldData = getFieldData(qmItemData, id, field, memberMap, cacheResult, map, resultMap, testCase)
+			def fieldData = getFieldData(qmItemData, id, field, memberMap, cacheResult, map, resultMap, testCase, null, exData)
 			if (fieldData != null) {
 				if (fieldData.value != null) {
 					bodyItem["${field.target}"] = fieldData.value
@@ -293,7 +299,9 @@ public class ClmTestItemManagementService {
 		}
 		//String outcome = "${bodyItem.outcome}"
 		if (!bodyOut || bodyOut.size() == 0) {
-			exData.body.add(bodyItem)
+			String oBody = new JsonBuilder([bodyItem]).toPrettyString()
+			exData.body = oBody
+			//exData.body.add(bodyItem)
 		}
 		return exData
 	}
@@ -483,12 +491,12 @@ public class ClmTestItemManagementService {
 		return flag
 	}
 	
-	private def getFieldData(def qmItemData, def id, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null, def prevWI = null) {
+	private def getFieldData(def qmItemData, def id, def field, def memberMap, def cacheWI, def map, def resultMap = null, def testCase = null, def prevWI = null, def exData = null) {
 		String handlerName = "${field.source}"
 		String qmHandlerName = "Qm${handlerName.substring(0,1).toUpperCase()}${handlerName.substring(1)}"
 		String fValue = ""
 		if (this.fieldMap[qmHandlerName] != null) {
-			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, prevWI: prevWI, itemMap: map, resultMap: resultMap, testCase: testCase]
+			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, prevWI: prevWI, itemMap: map, resultMap: resultMap, testCase: testCase, exData: exData]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}
@@ -498,7 +506,7 @@ public class ClmTestItemManagementService {
 			def fieldData = this.fieldMap[qmHandlerName].execute(data)
 			return fieldData
 		} else if (this.fieldMap["${handlerName}"] != null) {
-			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, prevWI: prevWI, itemMap: map, resultMap: resultMap, testCase: testCase]
+			def data = [itemData: qmItemData, id: id, memberMap: memberMap, fieldMap: field, cacheWI: cacheWI, prevWI: prevWI, itemMap: map, resultMap: resultMap, testCase: testCase, exData: exData]
 			if (testCase != null) {
 				data['testCase'] = testCase
 			}

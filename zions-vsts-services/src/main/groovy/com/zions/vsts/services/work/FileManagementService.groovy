@@ -65,13 +65,13 @@ class FileManagementService {
 	}
 	
 	private def encodeBytes( Object data ) throws UnsupportedEncodingException {
-	    if ( data instanceof File ) {
+	    if ( data instanceof byte[] ) {
 	        def entity = new org.apache.http.entity.ByteArrayEntity( (byte[]) data, ContentType.BINARY );
 	        entity.setContentType( ContentType.BINARY );
 	        return entity
 	    } else {
 	        throw new IllegalArgumentException( 
-	            "Don't know how to encode ${data.class.name} as a zip file" );
+	            "Don't know how to encode ${data.class.name} as binary" );
 	    }
 	}
 	
@@ -98,21 +98,23 @@ class FileManagementService {
 				def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 				wiData.body.add(rev)
 			}
+			int count = 0
 			files.each { fileItem ->
-				File file = fileItem.file
+				byte[] file = fileItem.file
 				
-				if (file && !linkExists(cacheWI, file)) {
+				if (file && !linkExists(cacheWI, fileItem.fileName) && count < 100) {
 					def area = areaPath
 					if (cacheWI) {
 						area = cacheWI.fields.'System.AreaPath'
 					}
-					def uploadData = uploadAttachment(collection, project, area, file)
+					def uploadData = uploadAttachment(collection, project, area, file, fileItem.fileName)
 					if (uploadData != null) {
 						String comment = "${fileItem.comment}"
 						def change = [op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: uploadData.url, attributes:[comment: comment]]]
 						wiData.body.add(change)
 					}
 				}
+				count++
 			}
 			if (wiData.body.size() == 1) {
 				return null
@@ -123,8 +125,8 @@ class FileManagementService {
 	}
 	
 	
-	private boolean linkExists(cacheWI, file) {
-		String fileName = "${file.name}"
+	private boolean linkExists(cacheWI, fileName) {
+		//String fileName = "${file.name}"
 		if (!cacheWI) return false
 		def link = cacheWI.relations.find { rel ->
 			def name = ""
@@ -152,17 +154,16 @@ class FileManagementService {
 		return result
 	}
 	
-	public def uploadAttachment(collection, project, area, byte[] bytes) {
+	public def uploadAttachment(collection, project, area, byte[] bytes, String fileName) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		def efilename = URLEncoder.encode(file.name, 'utf-8').replace('+', '%20')
+		def efilename = URLEncoder.encode(fileName, 'utf-8').replace('+', '%20')
 		def earea = URLEncoder.encode(area, 'utf-8').replace('+', '%20')
-		def result = genericRestClient.rateLimitPost([
+		def result = genericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
 			requestContentType: ContentType.BINARY,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/attachments",
 			body: bytes,
-			query: ['api-version': '5.0-preview.3', uploadType: 'Simple', areaPath: earea, fileName: efilename]],
-			this.&encodeBytes
+			query: ['api-version': '5.0-preview.3', uploadType: 'Simple', areaPath: earea, fileName: efilename]
 			
 			)
 		return result

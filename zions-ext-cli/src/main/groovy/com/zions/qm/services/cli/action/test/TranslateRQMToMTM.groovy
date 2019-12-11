@@ -438,7 +438,7 @@ class TranslateRQMToMTM implements CliAction {
 									idKeyMap[idtype] = idtype
 								}
 							}
-							testManagementService.setParent(testsuite, tcs, mappingData, updateLinks)
+							testManagementService.setParent(testsuite, tcs, mappingData)
 						}
 						def tcs = []
 						testplan.testcase.each { testcaseRef ->
@@ -455,7 +455,7 @@ class TranslateRQMToMTM implements CliAction {
 								idKeyMap[idtype] = idtype
 							}
 						}
-						testManagementService.setParent(testplan, tcs, mappingData, updateLinks)
+						testManagementService.setParent(testplan, tcs, mappingData)
 					}
 					clManager.flush()
 				}

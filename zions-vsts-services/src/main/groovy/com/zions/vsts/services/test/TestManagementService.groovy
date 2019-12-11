@@ -93,7 +93,7 @@ public class TestManagementService {
 	 */
 	public def sendResultChanges(String collection, String project, def executionResult, String id) {
 		//def executionResult = inexecutionResult.Result
-		String json = new JsonBuilder(executionResult).toPrettyString()
+		//String json = new JsonBuilder(executionResult).toPrettyString()
 		//log.info("Processing execution result: ${json}")
 		String method = "${executionResult.method}"
 		executionResult.remove('method')
@@ -107,16 +107,20 @@ public class TestManagementService {
 		} else if (method == 'patch') {
 			result = genericRestClient.patch(executionResult)
 		}
-		if (result != null) {
-			def eResult = getResult(nuri)
-			//String rjson = new JsonBuilder(executionResult).toPrettyString()
-			//log.info("Finished execution result: ${rjson}")
-			result = eResult
-			cacheManagementService.saveToCache(eResult, id, ICacheManagementService.RESULT_DATA)
+		if (result != null && result.count == 1) {
+			String ourl = "${nuri}/${result.value[0].id}"
+			def eResult = getResult(ourl)
+//			String rjson = new JsonBuilder(eResult).toPrettyString()
+//			log.info("Finished execution result: ${rjson}")
+			if (eResult) {
+				result = eResult
+				cacheManagementService.saveToCache(eResult, id, ICacheManagementService.RESULT_DATA)
+			}
 		}
-//		if (result == null) {
-//			checkpointManagementService.addLogentry("Unable to save test result with id:  ${id}")
-//		}
+		if (result == null) {
+			log.error("Failed to save result:  ${id}")
+			//checkpointManagementService.addLogentry("Unable to save test result with id:  ${id}")
+		}
 		
 		return result
 	}
@@ -292,6 +296,8 @@ public class TestManagementService {
 		((Map) change).remove('method')
 		def result = null
 		String dataType = getTestChangeType(change)
+		String body = new JsonBuilder(change.body).toPrettyString()
+		change.body = body
 		if (method == 'post') {
 			result = genericRestClient.post(change)
 		} else if (method == 'patch') {
@@ -487,16 +493,24 @@ public class TestManagementService {
 		return resultTestCaseMap
 	}
 	
-	public def ensureTestRunForTestCaseAndSuite(String collection, String project, def suiteData, def testcaseData, boolean refresh = false, def testCasePointsMap = null) {
+	public def ensureTestRunForTestCaseAndSuite(String collection, String project, def suiteData, def testcaseData, boolean refresh = false, def testCasePointsMap = null, String exeWebId = null, def runMap = null) {
 		String tcid = getTestCaseId(testcaseData)
 		String sid = getSuiteId(suiteData)
-		//String pid = getPlanId(suiteData)
+		String pid = getPlanId(suiteData)
 		String key = "${tcid}_${sid}"
+		if (exeWebId) {
+			def orunData = cacheManagementService.getFromCache(key, ICacheManagementService.RUN_DATA)
+			if (orunData) {
+				deleteRun(orunData)
+			}
+			key = exeWebId
+		}
 		def runData = cacheManagementService.getFromCache(key, ICacheManagementService.RUN_DATA)
 		if (refresh && runData) {
 			deleteRun(runData)
 			//setRunToInprogress(runData)
 			runData = null
+			
 			//cacheManagementService.deleteFromCache(pid, ICacheManagementService.RUN_DATA)
 		}
 		String pkey = "${tcid}_${pid}"
@@ -509,7 +523,8 @@ public class TestManagementService {
 		if (runData == null) {
 			def adoSuiteData = cacheManagementService.getFromCache(sid, ICacheManagementService.SUITE_DATA)
 			def adoTestCaseData = cacheManagementService.getFromCache(tcid, ICacheManagementService.WI_DATA)
-			if (!adoSuiteData || adoTestCaseData) return [:]
+			if (!adoSuiteData || !adoTestCaseData) return [:]
+			if (hasManualRun(adoSuiteData, adoTestCaseData.id, runMap)) return [:]
 			runData = createRunDataForTestCase(collection, project, adoSuiteData, adoTestCaseData, null, false, testCasePointsMap)
 			if (runData != null) {
 				cacheManagementService.saveToCache(runData, key, ICacheManagementService.RUN_DATA)
@@ -517,6 +532,45 @@ public class TestManagementService {
 		}
 		def resultTestCaseMap = getResultsTestcaseMap("${runData.url}/results")
 		return resultTestCaseMap
+	}
+	
+	boolean hasManualRun(adoSuite, String testCaseId) {
+		String manualTitle = "${adoSuite.name} (Manual)".bytes.encodeBase64()
+		String key = "${testCaseId}-${manualTitle}"
+		def r = cacheManagementService.getFromCache(key, 'manualResult')
+		if (r) return true
+		return false
+	}
+	
+	def setupManualRuns(adoPlan) {
+		String pid = "${adoPlan.project.id}"
+		String planId = adoPlan.id
+		String url = "${genericRestClient.tfsUrl}/${pid}/_apis/test/runs"
+		int skip = 0
+		//cacheManagementService.deleteByType('manualResult')
+		while (true) {
+			def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				//requestContentType: ContentType.JSON,
+				uri: url,
+				headers: ['Content-Type': 'application/json'],
+				query: ['api-version':'5.1', planIds: planId, '$top': 200, '$skip': skip]
+				)
+			skip += 200
+			if (!result || !result.'value' || result.'value'.size() == 0) break
+			result.'value'.each { arun ->
+				if (arun.name && arun.name.endsWith('(Manual)')) {
+					String erName = "${arun.name}".bytes.encodeBase64()
+					def tcMap = getResultsTestcaseMap("${arun.url}/results")
+					tcMap.each { tcId, mresult ->
+						String key = "${tcId}-${erName}"
+						cacheManagementService.saveToCache(mresult, key, 'manualResult')
+					}
+				}
+			}
+		}
+		return []
+
 	}
 	
 	public def cleanSuiteRun(String collection, String project, def suiteData) {
@@ -531,37 +585,60 @@ public class TestManagementService {
 
 	}
 	
-	def ensureAttachments(def adoresult, def binaries, rwebId) {
+	def ensureAttachments(def adoresult, def binaries, String rwebId) {
 		def attachmentCache = cacheManagementService.getFromCache(rwebId, 'resultAttachments')
 		boolean added = false
 		binaries.each { binary ->
-			if (!resultAttachmentExists(binary, adoresult, attachmentCache)) {
-				sendResultAttachment(adoresult, binary)
+			if (!resultAttachmentExists(binary, attachmentCache)) {
+				def resultAtt = sendResultAttachment(adoresult, binary)
 				added = true
 			}
 		}
 		if (added) {
-			def ratt = getResultAttachments(adoresult)
-			cacheManagementService.saveToCache(ratt, rwebId, 'resultAttachments')
+			attachmentCache = getResultAttachments(adoresult)
+			cacheManagementService.saveToCache(attachmentCache, rwebId, 'resultAttachments')
 		}
 		
+		def attMap = [:]
+		attachmentCache.value.each { a ->
+			String fn = "${a.fileName}"
+			attMap[fn] = a
+		}
+		return attMap
 	}
 	
 	def sendResultAttachment(adoResult, binary) {
 		ByteArrayInputStream bs = binary.data
-		def octet = bs.bytes.encodeBase64()
-		def body = [attachmentType: 'GeneralAttachment', comment: binary.comment, fileName: binary.filename, stream: octet]
-		def result = genericRestClient.post(
+		String octet = bs.bytes.encodeBase64()
+		def body = [stream: octet, attachmentType: 'GeneralAttachment', comment: binary.comment, fileName: binary.filename]
+		String sbody = new JsonBuilder(body).toPrettyString()
+		def result = genericRestClient.rateLimitPost(
 			requestContentType: ContentType.JSON,
 			contentType: ContentType.JSON,
-			uri: "${adoResult.url}",
-			body: body,
+			uri: "${adoResult.url}/attachments",
+			body: sbody,
 			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.1-preview.1', ]
+			query: ['api-version': '5.1-preview.1' ]
 			)
-
+		return result
 	}
 	
+	def sendManualResultAttachment(adoResult, binary) {
+		ByteArrayInputStream bs = binary.data
+		String octet = bs.bytes.encodeBase64()
+		def body = [stream: octet, attachmentType: 'GeneralAttachment', comment: binary.comment, fileName: binary.filename]
+		String sbody = new JsonBuilder(body).toPrettyString()
+		def result = genericRestClient.rateLimitPost(
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri: "${adoResult.url}/attachments",
+			body: sbody,
+			//headers: [Accept: 'application/json'],
+			query: ['api-version': '5.1-preview.1', iterationId: 1, actionPath: binary.actionPath ]
+			)
+		return result
+	}
+
 	def getResultAttachments(adoResult) {
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
@@ -576,7 +653,7 @@ public class TestManagementService {
 	boolean resultAttachmentExists(binary, cacheItem) {
 		if (!cacheItem) return false
 		String fileName = "${binary.filename}"
-		def b = cacheItem.value { a ->
+		def b = cacheItem.value.find { a ->
 			String fn = "${a.fileName}"
 			fileName == fn
 		}
@@ -587,9 +664,9 @@ public class TestManagementService {
 	public def ensureTestRunForTestSuite(String collection, String project, def suiteData, boolean refresh = false) {
 		String pid = getSuiteId(suiteData)
 		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
-		if (runData) {
-			setRunToInprogress(runData)
-		}
+//		if (runData) {
+//			setRunToInprogress(runData)
+//		}
 		if (refresh && runData) {
 			deleteRun(runData)
 			//setRunToInprogress(runData)
@@ -597,16 +674,29 @@ public class TestManagementService {
 			//cacheManagementService.deleteFromCache(pid, ICacheManagementService.RUN_DATA)
 		}
 
+		def adoSuiteData 
 		if (runData == null) {
-			def adoSuiteData = cacheManagementService.getFromCache(pid, ICacheManagementService.SUITE_DATA)
+			adoSuiteData = cacheManagementService.getFromCache(pid, ICacheManagementService.SUITE_DATA)
 			if (!adoSuiteData) return [:]
-			runData = createRunDataForTestSuite(collection, project, adoSuiteData)
+			runData = createRunDataForTestSuite(collection, project, adoSuiteData, null, false)
 			if (runData != null) {
 				cacheManagementService.saveToCache(runData, pid, ICacheManagementService.RUN_DATA)
 			}
 		}
+		if (runData == null) return [:]
 		def resultTestCaseMap = getResultsTestcaseMap("${runData.url}/results")
 		return resultTestCaseMap
+	}
+	
+	def refreshResultCaseForTestSuite(String collection, String project, def suiteData) {
+		String pid = getSuiteId(suiteData)
+		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
+		if (runData) {
+			def resultTestCaseMap = getResultsTestcaseMap("${runData.url}/results")
+			return resultTestCaseMap
+	
+		}
+		return null
 	}
 	
 	def setRunToInprogress(runData) {
@@ -696,6 +786,8 @@ public class TestManagementService {
 		if (parentData != null && suiteUrl) {
 			def tcIds = []
 			int tot = children.size()
+			def tcMap = getSuiteTestCaseMap(suiteUrl)
+			if (tcMap.size() == tot) return
 			children.each { child ->
 				String cname = "${child.name()}"
 				
@@ -709,7 +801,6 @@ public class TestManagementService {
 					tcIds.add(id)
 				}
 			}
-			def tcMap = getSuiteTestCaseMap(suiteUrl)
 			tcIds = this.filterIds(tcIds, tcMap)
 			if (tcIds.size() > 0) {
 				def oIds = []
@@ -744,20 +835,24 @@ public class TestManagementService {
 		return att != null
 	}
 	
-	private def getResultsTestcaseMap(def url) {
+	private def getResultsTestcaseMap(def url, boolean justKeys = false) {
 		int skip = 0
 		def tcMap = [:]
 		while (true) {
 			def result = genericRestClient.get(
 				uri: url,
 				contentType: ContentType.JSON,
-				query: [destroy: true, 'api-version': '5.0',detailsToInclude:'WorkItems', '$top': 200, '$skip': skip]
+				query: [destroy: true, 'api-version': '5.0',detailsToInclude:'Iterations,WorkItems', '$top': 200, '$skip': skip]
 				)
 			skip += 200
 			if (!result || !result.'value' || result.'value'.size() == 0) break
 			result.'value'.each { aresult ->
 				if (aresult.testCase) {
-					tcMap["${aresult.testCase.id}"] = aresult
+					if (justKeys) {
+						tcMap["${aresult.testCase.id}"] = "${aresult.testCase.id}"
+					} else {
+						tcMap["${aresult.testCase.id}"] = aresult
+					}
 				}
 			}
 		}
@@ -789,23 +884,21 @@ public class TestManagementService {
 		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
 		if (runData) {
 			def resultMap = getResultsMap("${runData.url}/results")
-			keyMap.each { rid, cacheKeys ->
+			keyMap.each { rid, cKey ->
 				String rKey = "${rid}"
 				def result = resultMap[rKey]
 				if (result) {
-					cacheKeys.each { cKey ->
-						cacheManagementService.saveToCache(result, cKey, ICacheManagementService.RESULT_DATA)
-					}
+					cacheManagementService.saveToCache(result, cKey, ICacheManagementService.RESULT_DATA)
 				}
 			}
 		}
 		
 	}
-	private def getResult(String uri) {
+	public def getResult(String uri) {
 		def result = genericRestClient.get(
 			uri: uri,
 			contentType: ContentType.JSON,
-			query: [destroy: true, 'api-version': '5.0',detailsToInclude:'WorkItems']
+			query: [destroy: true, 'api-version': '5.0',detailsToInclude:'workItems,subResults']
 			)
 		return result
 	}
@@ -1033,9 +1126,17 @@ public class TestManagementService {
 		return result
 	}
 	
-	def createRunDataForTestSuite(String collection, String project, def suiteData, String buildId = null, boolean automated = false ) {
+	def createRunDataForTestSuite(String collection, String project, def suiteData, String buildId = null, boolean automated = false) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		def testpoints = getTestPointsForSuite(collection, project, suiteData)
+		def testpointsMap = getTestPointsForSuiteMap(collection, project, suiteData)
+		def testpoints = []
+		testpointsMap.each { tid, point ->
+			if (!hasManualRun(suiteData, "${tid}")) {
+				testpoints.add(point.id)
+			}
+				
+		}
+		if (testpoints.size() == 0) return null
 		def data = [name: "${suiteData.name} Run", plan: [id: suiteData.plan.id], pointIds:testpoints, automated: automated]
 		if (buildId && buildId.size() > 0) {
 			data.build = [id: buildId]
@@ -1098,8 +1199,8 @@ public class TestManagementService {
 		return retVal
 	}
 	
-	private def getTestPointsForSuite(String collection, String project, def suite) {
-		def retVal = []
+	private def getTestPointsForSuiteMap(String collection, String project, def suite) {
+		def retVal = [:]
 		String url = "${suite.url}/points"
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
@@ -1107,9 +1208,9 @@ public class TestManagementService {
 			uri: url,
 			query: ['api-version':'5.0-preview.2']
 			)
-			
+		if (!result) return [:]
 		result.'value'.each { point ->
-			retVal.add(point.id)
+			retVal[point.testCase.id] = point
 			
 		}
 		return retVal

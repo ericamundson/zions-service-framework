@@ -210,6 +210,7 @@ class CustomAttributesHandler extends QmBaseAttributeHandler {
 	}
 
 	private String getKey(def wi) {
+		if (!wi) return null
 		String eId = "${wi.fields['Custom.ExternalID']}"
 		String wiType = "${wi.fields.'System.WorkItemType'}"
 		String key = "${eId.substring(4)}-${wiType}"

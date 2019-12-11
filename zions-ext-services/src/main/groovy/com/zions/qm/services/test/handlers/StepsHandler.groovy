@@ -304,13 +304,32 @@ class StepsHandler extends QmBaseAttributeHandler {
 		imgs.each { img ->
 			String url = img.@src
 			def oData = clmTestManagementService.getContent(url)
-			def file = cacheManagementService.saveBinaryAsAttachment(oData.data, oData.filename, sId)
+			String fName = cleanTextContent(oData.filename)
+			def file = cacheManagementService.saveBinaryAsAttachment(oData.data, fName, sId)
 			def attData = attachmentService.sendAttachment([file:file])
 			img.@src = attData.url
 		}
 		String outHtml = XmlUtil.asString(htmlData)
 		return outHtml
 	}
+	
+	private static String cleanTextContent(String text)
+	{
+		if (text.lastIndexOf('\\') > -1) {
+			text = text.substring(text.lastIndexOf('\\')+1)
+		}
+		// strips off all non-ASCII characters
+		text = text.replaceAll("[^\\x00-\\x7F]", "");
+ 
+		// erases all the ASCII control characters
+		text = text.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+		 
+		// removes non-printable characters from Unicode
+		text = text.replaceAll("\\p{C}", "");
+ 
+		return text.trim();
+	}
+
 
 
 }

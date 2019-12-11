@@ -126,7 +126,8 @@
 	<wit source="executionresult"  target="Result" translateUnmappedFields="false">
 		<field source="resultIdHandler" target="id"/>
 		<field source="resultStartDateHandler" target="startedDate"/>
-		<field source="resultTestcaseReferenceHandler" target="testCaseReferenceId"/>
+		<field source="resultCompletedDateHandler" target="completedDate"/>
+		<field source="resultTestCaseReferenceHandler" target="testCaseReferenceId"/>
 		<field source="blankHandler" target="priority">
 			<defaultvalue target="2"/>		
 		</field>
@@ -154,8 +155,10 @@
 			<value source="com.ibm.rqm.execution.common.state.failed" target="Completed"/> 
 			<value source="com.ibm.rqm.execution.common.state.error" target="Completed"/> 
 			<value source="com.ibm.rqm.execution.common.state.blocked" target="Completed"/>	-->	
-		</field>  
-		<!-- <field source="resultOwnerHandler" target="owner"/> -->
+		</field> 
+		
+		<field source="actionResultHandler" target="iterationDetails"/>
+		<field source="resultOwnerHandler" target="owner"/>
 		
 	</wit>
 	<wit source="configuration"  target="Configuration" translateUnmappedFields="false">
