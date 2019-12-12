@@ -123,7 +123,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		//log.debug("GenericRestClient::get -- URI after checkBlankCollection: "+oinput.uri)
 		HttpResponseDecorator resp = delegate.get(oinput)
 		if (resp.data == null) {
-			log.warn("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
+			//log.warn("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
 		}
 
 		if (withHeader) {
@@ -236,11 +236,33 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		} catch (e) {}
 		HttpResponseDecorator resp = delegate.patch(oinput)
 		
-		if (resp.status != 200) {
+		int status = resp.status
+		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
+		if ((status == 200 || status == 201) && dHeader != null) {
+			log.error "GenericRestClient::patch --  ADO started throttling. Delaying 1 minutes."
+			System.sleep(10000)			
+			throw new ThrottleException("Throttled: http ${status}")
+		}
+		if (status != 200) {
 			log.error("GenericRestClient::patch -- Warning. Status: "+resp.getStatusLine());
+			if (status == 408) {
+				System.sleep(20000)
+				throw new ThrottleException("Throttled: http ${status}")
+				
+			}
 			if (sinput) {
 				String json = new JsonBuilder(sinput).toPrettyString()
 				log.error("Input data: ${json}");
+				if (status == 503) {
+					log.error("Starting retry!")
+					System.sleep(30000)
+					resp = delegate.post(sinput)
+					if (resp.status != 200) {
+						log.error("Failed retry!")
+					} else {
+						log.error("Finished retry!")
+					}
+				}
 			}
 			return null;
 		}
@@ -287,12 +309,24 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		} catch (e) {}
 		HttpResponseDecorator resp = delegate.post(oinput)
 		//JsonOutput t
-		if (resp.status != 200 && resp.status!= 201) {
+		
+		int status = resp.status
+		if (status != 200 && status != 201) {
 			
 			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
 			if (sinput) {
 				String json = new JsonBuilder(sinput).toPrettyString()
 				log.error("Input data: ${json}");
+				if (resp.status == 503) {
+					log.error("Starting retry!")
+					System.sleep(30000)
+					resp = delegate.post(sinput)
+					if (resp.status != 200 && resp.status!= 201) {
+						log.error("Failed retry!")
+					} else {
+						log.error("Finished retry!")
+					}
+				}
 			}
 		}
 		if (withHeader) {
@@ -350,12 +384,17 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			delegate.encoder."${requestContentType}" = encoderFunction
 			
 		}
-		Map retryCopy = deepcopy(oinput)
+		Map retryCopy
+		try {
+			retryCopy = deepcopy(oinput)
+		} catch (e) {}
 		HttpResponseDecorator resp
 		try {
 			resp = delegate.post(oinput)
 		} catch (e) {
-			throw e
+			log.error "GenericRestClient::rateLimitPost --  Response error: ${e.message}"
+			System.sleep(10000)			
+			throw new ThrottleException("Response issue: http ${e.message}")
 		} finally {
 			if (encoderFunction || currentEncoder) {
 				String requestContentType = 'application/json'
@@ -371,17 +410,38 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
 		int status = resp.status
 		if ((status == 200 || status == 201) && dHeader != null) {
-			log.error "GenericRestClient::rateLimitPost --  ADO started throttling. Delaying 5 minutes."
-			System.sleep(300000)			
+			log.error "GenericRestClient::rateLimitPost --  ADO started throttling. Delaying 1 minutes."
+			System.sleep(10000)			
+			if (encoderFunction || currentEncoder) {
+				String requestContentType = 'application/json'
+				if (oinput.requestContentType) {
+					requestContentType  = "${oinput.requestContentType}"
+				}
+				delegate.encoder."${requestContentType}" = currentEncoder
+				
+			}
+			throw new ThrottleException("Throttled: http ${status}")
 		}
 		//JsonOutput t
-		if (resp.status != 200 && resp.status != 201) {
+		if (status != 200 && status != 201) {
 			log.error("GenericRestClient::rateLimitPost -- Failed. Status: "+resp.getStatusLine());
 			if (retryCopy) {
 				String json = new JsonBuilder(retryCopy).toPrettyString()
 				log.error("Input data: ${json}");
 			}
-			System.sleep(300000)
+			if (status == 408 || status == 503) {
+				System.sleep(20000)
+				if (encoderFunction || currentEncoder) {
+					String requestContentType = 'application/json'
+					if (oinput.requestContentType) {
+						requestContentType  = "${oinput.requestContentType}"
+					}
+					delegate.encoder."${requestContentType}" = currentEncoder
+					
+				}
+				throw new ThrottleException("Throttled: http ${resp.status}")
+				
+			}
 			try {
 				resp = delegate.post(retryCopy)
 			} catch (e) {

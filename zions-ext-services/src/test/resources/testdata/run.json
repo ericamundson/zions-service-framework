@@ -1,0 +1,25 @@
+{
+	"id": 1083682,
+	"name": "Release Three Test Plan - Deposits - Gamma 1 Run",
+	"url": "https://dev.azure.com/ZionsETO/BaNCS/_apis/test/Runs/1083682",
+	"isAutomated": false,
+	"owner": {
+		"displayName": null,
+		"id": "00000000-0000-0000-0000-000000000000"
+	},
+	"project": {
+		"id": "f5b48f08-0085-4814-875a-a3dbc9736967",
+		"name": "BaNCS"
+	},
+	"state": "Unspecified",
+	"plan": {
+		"id": "566709"
+	},
+	"totalTests": 0,
+	"incompleteTests": 0,
+	"notApplicableTests": 0,
+	"passedTests": 0,
+	"unanalyzedTests": 0,
+	"revision": 2,
+	"webAccessUrl": "https://dev.azure.com/ZionsETO/BaNCS/_TestManagement/Runs?runId=1083682&_a=runCharts"
+}

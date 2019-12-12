@@ -15,4 +15,8 @@ interface IAttachments {
 	 * @return [url: <store location url>]
 	 */
 	def sendAttachment(def info)
+	
+	def ensureResultAttachments(def adoresult, def binaries, String rwebId)
+	
+	def sendManualResultAttachment(adoResult, binary)
 }

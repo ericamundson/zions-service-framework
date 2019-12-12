@@ -429,7 +429,7 @@ class TranslateTestLinkToADO implements CliAction {
 							{
 								testcase = testcasea
 							}
-							Map resultMap = testManagementService.ensureTestRunForTestCase(collection, tfsProject, testplan, testcase)
+							Map resultMap = testManagementService.ensureTestRunForTestCaseAndPlan(collection, tfsProject, testplan, testcase)
 							testLinkItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
 								String rwebId = "${result.id}"
 								testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)

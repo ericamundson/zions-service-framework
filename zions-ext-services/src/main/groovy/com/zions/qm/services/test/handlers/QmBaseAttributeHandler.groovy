@@ -73,6 +73,7 @@ abstract class QmBaseAttributeHandler implements IFieldHandler {
 		return retVal;
 	}
 	
+	
 	abstract String getQmFieldName()
 	
 	abstract def formatValue(def val, def itemData)

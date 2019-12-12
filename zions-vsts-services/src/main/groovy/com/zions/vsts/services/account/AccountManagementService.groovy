@@ -17,6 +17,7 @@ class AccountManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/accounts",
 				query: ['api-version': '5.1']
 				)
+		return result
 	}
 	
 	def getAccount(String collection, String memberId) {
@@ -25,6 +26,6 @@ class AccountManagementService {
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/accounts",
 			query: ['api-version': '5.1', memberId: memberId]
 			)
-
+		return result
 	}
 }

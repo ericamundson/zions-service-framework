@@ -3,6 +3,7 @@ package com.zions.vsts.services.tfs.rest
 import static org.junit.Assert.*
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.rest.ThrottleException
 import com.zions.common.services.test.SpockLabeler
 import groovyx.net.http.ContentType
 import groovyx.net.http.HttpResponseDecorator
@@ -13,6 +14,7 @@ import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.test.context.ContextConfiguration
+import spock.lang.Ignore
 import spock.lang.Specification
 import org.springframework.spring.*
 
@@ -166,7 +168,7 @@ class GenericRestClientSpecTest extends Specification {
 		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.patch(_) >> resp
-		1* resp.getStatus() >> 400
+		1 * resp.getStatus() >> 400
 		
 		when: 'call method under test'
 		def result = genericRestClient.patch(
@@ -203,7 +205,8 @@ class GenericRestClientSpecTest extends Specification {
 		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.post(_) >> resp
-		2* resp.getStatus() >> 400
+		1* resp.getStatus() >> 400
+		1* resp.getStatus() >> 200
 		
 		when: 'call method under test'
 		def result = genericRestClient.post(
@@ -222,7 +225,7 @@ class GenericRestClientSpecTest extends Specification {
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.post(_) >> resp
 		1 * resp.getLastHeader(_) >> null
-		2 * resp.getStatus() >> 200
+		1 * resp.getStatus() >> 200
 		1 * resp.getData() >> [stuff: 'stuff']
 		
 		when: 'call method under test'
@@ -246,19 +249,24 @@ class GenericRestClientSpecTest extends Specification {
 		Header header = Mock(Header)
 		1 * delegate.post(_) >> resp
 		1 * resp.getLastHeader(_) >> header
-		2 * resp.getStatus() >> 200
-		1 * resp.getData() >> [stuff: 'stuff']
+		1 * resp.getStatus() >> 200
+		//1 * resp.getData() >> [stuff: 'stuff']
 		
 		when: 'call method under test'
-		def result = genericRestClient.rateLimitPost(
-			contentType: ContentType.JSON,
-			uri: "http://vsts/none/_apis/wit/workitems",
-			headers: [Accept: 'application/json'],
-			query: ['api-version': '4.1', '\$expand': 'all' ]
-			) 
-			
+		boolean flag = false
+		try {
+			def result = genericRestClient.rateLimitPost(
+				contentType: ContentType.JSON,
+				uri: "http://vsts/none/_apis/wit/workitems",
+				headers: [Accept: 'application/json'],
+				query: ['api-version': '4.1', '\$expand': 'all' ]
+				) 
+		} catch (ThrottleException t) {
+			flag = true
+		}
+		
 		then: "result.stuff == 'stuff'"
-		"${result.stuff}" == 'stuff'
+		flag
 	}
 	
 	public void 'call rateLimitPost bad status'() {
@@ -271,7 +279,7 @@ class GenericRestClientSpecTest extends Specification {
 		StatusLine line = Mock(StatusLine)
 		2 * delegate.post(_) >> resp
 		1 * resp.getLastHeader(_) >> header
-		3 * resp.getStatus() >> 429
+		1 * resp.getStatus() >> 429
 		1 * resp.getStatusLine() >> line
 		1 * line.toString() >> "Batch Failed"
 		1 * resp.getData() >> [stuff: 'stuff']

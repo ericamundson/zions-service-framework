@@ -19,10 +19,13 @@ class ResultOwnerHandler extends QmBaseAttributeHandler {
 		def outVal = null
 		def itemData = data.itemData
 		String url = "${itemData.owner.@'ns7:resource'}"
-		def owner = clmTestManagementService.getTestItem(url)
+		def owner =  null
+		try {
+			owner = clmTestManagementService.getTestItem(url)
+		} catch (e) {}
 		if (owner != null ) {
 			String email = "${owner.emailAddress.text()}"
-			outVal = email.toLowerCase()
+			outVal = [ uniqueName: email ]
 		}
 		return outVal;
 	}

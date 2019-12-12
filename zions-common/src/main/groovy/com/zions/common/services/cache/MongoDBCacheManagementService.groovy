@@ -71,7 +71,12 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	}
 
 	@Override
-	public Object saveToCache(Object data, String id, String type) {
+	public Object saveToCache(Object data, String id, String type, Closure c = null) {
+		if (c) {
+			def currentItem = getFromCache(id, type)
+			c(currentItem)
+		}
+
 		CacheItem ci = repository.findByProjectAndModuleAndKeyAndType(dbProject, cacheModule, id, type)
 		String json = new JsonBuilder(data).toPrettyString()
 		if (ci == null) {
@@ -184,8 +189,27 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	}
 
 	@Override
-	public void deleteByType(String type) {
+	public void deleteByType(String type, Closure c = null) {
+		if (c) {
+			int page = 0
+			while (true) {
+				def wis = getAllOfType('wiData', page)
+				if (wis.size() == 0) break
+				wis.each { key, wi ->
+					c(key, wi)
+				}
+				page++
+			}
+		}
 		Long i = repository.deleteCacheItemByProjectAndModuleAndType(dbProject, cacheModule, type)
+		
+	}
+
+	@Override
+	public void deleteByIdAndByType(String id, String type) {
+		try {
+			Long i = repository.deleteCacheItemByProjectAndModuleAndKeyAndType(dbProject, cacheModule, id, type)
+		} catch (e) {}
 		
 	}
 

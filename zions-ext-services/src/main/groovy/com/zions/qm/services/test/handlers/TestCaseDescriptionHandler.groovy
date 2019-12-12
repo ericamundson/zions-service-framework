@@ -36,7 +36,7 @@ class TestCaseDescriptionHandler extends QmBaseAttributeHandler {
 		if (tcDescription != null && tcDescription.length()> 0) {
 			bHtml.div(style:'border:2px solid black') {
 				div {
-					bold("RTC Test Case Description:")
+					bold("RQM Test Case Description:")
 				}
 				
 				div { mkp.yieldUnescaped tcDescription }
@@ -45,7 +45,7 @@ class TestCaseDescriptionHandler extends QmBaseAttributeHandler {
 		if (tsDescription != null && tsDescription.length() > 0) {
 			bHtml.div(style:'border:2px solid black') {
 				div {
-					bold("RTC Test Suite Description:")
+					bold("RQM Test Script Description:")
 				}
 				
 				div { mkp.yieldUnescaped tsDescription }

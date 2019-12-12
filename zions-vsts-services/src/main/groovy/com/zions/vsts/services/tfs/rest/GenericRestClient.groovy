@@ -58,8 +58,20 @@ class GenericRestClient extends AGenericRestClient {
 		delegate.handler.failure = { it }
 		setProxy()
 		setCredentials(user, token);
+		//setupTimeouts()
 		checked = true;
+		
 		//retryConnect()
+	}
+	
+	def setupTimeouts() {
+		int TENSECONDS  = 10*1000;
+		int THIRTYSECONDS = 30*1000;
+		
+		
+		//HTTPBuilder has no direct methods to add timeouts.  We have to add them to the HttpParams of the underlying HttpClient
+		delegate.getClient().getParams().setParameter("http.connection.timeout", new Integer(TENSECONDS))
+		delegate.getClient().getParams().setParameter("http.socket.timeout", new Integer(THIRTYSECONDS))
 	}
 	
 	private retryConnect() {

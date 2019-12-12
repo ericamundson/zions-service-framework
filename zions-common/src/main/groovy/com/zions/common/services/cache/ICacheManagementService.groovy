@@ -43,6 +43,16 @@ interface ICacheManagementService {
 	def saveToCache(def data, String id, String type);
 	
 	/**
+	 * Save data to be cached
+	 *
+	 * @param data - cache data
+	 * @param id - types identifier
+	 * @param type - type of cache object
+	 * @return state of cache
+	 */
+	def saveToCache(def data, String id, String type, Closure c);
+
+	/**
 	 * Cache a binary to be used for attachments
 	 * 
 	 * @param result - binary being cached
@@ -68,6 +78,19 @@ interface ICacheManagementService {
 	 * @param type - name
 	 */
 	void deleteByType(String type);
+	
+	/**
+	 * Delete a work items of some type.
+	 * @param type - name
+	 */
+	void deleteByType(String type, Closure c);
+
+	/**
+	 * Delete a work items of some type.
+	 * @param type - name
+	 */
+	void deleteByIdAndByType(String id, String type);
+	
 	/**
 	 * Check to see if element exists
 	 */

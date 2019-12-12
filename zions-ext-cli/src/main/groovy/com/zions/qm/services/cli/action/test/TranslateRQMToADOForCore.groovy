@@ -21,6 +21,7 @@ import com.zions.qm.services.test.ClmTestManagementService
 import com.zions.qm.services.metadata.QmMetadataManagementService
 import com.zions.qm.services.test.TestMappingManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
+import com.zions.vsts.services.notification.NotificationService
 import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.FileManagementService
@@ -222,6 +223,9 @@ class TranslateRQMToADOForCore implements CliAction {
 	@Autowired
 	IRestartManagementService restartManagementService
 
+	@Autowired
+	NotificationService notificationService
+
 	@Value('${process.full.plan:false}')
 	String processFullPlan
 
@@ -233,6 +237,28 @@ class TranslateRQMToADOForCore implements CliAction {
 
 	@Value('${parent.plan.name:}')
 	String parentPlanName
+
+	@Value('${rm.area.path:}')
+	String rmAreaPath
+
+	@Value('${rm.module:RM}')
+	String rmModule
+
+	@Value('${plan.id:}')
+	String planId
+
+	@Value('${plan.checkpoint:false}')
+	boolean planCheckpoint
+
+	@Value('${execution.checkpoint:false}')
+	boolean executionCheckpoint
+
+	@Value('${link.checkpoint:false}')
+	boolean linkCheckpoint
+
+	@Value('${update.cache.only:false}')
+	boolean updateCacheOnly
+
 
 	@Autowired
 	ICacheManagementService cacheManagementService
@@ -282,6 +308,17 @@ class TranslateRQMToADOForCore implements CliAction {
 			cacheManagementService.clear()
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
+		if (includes['refreshRM']) {
+			//log.info("Syncing mongodb to ADO reality and removing duplicates from ado\r\nCache will be deleted now...")
+			cacheManagementService.cacheModule = 'RM'
+			String query = "SELECT [System.Id],[System.WorkItemType],[System.Title],[Microsoft.VSTS.Common.Priority],[System.AssignedTo],[System.AreaPath] FROM WorkItems WHERE [System.TeamProject] = '${tfsProject}' AND [System.AreaPath] UNDER '${rmAreaPath}' AND [Custom.ExternalID] contains 'DNG-'"
+			//		testManagementService.cleanupTestItems('', project, areaPath, wiql)
+			workManagementService.refreshCacheByQuery(collection, tfsProject, query)
+		}
+		if (includes['cleanPrevious'] != null) {
+			//workManagementService.refreshCacheByTeamArea(collection, tfsProject, areaPath)
+			cacheManagementService.deleteByType('wiPrevious')
+		}
 		if (includes['refresh'] != null) {
 			workManagementService.refreshCacheByTeamArea(collection, tfsProject, areaPath)
 		}
@@ -289,13 +326,18 @@ class TranslateRQMToADOForCore implements CliAction {
 			clmTestManagementService.flushQueries(project)
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)
 		}
+		if (includes['clearsuitecheckpoints']) {
+			cacheManagementService.deleteByType('psuiteCheckpoint')
+		}
 		def mappingData = testMappingManagementService.mappingData
 		def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 		def parentPlan = testManagementService.getPlan(collection, tfsProject, parentPlanName)
+		String phases = ""
 		if (includes['phases'] != null) {
 			restartManagementService.processPhases { phase, items ->
 				//translate test platform configurations.
 				if (phase == 'configurations') {
+					phases += 'configuration,'
 					items.each { testItem ->
 						def configuration = clmTestManagementService.getTestItem(testItem.id.text())
 						//int id = Integer.parseInt(configuration.webId.text())
@@ -307,13 +349,14 @@ class TranslateRQMToADOForCore implements CliAction {
 				}
 				//translate test case work data.
 				if (phase == 'testcase') {
+					phases += 'testcase,'
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					def idKeyMap = [:]
 					clmTestItemManagementService.resetNewId()
 					items.each { testItem ->
 						def testcase = clmTestManagementService.getTestItem(testItem.id.text())
 						int aid = Integer.parseInt(testcase.webId.text())
-						clmTestItemManagementService.cacheLinkChanges(testcase)
+						//clmTestItemManagementService.cacheLinkChanges(testcase)
 						String idtype = "${aid}-testcase"
 						if (!idKeyMap.containsKey(idtype)) {
 							clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
@@ -331,59 +374,200 @@ class TranslateRQMToADOForCore implements CliAction {
 					//translate work data.
 				}
 				if (phase == 'plans') {
+					if (!planCheckpoint) {
+						cacheManagementService.deleteByType('psuiteCheckpoint')
+					}
+					phases += 'plans'
+					int suiteCount = 1
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					def idKeyMap = [:]
 					clmTestItemManagementService.resetNewId()
 					items.each { testItem ->
 						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
 						int id = Integer.parseInt(testplan.webId.text())
-						clmTestItemManagementService.cacheLinkChanges(testplan)
-						def psuite = null
-						clmTestItemManagementService.processForChanges(tfsProject, testplan, memberMap, null, null, parentPlan) { String key, def val ->
-							if (key.endsWith('WI')) {
-								clManager.add("${id}-${key}", val)
-							} else {
-								psuite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
+						String suiteKey = "${id}-Test Suite"
+						def padoSuite = cacheManagementService.getFromCache(suiteKey, ICacheManagementService.SUITE_DATA)
+						if (!padoSuite && updateCacheOnly) return
+							def suiteCheckpoint = cacheManagementService.getFromCache(suiteKey, 'psuiteCheckpoint')
+						if (!suiteCheckpoint) {
+							//							if (padoSuite) {
+							//								cacheManagementService.deleteByIdAndByType(suiteKey, ICacheManagementService.SUITE_DATA)
+							//								cacheManagementService.deleteByIdAndByType(suiteKey, ICacheManagementService.WI_DATA)
+							//							}
+							//clmTestItemManagementService.cacheLinkChanges(testplan)
+							def psuite = null
+							clmTestItemManagementService.processForChanges(tfsProject, testplan, memberMap, null, null, parentPlan) { String key, def val ->
+								if (key.endsWith('WI')) {
+									clManager.add("${id}-${key}", val)
+								} else {
+									psuite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${id}-${key}")
+								}
+							}
+							testplan.testsuite.each { testsuiteRef ->
+								def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+								//println new XmlUtil().serialize(testsuite)
+								//clmTestItemManagementService.cacheLinkChanges(testsuite)
+								//String tsXml = XmlUtil.serialize(testsuite)
+								int tsid = Integer.parseInt(testsuite.webId.text())
+								String isuiteKey = "${tsid}-Test Suite"
+								def adoSuite = cacheManagementService.getFromCache(isuiteKey, ICacheManagementService.SUITE_DATA)
+								if (!adoSuite && updateCacheOnly) return
+
+									def isuiteCheckpoint = cacheManagementService.getFromCache(suiteKey, 'psuiteCheckpoint')
+								if (!isuiteCheckpoint) {
+									//									if (adoSuite) {
+									//										cacheManagementService.deleteByIdAndByType(isuiteKey, ICacheManagementService.SUITE_DATA)
+									//										cacheManagementService.deleteByIdAndByType(isuiteKey, ICacheManagementService.WI_DATA)
+									//
+									//									}
+									String idtype = "${tsid}-testsuite"
+									if (!idKeyMap.containsKey(idtype)) {
+										clmTestItemManagementService.processForChanges(tfsProject, testsuite, memberMap, null, null, psuite) { key, val ->
+											if (key.endsWith(' WI')) {
+												clManager.add("${tsid}-${key}", val)
+											} else {
+												String idkey = "${tsid}-${key}"
+												def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${idkey}")
+											}
+										}
+										idKeyMap[idtype] = idtype
+									}
+
+									if (processFullPlan == 'true') {
+										if (testsuite.suiteelements) {
+											testsuite.suiteelements.suiteelement.each { suiteelement ->
+												if (suiteelement.testcase) {
+													def testcaseRef = suiteelement.testcase
+													def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+													if (testcase) {
+														//clmTestItemManagementService.cacheLinkChanges(testcase)
+														int aid = Integer.parseInt(testcase.webId.text())
+														//generate test data
+														idtype = "${aid}-testcase"
+														if (!idKeyMap.containsKey(idtype)) {
+															def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+																String tid = "${aid}-${key}".toString()
+																def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
+																val = fileManagementService.ensureAttachments(collection, tfsProject, tid, files, val)
+																if (val) {
+																	clManager.add("${aid}-${key}", val)
+																}
+															}
+															idKeyMap[idtype] = idtype
+														}
+													} else {
+														String url = "${testcaseRef.@href}"
+														TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
+													}
+												}
+											}
+										}
+									}
+									clManager.flush()
+
+								}
+								String title = "${testsuite.title.text()}"
+								TranslateRQMToADOForCore.log.info("(${suiteCount}) Plan with title: ${title}, complete")
+								suiteCount++
+								cacheManagementService.saveToCache([id: isuiteKey, title: title], isuiteKey, 'psuiteCheckpoint')
+
+							}
+							if (processFullPlan == 'true') {
+								testplan.testcase.each { testcaseRef ->
+									def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+									if (testcase) {
+										int aid = Integer.parseInt(testcase.webId.text())
+										//clmTestItemManagementService.cacheLinkChanges(testcase)
+										//generate test data
+										String idtype = "${aid}-testcase"
+										if (!idKeyMap.containsKey(idtype)) {
+											def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
+												String tid = "${aid}-${key}".toString()
+												def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
+												val = fileManagementService.ensureAttachments(collection, tfsProject, tid, files, val)
+												if (val) {
+													clManager.add("${aid}-${key}", val)
+												}
+											}
+											idKeyMap[idtype] = idtype
+										}
+									} else {
+										String url = "${testcaseRef.@href}"
+										TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
+									}
+								}
+								clManager.flush();
 							}
 						}
+						String title = "${testplan.title.text()}"
+						TranslateRQMToADOForCore.log.info("(${suiteCount}) Plan with title: ${title}, complete")
+						suiteCount++
+						cacheManagementService.saveToCache([id: suiteKey, title: title], suiteKey, 'psuiteCheckpoint')
 
-						testplan.testsuite.each { testsuiteRef ->
-							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
-							//println new XmlUtil().serialize(testsuite)
-							clmTestItemManagementService.cacheLinkChanges(testsuite)
-							//String tsXml = XmlUtil.serialize(testsuite)
-							int tsid = Integer.parseInt(testsuite.webId.text())
-							String idtype = "${tsid}-testsuite"
+						//cacheManagementService.deleteByType('wiPrevious')
+					}
+				}
+				//		workManagementService.testBatchWICreate(collection, tfsProject)
+				//apply work links
+				if (phase == 'links') {
+					if (!linkCheckpoint) {
+						cacheManagementService.deleteByType('lsuiteCheckpoint')
+					}
+					phases += 'links'
+					int suiteCount = 1
+
+					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+					def idKeyMap = [:]
+					items.each { testItem ->
+						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
+						//String itemXml = XmlUtil.serialize(testplan)
+						String webId = "${testplan.webId.text()}"
+						String suiteKey = "${webId}-Test Suite"
+						String idtype = "${webId}-testplan"
+						def suiteCheckpoint = cacheManagementService.getFromCache(suiteKey, 'lsuiteCheckpoint')
+						if (suiteCheckpoint) return
+							def adoSuite = cacheManagementService.getFromCache(suiteKey, 'suiteData')
+						if (!adoSuite) return
 							if (!idKeyMap.containsKey(idtype)) {
-								clmTestItemManagementService.processForChanges(tfsProject, testsuite, memberMap, null, null, psuite) { key, val ->
-									if (key.endsWith(' WI')) {
-										clManager.add("${tsid}-${key}", val)
-									} else {
-										String idkey = "${tsid}-${key}"
-										def suite = testManagementService.sendPlanChanges(collection, tfsProject, val, "${idkey}")
-									}
+								clmTestItemManagementService.processForLinkChanges(testplan) { key, val ->
+									String tid = "${webId}-${key}".toString()
+									clManager.add(tid,val)
 								}
 								idKeyMap[idtype] = idtype
 							}
-							if (processFullPlan == 'true') {
-								if (testsuite.suiteelements) {
+						testplan.testsuite.each { testsuiteRef ->
+							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+							Set<String> tcs = []
+							String tswebId = "${testsuite.webId.text()}"
+							String isuiteKey = "${tswebId}-Test Suite"
+							idtype = "${tswebId}-testsuite"
+							def isuiteCheckpoint = cacheManagementService.getFromCache(isuiteKey, 'lsuiteCheckpoint')
+							if (isuiteCheckpoint) return
+								def iadoSuite = cacheManagementService.getFromCache(isuiteKey, 'suiteData')
+							if (!iadoSuite) return
+
+								if (!idKeyMap.containsKey(idtype)) {
+									clmTestItemManagementService.processForLinkChanges(testsuite) { key, val ->
+										String tid = "${tswebId}-${key}".toString()
+										clManager.add(tid,val)
+									}
+									idKeyMap[idtype] = idtype
+								}
+							if (testsuite.suiteelements) {
+								Set<String> atcs = []
+								if (!suiteLinked(testsuite)) {
 									testsuite.suiteelements.suiteelement.each { suiteelement ->
 										if (suiteelement.testcase) {
 											def testcaseRef = suiteelement.testcase
 											def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 											if (testcase) {
-												clmTestItemManagementService.cacheLinkChanges(testcase)
-												int aid = Integer.parseInt(testcase.webId.text())
-												//generate test data
-												idtype = "${aid}-testcase"
+												atcs.add(testcase)
+												String tcwebId = "${testcase.webId.text()}"
+												idtype = "${tcwebId}-testcase"
 												if (!idKeyMap.containsKey(idtype)) {
-													def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-														String tid = "${aid}-${key}".toString()
-														def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
-														val = fileManagementService.ensureAttachments(collection, tfsProject, tid, files, val)
-														if (val) {
-															clManager.add("${aid}-${key}", val)
-														}
+													clmTestItemManagementService.processForLinkChanges(testcase) { key, val ->
+														String tid = "${tcwebId}-${key}".toString()
+														clManager.add(tid,val)
 													}
 													idKeyMap[idtype] = idtype
 												}
@@ -393,25 +577,27 @@ class TranslateRQMToADOForCore implements CliAction {
 											}
 										}
 									}
+									testManagementService.setParent(testsuite, atcs, mappingData)
 								}
 							}
+							String title = "${testsuite.title.text()}"
+							TranslateRQMToADOForCore.log.info("(${suiteCount}) Plan with title: ${title}, complete")
+							suiteCount++
+							cacheManagementService.saveToCache([id: isuiteKey, title: title], isuiteKey, 'lsuiteCheckpoint')
 						}
-						if (processFullPlan == 'true') {
+						Set<String> tcs = []
+						if (!planLinked(testplan)) {
 							testplan.testcase.each { testcaseRef ->
 								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 								if (testcase) {
-									int aid = Integer.parseInt(testcase.webId.text())
-									clmTestItemManagementService.cacheLinkChanges(testcase)
-									//generate test data
-									String idtype = "${aid}-testcase"
+									//String tcitemXml = XmlUtil.serialize(testcase)
+									String tcwebId = "${testcase.webId.text()}"
+									tcs.add(testcase)
+									idtype = "${tcwebId}-testcase"
 									if (!idKeyMap.containsKey(idtype)) {
-										def tcchanges = clmTestItemManagementService.processForChanges(tfsProject, testcase, memberMap) { key, val ->
-											String tid = "${aid}-${key}".toString()
-											def files = clmAttachmentManagementService.cacheTestCaseAttachments(testcase)
-											val = fileManagementService.ensureAttachments(collection, tfsProject, tid, files, val)
-											if (val) {
-												clManager.add("${aid}-${key}", val)
-											}
+										clmTestItemManagementService.processForLinkChanges(testcase) { key, val ->
+											String tid = "${tcwebId}-${key}".toString()
+											clManager.add(tid,val)
 										}
 										idKeyMap[idtype] = idtype
 									}
@@ -420,91 +606,24 @@ class TranslateRQMToADOForCore implements CliAction {
 									TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
 								}
 							}
+							testManagementService.setParent(testplan, tcs, mappingData)
 						}
-					}
-					clManager.flush();
-				}
-				//		workManagementService.testBatchWICreate(collection, tfsProject)
-				//apply work links
-				if (phase == 'links') {
-					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
-					def idKeyMap = [:]
-					items.each { testItem ->
-						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
-						String itemXml = XmlUtil.serialize(testplan)
-						String webId = "${testplan.webId.text()}"
-						String idtype = "${webId}-testplan"
-						if (!idKeyMap.containsKey(idtype)) {
-							clmTestItemManagementService.processForLinkChanges(testplan) { key, val ->
-								String tid = "${webId}-${key}".toString()
-								clManager.add(tid,val)
-							}
-							idKeyMap[idtype] = idtype
-						}
-						testplan.testsuite.each { testsuiteRef ->
-							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
-							def tcs = []
-							String tswebId = "${testsuite.webId.text()}"
-							idtype = "${tswebId}-testsuite"
-							if (!idKeyMap.containsKey(idtype)) {
-								clmTestItemManagementService.processForLinkChanges(testsuite) { key, val ->
-									String tid = "${tswebId}-${key}".toString()
-									clManager.add(tid,val)
-								}
-								idKeyMap[idtype] = idtype
-							}
-							if (testsuite.suiteelements) {
-								def atcs = []
-								testsuite.suiteelements.suiteelement.each { suiteelement ->
-									if (suiteelement.testcase) {
-										def testcaseRef = suiteelement.testcase
-										def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-										if (testcase) {
-											atcs.add(testcase)
-											String tcwebId = "${testcase.webId.text()}"
-											idtype = "${tcwebId}-testcase"
-											if (!idKeyMap.containsKey(idtype)) {
-												clmTestItemManagementService.processForLinkChanges(testcase) { key, val ->
-													String tid = "${tcwebId}-${key}".toString()
-													clManager.add(tid,val)
-												}
-												idKeyMap[idtype] = idtype
-											}
-										} else {
-											String url = "${testcaseRef.@href}"
-											TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
-										}
-									}
-								}
-								testManagementService.setParent(testsuite, atcs, mappingData, updateLinks)
-							}
-						}
-						def tcs = []
-						testplan.testcase.each { testcaseRef ->
-							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
-							if (testcase) {
-								String tcitemXml = XmlUtil.serialize(testcase)
-								String tcwebId = "${testcase.webId.text()}"
-								tcs.add(testcase)
-								idtype = "${tcwebId}-testcase"
-								if (!idKeyMap.containsKey(idtype)) {
-									clmTestItemManagementService.processForLinkChanges(testcase) { key, val ->
-										String tid = "${tcwebId}-${key}".toString()
-										clManager.add(tid,val)
-									}
-									idKeyMap[idtype] = idtype
-								}
-							} else {
-								String url = "${testcaseRef.@href}"
-								TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
-							}
-						}
-						testManagementService.setParent(testplan, tcs, mappingData, updateLinks)
+						String title = "${testplan.title.text()}"
+						TranslateRQMToADOForCore.log.info("(${suiteCount}) Plan with title: ${title}, complete")
+						suiteCount++
+						cacheManagementService.saveToCache([id: suiteKey, title: title], suiteKey, 'lsuiteCheckpoint')
 					}
 					clManager.flush()
 				}
 
-				if (phase == 'executions') {
+				if (phase == 'executionsBySuite') {
+					if (!executionCheckpoint) {
+						cacheManagementService.deleteByType('suiteCheckpoint')
+					}
+					//					testManagementService.setupManualRuns(parentPlan)
+
+					phases += 'executions'
+					int suiteCount = 1
 					//def linkMapping = processTemplateService.getLinkMapping(mapping)
 					items.each { testItem ->
 						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
@@ -512,13 +631,199 @@ class TranslateRQMToADOForCore implements CliAction {
 						String webId = "${testplan.webId.text()}"
 						String parentHref = "${testItem.id.text()}"
 						String planIdentifier = "${testplan.identifier.text()}"
-						def resultMap = testManagementService.ensureTestRunForTestSuite(collection, tfsProject, testplan, refreshRun)
 						testplan.testsuite.each { testsuiteRef ->
 							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
 							if (testsuite.suiteelements) {
 								String suitewebId = "${testsuite.webId.text()}"
 								def atcs = []
-								def subResultMap = testManagementService.ensureTestRunForTestSuite(collection, tfsProject, testsuite, refreshRun)
+								def ids = [:]
+								def allIds = [:]
+
+								def exData = null
+								Set<String> points = []
+								String suiteKey = "${suitewebId}-Test Suite"
+								def suiteCheckpoint = cacheManagementService.getFromCache(suiteKey, 'suiteCheckpoint')
+								if (!suiteCheckpoint) {
+									def adoSuite = cacheManagementService.getFromCache(suiteKey, ICacheManagementService.SUITE_DATA)
+									if (!adoSuite) return
+										def subResultMap = testManagementService.ensureTestRunForTestSuite(collection, tfsProject, testsuite, refreshRun)
+									testsuite.suiteelements.suiteelement.each { suiteelement ->
+										if (suiteelement.testcase) {
+											def testcaseRef = suiteelement.testcase
+											def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+											if (testcase) {
+												String tcwebId = "${testcase.webId.text()}"
+												String tcIdentifier = "${testcase.identifier.text()}"
+												//def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
+												def executionresults = clmTestManagementService.getExecutionResultViaHrefAndSuiteId(tcwebId, suitewebId, project)
+												if (executionresults.size() > 0) {
+													def topexecutionresults = getLastResult(executionresults)
+													if (topexecutionresults.size() > 0) {
+														topexecutionresults.each { result ->
+															clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, subResultMap, testcase, null, exData) { key, resultData ->
+																def cacheResult = clmTestItemManagementService.getResultData(subResultMap, testcase)
+																if (cacheResult) {
+																	String rwebId = "${result.webId.text()}-${key}"
+																	ids["${cacheResult.id}"] = rwebId
+																	allIds["${cacheResult.id}"] = rwebId
+																	exData = resultData
+																	def binaries = clmAttachmentManagementService.cacheTestItemAttachmentsAsBinary(result)
+																	if (binaries.size() > 0) {
+																		TranslateRQMToADOForCore.log.info("${rwebId} has attachments")
+																		testManagementService.ensureAttachments(cacheResult, binaries, rwebId)
+																	}
+																}
+															}
+														}
+													}
+												} else {
+													String rqmId = "${testcase.webId.text()}-Test Case"
+													def adoTestCase = cacheManagementService.getFromCache(rqmId, ICacheManagementService.WI_DATA)
+													if (adoTestCase) {
+														String tpId = testManagementService.getTestPoint(adoTestCase, subResultMap)
+														if (tpId) {
+															points.add(tpId)
+														}
+													}
+												}
+											} else {
+												String url = "${testcaseRef.@href}"
+												TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
+											}
+										}
+										if (exData && exData.body.size() >= 50) {
+											testManagementService.sendResultChangesMulti(collection, tfsProject, exData, ids)
+											ids = [:]
+											exData = null
+										}
+										if (points.size() == 5) {
+											testManagementService.resetTestPointsToActive(testplan, points)
+											points = []
+										}
+
+									}
+								}
+
+								if (exData && exData.body.size() > 0) {
+									testManagementService.sendResultChangesMulti(collection, tfsProject, exData, ids)
+								}
+								if (points.size() > 0) {
+									testManagementService.resetTestPointsToActive(testplan, points)
+									//points = []
+								}
+								String title = "${testsuite.title.text()}"
+								TranslateRQMToADOForCore.log.info("(${suiteCount}) Suite with title: ${title}, complete")
+								suiteCount++
+								testManagementService.cacheSuiteResults(testsuite, allIds)
+								cacheManagementService.saveToCache([id: suiteKey, title: title], suiteKey, 'suiteCheckpoint')
+
+
+							}
+
+
+						}
+						def ids = [:]
+						def allIds = [:]
+						def exData = null
+						Set<String> points = []
+						String suiteKey = "${webId}-Test Suite"
+						def suiteCheckpoint = cacheManagementService.getFromCache(suiteKey, 'suiteCheckpoint')
+						if (!suiteCheckpoint) {
+							def adoSuite = cacheManagementService.getFromCache(suiteKey, ICacheManagementService.SUITE_DATA)
+							if (!adoSuite) return
+								def resultMap = testManagementService.ensureTestRunForTestSuite(collection, tfsProject, testplan, refreshRun)
+							testplan.testcase.each { testcaseRef ->
+								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+								if (testcase) {
+									//String tcitemXml = XmlUtil.serialize(testcase)
+									String tcwebId = "${testcase.webId.text()}"
+									String tcIdentifier = "${testcase.identifier.text()}"
+									//def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
+									def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
+									if (executionresults.size() > 0) {
+										def topexecutionresults = getLastResult(executionresults)
+										if (topexecutionresults.size() > 0) {
+											topexecutionresults.each { result ->
+												clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase, null, exData) { key, resultData ->
+													def cacheResult = clmTestItemManagementService.getResultData(resultMap, testcase)
+													if (cacheResult) {
+														String rwebId = "${result.webId.text()}-${key}"
+														ids["${cacheResult.id}"] = rwebId
+														allIds["${cacheResult.id}"] = rwebId
+														exData = resultData
+														def binaries = clmAttachmentManagementService.cacheTestItemAttachmentsAsBinary(result)
+														if (binaries.size() > 0) {
+															TranslateRQMToADOForCore.log.info("${rwebId} has attachments")
+															testManagementService.ensureAttachments(cacheResult, binaries, rwebId)
+														}
+													}
+												}
+											}
+										}
+									} else {
+										String rqmId = "${testcase.webId.text()}-Test Case"
+										def adoTestCase = cacheManagementService.getFromCache(rqmId, ICacheManagementService.WI_DATA)
+										if (adoTestCase) {
+											String tpId = testManagementService.getTestPoint(adoTestCase, resultMap)
+											if (tpId) {
+												points.add(tpId)
+											}
+										}
+									}
+
+								} else {
+									String url = "${testcaseRef.@href}"
+									TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
+								}
+								if (exData && exData.body.size() >= 50) {
+									testManagementService.sendResultChangesMulti(collection, tfsProject, exData, ids)
+									ids = [:]
+									exData = null
+								}
+								if (points.size() == 5) {
+									testManagementService.resetTestPointsToActive(testplan, points)
+									points = []
+								}
+							}
+						}
+
+						if (exData && exData.body.size() > 0) {
+							testManagementService.sendResultChangesMulti(collection, tfsProject, exData, ids)
+						}
+						if (points.size()>0) {
+							testManagementService.resetTestPointsToActive(testplan, points)
+							//points = []
+						}
+						testManagementService.cacheSuiteResults(testplan, allIds)
+						String title = "${testplan.title.text()}"
+						TranslateRQMToADOForCore.log.info("(${suiteCount}) Plan with title: ${title}, complete")
+						suiteCount++
+						cacheManagementService.saveToCache([id: suiteKey, title: title], suiteKey, 'suiteCheckpoint')
+					}
+				}
+
+				if (phase == 'refreshBySuite') {
+					//					testManagementService.setupManualRuns(parentPlan)
+
+					phases += 'executions'
+					int suiteCount = 1
+					//def linkMapping = processTemplateService.getLinkMapping(mapping)
+					items.each { testItem ->
+						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
+						//String itemXml = XmlUtil.serialize(testplan)
+						String webId = "${testplan.webId.text()}"
+						String parentHref = "${testItem.id.text()}"
+						String planIdentifier = "${testplan.identifier.text()}"
+						testplan.testsuite.each { testsuiteRef ->
+							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+							if (testsuite.suiteelements) {
+								String suitewebId = "${testsuite.webId.text()}"
+								def allIds = [:]
+
+								String suiteKey = "${suitewebId}-Test Suite"
+								def adoSuite = cacheManagementService.getFromCache(suiteKey, ICacheManagementService.SUITE_DATA)
+								if (!adoSuite) return
+								def subResultMap = testManagementService.ensureTestRunForTestSuite(collection, tfsProject, testsuite)
 								testsuite.suiteelements.suiteelement.each { suiteelement ->
 									if (suiteelement.testcase) {
 										def testcaseRef = suiteelement.testcase
@@ -527,20 +832,17 @@ class TranslateRQMToADOForCore implements CliAction {
 											String tcwebId = "${testcase.webId.text()}"
 											String tcIdentifier = "${testcase.identifier.text()}"
 											//def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
-											def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
-											executionresults = getLastResult(executionresults)
+											def executionresults = clmTestManagementService.getExecutionResultViaHrefAndSuiteId(tcwebId, suitewebId, project)
 											if (executionresults.size() > 0) {
-												executionresults.each { result ->
-													clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, subResultMap, testcase) { key, resultData ->
-														String rwebId = "${result.webId.text()}-${key}"
-														testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+												def topexecutionresults = getLastResult(executionresults)
+												if (topexecutionresults.size() > 0) {
+													topexecutionresults.each { result ->
+														def cacheResult = clmTestItemManagementService.getResultData(subResultMap, testcase)
+														if (cacheResult) {
+															String rwebId = "${result.webId.text()}-Result"
+															cacheManagementService.saveToCache(cacheResult, rwebId, 'resultData')
+														}
 													}
-												}
-											} else {
-												String rqmId = "${testcase.webId.text()}-Test Case"
-												def adoTestCase = cacheManagementService.getFromCache(rqmId, ICacheManagementService.WI_DATA)
-												if (adoTestCase) {
-													testManagementService.resetToActive(adoTestCase, subResultMap)
 												}
 											}
 										} else {
@@ -548,9 +850,22 @@ class TranslateRQMToADOForCore implements CliAction {
 											TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
 										}
 									}
+
 								}
+
+
+								//testManagementService.cacheSuiteResults(testsuite, allIds)
+
+
 							}
+
+
 						}
+						def allIds = [:]
+						String suiteKey = "${webId}-Test Suite"
+						def adoSuite = cacheManagementService.getFromCache(suiteKey, ICacheManagementService.SUITE_DATA)
+						if (!adoSuite) return
+							def resultMap = testManagementService.ensureTestRunForTestSuite(collection, tfsProject, testplan)
 						testplan.testcase.each { testcaseRef ->
 							def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
 							if (testcase) {
@@ -559,19 +874,16 @@ class TranslateRQMToADOForCore implements CliAction {
 								String tcIdentifier = "${testcase.identifier.text()}"
 								//def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
 								def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
-								executionresults = getLastResult(executionresults)
 								if (executionresults.size() > 0) {
-									executionresults.each { result ->
-										clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, resultMap, testcase) { key, resultData ->
-											String rwebId = "${result.webId.text()}-${key}"
-											testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+									def topexecutionresults = getLastResult(executionresults)
+									if (topexecutionresults.size() > 0) {
+										topexecutionresults.each { result ->
+											def cacheResult = clmTestItemManagementService.getResultData(resultMap, testcase)
+											if (cacheResult) {
+												String rwebId = "${result.webId.text()}-Result"
+												cacheManagementService.saveToCache(cacheResult, rwebId, 'resultData')
+											}
 										}
-									}
-								} else {
-									String rqmId = "${testcase.webId.text()}-Test Case"
-									def adoTestCase = cacheManagementService.getFromCache(rqmId, ICacheManagementService.WI_DATA)
-									if (adoTestCase) {
-										testManagementService.resetToActive(adoTestCase, resultMap)
 									}
 								}
 
@@ -580,9 +892,124 @@ class TranslateRQMToADOForCore implements CliAction {
 								TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
 							}
 						}
+						//testManagementService.cacheSuiteResults(testplan, allIds)
+
 					}
 				}
 
+				if (phase == 'executionsByTestcase') {
+					if (!executionCheckpoint) {
+						cacheManagementService.deleteByType('suiteCheckpoint')
+					}
+					phases += 'executions'
+					int suiteCount = 1
+					def manualRuns = testManagementService.setupManualRuns(parentPlan)
+					//def linkMapping = processTemplateService.getLinkMapping(mapping)
+					items.each { testItem ->
+						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
+						//String itemXml = XmlUtil.serialize(testplan)
+						String webId = "${testplan.webId.text()}"
+						String parentHref = "${testItem.id.text()}"
+						String planIdentifier = "${testplan.identifier.text()}"
+						testplan.testsuite.each { testsuiteRef ->
+							def testsuite = clmTestManagementService.getTestItem("${testsuiteRef.@href}")
+							if (testsuite.suiteelements) {
+								String suitewebId = "${testsuite.webId.text()}"
+								String suiteKey = "${suitewebId}-Test Suite"
+								testManagementService.cleanSuiteRun(collection, tfsProject, testsuite)
+								def suiteCheckpoint = cacheManagementService.getFromCache(suiteKey, 'suiteCheckpoint')
+								if (!suiteCheckpoint) {
+									def adoSuite = cacheManagementService.getFromCache(suiteKey, ICacheManagementService.SUITE_DATA)
+									if (!adoSuite) return
+										def tcMap = testManagementService.getSuiteTestPointMap(adoSuite)
+									testsuite.suiteelements.suiteelement.each { suiteelement ->
+										if (suiteelement.testcase) {
+											def testcaseRef = suiteelement.testcase
+											def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+											if (testcase) {
+												String tcwebId = "${testcase.webId.text()}"
+												String tcIdentifier = "${testcase.identifier.text()}"
+												//def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
+												def executionresults = clmTestManagementService.getExecutionResultViaHrefAndSuiteId(tcwebId, suitewebId, project)
+												executionresults = getLastResult(executionresults)
+												if (executionresults.size() > 0) {
+													executionresults.each { result ->
+														String exeWebId = "${result.webId.text()}-Run"
+														Map rresultMap = testManagementService.ensureTestRunForTestCaseAndSuite(collection, tfsProject, testsuite, testcase, refreshRun, tcMap, exeWebId, manualRuns)
+														clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, rresultMap, testcase, null) { key, resultData ->
+															String rwebId = "${result.webId.text()}-${key}"
+															def adoresult = testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+															def binaries = clmAttachmentManagementService.cacheTestItemAttachmentsAsBinary(result)
+															if (binaries.size() > 0) {
+																TranslateRQMToADOForCore.log.info("${rwebId} has attachments")
+																testManagementService.ensureAttachments(adoresult, binaries, rwebId)
+															}
+														}
+													}
+												}
+											} else {
+												String url = "${testcaseRef.@href}"
+												TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
+											}
+										}
+									}
+								}
+
+								String title = "${testsuite.title.text()}"
+								TranslateRQMToADOForCore.log.info("(${suiteCount}) Suite with title: ${title}, complete")
+								suiteCount++
+								cacheManagementService.saveToCache([id: suiteKey, title: title], suiteKey, 'suiteCheckpoint')
+
+
+							}
+
+
+						}
+						Set<String> points = []
+						String suiteKey = "${webId}-Test Suite"
+						def suiteCheckpoint = cacheManagementService.getFromCache(suiteKey, 'suiteCheckpoint')
+						if (!suiteCheckpoint) {
+							def adoSuite = cacheManagementService.getFromCache(suiteKey, ICacheManagementService.SUITE_DATA)
+							def tcMap = testManagementService.getSuiteTestPointMap(adoSuite)
+							def resultMap = testManagementService.cleanSuiteRun(collection, tfsProject, testplan)
+							testplan.testcase.each { testcaseRef ->
+								def testcase = clmTestManagementService.getTestItem("${testcaseRef.@href}")
+								if (testcase) {
+									//String tcitemXml = XmlUtil.serialize(testcase)
+									String tcwebId = "${testcase.webId.text()}"
+									String tcIdentifier = "${testcase.identifier.text()}"
+									//def resultMap = testManagementService.ensureTestRun(collection, tfsProject, testplan, testcase)
+									def executionresults = clmTestManagementService.getExecutionResultViaHref(tcwebId, webId, project)
+									executionresults = getLastResult(executionresults)
+									if (executionresults.size() > 0) {
+										executionresults.each { result ->
+											String exeWebId = "${result.webId.text()}-Run"
+											Map rresultMap = testManagementService.ensureTestRunForTestCaseAndSuite(collection, tfsProject, testplan, testcase, refreshRun, tcMap, exeWebId, manualRuns)
+											clmTestItemManagementService.processForChanges(tfsProject, result, memberMap, rresultMap, testcase, null) { key, resultData ->
+												String rwebId = "${result.webId.text()}-${key}"
+												def adoresult = testManagementService.sendResultChanges(collection, tfsProject, resultData, rwebId)
+												def binaries = clmAttachmentManagementService.cacheTestItemAttachmentsAsBinary(result)
+												if (binaries.size() > 0) {
+													TranslateRQMToADOForCore.log.info("${rwebId} has attachments")
+													testManagementService.ensureAttachments(adoresult, binaries, rwebId)
+												}
+											}
+										}
+									}
+
+								} else {
+									String url = "${testcaseRef.@href}"
+									TranslateRQMToADOForCore.log.error("Failed to access test case via url:  ${url}")
+								}
+							}
+						}
+
+						String title = "${testplan.title.text()}"
+						TranslateRQMToADOForCore.log.info("(${suiteCount}) Plan with title: ${title}, complete")
+						suiteCount++
+						cacheManagementService.saveToCache([id: suiteKey, title: title], suiteKey, 'suiteCheckpoint')
+					}
+				}
 
 				if (phase == 'qmAttachments') {
 					//def linkMapping = processTemplateService.getLinkMapping(mapping)
@@ -625,12 +1052,45 @@ class TranslateRQMToADOForCore implements CliAction {
 						}
 					}
 					clManager.flush()
+
 				}
 			}
 		}
+		//notificationService.sendActionCompleteNotification('translateRQMToAdoForCore', phases)
 		//extract & apply attachments.
 
 		//ccmWorkManagementService.rtcRepositoryClient.shutdownPlatform()
+	}
+
+	boolean planLinked(def plan) {
+		String id = "${plan.webId.text()}-Test Suite"
+		def adoSuite = cacheManagementService.getFromCache(id, 'suiteData')
+		if (!adoSuite) return false
+
+		def adoTCMap = testManagementService.getSuiteTestCaseMap(adoSuite.url)
+		int tcSize = 0
+		if (plan.testcase) {
+			tcSize = plan.testcase.size()
+		}
+		return tcSize == adoTCMap.size()
+	}
+
+	boolean suiteLinked(def suite) {
+		String id = "${suite.webId.text()}-Test Suite"
+		def adoSuite = cacheManagementService.getFromCache(id, 'suiteData')
+		if (!adoSuite) return false
+
+		def adoTCMap = testManagementService.getSuiteTestCaseMap(adoSuite.url)
+		def tcList = []
+
+		suite.suiteelements.suiteelement.each { suiteelement ->
+			if (suiteelement.testcase) {
+				tcList.add(suiteelement.testcase)
+			}
+		}
+
+
+		return tcList.size() == adoTCMap.size()
 	}
 
 	def getLastResult(executionresults) {
@@ -649,6 +1109,22 @@ class TranslateRQMToADOForCore implements CliAction {
 			rs.add(ro)
 		} else if (executionresults.size() == 1){
 			rs.add(executionresults.get(0))
+		}
+		return rs
+	}
+
+
+	def getRemainderResults(executionresults) {
+		def rs = []
+		def l = getLastResult(executionresults)
+		def lr = l[0]
+		if (executionresults.size() > 1) {
+			def ro = null
+			String lrWebId = "${lr.webId.text()}"
+			rs = executionresults.findAll { r ->
+				String dWebId = "${r.webId.text()}"
+				dWebId != lrWebId
+			}
 		}
 		return rs
 	}
