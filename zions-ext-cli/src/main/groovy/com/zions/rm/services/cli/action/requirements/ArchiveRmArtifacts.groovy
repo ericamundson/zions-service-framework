@@ -78,21 +78,27 @@ class ArchiveRmArtifacts implements CliAction {
 		if (includes['phases'] != null) {
 			log.info("Processing artifacts")
 			int phaseCount = 0
-			String lastArtifactType = ''
+			String lastArtifactType
+			String curArtifactType
 			restartManagementService.processPhases { phase, items ->	
-				if (phase == 'archive') {
+				if (phase == 'requirements') {
 //					log.debug("Getting content of ${items.size()} items")
 					items.each { rmItem ->
 						//get item from DNG
 						ClmArtifact artifact = getArtifactFromSource(rmItem)
 						//make sure it came back correctly
 						if (artifact) {
-							if (!lastArtifactType.equals(artifact.getArtifactType())) {
-								lastArtifactType = artifact.getArtifactType()
+							curArtifactType = "${artifact.artifactType}"
+						//	log.debug("LastArtifactType: $lastArtifactType and this artifact: $curArtifactType")
+							if (!lastArtifactType.equals(curArtifactType)) {
+								log.info("New artifact type: ${curArtifactType}")
 								//close old excel document - just put this in the open call I think
-								//excelManagementService.CloseExcelFile()
-								//create new excel document
-								excelManagementService.CreateExcelFile(filePath,lastArtifactType)
+//								if(lastArtifactType) {
+//								excelManagementService.CloseExcelFile()
+//								}
+								//create new document
+								excelManagementService.CreateExcelFile(filePath,curArtifactType)
+								lastArtifactType = curArtifactType
 							}
 							insertArtifactIntoExcel(artifact)
 						} else {
@@ -150,8 +156,8 @@ class ArchiveRmArtifacts implements CliAction {
 	def insertArtifactIntoExcel(ClmArtifact artifact) {
 		//each attribute must be inserted into the workbook without making it too messy
 		//perhaps ExcelManager can add columns to current row based on insertion by header
-		log.debug("artifact made it to insert method")
-		excelManagementService.InsertNewRow(['ID': "${artifact.ID}", 'Artifact Type': "${artifact.ArtifactType}"])
+		//log.debug("artifact made it to insert method")
+		excelManagementService.InsertNewRow(['ID': "${artifact.ID}", 'Artifact Type': "${artifact.artifactType}"])
 		//create new row
 		//foreach attribute in artifact {
 		//  insert into current row: (attribute, attributeType as header)

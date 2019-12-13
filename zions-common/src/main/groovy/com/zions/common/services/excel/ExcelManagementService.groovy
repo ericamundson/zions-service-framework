@@ -20,7 +20,7 @@ class ExcelManagementService {
 	Row row
 	int rowNum
 	Map headers
-	File outputFile
+	String outputFileName
 	
 	
 	public ExcelManagementService() {
@@ -38,7 +38,8 @@ class ExcelManagementService {
 	def CreateExcelFile(def dir, def filename) {
 		//in case other file is open
 		CloseExcelFile()
-		outputFile = new File(dir, "${filename}.xlsx")
+		
+		outputFileName = "${dir}\\${filename}.xlsx"
 		workbook = new SXSSFWorkbook(-1)
 		sheet = workbook.createSheet()
 		rowNum = 0
@@ -49,23 +50,26 @@ class ExcelManagementService {
 	 * Writes out the excel file in memory
 	 */
 	def CloseExcelFile() {
-		if (outputFile)
-			log.debug("Saving file to ${outputFile}")
+		if (outputFileName != null)
+			log.debug("Saving file to ${outputFileName}")
 			try {
+				File outputFile = new File(outputFileName)
 				outputFile.withOutputStream { os -> workbook.write(os) }
 			}
 			catch (Exception e) {
-				log.error("Error when saving Excel file to ${outputFile}")
+				log.error("Error when saving Excel file to ${outputFileName}")
 			}
+			if (workbook) {
 			workbook.dispose()
+			}
 		}
 //	
 //	def InsertIntoCurrentRow(def value, int col) {
 //		row.createCell(col).setCellValue(value)
 //	}
-	
+
 	def InsertIntoCurrentRow(def val, String colname) {
-		int col = headers(colname)
+		def col = headers[colname]
 		if (!col) {
 			col = AddColumn(colname)
 		}

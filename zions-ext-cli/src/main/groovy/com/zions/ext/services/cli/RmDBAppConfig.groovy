@@ -26,7 +26,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("rmdb")
-@ComponentScan(["com.zions.rm.services","com.zions.vsts.services","com.zions.ext.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.cacheaspect", "com.zions.common.services.db"])
+@ComponentScan(["com.zions.rm.services","com.zions.vsts.services","com.zions.ext.services", "com.zions.common.services.restart", "com.zions.common.services.excel","com.zions.common.services.cache.db", "com.zions.common.services.cacheaspect", "com.zions.common.services.db"])
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 public class RmDBAppConfig {
 	@Autowired
