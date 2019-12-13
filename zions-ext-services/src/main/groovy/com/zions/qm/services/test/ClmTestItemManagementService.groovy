@@ -163,10 +163,13 @@ public class ClmTestItemManagementService {
 	 * @param qmItemData - CLM RQM element data
 	 * @param closure - callback for processing submission to ADO.
 	 */
-	void processForLinkChanges(def qmItemData, Closure closure) {
+	void processForLinkChanges(def qmItemData, String prefix = null, Closure closure) {
 		String iType = "${qmItemData.name()}"
 		String oType = wiNameMap[iType]
 		String sid = "${qmItemData.webId.text()}-${oType}"
+		if (prefix) {
+			sid = "${qmItemData.webId.text()}-${prefix} ${oType}"
+		}
 		String tss = "${qmItemData.updated.text()}"
 		def cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
 		if (!cacheWI) return
@@ -222,7 +225,7 @@ public class ClmTestItemManagementService {
 	 * @param memberMap
 	 * @return
 	 */
-	void processForChanges(String project, def qmItemData, def memberMap, def resultMap = null, def testCase = null, def parent = null, def exData = null, Closure closure) {
+	void processForChanges(String project, def qmItemData, def memberMap, def resultMap = null, def testCase = null, def parent = null, def exData = null, String itype = null, Closure closure) {
 		def maps = getTestMaps(qmItemData)
 		def outItems = [:]
 		maps.each { map ->
@@ -234,7 +237,7 @@ public class ClmTestItemManagementService {
 				item = generateConfigurationData(qmItemData, map, project, memberMap)
 
 			} else {
-				item = generateItemData(qmItemData, map, project, memberMap, parent)
+				item = generateItemData(qmItemData, map, project, memberMap, parent, itype)
 			}
 			String key = "${map.target}"
 			if (item) {
@@ -364,8 +367,11 @@ public class ClmTestItemManagementService {
 	}
 
 	
-	private def generateItemData(def qmItemData, def map, String project, def memberMap, def parent = null) {
+	private def generateItemData(def qmItemData, def map, String project, def memberMap, def parent = null, String prefix = null) {
 		String type = map.target
+		if (prefix) {
+			type = "${prefix} ${type}"
+		}
 		def etype = URLEncoder.encode(type, 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [:]
@@ -374,7 +380,8 @@ public class ClmTestItemManagementService {
 		def prevWI = null
 		if (type == 'Test Case' || type.endsWith(' WI')) {
 			if (type.endsWith(' WI')) {
-				String atype = "${map.target}".substring(0, type.length()-3)
+				String mTarget = "${map.target}"
+				String atype = mTarget.substring(0, mTarget.length()-3)
 				etype = URLEncoder.encode(atype, 'utf-8').replace('+', '%20')
 			}
 			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.WI_DATA)
@@ -400,7 +407,7 @@ public class ClmTestItemManagementService {
 				def cid = cacheWI.id
 				wiData = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/plans/${cid}", query:['api-version':'5.0-preview.2'], body: [:]]
 			}
-		} else if (type == 'Test Suite'){
+		} else if (type == 'Test Suite' || type == 'Inner Test Suite'){
 			cacheWI = cacheManagementService.getFromCache(id, ICacheManagementService.SUITE_DATA)
 			if (!cacheWI && updateCacheOnly) return null
 			if (parent != null) {

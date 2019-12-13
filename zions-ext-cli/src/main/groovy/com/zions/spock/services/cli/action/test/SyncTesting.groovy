@@ -283,7 +283,7 @@ class SyncTesting implements CliAction {
 		s.queryString = query
 		s.name = "${planName}-${mainTag} Suite"
 		s['iteration'] = project
-		suite.body = new JsonBuilder(s).toPrettyString()
+		suite.body = s
 		String id = "${planName}-${mainTag} Suite".bytes.encodeBase64()
 		def suiteData = testManagementService.sendPlanChanges('', project, suite, id)
 		return suiteData
