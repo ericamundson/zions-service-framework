@@ -3,6 +3,7 @@ package com.zions.vsts.services.tfs.rest
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.rest.ThrottleException
 import groovy.util.logging.Slf4j
+import org.apache.http.NoHttpResponseException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -66,13 +67,29 @@ class MultiUserGenericRestClient implements IGenericRestClient {
 
 	@Override
 	public Object get(Map input) {
-		return getClient().get(input)
+		def dInput = deepcopy(input)
+		def retVal
+		try {
+			retVal = getClient().get(input)
+		} catch (ThrottleException e) {
+			log.info("Current user throttled, moving to (${tfsUsers[currentClient]})")
+			retVal = get(dInput);
+		}
+		return retVal
 	}
 
 	@Override
 	public Object put(Map input) {
 		
-		return getClient().put(input)
+		def dInput = deepcopy(input)
+		def retVal
+		try {
+			retVal = getClient().put(input)
+		} catch (ThrottleException e) {
+			log.info("Current user throttled, moving to (${tfsUsers[currentClient]})")
+			retVal = put(dInput);
+		}
+		return retVal
 	}
 
 	@Override
@@ -127,12 +144,12 @@ class MultiUserGenericRestClient implements IGenericRestClient {
 	}
 	
 	def deepcopy(orig) {
-		def bos = new ByteArrayOutputStream()
-		def oos = new ObjectOutputStream(bos)
-		oos.writeObject(orig); oos.flush()
-		def bin = new ByteArrayInputStream(bos.toByteArray())
-		def ois = new ObjectInputStream(bin)
-		return ois.readObject()
+//		def bos = new ByteArrayOutputStream()
+//		def oos = new ObjectOutputStream(bos)
+//		oos.writeObject(orig); oos.flush()
+//		def bin = new ByteArrayInputStream(bos.toByteArray())
+//		def ois = new ObjectInputStream(bin)
+		return orig.clone()
    }
 
 

@@ -436,6 +436,19 @@ public class TestManagementService {
 		return outSuite
 	}
 	
+	def getSuiteMap(def plan) {
+		def suiteMap = [:]
+		def result = genericRestClient.get(
+			uri: "${plan.url}/suites",
+			contentType: ContentType.JSON,
+			query: ['api-version': '5.0']
+			)
+		result.'value'.each { suite ->
+			suiteMap["${suite.name}"] = suite
+		}
+		return suiteMap
+	}
+
 	String getTestCaseId(def testcaseData) {
 		String className = testcaseData.getClass().simpleName
 		if (className == 'TestCase') {
@@ -661,8 +674,12 @@ public class TestManagementService {
 		return false
 	}
 
-	public def ensureTestRunForTestSuite(String collection, String project, def suiteData, boolean refresh = false) {
+	public def ensureTestRunForTestSuite(String collection, String project, def suiteData, boolean refresh = false, String ipid = null) {
+		
 		String pid = getSuiteId(suiteData)
+		if (ipid) {
+			pid = ipid
+		}
 		def runData = cacheManagementService.getFromCache(pid, ICacheManagementService.RUN_DATA)
 //		if (runData) {
 //			setRunToInprogress(runData)
@@ -769,17 +786,20 @@ public class TestManagementService {
 	}
 
 	
-	public def setParent(def parent, def children, def map) {
+	public def setParent(def parent, def children, def map, String iptname = null) {
 		String pname = "${parent.name()}"
-		String ptname = getTargetName(pname, map)
+		String ptname = iptname
+		if (!iptname) {
+			ptname = getTargetName(pname, map)
+		}
 		String pid = "${parent.webId.text()}-${ptname}"
 		String type = ICacheManagementService.PLAN_DATA
-		if (ptname == 'Test Suite') type = ICacheManagementService.SUITE_DATA
+		if (ptname == 'Test Suite' || ptname == 'Inner Test Suite') type = ICacheManagementService.SUITE_DATA
 		def parentData = cacheManagementService.getFromCache(pid, type)
 		String suiteUrl = null
 		if ("${ptname}" == 'Test Plan' && parentData) {
 			suiteUrl = "${parentData.rootSuite.url}"
-		} else if ("${ptname}" == 'Test Suite' && parentData) {
+		} else if (("${ptname}" == 'Test Suite' || "${ptname}" == 'Inner Test Suite') && parentData) {
 			suiteUrl = "${parentData.url}"
 		}
 

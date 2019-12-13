@@ -205,7 +205,7 @@ class GenericRestClientSpecTest extends Specification {
 		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		1 * delegate.post(_) >> resp
-		1* resp.getStatus() >> 400
+		1* resp.getStatus() >> 413
 		1* resp.getStatus() >> 200
 		
 		when: 'call method under test'
@@ -277,12 +277,12 @@ class GenericRestClientSpecTest extends Specification {
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
 		Header header = Mock(Header)
 		StatusLine line = Mock(StatusLine)
-		2 * delegate.post(_) >> resp
+		1 * delegate.post(_) >> resp
 		1 * resp.getLastHeader(_) >> header
-		1 * resp.getStatus() >> 429
+		1 * resp.getStatus() >> 413
 		1 * resp.getStatusLine() >> line
 		1 * line.toString() >> "Batch Failed"
-		1 * resp.getData() >> [stuff: 'stuff']
+		//1 * resp.getData() >> null
 		
 		when: 'call method under test'
 		def result = genericRestClient.rateLimitPost(
@@ -292,8 +292,8 @@ class GenericRestClientSpecTest extends Specification {
 			query: ['api-version': '4.1', '\$expand': 'all' ]
 			) 
 			
-		then: "result.stuff == stuff"
-		"${result.stuff}" == 'stuff'
+		then: "result == null"
+		result == null
 	}
 }
 
