@@ -121,7 +121,7 @@ class ClmRequirementsManagementService {
 	ClmRequirementsModule getModule(String moduleUri, boolean validationOnly) {
 		boolean cacheLinks = !validationOnly
 		boolean addEmbeddedCollections = false
-		String satisfiesLink // For associated RRZ module
+		def satisfiesLinks = [] // For associated RRZ module
 		String uri = moduleUri.replace('resources/','publish/modules?resourceURI=')
 		def result = rmGenericRestClient.get(
 				uri: uri,
@@ -170,7 +170,7 @@ class ClmRequirementsManagementService {
 						}
 					}
 					if (linkType == 'Satisfies') {
-						satisfiesLink = linkURI
+						satisfiesLinks.add(linkURI)
 						return 
 					}
 				}
@@ -223,7 +223,7 @@ class ClmRequirementsManagementService {
 		
 		
 		// Instantiate and return the module
-		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, satisfiesLink, moduleAttributeMap,orderedArtifacts)
+		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, satisfiesLinks, moduleAttributeMap,orderedArtifacts)
 		if (cacheLinks) parseLinksFromArtifactNode(module, clmModule)
 		return clmModule
 

@@ -3,14 +3,14 @@ package com.zions.rm.services.requirements
 class ClmRequirementsModule  extends ClmArtifact {
 	def orderedArtifacts
 	String appendedDocumentType
-	String satisfiesLink
-	public ClmRequirementsModule(String in_title, String in_format, String in_about, String in_type, String in_satisfiesLink, def in_attributes, def in_artifacts) {
+	def satisfiesLinks = []
+	public ClmRequirementsModule(String in_title, String in_format, String in_about, String in_type, def in_satisfiesLinks, def in_attributes, def in_artifacts) {
 		super(in_title, in_format, in_about)
 		this.setBaseArtifactURI(in_about) // Base URI for module is same as about href
 		this.artifactType = in_type
 		this.attributeMap << in_attributes // Add to base Artifact attributes
 		this.orderedArtifacts = in_artifacts
-		this.satisfiesLink = in_satisfiesLink
+		this.satisfiesLinks = in_satisfiesLinks
 	}	
 	def appendModule(ClmRequirementsModule append_module) {
 		// NOTE: We increment the depth on all appended module artifacts so as to preserve outline numbering
