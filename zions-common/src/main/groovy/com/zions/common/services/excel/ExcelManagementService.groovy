@@ -9,6 +9,8 @@ import java.io.File
 
 import org.springframework.stereotype.Component
 
+import com.jayway.jsonpath.internal.function.text.Length
+
 
 @Component
 @Slf4j
@@ -18,7 +20,7 @@ class ExcelManagementService {
 	Workbook workbook
 	Sheet sheet
 	Row row
-	int rowNum
+	int rownum
 	Map headers
 	String outputFileName
 	
@@ -28,7 +30,7 @@ class ExcelManagementService {
 	}
 	
 	def OpenExcelFile(String fileName) {
-		rowNum = 0
+		rownum = 0
 	}
 	
 	/*
@@ -42,8 +44,10 @@ class ExcelManagementService {
 		outputFileName = "${dir}\\${filename}.xlsx"
 		workbook = new SXSSFWorkbook(-1)
 		sheet = workbook.createSheet()
-		rowNum = 0
+		rownum = 1
 		headers = [:]
+		//create header
+		sheet.createRow(0)
 	}
 	
 	/*
@@ -51,7 +55,7 @@ class ExcelManagementService {
 	 */
 	def CloseExcelFile() {
 		if (outputFileName != null)
-			log.debug("Saving file to ${outputFileName}")
+			log.info("Saving file to ${outputFileName}")
 			try {
 				File outputFile = new File(outputFileName)
 				outputFile.withOutputStream { os -> workbook.write(os) }
@@ -68,12 +72,12 @@ class ExcelManagementService {
 //		row.createCell(col).setCellValue(value)
 //	}
 
-	def InsertIntoCurrentRow(def val, String colname) {
-		def col = headers[colname]
-		if (!col) {
-			col = AddColumn(colname)
+	def InsertIntoCurrentRow(def val, String columnName) {
+		//log.debug("Inserting into row ${rownum}")
+		if (val.toString().length() > 32767) {
+			throw new Exception("Value of ${columnName} exceeds max length of excel cell")
 		}
-		row.createCell(col).setCellValue(val)
+		row.createCell(getColumn(columnName)).setCellValue(val)
 	}
 	
 	/*
@@ -81,26 +85,18 @@ class ExcelManagementService {
 	 * >if row 0 has been flushed, will it still write?
 	 * >I hope this map is an ok way to do this
 	 */
-	def AddColumn(String columnName) {
-		int col = headers.size() + 1
-		headers.put(columnName, col)
-		
-
-		//before trying the wild ride below, how about:
-		sheet.getRow(0).createCell(col).setCellValue(columnName)
+	def getColumn(String columnName) {
+		def col = headers[columnName]
+		if (col == null) {
+			col = headers.size()
+			headers.put(columnName, col)
+			sheet.getRow(0).createCell(col).setCellValue(columnName)
+		}
 		return col
-//		//it would seem directly adding a column that doesn't exist is a bit of a dance:
-//		Iterator<Row> iterator = sheet.iterator();
-//			while (iterator.hasNext()) {
-//				Row currentRow = iterator.next();
-//				Cell cell = currentRow.createCell(currentRow.getLastCellNum(), CellType.STRING);
-//				if(currentRow.getRowNum() == 0)
-//					cell.setCellValue("NEW-COLUMN");
-//			}
 	}
 	
 	def InsertNewRow(def values) {
-		row = sheet.createRow(rowNum++)
+		row = sheet.createRow(rownum++)
 		values.each {key, val ->
 			InsertIntoCurrentRow(val, key)
 		}

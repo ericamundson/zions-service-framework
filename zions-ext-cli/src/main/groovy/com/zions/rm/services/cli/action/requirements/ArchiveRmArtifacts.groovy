@@ -142,8 +142,9 @@ class ArchiveRmArtifacts implements CliAction {
 			else if (format == 'WrapperResource'){
 				try {
 					clmRequirementsManagementService.getNonTextArtifact(artifact,false,true)
+					downloadEmbeddedFile(artifact)
 				} catch (Exception e) {
-					checkpointManagementService.addLogentry("${sid} : getNonTextArtifact generated an exception and was not added as a change")
+					checkpointManagementService.addLogentry("${sid} : getNonTextArtifact generated an exception and was not added as a change: ${e}")
 				}
 			}
 			else {
@@ -153,11 +154,39 @@ class ArchiveRmArtifacts implements CliAction {
 		}
 	}
 	
+	def downloadEmbeddedFile(ClmArtifact artifact) {
+		def fileLink = artifact.fileHref
+			if (fileLink) {
+				File targetDir = new File("${filePath}\\${artifact.getArtifactType()}")
+				if (!targetDir.exists()) {
+					targetDir.mkdir()
+				}
+				File targetFile = new File("$targetDir\\${artifact.title}")
+				def download = clmRequirementsManagementService.getContent(fileLink)
+				ByteArrayInputStream input = download['data']
+				
+				//just because it works, doesn't mean it's right, yet here we are
+				targetFile.withOutputStream { os ->
+					os.write(input.read())
+				}
+
+			}
+	}
+	
 	def insertArtifactIntoExcel(ClmArtifact artifact) {
 		//each attribute must be inserted into the workbook without making it too messy
 		//perhaps ExcelManager can add columns to current row based on insertion by header
 		//log.debug("artifact made it to insert method")
-		excelManagementService.InsertNewRow(['ID': "${artifact.ID}", 'Artifact Type': "${artifact.artifactType}"])
+		//log.debug("'ID': ${artifact.ID}, 'Artifact Type': ${artifact.artifactType}")
+		excelManagementService.InsertNewRow(['Identifier': "${artifact.ID}", 'Artifact Type': "${artifact.artifactType}"])
+		artifact.attributeMap.each { key, value ->
+			try {
+			excelManagementService.InsertIntoCurrentRow(value, key)
+			} catch (Exception e)
+			{
+				log.error("Artifact ${artifact.ID} had error writing to spreadsheet: ${e}")
+			}
+		}
 		//create new row
 		//foreach attribute in artifact {
 		//  insert into current row: (attribute, attributeType as header)
