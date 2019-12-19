@@ -57,6 +57,9 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	@Value('${output.test.data.prefix:testdata}')
 	String outputTestDataPrefix
 	
+	@Value('${retry.copy:false}')
+	boolean rcopy
+	
 	
 	@Override
 	abstract public void setCredentials(String user, String token);
@@ -124,6 +127,13 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		HttpResponseDecorator resp = delegate.get(oinput)
 		if (resp.data == null) {
 			//log.warn("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
+		}
+		int status = resp.status
+		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
+		if ((status == 200 || status == 201) && dHeader != null) {
+			log.error "GenericRestClient::get --  ADO started throttling. Delaying 10 second."
+			System.sleep(10000)
+			throw new ThrottleException("Throttled: http ${status}")
 		}
 
 		if (withHeader) {
@@ -364,7 +374,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		return input
 	}
 
-	public Object rateLimitPost(Map input, Closure encoderFunction = null) {
+	public Object rateLimitPost(Map input,  Closure encoderFunction = null) {
 		boolean withHeader = false
 		if (input.withHeader) {
 			withHeader = input.withHeader
@@ -385,9 +395,11 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			
 		}
 		Map retryCopy
-		try {
-			retryCopy = deepcopy(oinput)
-		} catch (e) {}
+		if (rcopy) {
+			try {
+				retryCopy = deepcopy(oinput)
+			} catch (e) {}
+		}
 		HttpResponseDecorator resp
 		try {
 			resp = delegate.post(oinput)
@@ -428,8 +440,19 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			if (retryCopy) {
 				String json = new JsonBuilder(retryCopy).toPrettyString()
 				log.error("Input data: ${json}");
+			} 
+			if (status == 413) {
+				if (encoderFunction || currentEncoder) {
+					String requestContentType = 'application/json'
+					if (oinput.requestContentType) {
+						requestContentType  = "${oinput.requestContentType}"
+					}
+					delegate.encoder."${requestContentType}" = currentEncoder
+					
+				}
+				return null
 			}
-			if (status == 408 || status == 503) {
+			//if (status == 408 || status == 503) {
 				System.sleep(20000)
 				if (encoderFunction || currentEncoder) {
 					String requestContentType = 'application/json'
@@ -441,21 +464,21 @@ abstract class AGenericRestClient implements IGenericRestClient {
 				}
 				throw new ThrottleException("Throttled: http ${resp.status}")
 				
-			}
-			try {
-				resp = delegate.post(retryCopy)
-			} catch (e) {
-				throw e
-			} finally {
-				if (encoderFunction || currentEncoder) {
-					String requestContentType = 'application/json'
-					if (oinput.requestContentType) {
-						requestContentType  = "${oinput.requestContentType}"
-					}
-					delegate.encoder."${requestContentType}" = currentEncoder
-					
-				}
-			}
+			//}
+//			try {
+//				resp = delegate.post(retryCopy)
+//			} catch (e) {
+//				throw e
+//			} finally {
+//				if (encoderFunction || currentEncoder) {
+//					String requestContentType = 'application/json'
+//					if (oinput.requestContentType) {
+//						requestContentType  = "${oinput.requestContentType}"
+//					}
+//					delegate.encoder."${requestContentType}" = currentEncoder
+//					
+//				}
+//			}
 		}
 		if (withHeader) {
 			def headerMap = [:]
@@ -469,11 +492,11 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	}
 	
 	def deepcopy(orig) {
-		def bos = new ByteArrayOutputStream()
-		def oos = new ObjectOutputStream(bos)
-		oos.writeObject(orig); oos.flush()
-		def bin = new ByteArrayInputStream(bos.toByteArray())
-		def ois = new ObjectInputStream(bin)
-		return ois.readObject()
+//		def bos = new ByteArrayOutputStream()
+//		def oos = new ObjectOutputStream(bos)
+//		oos.writeObject(orig); oos.flush()
+//		def bin = new ByteArrayInputStream(bos.toByteArray())
+//		def ois = new ObjectInputStream(bin)
+		return orig.clone()
    }
 }

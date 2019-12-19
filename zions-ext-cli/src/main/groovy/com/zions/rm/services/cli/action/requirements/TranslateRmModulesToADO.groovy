@@ -235,10 +235,10 @@ class TranslateRmModulesToADO implements CliAction {
 				
 				// For RSZ modules, we need to append the linked RRZ module
 				if (module.getArtifactType()== "RSZ Specification") {
-					// Get linked RRZ module URI
-					def rrz_uri = module.getSatisfiesLink()
+					// Get linked RRZ module URI(s)
+					def rrz_uris = module.getSatisfiesLinks()
 					// Get RRZ Module info
-					if (rrz_uri) {
+					rrz_uris.each { rrz_uri ->
 						def rrz_module = clmRequirementsManagementService.getModule(rrz_uri,false)
 						module.appendModule(rrz_module)
 					}

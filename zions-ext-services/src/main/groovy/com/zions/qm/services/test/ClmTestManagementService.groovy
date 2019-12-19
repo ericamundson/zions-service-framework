@@ -130,12 +130,16 @@ class ClmTestManagementService {
 	def getTestItem(String uri) {
 		uri = uri.replace(' ', '+')
 		uri = uri.replace('|', '%7C')
+		uri = uri.replace("`", '%60')
 //		uri = URLEncoder.encode(uri, 'UTF-8')
-		def result = qmGenericRestClient.get(
-			//contentType: ContentType.XML,
-			uri: uri,
-			query: [calmlinks: true],
-			headers: [Accept: 'text/xml'] );
+		def result = null
+		try {
+			result = qmGenericRestClient.get(
+				//contentType: ContentType.XML,
+				uri: uri,
+				query: [calmlinks: true],
+				headers: [Accept: 'text/xml'] );
+		} catch (e) {}
 		return result
 	
 	}
