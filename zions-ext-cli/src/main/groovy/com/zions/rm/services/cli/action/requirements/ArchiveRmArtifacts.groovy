@@ -1,7 +1,11 @@
 package com.zions.rm.services.cli.action.requirements
 
+import java.security.cert.Extension
 import java.util.Map
 
+import javax.activation.MimeType
+
+import org.apache.commons.io.IOUtils
 import org.apache.ivy.core.module.descriptor.ModuleDescriptor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -120,6 +124,26 @@ class ArchiveRmArtifacts implements CliAction {
 				phaseCount++
 			}
 			excelManagementService.CloseExcelFile()
+			printCheckpointErrorLogs()
+		}
+	}
+	
+	def printCheckpointErrorLogs() {
+		log.info("Attempting to find all error logs in current checkpoints...")
+		try {
+		def errorLogs = checkpointManagementService.getAllLogs()
+		if (errorLogs) {
+		log.info("The following items failed to upload and generated a checkpoint log:")
+		
+		errorLogs.each { logEntry ->
+			log.info(logEntry)
+		}
+		} else {
+			log.info("No errors were logged in the checkpoints!")
+		}
+		} catch (Exception e) {
+			//I'm not sure that it will fail but we're about to prod release and I just don't want to bother with it if it does
+			log.error("printCheckpointErrorLogs failed: ${e}")
 		}
 	}
 	
@@ -157,19 +181,31 @@ class ArchiveRmArtifacts implements CliAction {
 	def downloadEmbeddedFile(ClmArtifact artifact) {
 		def fileLink = artifact.fileHref
 			if (fileLink) {
+				//select directory based on artifact type
 				File targetDir = new File("${filePath}\\${artifact.getArtifactType()}")
-				if (!targetDir.exists()) {
-					targetDir.mkdir()
-				}
-				File targetFile = new File("$targetDir\\${artifact.title}")
+				targetDir.mkdir()
+
+				//download the content from clm
 				def download = clmRequirementsManagementService.getContent(fileLink)
 				ByteArrayInputStream input = download['data']
 				
-				//just because it works, doesn't mean it's right, yet here we are
-				targetFile.withOutputStream { os ->
-					os.write(input.read())
+				//set output file; a bit messy because we're hoping to get the right file extension from the headers
+				//thanks clm for not saving the original filename
+				def extension = download['headers'].getAt('Content-Type')
+				MimeType mimetype = new MimeType(extension)
+				File targetFile = new File("$targetDir\\${artifact.title}.${mimetype.subType}")
+				
+				int count = 0
+				while (targetFile.exists()) {
+					targetFile = new File("$targetDir\\${artifact.title}.${count}.${mimetype.subType}")	
+					count++
 				}
-
+				//apache ioutils help write the file
+				targetFile.withOutputStream() { output ->
+					IOUtils.copy(input, output)
+				}
+				
+				artifact.setDescription("Downloaded file to: ${targetFile.getAbsolutePath()}")
 			}
 	}
 	
@@ -180,18 +216,24 @@ class ArchiveRmArtifacts implements CliAction {
 		//log.debug("'ID': ${artifact.ID}, 'Artifact Type': ${artifact.artifactType}")
 		excelManagementService.InsertNewRow(['Identifier': "${artifact.ID}", 'Artifact Type': "${artifact.artifactType}"])
 		artifact.attributeMap.each { key, value ->
+			if (key == 'Primary Text') {
+				value = stripHTMLTags(value)
+			}
 			try {
 			excelManagementService.InsertIntoCurrentRow(value, key)
-			} catch (Exception e)
-			{
+			} catch (Exception e){
 				log.error("Artifact ${artifact.ID} had error writing to spreadsheet: ${e}")
 			}
 		}
 		//create new row
 		//foreach attribute in artifact {
 		//  insert into current row: (attribute, attributeType as header)
-		
 	}
+	
+	def stripHTMLTags(String content) {
+		def regex = /<\/?(?i:script|embed|object|frameset|frame|iframe|meta|link|style|a|img|br|p|span|div|hr|h)(.|\n)*?>/
+		return content.replaceAll(regex, '')
+	 }
 
 	public Object validate(ApplicationArguments args) throws Exception {
 		def required = ['clm.url', 'clm.user', 'clm.projectAreaUri', 'clm.pageSize']
