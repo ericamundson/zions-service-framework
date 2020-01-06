@@ -433,7 +433,7 @@ public class BuildManagementService {
 			}
 		} else {
 			log.debug("BuildManagementService::createBuild -- Using local resource file.  Build type: "+buildType.toString().toLowerCase()+", build stage: "+ buildStage)
-			bDef = getExecutionResource(buildType.toString().toLowerCase(), buildStage)
+			bDef = getResource(buildType.toString().toLowerCase(), buildStage)
 		}
 		if (bDef == null) {
 			log.debug("BuildManagementService::createBuild -- No usable build definition template was found. No build will be created.")
@@ -559,7 +559,7 @@ public class BuildManagementService {
 
 	def writeBuildDefinition(def collection, def project, def bDef) {
 		def body = new JsonBuilder(bDef).toPrettyString()
-		//log.debug("BuildManagementService::writeBuildDefinition --> ${body}")
+		log.debug("BuildManagementService::writeBuildDefinition --> ${body}")
 		
 //		File f = new File("${repo.name}-${buildStage}.json")
 //		def o = f.newDataOutputStream()
@@ -888,6 +888,9 @@ public class BuildManagementService {
 		def parts = versionTag.tokenize(".")
 		def version = parts[0] + '.' + parts[1] + '.' + parts[2]
 		log.debug("BuildManagementService::createInitialBuildTag  -- Version = ${version}")
+		// check for node build to ensure that the build number is formatted correctly
+		def buildType = BuildType.NONE
+		buildType = detectBuildType(collection, project, repo)
 		// use IFB branch name as qualifier
 		def begIdx = -1
 		if (branchName.toLowerCase().startsWith("refs/heads/ifb/")) {
@@ -897,7 +900,12 @@ public class BuildManagementService {
 		}
 		def qualifier = branchName.substring(begIdx)
 		log.debug("BuildManagementService::createInitialBuildTag  -- qualifier = ${qualifier}")
-		def nTag = version + "-" + qualifier + "-00000";
+		def bldnum = "-00000"
+		if (buildType == BuildType.NODE) {
+			log.debug("BuildManagementService::createInitialBuildTag -- Detected node build type")
+			bldnum = ".0"
+		}
+		def nTag = version + "-" + qualifier + bldnum;
 		log.debug("BuildManagementService::createInitialBuildTag  -- New Tag = ${nTag}")
 		// get the commit to which to apply the tag
 		def query = ['api-version':'5.0-preview.1']
