@@ -69,6 +69,7 @@ public class PolicyManagementService {
 		// first create the CI build policy
 		def repoData = resourceData.repository
 		//def project = repoData.project
+		//ensureGitAttributesFile(collection, repoData)
 		ensurePolicies(collection, repoData, branchName)
 	}
 
@@ -211,7 +212,7 @@ public class PolicyManagementService {
 				requestContentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_apis/policy/configurations",
 				body: body,
-				headers: [Accept: 'application/json;api-version=4.1;excludeUrls=true']
+				headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true']
 		)
 		return result
 	}
@@ -277,6 +278,13 @@ public class PolicyManagementService {
 		def res = createPolicy(collection, projectData, policy)
 		log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- result = "+res)
 	}
+
+	public def ensureGitAttributesFile(def collection, def repoData) {
+		log.debug("PolicyManagementService::ensureGitAttributesFile -- ")
+		def res = codeManagementService.ensureGitAttributes(collection, repoData.project, repoData)
+		log.debug("PolicyManagementService::ensureGitAttributesFile -- result = "+res)
+	}
+
 
 	private loadProperties(def collection, def repoData, def branchName) {
 		def branch = "${branchName}".substring("refs/heads/".length())
