@@ -405,7 +405,8 @@ class TranslateTestLinkToADO implements CliAction {
 							String tswebId = "${testsuite.id}_${testplan.name}"
 							TestCase[] testcaseList = testLinkClient.getTestCasesForTestPlanSuite(testsuite.id, testplan.id, false, 'full')
 							testLinkItemManagementService.setParent(testsuite, testcaseList, mappingData, planName) { typeData, tcIds ->
-								testManagementService.associateCaseToSuite(typeData, tcIds, updateLinks)
+								String suiteUrl = "${typeData.url}"
+								testManagementService.associateCaseToSuite(suiteUrl, tcIds)
 							}
 							def suiteData = cacheManagementService.getFromCache(tswebId, ICacheManagementService.SUITE_DATA)
 							return suiteData
