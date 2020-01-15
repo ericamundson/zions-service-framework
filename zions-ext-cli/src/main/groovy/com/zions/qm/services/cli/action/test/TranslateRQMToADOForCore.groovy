@@ -322,6 +322,9 @@ class TranslateRQMToADOForCore implements CliAction {
 		if (includes['refresh'] != null) {
 			workManagementService.refreshCacheByTeamArea(collection, tfsProject, areaPath)
 		}
+		if (includes['fixTestCaseSteps'] != null) {
+			workManagementService.fixTestCaseSteps(collection, tfsProject, areaPath)
+		}
 		if (includes['flushQueries'] != null) {
 			clmTestManagementService.flushQueries(project)
 			//def updated = processTemplateService.updateWorkitemTemplates(collection, tfsProject, mapping, testTypes)

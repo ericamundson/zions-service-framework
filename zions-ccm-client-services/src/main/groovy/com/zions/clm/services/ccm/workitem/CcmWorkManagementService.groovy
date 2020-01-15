@@ -228,10 +228,24 @@ class CcmWorkManagementService {
 						url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
 					}
 				}
-				if (linkId && !linkExists(cacheWI, linkMap.target, linkId, wiData, runId) && "${linkId}" != "${cacheWI.id}") {
+				
+				def link = getLink(cacheWI, "${linkMap.@target}", linkId, wiData, runId)
+			
+				if (linkId && !link.link && "${linkId}" != "${cacheWI.id}") {
 					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap.@target}", url: url, attributes:[comment: "${linkMap.@source}"]]]
 					wiData.body.add(change)
-				}
+				} 
+//				else if (link.link && link.index > -1) {  // Ensure parent
+//					String lRelation = link.link.rel
+//					String lTarget = "${linkMap.@target}"
+//					if (lTarget == 'System.LinkTypes.Hierarchy-Reverse' && lRelation != 'System.LinkTypes.Hierarchy-Reverse') {
+//						def rChange = [op: 'remove', path: "/relations/${link.index}"]
+//						wiData.body.add(rChange)
+//						def pChange = [op: 'add', path:'/relations/-', value: [rel:"${linkMap.@target}", url: url, attributes:[comment: "${linkMap.@source}"]]]
+//						wiData.body.add(pChange)
+//						log.info("Ensuring parent relation for work item:  ${cacheWI.id}")
+//					}
+//				}
 			}
 		}
 		return wiData
@@ -246,24 +260,40 @@ class CcmWorkManagementService {
 	 * @param linkId
 	 * @return
 	 */
-	boolean linkExists(cacheWI, targetName, linkId, wiData, String runId = null) {
+	def getLink(cacheWI, String targetName, linkId, wiData, String runId = null) {
+		if (!linkId) return [link: null, index: -1]
 		//String url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
 		String lid = "/${linkId}"
 		if (runId) {
 			//url = "${tfsUrl}/_TestManagement/Runs?_a=resultSummary&runId=${runId}&resultId=${linkId}"
 			lid = ".${linkId}"
 		}
-//		def wlink = wiData.body.find { change ->
-//			String eurl = "${change.url}"
-//			eurl.endsWith(lid)
-//		}
-//		if (wlink != null) return true
-		
-		def link = cacheWI.relations.find { rel ->
-			String eUrl = "${rel.url}"
-			eUrl.endsWith(lid)
+		def wlink = wiData.body.find { change ->
+			String eurl = ''
+			String erel = ''
+			if (change.value && !(change.value instanceof Integer) && change.value.url) {
+				eurl = "${change.value.url}"
+				erel = "${change.value.rel}"
+			}
+			eurl.endsWith(lid) && erel == targetName
 		}
-		return link != null
+		if (wlink != null) return [link: wlink, index: -1]
+		int i = 0
+		def link = null
+		def index = 0
+		//cacheWI.relations.each { rel ->
+		for (rel in cacheWI.relations) {
+			String eUrl = "${rel.url}"
+			String eRel = "${rel.rel}"
+			if (eUrl.endsWith(lid) && eRel == targetName) {
+				link = rel
+				index = i
+				break;
+			}
+			i++
+			
+		}
+		return [link: link, index: index]
 	}
 	
 	boolean canChange(prevWI, cacheWI, field, String key) {

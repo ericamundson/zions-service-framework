@@ -58,6 +58,123 @@ class WorkManagementService {
 	public WorkManagementService() {
 	}
 	
+	public def cleanBadResultLinks(String collection, String project, String teamArea) {
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${project}' AND [System.AreaPath] under '${teamArea}' AND [Custom.ExternalID] CONTAINS 'RQM-'"
+		def wis = getWorkItems(collection, project, query)
+		if (!wis || !wis.workItems) return
+		def wiList = wis.workItems
+		int j = 0
+		//def eMap = [:]
+		while (true) {
+			def ids = []
+			def keys = []
+			for (int i = 0; i < 200 && j < wiList.size(); i++) {
+				def wi = wiList[j]
+				ids.push(wi.id)
+				j++
+			}
+			def result = batchGet(collection, project, ids)
+			result.value.each { owi ->
+				String key = getKey(owi)
+				def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
+				String oid = "${owi.id}"
+				String cid = "${cacheWI.id}"
+				if (oid == cid) {
+					def changes = genRemoveBadResultLinks(collection, project, owi)
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Bug fix for WI: 932997
+	 * 
+	 * @param collection
+	 * @param project
+	 * @param teamArea
+	 * @return
+	 */
+	public def fixTestCaseSteps(String collection, String project, String teamArea) {
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${project}' AND [System.WorkItemType] IN ('Test Case') AND [System.AreaPath] UNDER '${teamArea}' AND [Custom.ExternalID] Contains 'RQM-'"
+		def wis = getWorkItems(collection, project, query)
+		if (!wis || !wis.workItems) return
+		def wiList = wis.workItems
+		int j = 0
+		//def eMap = [:]
+		def clManager = new ChangeListManager(collection, project, this);
+		while (true) {
+			def ids = []
+			for (int i = 0; i < 200 && j < wiList.size(); i++) {
+				def wi = wiList[j]
+				ids.push(wi.id)
+				j++
+			}
+			def result = batchGet(collection, project, ids)
+			result.value.each { owi ->
+				def changes = generateStepsChanges(collection, project, owi)
+				if (changes) {
+					String key = getKey(owi)
+					
+					clManager.add(key, changes)
+				}
+			}
+			if (j == wiList.size()) {
+				def lwi = wiList[j - 1]
+				String lastId =  "${lwi.id}"
+				j = 0
+				wis = getWorkItems(collection, project, query, lastId)
+				if (!wis || !wis.workItems || !wis.workItems.size() == 0) return
+				wiList = wis.workItems
+			}
+		}
+		clManager.flush()
+	}
+	
+	private def generateStepsChanges(String collection, String project, owi) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def cid = owi.id
+		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0&bypassRules=true&suppressNotifications=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+		def rev = [ op: 'test', path: '/rev', value: owi.rev]
+		wiData.body.add(rev)
+		def sChanges = stepFieldChanges(owi)
+		if (sChanges) {
+			wiData.body.add(sChanges)
+			return wiData
+		}
+		return null
+	}
+	
+	private def stepFieldChanges(owi) {
+		String steps = "${owi.fields.'Microsoft.VSTS.TCM.Steps'}}"
+//		String val = steps.replaceAll(/<Day[ ]*[0-9]+>/) { it ->
+//							String s = it
+//							s = s.replace('<', '&lt;')
+//							s = s.replace('>', '&gt;')
+//							s
+//						};
+		String val = steps.replaceAll(/&lt;Day[ ]*[0-9]+&gt;/) { it ->
+							String s = it
+							s = s.replace('&', '&amp;')
+							s
+						};
+		if (steps != val) {
+			def retVal = [op:'add', path: '/fields/Microsoft.VSTS.TCM.Steps', value: val]
+			return retVal
+		}
+		return null
+	}
+
+	private def genRemoveBadResultLinks(String collection, String project, owi) {
+		String url
+		int index = 0
+	}
+	
+	private def removeLinkChanges(def wiData, def indexs) {
+		
+	}
+	
+	
+	
 	/**
 	 * Refresh work item cache by a query.
 	 * 
