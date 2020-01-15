@@ -269,6 +269,9 @@ class ZeusBuildData implements CliAction {
 				entry(affiliate: "${affiliate}") {
 					String fName = "${change.item.path}"
 					File f = fileMap["${outRepoDir}/${fName}"]
+					if (fName.startsWith('/')) {
+						fName = fName.substring(1)
+					}
 					file ( "${fName}" )
 					size ( "${f.size()}" )
 					date ( "${change.parent.timestamp}" )
