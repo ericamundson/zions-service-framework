@@ -19,7 +19,7 @@ task jarCopy(type: Copy) {
 	}
 	into("${buildDir}/libs")
 	rename { filename ->
-		filename.replace "zions-vsts-cli.jar", 'zions-vsts-cli-${version}.jar'
+		filename.replace "zions-vsts-cli.jar", "zions-vsts-cli-${version}.jar"
 	}
 
 }
