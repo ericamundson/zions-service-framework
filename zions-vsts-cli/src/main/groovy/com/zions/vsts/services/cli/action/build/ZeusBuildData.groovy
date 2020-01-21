@@ -110,7 +110,7 @@ class ZeusBuildData implements CliAction {
 		//if (sourceBranch.contains("release/")) {
 		String releaseIdNormal = ''
 		if (!releaseId || releaseId.size() == 0) {
-			releaseId = "{{${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}}}"
+			releaseId = "${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}"
 			releaseIdNormal = "${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}"
 		}
 		File rxvDir = new File("${inRepoDir}/xl/xebialabs")
