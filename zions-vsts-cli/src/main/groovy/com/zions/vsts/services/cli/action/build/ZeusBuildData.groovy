@@ -108,8 +108,17 @@ class ZeusBuildData implements CliAction {
 		def build = buildManagementService.getExecution(collection, project, buildId)
 		String sourceBranch = "${build.sourceBranch}"
 		//if (sourceBranch.contains("release/")) {
+		String releaseIdNormal = ''
 		if (!releaseId || releaseId.size() == 0) {
 			releaseId = "{{${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}}}"
+			releaseIdNormal = "${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}"
+		}
+		File rxvDir = new File("${inRepoDir}/xl/xebialabs")
+		if (rxvDir.exists()) {
+			File releaseXLValues = new File("${inRepoDir}/xl/xebialabs/zvalues.xlvals")
+			def rxv = releaseXLValues.newDataOutputStream()
+			rxv << "release_version=${releaseIdNormal}"
+			rxv.close()
 		}
 		def builds = null
 		if (rollup) {
@@ -165,7 +174,7 @@ class ZeusBuildData implements CliAction {
 //					if (fpath.contains('.keep')) {
 //						fListWFolders.push(fpath.replace("\\", "/"))
 //					}
-					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
+					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep') && !fpath.contains('.yml')) {
 						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
