@@ -125,13 +125,6 @@ class ZeusBuildData implements CliAction {
 				releaseXLValues.delete()
 			}
 		}
-		File rxvDir = new File("${inRepoDir}/xl/xebialabs")
-		if (rxvDir.exists()) {
-			File releaseXLValues = new File("${inRepoDir}/xl/xebialabs/zvalues.xlvals")
-			def rxv = releaseXLValues.newDataOutputStream()
-			rxv << "release_version=${releaseIdNormal}"
-			rxv.close()
-		}
 		def builds = null
 		if (rollup) {
 			builds = buildManagementService.getRelatedBuilds(collection, project, build)
