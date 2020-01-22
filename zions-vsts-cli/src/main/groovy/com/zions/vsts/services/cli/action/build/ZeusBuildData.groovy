@@ -119,6 +119,11 @@ class ZeusBuildData implements CliAction {
 				rxv << "release_version=${releaseIdNormal}"
 				rxv.close()
 			}
+		} else {
+			File releaseXLValues = new File("${inRepoDir}/xl/xebialabs/zvalues.xlvals")
+			if (releaseXLValues.exists()) {
+				releaseXLValues.delete()
+			}
 		}
 		File rxvDir = new File("${inRepoDir}/xl/xebialabs")
 		if (rxvDir.exists()) {
