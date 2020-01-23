@@ -111,19 +111,6 @@ class ZeusBuildData implements CliAction {
 		String releaseIdNormal = ''
 		if ((!releaseId || releaseId.size() == 0) && sourceBranch.contains('release/')) {
 			releaseId = "${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}"
-			releaseIdNormal = "${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}"
-			File rxvDir = new File("${inRepoDir}/xl/xebialabs")
-			if (rxvDir.exists()) {
-				File releaseXLValues = new File("${inRepoDir}/xl/xebialabs/zvalues.xlvals")
-				def rxv = releaseXLValues.newDataOutputStream()
-				rxv << "release_version=${releaseIdNormal}"
-				rxv.close()
-			}
-		} else {
-			File releaseXLValues = new File("${inRepoDir}/xl/xebialabs/zvalues.xlvals")
-			if (releaseXLValues.exists()) {
-				releaseXLValues.delete()
-			}
 		}
 		def builds = null
 		if (rollup) {
