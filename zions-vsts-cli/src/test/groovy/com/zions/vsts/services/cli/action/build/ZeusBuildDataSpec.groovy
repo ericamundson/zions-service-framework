@@ -38,7 +38,7 @@ class ZeusBuildDataSpec extends Specification {
 	@Autowired
 	DataGenerationService dataGenerationService
 
-	//@Ignore
+	@Ignore
 	def 'execute standard flow'() {
 		setup: 'test data for stubs'
 		URI uri = this.getClass().getResource('/testdata').toURI()
@@ -88,6 +88,7 @@ class ZeusBuildDataSpec extends Specification {
 		success
 	}
 	
+	@Ignore
 	def 'execute rollup flow'() {
 		setup: 'test data for stubs'
 		URI uri = this.getClass().getResource('/testdata').toURI()
