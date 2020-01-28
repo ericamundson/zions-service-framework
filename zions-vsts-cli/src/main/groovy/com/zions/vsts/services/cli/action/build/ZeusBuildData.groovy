@@ -224,6 +224,7 @@ class ZeusBuildData implements CliAction {
 		if (gversions.size() == 2) {
 			o << "uat.zeusprod.version=${gversions[0]}${sep}"
 			o << "uat.zeusdev.version=${gversions[1]}${sep}"
+			o << "bl.zeusprod.version=${gversions[0]}${sep}"
 		}
 		o.close()
 		if (fListSet.isEmpty()) {
