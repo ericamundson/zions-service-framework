@@ -72,6 +72,8 @@ class ZeusBuildData implements CliAction {
 	BuildManagementService buildManagementService
 	@Autowired
 	WorkManagementService workManagementService
+	@Autowired
+	CodeManagementService codeManagementService
 
 	@Autowired
 	public ZeusBuildData() {
@@ -107,6 +109,9 @@ class ZeusBuildData implements CliAction {
 		} catch (e) {}
 		def build = buildManagementService.getExecution(collection, project, buildId)
 		String sourceBranch = "${build.sourceBranch}"
+		String repoId = "${build.repository.id}"
+		
+		def releases = getDevProdReleases(collection, project, repoId)
 		//if (sourceBranch.contains("release/")) {
 		String releaseIdNormal = ''
 		if ((!releaseId || releaseId.size() == 0) && sourceBranch.contains('release/')) {
@@ -200,6 +205,27 @@ class ZeusBuildData implements CliAction {
 		if (releaseDate) {
 			o << "release.date=${releaseDate}${sep}"
 		}
+		def gversions = []
+		if (releases.prod) {
+			String bName = "${releases.prod.name}"
+			String v = bName.substring(8)
+			gversions.add(v)
+
+		}
+		if (releases.dev) {
+			String bName = "${releases.dev.name}"
+			String v = bName.substring(8)
+			gversions.add(v)
+		}
+		o << "global.versions.list=${gversions.join(',')}${sep}"
+		if (gversions.size() == 1) {
+			o << "uat.zeusdev.version=${gversions[0]}${sep}"
+		} 
+		if (gversions.size() == 2) {
+			o << "uat.zeusprod.version=${gversions[0]}${sep}"
+			o << "uat.zeusdev.version=${gversions[1]}${sep}"
+			o << "bl.zeusprod.version=${gversions[0]}${sep}"
+		}
 		o.close()
 		if (fListSet.isEmpty()) {
 			log.error('No files set for update! No new changes.')
@@ -243,6 +269,26 @@ class ZeusBuildData implements CliAction {
 		}
 		//}
 		return null
+	}
+	
+	def getDevProdReleases(String collection, String project, String repoName) {
+		def branches = codeManagementService.getBranches(collection, project, repoName)
+		def releaseBranches = branches.'value'.findAll { branch ->
+			String name = "${branch.name}"
+			name ==~ /release\/\d{4}/
+		}
+		releaseBranches = releaseBranches.sort()
+		def rBranches = [dev: null, prod: null]
+		if (releaseBranches.size() == 1) {
+			rBranches.dev = releaseBranches[0]
+			rBranches.prod = null
+		}
+		if (releaseBranches.size() >= 2) {
+			int size = releaseBranches.size()
+			rBranches.dev = releaseBranches[size-1]
+			rBranches.prod = releaseBranches[size-2]
+		}
+		return rBranches
 	}
 
 	boolean fileExists(String inRepoDir, String iName) {
