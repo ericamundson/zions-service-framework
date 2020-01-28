@@ -1,6 +1,7 @@
 package com.zions.rm.services.requirements
 
 import com.zions.common.services.cache.ICacheManagementService
+import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.cacheaspect.CacheInterceptor
 import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.db.DatabaseQueryService
@@ -120,7 +121,7 @@ class ClmRequirementsManagementService {
 	ClmRequirementsModule getModule(String moduleUri, boolean validationOnly) {
 		boolean cacheLinks = !validationOnly
 		boolean addEmbeddedCollections = false
-		String satisfiesLink // For associated RRZ module
+		def satisfiesLinks = [] // For associated RRZ module
 		String uri = moduleUri.replace('resources/','publish/modules?resourceURI=')
 		def result = rmGenericRestClient.get(
 				uri: uri,
@@ -169,7 +170,7 @@ class ClmRequirementsManagementService {
 						}
 					}
 					if (linkType == 'Satisfies') {
-						satisfiesLink = linkURI
+						satisfiesLinks.add(linkURI)
 						return 
 					}
 				}
@@ -222,7 +223,7 @@ class ClmRequirementsManagementService {
 		
 		
 		// Instantiate and return the module
-		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, satisfiesLink, moduleAttributeMap,orderedArtifacts)
+		ClmRequirementsModule clmModule = new ClmRequirementsModule(moduleTitle, moduleFormat, moduleAbout, moduleType, satisfiesLinks, moduleAttributeMap,orderedArtifacts)
 		if (cacheLinks) parseLinksFromArtifactNode(module, clmModule)
 		return clmModule
 
@@ -237,7 +238,7 @@ class ClmRequirementsManagementService {
 	}
 	
 	def nextPageDb() {
-		log.debug("Retrieving nextPage from databasequeryservice")
+		//log.debug("Retrieving nextPage from databasequeryservice")
 		return databaseQueryService.nextPage()
 	}
 	
@@ -359,31 +360,45 @@ class ClmRequirementsManagementService {
 	
 	//single giant query but should cache ok
 	def queryForWhereUsed() {
-		String uri = this.rmBGenericRestClient.clmUrl + "/rs/query/11126/dataservice?report=11099&limit=-1&basicAuthenticationEnabled=true"
-		def results = rmBGenericRestClient.get(
-				uri: uri,
-				headers: [Accept: 'application/rdf+xml'] );
-		log.info("Fetched whereUsed info from JRS, now storing to cache")
-		if (results != null) {
-			def prevID = null
-			def whereUsedList = []
-			results.children().each { p ->
-				def id = "${p.REFERENCE_ID}"
-				if (prevID != null && id != prevID) { // Save whereUsed for this id
-					cacheManagementService.saveToCache(whereUsedList, prevID, 'whereUsedData')
-					whereUsedList.clear()
-				}
-				whereUsedList.add([name: "${p.MODULE_NAME}", url: "${p.URL2}"])
-				
-				prevID = id
+//		String uri = this.rmBGenericRestClient.clmUrl + "/rs/query/11126/dataservice?report=11099&limit=-1&basicAuthenticationEnabled=true"
+//		def results = rmBGenericRestClient.get(
+//				uri: uri,
+//				headers: [Accept: 'application/rdf+xml'] );
+		String selectStatement = new SqlLoader().sqlQuery('/sql/whereUsed.sql')
+		databaseQueryService.init()
+		def results = databaseQueryService.query(selectStatement)
+		log.info("Processing whereUsed info from data warehouse query...")
+		cacheManagementService.deleteByType("whereUsedData")
+		while (results) {
+			processWhereUsedPage(results)
+			this.pageUrlDb()
+			results = this.nextPageDb()
+		}
+		return true;
+		
+//		else {
+//			log.info("Null results from fetching whereUsed cache, something went wrong I wager")
+//			return false
+//		}
+	}
+	
+	def processWhereUsedPage(def results) {
+		//log.info("Fetched whereUsed info from JRS, now storing to cache")
+		def prevID = null
+		def whereUsedList = []
+		results.each { p ->
+			def id = "${p.reference_id}"
+			//log.debug("${id}")
+			if (prevID != null && id != prevID) { // Save whereUsed for this id
+				cacheManagementService.saveToCache(whereUsedList, prevID, 'whereUsedData')
+				whereUsedList.clear()
 			}
-			log.debug("Stored ${whereUsedList.size()} whereUsed records")
-			return true
+			whereUsedList.add([name: "${p.module_name}", url: "${p.url2}"])
+			//log.debug("name: ${p.module_name}, url: ${p.url2}")
+			prevID = id
 		}
-		else {
-			log.info("Null results from fetching whereUsed cache, something went wrong I wager")
-			return false
-		}
+		//log.debug("Stored ${whereUsedList.size()} whereUsed records")
+		return true
 	}
 	
 	//cool, hardcoded logic!
@@ -441,20 +456,29 @@ class ClmRequirementsManagementService {
 					in_artifact.setDescription(primaryTextString)
 
 					if (includeCollections && primaryTextString.indexOf('WrapperResource')==-1) {
-						// Check to see if this artifact has an embedded collection in "showContent" mode
+						// Check to see if this artifact has an embedded collection is "maximised" mode
 						def memberHrefs = []
-						def collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent')
-						if (collectionIndex > -1) { // Embedded Collection, parse all member hrefs for that collection
+						if ( primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator maximised') > -1 ||
+							 primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator showContent') > -1) {
 							memberHrefs = parseCollectionHrefs(richTextBody)
 							in_artifact.setDescription('') // Remove description, since it is now redundant
 						}
-						
-						// Check to see if this artifact has an embedded collection in "minimized" mode
-						collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimised')
-						if (collectionIndex > -1) { // Minimized Collection, get href for the collection artifact
-							String hrefCollection = parseHref(primaryTextString.substring(collectionIndex))
-							memberHrefs = getCollectionMemberHrefs(hrefCollection)
-
+						else {
+							// Check to see if this artifact has an embedded collection in "minimized" mode
+							def collectionIndex = primaryTextString.indexOf('com-ibm-rdm-editor-EmbeddedResourceDecorator minimised')
+							if (collectionIndex > -1) { // Minimized Collection, get href for the collection artifact
+								String hrefCollection = parseHref(primaryTextString.substring(collectionIndex))
+								memberHrefs = getCollectionMemberHrefs(hrefCollection)
+							}
+							else if (in_artifact.getArtifactType() == 'Screen Field Configuration' || in_artifact.getArtifactType() == 'Screen Requirement') {
+								//Check to see if this is a screen field config artifact and it has a link to a collection
+								def collectionLnkIndex = primaryTextString.indexOf('<h:a')
+								if ( collectionLnkIndex > -1) { // Link to Collection
+									String hrefCollection = parseHref(primaryTextString.substring(collectionLnkIndex))
+									memberHrefs = getCollectionMemberHrefs(hrefCollection)
+		
+								}
+							}
 						}
 						
 						// If there are collection members to be retrieved, then retrieve them
@@ -567,37 +591,7 @@ class ClmRequirementsManagementService {
 		if (cacheWI != null) {
 			def cid = cacheWI.id
 			List<LinkInfo> info = getLinkInfoFromCache(sid)
-//			def resultLinks = getLinks('affects_execution_result',info)
-//			resultLinks.each { LinkInfo link ->
-//				def result = cacheManagementService.getFromCache(link.itemIdRelated, 'QM', ICacheManagementService.RESULT_DATA)
-//				if (result) {
-//					String title = "${result.testCaseTitle}"
-//					
-//					def resultChanges = [method:'patch', requestContentType: ContentType.JSON, contentType: ContentType.JSON, uri: "/${eproject}/_apis/test/Runs/${result.testRun.id}/results/${result.id}", query:['api-version':'5.0-preview.5'], body: []]
-//					def data = [id: result.id, testCaseTitle: title, associatedBugs: []]
-//					def wis = []
-//					if (result.associatedBugs) {
-//						result.associatedBugs.each { bug ->
-//							String bid = "${bug.id}"
-//							wis.add(bid)
-//						}
-//						data.associatedBugs.addAll(result.associatedBugs)
-//					}
-//					String wid = "${cid}"
-//					if (!wis.contains(wid)) {
-//						data.associatedBugs.add([id:wid])
-//						resultChanges.body.add(data)
-//						def changes = [resultChanges: resultChanges, rid: link.itemIdRelated]
-//						closure.call('Result', changes)
-//					}
-//				}
-//			}
-//			
-//			if (resultLinks.size() > 0) {
-//				cacheWI = cacheManagementService.getFromCache(sid, ICacheManagementService.WI_DATA)
-//			}
 			if (info) {
-			//	log.debug("Suspect links for ${sid}")
 			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
 			wiData.body.add(rev)
@@ -666,15 +660,43 @@ class ClmRequirementsManagementService {
 			return link != null
 		}
 	
-	List<LinkInfo> getLinks(links) {
-		List<LinkInfo> linkinfos = new ArrayList<LinkInfo>()
-		links.findAll { link ->
-			def info = new LinkInfo(type: "${link.type}", itemIdCurrent: "${link.itemIdCurrent}", itemIdRelated: "${link.itemIdRelated}", moduleCurrent: "${link.moduleCurrent}", moduleRelated: "${link.moduleRelated}")
-			if (info.getModuleRelated() == 'rm') {
-				linkinfos.add(info)
+
+		List<LinkInfo> getLinks(links) {
+			List<LinkInfo> linkinfos = new ArrayList<LinkInfo>()
+			links.findAll { link ->
+				def info = new LinkInfo(type: "${link.type}", itemIdCurrent: "${link.itemIdCurrent}", itemIdRelated: "${link.itemIdRelated}", moduleCurrent: "${link.moduleCurrent}", moduleRelated: "${link.moduleRelated}")
+				if (info.getModuleRelated() == 'rm') {
+					linkinfos.add(info)
+				}
 			}
+			return linkinfos
 		}
-		return linkinfos
+	
+		/*
+		 * bout to get mad silly
+		 * We go through all LinkInfo objects just to get their parent id
+		 */
+	def processLinks() {
+		if (cacheManagementService instanceof MongoDBCacheManagementService) {
+			MongoDBCacheManagementService mdbCacheManagement = cacheManagementService
+			int page = 0
+			while (true) {
+				def linkinfos = mdbCacheManagement.getAllOfType('LinkInfo', page)
+				if (linkinfos.size() == 0) break
+				linkinfos.findAll { link ->
+					def cid = "${link.itemIdCurrent}"
+					List<LinkInfo> links = getLinks(linkinfos)
+					def cacheWI = cacheManagementService.getFromCache(cid, 'RM', 'wiData')
+					def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+					def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
+					wiData.body.add(rev)
+					wiData = generateWILinkChanges(wiData, links, cacheWI)
+				}
+				page++
+			}
+		} else {
+			def cacheWIs = cacheManagementService.getAllOfType('wiData')
+		}
 	}
 
 	private void parseLinksFromArtifactNode(def artifactNode, def in_artifact) {

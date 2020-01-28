@@ -97,7 +97,7 @@ abstract class RmBaseAttributeHandler implements IFieldHandler {
 			else {
 				// Validate numeric value
 				try {
-					Integer seq = Integer.parseInt(val.trim().replaceAll(' bytes?','').replace(' - PACKED','').replace('PACKED ','').replace('x(','').replace('X(','').replace(')/MM/DD/YYYY','').replace(')',''))
+					Integer seq = Integer.parseInt(val.trim().replaceAll(' bytes?','').replace(' - PACKED','').replace('PACKED ','').replace(' positions','').replace(' position','').replace('x(','').replace('X(','').replace(')/MM/DD/YYYY','').replace(')',''))
 				} catch (NumberFormatException | NullPointerException nfe) {
 					throw new Exception("$handlerName threw exception, invalid number: $val")
 					return null;

@@ -69,6 +69,7 @@ public class PolicyManagementService {
 		// first create the CI build policy
 		def repoData = resourceData.repository
 		//def project = repoData.project
+		//ensureGitAttributesFile(collection, repoData)
 		ensurePolicies(collection, repoData, branchName)
 	}
 
@@ -175,7 +176,7 @@ public class PolicyManagementService {
 		
 		int relBuildId = result.releaseBuildId
 		// create release definition for release build
-		def relDef = null
+		def relResult = null
 		def relDefName = ""
 		if (relBuildId > -1) {
 			def releaseTemplate = null
@@ -187,13 +188,14 @@ public class PolicyManagementService {
 				}
 			}
 			log.debug("PolicyManagementService::ensureBuildPolicy -- Release Build Definition created. Will attempt to create a release definition")
-			relDef = releaseManagementService.ensureReleaseForBuild(collection, projectData, repoData, relBuildId, isDRBranch, releaseTemplate)
-		}
-		if (relDef == null) {
-			log.error("PolicyManagementService::ensureBuildPolicy -- Release Definition NOT created")
-		} else {
-			relDefName = "${relDef.name}"
-			log.debug("PolicyManagementService::ensureBuildPolicy -- Release Definition created: "+relDefName)
+			relResult = releaseManagementService.ensureReleaseForBuild(collection, projectData, repoData, relBuildId, isDRBranch, releaseTemplate)
+			// check status for release definition creation
+			if (!relResult.relDefCreated && !relResult.relDefFound) {
+				log.error("PolicyManagementService::ensureBuildPolicy -- Release Definition NOT found and failed creation")
+			} else if (relResult.relDefCreated) {
+				relDefName = relResult.releaseDefName
+				log.debug("PolicyManagementService::ensureBuildPolicy -- Release Definition created: "+relDefName)
+			}
 		}
 		
 		// send email if builds were created
@@ -210,7 +212,7 @@ public class PolicyManagementService {
 				requestContentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_apis/policy/configurations",
 				body: body,
-				headers: [Accept: 'application/json;api-version=4.1;excludeUrls=true']
+				headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true']
 		)
 		return result
 	}
@@ -277,11 +279,18 @@ public class PolicyManagementService {
 		log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- result = "+res)
 	}
 
+	public def ensureGitAttributesFile(def collection, def repoData) {
+		log.debug("PolicyManagementService::ensureGitAttributesFile -- ")
+		def res = codeManagementService.ensureGitAttributes(collection, repoData.project, repoData)
+		log.debug("PolicyManagementService::ensureGitAttributesFile -- result = "+res)
+	}
+
+
 	private loadProperties(def collection, def repoData, def branchName) {
 		def branch = "${branchName}".substring("refs/heads/".length())
 		log.debug("PolicyManagementService::loadProperties -- Get build properties for branch ${branch}")
 		this.branchProps = null
-		def buildPropertiesFile = codeManagementService.getBuildPropertiesFile(collection, repoData.project, repoData, buildPropsFileName, branch)
+		def buildPropertiesFile = codeManagementService.getFileContent(collection, repoData.project, repoData, buildPropsFileName, branch)
 		if (buildPropertiesFile != null) {
 			// load properties from file
 			String fileContent = buildPropertiesFile.toString()

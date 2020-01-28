@@ -106,6 +106,7 @@ class ClmRequirementsItemManagementService {
 			// Add work item type in case it changed
 			def idData = [ op: 'add', path: '/fields/System.WorkItemType', value: "${map.target}"]
 			wiData.body.add(idData)
+			rmItemData.setCacheWI(cacheWI)
 		} else {
 			def idData = [ op: 'add', path: '/id', value: newId]
 			newId--

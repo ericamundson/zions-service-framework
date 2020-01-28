@@ -7,7 +7,6 @@ class StartingPositionHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public String getFieldName() {
-		
 		return 'Starting Position'
 	}
 
