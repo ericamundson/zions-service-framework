@@ -103,6 +103,15 @@ class CodeManagementService {
 
 	}
 	
+	public getBranches(String collection, String project, String repo) {
+		def query = ['api-version':'5.1', 'baseVersionDescriptor.versionType': 'branch']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/stats/branches",
+			query: query
+		)
+		return result
+	}
 
 	public def listTopLevel(def collection, def project, def repo) {
 		//log.debug("CodeManagementService::listTopLevel -- collection: ${collection}, project: ${project.id}, repo: ${repo.id}")

@@ -14,20 +14,17 @@ import org.springframework.stereotype.Component
 class GenericRestClient {
 	private RESTClient delegate;
 	
-	
+	@Value('${xld.url}')
 	String xldUrl;
 	
+	@Value('${xld.user}')
 	private String user;
-		
+	
+	@Value('${xld.password}')
 	private String password
 
 	@Autowired
-	public GenericRestClient(@Value('${xld.url}') String tfsUrl,
-		@Value('${xld.user}') String user,
-		@Value('${xld.password}') String password) {
-		this.xldUrl = tfsUrl
-		this.password = password;
-		this.user = user;
+	public GenericRestClient() {
 		delegate = new RESTClient(tfsUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
