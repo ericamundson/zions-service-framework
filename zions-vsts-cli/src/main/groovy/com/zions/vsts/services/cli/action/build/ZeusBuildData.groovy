@@ -158,11 +158,9 @@ class ZeusBuildData implements CliAction {
 		buildWorkitems.each { ref ->
 			wi.push("${ref.id}")
 		}
-		if (wi.empty && provisionSetup) {
+		if (wi.empty) {
+			println "##vso[task.setvariable variable=hasChanges]false"
 			log.error("Build has no new work items!  Usually do to no new changes since prior build.")
-			System.exit(1)
-		}
-		if (wi.empty && !provisionSetup) {
 			return
 		}
 		def wis = wi.toSet()
@@ -244,11 +242,12 @@ class ZeusBuildData implements CliAction {
 			o << "bl.zeusprod.version=${gversions[0]}${sep}"
 		}
 		o.close()
-		if (fListSet.isEmpty() && provisionSetup) {
-			log.error('No files set for update! No new changes.')
-			System.exit(1)
+		if (fListSet.isEmpty()) {
+			println "##vso[task.setvariable variable=hasChanges]false"
+			return
 		}
-
+		println "##vso[task.setvariable variable=hasChanges]true"
+		
 		f = new File("${outDir}/ZEUS.template")
 		def oFList = []
 		fListSet.each { String fName ->
