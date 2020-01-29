@@ -14,6 +14,7 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.work.WorkManagementService
+import com.zions.xld.services.ci.CIService
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
@@ -74,6 +75,8 @@ class ZeusBuildData implements CliAction {
 	WorkManagementService workManagementService
 	@Autowired
 	CodeManagementService codeManagementService
+	@Autowired
+	CIService cIService
 
 	@Autowired
 	public ZeusBuildData() {
@@ -112,6 +115,29 @@ class ZeusBuildData implements CliAction {
 		String repoId = "${build.repository.id}"
 		
 		def releases = getDevProdReleases(collection, project, repoId)
+		def gversions = []
+		if (releases.prod) {
+			String bName = "${releases.prod.name}"
+			String v = bName.substring(8)
+			gversions.add(v)
+			print "##vso[task.setvariable variable=prodRelease]${v}"
+
+		}
+		boolean provisionSetup = false
+		if (releases.dev) {
+			String bName = "${releases.dev.name}"
+			String v = bName.substring(8)
+			gversions.add(v)
+			print "##vso[task.setvariable variable=devRelease]${v}"
+			def devTestBedProvisioning = cIService.getCI("Applications/Zeus_xld/Releases/${v}/Provision_TestBeds")
+			if (devTestBedProvisioning) {
+				print "##vso[task.setvariable variable=provisionSetup]true"
+				provisionSetup = true 
+			} else {
+				print "##vso[task.setvariable variable=provisionSetup]false"
+			}
+		}
+		
 		//if (sourceBranch.contains("release/")) {
 		String releaseIdNormal = ''
 		if ((!releaseId || releaseId.size() == 0) && sourceBranch.contains('release/')) {
@@ -132,7 +158,7 @@ class ZeusBuildData implements CliAction {
 		buildWorkitems.each { ref ->
 			wi.push("${ref.id}")
 		}
-		if (wi.empty) {
+		if (wi.empty && provisionSetup) {
 			log.error("Build has no new work items!  Usually do to no new changes since prior build.")
 			System.exit(1)
 		}
@@ -205,18 +231,6 @@ class ZeusBuildData implements CliAction {
 		if (releaseDate) {
 			o << "release.date=${releaseDate}${sep}"
 		}
-		def gversions = []
-		if (releases.prod) {
-			String bName = "${releases.prod.name}"
-			String v = bName.substring(8)
-			gversions.add(v)
-
-		}
-		if (releases.dev) {
-			String bName = "${releases.dev.name}"
-			String v = bName.substring(8)
-			gversions.add(v)
-		}
 		o << "global.versions.list=${gversions.join(',')}${sep}"
 		if (gversions.size() == 1) {
 			o << "uat.zeusdev.version=${gversions[0]}${sep}"
@@ -227,7 +241,7 @@ class ZeusBuildData implements CliAction {
 			o << "bl.zeusprod.version=${gversions[0]}${sep}"
 		}
 		o.close()
-		if (fListSet.isEmpty()) {
+		if (fListSet.isEmpty() && provisionSetup) {
 			log.error('No files set for update! No new changes.')
 			System.exit(1)
 		}
@@ -277,7 +291,7 @@ class ZeusBuildData implements CliAction {
 			String name = "${branch.name}"
 			name ==~ /release\/\d{4}/
 		}
-		releaseBranches = releaseBranches.sort()
+		releaseBranches = releaseBranches.sort { a,b -> a.name <=>  b.name }
 		def rBranches = [dev: null, prod: null]
 		if (releaseBranches.size() == 1) {
 			rBranches.dev = releaseBranches[0]
