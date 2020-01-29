@@ -161,7 +161,7 @@ class ZeusBuildData implements CliAction {
 		if (wi.empty) {
 			println "##vso[task.setvariable variable=hasChanges]false"
 			log.error("Build has no new work items!  Usually do to no new changes since prior build.")
-			return
+			return null
 		}
 		def wis = wi.toSet()
 		def buildChanges = null
@@ -243,8 +243,9 @@ class ZeusBuildData implements CliAction {
 		}
 		o.close()
 		if (fListSet.isEmpty()) {
+			log.error("Build has no new files!  Usually do to no new changes since prior build.")
 			println "##vso[task.setvariable variable=hasChanges]false"
-			return
+			return null
 		}
 		println "##vso[task.setvariable variable=hasChanges]true"
 		
