@@ -120,7 +120,7 @@ class ZeusBuildData implements CliAction {
 			String bName = "${releases.prod.name}"
 			String v = bName.substring(8)
 			gversions.add(v)
-			print "##vso[task.setvariable variable=prodRelease]${v}"
+			println "##vso[task.setvariable variable=prodRelease]${v}"
 
 		}
 		boolean provisionSetup = false
@@ -128,13 +128,13 @@ class ZeusBuildData implements CliAction {
 			String bName = "${releases.dev.name}"
 			String v = bName.substring(8)
 			gversions.add(v)
-			print "##vso[task.setvariable variable=devRelease]${v}"
+			println "##vso[task.setvariable variable=devRelease]${v}"
 			def devTestBedProvisioning = cIService.getCI("Applications/Zeus_xld/Releases/${v}/Provision_TestBeds")
 			if (devTestBedProvisioning) {
-				print "##vso[task.setvariable variable=provisionSetup]true"
+				println "##vso[task.setvariable variable=provisionSetup]true"
 				provisionSetup = true 
 			} else {
-				print "##vso[task.setvariable variable=provisionSetup]false"
+				println "##vso[task.setvariable variable=provisionSetup]false"
 			}
 		}
 		
@@ -161,6 +161,9 @@ class ZeusBuildData implements CliAction {
 		if (wi.empty && provisionSetup) {
 			log.error("Build has no new work items!  Usually do to no new changes since prior build.")
 			System.exit(1)
+		}
+		if (wi.empty && !provisionSetup) {
+			return
 		}
 		def wis = wi.toSet()
 		def buildChanges = null
