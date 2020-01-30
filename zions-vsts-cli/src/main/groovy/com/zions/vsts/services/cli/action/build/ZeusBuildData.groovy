@@ -15,6 +15,7 @@ import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.xld.services.ci.CIService
+import com.zions.xld.services.deployment.DeploymentService
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
@@ -77,6 +78,8 @@ class ZeusBuildData implements CliAction {
 	CodeManagementService codeManagementService
 	@Autowired
 	CIService cIService
+	@Autowired
+	DeploymentService deploymentService
 
 	@Autowired
 	public ZeusBuildData() {
@@ -129,10 +132,15 @@ class ZeusBuildData implements CliAction {
 			String v = bName.substring(8)
 			gversions.add(v)
 			println "##vso[task.setvariable variable=devRelease]${v}"
-			def devTestBedProvisioning = cIService.getCI("Applications/Zeus_xld/Releases/${v}/Provision_TestBeds")
+			String appId = "Applications/Zeus_xld/Releases/${v}/Zeus_${v}_Provision"
+			String environmentId = "Environments/Zeus_xld/Releases/${v}/Testbed/Provision"
+			def devTestBedProvisioning = cIService.getCI(appId)
 			if (devTestBedProvisioning) {
-				println "##vso[task.setvariable variable=provisionSetup]true"
-				provisionSetup = true 
+				boolean hasDeploy = deploymentService.hasDeployment(appId, environmentId)
+				if (hasDeploy) {
+					println "##vso[task.setvariable variable=provisionSetup]true"
+					provisionSetup = true 
+				}
 			} else {
 				println "##vso[task.setvariable variable=provisionSetup]false"
 			}
@@ -198,7 +206,7 @@ class ZeusBuildData implements CliAction {
 //					if (fpath.contains('.keep')) {
 //						fListWFolders.push(fpath.replace("\\", "/"))
 //					}
-					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep') && !fpath.contains('.yml')) {
+					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml')) {
 						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
