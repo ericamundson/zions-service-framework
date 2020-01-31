@@ -283,12 +283,14 @@ class ZeusBuildData implements CliAction {
 				if (!ofd.exists()) {
 					ofd.mkdirs()
 				}
-				File of = new File("$outRepoDir${fName}")
-				def ao = of.newDataOutputStream()
-				ao << i
-				i.close()
-				ao.close()
-				fileMap["$outRepoDir${fName}"] = of
+				if (!fName.endsWith('.keep')) {
+					File of = new File("$outRepoDir${fName}")
+					def ao = of.newDataOutputStream()
+					ao << i
+					i.close()
+					ao.close()
+					fileMap["$outRepoDir${fName}"] = of
+				}
 			}
 			detailsFile(collection, project, wis, allChanges, outDir, outRepoDir, fileMap)
 		}
