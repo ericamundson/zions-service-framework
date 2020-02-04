@@ -458,14 +458,14 @@ class WorkManagementService {
 
 	}
 
-	//	def getWorkItem(String url) {
-	//		def result = genericRestClient.get(
-	//			uri: url,
-	//			contentType: ContentType.JSON,
-	//			query: [destroy: true, 'api-version': '5.0-preview.3']
-	//			)
-	//		return result
-	//	}
+	def getWorkItem(String url) {
+		def result = genericRestClient.get(
+			uri: url,
+			contentType: ContentType.JSON,
+			query: [destroy: true, 'api-version': '5.0-preview.3']
+			)
+		return result
+	}
 
 	def getWorkItems(String collection, String project, String aquery, String lastId = null) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
