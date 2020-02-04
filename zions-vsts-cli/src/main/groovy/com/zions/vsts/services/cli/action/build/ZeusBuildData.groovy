@@ -108,11 +108,11 @@ class ZeusBuildData implements CliAction {
 		try {
 			outRepoDir = data.getOptionValues('out.repo.dir')[0]
 		} catch (e) {}
-		String changeRequest = data.getOptionValues('change.request')[0]
-		String releaseDate = null
-		try {
-			releaseDate = data.getOptionValues('release.date')[0]
-		} catch (e) {}
+//		String changeRequest = data.getOptionValues('change.request')[0]
+//		String releaseDate = null
+//		try {
+//			releaseDate = data.getOptionValues('release.date')[0]
+//		} catch (e) {}
 		def build = buildManagementService.getExecution(collection, project, buildId)
 		String sourceBranch = "${build.sourceBranch}"
 		String repoId = "${build.repository.id}"
@@ -151,6 +151,9 @@ class ZeusBuildData implements CliAction {
 		if ((!releaseId || releaseId.size() == 0) && sourceBranch.contains('release/')) {
 			releaseId = "${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}"
 		}
+		def crqAndRelease = getCRQAndReleaseDate(releaseId)
+		String changeRequest = crqAndRelease.CRQ
+		String releaseDate = crqAndRelease.releaseDate
 		def builds = null
 		if (rollup) {
 			builds = buildManagementService.getRelatedBuilds(collection, project, build)
@@ -230,7 +233,7 @@ class ZeusBuildData implements CliAction {
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()
 		o << "my.version=${releaseId}${sep}"
-		o << "change.request={{change.request}}${sep}"
+		o << "change.request=${changeRequest}${sep}"
 		String affiliatesStr = affiliatesList.join(',')
 		o << "global.affiliates.list=${affiliatesStr}${sep}"
 		if (wis.size() > 0) {
@@ -372,6 +375,37 @@ class ZeusBuildData implements CliAction {
 		o << writer.toString()
 		o.close();
 
+	}
+	
+	private def getCRQAndReleaseDate(String releaseId) {
+		def out = [CRQ: 'NotSet', releaseDate: 'UNKNOWN']
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = 'Zeus' AND [System.AreaPath] under 'Zeus' AND [System.WorkItemType] = 'Release' and [System.Title] = '${releaseId}'"
+		def wis = workManagementService.getWorkItems('', 'Zeus', query)
+		if (wis.workItems && wis.workItems.size() >= 1) {
+			String crq = 'NotSet'
+			def wi = wis.workItems[0]
+			wi = workManagementService.getWorkItem(wi.url)
+			String crqs = "${wi.fields.'Custom.CRQs'}"
+			if (crqs && crqs != 'null') {
+				def crqList = crqs.split(',')
+				if (crqList.size() > 0) {
+					crq = crqList[crqList.size()-1]
+				}
+			}
+			String releaseDate = 'UNKNOWN'
+			String rDate = "${wi.fields.'Custom.ApprovedDate'}"
+			if (rDate && rDate != 'null') {
+				rDate = rDate.substring(0, "yyyy-MM-dd".length())
+				Date modDate = Date.parse("yyyy-MM-dd", rDate)
+				rDate = modDate.format('yyyyMMdd')
+				releaseDate = rDate
+			}
+			if (crq != 'NotSet') {
+				out.CRQ = crq
+			    out.releaseDate = releaseDate
+			}
+		}
+		return out
 	}
 
 	@Override
