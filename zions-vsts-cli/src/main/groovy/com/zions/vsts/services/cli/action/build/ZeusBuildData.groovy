@@ -378,7 +378,7 @@ class ZeusBuildData implements CliAction {
 	}
 	
 	private def getCRQAndReleaseDate(String releaseId) {
-		def out = [CRQ: 'NotSet', releaseDate: 'NotSet']
+		def out = [CRQ: 'NotSet', releaseDate: 'UNKNOWN']
 		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = 'Zeus' AND [System.AreaPath] under 'Zeus' AND [System.WorkItemType] = 'Release' and [System.Title] = '${releaseId}'"
 		def wis = workManagementService.getWorkItems('', 'Zeus', query)
 		if (wis.workItems && wis.workItems.size() >= 1) {
@@ -392,9 +392,12 @@ class ZeusBuildData implements CliAction {
 					crq = crqList[crqList.size()-1]
 				}
 			}
-			String releaseDate = 'NotSet'
+			String releaseDate = 'UNKNOWN'
 			String rDate = "${wi.fields.'Custom.ApprovedDate'}"
-			if (rDate) {
+			if (rDate && rDate != 'null') {
+				rDate = rDate.substring(0, "yyyy-MM-dd".length())
+				Date modDate = Date.parse("yyyy-MM-dd", rDate)
+				rDate = modDate.format('yyyyMMdd')
 				releaseDate = rDate
 			}
 			if (crq != 'NotSet') {
