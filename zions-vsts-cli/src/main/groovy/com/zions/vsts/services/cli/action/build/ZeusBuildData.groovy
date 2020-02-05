@@ -119,10 +119,12 @@ class ZeusBuildData implements CliAction {
 		
 		def releases = getDevProdReleases(collection, project, repoId)
 		def gversions = []
+		String prodRelease = null
 		if (releases.prod) {
 			String bName = "${releases.prod.name}"
 			String v = bName.substring(8)
 			gversions.add(v)
+			prodRelease = v
 			println "##vso[task.setvariable variable=prodRelease]${v}"
 
 		}
@@ -151,12 +153,14 @@ class ZeusBuildData implements CliAction {
 		if ((!releaseId || releaseId.size() == 0) && sourceBranch.contains('release/')) {
 			releaseId = "${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}"
 		}
+		
+		//Setup crq and release date from Release work item with title of release id.
 		def crqAndRelease = getCRQAndReleaseDate(releaseId)
 		String changeRequest = crqAndRelease.CRQ
 		String releaseDate = crqAndRelease.releaseDate
 		def builds = null
 		if (rollup) {
-			builds = buildManagementService.getRelatedBuilds(collection, project, build)
+			builds = buildManagementService.getRelatedBuilds(collection, project, build, "${releaseId}" == "${prodRelease}")
 		}
 		def buildWorkitems = null
 		if (!builds) {
@@ -240,9 +244,9 @@ class ZeusBuildData implements CliAction {
 			String wiStr = wis.join(',')
 			o << "ado.workitems=${wiStr}${sep}"
 		}
-		if (releaseDate) {
-			o << "release.date=${releaseDate}${sep}"
-		}
+//		if (releaseDate) {
+//			o << "release.date={{release.date}}${sep}"
+//		}
 		o << "global.versions.list=${gversions.join(',')}${sep}"
 		if (gversions.size() == 1) {
 			o << "uat.zeusdev.version=${gversions[0]}${sep}"
@@ -393,7 +397,7 @@ class ZeusBuildData implements CliAction {
 				}
 			}
 			String releaseDate = 'UNKNOWN'
-			String rDate = "${wi.fields.'Custom.ApprovedDate'}"
+			String rDate = "${wi.fields.'System.ChangedDate'}"
 			if (rDate && rDate != 'null') {
 				rDate = rDate.substring(0, "yyyy-MM-dd".length())
 				Date modDate = Date.parse("yyyy-MM-dd", rDate)

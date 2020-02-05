@@ -612,8 +612,22 @@ public class BuildManagementService {
 		return result
 	}
 	
-	public def getRelatedBuilds(def collection, def project, def build) {
+	public def tagBuild(def build, String tag) {
+		String url = "${build.url}/tags/${tag}"
+		def result = genericRestClient.put(
+			requestContentType: ContentType.JSON,
+			uri: url,
+			query: ['api-version', '5.1']
+			)
+		
+	}
+	
+	public def getRelatedBuilds(def collection, def project, def build, boolean isProdBranch = false) {
 		//log.debug("BuildManagementService::getBuild -- buildName = "+repo.name+"-"+qualifier)
+		if (isProdBranch) {
+			def tag = tagBuild(build, 'PR')
+		}
+		
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		//def builds = []
@@ -622,6 +636,9 @@ public class BuildManagementService {
 		String repoId = "${build.repository.id}"
 		String defId = "${build.definition.id}"
 		def query = ['api-version':'5.1','branchName': bName, definitions: defId ]
+		if (isProdBranch) {
+			query.tagFilters = 'PR'
+		}
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds",
