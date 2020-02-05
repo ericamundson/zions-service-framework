@@ -617,9 +617,9 @@ public class BuildManagementService {
 		def result = genericRestClient.put(
 			requestContentType: ContentType.JSON,
 			uri: url,
-			query: ['api-version', '5.1']
+			query: ['api-version': '5.1']
 			)
-		
+		return result
 	}
 	
 	public def getRelatedBuilds(def collection, def project, def build, boolean isProdBranch = false) {
