@@ -135,8 +135,8 @@ class ZeusBuildData implements CliAction {
 			gversions.add(v)
 			gversions.add("${gversions[0]}PR")
 			println "##vso[task.setvariable variable=devRelease]${v}"
-			String appId = "Applications/Zeus_xld/Releases/${v}/Zeus_${v}_Provision"
-			String environmentId = "Environments/Zeus_xld/Releases/${v}/Testbed/Provision"
+			String appId = "Applications/Zeus/Releases/${v}/Zeus_${v}_Provision"
+			String environmentId = "Environments/Zeus/Releases/${v}/Testbed/Provision"
 			def devTestBedProvisioning = cIService.getCI(appId)
 			if (devTestBedProvisioning) {
 				boolean hasDeploy = deploymentService.hasDeployment(appId, environmentId)
