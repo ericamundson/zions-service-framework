@@ -133,6 +133,7 @@ class ZeusBuildData implements CliAction {
 			String bName = "${releases.dev.name}"
 			String v = bName.substring(8)
 			gversions.add(v)
+			gversions.add("${gversions[0]}PR")
 			println "##vso[task.setvariable variable=devRelease]${v}"
 			String appId = "Applications/Zeus_xld/Releases/${v}/Zeus_${v}_Provision"
 			String environmentId = "Environments/Zeus_xld/Releases/${v}/Testbed/Provision"
@@ -142,6 +143,9 @@ class ZeusBuildData implements CliAction {
 				if (hasDeploy) {
 					println "##vso[task.setvariable variable=provisionSetup]true"
 					provisionSetup = true 
+				} else {
+					println "##vso[task.setvariable variable=provisionSetup]false"
+					
 				}
 			} else {
 				println "##vso[task.setvariable variable=provisionSetup]false"
@@ -155,12 +159,13 @@ class ZeusBuildData implements CliAction {
 		}
 		
 		//Setup crq and release date from Release work item with title of release id.
-		def crqAndRelease = getCRQAndReleaseDate(releaseId)
-		String changeRequest = crqAndRelease.CRQ
-		String releaseDate = crqAndRelease.releaseDate
+//		def crqAndRelease = getCRQAndReleaseDate(releaseId)
+//		String changeRequest = crqAndRelease.CRQ
+//		String releaseDate = crqAndRelease.releaseDate
 		def builds = null
+		boolean isProductionBranch = "${releaseId}" == "${prodRelease}"
 		if (rollup) {
-			builds = buildManagementService.getRelatedBuilds(collection, project, build, "${releaseId}" == "${prodRelease}")
+			builds = buildManagementService.getRelatedBuilds(collection, project, build, isProductionBranch)
 		}
 		def buildWorkitems = null
 		if (!builds) {
@@ -236,22 +241,28 @@ class ZeusBuildData implements CliAction {
 		def fListSet = fList.toSet()
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()
-		o << "my.version=${releaseId}${sep}"
-		o << "change.request=${changeRequest}${sep}"
+		if (isProductionBranch) {
+			o << "my.version=${releaseId}PR${sep}"
+			
+		} else {
+			o << "my.version=${releaseId}${sep}"
+		}
+		o << "build.number=${build.buildNumber}${sep}"
+		o << "change.request={{change.request}}${sep}"
 		String affiliatesStr = affiliatesList.join(',')
 		o << "global.affiliates.list=${affiliatesStr}${sep}"
 		if (wis.size() > 0) {
 			String wiStr = wis.join(',')
 			o << "ado.workitems=${wiStr}${sep}"
 		}
-//		if (releaseDate) {
-//			o << "release.date={{release.date}}${sep}"
-//		}
+		//if (releaseDate) {
+			o << "release.date={{release.date}}${sep}"
+		//}
 		o << "global.versions.list=${gversions.join(',')}${sep}"
 		if (gversions.size() == 1) {
 			o << "uat.zeusdev.version=${gversions[0]}${sep}"
 		} 
-		if (gversions.size() == 2) {
+		if (gversions.size() >= 2) {
 			o << "uat.zeusprod.version=${gversions[0]}${sep}"
 			o << "uat.zeusdev.version=${gversions[1]}${sep}"
 			o << "bl.zeusprod.version=${gversions[0]}${sep}"
