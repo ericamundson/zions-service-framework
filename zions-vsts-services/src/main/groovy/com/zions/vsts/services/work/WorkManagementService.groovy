@@ -146,17 +146,116 @@ class WorkManagementService {
 	
 	private def stepFieldChanges(owi) {
 		String steps = "${owi.fields.'Microsoft.VSTS.TCM.Steps'}}"
-//		String val = steps.replaceAll(/<Day[ ]*[0-9]+>/) { it ->
-//							String s = it
-//							s = s.replace('<', '&lt;')
-//							s = s.replace('>', '&gt;')
-//							s
-//						};
-		String val = steps.replaceAll(/&lt;Day[ ]*[0-9]+&gt;/) { it ->
+		// Address all double tags:  << blah blah >>				
+		val = val.replaceAll(/&lt;&lt;[^&]*?&gt;&gt;/) { it ->
 							String s = it
 							s = s.replace('&', '&amp;')
 							s
 						};
+		// Address all tags with single digit or just empty tag
+		val = val.replaceAll(/&lt;[ ]?[0-9]?[ ]?&gt;/) { it ->
+							String s = it
+							s = s.replace('&', '&amp;')
+							s
+						};
+		// Address all tags that start with ... (ignore case)
+		val = val.fixAllTagsStartWith('[$#"]', val)
+		val = val.fixAllTagsStartWith('*', val)
+		val = val.fixAllTagsStartWith('[0-4]', val)
+		val = val.fixAllTagsStartWith('act[ui]', val)
+		val = val.fixAllTagsStartWith('acc[ot]', val)
+		val = val.fixAllTagsStartWith('affiliate', val)
+		val = val.fixAllTagsStartWith('after', val)
+		val = val.fixAllTagsStartWith('Amount', val)
+		val = val.fixAllTagsStartWith('Annual', val)
+		val = val.fixAllTagsStartWith('APR ', val)
+		val = val.fixAllTagsStartWith('Appro', val)
+		val = val.fixAllTagsStartWith('[/]?app', val)
+		val = val.fixAllTagsStartWith('Archived', val)
+		val = val.fixAllTagsStartWith('Auto ', val)
+		val = val.fixAllTagsStartWith('Bill[ i]', val)
+		val = val.fixAllTagsStartWith('blank', val)
+		val = val.fixAllTagsStartWith('before', val)
+		val = val.fixAllTagsStartWith('[/]?B[a]?NCS', val)
+		val = val.fixAllTagsStartWith('borrower', val)
+		val = val.fixAllTagsStartWith('bucket', val)
+		val = val.fixAllTagsStartWith('Capital', val)
+		val = val.fixAllTagsStartWith('Customer', val)
+		val = val.fixAllTagsStartWith('Check', val)
+		val = val.fixAllTagsStartWith('Cleanup', val)
+		val = val.fixAllTagsStartWith('Common', val)
+		val = val.fixAllTagsStartWith('Day', val)
+		val = val.fixAllTagsStartWith('De[fs]', val)
+		val = val.fixAllTagsStartWith('Due', val)
+		val = val.fixAllTagsStartWith('dat[ae]', val)
+		val = val.fixAllTagsStartWith('Draw ', val)
+		val = val.fixAllTagsStartWith('Effective', val)
+		val = val.fixAllTagsStartWith('End ', val)
+		val = val.fixAllTagsStartWith('EO[YDM]', val)
+		val = val.fixAllTagsStartWith('Expir', val)
+		val = val.fixAllTagsStartWith('FEB[ -]', val)
+		val = val.fixAllTagsStartWith('Frequency', val)
+		val = val.fixAllTagsStartWith('[/]?fns[/]?', val)
+		val = val.fixAllTagsStartWith('Fee', val)
+		val = val.fixAllTagsStartWith('First ', val)
+		val = val.fixAllTagsStartWith('Fu[nt]', val)
+		val = val.fixAllTagsStartWith('general', val)
+		val = val.fixAllTagsStartWith('Grace', val)
+		val = val.fixAllTagsStartWith('HHMMSS', val)
+		val = val.fixAllTagsStartWith('Ho[lw]', val)
+		val = val.fixAllTagsStartWith('http:', val)
+		val = val.fixAllTagsStartWith('IOF-', val)
+		val = val.fixAllTagsStartWith('inter[fe]', val)
+		val = val.fixAllTagsStartWith('implementation ', val)
+		val = val.fixAllTagsStartWith('Job', val)
+		val = val.fixAllTagsStartWith('Last ', val)
+		val = val.fixAllTagsStartWith('MAR[C]? 2015', val)
+		val = val.fixAllTagsStartWith('Maturity', val)
+		val = val.fixAllTagsStartWith('mmfdmain', val)
+		val = val.fixAllTagsStartWith('Next ', val)
+		val = val.fixAllTagsStartWith('ODS', val)
+		val = val.fixAllTagsStartWith('Other', val)
+		val = val.fixAllTagsStartWith('option', val)
+		val = val.fixAllTagsStartWith('lonq', val)
+		val = val.fixAllTagsStartWith('On ', val)
+		val = val.fixAllTagsStartWith('Payment', val)
+		val = val.fixAllTagsStartWith('Path ', val)
+		val = val.fixAllTagsStartWith('Periodic', val)
+		val = val.fixAllTagsStartWith('Pre[ -]?condition', val)
+		val = val.fixAllTagsStartWith('Pre[ -]?requisite', val)
+		val = val.fixAllTagsStartWith('Post', val)
+		val = val.fixAllTagsStartWith('Query', val)
+		val = val.fixAllTagsStartWith('Run', val)
+		val = val.fixAllTagsStartWith('Rate ', val)
+		val = val.fixAllTagsStartWith('Requirement', val)
+		val = val.fixAllTagsStartWith('Rep[ao]', val)
+		val = val.fixAllTagsStartWith('Response', val)
+		val = val.fixAllTagsStartWith('Remittance', val)
+		val = val.fixAllTagsStartWith('Renew', val)
+		val = val.fixAllTagsStartWith('Review', val)
+		val = val.fixAllTagsStartWith('Rollover', val)
+		val = val.fixAllTagsStartWith('Seasonal', val)
+		val = val.fixAllTagsStartWith('Select', val)
+		val = val.fixAllTagsStartWith('Settlement', val)
+		val = val.fixAllTagsStartWith('Second ', val)
+		val = val.fixAllTagsStartWith('SI_HOME', val)
+		val = val.fixAllTagsStartWith('Step', val)
+		val = val.fixAllTagsStartWith('[/]sch', val)
+		val = val.fixAllTagsStartWith('Sl Nbr', val)
+		val = val.fixAllTagsStartWith('Soap', val)
+		val = val.fixAllTagsStartWith('Sub[lm]', val)
+		val = val.fixAllTagsStartWith('SQL', val)
+		val = val.fixAllTagsStartWith('tfdrfile', val)
+		val = val.fixAllTagsStartWith('TCS ', val)
+		val = val.fixAllTagsStartWith('Tran', val)
+		val = val.fixAllTagsStartWith('timestamp', val)
+		val = val.fixAllTagsStartWith('UF[ET]', val)
+		val = val.fixAllTagsStartWith('Valid', val)
+		val = val.fixAllTagsStartWith('x', val)
+		val = val.fixAllTagsStartWith('Year ', val)
+		val = val.fixAllTagsStartWith('ZFN', val)
+		
+		// Only save if something changed
 		if (steps != val) {
 			def retVal = [op:'add', path: '/fields/Microsoft.VSTS.TCM.Steps', value: val]
 			return retVal
@@ -164,6 +263,16 @@ class WorkManagementService {
 		return null
 	}
 
+	private def fixAllTagsStartWith(String in_word, def in_val) {
+		// Address all tags that start with string
+		def val = in_val.replaceAll(~"/(?i)&lt;[ ]*$in_word[^&]*?&gt;/") { it ->
+							String s = it
+							s = s.replace('&', '&amp;')
+							s
+						};
+		return val
+	}
+	
 	private def genRemoveBadResultLinks(String collection, String project, owi) {
 		String url
 		int index = 0
