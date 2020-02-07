@@ -237,7 +237,8 @@ class ZeusBuildData implements CliAction {
 			}
 		}
 		Set affiliatesList = affiliates.toSet()
-		String sep = System.getProperty("line.separator")
+//		String sep = System.getProperty("line.separator")
+		String sep = '\r\n'
 		def fListSet = fList.toSet()
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()
