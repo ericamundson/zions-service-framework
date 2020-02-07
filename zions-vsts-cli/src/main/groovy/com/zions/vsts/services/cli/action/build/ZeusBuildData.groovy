@@ -279,7 +279,7 @@ class ZeusBuildData implements CliAction {
 		f = new File("${outDir}/ZEUS.template")
 		def oFList = []
 		fListSet.each { String fName ->
-			String n = fName.substring(fName.indexOf('/')+1)
+			String n = fName.substring(fName.indexOf('/'))
 			oFList.push(n)
 		}
 		def ofListSet = oFList.toSet()
