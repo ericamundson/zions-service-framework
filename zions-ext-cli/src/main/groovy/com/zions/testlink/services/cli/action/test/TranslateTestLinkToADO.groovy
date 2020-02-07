@@ -406,7 +406,12 @@ class TranslateTestLinkToADO implements CliAction {
 							TestCase[] testcaseList = testLinkClient.getTestCasesForTestPlanSuite(testsuite.id, testplan.id, false, 'full')
 							testLinkItemManagementService.setParent(testsuite, testcaseList, mappingData, planName) { typeData, tcIds ->
 								String suiteUrl = "${typeData.url}"
-								testManagementService.associateCaseToSuite(suiteUrl, tcIds)
+								def tcMap = testManagementService.getSuiteTestCaseMap(suiteUrl)
+								if (tcMap.size() == tcIds.size()) return
+								tcIds = this.filterIds(tcIds, tcMap)
+								if (tcIds.size() > 0) {
+									testManagementService.associateCaseToSuite(suiteUrl, tcIds)
+								}
 							}
 							def suiteData = cacheManagementService.getFromCache(tswebId, ICacheManagementService.SUITE_DATA)
 							return suiteData
@@ -519,6 +524,16 @@ class TranslateTestLinkToADO implements CliAction {
 			}
 		}
 		return true
+	}
+	private def filterIds(def idList, def tcMap) {
+		Set<String> oid = []
+		idList.each { id ->
+			String key = "${id}"
+			if (!tcMap.get(key)) {
+				oid.add(key)
+			}
+		}
+		return oid
 	}
 
 
