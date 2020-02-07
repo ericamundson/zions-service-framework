@@ -47,7 +47,7 @@ import groovy.xml.MarkupBuilder
  *cloud Zeus as "ADO Zeus Project"{
  *  rectangle Bug as "'Bug' work item type"
  *	actor Zeus_Developer as "Zeus Developer"
- *	component ZeusPipeline as "[[https://dev.azure.com/zionseto/Zeus/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=973 Zeus-release]] build pipeline"
+ *	component ZeusPipeline as "[[https://dev.azure.com/zionseto/Zeus/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=1238 Zeus]] build pipeline"
  *	storage Zeus_GIT_repo as "Zeus GIT repo" {
  *		rectangle release_branch as "release/<release id> git branch"
  *  }
@@ -57,13 +57,21 @@ import groovy.xml.MarkupBuilder
  *  ZeusPipeline --> ZeusBuildData : "Generates all build artifacts"
  *}
  *card XLDeploy as "XL Deploy" {
- *  actor ReleaseManager as "Release Manager"
- *	component ZeusApp as "Application/Zeus/Zeus" 
+ *	component ZeusApp as "Applications/Zeus/Releases/<Release Id>/Zeus_<release id>_app" 
  *	ZeusPipeline --> ZeusApp : "Publish Deployment Package to App"
- *  ReleaseManager --> ZeusApp : "Request deploy to environment"
  *  ZeusApp --> ZeusAntScript : "Specific application package makes call to ant script for specified environment"
  *}
+ *card XLR as "XL Release" {
+ *  actor ReleaseManager as "Release Manager/QA/UAT"
+ *  component ZeusTemplate as "Zeus Release Template"
+ *  component ZeusRelease as "Zeus Release"
+ *  ReleaseManager --> ZeusRelease: "Handles requests for response"
+ *  ZeusRelease --> ZeusTemplate: "Template Used"
+ *  ZeusPipeline --> ZeusRelease: "Creates release from template"
+ *  ZeusRelease --> ZeusApp : "Request deploy to environment"
+ *}
  *Zeus --[hidden]> XLDeploy
+ *
  *@enduml
  */
 @Component
@@ -238,7 +246,7 @@ class ZeusBuildData implements CliAction {
 		}
 		Set affiliatesList = affiliates.toSet()
 //		String sep = System.getProperty("line.separator")
-		String sep = '\r\n'
+		String sep = "\r\n"
 		def fListSet = fList.toSet()
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()
@@ -266,7 +274,7 @@ class ZeusBuildData implements CliAction {
 		if (gversions.size() >= 2) {
 			o << "uat.zeusprod.version=${gversions[0]}${sep}"
 			o << "uat.zeusdev.version=${gversions[1]}${sep}"
-			o << "bl.zeusprod.version=${gversions[0]}${sep}"
+			o << "bl.zeusprod.version=${gversions[1]}${sep}"
 		}
 		o.close()
 		if (fListSet.isEmpty()) {
@@ -279,7 +287,7 @@ class ZeusBuildData implements CliAction {
 		f = new File("${outDir}/ZEUS.template")
 		def oFList = []
 		fListSet.each { String fName ->
-			String n = fName.substring(fName.indexOf('/'))
+			String n = fName.substring(fName.indexOf('/')+1)
 			oFList.push(n)
 		}
 		def ofListSet = oFList.toSet()
