@@ -20,6 +20,9 @@ class DeploymentService {
 			uri: "${xldGenericRestClient.xldUrl}/deployit/deployment/exists",
 			query: query
 		)
+		if (!result) {
+			return false
+		}
 		def val = "${result.text()}"
 		
 		return val == 'true'
