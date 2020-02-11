@@ -333,7 +333,6 @@ class TranslateTestLinkToADO implements CliAction {
 						TestPlan testplan = testItem
 						int pid = testplan.id
 
-
 						def testcaseCallback = null
 						if (processFullPlan) {
 							testcaseCallback = { TestSuite psuite, TestCase testcasea -> 
@@ -372,6 +371,8 @@ class TranslateTestLinkToADO implements CliAction {
 						}
 							
 						TestSuite[] suites = testLinkClient.getFirstLevelSuitesForTestPlan(testplan)
+						if (suites.size() == 0) return
+						
 						handleTestSuites(suites, plan, testplan, null, { def parent, TestSuite testsuite -> 
 							String tsid = "${testsuite.id}_${testplan.name}"
 							def suite = null;
