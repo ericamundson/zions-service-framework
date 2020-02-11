@@ -20,6 +20,7 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
+import groovy.time.TimeCategory
 
 
 /**
@@ -341,6 +342,30 @@ class ZeusBuildData implements CliAction {
 			int size = releaseBranches.size()
 			rBranches.dev = releaseBranches[size-1]
 			rBranches.prod = releaseBranches[size-2]
+		}
+		rBranches = updateForBLRelease(rBranches)
+		return rBranches
+	}
+	
+	def updateForBLRelease(def rBranches) {
+		String bName = "${rBranches.dev.name}"
+		String v = bName.substring(8)
+		String appId = "Applications/Zeus/Releases/${v}/Zeus_${v}_App"
+		String environmentId = "Environments/Zeus/Releases/${v}/BL/BL Copy"
+		boolean hasDeploy = deploymentService.hasDeployment(appId, environmentId)
+		if (hasDeploy) {
+			rBranches.prod = rBranches.dev
+			Date cd = Date.parse('yyMM', v)
+			Date nd = null
+			TimeCategory t
+			use(TimeCategory) {
+			    nd = cd + 3.months
+				println nd
+				
+			}			
+			String name = "release/${nd.format('yyMM')}"
+			def pBranch = codeManagementService.ensureBranch('', 'Zeus', 'Zeus', 'master', name)
+			rBranches.dev = pBranch
 		}
 		return rBranches
 	}
