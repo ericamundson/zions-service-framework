@@ -117,7 +117,7 @@ class CodeManagementService {
 
 	}
 	
-	public getBranches(String collection, String project, String repo) {
+	public def getBranches(String collection, String project, String repo) {
 		def query = ['api-version':'5.1', 'baseVersionDescriptor.versionType': 'branch']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
@@ -125,6 +125,49 @@ class CodeManagementService {
 			query: query
 		)
 		return result
+	}
+	public def getBranch(String collection, String project, String repo, String name) {
+		def query = ['api-version':'5.1', 'baseVersionDescriptor.versionType': 'branch']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/stats/branches",
+			query: query
+		)
+		def branch = result.'value'.find { b -> 
+			String bName = "${b.name}"
+			bName == name
+		}
+		
+		return branch
+	}
+
+	public def ensureBranch(String collection, String project, String repo, String baseName, String name) {
+		def bBranch = getBranch(collection, project, repo, baseName)
+		def nBranch = getBranch(collection, project, repo, name)
+		if (nBranch) {
+			return nBranch
+		} else {
+			nBranch = createBranch(collection, project, repo, bBranch, name)
+			nBranch = getBranch(collection, project, repo, name)
+		}
+		return nBranch
+	}
+	
+	public def createBranch(String collection, String project, String repo, def bBranch, String name) {
+		def query = ['api-version': '5.1']
+		def data = [[name: "refs/heads/${name}", newObjectId: "${bBranch.commit.commitId}", oldObjectId: "0000000000000000000000000000000000000000"]]
+		String body = new JsonBuilder(data).toPrettyString()
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			body: body,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/refs",
+			query: query
+		)
+		if (result && result.'value' && result.'value'.size() == 1) {
+			return result.'value'[0]
+		}
+		return null
 	}
 
 
