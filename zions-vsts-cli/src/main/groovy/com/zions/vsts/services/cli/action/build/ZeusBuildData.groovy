@@ -54,11 +54,13 @@ import groovy.time.TimeCategory
  *  }
  *  Bug --> Zeus_Developer: Assigned to
  *  Zeus_Developer --> release_branch : "Provides pull request to release branch"
- *  ZeusPipeline --> Zeus_GIT_repo : "When repo changes build activates"
- *  ZeusPipeline --> ZeusBuildData : "Generates all build artifacts"
+ *  Zeus_GIT_repo --> ZeusPipeline : "When repo changes build activates"
+ *  ZeusPipeline --> ZeusBuildData : "Generates all build artifacts.\nPerforms some release tracking."
  *}
  *card XLDeploy as "XL Deploy" {
- *	component ZeusApp as "Applications/Zeus/Releases/<Release Id>/Zeus_<release id>_app" 
+ *	component ZeusApp as "Applications/Zeus/Releases/<Release Id>/Zeus_<build number>_app" 
+ *	component ZeusEnv as "Environments/Zeus/Releases/<Release Id>/QA Email\nEnvironments/Zeus/Releases/<Release Id>/QA Copy\nEnvironments/Zeus/Releases/<Release Id>/QAAuto Email\nEnvironments/Zeus/Releases/<Release Id>/QAAuto Copy\nEnvironments/Zeus/Releases/<Release Id>/UAT Email\nEnvironments/Zeus/Releases/<Release Id>/UAT Copy\nEnvironments/Zeus/Releases/<Release Id>/BL EMail\nEnvironments/Zeus/Releases/<Release Id>/BL Copy" 
+ *	ZeusPipeline --> XLDeploy : "Creates/Updates Release CIs"
  *	ZeusPipeline --> ZeusApp : "Publish Deployment Package to App"
  *  ZeusApp --> ZeusAntScript : "Specific application package makes call to ant script for specified environment"
  *}
@@ -69,7 +71,7 @@ import groovy.time.TimeCategory
  *  ReleaseManager --> ZeusRelease: "Handles requests for response"
  *  ZeusRelease --> ZeusTemplate: "Template Used"
  *  ZeusPipeline --> ZeusRelease: "Creates release from template"
- *  ZeusRelease --> ZeusApp : "Request deploy to environment"
+ *  ZeusRelease --> XLDeploy : "Request deploy to environment"
  *}
  *Zeus --[hidden]> XLDeploy
  *
@@ -99,6 +101,9 @@ class ZeusBuildData implements CliAction {
 	
 	@Value('${rollup:false}')
 	boolean rollup
+	
+	@Value('${create.branch:true}')
+	boolean createBranch
 
 	@Override
 	public def execute(ApplicationArguments data) {
@@ -126,7 +131,7 @@ class ZeusBuildData implements CliAction {
 		String sourceBranch = "${build.sourceBranch}"
 		String repoId = "${build.repository.id}"
 		
-		def releases = getDevProdReleases(collection, project, repoId)
+		def releases = getDevProdReleases(collection, project, repoId, createBranch)
 		def gversions = []
 		String prodRelease = null
 		if (releases.prod) {
@@ -273,7 +278,7 @@ class ZeusBuildData implements CliAction {
 			o << "uat.zeusdev.version=${gversions[0]}${sep}"
 		} 
 		if (gversions.size() >= 2) {
-			o << "uat.zeusprod.version=${gversions[0]}${sep}"
+			o << "uat.zeusprod.version=${gversions[0]}PR${sep}"
 			o << "uat.zeusdev.version=${gversions[1]}${sep}"
 			o << "bl.zeusprod.version=${gversions[1]}${sep}"
 		}
@@ -326,7 +331,7 @@ class ZeusBuildData implements CliAction {
 		return null
 	}
 	
-	def getDevProdReleases(String collection, String project, String repoName) {
+	def getDevProdReleases(String collection, String project, String repoName, boolean createBranch) {
 		def branches = codeManagementService.getBranches(collection, project, repoName)
 		def releaseBranches = branches.'value'.findAll { branch ->
 			String name = "${branch.name}"
@@ -343,11 +348,11 @@ class ZeusBuildData implements CliAction {
 			rBranches.dev = releaseBranches[size-1]
 			rBranches.prod = releaseBranches[size-2]
 		}
-		rBranches = updateForBLRelease(rBranches)
+		rBranches = updateForBLRelease(rBranches, createBranch)
 		return rBranches
 	}
 	
-	def updateForBLRelease(def rBranches) {
+	def updateForBLRelease(def rBranches, boolean createBranch) {
 		String bName = "${rBranches.dev.name}"
 		String v = bName.substring(8)
 		String appId = "Applications/Zeus/Releases/${v}/Zeus_${v}_App"
@@ -355,17 +360,20 @@ class ZeusBuildData implements CliAction {
 		boolean hasDeploy = deploymentService.hasDeployment(appId, environmentId)
 		if (hasDeploy) {
 			rBranches.prod = rBranches.dev
-			Date cd = Date.parse('yyMM', v)
-			Date nd = null
-			TimeCategory t
-			use(TimeCategory) {
-			    nd = cd + 3.months
-				println nd
-				
-			}			
-			String name = "release/${nd.format('yyMM')}"
-			def pBranch = codeManagementService.ensureBranch('', 'Zeus', 'Zeus', 'master', name)
-			rBranches.dev = pBranch
+			rBranches.dev = null
+			if (createBranch) {
+				Date cd = Date.parse('yyMM', v)
+				Date nd = null
+				TimeCategory t
+				use(TimeCategory) {
+				    nd = cd + 3.months
+					println nd
+					
+				}			
+				String name = "release/${nd.format('yyMM')}"
+				def pBranch = codeManagementService.ensureBranch('', 'Zeus', 'Zeus', 'master', name)
+				rBranches.dev = pBranch
+			}
 		}
 		return rBranches
 	}
