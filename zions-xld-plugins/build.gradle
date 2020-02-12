@@ -1,0 +1,10 @@
+bootJar { enabled = false }
+jar {
+	enabled = true
+	baseName = 'zions-xld-services'
+}
+
+dependencies {
+    compile fileTree(dir: 'lib', include: ['*.jar'])
+	compile project(':zions-common')
+}
