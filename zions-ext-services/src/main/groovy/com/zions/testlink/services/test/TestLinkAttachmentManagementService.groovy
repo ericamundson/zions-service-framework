@@ -8,6 +8,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import br.eti.kinoshita.testlinkjavaapi.TestLinkAPIException
 
 /**
  * Manage caching attachments and returning data elements required to associate attachment to ADO element.
@@ -53,7 +54,13 @@ class TestLinkAttachmentManagementService {
 	 */
 	public def cacheTestCaseAttachments(def testCase) {
 		def files = []
-		Attachment[] attachments = testLinkClient.getTestCaseAttachments(testCase.id, null)
+		Attachment[] attachments = []
+		try {
+			attachments = testLinkClient.getTestCaseAttachments(testCase.id, null)
+		}
+		catch (TestLinkAPIException e) {
+			log.error("Attempt to retrieve attachments failed for test case <${testCase.name}(${testCase.id})>.  Error: $e")
+		}
 		attachments.each { Attachment attachment ->
 			def data = attachment.content
 			byte[] dstr = Base64.decoder.decode(data)
