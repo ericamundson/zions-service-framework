@@ -59,8 +59,8 @@ import groovy.time.TimeCategory
  *}
  *card XLDeploy as "XL Deploy" {
  *	component ZeusApp as "Applications/Zeus/Releases/<Release Id>/Zeus_<build number>_app" 
- *	component ZeusEnv as "Environments/Zeus/Releases/<Release Id>/QA Email\nEnvironments/Zeus/Releases/<Release Id>/QA Copy\nEnvironments/Zeus/Releases/<Release Id>/QAAuto Email\nEnvironments/Zeus/Releases/<Release Id>/QAAuto Copy\nEnvironments/Zeus/Releases/<Release Id>/UAT Email\nEnvironments/Zeus/Releases/<Release Id>/UAT Copy\nEnvironments/Zeus/Releases/<Release Id>/BL EMail\nEnvironments/Zeus/Releases/<Release Id>/BL Copy" 
- *	ZeusPipeline --> XLDeploy : "Creates/Updates Release CIs"
+ *	component ZeusEnv as "Environments/Zeus/Releases/<Release Id>/QA/QA Email\nEnvironments/Zeus/Releases/<Release Id>/QA/QA Copy\nEnvironments/Zeus/Releases/<Release Id>/QAAuto/QAAuto Email\nEnvironments/Zeus/Releases/<Release Id>/QAAuto/QAAuto Copy\nEnvironments/Zeus/Releases/<Release Id>/UAT/UAT Email\nEnvironments/Zeus/Releases/<Release Id>/UAT/UAT Copy\nEnvironments/Zeus/Releases/<Release Id>/BL/BL EMail\nEnvironments/Zeus/Releases/<Release Id>/BL/BL Copy" 
+ *	ZeusPipeline --> XLDeploy : "Creates/Updates Deployment CIs"
  *	ZeusPipeline --> ZeusApp : "Publish Deployment Package to App"
  *  ZeusApp --> ZeusAntScript : "Specific application package makes call to ant script for specified environment"
  *}
@@ -70,7 +70,7 @@ import groovy.time.TimeCategory
  *  component ZeusRelease as "Zeus Release"
  *  ReleaseManager --> ZeusRelease: "Handles requests for response"
  *  ZeusRelease --> ZeusTemplate: "Template Used"
- *  ZeusPipeline --> ZeusRelease: "Creates release from template"
+ *  ZeusPipeline --> XLR: "Creates release from updated template"
  *  ZeusRelease --> XLDeploy : "Request deploy to environment"
  *}
  *Zeus --[hidden]> XLDeploy
@@ -280,8 +280,13 @@ class ZeusBuildData implements CliAction {
 		if (gversions.size() >= 2) {
 			o << "uat.zeusprod.version=${gversions[0]}PR${sep}"
 			o << "uat.zeusdev.version=${gversions[1]}${sep}"
-			o << "bl.zeusprod.version=${gversions[1]}${sep}"
+			if (isProductionBranch) {
+				o << "bl.zeusprod.version=${gversions[0]}PR${sep}"
+			} else {
+				o << "bl.zeusprod.version=${gversions[1]}${sep}"
+			}
 		}
+		if (isProductionBranch)
 		o.close()
 		if (fListSet.isEmpty()) {
 			log.error("Build has no new files!  Usually do to no new changes since prior build.")
