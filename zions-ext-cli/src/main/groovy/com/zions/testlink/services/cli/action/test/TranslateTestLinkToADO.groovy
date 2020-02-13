@@ -192,6 +192,8 @@ import groovy.xml.XmlUtil
 @Traceable
 class TranslateTestLinkToADO implements CliAction {
 	@Autowired
+	private Map<String, IFilter> filterMap;
+	@Autowired
 	MemberManagementService memberManagementService;
 	//	@Autowired
 	//	AttachmentsManagementService attachmentsManagementService
@@ -246,7 +248,7 @@ class TranslateTestLinkToADO implements CliAction {
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
 		String mappingFile = data.getOptionValues('test.mapping.file')[0]
 		String tlQuery = data.getOptionValues('tl.query')[0]
-		//String wiFilter = data.getOptionValues('tl.filter')[0]
+		String wiFilter = data.getOptionValues('tl.filter')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -329,10 +331,12 @@ class TranslateTestLinkToADO implements CliAction {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					def idKeyMap = [:]
 					testLinkItemManagementService.resetNewId()
+					items = filtered(items, wiFilter)
 					items.each { testItem ->
 						TestPlan testplan = testItem
 						int pid = testplan.id
 
+						log.info("Migrating plan: ${testplan.name}")
 						def testcaseCallback = null
 						if (processFullPlan) {
 							testcaseCallback = { TestSuite psuite, TestCase testcasea -> 
@@ -506,12 +510,12 @@ class TranslateTestLinkToADO implements CliAction {
 	 * @param filter - Name of IFilter to use
 	 * @return filtered result.
 	 */
-//	def filtered(def items, String filter) {
-//		if (this.filterMap[filter] != null) {
-//			return this.filterMap[filter].filter(items)
-//		}
-//		return items.entry.findAll { ti -> true }
-//	}
+	def filtered(def items, String filter) {
+		if (this.filterMap[filter] != null) {
+			return this.filterMap[filter].filter(items)
+		}
+		return items
+	}
 
 
 	/* (non-Javadoc)
