@@ -21,9 +21,6 @@ buildscript {
 		classpath 'net.sourceforge.plantuml:plantuml:8059'
 		classpath 'org.ajoberstar:gradle-git-publish:2.0.0'
 		classpath 'com.bmuschko:gradle-docker-plugin:4.10.0'
-		classpath 'org.codehaus.groovy:groovy-all:2.4.7'
-		classpath 'org.apache.poi:poi:3.14'
-		classpath 'org.apache.poi:poi-ooxml:3.14'
 	}
 }
 
