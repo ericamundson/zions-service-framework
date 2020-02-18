@@ -6,10 +6,10 @@
 			<defaultvalue target="Active"/>
 		</field>
 		<field source="planBlankHandler" target="area">
-			<defaultvalue target="TestLink\IVR"/>
+			<defaultvalue target="VoiceApplications\IVR"/>
 		</field>
 		<field source="blankHandler" target="iteration">
-			<defaultvalue target="TestLink"/>		
+			<defaultvalue target="VoiceApplications"/>		
 		</field>
 	</wit>
 	<wit source="TestSuite"  target="Test Suite" translateUnmappedFields="false" notWorkItem="true">
@@ -19,10 +19,10 @@
 			<defaultvalue target="Active"/>
 		</field>
 		<field source="planBlankHandler" target="area">
-			<defaultvalue target="TestLink\IVR"/>
+			<defaultvalue target="VoiceApplications\IVR"/>
 		</field>
 		<field source="blankHandler" target="iteration">
-			<defaultvalue target="TestLink"/>		
+			<defaultvalue target="VoiceApplications"/>		
 		</field>
 	</wit>
 	<wit source="TestCase"  target="Test Case" translateUnmappedFields="false">
@@ -34,10 +34,10 @@
 			<defaultvalue target="Design"/>
 		</field>
 		<field source="blankHandler" target="System.AreaPath">
-			<defaultvalue target="TestLink\IVR"/>
+			<defaultvalue target="VoiceApplications\IVR"/>
 		</field>
 		<field source="blankHandler" target="System.IterationPath">
-			<defaultvalue target="TestLink"/>		
+			<defaultvalue target="VoiceApplications"/>		
 		</field>
 		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
 		<excluded>
