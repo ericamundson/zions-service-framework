@@ -10,7 +10,7 @@ class TlDPSPlansFilter implements IFilter {
 	public def filter(def items) {
 		return items.findAll { ti ->
 			String name = "${ti.name}"
-			name == 'ADO Archive'
+			name == 'Oracle Upgrade TEBUS 3 Unit Testing 1 plan'
 		}
 	}
 

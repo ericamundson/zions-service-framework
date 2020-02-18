@@ -192,6 +192,8 @@ import groovy.xml.XmlUtil
 @Traceable
 class TranslateTestLinkToADO implements CliAction {
 	@Autowired
+	private Map<String, IFilter> filterMap;
+	@Autowired
 	MemberManagementService memberManagementService;
 	//	@Autowired
 	//	AttachmentsManagementService attachmentsManagementService
@@ -246,7 +248,7 @@ class TranslateTestLinkToADO implements CliAction {
 		String areaPath = data.getOptionValues('tfs.areapath')[0]
 		String mappingFile = data.getOptionValues('test.mapping.file')[0]
 		String tlQuery = data.getOptionValues('tl.query')[0]
-		//String wiFilter = data.getOptionValues('tl.filter')[0]
+		String wiFilter = data.getOptionValues('tl.filter')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -329,11 +331,12 @@ class TranslateTestLinkToADO implements CliAction {
 					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 					def idKeyMap = [:]
 					testLinkItemManagementService.resetNewId()
+					items = filtered(items, wiFilter)
 					items.each { testItem ->
 						TestPlan testplan = testItem
 						int pid = testplan.id
 
-
+						log.info("Migrating plan: ${testplan.name}")
 						def testcaseCallback = null
 						if (processFullPlan) {
 							testcaseCallback = { TestSuite psuite, TestCase testcasea -> 
@@ -372,6 +375,8 @@ class TranslateTestLinkToADO implements CliAction {
 						}
 							
 						TestSuite[] suites = testLinkClient.getFirstLevelSuitesForTestPlan(testplan)
+						if (suites.size() == 0) return
+						
 						handleTestSuites(suites, plan, testplan, null, { def parent, TestSuite testsuite -> 
 							String tsid = "${testsuite.id}_${testplan.name}"
 							def suite = null;
@@ -405,7 +410,13 @@ class TranslateTestLinkToADO implements CliAction {
 							String tswebId = "${testsuite.id}_${testplan.name}"
 							TestCase[] testcaseList = testLinkClient.getTestCasesForTestPlanSuite(testsuite.id, testplan.id, false, 'full')
 							testLinkItemManagementService.setParent(testsuite, testcaseList, mappingData, planName) { typeData, tcIds ->
-								testManagementService.associateCaseToSuite(typeData, tcIds, updateLinks)
+								String suiteUrl = "${typeData.url}"
+								def tcMap = testManagementService.getSuiteTestCaseMap(suiteUrl)
+								if (tcMap.size() == tcIds.size()) return
+								tcIds = this.filterIds(tcIds, tcMap)
+								if (tcIds.size() > 0) {
+									testManagementService.associateCaseToSuite(suiteUrl, tcIds)
+								}
 							}
 							def suiteData = cacheManagementService.getFromCache(tswebId, ICacheManagementService.SUITE_DATA)
 							return suiteData
@@ -499,12 +510,12 @@ class TranslateTestLinkToADO implements CliAction {
 	 * @param filter - Name of IFilter to use
 	 * @return filtered result.
 	 */
-//	def filtered(def items, String filter) {
-//		if (this.filterMap[filter] != null) {
-//			return this.filterMap[filter].filter(items)
-//		}
-//		return items.entry.findAll { ti -> true }
-//	}
+	def filtered(def items, String filter) {
+		if (this.filterMap[filter] != null) {
+			return this.filterMap[filter].filter(items)
+		}
+		return items
+	}
 
 
 	/* (non-Javadoc)
@@ -518,6 +529,16 @@ class TranslateTestLinkToADO implements CliAction {
 			}
 		}
 		return true
+	}
+	private def filterIds(def idList, def tcMap) {
+		Set<String> oid = []
+		idList.each { id ->
+			String key = "${id}"
+			if (!tcMap.get(key)) {
+				oid.add(key)
+			}
+		}
+		return oid
 	}
 
 

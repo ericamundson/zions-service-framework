@@ -58,6 +58,232 @@ class WorkManagementService {
 	public WorkManagementService() {
 	}
 	
+	public def cleanBadResultLinks(String collection, String project, String teamArea) {
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${project}' AND [System.AreaPath] under '${teamArea}' AND [Custom.ExternalID] CONTAINS 'RQM-'"
+		def wis = getWorkItems(collection, project, query)
+		if (!wis || !wis.workItems) return
+		def wiList = wis.workItems
+		int j = 0
+		//def eMap = [:]
+		while (true) {
+			def ids = []
+			def keys = []
+			for (int i = 0; i < 200 && j < wiList.size(); i++) {
+				def wi = wiList[j]
+				ids.push(wi.id)
+				j++
+			}
+			def result = batchGet(collection, project, ids)
+			result.value.each { owi ->
+				String key = getKey(owi)
+				def cacheWI = cacheManagementService.getFromCache(key, ICacheManagementService.WI_DATA)
+				String oid = "${owi.id}"
+				String cid = "${cacheWI.id}"
+				if (oid == cid) {
+					def changes = genRemoveBadResultLinks(collection, project, owi)
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Bug fix for WI: 932997
+	 * 
+	 * @param collection
+	 * @param project
+	 * @param teamArea
+	 * @return
+	 */
+	public def fixTestCaseSteps(String collection, String project, String teamArea) {
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = '${project}' AND [System.WorkItemType] IN ('Test Case') AND [System.AreaPath] UNDER '${teamArea}' AND [Custom.ExternalID] Contains 'RQM-'"
+		def wis = getWorkItems(collection, project, query)
+		if (!wis || !wis.workItems) return
+		def wiList = wis.workItems
+		int j = 0
+		//def eMap = [:]
+		def clManager = new ChangeListManager(collection, project, this);
+		while (true) {
+			def ids = []
+			for (int i = 0; i < 200 && j < wiList.size(); i++) {
+				def wi = wiList[j]
+				ids.push(wi.id)
+				j++
+			}
+			def result = batchGet(collection, project, ids)
+			result.value.each { owi ->
+				def changes = generateStepsChanges(collection, project, owi)
+				if (changes) {
+					String key = getKey(owi)
+					
+					clManager.add(key, changes)
+				}
+			}
+			if (j == wiList.size()) {
+				def lwi = wiList[j - 1]
+				String lastId =  "${lwi.id}"
+				j = 0
+				wis = getWorkItems(collection, project, query, lastId)
+				if (!wis || !wis.workItems || !wis.workItems.size() == 0) return
+				wiList = wis.workItems
+			}
+		}
+		clManager.flush()
+	}
+	
+	private def generateStepsChanges(String collection, String project, owi) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def cid = owi.id
+		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0&bypassRules=true&suppressNotifications=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+		def rev = [ op: 'test', path: '/rev', value: owi.rev]
+		wiData.body.add(rev)
+		def sChanges = stepFieldChanges(owi)
+		if (sChanges) {
+			wiData.body.add(sChanges)
+			return wiData
+		}
+		return null
+	}
+	
+	private def stepFieldChanges(owi) {
+		String steps = "${owi.fields.'Microsoft.VSTS.TCM.Steps'}}"
+		// Address all double tags:  << blah blah >>				
+		String val = steps.replaceAll(/&lt;&lt;[^&]*?&gt;&gt;/) { it ->
+							String s = it
+							s = s.replace('&', '&amp;')
+							s
+						};
+		// Address all tags with single digit or just empty tag
+		val = val.replaceAll(/&lt;[ ]?[0-9]?[ ]?&gt;/) { it ->
+							String s = it
+							s = s.replace('&', '&amp;')
+							s
+						};
+		// Address all tags that start with ... (ignore case)
+		val = fixAllTagsStartWith('[\\$#"]', val)
+		val = fixAllTagsStartWith('\\*', val)
+		val = fixAllTagsStartWith('[0-4]', val)
+		val = fixAllTagsStartWith('act[ui]', val)
+		val = fixAllTagsStartWith('acc[ot]', val)
+		val = fixAllTagsStartWith('affiliate', val)
+		val = fixAllTagsStartWith('after', val)
+		val = fixAllTagsStartWith('Amount', val)
+		val = fixAllTagsStartWith('Annual', val)
+		val = fixAllTagsStartWith('APR ', val)
+		val = fixAllTagsStartWith('Appro', val)
+		val = fixAllTagsStartWith('[/]?app', val)
+		val = fixAllTagsStartWith('Archived', val)
+		val = fixAllTagsStartWith('Auto ', val)
+		val = fixAllTagsStartWith('Bill[ i]', val)
+		val = fixAllTagsStartWith('blank', val)
+		val = fixAllTagsStartWith('before', val)
+		val = fixAllTagsStartWith('[/]?B[a]?NCS', val)
+		val = fixAllTagsStartWith('borrower', val)
+		val = fixAllTagsStartWith('bucket', val)
+		val = fixAllTagsStartWith('Capital', val)
+		val = fixAllTagsStartWith('Customer', val)
+		val = fixAllTagsStartWith('Check', val)
+		val = fixAllTagsStartWith('Cleanup', val)
+		val = fixAllTagsStartWith('Common', val)
+		val = fixAllTagsStartWith('Day', val)
+		val = fixAllTagsStartWith('De[fs]', val)
+		val = fixAllTagsStartWith('Due', val)
+		val = fixAllTagsStartWith('dat[ae]', val)
+		val = fixAllTagsStartWith('Draw ', val)
+		val = fixAllTagsStartWith('Effective', val)
+		val = fixAllTagsStartWith('End ', val)
+		val = fixAllTagsStartWith('EO[YDM]', val)
+		val = fixAllTagsStartWith('Expir', val)
+		val = fixAllTagsStartWith('FEB[ -]', val)
+		val = fixAllTagsStartWith('Frequency', val)
+		val = fixAllTagsStartWith('[/]?fns[/]?', val)
+		val = fixAllTagsStartWith('Fee', val)
+		val = fixAllTagsStartWith('First ', val)
+		val = fixAllTagsStartWith('Fu[nt]', val)
+		val = fixAllTagsStartWith('general', val)
+		val = fixAllTagsStartWith('Grace', val)
+		val = fixAllTagsStartWith('HHMMSS', val)
+		val = fixAllTagsStartWith('Ho[lw]', val)
+		val = fixAllTagsStartWith('http:', val)
+		val = fixAllTagsStartWith('IOF-', val)
+		val = fixAllTagsStartWith('inter[fe]', val)
+		val = fixAllTagsStartWith('implementation ', val)
+		val = fixAllTagsStartWith('Job', val)
+		val = fixAllTagsStartWith('Last ', val)
+		val = fixAllTagsStartWith('MAR[C]? 2015', val)
+		val = fixAllTagsStartWith('Maturity', val)
+		val = fixAllTagsStartWith('mmfdmain', val)
+		val = fixAllTagsStartWith('Next ', val)
+		val = fixAllTagsStartWith('ODS', val)
+		val = fixAllTagsStartWith('Other', val)
+		val = fixAllTagsStartWith('option', val)
+		val = fixAllTagsStartWith('lonq', val)
+		val = fixAllTagsStartWith('On ', val)
+		val = fixAllTagsStartWith('Payment', val)
+		val = fixAllTagsStartWith('Path ', val)
+		val = fixAllTagsStartWith('Periodic', val)
+		val = fixAllTagsStartWith('Pre[ -]?condition', val)
+		val = fixAllTagsStartWith('Pre[ -]?requisite', val)
+		val = fixAllTagsStartWith('Post', val)
+		val = fixAllTagsStartWith('Query', val)
+		val = fixAllTagsStartWith('Run', val)
+		val = fixAllTagsStartWith('Rate ', val)
+		val = fixAllTagsStartWith('Requirement', val)
+		val = fixAllTagsStartWith('Rep[ao]', val)
+		val = fixAllTagsStartWith('Response', val)
+		val = fixAllTagsStartWith('Remittance', val)
+		val = fixAllTagsStartWith('Renew', val)
+		val = fixAllTagsStartWith('Review', val)
+		val = fixAllTagsStartWith('Rollover', val)
+		val = fixAllTagsStartWith('Seasonal', val)
+		val = fixAllTagsStartWith('Select', val)
+		val = fixAllTagsStartWith('Settlement', val)
+		val = fixAllTagsStartWith('Second ', val)
+		val = fixAllTagsStartWith('SI_HOME', val)
+		val = fixAllTagsStartWith('Step', val)
+		val = fixAllTagsStartWith('[/]sch', val)
+		val = fixAllTagsStartWith('Sl Nbr', val)
+		val = fixAllTagsStartWith('Soap', val)
+		val = fixAllTagsStartWith('Sub[lm]', val)
+		val = fixAllTagsStartWith('SQL', val)
+		val = fixAllTagsStartWith('tfdrfile', val)
+		val = fixAllTagsStartWith('TCS ', val)
+		val = fixAllTagsStartWith('Tran', val)
+		val = fixAllTagsStartWith('timestamp', val)
+		val = fixAllTagsStartWith('UF[ET]', val)
+		val = fixAllTagsStartWith('Valid', val)
+		val = fixAllTagsStartWith('x', val)
+		val = fixAllTagsStartWith('Year ', val)
+		val = fixAllTagsStartWith('ZFN', val)
+		
+		// Only save if something changed
+		if (steps != val) {
+			def retVal = [op:'add', path: '/fields/Microsoft.VSTS.TCM.Steps', value: val]
+			return retVal
+		}
+		return null
+	}
+
+	private String fixAllTagsStartWith(String in_word, String in_val) {
+		// Address all tags that start with string
+		String val = in_val.replaceAll(~"(?i)&lt;[ ]*$in_word[^&]*?&gt;") { it ->
+							String s = it
+							s = s.replace('&', '&amp;')
+							s
+						};
+		return val
+	}
+	
+	private def genRemoveBadResultLinks(String collection, String project, owi) {
+		String url
+		int index = 0
+	}
+	
+	private def removeLinkChanges(def wiData, def indexs) {
+		
+	}
+	
+	
+	
 	/**
 	 * Refresh work item cache by a query.
 	 * 
@@ -341,14 +567,14 @@ class WorkManagementService {
 
 	}
 
-	//	def getWorkItem(String url) {
-	//		def result = genericRestClient.get(
-	//			uri: url,
-	//			contentType: ContentType.JSON,
-	//			query: [destroy: true, 'api-version': '5.0-preview.3']
-	//			)
-	//		return result
-	//	}
+	def getWorkItem(String url) {
+		def result = genericRestClient.get(
+			uri: url,
+			contentType: ContentType.JSON,
+			query: [destroy: true, 'api-version': '5.0-preview.3']
+			)
+		return result
+	}
 
 	def getWorkItems(String collection, String project, String aquery, String lastId = null) {
 		def eproject = URLEncoder.encode(project, 'utf-8')

@@ -14,10 +14,13 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.work.WorkManagementService
+import com.zions.xld.services.ci.CIService
+import com.zions.xld.services.deployment.DeploymentService
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
+import groovy.time.TimeCategory
 
 
 /**
@@ -45,23 +48,33 @@ import groovy.xml.MarkupBuilder
  *cloud Zeus as "ADO Zeus Project"{
  *  rectangle Bug as "'Bug' work item type"
  *	actor Zeus_Developer as "Zeus Developer"
- *	component ZeusPipeline as "[[https://dev.azure.com/zionseto/Zeus/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=973 Zeus-release]] build pipeline"
+ *	component ZeusPipeline as "[[https://dev.azure.com/zionseto/Zeus/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=1238 Zeus]] build pipeline"
  *	storage Zeus_GIT_repo as "Zeus GIT repo" {
  *		rectangle release_branch as "release/<release id> git branch"
  *  }
  *  Bug --> Zeus_Developer: Assigned to
  *  Zeus_Developer --> release_branch : "Provides pull request to release branch"
- *  ZeusPipeline --> Zeus_GIT_repo : "When repo changes build activates"
- *  ZeusPipeline --> ZeusBuildData : "Generates all build artifacts"
+ *  Zeus_GIT_repo --> ZeusPipeline : "When repo changes build activates"
+ *  ZeusPipeline --> ZeusBuildData : "Generates all build artifacts.\nPerforms some release tracking."
  *}
  *card XLDeploy as "XL Deploy" {
- *  actor ReleaseManager as "Release Manager"
- *	component ZeusApp as "Application/Zeus/Zeus" 
+ *	component ZeusApp as "Applications/Zeus/Releases/<Release Id>/Zeus_<build number>_app" 
+ *	component ZeusEnv as "Environments/Zeus/Releases/<Release Id>/QA/QA Email\nEnvironments/Zeus/Releases/<Release Id>/QA/QA Copy\nEnvironments/Zeus/Releases/<Release Id>/QAAuto/QAAuto Email\nEnvironments/Zeus/Releases/<Release Id>/QAAuto/QAAuto Copy\nEnvironments/Zeus/Releases/<Release Id>/UAT/UAT Email\nEnvironments/Zeus/Releases/<Release Id>/UAT/UAT Copy\nEnvironments/Zeus/Releases/<Release Id>/BL/BL EMail\nEnvironments/Zeus/Releases/<Release Id>/BL/BL Copy" 
+ *	ZeusPipeline --> XLDeploy : "Creates/Updates Deployment CIs"
  *	ZeusPipeline --> ZeusApp : "Publish Deployment Package to App"
- *  ReleaseManager --> ZeusApp : "Request deploy to environment"
  *  ZeusApp --> ZeusAntScript : "Specific application package makes call to ant script for specified environment"
  *}
+ *card XLR as "XL Release" {
+ *  actor ReleaseManager as "Release Manager/QA/UAT"
+ *  component ZeusTemplate as "Zeus Release Template"
+ *  component ZeusRelease as "Zeus Release"
+ *  ReleaseManager --> ZeusRelease: "Handles requests for response"
+ *  ZeusRelease --> ZeusTemplate: "Template Used"
+ *  ZeusPipeline --> XLR: "Creates release from updated template"
+ *  ZeusRelease --> XLDeploy : "Request deploy to environment"
+ *}
  *Zeus --[hidden]> XLDeploy
+ *
  *@enduml
  */
 @Component
@@ -72,6 +85,12 @@ class ZeusBuildData implements CliAction {
 	BuildManagementService buildManagementService
 	@Autowired
 	WorkManagementService workManagementService
+	@Autowired
+	CodeManagementService codeManagementService
+	@Autowired
+	CIService cIService
+	@Autowired
+	DeploymentService deploymentService
 
 	@Autowired
 	public ZeusBuildData() {
@@ -82,6 +101,9 @@ class ZeusBuildData implements CliAction {
 	
 	@Value('${rollup:false}')
 	boolean rollup
+	
+	@Value('${create.branch:true}')
+	boolean createBranch
 
 	@Override
 	public def execute(ApplicationArguments data) {
@@ -100,20 +122,64 @@ class ZeusBuildData implements CliAction {
 		try {
 			outRepoDir = data.getOptionValues('out.repo.dir')[0]
 		} catch (e) {}
-		String changeRequest = data.getOptionValues('change.request')[0]
-		String releaseDate = null
-		try {
-			releaseDate = data.getOptionValues('release.date')[0]
-		} catch (e) {}
+//		String changeRequest = data.getOptionValues('change.request')[0]
+//		String releaseDate = null
+//		try {
+//			releaseDate = data.getOptionValues('release.date')[0]
+//		} catch (e) {}
 		def build = buildManagementService.getExecution(collection, project, buildId)
 		String sourceBranch = "${build.sourceBranch}"
-		//if (sourceBranch.contains("release/")) {
-		if (!releaseId || releaseId.size() == 0) {
-			releaseId = "{{${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}}}"
+		String repoId = "${build.repository.id}"
+		
+		def releases = getDevProdReleases(collection, project, repoId, createBranch)
+		def gversions = []
+		String prodRelease = null
+		if (releases.prod) {
+			String bName = "${releases.prod.name}"
+			String v = bName.substring(8)
+			gversions.add(v)
+			prodRelease = v
+			println "##vso[task.setvariable variable=prodRelease]${v}"
+
 		}
+		boolean provisionSetup = false
+		if (releases.dev) {
+			String bName = "${releases.dev.name}"
+			String v = bName.substring(8)
+			gversions.add(v)
+			gversions.add("${gversions[0]}PR")
+			println "##vso[task.setvariable variable=devRelease]${v}"
+			String appId = "Applications/Zeus/Releases/${v}/Zeus_${v}_Provision"
+			String environmentId = "Environments/Zeus/Releases/${v}/Testbed/Provision"
+			def devTestBedProvisioning = cIService.getCI(appId)
+			if (devTestBedProvisioning) {
+				boolean hasDeploy = deploymentService.hasDeployment(appId, environmentId)
+				if (hasDeploy) {
+					println "##vso[task.setvariable variable=provisionSetup]true"
+					provisionSetup = true 
+				} else {
+					println "##vso[task.setvariable variable=provisionSetup]false"
+					
+				}
+			} else {
+				println "##vso[task.setvariable variable=provisionSetup]false"
+			}
+		}
+		
+		//if (sourceBranch.contains("release/")) {
+		String releaseIdNormal = ''
+		if ((!releaseId || releaseId.size() == 0) && sourceBranch.contains('release/')) {
+			releaseId = "${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}"
+		}
+		
+		//Setup crq and release date from Release work item with title of release id.
+//		def crqAndRelease = getCRQAndReleaseDate(releaseId)
+//		String changeRequest = crqAndRelease.CRQ
+//		String releaseDate = crqAndRelease.releaseDate
 		def builds = null
+		boolean isProductionBranch = "${releaseId}" == "${prodRelease}"
 		if (rollup) {
-			builds = buildManagementService.getRelatedBuilds(collection, project, build)
+			builds = buildManagementService.getRelatedBuilds(collection, project, build, isProductionBranch)
 		}
 		def buildWorkitems = null
 		if (!builds) {
@@ -127,8 +193,9 @@ class ZeusBuildData implements CliAction {
 			wi.push("${ref.id}")
 		}
 		if (wi.empty) {
+			println "##vso[task.setvariable variable=hasChanges]false"
 			log.error("Build has no new work items!  Usually do to no new changes since prior build.")
-			System.exit(1)
+			return null
 		}
 		def wis = wi.toSet()
 		def buildChanges = null
@@ -165,7 +232,7 @@ class ZeusBuildData implements CliAction {
 //					if (fpath.contains('.keep')) {
 //						fListWFolders.push(fpath.replace("\\", "/"))
 //					}
-					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.contains('.keep')) {
+					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml')) {
 						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
@@ -184,11 +251,18 @@ class ZeusBuildData implements CliAction {
 			}
 		}
 		Set affiliatesList = affiliates.toSet()
-		String sep = System.getProperty("line.separator")
+//		String sep = System.getProperty("line.separator")
+		String sep = "\r\n"
 		def fListSet = fList.toSet()
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()
-		o << "my.version=${releaseId}${sep}"
+		if (isProductionBranch) {
+			o << "my.version=${releaseId}PR${sep}"
+			
+		} else {
+			o << "my.version=${releaseId}${sep}"
+		}
+		o << "build.number=${build.buildNumber}${sep}"
 		o << "change.request={{change.request}}${sep}"
 		String affiliatesStr = affiliatesList.join(',')
 		o << "global.affiliates.list=${affiliatesStr}${sep}"
@@ -196,15 +270,31 @@ class ZeusBuildData implements CliAction {
 			String wiStr = wis.join(',')
 			o << "ado.workitems=${wiStr}${sep}"
 		}
-		if (releaseDate) {
-			o << "release.date=${releaseDate}${sep}"
+		//if (releaseDate) {
+			o << "release.date={{release.date}}${sep}"
+		//}
+		o << "global.versions.list=${gversions.join(',')}${sep}"
+		if (gversions.size() == 1) {
+			o << "uat.zeusdev.version=${gversions[0]}${sep}"
+		} 
+		if (gversions.size() >= 2) {
+			o << "uat.zeusprod.version=${gversions[0]}PR${sep}"
+			o << "uat.zeusdev.version=${gversions[1]}${sep}"
+			if (isProductionBranch) {
+				o << "bl.zeusprod.version=${gversions[0]}PR${sep}"
+			} else {
+				o << "bl.zeusprod.version=${gversions[1]}${sep}"
+			}
 		}
+		if (isProductionBranch)
 		o.close()
 		if (fListSet.isEmpty()) {
-			log.error('No files set for update! No new changes.')
-			System.exit(1)
+			log.error("Build has no new files!  Usually do to no new changes since prior build.")
+			println "##vso[task.setvariable variable=hasChanges]false"
+			return null
 		}
-
+		println "##vso[task.setvariable variable=hasChanges]true"
+		
 		f = new File("${outDir}/ZEUS.template")
 		def oFList = []
 		fListSet.each { String fName ->
@@ -231,17 +321,66 @@ class ZeusBuildData implements CliAction {
 				if (!ofd.exists()) {
 					ofd.mkdirs()
 				}
-				File of = new File("$outRepoDir${fName}")
-				def ao = of.newDataOutputStream()
-				ao << i
-				i.close()
-				ao.close()
-				fileMap["$outRepoDir${fName}"] = of
+				if (!fName.endsWith('.keep')) {
+					File of = new File("$outRepoDir${fName}")
+					def ao = of.newDataOutputStream()
+					ao << i
+					i.close()
+					ao.close()
+					fileMap["$outRepoDir${fName}"] = of
+				}
 			}
 			detailsFile(collection, project, wis, allChanges, outDir, outRepoDir, fileMap)
 		}
 		//}
 		return null
+	}
+	
+	def getDevProdReleases(String collection, String project, String repoName, boolean createBranch) {
+		def branches = codeManagementService.getBranches(collection, project, repoName)
+		def releaseBranches = branches.'value'.findAll { branch ->
+			String name = "${branch.name}"
+			name ==~ /release\/\d{4}/
+		}
+		releaseBranches = releaseBranches.sort { a,b -> a.name <=>  b.name }
+		def rBranches = [dev: null, prod: null]
+		if (releaseBranches.size() == 1) {
+			rBranches.dev = releaseBranches[0]
+			rBranches.prod = null
+		}
+		if (releaseBranches.size() >= 2) {
+			int size = releaseBranches.size()
+			rBranches.dev = releaseBranches[size-1]
+			rBranches.prod = releaseBranches[size-2]
+		}
+		rBranches = updateForBLRelease(rBranches, createBranch)
+		return rBranches
+	}
+	
+	def updateForBLRelease(def rBranches, boolean createBranch) {
+		String bName = "${rBranches.dev.name}"
+		String v = bName.substring(8)
+		String appId = "Applications/Zeus/Releases/${v}/Zeus_${v}_App"
+		String environmentId = "Environments/Zeus/Releases/${v}/BL/BL Copy"
+		boolean hasDeploy = deploymentService.hasDeployment(appId, environmentId)
+		if (hasDeploy) {
+			rBranches.prod = rBranches.dev
+			rBranches.dev = null
+			if (createBranch) {
+				Date cd = Date.parse('yyMM', v)
+				Date nd = null
+				TimeCategory t
+				use(TimeCategory) {
+				    nd = cd + 3.months
+					println nd
+					
+				}			
+				String name = "release/${nd.format('yyMM')}"
+				def pBranch = codeManagementService.ensureBranch('', 'Zeus', 'Zeus', 'master', name)
+				rBranches.dev = pBranch
+			}
+		}
+		return rBranches
 	}
 
 	boolean fileExists(String inRepoDir, String iName) {
@@ -269,6 +408,9 @@ class ZeusBuildData implements CliAction {
 				entry(affiliate: "${affiliate}") {
 					String fName = "${change.item.path}"
 					File f = fileMap["${outRepoDir}/${fName}"]
+					if (fName.startsWith('/')) {
+						fName = fName.substring(1)
+					}
 					file ( "${fName}" )
 					size ( "${f.size()}" )
 					date ( "${change.parent.timestamp}" )
@@ -295,6 +437,37 @@ class ZeusBuildData implements CliAction {
 		o << writer.toString()
 		o.close();
 
+	}
+	
+	private def getCRQAndReleaseDate(String releaseId) {
+		def out = [CRQ: 'NotSet', releaseDate: 'UNKNOWN']
+		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = 'Zeus' AND [System.AreaPath] under 'Zeus' AND [System.WorkItemType] = 'Release' and [System.Title] = '${releaseId}'"
+		def wis = workManagementService.getWorkItems('', 'Zeus', query)
+		if (wis.workItems && wis.workItems.size() >= 1) {
+			String crq = 'NotSet'
+			def wi = wis.workItems[0]
+			wi = workManagementService.getWorkItem(wi.url)
+			String crqs = "${wi.fields.'Custom.CRQs'}"
+			if (crqs && crqs != 'null') {
+				def crqList = crqs.split(',')
+				if (crqList.size() > 0) {
+					crq = crqList[crqList.size()-1]
+				}
+			}
+			String releaseDate = 'UNKNOWN'
+			String rDate = "${wi.fields.'System.ChangedDate'}"
+			if (rDate && rDate != 'null') {
+				rDate = rDate.substring(0, "yyyy-MM-dd".length())
+				Date modDate = Date.parse("yyyy-MM-dd", rDate)
+				rDate = modDate.format('yyyyMMdd')
+				releaseDate = rDate
+			}
+			if (crq != 'NotSet') {
+				out.CRQ = crq
+			    out.releaseDate = releaseDate
+			}
+		}
+		return out
 	}
 
 	@Override

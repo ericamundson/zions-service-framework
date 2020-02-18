@@ -116,6 +116,60 @@ class CodeManagementService {
 		return result
 
 	}
+	
+	public def getBranches(String collection, String project, String repo) {
+		def query = ['api-version':'5.1', 'baseVersionDescriptor.versionType': 'branch']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/stats/branches",
+			query: query
+		)
+		return result
+	}
+	public def getBranch(String collection, String project, String repo, String name) {
+		def query = ['api-version':'5.1', 'baseVersionDescriptor.versionType': 'branch']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/stats/branches",
+			query: query
+		)
+		def branch = result.'value'.find { b -> 
+			String bName = "${b.name}"
+			bName == name
+		}
+		
+		return branch
+	}
+
+	public def ensureBranch(String collection, String project, String repo, String baseName, String name) {
+		def bBranch = getBranch(collection, project, repo, baseName)
+		def nBranch = getBranch(collection, project, repo, name)
+		if (nBranch) {
+			return nBranch
+		} else {
+			nBranch = createBranch(collection, project, repo, bBranch, name)
+			nBranch = getBranch(collection, project, repo, name)
+		}
+		return nBranch
+	}
+	
+	public def createBranch(String collection, String project, String repo, def bBranch, String name) {
+		def query = ['api-version': '5.1']
+		def data = [[name: "refs/heads/${name}", newObjectId: "${bBranch.commit.commitId}", oldObjectId: "0000000000000000000000000000000000000000"]]
+		String body = new JsonBuilder(data).toPrettyString()
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			body: body,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/refs",
+			query: query
+		)
+		if (result && result.'value' && result.'value'.size() == 1) {
+			return result.'value'[0]
+		}
+		return null
+	}
+
 
 	public def getFileContent(def collection, def project, def repo, def filename, def branchName) {
 		log.debug("CodeManagementService::getFileContent -- collection: ${collection}, project: ${project.name}, repo: ${repo.name}, filename: ${filename}, branchName: ${branchName}")
@@ -217,7 +271,14 @@ class CodeManagementService {
 		}
 	}
 	
-	def getRefHead(collection, project, repo) {
+	public def ensureGitAttributes(def collection, def project, def repo) {
+		def gitAttriibutes = getGitAttributes(collection, project, repo)
+		if (gitAttriibutes == null) {
+			gitAttriibutes = createGitAttributes(collection, project, repo)
+		}
+	}
+	
+	def getRefHead(def collection, def project, def repo) {
 		def query = [filter:'head','api-version':'4.1']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
@@ -231,10 +292,9 @@ class CodeManagementService {
 			}
 		}
 		return head
-
 	}
 	
-	def createDeployManifest(collection, project, repo) {
+	def createDeployManifest(def collection, def project, def repo) {
 		def query = [filter:'head', 'api-version': '4.1']
 		def head = getRefHead(collection, project, repo)
 		if (head == null) return null
@@ -286,4 +346,68 @@ class CodeManagementService {
 		return manifest
 	}
 
+	def createGitAttributes(def collection, def project, def repo) {
+		log.debug("CodeManagementService::createGitAttributes -- Insert .gitattributes file for ${repo.name} repo in ${project.name} project")
+		def query = [filter:'head', 'api-version': '5.1']
+		def head = getRefHead(collection, project, repo)
+		if (head == null) {
+			log.debug("CodeManagementService::createGitAttributes -- Unable to get head ref for ${repo.name} repo in ${project.name} project")
+			return null
+		}
+		def inContent = getResource("gitattributes.txt")
+		log.debug("CodeManagementService::createGitAttributes -- Read resource for .gitattributes file: ${inContent}")
+		def outContent = "${inContent}"
+		def commitData = [commits: [[changes:[[changeType: 'add', item:[path:'/.gitattributes'], newContent: [content: outContent, contentType:'rawText']]], comment: 'Add .gitattributes file']],
+			refUpdates:[[name:'refs/heads/master', oldObjectId: head.objectId]]]
+		def body = new JsonBuilder(commitData).toString()
+		log.debug("CodeManagementService::createGitAttributes -- Commit data (json): ${body}")
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: 'application/json',
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/git/repositories/${repo.id}/pushes",
+			query: query,
+			body: body
+			)
+			
+		def items = [includeContentMetadata: true, itemDescriptors:[[path: '/.gitattributes', version: 'master', versionType: 'branch', versionLevel: 4],
+			[path: '/', version: 'master', versionType: 'branch', versionLevel: 4]]]
+		body = new JsonBuilder(items).toString()
+		result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: 'application/json',
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/itemsBatch",
+			query: query,
+			body: body
+			)
+	}
+	
+	def getGitAttributes(def collection, def project, def repo) {
+		def query = ['api-version':'5.1','scopePath':'/', 'recursionLevel':'OneLevel', latestProcessedChange:true, 'versionDescriptor.version': 'master']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/items",
+			query: query,
+			)
+		def gitAttributes = null
+		if (result != null) {
+			result.value.each { file ->
+				if ("${file.path}" == '/.gitattributes') {
+					gitAttributes = file
+				}
+			}
+		}
+		return gitAttributes
+	}
+
+	public def getResource(String resourcePath) {
+		def resrc = null
+		try {
+			//resrc = getClass().getResourceAsStream("/${resourcePath}")
+			resrc = getClass().getResource("/${resourcePath}").text
+			//String xsd = this.getClass().getResource('/xsd/file.xsd').text
+		} catch (e) {
+			log.debug("CodeManagementService::getResource -- Exception caught reading resource ... ${resourcePath} not found. Returning NULL ...")
+		}
+		return resrc
+	}
 }
