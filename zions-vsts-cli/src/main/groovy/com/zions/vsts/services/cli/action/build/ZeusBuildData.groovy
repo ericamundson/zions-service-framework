@@ -122,11 +122,14 @@ class ZeusBuildData implements CliAction {
 		try {
 			outRepoDir = data.getOptionValues('out.repo.dir')[0]
 		} catch (e) {}
-//		String changeRequest = data.getOptionValues('change.request')[0]
-//		String releaseDate = null
-//		try {
-//			releaseDate = data.getOptionValues('release.date')[0]
-//		} catch (e) {}
+		String changeRequest = null
+		try {
+			data.getOptionValues('change.request')[0]
+		} catch (e) {}
+		String releaseDate = null
+		try {
+			releaseDate = data.getOptionValues('release.date')[0]
+		} catch (e) {}
 		def build = buildManagementService.getExecution(collection, project, buildId)
 		String sourceBranch = "${build.sourceBranch}"
 		String repoId = "${build.repository.id}"
@@ -232,7 +235,7 @@ class ZeusBuildData implements CliAction {
 //					if (fpath.contains('.keep')) {
 //						fListWFolders.push(fpath.replace("\\", "/"))
 //					}
-					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml')) {
+					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/imgs') && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml') && !fpath.contains('zeus.md')) {
 						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
@@ -263,16 +266,24 @@ class ZeusBuildData implements CliAction {
 			o << "my.version=${releaseId}${sep}"
 		}
 		o << "build.number=${build.buildNumber}${sep}"
-		o << "change.request={{change.request}}${sep}"
+		if (changeRequest) {
+			o << "change.request=${changeRequest}${sep}"
+			
+		} else {
+			o << "change.request={{change.request}}${sep}"
+		}
 		String affiliatesStr = affiliatesList.join(',')
 		o << "global.affiliates.list=${affiliatesStr}${sep}"
 		if (wis.size() > 0) {
 			String wiStr = wis.join(',')
 			o << "ado.workitems=${wiStr}${sep}"
 		}
-		//if (releaseDate) {
+		if (releaseDate) {
+			o << "release.date=${releaseDate}${sep}"
+		} else {
 			o << "release.date={{release.date}}${sep}"
-		//}
+			
+		}
 		o << "global.versions.list=${gversions.join(',')}${sep}"
 		if (gversions.size() == 1) {
 			o << "uat.zeusdev.version=${gversions[0]}${sep}"
