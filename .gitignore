@@ -3,3 +3,5 @@
 **/*.cmapx
 **/*.png
 /gitPublish/
+.classpath
+.project
