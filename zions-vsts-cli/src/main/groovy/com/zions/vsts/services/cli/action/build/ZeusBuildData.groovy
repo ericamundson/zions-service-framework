@@ -104,6 +104,9 @@ class ZeusBuildData implements CliAction {
 	
 	@Value('${create.branch:true}')
 	boolean createBranch
+	
+	@Value('${final.release.environment:Environments/Zeus/Releases/2305/BL/BL Promote}')
+	String finalReleaseEnv
 
 	@Override
 	public def execute(ApplicationArguments data) {
@@ -372,7 +375,7 @@ class ZeusBuildData implements CliAction {
 		String bName = "${rBranches.dev.name}"
 		String v = bName.substring(8)
 		String appId = "Applications/Zeus/Releases/${v}/Zeus_${v}_App"
-		String environmentId = "Environments/Zeus/Releases/${v}/BL/BL Copy"
+		String environmentId = finalReleaseEnv
 		boolean hasDeploy = deploymentService.hasDeployment(appId, environmentId)
 		if (hasDeploy) {
 			rBranches.prod = rBranches.dev
