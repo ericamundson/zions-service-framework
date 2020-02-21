@@ -48,7 +48,7 @@ import org.apache.commons.lang.StringEscapeUtils
  */
 @Component
 @Slf4j
-class SyncTesting implements CliAction {
+class SyncPipelineTesting implements CliAction {
 
 	@Autowired
 	SpockQueryService spockQueryService

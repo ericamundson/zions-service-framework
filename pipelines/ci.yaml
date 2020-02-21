@@ -1,0 +1,13 @@
+pool:
+  name: Default
+  demands:
+  - agent.name -equals bagent
+  - java
+
+steps:
+- task: Gradle@2
+  displayName: 'gradlew clean build'
+  inputs:
+    options: '--no-scan -Pqueue=default -Pcontext=all'
+    tasks: 'clean build'
+    publishJUnitResults: false

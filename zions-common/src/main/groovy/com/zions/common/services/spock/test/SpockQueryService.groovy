@@ -1,4 +1,4 @@
-package com.zions.spock.services.test
+package com.zions.common.services.spock.test
 
 import groovy.json.JsonSlurper
 import org.springframework.stereotype.Component
