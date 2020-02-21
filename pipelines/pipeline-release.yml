@@ -25,74 +25,81 @@ pool:
 #Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 #Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 #Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    workspace:
+      clean: all
 
-steps:
-- task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
-  displayName: 'Tag Pending'
-  inputs:
-    OutputVariable: buildTag
-    InitialVersionPrefix: 7.0.0
-    WriteTag: false
+    steps:
+    - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
+      displayName: 'Tag Pending'
+      inputs:
+        OutputVariable: buildTag
+        InitialVersionPrefix: 7.0.0
+        WriteTag: false
 
-- task: Gradle@2
-  displayName: 'gradlew clean build updateBatJarVersion'
-  inputs:
-    gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
-    workingDirectory: '$(Build.SourcesDirectory)'
-    options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=pipeline'
-    tasks: 'clean build updateBatJarVersion'
-    publishJUnitResults: false
+    - task: Gradle@2
+      displayName: 'gradlew clean build updateBatJarVersion'
+      inputs:
+        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
+        workingDirectory: '$(Build.SourcesDirectory)'
+        options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=pipeline'
+        tasks: 'clean build updateBatJarVersion'
+        publishJUnitResults: false
 
-- task: CopyFiles@2
-  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
-  inputs:
-    SourceFolder: '$(system.defaultworkingdirectory)'
-    Contents: |
-     **/build/libs/*.jar
-    TargetFolder: '$(build.artifactstagingdirectory)'
-    CleanTargetFolder: true
-    OverWrite: true
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: |
+         **/build/libs/*.jar
+        TargetFolder: '$(build.artifactstagingdirectory)'
+        CleanTargetFolder: true
+        OverWrite: true
 
-- task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
-  displayName: Tagging
-  inputs:
-    OutputVariable: Tag
-    InitialVersionPrefix: 7.0.0
+    - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
+      displayName: Tagging
+      inputs:
+        OutputVariable: Tag
+        InitialVersionPrefix: 7.0.0
 
-- task: PublishTestResults@2
-  displayName: 'Publish Test Results **/TEST-*.xml'
-  enabled: false
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results **/TEST-*.xml'
+      enabled: false
 
-- task: BatchScript@1
-  displayName: 'Run Publish Test Results'
-  inputs:
-    filename: '$(System.ArtifactsDirectory)\zions-ext-cli\build\batch_out\syncTesting.bat'
-    arguments: '--report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ALMOps --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=almops --plan.name=almops-release-$(Tag) --build.id=$(Build.BuildId) --definition.id=$(System.DefinitionId)'
-    workingFolder: '$(System.ArtifactsDirectory)\zions-ext-cli\build\batch_out'
-  continueOnError: true
+    - task: BatchScript@1
+      displayName: 'Run Publish Test Results'
+      inputs:
+        filename: '$(System.ArtifactsDirectory)\zions-ext-cli\build\batch_out\syncTesting.bat'
+        arguments: '--report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ALMOps --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=almops --plan.name=almops-release-$(Tag) --build.id=$(Build.BuildId) --definition.id=$(System.DefinitionId)'
+        workingFolder: '$(System.ArtifactsDirectory)\zions-ext-cli\build\batch_out'
+      continueOnError: true
+      enabled: false
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: almops-drop'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
-    ArtifactName: 'pipeline-drop'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: almops-drop'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
+        ArtifactName: 'pipeline-drop'
 
-- task: Gradle@2
-  displayName: 'gradlew gitPublishPush'
-  inputs:
-    gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
-    workingDirectory: '$(Build.SourcesDirectory)'
-    options: '--no-scan -Pversion=$(buildTag) -Pqueue=Hosted -PpublishLocation=$(system.defaultworkingdirectory)/gitPublish -DGRAPHVIZ_DOT=$(system.defaultworkingdirectory)/graphviz/bin/dot.exe'
-    tasks: gitPublishPush
-    publishJUnitResults: false
-  enabled: false
+    - task: Gradle@2
+      displayName: 'gradlew gitPublishPush'
+      inputs:
+        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
+        workingDirectory: '$(Build.SourcesDirectory)'
+        options: '--no-scan -Pversion=$(buildTag) -Pqueue=Hosted -PpublishLocation=$(system.defaultworkingdirectory)/gitPublish -DGRAPHVIZ_DOT=$(system.defaultworkingdirectory)/graphviz/bin/dot.exe'
+        tasks: gitPublishPush
+        publishJUnitResults: false
+      enabled: false
 
-- task: xebialabs.tfs2015-xl-deploy-plugin.C36FC88A-B479-461F-8067-8C3254AF356C.XLDeploy@7
-  displayName: 'Publish to XL Deploy'
-  inputs:
-    manifestPath: 'dar/deployit-manifest.xml'
-    connectedServiceName: 'XL Deploy - Production'
-    version: true
-    versionNumber: '$(Tag)'
-  enabled: false
-  continueOnError: true
+    - task: xebialabs.tfs2015-xl-deploy-plugin.C36FC88A-B479-461F-8067-8C3254AF356C.XLDeploy@7
+      displayName: 'Publish to XL Deploy'
+      inputs:
+        manifestPath: 'dar/deployit-manifest.xml'
+        connectedServiceName: 'XL Deploy - Production'
+        version: true
+        versionNumber: '$(Tag)'
+      enabled: false
+      continueOnError: true
