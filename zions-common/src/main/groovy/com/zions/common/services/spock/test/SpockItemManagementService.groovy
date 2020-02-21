@@ -1,4 +1,4 @@
-package com.zions.spock.services.test
+package com.zions.common.services.spock.test
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
