@@ -1,4 +1,4 @@
-package com.zions.vsts.services.cli.action.release;
+package com.zions.pipeline.services.cli.action.release;
 
 import java.util.Map
 import com.zions.common.services.cli.action.CliAction

@@ -1,4 +1,4 @@
-package com.zions.vsts.services.cli.action.build;
+package com.zions.pipeline.services.cli.action.build;
 
 import java.lang.reflect.Field
 import java.util.Map
@@ -9,6 +9,7 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.cli.action.CliAction
+import com.zions.pipeline.services.cli.action.build.ZeusBuildData
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.build.BuildManagementService
@@ -77,8 +78,6 @@ import groovy.time.TimeCategory
  *
  *@enduml
  */
-@Component
-@Slf4j
 class ZeusBuildData implements CliAction {
 
 	@Autowired
@@ -92,7 +91,6 @@ class ZeusBuildData implements CliAction {
 	@Autowired
 	DeploymentService deploymentService
 
-	@Autowired
 	public ZeusBuildData() {
 	}
 	
