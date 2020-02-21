@@ -1,0 +1,9 @@
+bootJar { enabled = false }
+jar {
+	enabled = true
+	baseName = 'zions-xlr-services'
+}
+
+dependencies {
+	compile project(':zions-common')
+}
