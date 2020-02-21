@@ -19,7 +19,7 @@ public class MaintenanceService {
 	public MaintenanceService() {}
 	
 	def cleanupOrphanedReleases(def currentRelease, String folderId, String titleFilter = null) {
-		def query = [ parentId: folderId, inProgress: true, planned: true]
+		def query = [ parentId: folderId, inProgress: true]
 		if (titleFilter) {
 			query.title = titleFilter
 		}
