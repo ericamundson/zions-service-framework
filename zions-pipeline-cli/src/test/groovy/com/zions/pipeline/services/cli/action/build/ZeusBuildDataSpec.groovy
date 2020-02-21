@@ -1,4 +1,4 @@
-package com.zions.vsts.services.cli.action.build
+package com.zions.pipeline.services.cli.action.build
 
 import static org.junit.Assert.*
 
@@ -19,6 +19,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
+import com.zions.pipeline.services.cli.action.build.ZeusBuildData
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.work.WorkManagementService
