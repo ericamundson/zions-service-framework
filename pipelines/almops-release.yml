@@ -14,9 +14,9 @@ trigger:
     - 'zions-ccm-client-services/*'
     
 pool:
-  name: Default
+  name: On-Prem Production
   demands:
-  - agent.name -equals bagent
+  - agent.computername -equals utlxa1001
   
  
 stages:
