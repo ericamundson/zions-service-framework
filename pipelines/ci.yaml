@@ -1,9 +1,9 @@
 trigger: none
 
 pool:
-  name: Default
+  name: On-Prem Production
   demands:
-  - agent.name -equals bagent
+  - agent.computername -equals UTMVPI0144
   - java
 
 steps:
