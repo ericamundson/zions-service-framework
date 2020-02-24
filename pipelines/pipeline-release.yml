@@ -14,7 +14,7 @@ trigger:
 pool:
   name: On-Prem Production
   demands:
-  - agent.computername -equals UTMVPI0144
+  - agent.computername -equals utlxa1846
   
  
 #Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
@@ -69,7 +69,7 @@ stages:
       displayName: 'Run Publish Test Results'
       inputs:
         filename: '$(System.ArtifactsDirectory)\zions-ext-cli\build\batch_out\syncTesting.bat'
-        arguments: '--report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ALMOps --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=almops --plan.name=almops-release-$(Tag) --build.id=$(Build.BuildId) --definition.id=$(System.DefinitionId)'
+        arguments: '--report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ALMOps --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=pipeline --plan.name=pipeline-release-$(Tag) --build.id=$(Build.BuildId) --definition.id=$(System.DefinitionId)'
         workingFolder: '$(System.ArtifactsDirectory)\zions-ext-cli\build\batch_out'
       continueOnError: true
       enabled: false
