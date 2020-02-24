@@ -1,10 +1,9 @@
 trigger: none
 
 pool:
-  name: On-Prem Production
+  name: Default
   demands:
-  - agent.computername -equals UTMVPI0144
-  - java
+  - agent.name -equals bagent
 
 steps:
 - task: Gradle@2
