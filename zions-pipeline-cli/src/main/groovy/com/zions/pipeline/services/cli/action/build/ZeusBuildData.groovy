@@ -78,6 +78,8 @@ import groovy.time.TimeCategory
  *
  *@enduml
  */
+@Component
+@Slf4j
 class ZeusBuildData implements CliAction {
 
 	@Autowired
