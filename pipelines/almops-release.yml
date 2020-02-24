@@ -16,7 +16,7 @@ trigger:
 pool:
   name: Default
   demands:
-  - agent.name -equals bagent
+  - agent.computername -equals UTMVPI0144
   
  
 stages:

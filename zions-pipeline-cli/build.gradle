@@ -1,6 +1,6 @@
 bootJar {
 	enabled = true
-	mainClassName = 'com.zions.vsts.services.cli.CliApplication'
+	mainClassName = 'com.zions.pipeline.services.cli.CliApplication'
 	archiveName = "zions-pipeline-cli.jar"
 	//version =  "${version}"
 }
