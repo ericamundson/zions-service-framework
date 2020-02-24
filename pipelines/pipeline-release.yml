@@ -12,9 +12,9 @@ trigger:
     - 'zions-xld-services/*'
     
 pool:
-  name: Default
+  name: On-Prem Production
   demands:
-  - agent.computername -equals bagent
+  - agent.computername -equals UTMVPI0144
   
  
 #Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
