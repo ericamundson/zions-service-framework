@@ -75,7 +75,7 @@ stages:
       enabled: false
 
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: almops-drop'
+      displayName: 'Publish Artifact: pipeline-drop'
       inputs:
         PathtoPublish: '$(build.artifactstagingdirectory)'
         ArtifactName: 'pipeline-drop'
