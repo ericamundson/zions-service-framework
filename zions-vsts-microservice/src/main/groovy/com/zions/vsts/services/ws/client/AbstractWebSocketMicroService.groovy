@@ -65,7 +65,6 @@ import javax.net.ssl.X509TrustManager
  * @author z091182
  *
  */
-@Component
 @Slf4j
 abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter {
     public static final String SSL_CONTEXT_PROPERTY =
@@ -78,7 +77,6 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 	String websocketPassword
 	WebSocketStompClient stompClient
 
-	@Autowired
 	public AbstractWebSocketMicroService(websocketUrl, 
 		websocketUser = null, 
 		websocketPassword = null ) {
