@@ -23,8 +23,8 @@ stages:
 - stage: Build
   jobs:
   - job: Build
-    workspace:
-      clean: all
+#    workspace:
+#      clean: all
 
     steps:
     - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
