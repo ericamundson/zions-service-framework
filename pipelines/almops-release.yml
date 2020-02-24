@@ -16,7 +16,7 @@ trigger:
 pool:
   name: Default
   demands:
-  - agent.computername -equals bagent
+  - agent.name -equals bagent
   
  
 stages:
