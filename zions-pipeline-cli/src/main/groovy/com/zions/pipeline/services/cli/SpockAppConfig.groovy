@@ -28,7 +28,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("spock")
-@ComponentScan(["com.zions.vsts.services","com.zions.spock.services","com.zions.common.services.spock", "com.zions.common.services.restart", "com.zions.common.services.cacheaspect"])
+@ComponentScan(["com.zions.vsts.services","com.zions.spock.services","com.zions.common.services.spock", "com.zions.common.services.restart", "com.zions.common.services.cacheaspect","com.zions.xld.services","com.zions.xlr.services", "com.zions.pipeline.services"])
 public class SpockAppConfig {
 	
 	@Autowired
