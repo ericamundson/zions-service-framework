@@ -37,7 +37,7 @@ import groovy.xml.XmlUtil
 @Component
 class RestClient implements CliAction {
 	
-	@Autowired
+	@Autowired(required=false)
 	Map<String, IGenericRestClient> clientMap
 
 	@Override

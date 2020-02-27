@@ -1,4 +1,4 @@
-package com.zions.spock.services.cli.action.test
+package com.zions.vsts.services.test
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -8,7 +8,6 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.spock.test.SpockQueryService
-import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.WorkManagementService
 import groovy.json.JsonBuilder
@@ -48,7 +47,7 @@ import org.apache.commons.lang.StringEscapeUtils
  */
 @Component
 @Slf4j
-class SyncPipelineTesting implements CliAction {
+class SyncTesting implements CliAction {
 
 	@Autowired
 	SpockQueryService spockQueryService
