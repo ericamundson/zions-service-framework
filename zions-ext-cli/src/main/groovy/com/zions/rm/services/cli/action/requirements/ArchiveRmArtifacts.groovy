@@ -88,10 +88,14 @@ class ArchiveRmArtifacts implements CliAction {
 				if (phase == 'requirements') {
 //					log.debug("Getting content of ${items.size()} items")
 					items.each { rmItem ->
+						// RH - ignore certain types
+						if (rmItem.requirement_type == 'Formal Use Case (Text)') {
+							return
+						}
 						//get item from DNG
 						ClmArtifact artifact = getArtifactFromSource(rmItem)
 						//make sure it came back correctly
-						if (artifact) {
+						if (artifact && "${artifact.artifactType}" != "null") {
 							curArtifactType = "${artifact.artifactType}"
 						//	log.debug("LastArtifactType: $lastArtifactType and this artifact: $curArtifactType")
 							if (!lastArtifactType.equals(curArtifactType)) {
