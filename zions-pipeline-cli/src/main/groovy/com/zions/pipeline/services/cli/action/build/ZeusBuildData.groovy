@@ -238,7 +238,7 @@ class ZeusBuildData implements CliAction {
 //					if (fpath.contains('.keep')) {
 //						fListWFolders.push(fpath.replace("\\", "/"))
 //					}
-					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/imgs') && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml') && !fpath.contains('zeus.md')) {
+					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/imgs') && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml') && !fpath.contains('.md')) {
 						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
