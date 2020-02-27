@@ -7,10 +7,11 @@
 <listEntry value="1"/>
 </listAttribute>
 <listAttribute key="org.eclipse.eclemma.core.SCOPE_IDS"/>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="syncTesting --tfs.url=https://dev.azure.com/zionseto --report.search.dir=D:\git\zions-service-framework --tfs.project=DTS --ado.area.path=DTS\ALMOps --ado.iteration.path=DTS --cache.location=d:\spockprodcache --main.tag=zions-service-framework --plan.name=zions-service-framework_testing"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="syncTesting --tfs.url=https://dev.azure.com/zionseto --report.search.dir=D:\git\zions-service-framework --tfs.project=DTS --ado.area.path=DTS\ALMOps --ado.iteration.path=DTS --cache.location=d:\spockprodcache --main.tag=almops --plan.name=zions-service-framework_testing"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=spock"/>
 </launchConfiguration>
