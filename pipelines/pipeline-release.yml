@@ -68,7 +68,7 @@ stages:
     - task: BatchScript@1
       displayName: 'Run Publish Tests'
       inputs:
-        filename: '$(System.SourcesDirectory)\zions-pipeline-cli\java.bat'
+        filename: '$(Build.SourcesDirectory)\zions-pipeline-cli\java.bat'
         arguments: '-Dspring.profiles.active=spock -jar $(System.ArtifactsDirectory)/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar syncTesting --tfs.url=https://dev.azure.com/zionseto --report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ReleaseEngineering --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=pipeline --plan.name=pipeline-release-$(Tag)'
       continueOnError: true
       enabled: true
