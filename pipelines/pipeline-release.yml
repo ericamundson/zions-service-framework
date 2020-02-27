@@ -66,7 +66,7 @@ stages:
       enabled: false
 
     - script: |
-        java -Dspring.profiles.active=spock -jar ..\libs\zions-pipeline-cli.jar syncTesting --tfs.url=https://dev.azure.com/zionseto --report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ReleaseEngineering --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=pipeline --plan.name=pipeline-release-$(Tag)
+        java -Dspring.profiles.active=spock -jar $(System.ArtifactsDirectory)/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar syncTesting --tfs.url=https://dev.azure.com/zionseto --report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ReleaseEngineering --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=pipeline --plan.name=pipeline-release-$(Tag)
       displayName: 'Execute publish tests'
       name: 'publishTests'
       enabled: true
