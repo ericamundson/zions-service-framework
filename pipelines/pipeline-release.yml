@@ -65,11 +65,15 @@ stages:
       displayName: 'Publish Test Results **/TEST-*.xml'
       enabled: false
 
-    - script: |
-        java -Dspring.profiles.active=spock -jar $(System.ArtifactsDirectory)/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar syncTesting --tfs.url=https://dev.azure.com/zionseto --report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ReleaseEngineering --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=pipeline --plan.name=pipeline-release-$(Tag)
+    - task: BatchScript@1
+      displayName: 'Run Publish Test Results'
+      inputs:
+        filename: 'java'
+        arguments: '-Dspring.profiles.active=spock -jar $(System.ArtifactsDirectory)/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar syncTesting --tfs.url=https://dev.azure.com/zionseto --report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ReleaseEngineering --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=pipeline --plan.name=pipeline-release-$(Tag)'
+        workingFolder: '$(System.ArtifactsDirectory)\zions-pipeline-cli'
       displayName: 'Execute publish tests'
       name: 'publishTests'
-      enabled: true
+      continueOnError: true
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: pipeline-drop'
