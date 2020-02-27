@@ -1,0 +1,88 @@
+<witmapping>
+	<wit source="TestPlan"  target="Test Plan" translateUnmappedFields="false" notWorkItem="true">
+		<field source="nameHandler" target="name"/>
+		<field source="descriptionHandler" target="description"/>
+		<field source="stateHandler" target="state">
+			<defaultvalue target="Active"/>
+		</field>
+		<field source="planBlankHandler" target="area">
+			<defaultvalue target="TestLink\Lockbox"/>
+		</field>
+		<field source="blankHandler" target="iteration">
+			<defaultvalue target="TestLink"/>		
+		</field>
+	</wit>
+	<wit source="TestSuite"  target="Test Suite" translateUnmappedFields="false" notWorkItem="true">
+		<field source="nameHandler" target="name"/>
+		<field source="suiteDescriptionHandler" target="description"/>
+		<field source="blankHandler" target="state">
+			<defaultvalue target="Active"/>
+		</field>
+		<field source="planBlankHandler" target="area">
+			<defaultvalue target="TestLink\Lockbox"/>
+		</field>
+		<field source="blankHandler" target="iteration">
+			<defaultvalue target="TestLink"/>		
+		</field>
+	</wit>
+	<wit source="TestCase"  target="Test Case" translateUnmappedFields="false">
+		<field source="testCaseNameHandler" target="System.Title"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="summaryHandler" target="System.Description"/>
+		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="testCaseStateHandler" target="System.State">
+			<defaultvalue target="Design"/>
+		</field>
+		<field source="blankHandler" target="System.AreaPath">
+			<defaultvalue target="TestLink\Lockbox"/>
+		</field>
+		<field source="blankHandler" target="System.IterationPath">
+			<defaultvalue target="TestLink"/>		
+		</field>
+		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
+		<excluded>
+			<field name="Execution_Count"/>
+			<field name="Risk_Model__RE__Calculation"/>
+			<field name="Test_Case_Risk"/>
+			<field name="Unresolved_Defect_Count"/>
+			<field name="Test_Case_Important_Level"/>
+		</excluded>
+	</wit>
+	<wit source="Execution"  target="Result" translateUnmappedFields="false">
+		<field source="resultIdHandler" target="id"/>
+		<field source="resultTestcaseTitleHandler" target="testCaseTitle"/>
+		<field source="blankHandler" target="priority">
+			<defaultvalue target="2"/>		
+		</field>
+		
+		<field source="resultStateHandler" target="outcome">
+			<defaultvalue target="Unspecified"/>		
+			<value source="p" target="Passed"/>
+			<value source="f" target="Failed"/> 
+			<value source="b" target="Blocked"/> 
+			<value source="n" target="Unspecified"/> 
+		</field>
+		<field source="resultStateHandler" target="state">
+			<defaultvalue target="Pending"/>		
+			<value source="p" target="Completed"/>
+			<value source="f" target="Completed"/> 
+			<value source="b" target="Completed"/> 
+		</field>
+		<!-- <field source="resultOwnerHandler" target="owner"/> -->
+		
+	</wit>
+	<wit source="configuration"  target="Configuration" translateUnmappedFields="false">
+		<field source="nameHandler" target="name"/>
+		<field source="summaryHandler" target="description"/>
+		<field source="blankHandler" target="state">
+			<defaultvalue target="Active"/>
+		</field>
+	</wit>
+	<wit source="TestPlan"  target="Test Plan WI" translateUnmappedFields="false">
+		<field source="idHandler" target="Custom.ExternalID"/>
+	</wit> 
+	<wit source="TestSuite"  target="Test Suite WI" translateUnmappedFields="false">
+		<field source="idHandler" target="Custom.ExternalID"/>
+	</wit> 
+	
+</witmapping>
