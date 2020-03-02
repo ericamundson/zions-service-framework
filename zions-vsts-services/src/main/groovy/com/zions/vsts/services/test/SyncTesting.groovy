@@ -49,7 +49,7 @@ import org.apache.commons.lang.StringEscapeUtils
 @Slf4j
 class SyncTesting implements CliAction {
 
-	@Autowired
+	@Autowired(required=false)
 	SpockQueryService spockQueryService
 
 	@Autowired
@@ -58,7 +58,7 @@ class SyncTesting implements CliAction {
 	@Value('${ado.area.path:}')
 	String areaPath
 
-	@Value('${ado.iteration.path}')
+	@Value('${ado.iteration.path:}')
 	String iterationPath
 
 	@Value('${tfs.project}')
