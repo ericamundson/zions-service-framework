@@ -95,16 +95,22 @@ class ZeusBuildData implements CliAction {
 
 	public ZeusBuildData() {
 	}
-	
+
 	@Value('${release.id:}')
 	String releaseId
-	
+
 	@Value('${rollup:false}')
 	boolean rollup
-	
+
 	@Value('${create.branch:true}')
 	boolean createBranch
+
+	@Value('${split.affiliates:true}')
+	boolean splitAffiliates
 	
+	@Value('${all.affiliates:AZ-NBA,CA-CBT,CO-VBC,NV-NSB,TX-ABT,UT-ZFNB}')
+	String[] allAffiliates
+
 	@Value('${final.release.environment:Environments/Zeus/Releases/2305/BL/BL Promote}')
 	String finalReleaseEnv
 
@@ -136,7 +142,7 @@ class ZeusBuildData implements CliAction {
 		def build = buildManagementService.getExecution(collection, project, buildId)
 		String sourceBranch = "${build.sourceBranch}"
 		String repoId = "${build.repository.id}"
-		
+
 		def releases = getDevProdReleases(collection, project, repoId, createBranch)
 		def gversions = []
 		String prodRelease = null
@@ -146,7 +152,6 @@ class ZeusBuildData implements CliAction {
 			gversions.add(v)
 			prodRelease = v
 			println "##vso[task.setvariable variable=prodRelease]${v}"
-
 		}
 		boolean provisionSetup = false
 		if (releases.dev) {
@@ -162,26 +167,25 @@ class ZeusBuildData implements CliAction {
 				boolean hasDeploy = deploymentService.hasDeployment(appId, environmentId)
 				if (hasDeploy) {
 					println "##vso[task.setvariable variable=provisionSetup]true"
-					provisionSetup = true 
+					provisionSetup = true
 				} else {
 					println "##vso[task.setvariable variable=provisionSetup]false"
-					
 				}
 			} else {
 				println "##vso[task.setvariable variable=provisionSetup]false"
 			}
 		}
-		
+
 		//if (sourceBranch.contains("release/")) {
 		String releaseIdNormal = ''
 		if ((!releaseId || releaseId.size() == 0) && sourceBranch.contains('release/')) {
 			releaseId = "${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}"
 		}
-		
+
 		//Setup crq and release date from Release work item with title of release id.
-//		def crqAndRelease = getCRQAndReleaseDate(releaseId)
-//		String changeRequest = crqAndRelease.CRQ
-//		String releaseDate = crqAndRelease.releaseDate
+		//		def crqAndRelease = getCRQAndReleaseDate(releaseId)
+		//		String changeRequest = crqAndRelease.CRQ
+		//		String releaseDate = crqAndRelease.releaseDate
 		def builds = null
 		boolean isProductionBranch = "${releaseId}" == "${prodRelease}"
 		if (rollup) {
@@ -192,7 +196,7 @@ class ZeusBuildData implements CliAction {
 			buildWorkitems = buildManagementService.getExecutionWorkItems(collection, project, buildId)
 		} else {
 			buildWorkitems = buildManagementService.getExecutionWorkItemsByBuilds(collection, project, builds)
-			
+
 		}
 		List wi = []
 		buildWorkitems.each { ref ->
@@ -235,10 +239,10 @@ class ZeusBuildData implements CliAction {
 					if (!fileExists(inRepoDir, "${fpath.substring(1)}") && !dList.contains("${fpath.substring(1)}")) {
 						dList.push("${fpath.substring(1)}")
 					}
-//					if (fpath.contains('.keep')) {
-//						fListWFolders.push(fpath.replace("\\", "/"))
-//					}
-					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/imgs') && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml') && !fpath.contains('.md')) {
+					//					if (fpath.contains('.keep')) {
+					//						fListWFolders.push(fpath.replace("\\", "/"))
+					//					}
+					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/.vs') && !fpath.startsWith('/imgs') && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml') && !fpath.contains('.md')) {
 						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
@@ -257,21 +261,21 @@ class ZeusBuildData implements CliAction {
 			}
 		}
 		Set affiliatesList = affiliates.toSet()
-//		String sep = System.getProperty("line.separator")
+		//		String sep = System.getProperty("line.separator")
 		String sep = "\r\n"
 		def fListSet = fList.toSet()
 		File f = new File("${outDir}/ZEUS.properties")
 		def o = f.newDataOutputStream()
 		if (isProductionBranch) {
 			o << "my.version=${releaseId}PR${sep}"
-			
+
 		} else {
 			o << "my.version=${releaseId}${sep}"
 		}
 		o << "build.number=${build.buildNumber}${sep}"
 		if (changeRequest) {
 			o << "change.request=${changeRequest}${sep}"
-			
+
 		} else {
 			o << "change.request={{change.request}}${sep}"
 		}
@@ -285,12 +289,12 @@ class ZeusBuildData implements CliAction {
 			o << "release.date=${releaseDate}${sep}"
 		} else {
 			o << "release.date={{release.date}}${sep}"
-			
+
 		}
 		o << "global.versions.list=${gversions.join(',')}${sep}"
 		if (gversions.size() == 1) {
 			o << "uat.zeusdev.version=${gversions[0]}${sep}"
-		} 
+		}
 		if (gversions.size() >= 2) {
 			o << "uat.zeusprod.version=${gversions[0]}PR${sep}"
 			o << "uat.zeusdev.version=${gversions[1]}${sep}"
@@ -300,15 +304,63 @@ class ZeusBuildData implements CliAction {
 				o << "bl.zeusprod.version=${gversions[1]}${sep}"
 			}
 		}
-		if (isProductionBranch)
 		o.close()
+		if (splitAffiliates) {
+			allAffiliates.each { aff ->
+				File od = new File("${outDir}/${aff}")
+				if (!od.exists()) {
+					od.mkdirs()
+				}
+				f = new File("${outDir}/${aff}/ZEUS.properties")
+				o = f.newDataOutputStream()
+				if (isProductionBranch) {
+					o << "my.version=${releaseId}PR${sep}"
+
+				} else {
+					o << "my.version=${releaseId}${sep}"
+				}
+				o << "build.number=${build.buildNumber}${sep}"
+				if (changeRequest) {
+					o << "change.request=${changeRequest}${sep}"
+
+				} else {
+					o << "change.request={{change.request}}${sep}"
+				}
+				//String affiliatesStr = affiliatesList.join(',')
+				o << "global.affiliates.list=${aff}${sep}"
+				if (wis.size() > 0) {
+					String wiStr = wis.join(',')
+					o << "ado.workitems=${wiStr}${sep}"
+				}
+				if (releaseDate) {
+					o << "release.date=${releaseDate}${sep}"
+				} else {
+					o << "release.date={{release.date}}${sep}"
+
+				}
+				o << "global.versions.list=${gversions.join(',')}${sep}"
+				if (gversions.size() == 1) {
+					o << "uat.zeusdev.version=${gversions[0]}${sep}"
+				}
+				if (gversions.size() >= 2) {
+					o << "uat.zeusprod.version=${gversions[0]}PR${sep}"
+					o << "uat.zeusdev.version=${gversions[1]}${sep}"
+					if (isProductionBranch) {
+						o << "bl.zeusprod.version=${gversions[0]}PR${sep}"
+					} else {
+						o << "bl.zeusprod.version=${gversions[1]}${sep}"
+					}
+				}
+				o.close()
+			}
+		}
 		if (fListSet.isEmpty()) {
 			log.error("Build has no new files!  Usually do to no new changes since prior build.")
 			println "##vso[task.setvariable variable=hasChanges]false"
 			return null
 		}
 		println "##vso[task.setvariable variable=hasChanges]true"
-		
+
 		f = new File("${outDir}/ZEUS.template")
 		def oFList = []
 		fListSet.each { String fName ->
@@ -320,6 +372,24 @@ class ZeusBuildData implements CliAction {
 		String filesStr = ofListSet.join("${sep}")
 		o << "${filesStr}${sep}"
 		o.close()
+		if (splitAffiliates) {
+			allAffiliates.each { aff ->
+				f = new File("${outDir}/${aff}/ZEUS.template")
+				oFList = []
+				fListSet.each { String fName ->
+					String n = fName.substring(fName.indexOf('/')+1)
+					if (n.startsWith("${aff}/")) {
+						oFList.push(n)
+					}
+				}
+				ofListSet = oFList.toSet()
+				o = f.newDataOutputStream()
+				filesStr = ofListSet.join("${sep}")
+				o << "${filesStr}${sep}"
+				o.close()
+
+			}
+		}
 		Map<String, File> fileMap = [:]
 		if (inRepoDir && outRepoDir) {
 			File od = new File(outRepoDir)
@@ -344,12 +414,12 @@ class ZeusBuildData implements CliAction {
 					fileMap["$outRepoDir${fName}"] = of
 				}
 			}
-			detailsFile(collection, project, wis, allChanges, outDir, outRepoDir, fileMap)
+			detailsFile(collection, project, wis, allChanges, outDir, outRepoDir, fileMap, allAffiliates)
 		}
 		//}
 		return null
 	}
-	
+
 	def getDevProdReleases(String collection, String project, String repoName, boolean createBranch) {
 		def branches = codeManagementService.getBranches(collection, project, repoName)
 		def releaseBranches = branches.'value'.findAll { branch ->
@@ -370,7 +440,7 @@ class ZeusBuildData implements CliAction {
 		rBranches = updateForBLRelease(rBranches, createBranch)
 		return rBranches
 	}
-	
+
 	def updateForBLRelease(def rBranches, boolean createBranch) {
 		String bName = "${rBranches.dev.name}"
 		String v = bName.substring(8)
@@ -385,10 +455,10 @@ class ZeusBuildData implements CliAction {
 				Date nd = null
 				TimeCategory t
 				use(TimeCategory) {
-				    nd = cd + 3.months
+					nd = cd + 3.months
 					println nd
-					
-				}			
+
+				}
 				String name = "release/${nd.format('yyMM')}"
 				def pBranch = codeManagementService.ensureBranch('', 'Zeus', 'Zeus', 'master', name)
 				rBranches.dev = pBranch
@@ -403,7 +473,7 @@ class ZeusBuildData implements CliAction {
 		return i.exists()
 	}
 
-	def detailsFile(String collection, String project, def wis, def allChanges, outDir, outRepoDir, Map<String,File> fileMap) {
+	def detailsFile(String collection, String project, def wis, def allChanges, outDir, outRepoDir, Map<String,File> fileMap, affiliatesList) {
 		def writer = new StringWriter()
 		MarkupBuilder bXml = new MarkupBuilder(writer)  //TODO:  Study up on examples of MarkupBuilder
 		File outFile = new File("${outDir}/ZEUS.details.xml")
@@ -446,13 +516,57 @@ class ZeusBuildData implements CliAction {
 				}
 			}
 		}
+		def io = outFile.newDataOutputStream()
+		io << writer.toString()
+		io.close();
+		if (splitAffiliates) {
+			affiliatesList.each { aff ->
+				writer = new StringWriter()
+				bXml = new MarkupBuilder(writer)  //TODO:  Study up on examples of MarkupBuilder
+				outFile = new File("${outDir}/${aff}/ZEUS.details.xml")
+				bXml.mkp.xmlDeclaration(version: "1.0", encoding: "utf-8")
+				boolean hasChanges = false
+				bXml.details {
+					allChanges.each { key, change ->
+						String fpath = "${change.item.path}"
+						String[] fItems = fpath.split('/')
+						String affiliate = fItems[2]
+						if (affiliate == aff) {
+							String fName = "${change.item.path}"
+							File f = fileMap["${outRepoDir}/${fName}"]
+							if (fName.startsWith('/')) {
+								fName = fName.substring(1)
+							}
+							file ( "${fName}" )
+							size ( "${f.size()}" )
+							date ( "${change.parent.timestamp}" )
+							gitCommit ( "${change.parent.id}" )
+							String message = "${change.parent.message}"
+							gitMessage {  bXml.mkp.yieldUnescaped("<![CDATA[${message}]]>") }
+							fWorkitems.each { wi ->
+								adoId ( "${wi.id}" )
+								adoTitle ( "${wi.fields.'System.Title'}" )
+								adoState ( "${wi.fields.'System.State'}" )
+								String r = ""
+								if (wi.fields.'System.Reason') {
+									r = "${wi.fields.'System.Reason'}"
+								}
+								adoResolution ( "${r}" )
+								adoType ( "${wi.fields.'System.WorkItemType'}" )
+							}
 
-		def o = outFile.newDataOutputStream()
-		o << writer.toString()
-		o.close();
+						}
+					}
+				}
+				io = outFile.newDataOutputStream()
+				io << writer.toString()
+				io.close();
+			}
+		}
+
 
 	}
-	
+
 	private def getCRQAndReleaseDate(String releaseId) {
 		def out = [CRQ: 'NotSet', releaseDate: 'UNKNOWN']
 		String query = "Select [System.Id], [System.Title] From WorkItems Where [System.TeamProject] = 'Zeus' AND [System.AreaPath] under 'Zeus' AND [System.WorkItemType] = 'Release' and [System.Title] = '${releaseId}'"
@@ -478,7 +592,7 @@ class ZeusBuildData implements CliAction {
 			}
 			if (crq != 'NotSet') {
 				out.CRQ = crq
-			    out.releaseDate = releaseDate
+				out.releaseDate = releaseDate
 			}
 		}
 		return out
