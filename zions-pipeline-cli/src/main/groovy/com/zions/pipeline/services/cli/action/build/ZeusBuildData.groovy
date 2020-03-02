@@ -367,7 +367,7 @@ class ZeusBuildData implements CliAction {
 			rBranches.dev = releaseBranches[size-1]
 			rBranches.prod = releaseBranches[size-2]
 		}
-		rBranches = updateForBLRelease(rBranches, createBranch)
+		//rBranches = updateForBLRelease(rBranches, createBranch)
 		return rBranches
 	}
 	
