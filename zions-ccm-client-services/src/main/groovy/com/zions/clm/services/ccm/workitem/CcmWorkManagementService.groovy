@@ -26,7 +26,23 @@ import com.ibm.team.workitem.common.query.IQueryResult
 import com.ibm.team.workitem.common.query.IResolvedResult
 import com.ibm.team.workitem.common.query.QueryTypes
 import com.ibm.team.workitem.common.query.ResultSize
-import com.zions.clm.services.ccm.client.CcmGenericRestClient
+import com.ibm.team.repository.common.IAuditable;
+import com.ibm.team.repository.common.IAuditableHandle;
+import com.ibm.team.workitem.common.model.IEnumeration;
+import com.ibm.team.workitem.common.model.ILiteral;
+import com.ibm.team.workitem.common.model.ICategory;
+import com.ibm.team.workitem.common.model.ICategoryHandle;
+import com.ibm.team.workitem.common.model.Identifier;
+import com.ibm.team.workitem.client.IAuditableClient;
+import com.ibm.team.repository.client.IItemManager;
+import com.ibm.team.workitem.common.internal.WorkItemCommon;
+import com.ibm.team.repository.common.IContent;
+import com.ibm.team.repository.common.IContributorHandle;
+import com.ibm.team.process.common.IIteration;
+import com.ibm.team.process.common.IIterationHandle;
+import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
+import com.ibm.team.workitem.common.model.IState;
+import com.zions.clm.services.ccm.client.CcmGenericRestClient;
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.utils.ProcessAreaUtil
 import com.zions.clm.services.ccm.utils.ReferenceUtil
@@ -133,7 +149,7 @@ class CcmWorkManagementService {
 		def outType = "${wiMap.target}"
 		return generateWIData(id, workItem.modified(), workItem,  project, outType, wiMap, memberMap).changes
 	}
-	
+
 	/**
 	 * Returns link changes from RTC that is in object usable for VSTS work item update request.
 	 * 
@@ -496,7 +512,7 @@ class CcmWorkManagementService {
 		return [op:'add', path:"/fields/${fieldMap.target}", value: val]
 		
 	}
-	
+
 	IWorkItemCommon getWorkItemCommon() {
 		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
 		return teamRepository.getClientLibrary(IWorkItemCommon.class)
@@ -705,6 +721,215 @@ class CcmWorkManagementService {
 		}
 		return null
 		
+	}
+	
+	/**
+	 * Get the work item attributes to support archival processing.
+	 *
+	 * @param workItem
+	 * @param projectName
+	 * @return
+	 */
+	public def getWIAttributes(IWorkItem workItem, String projectName)
+		throws TeamRepositoryException
+	{
+		def attrMap = [:]
+		IProgressMonitor monitor = getMonitor()
+		ITeamRepository teamRepository = rtcRepositoryClient.getRepo()
+		IProcessClientService clientService = teamRepository.getClientLibrary(IProcessClientService.class)
+		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(projectName, clientService, monitor)
+        IAuditableClient auditableClient = (IAuditableClient) teamRepository.getClientLibrary(IAuditableClient.class);
+		IWorkItemCommon workItemCommon = (IWorkItemCommon) teamRepository.getClientLibrary(IWorkItemCommon.class);
+		// get the xml source for the project, in case there is a multi-select
+		// stored in a string field
+		IContent pxml = (IContent) projectArea.getProcessData().get(
+				"com.ibm.team.internal.process.compiled.xml");
+		
+		IAttribute ii = workItemCommon.findAttribute(projectArea,
+				"internalComments", monitor);
+		if (ii == null)
+		{
+			System.out.println("unable to find comments in projectarea="
+					+ projectArea.getName());
+			return;
+		}
+	
+		try
+		{
+			// loop thru all the workitem attributes
+			for (IAttribute ia : workItemCommon.findAttributes(projectArea, monitor))
+			{
+	
+				// if this workitem has this attribute and
+				// its nOT an internal use attribute
+				if (workItem.hasAttribute(ia) && !ia.isInternal() && !(ia.getDisplayName() == "Project Area")
+					&& !(ia.getDisplayName() == "Restricted Access") && !(ia.getDisplayName() == "Subscribed By") 
+					&& !(ia.getDisplayName() == "Approval Descriptors")
+					)
+				{
+					def attrValue = ''
+					try
+					{
+						if (ia.getAttributeType().equals("contributor")) {
+							IContributorHandle contribHandle = ia.getValue(auditableClient, workItem, monitor)
+							IContributor contributor = (IContributor) teamRepository.itemManager().fetchCompleteItem(contribHandle, IItemManager.DEFAULT, monitor)
+							attrValue = contributor.getName()
+						}
+						else if (ia.getAttributeType().equals("interval")) {
+							IIterationHandle iterHandle = ia.getValue(auditableClient, workItem, monitor)
+							IIteration iter = (IIteration) teamRepository.itemManager().fetchCompleteItem(iterHandle, IItemManager.DEFAULT, monitor)
+							attrValue = iter.getName()
+						}
+						else if (ia.getDisplayName().equals("Status")) {
+							IWorkflowInfo workflowInfo = workItemCommon.findWorkflowInfo(workItem,monitor)
+							Identifier<IState> state = workItem.getState2()
+							attrValue = workflowInfo.getStateName(state)
+						}
+						// if this is a category attribute
+						else if (ia.getAttributeType().equals("category"))
+						{
+							// get the handle
+							ICategoryHandle ich = (ICategoryHandle) (ia.getValue(auditableClient, workItem, null));
+							// and its full value
+							ICategory ic = (ICategory) teamRepository.itemManager().fetchCompleteItem(ich,
+											IItemManager.REFRESH, monitor); // .fetchCompleteItem(ich,
+																			// IItemManager.DEFAULT,
+																			// null);
+							attrValue = ic.getName()
+						}
+						else if (ia.getAttributeType().toString().startsWith("enumerationList"))
+						{
+							List<ILiteral> enumerationLiterals = (List<ILiteral>) workItemCommon
+									.resolveEnumeration(ia, monitor)
+									.getEnumerationLiterals();
+							List<Identifier> ial = (List<Identifier>) ia.getValue(auditableClient, workItem,
+											monitor);
+							for (int r = 0; r < ial.size(); r++)
+							{
+								for (ILiteral literal : enumerationLiterals)
+								{
+									if (literal.getIdentifier2().getStringIdentifier().equalsIgnoreCase(ial.get(r).getStringIdentifier()))
+									{
+										if (attrValue) attrValue = attrValue + ";"
+										attrValue = attrValue + literal.getName()
+										break;
+									}
+								}
+							}
+						}
+						else if (ia.getAttributeType().toString().toLowerCase().endsWith("string")) {
+							attrValue = ia.getValue(auditableClient, workItem, monitor)
+						}
+						else
+						{
+							// this will throw exception if not enumeration
+							IEnumeration<ILiteral> enumeration = (IEnumeration<ILiteral>) workItemCommon.resolveEnumeration(ia, monitor);
+							if (enumeration != null)
+							{
+								String[] iaval = ia.getValue(auditableClient, workItem,
+												monitor).toString().split(":");
+								if (iaval.length > 1 && iaval[1] != null)
+								{
+									List<ILiteral> enumerationLiterals = enumeration.getEnumerationLiterals();
+									for (ILiteral literal : enumerationLiterals)
+									{
+										if (literal.getIdentifier2()
+												.getStringIdentifier()
+												.equalsIgnoreCase(iaval[1]))
+										{
+											attrValue = literal.getName()
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
+					catch (Exception e)
+					{
+						attrValue = ia.getValue(auditableClient, workItem, monitor)
+						def attName = ia.getDisplayName()
+						def type = ia.getAttributeType()
+						if (ia.getAttributeType().toString().toLowerCase().endsWith("string"))
+						{
+							// if this is a string type, it MIGHT be
+							// multi-select
+							// so, find the attribute definition in the project
+							// area
+							// then check to see if there is a related
+							// enumeration,
+							// if not its just a string.. bummer
+	
+							// try to find the attribute in the presentation
+							// definition as a list type
+							// data looks like this, numbers for reference
+							// 1 <presentation attributeId="field name"
+							// kind="com.ibm.team.workitem.kind.list">
+							// 2 <property key="enumeration"
+							// value="enumeration name"/>
+							// 3 </presentation>
+							String typeString = "<presentation attributeId=\""
+									+ ia.getIdentifier()
+									+ "\" kind=\"com.ibm.team.workitem.kind.list\">";
+							String endString = "</presentation>";
+							// find the xml string that starts the presentation
+							// definition for this field
+							// could use xpath, but this is faster
+							// find line 1 if it exists
+							int typeIndex = XML.indexOf(typeString);
+							// if we found the string type as a list
+							if (typeIndex >= 0)
+							{
+								// parse the defined enum
+								// get the xml offset of the end of line 1
+								// we don't need this data anymore
+								int fieldOffset = typeIndex
+										+ typeString.length();
+								// use substring to extract just line 2
+								// use split to get the quoted enum name
+								String[] result = XML.substring(fieldOffset,
+										XML.indexOf(endString, fieldOffset))
+										.split("\"");
+								// get the Enum object from its name
+								IEnumeration enumeration = (IEnumeration) ((WorkItemCommon) workItemCommon).internalResolveEnumeration(
+												projectArea,
+												result[result.length - 2],
+												monitor);
+								// get the data literals (selected values) from
+								// the field, comma separated
+								String[] Literals = workItem.getValue(ia).toString().split(",");
+								// loop thru the selected value literals
+								for (int r = 0; r < Literals.length; r++)
+								// for(String literal: Literals)
+								{
+									String literal = Literals[r];
+									if (literal.length() > 0)
+									{
+										// print out the literal name and the
+										// human readable value
+										attrValue = enumeration.findEnumerationLiteral(
+																		Identifier.create(ILiteral.class,
+																		literal)).getName()
+									}
+								}
+							}
+						}
+					}
+					attrMap.put(ia.getDisplayName(),"$attrValue")
+				}
+			}
+			/* handle all the workitem references/links/attachments
+			analyzeReferences(workItemCommon.resolveWorkItemReferences(
+					workItem, null));
+			System.out.println(" ");
+			*/
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			System.out.println("outer Exception=" + e.toString());
+		}
+	return attrMap
 	}
 }
 
