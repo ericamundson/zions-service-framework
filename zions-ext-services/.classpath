@@ -1,13 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/groovy"/>
-	<classpathentry kind="src" path="src/integration-test/groovy"/>
-	<classpathentry kind="src" path="src/integration-test/resources"/>
-	<classpathentry kind="src" path="src/test/resources"/>
-	<classpathentry kind="src" path="src/test/groovy"/>
-	<classpathentry kind="src" path="src/main/resources"/>
-	<classpathentry kind="src" path="src/groovydoc"/>
+	<classpathentry kind="src" output="bin/main" path="src/main/groovy">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test,integrationTest"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/integrationTest" path="src/integration-test/groovy">
+		<attributes>
+			<attribute name="gradle_scope" value="integrationTest"/>
+			<attribute name="gradle_used_by_scope" value="integrationTest"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/integrationTest" path="src/integration-test/resources">
+		<attributes>
+			<attribute name="gradle_scope" value="integrationTest"/>
+			<attribute name="gradle_used_by_scope" value="integrationTest"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/test" path="src/test/resources">
+		<attributes>
+			<attribute name="gradle_scope" value="test"/>
+			<attribute name="gradle_used_by_scope" value="test,integrationTest"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/test" path="src/test/groovy">
+		<attributes>
+			<attribute name="gradle_scope" value="test"/>
+			<attribute name="gradle_used_by_scope" value="test,integrationTest"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/main" path="src/main/resources">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test,integrationTest"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/groovydoc" path="src/groovydoc">
+		<attributes>
+			<attribute name="gradle_scope" value="groovydoc"/>
+			<attribute name="gradle_used_by_scope" value="groovydoc"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/main" path="common-resources">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test,integrationTest"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="bin/default"/>
 </classpath>

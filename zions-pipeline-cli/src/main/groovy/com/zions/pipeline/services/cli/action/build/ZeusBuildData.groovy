@@ -21,6 +21,8 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.representer.Representer
 import groovy.time.TimeCategory
 
 
@@ -281,6 +283,8 @@ class ZeusBuildData implements CliAction {
 		}
 		String affiliatesStr = affiliatesList.join(',')
 		o << "global.affiliates.list=${affiliatesStr}${sep}"
+		println "##vso[task.setvariable variable=activeAffiliates]${affiliatesStr}"
+		
 		if (wis.size() > 0) {
 			String wiStr = wis.join(',')
 			o << "ado.workitems=${wiStr}${sep}"
@@ -417,6 +421,8 @@ class ZeusBuildData implements CliAction {
 			detailsFile(collection, project, wis, allChanges, outDir, outRepoDir, fileMap, allAffiliates)
 		}
 		//}
+		File xlrTemplateYaml = new File("${inRepoDir}/xl/xebialabs/xlr-template.yaml")
+		//writeXLRTemplateYaml(affiliatesList, xlrTemplateYaml)
 		return null
 	}
 
@@ -471,6 +477,17 @@ class ZeusBuildData implements CliAction {
 		String fName = "/${iName}"
 		def i = new File("$inRepoDir${fName}")
 		return i.exists()
+	}
+	
+	def writeXLRTemplateYaml(affiliatesList, File inFile) {
+		def reader = new StringReader(inFile.text)
+		Representer r = new Representer()
+		Yaml appYaml = new Yaml()  //TODO:  Study up on examples of MarkupBuilder
+		
+		appYaml.load(reader)
+		def yamlMap = [apiVersion: 'xl-deploy/v1', kind: 'Applications', spec: []]
+		def appZeus = [ directory: 'Application/Zeus', children: []]
+		yamlMap.spec.add(appZeus)
 	}
 
 	def detailsFile(String collection, String project, def wis, def allChanges, outDir, outRepoDir, Map<String,File> fileMap, affiliatesList) {
