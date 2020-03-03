@@ -61,10 +61,10 @@ class SyncTesting implements CliAction {
 	@Value('${ado.iteration.path:}')
 	String iterationPath
 
-	@Value('${tfs.project}')
+	@Value('${tfs.project:}')
 	String project
 
-	@Value('${tfs.url}')
+	@Value('${tfs.url:}')
 	String adoUrl
 
 	@Value('${main.tag:}')
