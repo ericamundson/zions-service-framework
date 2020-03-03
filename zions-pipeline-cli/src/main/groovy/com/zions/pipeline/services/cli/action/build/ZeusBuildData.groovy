@@ -283,7 +283,7 @@ class ZeusBuildData implements CliAction {
 		}
 		String affiliatesStr = affiliatesList.join(',')
 		o << "global.affiliates.list=${affiliatesStr}${sep}"
-		println "##vso[task.setvariable variable=activeAffiliates]${affiliatesStr}"
+		println "##vso[task.setvariable variable=activeAffiliates]${affiliatesList.join(' ')}"
 		
 		if (wis.size() > 0) {
 			String wiStr = wis.join(',')
