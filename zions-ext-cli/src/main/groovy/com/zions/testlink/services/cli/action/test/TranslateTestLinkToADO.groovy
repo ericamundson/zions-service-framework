@@ -376,6 +376,7 @@ class TranslateTestLinkToADO implements CliAction {
 							
 						TestSuite[] suites = testLinkClient.getFirstLevelSuitesForTestPlan(testplan)
 						if (suites.size() == 0) return
+						log.info("Suite count for this plan: ${suites.length}")
 						
 						handleTestSuites(suites, plan, testplan, null, { def parent, TestSuite testsuite -> 
 							String tsid = "${testsuite.id}_${testplan.name}"
@@ -400,6 +401,7 @@ class TranslateTestLinkToADO implements CliAction {
 				//apply work links
 				if (phase == 'links') {
 					def idKeyMap = [:]
+					items = filtered(items, wiFilter)
 					items.each { TestPlan testplan ->
 						String webId = "${testplan.id}"
 						String planName = "${testplan.name}"
@@ -412,7 +414,6 @@ class TranslateTestLinkToADO implements CliAction {
 							testLinkItemManagementService.setParent(testsuite, testcaseList, mappingData, planName) { typeData, tcIds ->
 								String suiteUrl = "${typeData.url}"
 								def tcMap = testManagementService.getSuiteTestCaseMap(suiteUrl)
-								if (tcMap.size() == tcIds.size()) return
 								tcIds = this.filterIds(tcIds, tcMap)
 								if (tcIds.size() > 0) {
 									testManagementService.associateCaseToSuite(suiteUrl, tcIds)
@@ -490,6 +491,7 @@ class TranslateTestLinkToADO implements CliAction {
 	
 	def handleTestSuites(TestSuite[] psuites, def parent, TestPlan plan, def resultMap = null,  Closure tsc = null, Closure tcc = null) {
 		psuites.each { TestSuite psuite ->
+			log.info("Migrating suite: ${psuite.name}")
 			def parentData = null
 			if (tsc) {
 				parentData = tsc.call(parent, psuite)
