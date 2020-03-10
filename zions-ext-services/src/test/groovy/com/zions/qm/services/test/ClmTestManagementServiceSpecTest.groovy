@@ -24,8 +24,10 @@ import org.springframework.test.context.ContextConfiguration
 
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
+import spock.lang.Ignore
 
 @ContextConfiguration(classes=[ClmTestManagementServiceSpecTestConfig])
+@Ignore
 class ClmTestManagementServiceSpecTest extends Specification {
 	
 	@Value('${clm.projectArea:}')
