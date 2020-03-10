@@ -42,10 +42,13 @@ import com.ibm.team.process.common.IIteration;
 import com.ibm.team.process.common.IIterationHandle;
 import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
 import com.ibm.team.workitem.common.model.IState;
+import com.ibm.team.workitem.common.model.IComment
+import com.ibm.team.workitem.common.model.IComments
 import com.zions.clm.services.ccm.client.CcmGenericRestClient;
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
 import com.zions.clm.services.ccm.utils.ProcessAreaUtil
 import com.zions.clm.services.ccm.utils.ReferenceUtil
+import com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService
 import com.zions.clm.services.ccm.workitem.handler.CcmBaseAttributeHandler
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cacheaspect.Cache
@@ -74,6 +77,9 @@ class CcmWorkManagementService {
 	@Autowired(required=false)
 	private Map<String, CcmBaseAttributeHandler> fieldMap;
 	
+	@Autowired
+	AttachmentsManagementService attachmentsManagementService
+
 	@Autowired
 	RtcRepositoryClient rtcRepositoryClient
 	@Autowired
@@ -730,7 +736,7 @@ class CcmWorkManagementService {
 	 * @param projectName
 	 * @return
 	 */
-	public def getWIAttributes(IWorkItem workItem, String projectName)
+	public def getWIAttributesForArchive(String archiveDir, IWorkItem workItem, String projectName)
 		throws TeamRepositoryException
 	{
 		def attrMap = [:]
@@ -749,7 +755,7 @@ class CcmWorkManagementService {
 				"internalComments", monitor);
 		if (ii == null)
 		{
-			System.out.println("unable to find comments in projectarea="
+			log.error("unable to find comments in projectarea="
 					+ projectArea.getName());
 			return;
 		}
@@ -784,6 +790,30 @@ class CcmWorkManagementService {
 							IWorkflowInfo workflowInfo = workItemCommon.findWorkflowInfo(workItem,monitor)
 							Identifier<IState> state = workItem.getState2()
 							attrValue = workflowInfo.getStateName(state)
+						}
+						else if (ia.getAttributeType().equals("comments")) {
+							IComments comments = workItem.getComments()
+							IComment[] theComments = comments.getContents()
+							String commentText = ''
+							int i = 1;
+							for (IComment aComment : theComments) {
+								if (i > 1) {
+									commentText = commentText + '\r'
+								}
+								IContributorHandle contribHandle = aComment.getCreator()
+								IContributor author = (IContributor) teamRepository.itemManager().fetchCompleteItem(contribHandle, IItemManager.DEFAULT, monitor)
+								commentText = commentText + aComment.getCreationDate().toString().substring(0,10) + "(${author.getName()}): ${aComment.getHTMLContent().getPlainText()}"
+								i++;
+							}
+							if (commentText.length()> 1000) {
+								String fname = "${workItem.getId()}_Comments.txt"
+								String dir = "$archiveDir/Comments"
+								archiveFile(fname, dir, commentText.getBytes())
+								attrValue = "$dir/$fname"
+							}
+							else {
+								attrValue = commentText
+							}
 						}
 						// if this is a category attribute
 						else if (ia.getAttributeType().equals("category"))
@@ -918,19 +948,41 @@ class CcmWorkManagementService {
 					attrMap.put(ia.getDisplayName(),"$attrValue")
 				}
 			}
-			/* handle all the workitem references/links/attachments
-			analyzeReferences(workItemCommon.resolveWorkItemReferences(
-					workItem, null));
-			System.out.println(" ");
-			*/
 		}
 		catch (Exception e)
 		{
 			// TODO Auto-generated catch block
-			System.out.println("outer Exception=" + e.toString());
+			log.error("outer Exception=" + e.toString());
+		}
+		
+		// If there are any attachments on this work item, then cache the attachments and store file name in attribute
+		def files = attachmentsManagementService.cacheWorkItemAttachments(workItem.getId())
+		if (files.size() > 0) {
+			String attrValue = ''
+			String dir = "$archiveDir/Attachments"				
+	  		files.each { file ->
+				def fname = "${workItem.getId()}_${file.fileName}"
+				archiveFile(fname, dir, file.file)
+				if (attrValue != '') attrValue = attrValue + '\r'
+				attrValue = attrValue + "$dir/$fname"
+			}
+			attrMap.put('Attachments',"$attrValue")
 		}
 	return attrMap
 	}
+	
+	def archiveFile(String fname, String dir, byte[] byteArray) {
+		// Write out file
+		try {
+			new File("$dir/$fname").withOutputStream {
+				it.write byteArray
+			}
+		}
+		catch (e) {
+			log.error("Could not save file $fname.  Error: ${e.getMessage()}")
+		}
+	}
+
 }
 
 

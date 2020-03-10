@@ -139,25 +139,10 @@ class ArchiveRTCWorkItems implements CliAction {
 							excelManagementService.CreateExcelFile(filePath,curArtifactType)
 							lastArtifactType = curArtifactType
 						}
-						def wiAttributes = ccmWorkManagementService.getWIAttributes(ccmWorkitem,project)
+						def wiAttributes = ccmWorkManagementService.getWIAttributesForArchive(filePath, ccmWorkitem,project)
 						insertArtifactIntoExcel(sid, lastArtifactType, wiAttributes)
 					}
 				}
-				
-
-				//extract & apply attachments.
-//				if (phase == 'attachments' || phase == 'update' || phase == 'other') {
-//					ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
-//					items.each { workitem ->
-//						int id = Integer.parseInt(workitem.id)
-//						def files = attachmentsManagementService.cacheWorkItemAttachments(id)
-//						def wiChanges = fileManagementService.ensureAttachments(collection, tfsProject, id, files)
-//						if (wiChanges != null) {
-//							clManager.add("${id}",wiChanges)
-//						}
-//					}
-//					clManager.flush()
-//				}
 			}
 			excelManagementService.CloseExcelFile()
 //			printCheckpointErrorLogs()
