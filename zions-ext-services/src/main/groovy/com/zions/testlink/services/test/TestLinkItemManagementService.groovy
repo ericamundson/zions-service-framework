@@ -354,6 +354,7 @@ class TestLinkItemManagementService {
 			type = ICacheManagementService.SUITE_DATA
 			pid = "${pid}_${appendId}"
 		}
+		// make sure parent and children exist in cache (i.e. ADO) before attempting to link
 		def parentData = cacheManagementService.getFromCache(pid, type)
 		if (parentData != null) {
 			def tcIds = []

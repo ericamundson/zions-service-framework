@@ -33,7 +33,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("clmdb")
-@ComponentScan(["com.zions.vsts.services","com.zions.clm.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.ldap", "com.zions.common.services.user"])
+@ComponentScan(["com.zions.vsts.services","com.zions.clm.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.ldap", "com.zions.common.services.user", "com.zions.common.services.spock.test", "com.zions.common.services.excel"])
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 @EnableLdapRepositories(basePackages = "com.zions.common.services.ldap")
 public class CLMDBAppConfig {

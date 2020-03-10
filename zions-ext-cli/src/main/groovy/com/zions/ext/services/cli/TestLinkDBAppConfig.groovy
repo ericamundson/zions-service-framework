@@ -39,7 +39,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("tldb")
-@ComponentScan(["com.zions.testlink.services","com.zions.vsts.services", "com.zions.common.services.restart", "com.zions.common.services.logging","com.zions.common.services.cache.db","com.zions.common.services.ldap", "com.zions.common.services.user"])
+@ComponentScan(["com.zions.testlink.services","com.zions.vsts.services", "com.zions.common.services.restart", "com.zions.common.services.logging","com.zions.common.services.cache.db","com.zions.common.services.ldap", "com.zions.common.services.user", "com.zions.common.services.spock.test"])
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 @EnableLdapRepositories(basePackages = "com.zions.common.services.ldap")
 //@Import(QmAppConfig.class)
