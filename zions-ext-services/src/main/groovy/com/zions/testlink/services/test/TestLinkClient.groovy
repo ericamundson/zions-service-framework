@@ -232,7 +232,14 @@ class TestLinkClient {
 	 * @throws TestLinkAPIException
 	 */
 	public TestSuite[] getTestSuitesForTestPlan(Integer testPlanId) throws TestLinkAPIException {
-		return delegate.getTestSuitesForTestPlan(testPlanId);
+		TestSuite[] out_suites
+		try {
+			 out_suites = delegate.getTestSuitesForTestPlan(testPlanId);
+		}
+		catch (ClassCastException) {
+			// Empty Test Plan -- skipping 
+			return []
+		}
 	}
 
 	/**

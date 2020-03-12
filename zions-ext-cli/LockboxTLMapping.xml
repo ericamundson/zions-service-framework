@@ -6,10 +6,10 @@
 			<defaultvalue target="Active"/>
 		</field>
 		<field source="planBlankHandler" target="area">
-			<defaultvalue target="CLOS"/>
+			<defaultvalue target="Lockbox"/>
 		</field>
 		<field source="blankHandler" target="iteration">
-			<defaultvalue target="CLOS"/>		
+			<defaultvalue target="Lockbox"/>		
 		</field>
 	</wit>
 	<wit source="TestSuite"  target="Test Suite" translateUnmappedFields="false" notWorkItem="true">
@@ -19,25 +19,25 @@
 			<defaultvalue target="Active"/>
 		</field>
 		<field source="planBlankHandler" target="area">
-			<defaultvalue target="CLOS"/>
+			<defaultvalue target="Lockbox"/>
 		</field>
 		<field source="blankHandler" target="iteration">
-			<defaultvalue target="CLOS"/>		
+			<defaultvalue target="Lockbox"/>		
 		</field>
 	</wit>
 	<wit source="TestCase"  target="Test Case" translateUnmappedFields="false">
 		<field source="testCaseNameHandler" target="System.Title"/>
-		<field source="testCaseCustomAttributesHandler" target="Custom.CustomAttributes"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
 		<field source="summaryHandler" target="System.Description"/>
 		<field source="ownerHandler" target="System.AssignedTo"/>
 		<field source="testCaseStateHandler" target="System.State">
 			<defaultvalue target="Design"/>
 		</field>
 		<field source="blankHandler" target="System.AreaPath">
-			<defaultvalue target="CLOS"/>
+			<defaultvalue target="Lockbox"/>
 		</field>
 		<field source="blankHandler" target="System.IterationPath">
-			<defaultvalue target="CLOS"/>		
+			<defaultvalue target="Lockbox"/>		
 		</field>
 		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
 		<excluded>
@@ -79,10 +79,10 @@
 		</field>
 	</wit>
 	<wit source="TestPlan"  target="Test Plan WI" translateUnmappedFields="false">
-		<field source="testPlanCustomAttributesHandler" target="Custom.CustomAttributes"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
 	</wit> 
 	<wit source="TestSuite"  target="Test Suite WI" translateUnmappedFields="false">
-		<field source="testSuiteCustomAttributesHandler" target="Custom.CustomAttributes"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
 	</wit> 
 	
 </witmapping>

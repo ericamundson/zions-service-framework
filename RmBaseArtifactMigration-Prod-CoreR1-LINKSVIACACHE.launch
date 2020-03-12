@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-ext-cli/src/main/groovy/com/zions/ext/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="translateRmBaseArtifactsToADO&#13;&#10; --include.update=linkViaCache&#13;&#10; --include.phases=requirements&#13;&#10; --mr.url=http://utmvti0190:8026&#13;&#10; --clm.url=https://clm.cs.zionsbank.com&#13;&#10; --clm.user=svc-rtcmigration&#13;&#10; --clm.password=t35T1ng411rTcM!gR@t10n &#13;&#10; --clm.pageSize=10&#13;&#10; --tfs.url=https://dev.azure.com&#13;&#10; --tfs.collection=ZionsETO&#13;&#10; --tfs.user=robert.huet@zionsbancorp.com &#13;&#10; --clm.projectAreaUri=_klNSEBNGEeSmasotILOx6w&#13;&#10; --rm.mapping.file=./CoreRRMMapping.xml&#13;&#10; --tfs.project=BaNCS&#13;&#10; --process.name=ZionsAgile&#13;&#10; --rm.filter=allFilter&#13;&#10; --tfs.areapath=BaNCS\Requirements\R1&#13;&#10; --tfs.projectUri={f5b48f08-0085-4814-875a-a3dbc9736967}&#13;&#10; --tfs.projectFolder=FutureCore&#13;&#10; --tfs.isDefaultTeam=true&#13;&#10; --tfs.teamGuid=dbc2b591-13fc-4dcf-bfdd-7f31e31a7323&#13;&#10; --tfs.collectionId=931ea459-abea-43db-9aed-eb489dee1e5e&#13;&#10; --db.project=coreR1&#13;&#10; --spring.data.mongodb.database=adomigration_prod&#13;&#10; --cache.location=C:\\rmtestcachesandbox&#13;&#10; --cache.module=RM &#13;&#10; --logging.level.root=INFO&#13;&#10; --logging.file=&quot;c:\\logs\\MigrationTranslateRMToADO_prod_core_links.log&quot;&#13;&#10; --selected.checkpoint=none&#13;&#10; --sql.resource.name=sql/core.sql"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=rmdb -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=svc-rtcmigration -Dproxy.Password=t35T1ng411rTcM!gR@t10nd"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>

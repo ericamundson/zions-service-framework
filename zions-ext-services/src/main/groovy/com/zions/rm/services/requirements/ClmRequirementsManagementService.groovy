@@ -290,6 +290,7 @@ class ClmRequirementsManagementService {
 		while (true) {
 			iUrl = this.pageUrlDb()
 			pageCount++
+			log.info("Saving page $pageCount from DataWarehouse to cache")
 			if (maxPage != -1 && (maxPage) == pageCount) break; // For testing
 			new CacheInterceptor() {}.provideCaching(this, "${pageCount}", ts, DataWarehouseQueryData) {
 				currentItems = this.nextPageDb()
@@ -868,7 +869,7 @@ class DataWarehouseQueryData implements CacheWData {
 	def data
 	
 	void doData(def result) {
-		log.debug("Saving new DataWarehouseQueryData page to mongodb")
+		//log.debug("Saving new DataWarehouseQueryData page to mongodb")
 		data = new JsonBuilder(result).toPrettyString()
 	}
 	
