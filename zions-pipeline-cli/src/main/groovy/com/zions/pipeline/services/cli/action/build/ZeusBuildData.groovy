@@ -21,8 +21,7 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
-import org.yaml.snakeyaml.Yaml
-import org.yaml.snakeyaml.representer.Representer
+import org.ho.yaml.Yaml
 import groovy.time.TimeCategory
 
 
@@ -480,13 +479,10 @@ class ZeusBuildData implements CliAction {
 	}
 	
 	def writeXLRTemplateYaml(affiliatesList, File inFile) {
-		def reader = new StringReader(inFile.text)
-		Representer r = new Representer()
+		//def reader = new StringReader(inFile.text)
 		Yaml appYaml = new Yaml()  //TODO:  Study up on examples of MarkupBuilder
 		
-		appYaml.load(reader)
-		def yamlMap = [apiVersion: 'xl-deploy/v1', kind: 'Applications', spec: []]
-		def appZeus = [ directory: 'Application/Zeus', children: []]
+		def yamlMap = appYaml.load(inFile)
 		yamlMap.spec.add(appZeus)
 	}
 

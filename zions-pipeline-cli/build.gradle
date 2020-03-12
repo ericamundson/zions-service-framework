@@ -10,7 +10,7 @@ dependencies {
 	compile project(':zions-xld-services')
 	compile project(':zions-xlr-services')
 	compile project(':zions-common')
-	compile 'org.yaml:snakeyaml:1.19'
+	compile 'org.jyaml:jyaml:1.3'
 	
 }
 
