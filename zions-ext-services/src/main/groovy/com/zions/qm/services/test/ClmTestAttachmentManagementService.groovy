@@ -66,7 +66,26 @@ class ClmTestAttachmentManagementService {
 
 		return files
 	}
-	
+
+	public def cacheTestItemAttachments(List hrefs) {
+		def files = []
+		hrefs.each { aurl ->
+			def result = clmTestManagementService.getContent(aurl)
+			if (result.filename != null) {
+				String fName = cleanTextContent(result.filename)
+				//def file = cacheManagementService.saveBinaryAsAttachment(result.data, fName, id)
+				ByteArrayInputStream s = result.data
+				def file = s.bytes
+				def item = [file: file, fileName: fName, comment: "Added attachment ${fName}"]
+				//File cFile = saveAttachment
+				files.add(item)
+			}
+		}
+
+		return files
+	}
+
+		
 	public def cacheTestItemAttachmentsAsBinary(def titem) {
 		def binaries = []
 //		String type = getOutType(titem)

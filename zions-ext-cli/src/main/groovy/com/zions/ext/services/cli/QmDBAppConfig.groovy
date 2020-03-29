@@ -35,7 +35,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("qmdb")
-@ComponentScan(["com.zions.qm.services","com.zions.vsts.services", "com.zions.common.services.restart","com.zions.common.services.cache.db"])
+@ComponentScan(["com.zions.qm.services","com.zions.vsts.services", "com.zions.common.services.restart","com.zions.common.services.cache.db","com.zions.common.services.excel"])
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 //@Import(QmAppConfig.class)
 public class QmDBAppConfig {
