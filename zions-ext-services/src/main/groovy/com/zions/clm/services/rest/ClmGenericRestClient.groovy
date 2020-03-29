@@ -86,11 +86,11 @@ public class ClmGenericRestClient extends AGenericRestClient {
 		try {
 			
 			HttpResponseDecorator resp = this.delegate.get(	
-				uri: "${this.clmUrl}/ccm/authenticated/identity",
+				uri: "${this.clmUrl}/qm/authenticated/identity",
 				headers: [Accept: 'text/html']
 			);	
 			resp = this.delegate.post( 
-				uri: "${this.clmUrl}/ccm/authenticated/j_security_check",
+				uri: "${this.clmUrl}/qm/authenticated/j_security_check",
 				query: [j_username: this.userid, j_password: this.password],
 				requestContentType: 'application/x-www-form-urlencoded'
 			);

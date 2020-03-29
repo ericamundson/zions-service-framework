@@ -12,9 +12,9 @@ import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
 import groovy.xml.XmlUtil
 
-@Component('QmStepsHandler')
+@Component('QmStepResultsHandler')
 @Slf4j
-class StepsHandler extends QmBaseAttributeHandler {
+class StepResultsHandler extends QmBaseAttributeHandler {
 	@Autowired
 	ClmTestManagementService clmTestManagementService
 
@@ -47,7 +47,7 @@ class StepsHandler extends QmBaseAttributeHandler {
 	}
 
 	String buildStepData(ts, String id) {
-		def teststeps = ts.steps.step
+		def teststeps = ts.'**'.findAll({it.name() == 'stepResult'}) 
 
 		if (teststeps.size()> 0) {
 			def writer = new StringWriter()
@@ -147,10 +147,36 @@ class StepsHandler extends QmBaseAttributeHandler {
 											}
 
 										}
-										// Capture attachments
-										if (sstep.attachment.size() > 0) {
+										// Capture result
+										if (sstep.result.size() > 0) {
+											String html = "${sstep.result.childNodes().this$0}".replace('com.ibm.rqm.execution.common.state.','')
+											parameterizedString(isformatted: 'false') {
+												mkp.yieldUnescaped html
+											}
+										}
+										else {
 											String html = ''
-											sstep.attachment.each { attachment ->
+											parameterizedString(isformatted: 'false') {
+												mkp.yieldUnescaped html
+											}
+										}
+										// Capture endTime
+										if (sstep.endTime.size() > 0) {
+											String html = "${sstep.endTime.childNodes().this$0}"
+											parameterizedString(isformatted: 'false') {
+												mkp.yieldUnescaped html
+											}
+										}
+										else {
+											String html = ''
+											parameterizedString(isformatted: 'false') {
+												mkp.yieldUnescaped html
+											}
+										}
+										// Capture attachments
+										if (sstep.stepAttachment.size() > 0) {
+											String html = ''
+											sstep.stepAttachment.each { attachment ->
 												html = html + '|'
 											}
 											parameterizedString(isformatted: 'false') {
@@ -234,10 +260,36 @@ class StepsHandler extends QmBaseAttributeHandler {
 								}
 
 							}
-							// Capture attachments
-							if (astep.attachment.size() > 0) {
+							// Capture result
+							if (astep.result.size() > 0) {
+									String html = "${astep.result.childNodes().this$0}".replace('com.ibm.rqm.execution.common.state.','')
+									parameterizedString(isformatted: 'false') {
+									mkp.yieldUnescaped html
+								}
+							}
+							else {
 								String html = ''
-								astep.attachment.each { attachment ->
+								parameterizedString(isformatted: 'false') {
+									mkp.yieldUnescaped html
+								}
+							}
+							// Capture endTime
+							if (astep.endTime.size() > 0) {
+								String html = "${astep.endTime.childNodes().this$0}"
+								parameterizedString(isformatted: 'false') {
+									mkp.yieldUnescaped html
+								}
+							}
+							else {
+								String html = ''
+								parameterizedString(isformatted: 'false') {
+									mkp.yieldUnescaped html
+								}
+							}
+							// Capture attachments
+							if (astep.stepAttachment.size() > 0) {
+								String html = ''
+								astep.stepAttachment.each { attachment ->
 									html = html + "${attachment.@href}|"
 								}
 								parameterizedString(isformatted: 'false') {
