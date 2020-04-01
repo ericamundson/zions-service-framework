@@ -75,10 +75,12 @@ class ClmTestAttachmentManagementService {
 				String fName = cleanTextContent(result.filename)
 				//def file = cacheManagementService.saveBinaryAsAttachment(result.data, fName, id)
 				ByteArrayInputStream s = result.data
-				def file = s.bytes
-				def item = [file: file, fileName: fName, comment: "Added attachment ${fName}"]
-				//File cFile = saveAttachment
-				files.add(item)
+				if (s != null) {
+					def file = s.bytes
+					def item = [file: file, fileName: fName, comment: "Added attachment ${fName}"]
+					//File cFile = saveAttachment
+					files.add(item)
+				}
 			}
 		}
 

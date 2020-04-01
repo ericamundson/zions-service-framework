@@ -4,9 +4,12 @@ import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+
 import com.zions.qm.services.test.handlers.StepResultsHandler
 import com.zions.qm.services.test.ClmTestManagementService
 
+@Slf4j
 class StepResultsExtractor {
 
 	def steps = []
