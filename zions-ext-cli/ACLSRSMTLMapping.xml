@@ -6,7 +6,7 @@
 			<defaultvalue target="Active"/>
 		</field>
 		<field source="planBlankHandler" target="area">
-			<defaultvalue target="LegacyTools\Testlink\BankcardInstantPrescreen"/>
+			<defaultvalue target="LegacyTools\TestLink\AccountAnalysis"/>
 		</field>
 		<field source="blankHandler" target="iteration">
 			<defaultvalue target="LegacyTools"/>		
@@ -19,10 +19,10 @@
 			<defaultvalue target="Active"/>
 		</field>
 		<field source="planBlankHandler" target="area">
-			<defaultvalue target="LegacyTools\Testlink\BankcardInstantPrescreen"/>
+			<defaultvalue target="LegacyTools\TestLink\AccountAnalysis"/>
 		</field>
 		<field source="blankHandler" target="iteration">
-			<defaultvalue target="LegacyTools"/>		
+			<defaultvalue target="LegacyTools"/>	
 		</field>
 	</wit>
 	<wit source="TestCase"  target="Test Case" translateUnmappedFields="false">
@@ -34,7 +34,7 @@
 			<defaultvalue target="Design"/>
 		</field>
 		<field source="blankHandler" target="System.AreaPath">
-			<defaultvalue target="LegacyTools\Testlink\BankcardInstantPrescreen"/>
+			<defaultvalue target="LegacyTools\TestLink\AccountAnalysis"/>
 		</field>
 		<field source="blankHandler" target="System.IterationPath">
 			<defaultvalue target="LegacyTools"/>		
