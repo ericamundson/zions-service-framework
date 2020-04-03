@@ -219,5 +219,32 @@ class ClmTestAttachmentManagementService {
 		}
 		return maps
 	}
+	
+	def archiveAttachments (def testitem, def attachmentHrefs, def targetDir)  {
+		List hrefList = attachmentHrefs.split("\\|")
+		if (hrefList[0] == '') return ''
+		// Get any attachments for this step
+		List files = cacheTestItemAttachments(hrefList)
+		def attachments = ''
+		files.each { file ->
+			def fname = "${testitem.webId.text()}-${file.fileName}"
+			if (fname.length() > 60) fname = fname.substring(0,59)  //truncate long filenames
+			archiveFile(fname, "$targetDir", file.file)
+			attachments = attachments + "\n$targetDir\\$fname"
+		}
+		return attachments
+	}
+
+	def archiveFile(String fname, String dir, byte[] byteArray) {
+		// Write out file
+		try {
+			new File("$dir/$fname").withOutputStream {
+				it.write byteArray
+			}
+		}
+		catch (e) {
+			log.error("Could not save file $fname.  Error: ${e.getMessage()}")
+		}
+	}
 
 }

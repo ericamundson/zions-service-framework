@@ -28,38 +28,13 @@ class StepResultsExtractor {
 				def expResults = "${step.parameterizedString[1]}"
 				def resultVal = "${step.parameterizedString[2]}"
 				def endTime = "${step.parameterizedString[3]}"
-				def attachments = archiveAttachments(result, "${step.parameterizedString[4]}", clmAttachmentManagementService, targetDir)
+				def attachments = clmAttachmentManagementService.archiveAttachments(result, "${step.parameterizedString[4]}", targetDir)
 				this.steps.add(new StepData(description, expResults, resultVal, endTime, attachments))	
 				iStep++	
 			}
 		}
 	}
 
-	def archiveAttachments (def result, def attachmentHrefs, def clmAttachmentManagementService, def targetDir)  {
-		List hrefList = attachmentHrefs.split("\\|")
-		if (hrefList[0] == '') return ''
-		// Get any attachments for this step
-		List files = clmAttachmentManagementService.cacheTestItemAttachments(hrefList)
-		def attachments = ''
-		files.each { file ->
-			def fname = "${result.webId.text()}-${file.fileName}"
-			archiveFile(fname, "$targetDir", file.file)
-			attachments = attachments + "\n$targetDir\\$fname"
-		}
-		return attachments
-	}
-
-	def archiveFile(String fname, String dir, byte[] byteArray) {
-		// Write out file
-		try {
-			new File("$dir/$fname").withOutputStream {
-				it.write byteArray
-			}
-		}
-		catch (e) {
-			log.error("Could not save file $fname.  Error: ${e.getMessage()}")
-		}
-	}
 
 	class StepData {
 		String description
