@@ -319,6 +319,7 @@ class ArchiveRQM implements CliAction {
 					clmTestItemManagementService.resetNewId()
 					def itemCount = 0
 					items.each { testItem ->
+						itemCount++
 						def planDir = getTestPlanDir(testItem)
 						// Create a directory for this test plan.  If it already exists, skip it
 						File targetDir = new File(planDir)
@@ -331,7 +332,7 @@ class ArchiveRQM implements CliAction {
 						}
 						def testplan = clmTestManagementService.getTestItem(testItem.id.text())
 						int planId = Integer.parseInt(testplan.webId.text())
-						log.info ">>>>> Archiving plan #${++itemCount} of ${items.size()}: ${testplan.title}"
+						log.info ">>>>> Archiving plan #${itemCount} of ${items.size()}: ${testplan.title}"
 						
 						def attachmentDir = "$planDir\\Attachments"
 						File targetAttachmentDir = new File(attachmentDir)
@@ -405,9 +406,9 @@ class ArchiveRQM implements CliAction {
 								}
 							}
 						}
-						// Close out 
-						excelManagementService.CloseExcelFile()
 					}	
+					// Close out 
+					excelManagementService.CloseExcelFile()
 
 				}
 			}
@@ -747,7 +748,7 @@ class ArchiveRQM implements CliAction {
 		}
 	}
 	String getTestPlanDir(def testItem) {
-		return "$filePath\\${testItem.content.testplan.webId.text()} - ${testItem.title}"
+		return "$filePath\\${testItem.content.testplan.webId.text()} - ${testItem.title}".replace('/','-')
 	}
 }
 
