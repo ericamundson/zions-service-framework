@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-ext-cli/src/main/groovy/com/zions/ext/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="translateTestLinkToADO  &#13;&#10;--tfs.url=https://dev.azure.com/ZionsETO &#13;&#10;--tfs.user=z091182   &#13;&#10;--qm.template.dir=&quot;d:\qm_templates&quot; &#13;&#10;--test.mapping.file=&quot;./COBRATLMapping.xml&quot; &#13;&#10;--tfs.project=&quot;LegacyTools&quot; &#13;&#10;--process.name=&quot;ZionsAgile&quot; &#13;&#10;--include.update=phases &#13;&#10;--include.phases=plans,links&#13;&#10;--process.full.plan=true&#13;&#10;--tl.query=&quot;none&quot; &#13;&#10;--tl.filter=tlAllFilter &#13;&#10;--tfs.areapath=&quot;LegacyTools\TestLink\COBRA&quot; &#13;&#10;--cache.location=d:\tltestcache&#13;&#10;--testlink.projectName=&quot;COBRA&quot;&#13;&#10;--ext.url=https://extmgmt.dev.azure.com/ZionsETO &#13;&#10;--ext.collection=ZionsETO &#13;&#10;--db.project=testlink_COBRA&#13;&#10;--spring.data.mongodb.database=tladomigration_prod&#13;&#10;--logging.level.root=INFO &#13;&#10;--logging.file=c:\\adomigration_prod\\testlink-CobraProd.log&#13;&#10;--ado.iteration.path=&quot;LegacyTools&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=tldb&#13;&#10;-Dproxy.Host=172.18.4.115  &#13;&#10;-Dproxy.Port=8080 &#13;&#10;-Dproxy.User=z003928&#13;&#10;-Dproxy.Password=chloeemmelynezera3"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>
