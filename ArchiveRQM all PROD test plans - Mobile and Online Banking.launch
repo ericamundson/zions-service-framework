@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-ext-cli/src/main/groovy/com/zions/ext/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.debug.ui.CONSIDER_INHERITED_MAIN" value="true"/>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="archiveRQM&#13;&#10;--clm.url=https://clm.cs.zionsbank.com &#13;&#10;--clm.user=z097331&#13;&#10;--clm.password=februar1L!berty&#13;&#10;--tfs.url=https://dev.azure.com/eto-dev &#13;&#10;--tfs.user=z097331  &#13;&#10;--clm.projectArea=&quot;Mobile and Online Banking (Quality Management)&quot; &#13;&#10;--qm.template.dir=&quot;d:\qm_templates&quot; &#13;&#10;--test.mapping.file=&quot;./CoreRQMMapping.xml&quot; &#13;&#10;--tfs.project=&quot;BaNCS&quot; &#13;&#10;--process.name=&quot;ZionsAgile&quot; &#13;&#10;--include.update=phases &#13;&#10;--include.phases=plans&#13;&#10;--qm.query=&quot;feed/entry/content/testplan/*&quot; &#13;&#10;--qm.filter=allFilter &#13;&#10;--tfs.areapath=&quot;BaNCS&quot; &#13;&#10;--cache.location=d:/bancs_cache_prod &#13;&#10;--selected.checkpoint=none &#13;&#10;--spring.data.mongodb.database=adomigration_prod &#13;&#10;--db.project=core &#13;&#10;--parent.plan.name=&quot;FC PS Migrated (From RQM)&quot; &#13;&#10;--process.full.plan=true &#13;&#10;--ext.url=https://extmgmt.dev.azure.com/zionseto &#13;&#10;--ext.collection=zionseto &#13;&#10;--rm.area.path=&quot;BaNCS\Requirements\R3&quot; &#13;&#10;--email.recipient.address=&quot;eaamund@gmail.com&quot; &#13;&#10;--check.updated=false --refresh.run=true &#13;&#10;--update.cache.only=false &#13;&#10;--logging.file=e:\\bin\\batch\\logs\\rqm.log&#13;&#10;--excel.path=&quot;d:\rqm_archives_mobile_onlinebanking&quot;&#13;&#10;--page.size=500"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=qmdb -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=z097331 -Dproxy.Password=februar1L!berty"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>

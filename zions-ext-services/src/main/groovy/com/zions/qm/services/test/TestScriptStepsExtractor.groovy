@@ -19,7 +19,14 @@ class TestScriptStepsExtractor {
 		// Use Steps handler to extract the steps description and expected results
 		def value = stepsHandler.buildStepData(testscript, "${testscript.webId}")
 		if (value != null) {
-			def parsedSteps = new XmlSlurper().parseText(value)
+			def parsedSteps 
+			try {
+				parsedSteps = new XmlSlurper().parseText(value)
+			}
+			catch (Exception e) {
+				log.error("Error parsing steps for test script ${testscript.webId}: ${e.message}")
+				return
+			}
 			
 			// Format into a collection of Step objects
 			def iStep = 0
