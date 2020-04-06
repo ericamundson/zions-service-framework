@@ -748,7 +748,7 @@ class ArchiveRQM implements CliAction {
 		}
 	}
 	String getTestPlanDir(def testItem) {
-		return "$filePath\\${testItem.content.testplan.webId.text()} - ${testItem.title}".replace('/','-')
+		return "$filePath\\${testItem.content.testplan.webId.text()} - " + "${testItem.title}".replace('/','-').replace(':',' ')
 	}
 }
 
