@@ -114,6 +114,9 @@ class ZeusBuildData implements CliAction {
 
 	@Value('${final.release.environment:Environments/Zeus/Releases/2305/BL/BL Promote}')
 	String finalReleaseEnv
+	
+	@Value('${build.tag.filter:none}')
+	String buildTagFilter
 
 	@Override
 	public def execute(ApplicationArguments data) {
@@ -243,7 +246,7 @@ class ZeusBuildData implements CliAction {
 					//					if (fpath.contains('.keep')) {
 					//						fListWFolders.push(fpath.replace("\\", "/"))
 					//					}
-					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/.vs') && !fpath.startsWith('/imgs') && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml') && !fpath.contains('.md')) {
+					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/libs') && !fpath.startsWith('/batch') && !fpath.startsWith('/.vs') && !fpath.startsWith('/imgs') && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml') && !fpath.contains('.md')) {
 						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
