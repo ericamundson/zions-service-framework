@@ -19,4 +19,12 @@ class CIService {
 		return result
 
 	}
+	
+	public def createApplicationVersion(String path, def jsonData) {
+		def result = xldGenericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			uri: "${xldGenericRestClient.xldUrl}/deployit/repository/ci/${path}"
+		)
+	}
 }
