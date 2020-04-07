@@ -193,7 +193,7 @@ class ZeusBuildData implements CliAction {
 		def builds = null
 		boolean isProductionBranch = "${releaseId}" == "${prodRelease}"
 		if (rollup) {
-			builds = buildManagementService.getRelatedBuilds(collection, project, build, isProductionBranch)
+			builds = buildManagementService.getRelatedBuilds(collection, project, build, isProductionBranch, buildTagFilter)
 		}
 		def buildWorkitems = null
 		if (!builds) {
