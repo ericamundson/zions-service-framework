@@ -21,8 +21,7 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
-import org.yaml.snakeyaml.Yaml
-import org.yaml.snakeyaml.representer.Representer
+import org.ho.yaml.Yaml
 import groovy.time.TimeCategory
 
 
@@ -115,6 +114,9 @@ class ZeusBuildData implements CliAction {
 
 	@Value('${final.release.environment:Environments/Zeus/Releases/2305/BL/BL Promote}')
 	String finalReleaseEnv
+	
+	@Value('${build.tag.filter:none}')
+	String buildTagFilter
 
 	@Override
 	public def execute(ApplicationArguments data) {
@@ -191,7 +193,7 @@ class ZeusBuildData implements CliAction {
 		def builds = null
 		boolean isProductionBranch = "${releaseId}" == "${prodRelease}"
 		if (rollup) {
-			builds = buildManagementService.getRelatedBuilds(collection, project, build, isProductionBranch)
+			builds = buildManagementService.getRelatedBuilds(collection, project, build, isProductionBranch, buildTagFilter)
 		}
 		def buildWorkitems = null
 		if (!builds) {
@@ -244,7 +246,7 @@ class ZeusBuildData implements CliAction {
 					//					if (fpath.contains('.keep')) {
 					//						fListWFolders.push(fpath.replace("\\", "/"))
 					//					}
-					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/.vs') && !fpath.startsWith('/imgs') && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml') && !fpath.contains('.md')) {
+					if ( (change.item.path) && !dList.contains("${fpath.substring(1)}") && !change.item.isFolder && !fpath.startsWith('/libs') && !fpath.startsWith('/batch') && !fpath.startsWith('/.vs') && !fpath.startsWith('/imgs') && !fpath.startsWith('/xl') && !fpath.startsWith('/dar') && !fpath.contains('.gitignore') && !fpath.contains('.project') && !fpath.endsWith('.keep') && !fpath.contains('.yml') && !fpath.contains('.md')) {
 						fListWFolders.push(fpath.replace("\\", "/"))
 						fList.push(fpath.substring(1))
 						String[] fItems = fpath.split('/')
@@ -480,13 +482,10 @@ class ZeusBuildData implements CliAction {
 	}
 	
 	def writeXLRTemplateYaml(affiliatesList, File inFile) {
-		def reader = new StringReader(inFile.text)
-		Representer r = new Representer()
+		//def reader = new StringReader(inFile.text)
 		Yaml appYaml = new Yaml()  //TODO:  Study up on examples of MarkupBuilder
 		
-		appYaml.load(reader)
-		def yamlMap = [apiVersion: 'xl-deploy/v1', kind: 'Applications', spec: []]
-		def appZeus = [ directory: 'Application/Zeus', children: []]
+		def yamlMap = appYaml.load(inFile)
 		yamlMap.spec.add(appZeus)
 	}
 

@@ -147,7 +147,22 @@ class StepsHandler extends QmBaseAttributeHandler {
 											}
 
 										}
-										//description()
+										// Capture attachments
+										if (sstep.attachment.size() > 0) {
+											String html = ''
+											sstep.attachment.each { attachment ->
+												html = html + '|'
+											}
+											parameterizedString(isformatted: 'false') {
+												mkp.yieldUnescaped html
+											}
+										}
+										else {
+											String html = ''
+											parameterizedString(isformatted: 'false') {
+												mkp.yieldUnescaped html
+											}
+										}
 									}
 									sCount++
 								}
@@ -219,7 +234,22 @@ class StepsHandler extends QmBaseAttributeHandler {
 								}
 
 							}
-							//description()
+							// Capture attachments
+							if (astep.attachment.size() > 0) {
+								String html = ''
+								astep.attachment.each { attachment ->
+									html = html + "${attachment.@href}|"
+								}
+								parameterizedString(isformatted: 'false') {
+									mkp.yieldUnescaped html
+								}
+							}
+							else {
+								String html = ''
+								parameterizedString(isformatted: 'false') {
+									mkp.yieldUnescaped html
+								}
+							}
 						}
 						sCount++
 					}
