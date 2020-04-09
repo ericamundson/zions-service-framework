@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-vsts-setowner-microservice/src/main/groovy/com/zions/vsts/services/SetOwnerApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.SetOwnerApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--tfs.url=https://dev.azure.com/eto-dev &#13;&#10;--tfs.user=z091182 --tfs.token=pzyybyd3zq5kzbdpkn4e656i6d3b7zfe43tms5s3v35gsifdngoq&#13;&#10;--websocketUrl=ws://utmvti0192:9000/ws"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-setowner-microservice"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dwsproxy.Host=172.18.4.115 -Dwsproxy.Port=8080 -Dwsproxy.User=z097331 -Dwsproxy.Password=februar1L!berty"/>
+</launchConfiguration>
