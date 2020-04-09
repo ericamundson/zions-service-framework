@@ -1,8 +1,8 @@
 <service>
-      <id>rollupms</id>
-      <name>rollupms</name>
+      <id>setownerms</id>
+      <name>setownerms</name>
       <description>This service runs ALMOps rollup work data micro-service.</description>
       <executable>java</executable>
-      <arguments>-Xrs -Xmx256m -jar "d:\bin\service\zions-vsts-rollup-microservice.jar" --websocket.url=wss://104.42.59.51/ws --tfs.url=https://dev.azure.com/eto-dev --tfs.user=z091182 --tfs.token=pzyybyd3zq5kzbdpkn4e656i6d3b7zfe43tms5s3v35gsifdngoq --logging.file="d:\bin\service\rollupms.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "d:\bin\service\zions-vsts-rollup-microservice.jar" --websocket.url=wss://104.42.59.51/ws --tfs.url=https://dev.azure.com/eto-dev --tfs.user=z091182 --tfs.token=pzyybyd3zq5kzbdpkn4e656i6d3b7zfe43tms5s3v35gsifdngoq --logging.file="d:\bin\service\setownerms.log" </arguments>
       <logmode>rotate</logmode>
 </service>
