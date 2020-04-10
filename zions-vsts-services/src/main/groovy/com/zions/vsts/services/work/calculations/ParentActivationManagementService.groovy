@@ -49,7 +49,8 @@ class ParentActivationManagementService {
 	void activateParent(String pwi, String childState, String project) {
 	
 		//do I need to define a variable for parent state?
-		String pState = workManagementService.getState(collection, project, pwi)
+		//String pState = workManagementService.getState(collection, project, pwi)
+		String pState = "${pwi.fields.'System.State'}"
 		
 		//enclose the save in an IF under conditions to save the parent
 		//if old state is new and new state is active set parent state to active
