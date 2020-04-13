@@ -113,6 +113,12 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			if (input.query) {
 				query = input.query
 			}
+			if ("${input.contentType}".contains('json')) {
+				this.outputTestDataType = 'json'
+			} else if ("${input.contentType}".contains('xml')) {
+				this.outputTestDataType = 'xml'
+				
+			}
 		}
 		boolean withHeader = false
 		if (input.withHeader) {
@@ -156,7 +162,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			File dir = new File(this.outputTestDataLocation)
 			File of = new File(dir, "${this.outputTestDataPrefix}${ts}.json")
 			def os = of.newDataOutputStream()
-			def info = [method: method, url: "${url}", query: query, type: "${this.outputTestDataType}", data: "${new JsonBuilder(data).toPrettyString()}"]
+			def info = [method: method, url: "${url}", query: query, type: "${this.outputTestDataType}"]
+			if (data) {
+				info.data = "${new JsonBuilder(data).toPrettyString()}"
+			}
 			if (body) {
 				info.body = body
 			}
@@ -166,7 +175,11 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			File dir = new File(this.outputTestDataLocation)
 			File of = new File(dir, "${this.outputTestDataPrefix}${ts}.json")
 			def os = of.newDataOutputStream()
-			def info = [method: method, url: "${url}", query: query, type: "${this.outputTestDataType}", data: "${new XmlUtil().serialize(data)}"]
+			
+			def info = [method: method, url: "${url}", query: query, type: "${this.outputTestDataType}"]
+			if (data) {
+				info.data = "${new XmlUtil().serialize(data)}"
+			}
 			if (body) {
 				info.body = body
 			}
