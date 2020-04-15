@@ -43,16 +43,30 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 		def wiResource = adoData.resource
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		String owner = "${wiResource.revision.fields.'System.AssignedTo'}"
+		String status = "${wiResource.revision.fields.'System.State'}"
 		if (!wiType && wiType != 'Task') return null
-		if (owner) return null
-		if (!wiResource.fields) return null
-		String parent = "${wiResource.revision._links.parent.href}"
-		if ( parent ) {
-			String parentID = ""
-			String project = "${wiResource.revision.fields.'System.TeamProject'}"
-			def parentWI = workManagementService.getWorkItem(collection, project, parentID)
-		}
+		if (owner != 'null') return null
+		if (!status || status != 'Closed') return null
+		String project = "${wiResource.revision.fields.'System.TeamProject'}"
+		String id = "${wiResource.revision.id}"
+		String parentId = "${wiResource.revision.fields.'System.Parent'}"
+		if (parentId) setToParentOwner(project, id, parentId)
 		return null;
+	}
+
+	private def setToParentOwner(def project, def id, def parentId) {
+		// First get parent wi data
+		def parentWI = workManagementService.getWorkItem(collection, project, parentId)
+		def parentOwner = parentWI.fields.'System.AssignedTo'
+		if (parentWI && parentOwner) {
+			def data = []
+			def t = [op: 'test', path: '/rev', value: parentWI.rev]
+			data.add(t)
+			def e = [op: 'add', path: '/fields/System.AssignedTo', value: parentOwner.uniqueName]
+			data.add(e)
+			workManagementService.updateWorkItem(collection, project, id, data)
+		}
+
 	}
 
 	@Override
