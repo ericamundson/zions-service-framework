@@ -100,9 +100,9 @@ id:
 # Event registration properties
 websocket:
 # test
-#  url: ws://utmvti0192:9000/ws
+url: ws://utmvti0192:9000/ws
 # prod
-  url: ws://utlxa1846:9000/ws
+#url: ws://utlxa1846:9000/ws
 
 # The path to the keystore containing the certificate
 http:

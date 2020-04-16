@@ -29,6 +29,7 @@ class ParentActivationManagementService {
 	//getting parent data
 	def performParentActivation(String id, String childState, String project) {
 		def wi = workManagementService.getWorkItem(collection, project, id)
+		
 		def parent = workManagementService.getParent(collection,project, wi)
 		
 		if (parent) {
@@ -46,10 +47,11 @@ class ParentActivationManagementService {
 	 */
 	
 	//will pull id, childState and project from parentActivationMicroService
-	void activateParent(String pwi, String childState, String project) {
+	void activateParent(String pwi, childState, String project) {
 	
 		//do I need to define a variable for parent state?
-		//String pState = workManagementService.getState(collection, project, pwi)
+		
+	//String pState = workManagementService.getState(collection, project, pwi)
 		String pState = "${pwi.fields.'System.State'}"
 		
 		//enclose the save in an IF under conditions to save the parent
