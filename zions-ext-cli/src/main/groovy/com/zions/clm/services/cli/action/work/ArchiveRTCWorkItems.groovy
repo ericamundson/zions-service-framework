@@ -126,6 +126,19 @@ class ArchiveRTCWorkItems implements CliAction {
 			restartManagementService.processPhases { phase, items ->
 				if (phase == 'workdata' || phase == 'update') {
 					ccmWorkManagementService.resetNewId()
+					File fileDir = new File("$filePath")
+					if (!fileDir.exists()) {
+						fileDir.mkdir()
+					}
+					File attDir = new File("$filePath\\Attachments")
+					if (!attDir.exists()) {
+						attDir.mkdir()
+					}
+					File comDir = new File("$filePath\\Comments")
+					if (!comDir.exists()) {
+						comDir.mkdir()
+					}
+
 					items.each { workitem ->
 						int id = Integer.parseInt(workitem.id)
 						String sid = "${workitem.id}"
@@ -134,9 +147,9 @@ class ArchiveRTCWorkItems implements CliAction {
 						//	log.debug("LastArtifactType: $lastArtifactType and this artifact: $curArtifactType")
 						if (!lastArtifactType.equals(ccmWorkitem.getWorkItemType())) {
 							String curArtifactType = "${ccmWorkitem.getWorkItemType()}"
-							log.info("New artifact type: ${curArtifactType}")
+							log.info("New artifact type: ${stripType(curArtifactType)}")
 							//create new document
-							excelManagementService.CreateExcelFile(filePath,curArtifactType)
+							excelManagementService.CreateExcelFile(filePath,stripType(curArtifactType))
 							lastArtifactType = curArtifactType
 						}
 						def wiAttributes = ccmWorkManagementService.getWIAttributesForArchive(filePath, ccmWorkitem,project)
@@ -199,5 +212,13 @@ class ArchiveRTCWorkItems implements CliAction {
 	}
 
 
-
+	def stripType(String type) {
+		def pos = type.lastIndexOf('.')
+		if (pos > -1) {
+			return type.substring(pos + 1, type.length())
+		}
+		else {
+			return type
+		}
+	}
 }

@@ -622,10 +622,12 @@ public class BuildManagementService {
 		return result
 	}
 	
-	public def getRelatedBuilds(def collection, def project, def build, boolean isProdBranch = false) {
+	public def getRelatedBuilds(def collection, def project, def build, boolean isProdBranch = false, String buildTagFilter = 'none') {
 		//log.debug("BuildManagementService::getBuild -- buildName = "+repo.name+"-"+qualifier)
 		if (isProdBranch) {
 			def tag = tagBuild(build, 'PR')
+		} else if (buildTagFilter != 'none') {
+			
 		}
 		
 		def eproject = URLEncoder.encode(project, 'utf-8')
@@ -638,6 +640,8 @@ public class BuildManagementService {
 		def query = ['api-version':'5.1','branchName': bName, definitions: defId ]
 		if (isProdBranch) {
 			query.tagFilters = 'PR'
+		} else if (buildTagFilter != 'none') {
+			query.tagFilters = buildTagFilter
 		}
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,

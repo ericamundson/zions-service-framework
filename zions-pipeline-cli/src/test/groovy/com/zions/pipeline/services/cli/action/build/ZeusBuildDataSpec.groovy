@@ -21,7 +21,11 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
 import com.zions.pipeline.services.cli.action.build.ZeusBuildData
 import com.zions.vsts.services.build.BuildManagementService
+import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
+import com.zions.xld.services.rest.client.XldGenericRestClient
+import com.zions.xld.services.ci.CIService
+import com.zions.xld.services.deployment.DeploymentService
 import com.zions.vsts.services.work.WorkManagementService
 import groovy.json.JsonSlurper
 import spock.lang.Ignore
@@ -37,6 +41,9 @@ class ZeusBuildDataSpec extends Specification {
 	IGenericRestClient genericRestClient
 	
 	@Autowired
+	XldGenericRestClient xldGenericRestClient
+
+	@Autowired
 	DataGenerationService dataGenerationService
 
 	@Ignore
@@ -46,7 +53,7 @@ class ZeusBuildDataSpec extends Specification {
 		File tDir = new File(uri)
 		def testFiles = []
 		tDir.eachFile { File file ->
-			if (file.name.startsWith('zeusbuilddata')) testFiles.add(file)
+			if (file.name.startsWith('zeus_rollup_false')) testFiles.add(file)
 		}
 		
 		and: 'set execute arguments'
@@ -59,7 +66,15 @@ class ZeusBuildDataSpec extends Specification {
 		def rMap = [:]
 		testFiles.each { File f ->
 			def request = dataGenerationService.generate(f)
-			def data = new JsonSlurper().parseText(request.data)
+			def data = null
+			if (request.data) {
+				if (request.type.contains('json')) {
+					data = new JsonSlurper().parseText(request.data)
+				} else {
+					
+					data = new XmlSlurper().parseText(request.data)
+				}
+			}
 			String url = "${request.url}"
 			rMap[url] = data
 		}
@@ -75,6 +90,17 @@ class ZeusBuildDataSpec extends Specification {
 			return out
 		}
 		
+		and: 'stub xldGenericRestClient calls'
+		xldGenericRestClient.get(_) >> { args ->
+			def d = args[0]
+			String auri = "${d.uri}"
+			if (!auri.startsWith('https://xldeploy')) {
+				auri = "https://xldeploy.cs.zionsbank.com${d.uri}"
+			}
+			def out = rMap[auri]
+			return out
+		}
+
 		when: 'run execute'
 		boolean success = true
 		zeusBuildData.rollup = false
@@ -96,7 +122,7 @@ class ZeusBuildDataSpec extends Specification {
 		File tDir = new File(uri)
 		def testFiles = []
 		tDir.eachFile { File file ->
-			if (file.name.startsWith('rollup')) testFiles.add(file)
+			if (file.name.startsWith('zeus_rollup_true')) testFiles.add(file)
 		}
 		
 		and: 'set execute arguments'
@@ -109,7 +135,15 @@ class ZeusBuildDataSpec extends Specification {
 		def rMap = [:]
 		testFiles.each { File f ->
 			def request = dataGenerationService.generate(f)
-			def data = new JsonSlurper().parseText(request.data)
+			def data = null
+			if (request.data) {
+				if (request.type.contains('json')) {
+					data = new JsonSlurper().parseText(request.data)
+				} else {
+					
+					data = new XmlSlurper().parseText(request.data)
+				}
+			}
 			String url = "${request.url}"
 			rMap[url] = data
 		}
@@ -125,6 +159,17 @@ class ZeusBuildDataSpec extends Specification {
 			return out
 		}
 		
+		and: 'stub xldGenericRestClient calls'
+		xldGenericRestClient.get(_) >> { args ->
+			def d = args[0]
+			String auri = "${d.uri}"
+			if (!auri.startsWith('https://xldeploy')) {
+				auri = "https://xldeploy.cs.zionsbank.com${d.uri}"
+			}
+			def out = rMap[auri]
+			return out
+		}
+
 		when: 'run execute'
 		boolean success = true
 		zeusBuildData.rollup = true
@@ -145,13 +190,14 @@ class ZeusBuildDataSpec extends Specification {
 			'--tfs.user=svc-cloud-vsmigration',
 			'--tfs.token=me6cvg6ggjbhbcy4aj5v2xb7hnfvjtfzf4bud6wf5wkmxe2z6slq',
 			'--tfs.project=Zeus', 
-			'--build.id=15677',
+			'--build.id=32739',
 			'--out.dir=build/', 
 			'--change.request={{change.request}}',
 			"--in.repo.dir=${iRepoDir}",
 			'--out.repo.dir=build/repo', 
 			'--release.date={{release.date}}',
-			'--rollup=false'
+			'--rollup=false',
+			'--build.tag.filter=none'
 			
 		]
 		return args
@@ -162,13 +208,14 @@ class ZeusBuildDataSpec extends Specification {
 			'--tfs.user=svc-cloud-vsmigration',
 			'--tfs.token=me6cvg6ggjbhbcy4aj5v2xb7hnfvjtfzf4bud6wf5wkmxe2z6slq',
 			'--tfs.project=Zeus',
-			'--build.id=15677',
+			'--build.id=32739',
 			'--out.dir=build/',
 			'--change.request={{change.request}}',
 			"--in.repo.dir=${iRepoDir}",
 			'--out.repo.dir=build/repo',
 			'--release.date={{release.date}}',
-			'--rollup=true'
+			'--rollup=true',
+			'--build.tag.filter=1912'
 		]
 		return args
 	}
@@ -201,6 +248,11 @@ class ZeusBuildDataSpecConfig {
 	}
 	
 	@Bean
+	CodeManagementService codeManagementService() {
+		return new CodeManagementService()
+	}
+
+	@Bean
 	WorkManagementService workManagementService() {
 		return new WorkManagementService()
 	}
@@ -214,7 +266,15 @@ class ZeusBuildDataSpecConfig {
 	CommandManagementService commandManagementService() {
 		return new CommandManagementService();
 	}
-	
+	@Bean
+	CIService ciService() {
+		return new CIService();
+	}
+	@Bean
+	DeploymentService deploymentService() {
+		return new DeploymentService();
+	}
+
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return factory.Stub(GenericRestClient)
@@ -225,4 +285,9 @@ class ZeusBuildDataSpecConfig {
 		return factory.Stub(GenericRestClient)
 	}
 	
+	@Bean
+	XldGenericRestClient xldGenericRestClient() {
+		return factory.Stub(XldGenericRestClient)
+	}
+
 }
