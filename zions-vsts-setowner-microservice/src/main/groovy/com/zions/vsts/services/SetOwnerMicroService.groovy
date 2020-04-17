@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 /**
- * Handles rollup calculations of work data from Task to Feature work item types.
+ * Assigns unassigned tasks to the parent's owner when the task is closed.
  * 
- * @author z091182
+ * @author z097331
  *
  */
 @Component
@@ -32,13 +32,13 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 	}
 
 	/**
-	 * Perform rollup calculations.
+	 * Perform assignment operation
 	 * 
 	 * @see com.zions.vsts.services.ws.client.AbstractWebSocketMicroService#processADOData(java.lang.Object)
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.info("Entering RollupMicroService:: processADOData")
+		log.info("Entering SetOwnerMicroService:: processADOData")
 		def outData = adoData
 		def wiResource = adoData.resource
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
@@ -49,18 +49,19 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 		if (!status || status != 'Closed') return null
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		String id = "${wiResource.revision.id}"
+		String rev = "${wiResource.revision.rev}"
 		String parentId = "${wiResource.revision.fields.'System.Parent'}"
-		if (parentId) setToParentOwner(project, id, parentId)
+		if (parentId) setToParentOwner(project, id, rev, parentId)
 		return null;
 	}
 
-	private def setToParentOwner(def project, def id, def parentId) {
+	private def setToParentOwner(def project, def id, String rev, def parentId) {
 		// First get parent wi data
 		def parentWI = workManagementService.getWorkItem(collection, project, parentId)
 		def parentOwner = parentWI.fields.'System.AssignedTo'
 		if (parentWI && parentOwner) {
 			def data = []
-			def t = [op: 'test', path: '/rev', value: parentWI.rev]
+			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 			data.add(t)
 			def e = [op: 'add', path: '/fields/System.AssignedTo', value: parentOwner.uniqueName]
 			data.add(e)

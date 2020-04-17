@@ -62,6 +62,10 @@ public class AppConfig  {
 		return new MrGenericRestClient('', '')
 	}
 
+	@Autowired
+	@Value('${websocketDisableProxy:false}')
+	String disableProxy
+
 
 	@Autowired
 	@Value('${cache.location:cache}')
