@@ -210,7 +210,13 @@ class TestLinkClient {
 		TestCase[] ptestcase = null
 		def tcMap = [:]
 		if (!planTestCaseCache.containsKey(planId)) {
-			ptestcase = delegate.getTestCasesForTestPlan(planId, null, null, null, null, null, null, null, null, false)
+			try {
+				ptestcase = delegate.getTestCasesForTestPlan(planId, null, null, null, null, null, null, null, null, false)
+			}
+			catch (Exception e) {
+				log.error("Error extracting plan $planId.  Error is: ${e.message}")
+				return null
+			}
 			ptestcase.each { TestCase tc ->
 				tcMap[tc.id] = tc 
 			}
