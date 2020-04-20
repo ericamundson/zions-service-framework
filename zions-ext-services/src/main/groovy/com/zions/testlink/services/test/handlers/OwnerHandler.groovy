@@ -18,7 +18,7 @@ class OwnerHandler extends TlBaseAttributeHandler {
 	public def formatValue(def value, def data) {
 		def itemData = data.itemData
 		String authorLogin = "${itemData.authorLogin}"
-		if (authorLogin == null || authorLogin.length() == 0) return null
+		if (authorLogin == null || authorLogin == 'null' || authorLogin.length() == 0) return null
 		User user = userManagementService.getUserById(authorLogin)
 		if (!user) return null
 		return user.email;
