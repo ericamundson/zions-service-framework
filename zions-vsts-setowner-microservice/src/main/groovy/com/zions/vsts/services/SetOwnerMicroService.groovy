@@ -22,7 +22,10 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 	
 	@Value('${tfs.collection:}')
 	String collection	
-	
+
+	@Value('${tfs.types:}')
+	String wiTypes
+
 	@Autowired
 	public SetOwnerMicroService(@Value('${websocket.url:}') websocketUrl, 
 		@Value('${websocket.user:#{null}}') websocketUser,
@@ -39,19 +42,29 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 	@Override
 	public Object processADOData(Object adoData) {
 		log.info("Entering SetOwnerMicroService:: processADOData")
+		def types = wiTypes.split(',')
 		def outData = adoData
 		def wiResource = adoData.resource
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		String owner = "${wiResource.revision.fields.'System.AssignedTo'}"
 		String status = "${wiResource.revision.fields.'System.State'}"
-		if (!wiType && wiType != 'Task') return null
+		if (!wiType && !types.contains(wiType)) return null
 		if (owner != 'null') return null
 		if (!status || status != 'Closed') return null
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		String id = "${wiResource.revision.id}"
 		String rev = "${wiResource.revision.rev}"
 		String parentId = "${wiResource.revision.fields.'System.Parent'}"
-		if (parentId) setToParentOwner(project, id, rev, parentId)
+		if (parentId) {
+			log.info("Updating owner of $wiType #$id")
+			try {
+				setToParentOwner(project, id, rev, parentId)
+				log.info("Updated succeeded")
+			}
+			catch (e){
+				log.info("Error updating System.AssigedTo: ${e.message}")
+			}
+		}
 		return null;
 	}
 
@@ -67,7 +80,6 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 			data.add(e)
 			workManagementService.updateWorkItem(collection, project, id, data)
 		}
-
 	}
 
 	@Override

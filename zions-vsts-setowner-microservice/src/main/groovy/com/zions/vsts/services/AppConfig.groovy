@@ -71,6 +71,10 @@ public class AppConfig  {
 	@Value('${cache.location:cache}')
 	String cacheLocation
 
+	@Autowired
+	@Value('${tfs.types:Task}')
+	String wiTypes
+
 }
 
 
