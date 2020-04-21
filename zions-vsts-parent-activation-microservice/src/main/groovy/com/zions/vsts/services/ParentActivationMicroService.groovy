@@ -49,39 +49,58 @@ class ParentActivationMicroService extends AbstractWebSocketMicroService {
 		def outData = adoData
 		def wiResource = adoData.resource
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
-		
 		String childState = "${wiResource.revision.fields.'System.State'}"
-		if (!wiType && wiType != 'Task') return null
-		if (!wiResource.fields) return null
+		
+		//eventually parameterize Task
+		if (wiType != 'Task') return null
+		
+		//parameterized.  if (!wiType && !types.contains(wiType)) return null;
+		//only pull active or closed Task work items
+		
+		if (!(childState == 'Active' || childState == 'Closed')) return null
+		
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
+		//this is child id
 		String id = "${wiResource.revision.id}"
-		String rev = "${wiResource.revision.rev}"
+		
 		String parentId = "${wiResource.revision.fields.'System.Parent'}"
-		if (childState) performParentActivation(childState, project, id, rev, parentId)
+		
+		if (parentId) {
+			def parentWI = workManagementService.getWorkItem(collection, project, parentId)
+			def pState = parentWI.fields.'System.State'
+			String rev = "${parentWI.rev}"
+			//if (parentWI) {
+			//if (((parentWI) && childState == 'Closed' || childState == 'Active') && pState == 'New') {
+			//042120 12:50pm if ((childState == 'Closed' || childState == 'Active') && pState == 'New') {
+			if (pState == 'New') {
+				performParentActivation(project, rev, parentId)
+				//add logging
+			}
+		}	
 		return null;
+		
 		
 	}
 	//getting parent data
-	private def performParentActivation(def childState, def project, def id, String rev, def parentId) {
+	//private def performParentActivation(def childState, def project, def id, String rev, def parentId) {
+	
+	private def performParentActivation(String project, String rev, def parentId) {
+		
 		
 		// First get parent wi data
-		def parentWI = workManagementService.getWorkItem(collection, project, parentId)
-		def pState = parentWI.fields.'System.State'
 
-		//if (parentWI) {
-		if (((parentWI) && childState == 'Closed' || childState == 'Active') && pState == 'New') {
-		//if ((childState == 'Closed' || childState == 'Active') && pState == 'New') {
 			
-			def data = []
-			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
-			data.add(t)
-			
-			def e = [op: 'add', path: '/fields/System.State', value: 'Active']
-			//def e = [op: 'add', path: '/fields/System.State', value: pState.'Active']
-			
-			data.add(e)
-			workManagementService.updateWorkItem(collection, project, id, data)
-		}
+		def data = []
+		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
+		data.add(t)
+		
+		def e = [op: 'add', path: '/fields/System.State', value: 'Active']
+		//def e = [op: 'add', path: '/fields/System.State', value: pState.'Active']
+		
+		data.add(e)
+		//workManagementService.updateWorkItem(collection, project, id, data)
+		workManagementService.updateWorkItem(collection, project, parentId, data)
+		
 	}
 	
 
