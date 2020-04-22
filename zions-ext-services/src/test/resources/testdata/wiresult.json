@@ -1,0 +1,106 @@
+{
+    "id": 947613,
+    "rev": 13,
+    "fields": {
+        "System.AreaPath": "ALMOpsTest\\DevTeam",
+        "System.TeamProject": "ALMOpsTest",
+        "System.IterationPath": "ALMOpsTest",
+        "System.WorkItemType": "Task",
+        "System.State": "Closed",
+        "System.Reason": "Completed",
+        "System.AssignedTo": {
+            "displayName": "Eric Amundson",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+                }
+            },
+            "id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+            "uniqueName": "eric.amundson2@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj",
+            "descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+        },
+        "System.CreatedDate": "2020-04-16T15:30:33.197Z",
+        "System.CreatedBy": {
+            "displayName": "Robert Huet",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+                }
+            },
+            "id": "2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "uniqueName": "robert.huet@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4",
+            "descriptor": "aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+        },
+        "System.ChangedDate": "2020-04-17T21:28:16.36Z",
+        "System.ChangedBy": {
+            "displayName": "svc-cloud-vsmigration",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+                }
+            },
+            "id": "535df225-8a47-6eb5-b5d1-4cdcccbcd6c2",
+            "uniqueName": "svc-cloud-vsmigration@zionsbancorporation.onmicrosoft.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy",
+            "descriptor": "aad.NTM1ZGYyMjUtOGE0Ny03ZWI1LWI1ZDEtNGNkY2NjYmNkNmMy"
+        },
+        "System.CommentCount": 0,
+        "System.Title": "test11",
+        "Microsoft.VSTS.Common.StateChangeDate": "2020-04-16T20:29:24.067Z",
+        "Microsoft.VSTS.Common.ClosedDate": "2020-04-16T20:29:24.067Z",
+        "Microsoft.VSTS.Common.ClosedBy": {
+            "displayName": "Robert Huet",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+                }
+            },
+            "id": "2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "uniqueName": "robert.huet@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4",
+            "descriptor": "aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+        },
+        "Microsoft.VSTS.Common.Priority": 2,
+        "System.Parent": 947394
+    },
+    "relations": [
+        {
+            "rel": "System.LinkTypes.Hierarchy-Reverse",
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947394",
+            "attributes": {
+                "isLocked": false,
+                "name": "Parent"
+            }
+        }
+    ],
+    "_links": {
+        "self": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947613"
+        },
+        "workItemUpdates": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947613/updates"
+        },
+        "workItemRevisions": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947613/revisions"
+        },
+        "workItemComments": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947613/comments"
+        },
+        "html": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_workitems/edit/947613"
+        },
+        "workItemType": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItemTypes/Task"
+        },
+        "fields": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/fields"
+        }
+    },
+    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947613"
+}

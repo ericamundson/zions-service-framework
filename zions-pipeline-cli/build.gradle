@@ -5,6 +5,10 @@ bootJar {
 	//version =  "${version}"
 }
 
+configurations {
+	runtime.exclude module: 'zions-common-data'
+}
+
 dependencies {
 	compile project(':zions-vsts-services')
 	compile project(':zions-xld-services')
