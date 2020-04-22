@@ -1,12 +1,24 @@
 {
-    "contentType": "application/xml",
-    "uri": "https://clm.cs.zionsbank.com/rm/folders",
-    "headers": {
-    	"Accept": "application/rdf+xml",
-    	"OSLC-Core-Version": "2.0"
-    },
+    "contentType": "application/json",
+    "uri": "https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/947613",
+    "body": [
+        {
+            "op": "test",
+            "path": "/rev",
+            "value": 2
+        },
+        {
+            "op": "add",
+            "path": "/fields/System.AssignedTo",
+            "value": "eric.amundson2@zionsbancorp.com"
+        }
+    ],
     "query": {
-        "oslc.where": "public_rm:parent=https://clm.cs.zionsbank.com/rm/folders/_mxVp8L1REeS5FIAyBUGhBQ"
+        "api-version": "5.1",
+        "bypassRules": true
+    },
+    "headers": {
+        "Content-Type": "application/json-patch+json"
     }
     
 }
