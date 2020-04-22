@@ -516,7 +516,10 @@ class TranslateTestLinkToADO implements CliAction {
 		if (this.filterMap[filter] != null) {
 			return this.filterMap[filter].filter(items)
 		}
-		return items
+		else {
+			log.error("***Error*** Filter $filter could not be found.")
+			return null
+		}
 	}
 
 

@@ -54,7 +54,7 @@ class ExcelManagementService {
 	 * Writes out the excel file in memory
 	 */
 	def CloseExcelFile() {
-		if (outputFileName != null)
+		if (outputFileName != null) {
 			log.info("Saving file to ${outputFileName}")
 			try {
 				File outputFile = new File(outputFileName)
@@ -67,6 +67,7 @@ class ExcelManagementService {
 			workbook.dispose()
 			}
 		}
+	}
 //	
 //	def InsertIntoCurrentRow(def value, int col) {
 //		row.createCell(col).setCellValue(value)
