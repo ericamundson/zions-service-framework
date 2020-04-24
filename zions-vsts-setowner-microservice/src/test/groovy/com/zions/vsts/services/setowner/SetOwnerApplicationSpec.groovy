@@ -1,4 +1,4 @@
-package com.zions.vsts.services
+package com.zions.vsts.services.setowner
 
 import static org.junit.Assert.*
 
@@ -18,7 +18,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[SetOwnerApplicationTestConfig])
-class SetOwnerApplicationTest extends Specification {
+class SetOwnerApplicationSpec extends Specification {
 	
 	@Autowired
 	IGenericRestClient genericRestClient

@@ -87,7 +87,10 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 		connect()
 		startCheck();
 	}
-	
+	public AbstractWebSocketMicroService() {
+		// Constructor for unit testing of microservices
+	}
+		
 	private RestTemplate getRestTemplate() {
 		HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 		String proxyHost = System.getProperty("wsproxy.Host")
@@ -211,7 +214,7 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 	 */
 	@Override
 	public void handleTransportError(StompSession session, Throwable exception) {
-			log.error("Transport fail", exception)
+			log.error("Transport fail", exception.message)
 	}
 		
 	void setupSSL(HttpClientBuilder clientBuilder)

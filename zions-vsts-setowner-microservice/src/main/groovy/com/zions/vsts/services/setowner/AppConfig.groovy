@@ -1,4 +1,4 @@
-package com.zions.vsts.services
+package com.zions.vsts.services.setowner
 
 
 import org.springframework.beans.factory.annotation.Autowired

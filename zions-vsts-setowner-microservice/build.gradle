@@ -1,6 +1,6 @@
 bootJar {
 	enabled = true
-	mainClassName = 'com.zions.content.services.SetOwnerApplication'
+	mainClassName = 'com.zions.content.services.setowner.SetOwnerApplication'
 	archiveName = 'zions-vsts-setowner-microservice.jar'
 	//version =  "${version}"
 }

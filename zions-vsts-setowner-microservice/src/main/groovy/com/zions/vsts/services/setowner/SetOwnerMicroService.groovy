@@ -1,4 +1,4 @@
-package com.zions.vsts.services
+package com.zions.vsts.services.setowner
 
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.ws.client.AbstractWebSocketMicroService
@@ -6,6 +6,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import groovy.json.JsonBuilder
 
 /**
  * Assigns unassigned tasks to the parent's owner when the task is closed.
@@ -33,6 +34,10 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 		super(websocketUrl, websocketUser, websocketPassword)
 		
 	}
+	public SetOwnerMicroService() {
+		// Constructor for unit testing
+		println('SetOwnerMicroservice constructor')
+	}
 
 	/**
 	 * Perform assignment operation
@@ -42,15 +47,17 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 	@Override
 	public Object processADOData(Object adoData) {
 		log.info("Entering SetOwnerMicroService:: processADOData")
+//		String json = new JsonBuilder(adoData).toPrettyString()
+//		println(json)
 		def types = wiTypes.split(',')
 		def outData = adoData
 		def wiResource = adoData.resource
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		String owner = "${wiResource.revision.fields.'System.AssignedTo'}"
 		String status = "${wiResource.revision.fields.'System.State'}"
-		if (!wiType && !types.contains(wiType)) return null
-		if (owner != 'null') return null
-		if (!status || status != 'Closed') return null
+		if (!types.contains(wiType)) return false
+		if (owner != 'null') return false
+		if (status != 'Closed') return false
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		String id = "${wiResource.revision.id}"
 		String rev = "${wiResource.revision.rev}"
@@ -60,17 +67,23 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 			try {
 				setToParentOwner(project, id, rev, parentId)
 				log.info("Updated succeeded")
+				return true
 			}
 			catch (e){
 				log.info("Error updating System.AssigedTo: ${e.message}")
+				return false
 			}
 		}
-		return null;
+		else {
+			return false;
+		}
 	}
 
 	private def setToParentOwner(def project, def id, String rev, def parentId) {
 		// First get parent wi data
 		def parentWI = workManagementService.getWorkItem(collection, project, parentId)
+//		String json = new JsonBuilder(parentWI).toPrettyString()
+//		println(json)
 		def parentOwner = parentWI.fields.'System.AssignedTo'
 		if (parentWI && parentOwner) {
 			def data = []
