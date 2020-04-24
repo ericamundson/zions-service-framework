@@ -23,7 +23,7 @@ import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[SetOwnerMicroserviceTestConfig])
-class SetOwnerMicroserviceSpec extends Specification {
+class SetOwnerMicroServiceSpec extends Specification {
 	@Autowired
 	SetOwnerMicroService underTest;
 	
