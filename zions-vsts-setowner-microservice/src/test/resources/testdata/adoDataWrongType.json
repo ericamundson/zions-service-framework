@@ -47,8 +47,8 @@
                 "newValue": "2020-04-24T14:07:39.43Z"
             },
             "System.State": {
-                "oldValue": "New",
-                "newValue": "Active"
+                "oldValue": "Active",
+                "newValue": "Closed"
             },
             "System.Reason": {
                 "oldValue": "Moved to state New",
@@ -95,7 +95,7 @@
             "rev": 14,
             "fields": {
                 "System.WorkItemType": "Spike",
-                "System.State": "Active",
+                "System.State": "Closed",
                 "System.Reason": "Moved to state Active",
                 "System.CreatedDate": "2020-04-22T21:32:16.883Z",
                 "System.CreatedBy": "Robert Huet <robert.huet@zionsbancorp.com>",

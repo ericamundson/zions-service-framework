@@ -25,13 +25,63 @@ import spock.mock.DetachedMockFactory
 @ContextConfiguration(classes=[SetOwnerMicroserviceTestConfig])
 class SetOwnerMicroserviceSpec extends Specification {
 	@Autowired
-	SetOwnerMicroService underTest
+	SetOwnerMicroService underTest;
+	
 	@Autowired
-	WorkManagementService workManagementService
-
+	WorkManagementService workManagementService;
+	
 	def "Not a configured target work item type"() {
 		given: "A mock ADO event payload exists for wrong work item type"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataFileWrongType.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataWrongType.json').text)
+
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "No updates should be made"
+		resp == false
+	}
+	
+	def "State is not Closed"() {
+		given: "A mock ADO event payload where state is not Closed"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataStateNotClosed.json').text)
+
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "No updates should be made"
+		resp == false
+	}
+	
+	def "Work Item Aready Assigned"() {
+		given: "A mock ADO event payload where Assigned To is already set"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataAlreadyAssigned.json').text)
+
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "No updates should be made"
+		resp == false
+	}
+	
+	def "Work Item Has No Parent"() {
+		given: "A mock ADO event payload where work item has no parent"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoParent.json').text)
+
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "No updates should be made"
+		resp == false
+	}
+
+	def "Parent is Unassigned"() {
+		given: "A mock ADO event payload for WI having unassigned parent"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataParentNotAssigned.json').text)
+		
+		and: "stub workManagementService.getWorkItem()"
+		1 * workManagementService.getWorkItem(_,_,_) >> {
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/unassignedParentData.json').text)
+		}
 
 		when: "ADO sends notification for work item change who's type is not in configured target list"
 		def resp = underTest.processADOData(adoMap)
@@ -44,19 +94,22 @@ class SetOwnerMicroserviceSpec extends Specification {
 		given: "A mock ADO event payload exists that meets all criteria for update"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment.json').text)
 
-		when: "ADO sends notification for work item change"
-		def resp = underTest.processADOData(adoMap)
-		1 * workManagementService.getWorkItem(_) >> {
+		and: "stub workManagementService.getWorkItem()"
+		1 * workManagementService.getWorkItem(_,_,_) >> {
 			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/parentData.json').text)
 		}
-		1 * workManagementService.updateWorkItem(_) >> { args ->
-			String data = "${args[3]}"
-			println(data.toString())
-			assert(data.toString() == '[{op=test, path=/rev, value=2}, {op=add, path=/fields/System.AssignedTo, value=robert.huet@zionsbancorp.com}]')
-		}
 		
-		then: "No updates should be made"
-		resp == false
+		and: "stub workManagementService.updateItem()"
+		1 * workManagementService.updateWorkItem(_,_,_,_) >> { args ->
+			String data = "${args[3]}"
+			assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/System.AssignedTo, value:robert.huet@zionsbancorp.com]]')
+		}
+
+		when: "calling method under test processADOData()"
+		def resp = underTest.processADOData(adoMap)
+		
+		then: "Update should be made"
+		resp == true
 	}
 	
 }
@@ -67,10 +120,10 @@ class SetOwnerMicroserviceSpec extends Specification {
 @PropertySource("classpath:test.properties")
 class SetOwnerMicroserviceTestConfig {
 	def mockFactory = new DetachedMockFactory()
-
-	@Autowired
+	
 	@Value('${tfs.types}') 
-	String types
+	String wiTypes
+	
 	@Bean
 	SetOwnerMicroService underTest() {
 		return new SetOwnerMicroService()

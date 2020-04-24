@@ -20,11 +20,11 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 
 	@Autowired
 	WorkManagementService workManagementService
-	
+
 	@Value('${tfs.collection:}')
 	String collection	
 
-	@Value('${tfs.types:}')
+	@Value('${tfs.types}')
 	String wiTypes
 
 	@Autowired
@@ -36,7 +36,6 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 	}
 	public SetOwnerMicroService() {
 		// Constructor for unit testing
-		println('SetOwnerMicroservice constructor')
 	}
 
 	/**
@@ -47,6 +46,7 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 	@Override
 	public Object processADOData(Object adoData) {
 		log.info("Entering SetOwnerMicroService:: processADOData")
+//		Uncomment code below to capture adoData payload for test
 //		String json = new JsonBuilder(adoData).toPrettyString()
 //		println(json)
 		def types = wiTypes.split(',')
@@ -62,10 +62,18 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 		String id = "${wiResource.revision.id}"
 		String rev = "${wiResource.revision.rev}"
 		String parentId = "${wiResource.revision.fields.'System.Parent'}"
-		if (parentId) {
+		if (parentId != 'null') {
+			// First get parent wi data
+			def parentWI = workManagementService.getWorkItem(collection, project, parentId)
+//			Uncomment code below to capture parent playload for test
+//			String json = new JsonBuilder(parentWI).toPrettyString()
+//			println(json)
+			def parentOwner = parentWI.fields.'System.AssignedTo'
+			if (parentOwner == 'null') return false
+			
 			log.info("Updating owner of $wiType #$id")
 			try {
-				setToParentOwner(project, id, rev, parentId)
+				setToParentOwner(project, id, rev, parentOwner)
 				log.info("Updated succeeded")
 				return true
 			}
@@ -79,20 +87,13 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 		}
 	}
 
-	private def setToParentOwner(def project, def id, String rev, def parentId) {
-		// First get parent wi data
-		def parentWI = workManagementService.getWorkItem(collection, project, parentId)
-//		String json = new JsonBuilder(parentWI).toPrettyString()
-//		println(json)
-		def parentOwner = parentWI.fields.'System.AssignedTo'
-		if (parentWI && parentOwner) {
-			def data = []
-			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
-			data.add(t)
-			def e = [op: 'add', path: '/fields/System.AssignedTo', value: parentOwner.uniqueName]
-			data.add(e)
-			workManagementService.updateWorkItem(collection, project, id, data)
-		}
+	private def setToParentOwner(def project, def id, String rev, def parentOwner) {
+		def data = []
+		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
+		data.add(t)
+		def e = [op: 'add', path: '/fields/System.AssignedTo', value: parentOwner.uniqueName]
+		data.add(e)
+		workManagementService.updateWorkItem(collection, project, id, data)
 	}
 
 	@Override
