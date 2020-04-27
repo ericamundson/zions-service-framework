@@ -79,7 +79,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataParentNotAssigned.json').text)
 		
 		and: "stub workManagementService.getWorkItem()"
-		1 * workManagementService.getWorkItem(_,_,_) >> {
+		workManagementService.getWorkItem(_,_,_) >> {
 			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/unassignedParentData.json').text)
 		}
 
@@ -95,12 +95,12 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment.json').text)
 
 		and: "stub workManagementService.getWorkItem()"
-		1 * workManagementService.getWorkItem(_,_,_) >> {
+		workManagementService.getWorkItem(_,_,_) >> {
 			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/parentData.json').text)
 		}
 		
 		and: "stub workManagementService.updateItem()"
-		1 * workManagementService.updateWorkItem(_,_,_,_) >> { args ->
+		workManagementService.updateWorkItem(_,_,_,_) >> { args ->
 			String data = "${args[3]}"
 			assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/System.AssignedTo, value:robert.huet@zionsbancorp.com]]')
 		}
@@ -130,10 +130,10 @@ class SetOwnerMicroserviceTestConfig {
 	}
 	@Bean
 	WorkManagementService workManagementService() {
-		return mockFactory.Mock(WorkManagementService)
+		return mockFactory.Stub(WorkManagementService)
 	}
 	@Bean
 	IGenericRestClient genericRestClient() {
-		return new GenericRestClient('http://localhost:8080/ws', '', '')
+		return mockFactory.Stub(GenericRestClient)
 	}
 }
