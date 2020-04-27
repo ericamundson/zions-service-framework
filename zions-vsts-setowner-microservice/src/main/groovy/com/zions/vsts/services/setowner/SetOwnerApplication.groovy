@@ -1,4 +1,4 @@
-package com.zions.vsts.services;
+package com.zions.vsts.services.setowner
 
 import com.zions.common.services.cli.action.CliAction
 import com.zions.vsts.services.work.templates.ProcessTemplateService
