@@ -30,7 +30,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 	@Autowired
 	WorkManagementService workManagementService;
 	
-	def "Not a configured target work item type"() {
+	def "Not a Bug work item type"() {
 		given: "A mock ADO event payload exists for wrong work item type"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataWrongType.json').text)
 
@@ -41,9 +41,9 @@ class SetOwnerMicroServiceSpec extends Specification {
 		resp == false
 	}
 	
-	def "State is not Closed"() {
+	def "No change to Severity, Priority or Color"() {
 		given: "A mock ADO event payload where state is not Closed"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataStateNotClosed.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoRelevantChange.json').text)
 
 		when: "ADO sends notification for work item change who's type is not in configured target list"
 		def resp = underTest.processADOData(adoMap)
@@ -52,9 +52,9 @@ class SetOwnerMicroServiceSpec extends Specification {
 		resp == false
 	}
 	
-	def "Work Item Aready Assigned"() {
+	def "Severity and Priority are set, but Color is unassigned"() {
 		given: "A mock ADO event payload where Assigned To is already set"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataAlreadyAssigned.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataMissingColor.json').text)
 
 		when: "ADO sends notification for work item change who's type is not in configured target list"
 		def resp = underTest.processADOData(adoMap)
@@ -63,9 +63,9 @@ class SetOwnerMicroServiceSpec extends Specification {
 		resp == false
 	}
 	
-	def "Work Item Has No Parent"() {
+	def "Severity and Priority are set, and Color is wrong"() {
 		given: "A mock ADO event payload where work item has no parent"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoParent.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataWrongColor.json').text)
 
 		when: "ADO sends notification for work item change who's type is not in configured target list"
 		def resp = underTest.processADOData(adoMap)
@@ -74,9 +74,9 @@ class SetOwnerMicroServiceSpec extends Specification {
 		resp == false
 	}
 
-	def "Parent is Unassigned"() {
+	def "Severity and Priority are set, and Color is correct"() {
 		given: "A mock ADO event payload for WI having unassigned parent"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataParentNotAssigned.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataCorrectColor.json').text)
 		
 		and: "stub workManagementService.getWorkItem()"
 		workManagementService.getWorkItem(_,_,_) >> {
@@ -90,9 +90,9 @@ class SetOwnerMicroServiceSpec extends Specification {
 		resp == false
 	}
 	
-	def "Successful Assignment to Parent Owner"() {
+	def "Either Severity or Priority is unassigned, but Color is set"() {
 		given: "A mock ADO event payload exists that meets all criteria for update"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataPrematureColor.json').text)
 
 		and: "stub workManagementService.getWorkItem()"
 		workManagementService.getWorkItem(_,_,_) >> {
