@@ -73,7 +73,7 @@ public class SyncBBGitReposTest extends Specification {
 			'--grant.template=password'
 		]
 		
-	@Test
+	
 	def 'validate method success flow.'() {
 		def appArgs = new DefaultApplicationArguments(args)
 		
@@ -84,7 +84,7 @@ public class SyncBBGitReposTest extends Specification {
 		true
 	}
 	
-	@Test
+	
 	def 'validate method exception flow.'() {
 		
 		given: 'Stub with Application Arguments'
@@ -98,7 +98,7 @@ public class SyncBBGitReposTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'execute method exception flow.'() {
 		
 		given: 'Stub with Application Arguments'
@@ -182,9 +182,9 @@ class SyncBBGitReposTestConfig {
 	
 	@Bean
 	SyncBBGitRepos underTest() {
-		return new SyncBBGitRepos(CodeManagementService codeManagmentService,
-		BBCodeManagementService bBCodeManagmentService,
-		PermissionsManagementService permissionsManagementService)
+		return new SyncBBGitRepos(codeManagmentService(),
+		bBCodeManagmentService(),
+		permissionsManagementService())
 	}
 
 }

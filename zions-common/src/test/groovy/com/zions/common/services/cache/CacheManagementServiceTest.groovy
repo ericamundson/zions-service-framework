@@ -30,7 +30,6 @@ public class CacheManagementServiceTest extends Specification {
 	@Autowired
 	DataGenerationService dataGenerationService
 
-	@Test
 	def 'saveBinaryAsAttachment for project name success flow.'(){
 
 		def result= new ByteArrayInputStream();
@@ -43,7 +42,6 @@ public class CacheManagementServiceTest extends Specification {
 
 	}
 
-	@Test
 	def 'saveToCache for project name success flow.'(){
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')
@@ -55,7 +53,6 @@ public class CacheManagementServiceTest extends Specification {
 		true
 	}
 
-	@Test
 	def 'getFromCache for project name success flow.'(){
 
 		def data = dataGenerationService.generate('/testdata/TestPlanT_Cache.json')

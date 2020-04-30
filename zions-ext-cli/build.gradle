@@ -25,15 +25,16 @@ dependencies {
 	compile project(':zions-vsts-services')
 	compile project(':zions-ccm-client-services')
 	compile project(':zions-common')
+	compile project(':zions-common-data')
 	integrationTestCompile(
-		'org.springframework.boot:spring-boot-starter-test',
-		'org.springframework:spring-mock:2.0.8',
-		'junit:junit:4.12',
-		'cglib:cglib-nodep:3.1',
-		'org.objenesis:objenesis:2.4',
-		'org.codehaus.groovy:groovy-all:2.4.13',
-		'org.spockframework:spock-core:1.2-groovy-2.4',
-		'org.spockframework:spock-spring:1.2-groovy-2.4'
+			'org.springframework.boot:spring-boot-starter-test',
+			'org.springframework:spring-mock:2.0.8',
+			'cglib:cglib-nodep:3.1',
+			'com.athaydes:spock-reports:1.6.2',
+			'org.objenesis:objenesis:2.4',
+			'org.codehaus.groovy:groovy-all:3.0.1',
+			'org.spockframework:spock-core:2.0-M2-groovy-3.0',
+			'org.spockframework:spock-spring:2.0-M2-groovy-3.0'
 		)
 
 }

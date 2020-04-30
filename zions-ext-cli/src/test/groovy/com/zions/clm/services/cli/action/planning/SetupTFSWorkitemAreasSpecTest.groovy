@@ -67,7 +67,7 @@ public class SetupTFSWorkitemAreasSpecTest extends Specification {
 	@Autowired
 	CodeManagementService codeManagementService
 	
-	@Test
+	
 	def 'validate ApplicationArguments success flow.'() {
 		given: 'Stub with Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password', 
@@ -83,7 +83,7 @@ public class SetupTFSWorkitemAreasSpecTest extends Specification {
 		result == true
 	}
 	
-	@Test
+	
 	def 'validate ApplicationArguments exception flow.'() {
 		given: 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
@@ -96,7 +96,7 @@ public class SetupTFSWorkitemAreasSpecTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'execute ApplicationArguments success flow.' () {
 		given: 'valid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080', '--clm.user=user', '--clm.password=password',

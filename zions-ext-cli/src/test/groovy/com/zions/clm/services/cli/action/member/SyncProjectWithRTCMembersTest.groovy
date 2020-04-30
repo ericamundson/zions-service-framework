@@ -41,7 +41,7 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 	@Autowired
 	ProjectManagementService projectManagementService
 	
-	@Test
+	
 	def 'validate method exception flow.'() {
 		
 		given: 'invalid Application Arguments'
@@ -55,7 +55,7 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'validate method success flow.'() {
 		
 		given: 'valid Application Arguments'
@@ -69,7 +69,7 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 		result == true
 	}
 	
-	@Test
+	
 	def 'execute method success flow.' () {
 		
 		given: 'Valid Application Arguments'
@@ -86,7 +86,7 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 		result == null
 	}
 	
-	@Test
+	
 	def 'rebuildMemberData method success flow.' () {
 		
 		given: 'valid Application Arguments'
@@ -147,7 +147,7 @@ class SyncProjectWithRTCMembersTestConfig {
 	
 	@Bean
 	SyncProjectWithRTCMembers underTest() {
-		return new SyncProjectWithRTCMembers(MemberManagementService memberManagmentService, CcmMemberManagementService ccmMemberManagmentService)
+		return new SyncProjectWithRTCMembers(memberManagmentService(), ccmMemberManagmentService())
 	}
 
 }

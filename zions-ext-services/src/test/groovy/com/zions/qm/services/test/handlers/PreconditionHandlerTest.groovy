@@ -9,7 +9,7 @@ import spock.lang.Specification
 
 class PreconditionHandlerTest extends Specification {
 
-	@Test
+	
 	def 'main flow'() {
 		
 	}

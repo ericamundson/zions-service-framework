@@ -14,11 +14,12 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
+import spock.mock.DetachedMockFactory
 
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[RollupApplicationTestConfig])
-class RollupApplicationTest extends Specification {
+class RollupApplicationSpec extends Specification {
 	
 	@Autowired
 	IGenericRestClient genericRestClient
@@ -44,8 +45,10 @@ class RollupApplicationTest extends Specification {
 //@ComponentScan("com.zions.vsts.services.tfs.rest")
 @PropertySource("classpath:test.properties")
 class RollupApplicationTestConfig {
+	def mockFactory = new DetachedMockFactory()
+	
 	@Bean
 	IGenericRestClient genericRestClient() {
-		return new GenericRestClient('http://localhost:8080/ws', '', '')
+		return mockFactory.Stub(GenericRestClient)
 	}
 }

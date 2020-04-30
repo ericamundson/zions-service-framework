@@ -19,7 +19,6 @@ public class IntegerGeneratorTest extends Specification {
 	@Autowired
 	IntegerGenerator underTest
 
-	@Test
 	def 'gen test'() {
 
 		when: 'call gen'
