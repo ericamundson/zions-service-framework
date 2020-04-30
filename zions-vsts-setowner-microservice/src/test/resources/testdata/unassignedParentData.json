@@ -1,0 +1,110 @@
+{
+    "id": 947693,
+    "rev": 1,
+    "fields": {
+        "System.Id": 947693,
+        "System.AreaId": 133,
+        "System.AreaPath": "ALMOpsTest\\DevTeam",
+        "System.TeamProject": "ALMOpsTest",
+        "System.NodeName": "DevTeam",
+        "System.AreaLevel1": "ALMOpsTest",
+        "System.AreaLevel2": "DevTeam",
+        "System.Rev": 1,
+        "System.AuthorizedDate": "2020-04-24T22:05:28.833Z",
+        "System.RevisedDate": "9999-01-01T00:00:00Z",
+        "System.IterationId": 127,
+        "System.IterationPath": "ALMOpsTest",
+        "System.IterationLevel1": "ALMOpsTest",
+        "System.WorkItemType": "User Story",
+        "System.State": "New",
+        "System.Reason": "New",
+        "System.CreatedDate": "2020-04-24T22:05:28.833Z",
+        "System.CreatedBy": {
+            "displayName": "Robert Huet",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+                }
+            },
+            "id": "2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "uniqueName": "robert.huet@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4",
+            "descriptor": "aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+        },
+        "System.ChangedDate": "2020-04-24T22:05:28.833Z",
+        "System.ChangedBy": {
+            "displayName": "Robert Huet",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+                }
+            },
+            "id": "2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "uniqueName": "robert.huet@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4",
+            "descriptor": "aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+        },
+        "System.AuthorizedAs": {
+            "displayName": "Robert Huet",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+                }
+            },
+            "id": "2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "uniqueName": "robert.huet@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4",
+            "descriptor": "aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+        },
+        "System.PersonId": 89581202,
+        "System.Watermark": 327309,
+        "System.CommentCount": 0,
+        "System.Title": "Unassigned Parent",
+        "System.BoardColumn": "New",
+        "System.BoardColumnDone": false,
+        "Microsoft.VSTS.Common.StateChangeDate": "2020-04-24T22:05:28.833Z",
+        "Microsoft.VSTS.Common.Priority": 2,
+        "Microsoft.VSTS.Common.ValueArea": "Business",
+        "Custom.SubState": "New",
+        "WEF_BFC19308C2FB40FB8B8096ABC237674D_System.ExtensionMarker": true,
+        "WEF_BFC19308C2FB40FB8B8096ABC237674D_Kanban.Column": "New",
+        "WEF_BFC19308C2FB40FB8B8096ABC237674D_Kanban.Column.Done": false
+    },
+    "relations": [
+        {
+            "rel": "System.LinkTypes.Hierarchy-Forward",
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947694",
+            "attributes": {
+                "isLocked": false,
+                "name": "Child"
+            }
+        }
+    ],
+    "_links": {
+        "self": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947693"
+        },
+        "workItemUpdates": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947693/updates"
+        },
+        "workItemRevisions": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947693/revisions"
+        },
+        "workItemComments": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947693/comments"
+        },
+        "html": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_workitems/edit/947693"
+        },
+        "workItemType": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItemTypes/User%20Story"
+        },
+        "fields": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/fields"
+        }
+    },
+    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947693"
+}
