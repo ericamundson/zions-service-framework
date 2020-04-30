@@ -40,7 +40,7 @@ public class ObFilterSpecTest extends Specification {
 	@Autowired
 	ObFilter underTest
 	
-	@Test
+	
 	def 'filter success flow '() {
 		given: 'work item query xml'
 		def xmlWorkItems = new XmlSlurper().parse(new File(testWorkItemsFileName))

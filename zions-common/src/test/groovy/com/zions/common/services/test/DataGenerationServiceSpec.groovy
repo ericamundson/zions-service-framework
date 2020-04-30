@@ -29,7 +29,7 @@ class DataGenerationServiceSpec extends Specification {
 		true
 	}
 	
-	@Test
+	
 	def 'generate string resouce test with json' () {
 		given: 'setup data template'
 		def resourceJson = '/testdata/TestPlanT.json'
@@ -39,7 +39,7 @@ class DataGenerationServiceSpec extends Specification {
 		plan != null
 	}
 	
-	@Test
+	
 	def 'generate string resouce test with xml' () {
 		given: 'setup data template'
 		def resourceXml= '/testdata/testcase.xml'
@@ -49,7 +49,7 @@ class DataGenerationServiceSpec extends Specification {
 		true
 	}
 	
-	@Test
+	
 	def 'generate test with url' () {
 		given: 'json data to do replacement'
 		def resourceJson = '/testdata/TestPlanT.json'

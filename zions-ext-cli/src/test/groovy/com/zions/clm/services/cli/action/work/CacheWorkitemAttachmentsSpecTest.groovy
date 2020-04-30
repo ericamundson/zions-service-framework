@@ -53,7 +53,7 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 	@Autowired
 	CacheWorkitemAttachments underTest
 
-	@Test
+	
 	def 'validate ApplicationArguments success flow.'() {
 		given: 'valid Application Arguments'
 		String[] args = loadArgs()
@@ -77,7 +77,7 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 		return args
 	}
 
-	@Test
+	
 	def 'validate ApplicationArguments exception flow.'() {
 		given: 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
@@ -90,7 +90,7 @@ public class CacheWorkitemAttachmentsSpecTest extends Specification {
 		thrown Exception
 	}
 
-	@Test
+	
 	def 'execute ApplicationArguments exception flow.' () {
 		given: 'invalid Application Arguments'
 		String[] args = loadArgs()

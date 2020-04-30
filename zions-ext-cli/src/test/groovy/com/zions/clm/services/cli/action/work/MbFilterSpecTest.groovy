@@ -40,7 +40,7 @@ public class MbFilterSpecTest extends Specification {
 	@Autowired
 	MbFilter underTest
 	
-	@Test
+	
 	def 'filter success flow '() {
 		given: 'work item query xml'
 		def xmlWorkItems = new XmlSlurper().parse(new File(testWorkItemsFileName))

@@ -53,7 +53,7 @@ class CodeManagementServiceSpecTest extends Specification {
 	@Autowired
 	private CommandManagementService commandManagementService
 	
-	@Test
+	
 	def 'getRepos success flow with two params' () {
 		
 		given: 'stub rest call for to get repos'
@@ -72,7 +72,7 @@ class CodeManagementServiceSpecTest extends Specification {
 		"${result.count}" == "4"
 	}
 	
-	@Test
+	
 	def 'getRepos success flow with three parms' () {
 		given: 'Stub rest call for GIT repositories'
 		
@@ -94,7 +94,7 @@ class CodeManagementServiceSpecTest extends Specification {
 		"${result.size}" == "0"
 	}
 	
-	@Test
+	
 	def 'listTopLevel success flow' () {
 		given: 'Stub rest call for top level repositories'
 		String json = this.getClass().getResource('/testdata/items.json').text
@@ -114,7 +114,7 @@ class CodeManagementServiceSpecTest extends Specification {
 		
 	}
 	
-	@Test
+	
 	def 'getFileContent success flow' () {
 		given: 'Stub of rest call to get file content'
 		String file = this.getClass().getResource('/testdata/dts-re-build.properties').text
@@ -134,7 +134,7 @@ class CodeManagementServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'getAuthUrl success flow' () {
 		when: 'call getAuthUrl'
 		def out = underTest.getAuthUrl('https://dev.azure.com', 'v072160', 'K@nakadurga@2171')
@@ -143,7 +143,7 @@ class CodeManagementServiceSpecTest extends Specification {
 		out == "https://v072160:K%40nakadurga%402171@dev.azure.com"
 	}
 	
-	/*@Test
+	/*
 	def 'importRepoDir success flow' () {
 		when: 
 		def out = underTest.importRepoDir('', 'DigitalBanking', '', null, '', '')
@@ -152,7 +152,7 @@ class CodeManagementServiceSpecTest extends Specification {
 		out != null
 	}
 	
-	@Test
+	
 	def 'importRepoCLI success flow' () {
 		when: 
 		def out = underTest.importRepoCLI('', 'DigitalBanking', '', '', '', '')
@@ -161,7 +161,7 @@ class CodeManagementServiceSpecTest extends Specification {
 		out != null
 	}*/
 	
-	@Test
+	
 	def 'getRefHead success flow' () {
 		
 		given: 'stub of get repo refs call'
@@ -182,7 +182,7 @@ class CodeManagementServiceSpecTest extends Specification {
 		"${result.name}" == "refs/heads/master"
 	}
 	
-	@Test
+	
 	def 'createDeployManifest success flow' () {
 		
 		given: 'stub push rest call'
@@ -204,7 +204,7 @@ class CodeManagementServiceSpecTest extends Specification {
 	
 	}
 
-	@Test
+	
 	def 'createRepo success flow' () {
 		
 		given: 'stub rest call for create repo'
@@ -224,7 +224,7 @@ class CodeManagementServiceSpecTest extends Specification {
 	
 	}
 	
-	@Test
+	
 	def 'getRepo success flow' () {
 		
 		given: 'stub of db rest call'
@@ -244,7 +244,7 @@ class CodeManagementServiceSpecTest extends Specification {
 	
 	}
 	
-	@Test
+	
 	def 'getDeployManifest success flow' () {
 		
 		given: 'stub rest call for items'
@@ -266,7 +266,7 @@ class CodeManagementServiceSpecTest extends Specification {
 	
 	}
 	
-	@Test
+	
 	def 'importRepo success flow' () {
 		
 		given: 'stub projectManagementService.getProject'
@@ -291,7 +291,7 @@ class CodeManagementServiceSpecTest extends Specification {
 	
 	}
 	
-	@Test
+	
 	def 'importRepoDir NullPointerException flow' () {
 		given: 'stub of projectManagementService.getProject'
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
@@ -304,7 +304,7 @@ class CodeManagementServiceSpecTest extends Specification {
 	
 	}
 	
-	@Test
+	
 	def 'importRepoCLI NullPointerException flow' () {
 		given: 'stub of projectManagementService.getProject'
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
@@ -318,7 +318,7 @@ class CodeManagementServiceSpecTest extends Specification {
 	
 	}
 	
-	/*@Test
+	/*
 	def 'importRepoCLI success flow' () {
 		given:
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
@@ -334,7 +334,7 @@ class CodeManagementServiceSpecTest extends Specification {
 	
 	}*/
 	
-	@Test
+	
 	def 'ensureDeployManifest success flow' () {
 		
 		given: 'stub check for items'

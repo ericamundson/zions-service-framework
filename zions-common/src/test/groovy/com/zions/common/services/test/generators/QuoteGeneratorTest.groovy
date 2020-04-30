@@ -22,7 +22,6 @@ public class QuoteGeneratorTest extends Specification {
 	@Autowired
 	QuoteGenerator underTest
 	
-	@Test
 	def 'init test'() {
 	
 		underTest.setLength(5)
@@ -35,7 +34,7 @@ public class QuoteGeneratorTest extends Specification {
 	}
 	
 	
-	@Test
+	
 	def 'gen test'() {
 	
 		underTest.setLength(0)
@@ -47,7 +46,7 @@ public class QuoteGeneratorTest extends Specification {
 		true
 	}
 	
-	@Test
+	
 	def 'gen exception flow' () {
 		when: 'call gen'
 		def plan = underTest.gen()
