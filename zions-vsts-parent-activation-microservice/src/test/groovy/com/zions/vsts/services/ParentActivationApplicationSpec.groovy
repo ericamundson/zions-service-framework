@@ -18,7 +18,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 @ContextConfiguration(classes=[ParentActivationApplicationTestConfig])
-class ParentActivationApplicationTest extends Specification {
+class ParentActivationApplicationSpec extends Specification {
 	
 	@Autowired
 	IGenericRestClient genericRestClient
@@ -43,7 +43,6 @@ class ParentActivationApplicationTest extends Specification {
 @Profile("test")
 //@ComponentScan("com.zions.vsts.services.tfs.rest")
 @PropertySource("classpath:test.properties")
-//this class set in a test.properties file?  
 class ParentActivationApplicationTestConfig {
 	@Bean
 	IGenericRestClient genericRestClient() {
