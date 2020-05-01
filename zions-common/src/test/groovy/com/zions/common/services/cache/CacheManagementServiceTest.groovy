@@ -1,14 +1,12 @@
 package com.zions.common.services.cache;
 
 
-import static org.junit.Assert.*
 import groovy.json.JsonSlurper
 
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
 import com.zions.common.services.test.SpockLabeler
 
-import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
@@ -29,6 +27,7 @@ public class CacheManagementServiceTest extends Specification {
 	
 	@Autowired
 	DataGenerationService dataGenerationService
+	
 
 	def 'saveBinaryAsAttachment for project name success flow.'(){
 

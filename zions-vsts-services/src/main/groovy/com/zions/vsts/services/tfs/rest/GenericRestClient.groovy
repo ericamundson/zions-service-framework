@@ -30,9 +30,9 @@ class GenericRestClient extends AGenericRestClient {
 		
 	String tfsUrl;
 	
-	private String user;
+	String user;
 		
-	private String token
+	String token
 	
 	public String getTfsUrl() {
 		return tfsUrl

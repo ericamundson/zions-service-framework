@@ -67,7 +67,7 @@ public class ClmGenericRestClient extends AGenericRestClient {
 	
 	public String userid = "";
 	String password = "";
-	public String clmUrl = "";
+	String clmUrl;
 	
 	@Autowired
 	public ClmGenericRestClient(@Value('${clm.url}') String clmUrl, @Value('${clm.user}') String userid, @Value('${clm.password}') String password) {

@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 import com.zions.bb.services.code.BBCodeManagementService
+import com.zions.bb.services.rest.BBGenericRestClient
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient;
 import com.zions.common.services.test.SpockLabeler
@@ -142,7 +143,7 @@ class SyncBBGitReposTestConfig {
 	
 	@Bean
 	IGenericRestClient bBGenericRestClient() {
-		return factory.Mock(ClmGenericRestClient)
+		return factory.Mock(BBGenericRestClient)
 	}
 	
 	@Bean
@@ -179,7 +180,7 @@ class SyncBBGitReposTestConfig {
 	BBCodeManagementService bBCodeManagmentService() {
 		return new BBCodeManagementService()
 	}
-	
+
 	@Bean
 	SyncBBGitRepos underTest() {
 		return new SyncBBGitRepos(codeManagmentService(),

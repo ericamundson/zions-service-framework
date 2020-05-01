@@ -250,7 +250,7 @@ class QmMetadataManagementService {
 	 * @return
 	 */
 	def getQMSchema() {
-		String uri = "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.integration.service.IIntegrationService/schema/qm.xsd"
+		String uri = "${qmGenericRestClient.clmUrl}/qm/service/com.ibm.rqm.integration.service.IIntegrationService/schema/qm.xsd"
 		def result = qmGenericRestClient.get(
 				uri: uri,
 				query: [abbreviate: false],
@@ -266,7 +266,7 @@ class QmMetadataManagementService {
 	 */
 	def getCustomAttributes(String mType, String projectArea) {
 		def projectInfo = qmProjectManagementSerivce.getProject(projectArea)
-		String url = "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService/customAttributesDTO"
+		String url = "${qmGenericRestClient.clmUrl}/qm/service/com.ibm.rqm.planning.common.service.rest.ICustomAttributeRestService/customAttributesDTO"
 		def attribs = qmGenericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: url,
@@ -285,7 +285,7 @@ class QmMetadataManagementService {
 	def getCategories(String type, String projectArea) {
 		//String cType = this.categoriesMapType[type]
 		def projectInfo = qmProjectManagementSerivce.getProject(projectArea)
-		String url = "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.planning.common.service.rest.ICategoryTypeRestService/categoryTypesDTO"
+		String url = "${qmGenericRestClient.clmUrl}/qm/service/com.ibm.rqm.planning.common.service.rest.ICategoryTypeRestService/categoryTypesDTO"
 		def cats = qmGenericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: url,
@@ -355,7 +355,7 @@ class QmMetadataManagementService {
 			return schemaMap[schemaElement]
 		}
 		def mschema = qmGenericRestClient.get(
-				uri: "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.rqm.integration.service.IIntegrationService/schema/${schemaElement}.xsd",
+				uri: "${qmGenericRestClient.clmUrl}/qm/service/com.ibm.rqm.integration.service.IIntegrationService/schema/${schemaElement}.xsd",
 				query: [abbreviate: false],
 				headers: [Accept: 'text/xml'] );
 
