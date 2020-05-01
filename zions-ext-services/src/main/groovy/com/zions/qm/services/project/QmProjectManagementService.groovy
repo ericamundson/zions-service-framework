@@ -15,7 +15,7 @@ class QmProjectManagementService {
 	}
 	
 	def getProject(String projectArea) {
-		String url = "${qmGenericRestClient.qmUrl}/qm/service/com.ibm.team.process.internal.service.web.IProcessWebUIService/projectAreasPaged"
+		String url = "${qmGenericRestClient.clmUrl}/qm/service/com.ibm.team.process.internal.service.web.IProcessWebUIService/projectAreasPaged"
 		int page = 0;
 		int psize = 25;
 		int cpsize = 0;

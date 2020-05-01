@@ -2,6 +2,7 @@
 <launchConfiguration type="org.eclipse.buildship.core.launch.runconfiguration">
 <listAttribute key="arguments">
 <listEntry value="-Pcontext=pipeline"/>
+<listEntry value="--info"/>
 </listAttribute>
 <booleanAttribute key="build_scans_enabled" value="false"/>
 <stringAttribute key="gradle_distribution" value="GRADLE_DISTRIBUTION(WRAPPER)"/>

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import spock.lang.Specification
+import spock.lang.Ignore
 import spock.mock.DetachedMockFactory
 
 import com.zions.clm.services.ccm.client.RtcRepositoryClient
@@ -40,7 +41,7 @@ public class MbFilterSpecTest extends Specification {
 	@Autowired
 	MbFilter underTest
 	
-	
+	@Ignore
 	def 'filter success flow '() {
 		given: 'work item query xml'
 		def xmlWorkItems = new XmlSlurper().parse(new File(testWorkItemsFileName))

@@ -19,6 +19,7 @@ import com.zions.vsts.services.permissions.PermissionsManagementService
 
 import groovy.json.JsonSlurper
 import spock.lang.Specification;
+import spock.lang.Ignore
 import spock.mock.DetachedMockFactory
 
 
@@ -69,7 +70,7 @@ public class SyncProjectWithRTCMembersTest extends Specification {
 		result == true
 	}
 	
-	
+	@Ignore
 	def 'execute method success flow.' () {
 		
 		given: 'Valid Application Arguments'
