@@ -30,38 +30,18 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 /* Will set default configs for ContentApplication */
 
 @Configuration
-@ComponentScan(["com.zions.vsts.services","com.zions.common.services.logging"])
+@ComponentScan(["com.zions.vsts.services.work","com.zions.vsts.services.admin","com.zions.common.services.logging"])
 public class AppConfig  {
 	
 	
 	@Bean
-	JavaMailSender sender() {
-		return new JavaMailSenderImpl()
-	}
-
-	@Bean
 	ICacheManagementService cacheManagementService() {
 		return new CacheManagementService(cacheLocation)
-	}
-
-	@Bean
-	CommandManagementService commandManagementService() {
-		return new CommandManagementService();
-	}
-
-	@Bean
-	AttachmentManagementService attachmentManagementService() {
-		return new AttachmentManagementService();
 	}
 	
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return new MultiUserGenericRestClient()
-	}
-
-	@Bean
-	IGenericRestClient mrGenericRestClient() {
-		return new MrGenericRestClient('', '')
 	}
 	
 	@Bean
