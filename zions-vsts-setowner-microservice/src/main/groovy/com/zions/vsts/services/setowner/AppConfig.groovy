@@ -47,10 +47,6 @@ public class AppConfig  {
 		return new CommandManagementService();
 	}
 
-	@Bean
-	AttachmentManagementService attachmentManagementService() {
-		return new AttachmentManagementService();
-	}
 	
 	@Bean
 	IGenericRestClient genericRestClient() {
