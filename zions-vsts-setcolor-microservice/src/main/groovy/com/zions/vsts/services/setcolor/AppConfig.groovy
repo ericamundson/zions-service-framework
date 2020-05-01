@@ -15,11 +15,13 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.mr.services.rest.MrGenericRestClient
+import com.zions.vsts.services.asset.SharedAssetService
 import com.zions.vsts.services.attachments.AttachmentManagementService
 import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
@@ -60,6 +62,11 @@ public class AppConfig  {
 	@Bean
 	IGenericRestClient mrGenericRestClient() {
 		return new MrGenericRestClient('', '')
+	}
+	
+	@Bean
+	SharedAssetService sharedAssetService() {
+		return new SharedAssetService()
 	}
 
 	@Autowired

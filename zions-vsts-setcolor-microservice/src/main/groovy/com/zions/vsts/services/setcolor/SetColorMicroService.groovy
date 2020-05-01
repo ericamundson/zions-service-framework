@@ -1,12 +1,15 @@
 package com.zions.vsts.services.setcolor
 
+import com.zions.vsts.services.asset.SharedAssetService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.ws.client.AbstractWebSocketMicroService
+
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 
 /**
  * Assigns unassigned tasks to the parent's owner when the task is closed.
@@ -16,28 +19,32 @@ import groovy.json.JsonBuilder
  */
 @Component
 @Slf4j
-class SetOwnerMicroService extends AbstractWebSocketMicroService {
-
+class SetColorMicroService extends AbstractWebSocketMicroService {
+	def colorMap
 	@Autowired
 	WorkManagementService workManagementService
+
+	@Autowired
+	SharedAssetService sharedAssetService
 
 	@Value('${tfs.collection:}')
 	String collection	
 
-	@Value('${tfs.types}')
-	String wiTypes
+    @Value('${websocket.topic}')
+    private String eventTopic
 
 	@Autowired
-	public SetOwnerMicroService(@Value('${websocket.url:}') websocketUrl, 
+	public SetColorMicroService(@Value('${websocket.url:}') websocketUrl, 
 		@Value('${websocket.user:#{null}}') websocketUser,
 		@Value('${websocket.password:#{null}}') websocketPassword) {
 		super(websocketUrl, websocketUser, websocketPassword)
-		
 	}
-	public SetOwnerMicroService() {
+	public SetColorMicroService() {
 		// Constructor for unit testing
 	}
-
+	void loadColorMap() {
+		this.colorMap = sharedAssetService.getAsset('colorMap')
+	}
 	/**
 	 * Perform assignment operation
 	 * 
@@ -45,60 +52,68 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.info("Entering SetOwnerMicroService:: processADOData")
+		log.info("Entering SetColorMicroService:: processADOData")
+		if (!colorMap) loadColorMap()
 //		Uncomment code below to capture adoData payload for test
 //		String json = new JsonBuilder(adoData).toPrettyString()
 //		println(json)
-		def types = wiTypes.split(',')
 		def outData = adoData
 		def wiResource = adoData.resource
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
-		String owner = "${wiResource.revision.fields.'System.AssignedTo'}"
-		String status = "${wiResource.revision.fields.'System.State'}"
-		if (!types.contains(wiType)) return false
-		if (owner != 'null') return false
-		if (status != 'Closed') return false
+		if (wiType != 'Bug') return logResult('Not a Bug')
+		boolean needColorUpdate = wiResource.fields.'Microsoft.VSTS.Common.Priority' != null ||
+								wiResource.fields.'Microsoft.VSTS.Common.Severity' != null ||
+								wiResource.fields.'Custom.Color' != null
+		if (!needColorUpdate) return logResult('No change to Severity, Priority or Color')
+		def priority = wiResource.revision.fields.'Microsoft.VSTS.Common.Priority'
+		def severity = "${wiResource.revision.fields.'Microsoft.VSTS.Common.Severity'}"
+		def color = "${wiResource.revision.fields.'Custom.Color'}"
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		String id = "${wiResource.revision.id}"
 		String rev = "${wiResource.revision.rev}"
-		String parentId = "${wiResource.revision.fields.'System.Parent'}"
-		if (parentId != 'null') {
-			// First get parent wi data
-			def parentWI = workManagementService.getWorkItem(collection, project, parentId)
-//			Uncomment code below to capture parent playload for test
-//			String json = new JsonBuilder(parentWI).toPrettyString()
-//			println(json)
-			def parentOwner = parentWI.fields.'System.AssignedTo'
-			if (parentOwner == 'null') return false
-			
-			log.info("Updating owner of $wiType #$id")
-			try {
-				setToParentOwner(project, id, rev, parentOwner)
-				log.info("Updated succeeded")
-				return true
+		if (priority != null && severity != 'null') {
+			// Get associated color
+			String newColor = lookupColor(priority, severity)
+			if (color == 'null' || newColor != color) {
+				log.info("Updating color for $wiType #$id")
+				try {
+					updateColor(project, id, rev, newColor)
+					return logResult('Color updated')
+				}
+				catch (e){
+					log.error("Error updating Custom.Color: ${e.message}")
+					return 'Failed update'
+				}
 			}
-			catch (e){
-				log.info("Error updating System.AssigedTo: ${e.message}")
-				return false
-			}
+			else return logResult('No updates needed')
 		}
-		else {
-			return false;
+		else if (color != 'null'){
+			// Need to set color to unassigned
+			updateColor(project, id, rev, '')
+			return logResult('Color set to unassigned')
 		}
 	}
-
-	private def setToParentOwner(def project, def id, String rev, def parentOwner) {
+	private def lookupColor(def priority, def severity) {
+		def colorElement = colorMap.find{it.Priority==priority && it.Severity==severity}
+		return "${colorElement.Color}"
+	}
+	private def updateColor(def project, def id, String rev, String color) {
 		def data = []
 		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 		data.add(t)
-		def e = [op: 'add', path: '/fields/System.AssignedTo', value: parentOwner.uniqueName]
+		def e = [op: 'add', path: '/fields/Custom.Color', value: color]
 		data.add(e)
 		workManagementService.updateWorkItem(collection, project, id, data)
+	}
+	
+	private def logResult(def msg) {
+		log.info(msg)
+		return msg
 	}
 
 	@Override
 	public String topic() {
-		return 'workitem.updated';
+		return this.eventTopic;
 	}
 
 }
