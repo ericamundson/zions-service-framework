@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 import com.zions.bb.services.code.BBCodeManagementService
+import com.zions.bb.services.rest.BBGenericRestClient
 import com.zions.clm.services.rest.ClmGenericRestClient
 import com.zions.common.services.rest.IGenericRestClient;
 import com.zions.common.services.test.SpockLabeler
@@ -73,7 +74,7 @@ public class SyncBBGitReposTest extends Specification {
 			'--grant.template=password'
 		]
 		
-	@Test
+	
 	def 'validate method success flow.'() {
 		def appArgs = new DefaultApplicationArguments(args)
 		
@@ -84,7 +85,7 @@ public class SyncBBGitReposTest extends Specification {
 		true
 	}
 	
-	@Test
+	
 	def 'validate method exception flow.'() {
 		
 		given: 'Stub with Application Arguments'
@@ -98,7 +99,7 @@ public class SyncBBGitReposTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'execute method exception flow.'() {
 		
 		given: 'Stub with Application Arguments'
@@ -142,7 +143,7 @@ class SyncBBGitReposTestConfig {
 	
 	@Bean
 	IGenericRestClient bBGenericRestClient() {
-		return factory.Mock(ClmGenericRestClient)
+		return factory.Mock(BBGenericRestClient)
 	}
 	
 	@Bean
@@ -179,12 +180,12 @@ class SyncBBGitReposTestConfig {
 	BBCodeManagementService bBCodeManagmentService() {
 		return new BBCodeManagementService()
 	}
-	
+
 	@Bean
 	SyncBBGitRepos underTest() {
-		return new SyncBBGitRepos(CodeManagementService codeManagmentService,
-		BBCodeManagementService bBCodeManagmentService,
-		PermissionsManagementService permissionsManagementService)
+		return new SyncBBGitRepos(codeManagmentService(),
+		bBCodeManagmentService(),
+		permissionsManagementService())
 	}
 
 }

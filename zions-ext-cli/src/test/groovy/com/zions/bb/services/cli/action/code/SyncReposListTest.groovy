@@ -65,7 +65,7 @@ public class SyncReposListTest extends Specification {
 		'--grant.template=password'
 	]
 	
-	@Test
+	
 	def 'validate method exception flow.'() {
 		
 		given: 'Stub with Application Arguments'
@@ -79,7 +79,7 @@ public class SyncReposListTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'validate method failed flow.'() {
 		
 		given: 'Invalid application arguments'
@@ -93,7 +93,7 @@ public class SyncReposListTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'validate method success flow.'() {
 		
 		given: "Valid argument settings."		
@@ -106,7 +106,7 @@ public class SyncReposListTest extends Specification {
 		true
 	}
 	
-	@Test
+	
 	def 'execute method failed flow.'() {
 		
 		given: 'Stub with Application Arguments'
@@ -121,7 +121,7 @@ public class SyncReposListTest extends Specification {
 	}
 	
 	
-	@Test
+	
 	def 'execute method success flow.'() {
 		
 		given: 'Stub with Application Arguments'
@@ -196,8 +196,8 @@ class SyncReposListTestConfig {
 	
 	@Bean
 	SyncReposList underTest() {
-		return new SyncReposList(CodeManagementService codeManagmentService, 
-		PermissionsManagementService permissionsManagementService)
+		return new SyncReposList(codeManagmentService(), 
+		permissionsManagementService())
 	}
 
 }

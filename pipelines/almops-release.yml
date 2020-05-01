@@ -68,13 +68,13 @@ stages:
       displayName: 'Publish Test Results **/TEST-*.xml'
       enabled: false
 
-    - task: BatchScript@1
-      displayName: 'Run Publish Test Results'
-      inputs:
-        filename: '$(System.ArtifactsDirectory)\zions-ext-cli\build\batch_out\syncTesting.bat'
-        arguments: '--report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ALMOps --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=almops --plan.name=almops-release-$(Tag) --build.id=$(Build.BuildId) --definition.id=$(System.DefinitionId)'
-        workingFolder: '$(System.ArtifactsDirectory)\zions-ext-cli\build\batch_out'
-      continueOnError: true
+#     - task: BatchScript@1
+#       displayName: 'Run Publish Test Results'
+#       inputs:
+#         filename: '$(System.ArtifactsDirectory)\zions-ext-cli\build\batch_out\syncTesting.bat'
+#         arguments: '--report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ALMOps --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=almops --plan.name=almops-release-$(Tag) --build.id=$(Build.BuildId) --definition.id=$(System.DefinitionId)'
+#         workingFolder: '$(System.ArtifactsDirectory)\zions-ext-cli\build\batch_out'
+#       continueOnError: true
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: almops-drop'

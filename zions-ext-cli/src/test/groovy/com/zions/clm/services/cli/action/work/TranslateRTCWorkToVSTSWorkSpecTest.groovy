@@ -115,7 +115,7 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 		return args
 	}
 	
-	@Test
+	
 	def 'validate ApplicationArguments success flow.'() {
 		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs('./src/test/resources/testdata/OBWITMapping.xml'))
@@ -128,7 +128,7 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 		result == true
 	}
 	
-	@Test
+	
 	def 'validate ApplicationArguments exception flow.'() {
 		given: 'invalid Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
@@ -141,7 +141,7 @@ class TranslateRTCWorkToVSTSWorkSpecTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'execute ApplicationArguments exception flow.' () {
 		given: 'valid Application Arguments'
 		String[] args = loadArgs()

@@ -58,7 +58,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 	@Autowired
 	private ReleaseManagementService underTest
 	/*
-	@Test
+	
 	def 'ensureReleases with getRelease successflow' () {
 		given:
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
@@ -86,7 +86,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'ensureReleases with createRelease successflow' () {
 		given:
 		//8 * genericRestClient.get(_) >> null
@@ -121,7 +121,7 @@ class ReleaseManagementServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'ensureReleaseFolder success flow' () {
 		given:
 		genericRestClient.getTfsUrl() >> "visualstudio"

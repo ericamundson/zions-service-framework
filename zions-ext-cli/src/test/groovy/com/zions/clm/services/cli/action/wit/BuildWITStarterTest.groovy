@@ -41,7 +41,7 @@ public class BuildWITStarterTest extends Specification {
 		'--out.file=http://localhost:8080'
 	]
 	
-	@Test
+	
 	def 'validate method success flow.'() {
 		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(args)
@@ -53,7 +53,7 @@ public class BuildWITStarterTest extends Specification {
 		result == true
 	}
 	
-	@Test
+	
 	def 'validate method exception flow.'() {
 		given:'invalid Application Arguments'
 		String[] args = ['--bb.user=user']
@@ -66,7 +66,7 @@ public class BuildWITStarterTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'execute method success flow.' () {
 		
 		given: 'valid Application Arguments'
@@ -79,7 +79,7 @@ public class BuildWITStarterTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'buildStarterXml method success flow.' () {
 		
 		given: 'valid Application Arguments'

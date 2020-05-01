@@ -337,7 +337,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		return wits
 	}
 	
-	@Test
+	
 	def 'getTranslateMapping success flow one' () {
 		given: 'setup data'
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
@@ -357,7 +357,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		true
 	}
 	
-	@Test
+	
 	def 'getTranslateMapping success flow two' () {
 		given: 'setup data'
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
@@ -377,7 +377,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		true
 	}
 
-	@Test
+	
 	def 'getLinkMapping success flow' () {
 		given: 'Setup return data'
 		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
@@ -389,7 +389,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'getWIT success flow' () {
 		given: 'stub rest call for work item type data'
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
@@ -406,7 +406,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		resultTwo == null
 	}
 	
-	@Test
+	
 	def 'ensureWitFieldLayout success flow' () {
 		given: 'stub rest call for layout'
 		def wit = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
@@ -429,7 +429,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'createWITGroup success flow' () {
 		given: 'stub of post of layout data'
 		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
@@ -446,7 +446,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'createWITPage success flow' () {
 		given: 'stub rest call for layouts'
 		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
@@ -461,7 +461,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'createField success flow' () {
 		given: 'stub layout rest call'
 		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
@@ -476,7 +476,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'addGroup success flow' () {
 		given: 'stub call for layout'
 		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
@@ -492,7 +492,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'addControl success flow' () {
 		given: 'stubb of layout rest call'
 		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
@@ -509,7 +509,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result == null
 	}
 	
-	@Test
+	
 	def 'addWITField success flow' () {
 		given: 'stub of accessing layout'
 		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
@@ -526,7 +526,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'getWITField success flow' () {
 		given: 'stub rest call to access layout'
 		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
@@ -543,7 +543,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result == null
 	}
 	
-	@Test
+	
 	def 'createWorkitemTemplate success flow' () {
 		given: 'project management service getProjectProperty stub'
 		def processTemplateId = new JsonSlurper().parseText(getClass().getResource('/testdata/project.json').text)
@@ -579,7 +579,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		true
 	}
 	
-	@Test
+	
 	def 'addGroupWithControl success flow' () {
 		given: 'setup addGroupWithControl arguments'
 		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
@@ -596,7 +596,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		true
 	}
 	
-	@Test
+	
 	def 'ensureWitField success flow' () {
 		given: 'stub rest call for  process fields data'
 		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
@@ -618,7 +618,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		true
 	}
 	
-	@Test
+	
 	def 'requiresField success flow' () {
 		given: 'setup arguments for requiresField'
 		def field = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
@@ -629,7 +629,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		result == true
 	}
 	
-	@Test
+	
 	def 'addUnmappedFields exception flow' () {
 		given: 'setup arguments for addUnmappedField'
 		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/actualwit.json').text)

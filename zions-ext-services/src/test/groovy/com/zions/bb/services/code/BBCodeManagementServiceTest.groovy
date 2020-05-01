@@ -2,7 +2,7 @@ package com.zions.bb.services.code;
 
 import static org.junit.Assert.*
 
-import com.zions.clm.services.rest.ClmGenericRestClient
+import com.zions.bb.services.rest.BBGenericRestClient
 import com.zions.qm.services.test.ClmTestManagementService
 import groovy.json.JsonSlurper
 import com.zions.bb.services.code.BBCodeManagementService
@@ -56,7 +56,7 @@ class BBCodeManagementServiceTestConfig {
 	
 	@Bean
 	IGenericRestClient bBGenericRestClient() {
-		return factory.Mock(ClmGenericRestClient)
+		return factory.Mock(BBGenericRestClient)
 	}
 	
 	@Bean

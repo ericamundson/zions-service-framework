@@ -9,7 +9,7 @@ import spock.lang.Specification
 
 class PerformRollupSchedulingSpec extends Specification {
 
-	@Test
+	
 	public void test() {
 		fail("Not yet implemented")
 	}
