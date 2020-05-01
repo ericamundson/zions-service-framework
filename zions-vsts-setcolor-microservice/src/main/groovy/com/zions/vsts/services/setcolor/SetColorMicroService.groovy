@@ -12,7 +12,10 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 
 /**
- * Assigns unassigned tasks to the parent's owner when the task is closed.
+ * Validates and, if necessary, updates the Color field on a Bug when any of the following field values have changed:
+ * - Priority
+ * - Severity
+ * - Color
  * 
  * @author z097331
  *
