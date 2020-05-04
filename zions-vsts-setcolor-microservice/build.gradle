@@ -1,6 +1,6 @@
 bootJar {
 	enabled = true
-	mainClassName = 'com.zions.content.services.setowner.SetColorApplication'
+	mainClassName = 'com.zions.content.services.setcolor.SetColorApplication'
 	archiveName = 'zions-vsts-setcolor-microservice.jar'
 	//version =  "${version}"
 }
