@@ -19,7 +19,6 @@ public class DateGeneratorTest extends Specification {
 	@Autowired
 	DateGenerator underTest
 	
-	@Test
 	def 'gen test'() {
 	
 //		when:

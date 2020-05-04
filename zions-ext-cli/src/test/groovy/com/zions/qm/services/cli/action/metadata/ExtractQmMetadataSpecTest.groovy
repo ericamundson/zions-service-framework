@@ -46,7 +46,7 @@ public class ExtractQmMetadataSpecTest extends Specification {
 	@Autowired
 	ExtractQmMetadata underTest
 
-	@Test
+	
 	def 'validate ApplicationArguments success flow.'() {
 		given: 'valid Application Arguments'
 		String[] args = loadArgs()
@@ -71,7 +71,7 @@ public class ExtractQmMetadataSpecTest extends Specification {
 		return args
 	}
 
-	@Test
+	
 	def 'validate ApplicationArguments exception flow.'() {
 		given:'bad Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
@@ -84,7 +84,7 @@ public class ExtractQmMetadataSpecTest extends Specification {
 		thrown Exception
 	}
 
-	@Test
+	
 	def 'execute ApplicationArguments success flow.' () {
 		given: 'valid Application Arguments'
 		def appArgs = new DefaultApplicationArguments(loadArgs())

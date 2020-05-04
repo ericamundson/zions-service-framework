@@ -20,7 +20,6 @@ public class AlphaGeneratorTest extends Specification {
 	@Autowired
 	AlphaGenerator underTest
 	
-	@Test
 	def 'gen test'() {
 		when: 'call gen'
 		def plan = underTest.gen()

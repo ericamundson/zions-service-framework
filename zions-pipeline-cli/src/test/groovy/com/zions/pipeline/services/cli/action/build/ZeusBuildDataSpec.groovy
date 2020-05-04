@@ -46,7 +46,7 @@ class ZeusBuildDataSpec extends Specification {
 	@Autowired
 	DataGenerationService dataGenerationService
 
-	@Ignore
+	//@Ignore
 	def 'execute standard flow'() {
 		setup: 'test data for stubs'
 		URI uri = this.getClass().getResource('/testdata').toURI()
@@ -115,7 +115,7 @@ class ZeusBuildDataSpec extends Specification {
 		success
 	}
 	
-	@Ignore
+	//@Ignore
 	def 'execute rollup flow'() {
 		setup: 'test data for stubs'
 		URI uri = this.getClass().getResource('/testdata').toURI()
@@ -225,7 +225,7 @@ class ZeusBuildDataSpec extends Specification {
 @TestConfiguration
 @Profile("test")
 @ComponentScan(["com.zions.vsts.services", "com.zions.common.services.test"])
-@PropertySource("classpath:test.properties")
+//@PropertySource("classpath:test.properties")
 class ZeusBuildDataSpecConfig {
 	def factory = new DetachedMockFactory()
 	

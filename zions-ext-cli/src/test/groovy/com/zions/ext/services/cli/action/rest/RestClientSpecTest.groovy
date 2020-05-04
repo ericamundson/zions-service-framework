@@ -78,7 +78,7 @@ public class RestClientSpecTest extends Specification {
 	@Value('${test.xml.response.file}')
 	String xmlResponseFileName
 
-	@Test
+	
 	def 'validate ApplicationArguments success flow.'() {
 		given: 'Stub with Application Arguments'
 		String[] args = loadArgs('get','json', jsonResponseFileName)
@@ -91,7 +91,7 @@ public class RestClientSpecTest extends Specification {
 		result == true
 	}
 
-	@Test
+	
 	def 'validate ApplicationArguments exception flow.'() {
 		given: 'Stub with Application Arguments'
 		String[] args = ['--clm.url=http://localhost:8080']
@@ -104,7 +104,7 @@ public class RestClientSpecTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'execute ApplicationArguments success flow for json.' () {
 		given: 'rest calls'
 		String json = this.getClass().getResource('/testdata/jsonResponse.json').text
@@ -134,7 +134,7 @@ public class RestClientSpecTest extends Specification {
 		resultDefault == null
 	}
 	
-	@Test
+	
 	def 'execute ApplicationArguments success flow for xml.' () {
 		given: 'stub of rest calls'
 		def out = '<a1>adf</a1>'

@@ -56,7 +56,7 @@ class BuildManagementServiceSpecTest extends Specification {
 	@Autowired
 	private BuildManagementService underTest
 	
-	@Test
+	
 	def 'getResource success flow' () {
 	
 		when: 'Test getting resource'
@@ -66,7 +66,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.id}" == "83"
 	}
 	
-	@Test
+	
 	def 'getTemplate success flow' () {
 		given: 'Stub rest call for get build templates'
 		String json = this.getClass().getResource('/testdata/buildtemplates.json').text
@@ -83,7 +83,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'writeBuildDefinition success flow' () {
 		given: 'Stub rest call'
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
@@ -100,7 +100,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.count}" == "1"
 	}
 	
-	@Test
+	
 	def 'getQueue success flow' () {
 		given: 'Stub rest call to get build queues'
 		String json = this.getClass().getResource('/testdata/buildqueues.json').text
@@ -117,7 +117,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		result == null
 	}
 	
-	@Test
+	
 	def 'getRetentionSettings success flow' () {
 		given: 'Sutb call for getting build settings'
 		String json = this.getClass().getResource('/testdata/buildsettings.json').text
@@ -132,7 +132,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.daysToKeepDeletedBuildsBeforeDestroy}" =="30"
 	}
 	
-	/*@Test
+	/*
 	def 'getBuild success flow' () {
 		given:
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
@@ -151,7 +151,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.count}" =="1"
 	}*/
 	
-	@Test
+	
 	def 'createBuildFolder success flow' () {
 		given: 'stub rest call for build folders'
 		String json = this.getClass().getResource('/testdata/buildfolders.json').text
@@ -171,7 +171,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.count}" =="1"
 	}
 	
-	@Test
+	
 	def 'getBuild success flow' () {
 		given: 'stub build def rest call'
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
@@ -195,7 +195,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.id}" =="35"
 	}
 	
-	@Test
+	
 	def 'getDRBuild success flow' () {
 		given: 'stub get build defs rest call'
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
@@ -214,7 +214,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.count}" =="1"
 	}
 	
-	@Test
+	
 	def 'getBuild success flow with 4 parms' () {
 		given: 'stub rest call for build defs'
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
@@ -233,7 +233,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.count}" =="1"
 	}
 	
-	@Test
+	
 	def 'createBuildDefinition success flow' () {
 		given: 'stub get build config call'
 		String json = this.getClass().getResource('/testdata/buildConfigurations.json').text
@@ -261,7 +261,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		result == null
 	}
 	
-	@Test
+	
 	def 'createDRBuildDefinition success flow' () {
 		given: 'stub rest call for getting build configurations'
 		String json = this.getClass().getResource('/testdata/buildConfigurations.json').text
@@ -287,7 +287,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		result == null
 	}
 	
-	@Test
+	
 	def 'createBuild success flow' () {
 		given: 'stub rest cal for build configs'
 		String json = this.getClass().getResource('/testdata/buildConfigurations.json').text
@@ -313,7 +313,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		result == null
 	}
 	
-	@Test
+	
 	def 'branchPolicy success flow' () {
 		given: 'stub rest call'
 		String json = this.getClass().getResource('/testdata/buildConfigurations.json').text
@@ -334,7 +334,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.count}" == "0"
 	}
 	
-	@Test 
+	 
 	def 'getBuildTemplate success flow' () {
 		given: 'data for template call'
 		def items = "build-template-gradle = gradle"//new JsonSlurper().parseText(this.getClass().getResource('/testdata/items.json').text)
@@ -356,7 +356,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		result == null
 	}
 	
-	@Test
+	
 	def 'reviseReleaseLabels success flow' () {
 		given: 'mock codeManagementService'
 		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repos.json').text)
@@ -372,7 +372,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		result != null
 	}
 	
-	@Test
+	
 	def 'ensureDRBuilds success flow' () {
 		given: 'stub of rest call for build defs'
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
@@ -391,7 +391,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.folderName}" == "DigitalBanking"
 	}
 	
-	@Test
+	
 	def 'ensureDRBuilds success with build count zero flow' () {
 		given: 'stub rest calls for build defs'
 		String json = this.getClass().getResource('/testdata/builddefinitionscountzero.json').text
@@ -410,7 +410,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.folderName}" == "DigitalBanking"
 	}
 	
-	@Test
+	
 	def 'ensureBuildsForBranch success flow' () {
 		given: 'stub for rest call to get build defs'
 		String json = this.getClass().getResource('/testdata/builddefinitions.json').text
@@ -429,7 +429,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.folderName}" == ""
 	}
 	
-	@Test
+	
 	def 'ensureBuildsForBranch success with build count zero flow' () {
 		given: 'stub rest call for build definitions with zero count'
 		String json = this.getClass().getResource('/testdata/builddefinitionscountzero.json').text
@@ -448,7 +448,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"${result.folderName}" == ""
 	}
 	
-	@Test
+	
 	def 'ensureBuilds success flow' () {
 		given: 'stub projectManagementService.getProject'
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
@@ -480,7 +480,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		result.size() == 4
 	}
 	
-	@Test
+	
 	def 'detectBuildType gradle success flow' () {
 		given: 'stub code management service calls'
 		def items = new JsonSlurper().parseText(this.getClass().getResource('/testdata/items.json').text)
@@ -513,7 +513,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		"ANT" == resultAnt.toString()
 	}
 	
-	@Test
+	
 	def 'ensureBuild successflow' () {
 		given: 'stub get build defs'
 		String json = this.getClass().getResource('/testdata/builddefinitionscountzero.json').text

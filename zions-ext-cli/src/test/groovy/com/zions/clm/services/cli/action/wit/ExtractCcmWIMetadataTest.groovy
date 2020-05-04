@@ -28,7 +28,7 @@ public class ExtractCcmWIMetadataTest extends Specification {
 	@Autowired
 	CcmWIMetadataManagementService ccmWIMetadataManagementService
 	
-	@Test
+	
 	def 'validate method success flow.'() {
 		
 		given: 'valid Application Arguments'
@@ -42,7 +42,7 @@ public class ExtractCcmWIMetadataTest extends Specification {
 		result == true
 	}
 	
-	@Test
+	
 	def 'validate method exception flow.'() {
 		
 		given:'valid Application Arguments'
@@ -56,7 +56,7 @@ public class ExtractCcmWIMetadataTest extends Specification {
 		thrown Exception
 	}
 	
-	@Test
+	
 	def 'execute method success flow.' () {
 		
 		given: 'valid Application Arguments'

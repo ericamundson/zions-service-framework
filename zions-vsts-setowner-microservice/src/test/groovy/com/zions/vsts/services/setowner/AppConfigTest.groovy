@@ -1,4 +1,4 @@
-package com.zions.vsts.services;
+package com.zions.vsts.services.setowner;
 
 import static org.junit.Assert.*
 

@@ -1,4 +1,4 @@
-package com.zions.vsts.services
+package com.zions.vsts.services.setowner
 
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -70,6 +70,10 @@ public class AppConfig  {
 	@Autowired
 	@Value('${cache.location:cache}')
 	String cacheLocation
+
+	@Autowired
+	@Value('${tfs.types:Task}')
+	String wiTypes
 
 }
 

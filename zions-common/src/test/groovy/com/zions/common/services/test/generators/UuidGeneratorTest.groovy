@@ -18,7 +18,6 @@ public class UuidGeneratorTest extends Specification {
 	@Autowired
 	UuidGenerator underTest
 
-	@Test
 	def 'gen test'() {
 
 		when: 'call gen'

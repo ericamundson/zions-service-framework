@@ -18,7 +18,6 @@ public class StringGeneratorTest extends Specification {
 	@Autowired
 	StringGenerator underTest
 
-	@Test
 	def 'gen test'() {
 
 		when: 'call gen'
