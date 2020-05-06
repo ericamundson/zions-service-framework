@@ -26,7 +26,7 @@ class SharedAssetService {
 	}
 	
 	def getAsset(def name)	{
-		return colorMap
+		return colorMap.value
 	}
 	
 	

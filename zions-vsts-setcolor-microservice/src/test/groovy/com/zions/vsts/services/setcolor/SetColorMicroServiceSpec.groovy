@@ -161,7 +161,7 @@ class SetColorMicroServiceSpec extends Specification {
 	
 	def loadColormap() {
 		def resource = new JsonSlurper().parseText(this.getClass().getResource('/testdata/colormap.json').text)
-		return resource
+		return resource.value
 	}
 }
 
