@@ -50,22 +50,8 @@ public class AppConfig  {
 	}
 
 	@Autowired
-	@Value('${websocketDisableProxy:false}')
-	String disableProxy
-
-
-	@Autowired
-	@Value('${cache.location:cache}')
-	String cacheLocation
-
-	@Autowired
-	@Value('${tfs.types:Task}')
-	String wiTypes
-
-	@Autowired
 	@Value('${tfs.colorMapUID:}')
 	String colorMapUID
-
 }
 
 
