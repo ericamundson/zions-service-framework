@@ -46,6 +46,9 @@ class SharedAssetServiceSpec extends Specification {
 
 		then: "SharedAssetService has one asset cached"
 		underTest.assetMap.size() == 1
+		
+		and: "Asset matches expected colormap"
+		underTest.assetMap[colorMapUID] == adoMap.value
 	}
 
 }
