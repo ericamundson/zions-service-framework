@@ -62,6 +62,10 @@ public class AppConfig  {
 	@Value('${tfs.types:Task}')
 	String wiTypes
 
+	@Autowired
+	@Value('${tfs.colorMapUID:}')
+	String colorMapUID
+
 }
 
 

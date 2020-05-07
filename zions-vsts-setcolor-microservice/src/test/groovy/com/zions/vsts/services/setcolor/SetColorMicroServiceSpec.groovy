@@ -39,7 +39,7 @@ class SetColorMicroServiceSpec extends Specification {
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataWrongType.json').text)
 
 		and: "stub sharedAssetService.getAsset()"
-		sharedAssetService.getAsset(_) >> loadColormap()
+		sharedAssetService.getAsset(_,_) >> loadColormap()
 		
 		when: "ADO sends notification"
 		def resp = underTest.processADOData(adoMap)
@@ -53,7 +53,7 @@ class SetColorMicroServiceSpec extends Specification {
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoRelevantChanges.json').text)
 
 		and: "stub sharedAssetService.getAsset()"
-		sharedAssetService.getAsset(_) >> loadColormap()
+		sharedAssetService.getAsset(_,_) >> loadColormap()
 		
 		when: "ADO sends notification"
 		def resp = underTest.processADOData(adoMap)
@@ -74,7 +74,7 @@ class SetColorMicroServiceSpec extends Specification {
 		}
 
 		and: "stub sharedAssetService.getAsset()"
-		sharedAssetService.getAsset(_) >> loadColormap()
+		sharedAssetService.getAsset(_,_) >> loadColormap()
 		
 		when: "ADO sends notification with set Priority and Severity"
 		adoMap.resource.revision.fields.'Microsoft.VSTS.Common.Priority' = Priority
@@ -116,7 +116,7 @@ class SetColorMicroServiceSpec extends Specification {
 		}
 
 		and: "stub sharedAssetService.getAsset()"
-		sharedAssetService.getAsset(_) >> loadColormap()
+		sharedAssetService.getAsset(_,_) >> loadColormap()
 		
 		when: "ADO sends notification"
 		def resp = underTest.processADOData(adoMap)
@@ -130,7 +130,7 @@ class SetColorMicroServiceSpec extends Specification {
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataCorrectColor.json').text)
 		
 		and: "stub sharedAssetService.getAsset()"
-		sharedAssetService.getAsset(_) >> loadColormap()
+		sharedAssetService.getAsset(_,_) >> loadColormap()
 		
 		when: "ADO sends notification"
 		def resp = underTest.processADOData(adoMap)
@@ -150,7 +150,7 @@ class SetColorMicroServiceSpec extends Specification {
 		}
 
 		and: "stub sharedAssetService.getAsset()"
-		sharedAssetService.getAsset(_) >> loadColormap()
+		sharedAssetService.getAsset(_,_) >> loadColormap()
 		
 		when: "ADO sends notification"
 		def resp = underTest.processADOData(adoMap)

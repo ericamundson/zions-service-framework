@@ -13,9 +13,11 @@ import groovy.json.JsonSlurper
 
 /**
  * Validates and, if necessary, updates the Color field on a Bug when any of the following field values have changed:
- * - Priority
- * - Severity
- * - Color
+ * <ul>
+ * <li>Priority</li>
+ * <li>Severity</li>
+ * <li>Color</li>
+ * </ul>
  * 
  * @author z097331
  *
@@ -23,7 +25,6 @@ import groovy.json.JsonSlurper
 @Component
 @Slf4j
 class SetColorMicroService extends AbstractWebSocketMicroService {
-	def colorMap
 	@Autowired
 	WorkManagementService workManagementService
 
@@ -33,7 +34,10 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
 	@Value('${tfs.collection:}')
 	String collection	
 
-    @Value('${websocket.topic}')
+	@Value('${tfs.colorMapUID:}')
+	String colorMapUID	
+
+	@Value('${websocket.topic}')
     private String eventTopic
 
 	@Autowired
@@ -45,9 +49,6 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
 	public SetColorMicroService() {
 		// Constructor for unit testing
 	}
-	void loadColorMap() {
-		this.colorMap = sharedAssetService.getAsset('colorMap')
-	}
 	/**
 	 * Perform assignment operation
 	 * 
@@ -56,7 +57,6 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
 	@Override
 	public Object processADOData(Object adoData) {
 		log.info("Entering SetColorMicroService:: processADOData")
-		if (!colorMap) loadColorMap()
 //		Uncomment code below to capture adoData payload for test
 //		String json = new JsonBuilder(adoData).toPrettyString()
 //		println(json)
@@ -97,6 +97,7 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
 		}
 	}
 	private def lookupColor(def priority, def severity) {
+		def colorMap = sharedAssetService.getAsset(collection, colorMapUID)
 		def colorElement = colorMap.find{it.Priority==priority && it.Severity==severity}
 		return "${colorElement.Color}"
 	}
@@ -116,7 +117,11 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
 
 	@Override
 	public String topic() {
-		return this.eventTopic;
+		return null
+	}
+	@Override
+	public String[] topics() {
+		return ['workitem.updated','workitem.created']
 	}
 
 }
