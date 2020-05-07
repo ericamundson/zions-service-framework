@@ -669,6 +669,7 @@ class WorkManagementService {
 		//def children = getListedWorkitems(collection, project, childIds)
 		return parent
 	}
+	
 
 	def getCategories(collection, project) {
 		if (categoriesMap.size() == 0) {

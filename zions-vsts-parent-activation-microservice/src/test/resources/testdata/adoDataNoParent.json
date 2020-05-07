@@ -1,0 +1,146 @@
+{
+    "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
+    "notificationId": 312,
+    "id": "93c32896-d60b-4470-bb5e-c483b7c126df",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": {
+        "text": "Task #947699 (astros unit test no parent task) transitioned to Closed by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947699)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=947699\">Task #947699</a> (astros unit test no parent task) transitioned to Closed by Michael Angelastro",
+        "markdown": "[Task #947699](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947699) (astros unit test no parent task) transitioned to Closed by Michael Angelastro"
+    },
+    "detailedMessage": {
+        "text": "Task #947699 (astros unit test no parent task) transitioned to Closed by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947699)\r\n\r\n- New State: Closed\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=947699\">Task #947699</a> (astros unit test no parent task) transitioned to Closed by Michael Angelastro<ul>\r\n<li>New State: Closed</li></ul>",
+        "markdown": "[Task #947699](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947699) (astros unit test no parent task) transitioned to Closed by Michael Angelastro\r\n\r\n* New State: Closed\r\n"
+    },
+    "resource": {
+        "id": 15,
+        "workItemId": 947699,
+        "rev": 15,
+        "revisedBy": {
+            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
+            "name": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+            "displayName": "Michael Angelastro",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                }
+            },
+            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
+            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+        },
+        "revisedDate": "9999-01-01T00:00:00Z",
+        "fields": {
+            "System.Rev": {
+                "oldValue": 14,
+                "newValue": 15
+            },
+            "System.AuthorizedDate": {
+                "oldValue": "2020-04-30T13:40:55.717Z",
+                "newValue": "2020-04-30T14:06:00.96Z"
+            },
+            "System.RevisedDate": {
+                "oldValue": "2020-04-30T14:06:00.96Z",
+                "newValue": "9999-01-01T00:00:00Z"
+            },
+            "System.State": {
+                "oldValue": "Active",
+                "newValue": "Closed"
+            },
+            "System.Reason": {
+                "oldValue": "Reactivated",
+                "newValue": "Completed"
+            },
+            "System.ChangedDate": {
+                "oldValue": "2020-04-30T13:40:55.717Z",
+                "newValue": "2020-04-30T14:06:00.96Z"
+            },
+            "System.Watermark": {
+                "oldValue": 327405,
+                "newValue": 327409
+            },
+            "Microsoft.VSTS.Common.StateChangeDate": {
+                "oldValue": "2020-04-30T13:40:55.717Z",
+                "newValue": "2020-04-30T14:06:00.96Z"
+            },
+            "Microsoft.VSTS.Common.ClosedDate": {
+                "newValue": "2020-04-30T14:06:00.96Z"
+            },
+            "Microsoft.VSTS.Common.ClosedBy": {
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            }
+        },
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947699/updates/15"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947699/updates"
+            },
+            "parent": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947699"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947699"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947699/updates/15",
+        "revision": {
+            "id": 947699,
+            "rev": 15,
+            "fields": {
+                "System.AreaPath": "ALMOpsTest",
+                "System.TeamProject": "ALMOpsTest",
+                "System.IterationPath": "ALMOpsTest\\Iteration 1",
+                "System.WorkItemType": "Task",
+                "System.State": "Closed",
+                "System.Reason": "Completed",
+                "System.AssignedTo": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CreatedDate": "2020-04-28T17:49:43.02Z",
+                "System.CreatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.ChangedDate": "2020-04-30T14:06:00.96Z",
+                "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CommentCount": 0,
+                "System.Title": "astros unit test no parent task",
+                "Microsoft.VSTS.Common.StateChangeDate": "2020-04-30T14:06:00.96Z",
+                "Microsoft.VSTS.Common.ActivatedDate": "2020-04-30T13:40:55.717Z",
+                "Microsoft.VSTS.Common.ActivatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "Microsoft.VSTS.Common.ClosedDate": "2020-04-30T14:06:00.96Z",
+                "Microsoft.VSTS.Common.ClosedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "Microsoft.VSTS.Common.Priority": 2,
+                "System.Description": "<div>astros unit test no parent task</div>"
+            },
+            "_links": {
+                "self": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947699/revisions/15"
+                },
+                "workItemRevisions": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947699/revisions"
+                },
+                "parent": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947699"
+                }
+            },
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947699/revisions/15"
+        }
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1bec1897-29a0-44d0-80a8-670c5ae5ef4a",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "account": {
+            "id": "6e6d6b08-2e41-4c55-a624-0d1ec79969dd",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "project": {
+            "id": "030d62a4-ce8b-405e-a331-8678df1a6efe",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        }
+    },
+    "createdDate": "2020-04-30T14:06:08.824053Z"
+}

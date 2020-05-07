@@ -18,7 +18,7 @@ class NameHandler extends TlBaseAttributeHandler {
 		if (value.length() > SIZE) {
 			outVal = value.substring(0, SIZE-1)
 		}
-		outVal = outVal.replaceAll(/[\u2018\u2019​]/, "'")
+		
 		return outVal;
 	}
 
