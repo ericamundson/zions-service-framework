@@ -61,19 +61,20 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
 //		String json = new JsonBuilder(adoData).toPrettyString()
 //		println(json)
 		def outData = adoData
+		def eventType = adoData.eventType
 		def wiResource = adoData.resource
-		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
+		String wiType = getFieldValue('System.WorkItemType', eventType, wiResource)
 		if (wiType != 'Bug') return logResult('Not a Bug')
 		boolean needColorUpdate = wiResource.fields.'Microsoft.VSTS.Common.Priority' != null ||
 								wiResource.fields.'Microsoft.VSTS.Common.Severity' != null ||
 								wiResource.fields.'Custom.Color' != null
 		if (!needColorUpdate) return logResult('No change to Severity, Priority or Color')
-		def priority = wiResource.revision.fields.'Microsoft.VSTS.Common.Priority'
-		def severity = "${wiResource.revision.fields.'Microsoft.VSTS.Common.Severity'}"
-		def color = "${wiResource.revision.fields.'Custom.Color'}"
-		String project = "${wiResource.revision.fields.'System.TeamProject'}"
-		String id = "${wiResource.revision.id}"
-		String rev = "${wiResource.revision.rev}"
+		Integer priority = getFieldValue('Microsoft.VSTS.Common.Priority', eventType, wiResource)
+		String severity = getFieldValue('Microsoft.VSTS.Common.Severity', eventType, wiResource)
+		String color = getFieldValue('Custom.Color', eventType, wiResource)
+		String project = getFieldValue('System.TeamProject', eventType, wiResource)
+		String id = getRootFieldValue('id', eventType, wiResource)
+		String rev = getRootFieldValue('rev', eventType, wiResource)
 		if (priority != null && severity != 'null') {
 			// Get associated color
 			String newColor = lookupColor(priority, severity)
@@ -96,10 +97,33 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
 			return logResult('Color set to unassigned')
 		}
 	}
-	private def lookupColor(def priority, def severity) {
+	private def getFieldValue(def field, def eventType, def wiResource) {
+		def value
+		if (eventType == 'workitem.created') {
+			value = wiResource.fields[field]
+		} else {
+			value = wiResource.revision.fields[field]
+		}
+		if (field == 'Microsoft.VSTS.Common.Priority') {
+			if (value == null) return null
+			return "$value".toInteger()
+		} else {
+			return "$value"
+		}
+	}
+	private def getRootFieldValue(def field, def eventType, def wiResource) {
+		def value
+		if (eventType == 'workitem.created') {
+			value = wiResource[field]
+		} else {
+			value = wiResource.revision[field]
+		}
+		return "$value"
+	}
+	private def lookupColor(Integer priority, String severity) {
 		def colorMap = sharedAssetService.getAsset(collection, colorMapUID)
 		def colorElement = colorMap.find{it.Priority==priority && it.Severity==severity}
-		return "${colorElement.Color}"
+		return colorElement.Color
 	}
 	private def updateColor(def project, def id, String rev, String color) {
 		def data = []

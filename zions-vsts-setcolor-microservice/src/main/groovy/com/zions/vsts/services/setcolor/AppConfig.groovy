@@ -36,7 +36,7 @@ public class AppConfig  {
 	
 	@Bean
 	ICacheManagementService cacheManagementService() {
-		return new CacheManagementService(cacheLocation)
+		return new CacheManagementService('na')
 	}
 	
 	@Bean

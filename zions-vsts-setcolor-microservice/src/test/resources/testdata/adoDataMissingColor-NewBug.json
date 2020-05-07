@@ -1,0 +1,84 @@
+{
+    "subscriptionId": "5a64a1f2-9602-49ee-945c-a61f8c00607f",
+    "notificationId": 11,
+    "id": "5140c27f-2b60-407a-b4af-44134cf08e41",
+    "eventType": "workitem.created",
+    "publisherId": "tfs",
+    "message": {
+        "text": "Bug #947757 (Test for New Bug) created by Robert Huet\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947757)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=947757\">Bug #947757</a> (Test for New Bug) created by Robert Huet",
+        "markdown": "[Bug #947757](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947757) (Test for New Bug) created by Robert Huet"
+    },
+    "detailedMessage": {
+        "text": "Bug #947757 (Test for New Bug) created by Robert Huet\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947757)\r\n\r\n- Area: ALMOpsTest\\DevTeam\r\n- Iteration: ALMOpsTest\r\n- State: New\r\n- Severity: 4 - Low\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=947757\">Bug #947757</a> (Test for New Bug) created by Robert Huet<ul>\r\n<li>Area: ALMOpsTest\\DevTeam</li>\r\n<li>Iteration: ALMOpsTest</li>\r\n<li>State: New</li>\r\n<li>Severity: 4 - Low</li></ul>",
+        "markdown": "[Bug #947757](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947757) (Test for New Bug) created by Robert Huet\r\n\r\n* Area: ALMOpsTest\\DevTeam\r\n* Iteration: ALMOpsTest\r\n* State: New\r\n* Severity: 4 - Low\r\n"
+    },
+    "resource": {
+        "id": 947757,
+        "rev": 1,
+        "fields": {
+            "System.AreaPath": "ALMOpsTest\\DevTeam",
+            "System.TeamProject": "ALMOpsTest",
+            "System.IterationPath": "ALMOpsTest",
+            "System.WorkItemType": "Bug",
+            "System.State": "New",
+            "System.Reason": "New",
+            "System.CreatedDate": "2020-05-07T18:22:30.53Z",
+            "System.CreatedBy": "Robert Huet <robert.huet@zionsbancorp.com>",
+            "System.ChangedDate": "2020-05-07T18:22:30.53Z",
+            "System.ChangedBy": "Robert Huet <robert.huet@zionsbancorp.com>",
+            "System.CommentCount": 0,
+            "System.Title": "Test for New Bug",
+            "System.BoardColumn": "New",
+            "System.BoardColumnDone": false,
+            "Microsoft.VSTS.Common.StateChangeDate": "2020-05-07T18:22:30.53Z",
+            "Microsoft.VSTS.Common.Priority": 1,
+            "Microsoft.VSTS.Common.Severity": "4 - Low",
+            "Microsoft.VSTS.Common.ValueArea": "Business",
+            "Custom.Classification": "Bug",
+            "WEF_BFC19308C2FB40FB8B8096ABC237674D_Kanban.Column": "New",
+            "WEF_BFC19308C2FB40FB8B8096ABC237674D_Kanban.Column.Done": false
+        },
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947757"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947757/updates"
+            },
+            "workItemRevisions": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947757/revisions"
+            },
+            "workItemComments": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947757/comments"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_workitems/edit/947757"
+            },
+            "workItemType": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItemTypes/Bug"
+            },
+            "fields": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/fields"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947757"
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1bec1897-29a0-44d0-80a8-670c5ae5ef4a",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "account": {
+            "id": "6e6d6b08-2e41-4c55-a624-0d1ec79969dd",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "project": {
+            "id": "030d62a4-ce8b-405e-a331-8678df1a6efe",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        }
+    },
+    "createdDate": "2020-05-07T18:22:37.6229157Z"
+}

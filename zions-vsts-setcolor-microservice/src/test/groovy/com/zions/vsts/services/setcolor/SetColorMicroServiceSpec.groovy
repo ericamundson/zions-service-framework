@@ -104,7 +104,27 @@ class SetColorMicroServiceSpec extends Specification {
 		4 | "4 - Low" | "Green"
 
 	}
-	
+	def "Severity and Priority are set, but Color is unassigned on a new bug"() {
+		given: "A mock ADO event payload where Assigned To is already set"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataMissingColor-NewBug.json').text)
+		
+		and: "stub workManagementService.updateItem()"
+		workManagementService.updateWorkItem(_,_,_,_) >> { args ->
+			String data = "${args[3]}"
+			// Inject mapped color here to test full color map
+			assert(data.toString() == "[[op:test, path:/rev, value:1], [op:add, path:/fields/Custom.Color, value:Red]]")
+		}
+
+		and: "stub sharedAssetService.getAsset()"
+		sharedAssetService.getAsset(_,_) >> loadColormap()
+		
+		when: "ADO sends notification with set Priority and Severity"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "Color is updated to the expected color"
+		resp == 'Color updated'
+	}
+
 	def "Severity and Priority are set, and Color is wrong"() {
 		given: "A mock ADO event payload where work item has no parent"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataWrongColor.json').text)
