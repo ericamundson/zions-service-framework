@@ -30,8 +30,22 @@ class SharedAssetServiceSpec extends Specification {
 	@Autowired
 	SharedAssetService underTest
 
+	@Value('${tfs.collection}')
+	String collection
+
+	@Value('${tfs.colorMapUID:}')
+	String colorMapUID
+
 	def 'getAsset main flow'() {
-		true
+		given: "A stub REST Client"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/colormap.json').text)
+		genericRestClient.get(_) >> adoMap
+
+		when: "Get colormap asset from ADO Control data store"
+		underTest.getAsset(collection, colorMapUID)
+
+		then: "SharedAssetService has one asset cached"
+		underTest.assetMap.size() == 1
 	}
 
 }
@@ -42,23 +56,22 @@ class SharedAssetServiceSpec extends Specification {
 class SharedAssetServiceSpecConfig {
 	def mockFactory = new DetachedMockFactory()
 	@Autowired
-	@Value('${cache.location}')
-	String cacheLocation
+	@Value('${tfs.collection}')
+	String collection
+
+	@Autowired
+	@Value('${tfs.colorMapUID:}')
+	String colorMapUID
 
 	@Bean
 	IGenericRestClient genericRestClient() {
-		return mockFactory.Mock(GenericRestClient, name: 'genericRestClient')
+		return mockFactory.Stub(GenericRestClient, name: 'genericRestClient')
 	}
 	
 	@Bean
 	SharedAssetService underTest() {
 		SharedAssetService out = new SharedAssetService()
 		return out
-	}
-	
-	@Bean
-	ICacheManagementService cacheManagementService() {
-		return mockFactory.Mock(CacheManagementService)
 	}
 
 
