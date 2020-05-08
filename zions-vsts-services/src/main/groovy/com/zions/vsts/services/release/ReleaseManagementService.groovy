@@ -350,6 +350,184 @@ public class ReleaseManagementService {
 		}
 	}
 
+	public def getReleases(def collection, def project) {
+		log.debug("ReleaseManagementService::getReleases for project = ${project.name}")
+		//def query = ['name':"*${name}"]
+		def releaseUri = getReleaseApiUrl(collection, project)
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${releaseUri}/definitions",
+			headers: [accept: 'application/json;api-version=5.1;excludeUrls=true'],
+		)
+		if (result == null || result.count == 0) {
+			log.debug("ReleaseManagementService::getReleases -- No release defs found for project ${project.name}.")
+		}
+		return result
+	}
+
+	public def updateReleases(def collection, def project, boolean deleteUnwantedTasks) {
+		def releaseDefs = getReleases(collection, project)
+		releaseDefs.value.each { releaseDef ->
+			if (!releaseDef.name.startsWith("d3") && !releaseDef.name.startsWith("zbc")) {
+				def result = updateRelease(collection, project, releaseDef.id, deleteUnwantedTasks)
+				if (result == null) {
+					log.debug("ReleaseManagementService::updateRelease -- Failed to update release def ${releaseDef.name}.")
+				}
+			}
+		}
+		return
+	}
+
+	public def updateRelease(def collection, def project, def releaseId, boolean deleteUnwantedTasks) {
+		log.debug("ReleaseManagementService::updateRelease -- Evaluating release def ${releaseId} for project ${project.name}")
+		def query = ['api-version':'5.1']
+		def releaseUri = getReleaseApiUrl(collection, project)
+		def releaseDef = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${releaseUri}/definitions/${releaseId}",
+			query: query,
+		)
+		// don't want call update if no changes were made
+		def changed = false
+		releaseDef.environments.each { environment ->
+			// skip non-deployment phases
+			if (environment.name != "Start Isolation" && environment.name != "Finalize Release") {
+				environment.deployPhases.each { phase ->
+					boolean xldtaskfound = false
+					def tasks = phase.workflowTasks
+					// set new values ,etc.
+					for (int idx = 0; idx < tasks.size(); idx++) {
+					//environment.deployPhases.tasks.each { step ->
+						def task = tasks[idx]
+						// remove UDeploy: Ant deploy-application task
+						if (task.taskId == "3a6a2d63-f2b2-4e93-bcf9-0cbe22f5dc26" && task.inputs.targets == "deploy-application") {
+							if (deleteUnwantedTasks) {
+								log.debug("Removing uDeploy Ant task for environment ${environment.name} ...")
+								tasks.remove(idx)
+								idx--
+								changed = true
+							} else {
+								if (task.enabled == true) {
+									log.debug("Disabling uDeploy Ant task for environment ${environment.name} ...")
+									task.enabled = false
+									changed = true
+								}
+							}
+						}
+						// remove UDeploy: Copy Files task for udclient_runAppProc.json file
+						if (task.taskId == "a8515ec8-7254-4ffd-912c-86772e2b5962" && task.inputs.targetFiles == "udclient_runAppProc.json") {
+							if (deleteUnwantedTasks) {
+								log.debug("Removing Copy Files task for udclient_runAppProc.json file for environment ${environment.name} ...")
+								tasks.remove(idx)
+								idx--
+								changed = true
+							} else {
+								if (task.enabled == true) {
+									log.debug("Disabling Copy Files task for udclient_runAppProc.json file for environment ${environment.name} ...")
+									task.enabled = false
+									changed = true
+								}
+							}
+						}
+						// Check for XL Deploy task
+						if (task.taskId == "589dce45-4881-4410-bcf0-1afbd0fc0f65") {
+							log.debug("Found XL Deploy task for environment ${environment.name} ...")
+							xldtaskfound = true
+							// remove if incorrectly added for Start Release Isolation phase
+							if (environment.name == "Start Release Isolation") {
+								log.debug("Removing XL Deploy task for environment ${environment.name} ...")
+								tasks.remove(idx)
+								idx--
+								changed = true
+							} else {
+								// Make sure task is enabled
+								if (task.enabled == false) {
+									log.debug("Enabling XL Deploy task ...")
+									task.enabled = true
+									changed = true
+								}
+								// Set the target environment ??
+								def target = task.inputs.targetEnvironment
+								if (target != "Environments/Digital Banking/${environment.name}") {
+									log.debug("Setting target environment for XL Deploy task to 'Environments/Digital Banking/${environment.name}'...")
+									task.inputs.targetEnvironment = "Environments/Digital Banking/${environment.name}"
+									changed = true
+								}
+							}
+						}
+						// disable or remove the uDeploy task group for the project
+						if (task.taskId == "3c199b71-a326-4735-8ddb-282122af20c4") {
+							if (deleteUnwantedTasks) {
+								log.debug("Removing uDeploy: create/upload version task group for environment ${environment.name} ...")
+								tasks.remove(idx)
+								idx--
+								changed = true
+							} else {
+								if (task.enabled == true) {
+									log.debug("Disabling uDeploy create/upload version task group for environment ${environment.name} ...")
+									task.enabled = false
+									changed = true
+								}
+							}
+						}
+					}
+					// Add XL Deploy task if not found
+					if (!xldtaskfound) {
+						// add the XL Deploy task
+						log.debug("Adding XL Deploy task for environment ${environment.name} ...")
+						//def connSvcId = "5014df84-64bf-45a3-9bf8-d9ccbbab5447"
+						//def connSvcId = "41cc9a0a-c264-41b7-bb1c-5832cfe55e1a"
+						def jsonSlurper = new JsonSlurper()
+						def xldtask = jsonSlurper.parseText '''
+							{ "environment": {},
+							  "taskId": "589dce45-4881-4410-bcf0-1afbd0fc0f65",
+							  "version": "7.*",
+							  "name": "XL Deploy - Import and Deploy",
+							  "refName": "",
+							  "enabled": true,
+							  "alwaysRun": false,
+							  "continueOnError": false,
+							  "timeoutInMinutes": 0,
+							  "definitionType": "task",
+							  "overrideInputs": {},
+							  "condition": "succeeded()",
+							  "inputs": {
+								"connectedServiceName": "41cc9a0a-c264-41b7-bb1c-5832cfe55e1a",
+								"darPackage": "**/*.dar",
+								"targetEnvironment": "",
+								"rollback": "false"}
+							}'''
+						xldtask.inputs.targetEnvironment = "Environments/Digital Banking/${environment.name}"
+						tasks.add(xldtask)
+						changed = true
+					}
+				}
+			}
+		}
+		// save changes
+		if (changed) {
+			return updateReleaseDefinition(collection, project, releaseDef)
+		} else {
+			return ""
+		}
+	}
+
+	def updateReleaseDefinition(def collection, def project, def relDef) {
+		def body = new JsonBuilder(relDef).toPrettyString()
+		log.debug("ReleaseManagementService::updateReleaseDefinition --> ${body}")
+		//System.out.println("updateReleaseDefinition --> ${body}")
+		
+		def releaseUri = getReleaseApiUrl(collection, project)
+		log.debug("ReleaseManagementService::updateReleaseDefinition -- URI = ${releaseUri}/definitions/${relDef.id}")
+		def result = genericRestClient.put(
+			requestContentType: ContentType.JSON,
+			uri: "${releaseUri}/definitions/${relDef.id}",
+			body: body,
+			headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true'],
+		)
+		return result
+	}
+	
 	def getReleaseApiUrl(def collection, def project) {
 		def baseUri = genericRestClient.getTfsUrl()
 		if ("${baseUri}".contains("visualstudio.com")) {
