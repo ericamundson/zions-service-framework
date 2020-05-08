@@ -379,14 +379,7 @@ public class BuildManagementService {
 				}
 			}
 		}
-		def body = new JsonBuilder(build).toPrettyString()
-		def result = genericRestClient.put(
-			requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_apis/build/definitions/${build.id}",
-			body: body,
-			headers: [Accept: 'application/json;api-version=4.1;excludeUrls=true'],
-			)
-
+		return updateBuildDefinition(collection, projectData, build)
 	}
 	public def ensureBuild(def collection, def project, def repo, BuildType buildType, def buildStage, def folder) {
 		def build = getBuild(collection, project, repo, buildStage)
@@ -808,6 +801,330 @@ public class BuildManagementService {
 				)
 		// What is this doing ?? query = ['api-version':'4.1', 'propertyFilters':'processParameters']
 		return result1
+	}
+
+	public def updateBuilds(def collection, def project, boolean deleteUnwantedTasks) {
+		def buildDefs = getBuilds(collection, project)
+		buildDefs.value.each { buildDef ->
+			// HACK ALERT! Should try to pass this in as a parameter
+			// only process release builds and skip d3, d3z and zbc builds
+			if (buildDef.name.endsWith("-release") && (!buildDef.name.startsWith("d3") && !buildDef.name.startsWith("zbc"))) {
+				def result = updateBuild(collection, project, buildDef.id, deleteUnwantedTasks)
+				if (result == null) {
+					log.debug("BuildManagementService::updateBuild -- Failed to update build def ${buildDef.name}.")
+				}
+			}
+		}
+		return
+	}
+
+	public def updateBuild(def collection, def project, def buildId, boolean deleteUnwantedTasks) {
+		log.debug("BuildManagementService::updateBuild -- Evaluating build def ${buildId} for project ${project.name}")
+		def query = ['api-version':'5.1']
+		def buildDef = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${buildId}",
+			query: query,
+		)
+		// don't want call update if no changes were made
+		def changed = false
+		def xldPublishTaskFound = false
+		def xldCreateDARTaskFound = false
+		def xldCDTaskGroupFound = false
+		def xldMFTaskGroupFound = false
+		def publishTaskIdx = -1
+		def phases = buildDef.process.phases
+		phases.each { phase ->
+			def steps = phase.steps
+			def versionVar = ""
+			for (int idx = 0; idx < steps.size(); idx++) {
+			//phase.steps.each { step ->
+				// set new values ,etc.
+				def step = steps[idx]
+				if (step.task.id == "218eff04-a485-4087-b005-e1f04527654d") {
+					versionVar = step.inputs.OutputVariable
+					if (versionVar != "build.buildnumber") {
+						log.debug("Setting OutputVariable for tagging task ...")
+						step.inputs.OutputVariable = "build.buildnumber"
+						changed = true
+					}
+				}
+				if (step.task.id == "ac4ee482-65da-4485-a532-7b085873e532" && step.inputs.goals == "versions:set") {
+					if (versionVar != "build.buildnumber") {
+						def options = step.inputs.options
+						log.debug("Maven versions:set options = '${options}'")
+						log.debug("Replacing '${versionVar}' with 'build.buildnumber' in options ...")
+						def optionsVar = options.replace("${versionVar}", "build.buildnumber")
+						//log.debug("Maven versions:set options now = '${optionsVar}'")
+						step.inputs.options = optionsVar
+						//step.inputs.options.replace("'${versionVar}'", 'build.buildnumber')
+						changed = true
+					}
+				}
+				// remove UDeploy: createVersion & addVersionFiles tasks
+				if (step.task.id == "d7b8f29f-640e-4e08-926b-de4e265b6742") {
+					if (deleteUnwantedTasks) {
+						log.debug("Removing ${step.displayName} task ...")
+						steps.remove(idx)
+						idx--
+						changed = true
+					} else {
+						if (versionVar != "build.buildnumber") {
+							def args = step.inputs.udClientCommandArgs
+							log.debug("Replacing '${versionVar}' with 'build.buildnumber' in udClientCommandArgs ...")
+							def newArgs = args.replace("${versionVar}", "build.buildnumber")
+							step.inputs.udClientCommandArgs = newArgs
+							changed = true
+						}
+						if (step.enabled == true) {
+							log.debug("Disabling ${step.displayName} task ...")
+							step.enabled = false
+							changed = true
+						}
+					}
+				}
+				// remove UDeploy: Copy Files task for udclient_runAppProc.json file
+				if (step.task.id == "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c" && step.inputs.Contents == "udclient_runAppProc.json") {
+					if (deleteUnwantedTasks) {
+						log.debug("Removing Copy Files task for udclient_runAppProc.json file ...")
+						steps.remove(idx)
+						idx--
+						changed = true
+					} else {
+						if (step.enabled == true) {
+							log.debug("Disabling Copy Files task for udclient_runAppProc.json file ...")
+							step.enabled = false
+							changed = true
+						}
+					}
+				}
+				// check for XLDeploy: checkout-deployit-manifest task group
+				//if (step.task.id == "d63f92e6-ffe7-4ab0-b034-70d75bb16903") {
+				if (step.task.id == "1473e5ab-d932-4681-b8b9-023f7de6e49c") {
+					xldMFTaskGroupFound = true
+				}
+				// Replace the currently used variable with 'build.buildnumber' for the Publish to XL Deploy task
+				if (step.task.id == "c36fc88a-b479-461f-8067-8c3254af356c") {
+					if (step.enabled == true && xldMFTaskGroupFound) {
+						xldPublishTaskFound = true
+						def vNum = step.inputs.versionNumber
+						if (vNum != "\$(build.buildnumber)") {
+							log.debug("Replacing versionNumber option with 'build.buildnumber' for Publish to XL Deploy task  ...")
+							step.inputs.versionNumber = "\$(build.buildnumber)"
+							changed = true
+						}
+					} else {
+						// Remove the Publish to XL Deploy task if disabled
+						log.debug("Removing the Publish to XL Deploy task because it is either disabled or the XLDeploy: checkout-deployit-manifest task group was not found.")
+						steps.remove(idx)
+						idx--
+						changed = true
+					}
+				}
+				// Remove the Create DAR package task and replace with the Create Dar Package task group
+				if (step.task.id == "6d391a67-a4c0-4c48-9472-cfe5319b45f6") {
+					if (xldMFTaskGroupFound) {
+						xldCreateDARTaskFound = true
+					} else {
+						log.debug("Removing ${step.displayName} task ...")
+						steps.remove(idx)
+						idx--
+						changed = true
+					}
+				}
+				// check for XLDeploy: Create Dar Package task group
+				if (step.task.id == "77dc638f-f104-4cc0-9ac9-ed0509f17c32") {
+					xldCDTaskGroupFound = true
+				}
+				// Capture index of Publish Artifact: drop task
+				if (step.task.id == "2ff763a7-ce83-4e1f-bc89-0ae63477cebe") {
+					publishTaskIdx = idx
+				}
+			}
+			// Add XLDeploy: Create Dar Package task group if not found
+			if (!xldCDTaskGroupFound && !(xldMFTaskGroupFound && (xldPublishTaskFound || xldCreateDARTaskFound))) {
+				log.debug("Adding XLDeploy: Create Dar Package task group for phase ${phase.name} ...")
+				def jsonSlurper = new JsonSlurper()
+				def xldtask = jsonSlurper.parseText '''
+					{ "environment": {},
+					  "enabled": true,
+					  "continueOnError": false,
+					  "alwaysRun": false,
+					  "displayName": "Task group: XLDeploy: Create Dar Package ",
+					  "timeoutInMinutes": 0,
+					  "condition": "succeeded()",
+					  "task": {
+						 "id": "77dc638f-f104-4cc0-9ac9-ed0509f17c32",
+						 "versionSpec": "1.*",
+						 "definitionType": "metaTask"
+					  },
+					  "inputs": {}
+					}'''
+				if (publishTaskIdx == -1) {
+					steps.add(xldtask)
+				} else {
+					steps.add(publishTaskIdx, xldtask)
+				}
+				
+				
+				
+				changed = true
+			}
+			if (phase.target.allowScriptsAuthAccessOption == false) {
+				log.debug("Setting allowScriptsAuthAccessOption to true ...")
+				phase.target.allowScriptsAuthAccessOption = true
+				changed = true
+			}
+		}
+		// save changes
+		if (changed) {
+			return updateBuildDefinition(collection, project, buildDef)
+		} else {
+			return ""
+		}
+			
+	}
+
+	public def updateTaggingTasks(def collection, def project, def newOutputVar) {
+		def buildDefs = getBuilds(collection, project)
+		buildDefs.value.each { buildDef ->
+			// HACK ALERT! Should try to pass this in as a parameter
+			// For Digital Banking -- only process release builds and skip d3, d3z and zbc builds
+			//if (buildDef.name.endsWith("-release") && (!buildDef.name.startsWith("d3") && !buildDef.name.startsWith("zbc"))) {
+			if (buildDef.name.endsWith("-release")) {
+				def result = updateTaggingTask(collection, project, buildDef.id, newOutputVar)
+				if (result == null) {
+					log.debug("BuildManagementService::updateBuild -- Failed to update build def ${buildDef.name}.")
+				}
+			}
+		}
+		return
+	}
+
+	public def updateTaggingTask(def collection, def project, def buildId, def outputVarName) {
+		def query = ['api-version':'5.1']
+		def buildDef = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${buildId}",
+			query: query,
+		)
+		// don't want call update if no changes were made
+		def changed = false
+		def taggingTaskFound = false
+		def xldMFTaskGroupFound = false
+		def xldPublishTaskFound = false
+		log.debug("BuildManagementService::updateTaggingTask -- Evaluating build def ${buildDef.name} for project ${project.name}")
+		def phases = buildDef.process.phases
+		phases.each { phase ->
+			def steps = phase.steps
+			def versionVar = ""
+			for (int idx = 0; idx < steps.size(); idx++) {
+			//phase.steps.each { step ->
+				def step = steps[idx]
+				// set new OutputVariable value for tagging task.
+				if (step.task.id == "218eff04-a485-4087-b005-e1f04527654d") {
+					taggingTaskFound = true
+					versionVar = step.inputs.OutputVariable
+					if (versionVar.toLowerCase() == "build.buildnumber") {
+						log.debug("Setting OutputVariable for tagging task to ${outputVarName} ...")
+						step.inputs.OutputVariable = "${outputVarName}"
+						changed = true
+					}
+				}
+				if (step.task.id == "ac4ee482-65da-4485-a532-7b085873e532" && step.inputs.goals == "versions:set") {
+					if (versionVar.toLowerCase() == "build.buildnumber") {
+						def options = step.inputs.options
+						log.debug("Maven versions:set options = '${options}'")
+						log.debug("Replacing '${versionVar}' with '${outputVarName}' in options ...")
+						// Need this to catch case differences in name used, ie. Build.BuildNumber, build.buildnumber
+						//def optionsVar = options.replace("Build.BuildNumber", "${outputVarName}")
+						def optionsVar = options.replace("${versionVar}", "${outputVarName}")
+						//log.debug("Maven versions:set options now = '${optionsVar}'")
+						step.inputs.options = optionsVar
+						changed = true
+					}
+				}
+				// replace UDeploy: createVersion & addVersionFiles tasks
+				/* Shouldn't need this as uDeploy deployments have been deprecated
+				if (step.task.id == "d7b8f29f-640e-4e08-926b-de4e265b6742") {
+					if (versionVar.toLowerCase() == "build.buildnumber") {
+						def args = step.inputs.udClientCommandArgs
+						log.debug("Replacing '${versionVar}' with '${outputVarName}' in udClientCommandArgs ...")
+						def newArgs = args.replace("${versionVar}", "${outputVarName}")
+						step.inputs.udClientCommandArgs = newArgs
+						changed = true
+					}
+				}*/
+				// check for XLDeploy: checkout-deployit-manifest task group
+				// *** This task group will have a different ID for every project
+				//if (step.task.id == "d63f92e6-ffe7-4ab0-b034-70d75bb16903") {
+				// This task ID is for Digital Banking project
+				//if (step.task.id == "1473e5ab-d932-4681-b8b9-023f7de6e49c") {
+				//	xldMFTaskGroupFound = true
+				//}
+				// Replace the currently used variable with 'build.buildnumber' for the Publish to XL Deploy task
+				if (step.task.id == "c36fc88a-b479-461f-8067-8c3254af356c") {
+					xldPublishTaskFound = true
+					//if (step.enabled == true && xldMFTaskGroupFound) {
+					//if (step.enabled == true) {
+					if (step.inputs.version == "true") {
+						String vNum = step.inputs.versionNumber
+						if (versionVar == "zions.buildnumber") {						
+							//if (vNum.toLowerCase() != "\$(${versionVar})") {
+							// check for blank instead
+							if (vNum.replaceAll("\\s","") == "") {
+								log.debug("Replacing versionNumber option with '${versionVar}' for Publish to XL Deploy task  ...")
+								//log.debug("Replacing versionNumber option with '${outputVarName}' for Publish to XL Deploy task  ...")
+								//step.inputs.versionNumber = "\$(${outputVarName})"
+								step.inputs.versionNumber = "\$(${versionVar})"
+								changed = true
+							}
+						}
+					/*} else {
+						// Remove the Publish to XL Deploy task if disabled
+						log.debug("Removing the Publish to XL Deploy task because it is either disabled or the XLDeploy: checkout-deployit-manifest task group was not found.")
+						steps.remove(idx)
+						idx--
+						changed = true
+					*/
+					}
+				}
+			}
+		}
+		// save changes
+		if (changed) {
+			return updateBuildDefinition(collection, project, buildDef)
+		} else {
+			return ""
+		}
+			
+	}
+
+	def updateBuildDefinition(def collection, def project, def bDef) {
+		def body = new JsonBuilder(bDef).toPrettyString()
+		log.debug("BuildManagementService::updateBuildDefinition --> ${body}")
+		
+		def result = genericRestClient.put(
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${bDef.id}",
+			body: body,
+			headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true'],
+		)
+		return result
+	}
+	
+	public def getBuilds(def collection, def project) {
+		log.debug("BuildManagementService::getBuilds for project = ${project.name}")
+		//def query = ['name':"*${name}"]
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
+			headers: [accept: 'application/json;api-version=5.1;excludeUrls=true'],
+		)
+		if (result == null || result.count == 0) {
+			log.debug("BuildManagementService::getBuilds -- No build defs found for project ${project.name}.")
+		}
+		return result
 	}
 
 	public def getBuildById(def collection, def project, def id) {
