@@ -56,24 +56,29 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.info("Entering SetColorMicroService:: processADOData")
 //		Uncomment code below to capture adoData payload for test
 //		String json = new JsonBuilder(adoData).toPrettyString()
 //		println(json)
 		def outData = adoData
 		def eventType = adoData.eventType
 		def wiResource = adoData.resource
+		String id = getRootFieldValue('id', eventType, wiResource)
+		log.info("Entering SetColorMicroService:: processADOData <$eventType> #$id")
 		String wiType = getFieldValue('System.WorkItemType', eventType, wiResource)
 		if (wiType != 'Bug') return logResult('Not a Bug')
-		boolean needColorUpdate = wiResource.fields.'Microsoft.VSTS.Common.Priority' != null ||
-								wiResource.fields.'Microsoft.VSTS.Common.Severity' != null ||
-								wiResource.fields.'Custom.Color' != null
+		boolean needColorUpdate
+		if (wiResource.fields) {
+			needColorUpdate = wiResource.fields.'Microsoft.VSTS.Common.Priority' != null ||
+							wiResource.fields.'Microsoft.VSTS.Common.Severity' != null ||
+							wiResource.fields.'Custom.Color' != null
+		} else {
+			needColorUpdate = false
+		}
 		if (!needColorUpdate) return logResult('No change to Severity, Priority or Color')
 		Integer priority = getFieldValue('Microsoft.VSTS.Common.Priority', eventType, wiResource)
 		String severity = getFieldValue('Microsoft.VSTS.Common.Severity', eventType, wiResource)
 		String color = getFieldValue('Custom.Color', eventType, wiResource)
 		String project = getFieldValue('System.TeamProject', eventType, wiResource)
-		String id = getRootFieldValue('id', eventType, wiResource)
 		String rev = getRootFieldValue('rev', eventType, wiResource)
 		if (priority != null && severity != 'null') {
 			// Get associated color
@@ -135,7 +140,7 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
 	}
 	
 	private def logResult(def msg) {
-		log.info(msg)
+		log.info("Result: $msg")
 		return msg
 	}
 
