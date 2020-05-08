@@ -1,4 +1,4 @@
-package com.zions.vsts.services.setowner
+package com.zions.vsts.services.setcolor
 
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,11 +15,13 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.mr.services.rest.MrGenericRestClient
+import com.zions.vsts.services.asset.SharedAssetService
 import com.zions.vsts.services.attachments.AttachmentManagementService
 import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
@@ -28,49 +30,28 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 /* Will set default configs for ContentApplication */
 
 @Configuration
-@ComponentScan(["com.zions.vsts.services","com.zions.common.services.logging"])
+@ComponentScan(["com.zions.vsts.services.work","com.zions.vsts.services.admin","com.zions.common.services.logging"])
 public class AppConfig  {
 	
 	
 	@Bean
-	JavaMailSender sender() {
-		return new JavaMailSenderImpl()
-	}
-
-	@Bean
 	ICacheManagementService cacheManagementService() {
-		return new CacheManagementService(cacheLocation)
+		return new CacheManagementService('na')
 	}
-
-	@Bean
-	CommandManagementService commandManagementService() {
-		return new CommandManagementService();
-	}
-
 	
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return new MultiUserGenericRestClient()
 	}
-
+	
 	@Bean
-	IGenericRestClient mrGenericRestClient() {
-		return new MrGenericRestClient('', '')
+	SharedAssetService sharedAssetService() {
+		return new SharedAssetService()
 	}
 
 	@Autowired
-	@Value('${websocketDisableProxy:false}')
-	String disableProxy
-
-
-	@Autowired
-	@Value('${cache.location:cache}')
-	String cacheLocation
-
-	@Autowired
-	@Value('${tfs.types:Task}')
-	String wiTypes
-
+	@Value('${tfs.colorMapUID:}')
+	String colorMapUID
 }
 
 
