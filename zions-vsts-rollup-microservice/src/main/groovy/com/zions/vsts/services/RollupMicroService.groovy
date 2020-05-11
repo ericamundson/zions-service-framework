@@ -1,7 +1,9 @@
 package com.zions.vsts.services
 
+import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
 import com.zions.vsts.services.work.calculations.RollupManagementService
-import com.zions.vsts.services.ws.client.AbstractWebSocketMicroService
+//import com.zions.vsts.services.ws.client.WebSocketMicroServiceTrait
+
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 @Slf4j
-class RollupMicroService extends AbstractWebSocketMicroService {
+class RollupMicroService implements MessageReceiverTrait {
 
 	@Autowired
 	RollupManagementService rollupManagementService
@@ -26,11 +28,14 @@ class RollupMicroService extends AbstractWebSocketMicroService {
 //		
 //	}
 	
-	@Autowired
-	public RollupMicroService(@Value('${websocket.url:}') websocketUrl, 
-		@Value('${websocket.user:#{null}}') websocketUser,
-		@Value('${websocket.password:#{null}}') websocketPassword) {
-		super(websocketUrl, websocketUser, websocketPassword)
+//	@Autowired
+//	public RollupMicroService(@Value('${websocket.url:}') websocketUrl, 
+//		@Value('${websocket.user:#{null}}') websocketUser,
+//		@Value('${websocket.password:#{null}}') websocketPassword) {
+//		init(websocketUrl, websocketUser, websocketPassword)
+//		
+//	}
+	public RollupMicroService() {
 		
 	}
 
@@ -39,8 +44,7 @@ class RollupMicroService extends AbstractWebSocketMicroService {
 	 * 
 	 * @see com.zions.vsts.services.ws.client.AbstractWebSocketMicroService#processADOData(java.lang.Object)
 	 */
-	@Override
-	public Object processADOData(Object adoData) {
+	public def processADOData(def adoData) {
 		log.info("Entering RollupMicroService:: processADOData")
 		def outData = adoData
 		def wiResource = adoData.resource
@@ -62,7 +66,6 @@ class RollupMicroService extends AbstractWebSocketMicroService {
 		return null;
 	}
 
-	@Override
 	public String topic() {
 		return 'workitem.updated';
 	}

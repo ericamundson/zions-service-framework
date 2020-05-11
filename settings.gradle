@@ -16,6 +16,7 @@ if ("${context}" == 'all') {
 	include ':zions-xld-services'
 	include ':zions-xlr-services'
 	include ':zions-vsts-gateway'
+	include ':zions-queuing-microservice'
 	include ':zions-content-microservice'
 	include ':zions-vsts-rollup-microservice'
 	include ':zions-vsts-parent-activation-microservice'
@@ -26,6 +27,7 @@ if ("${context}" == 'all') {
 	include ':zions-vsts-event-microservice'
 	include ':zions-xld-plugins'
 	include ':zions-pipeline-cli'
+	include ':zions-pipeline-services'
 }
 if ("${context}" == 'ALMOps') {
 	include ':zions-vsts-cli'
@@ -45,6 +47,7 @@ if ("${context}" == 'microservices')	{
 	include ':zions-xlr-services'
 	include ':zions-vsts-gateway'
 	include ':zions-content-microservice'
+	include ':zions-queuing-microservice'
 	include ':zions-vsts-rollup-microservice'
 	include ':zions-vsts-parent-activation-microservice'
 	include ':zions-vsts-setowner-microservice'
@@ -60,6 +63,7 @@ if ("${context}" == 'microservices')	{
 }
 if ("${context}" == 'pipeline')	{
 	include ':zions-pipeline-cli'
+	include ':zions-pipeline-services'
 	include ':zions-common'
 	include ':zions-common-data'
 	include ':zions-xld-services'

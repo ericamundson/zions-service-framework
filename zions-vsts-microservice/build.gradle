@@ -6,9 +6,10 @@ jar {
 }
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-websocket")
+    compile("org.springframework.boot:spring-boot-starter-amqp")
 	compile("org.springframework:spring-websocket")
 	compile("org.springframework:spring-messaging")
-
+    //compile("org.springframework.amqp:spring-rabbit-test:")
 	
 	compile project(':zions-vsts-services')
 	compile project(':zions-common')
