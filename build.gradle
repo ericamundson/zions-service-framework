@@ -168,6 +168,7 @@ allprojects {
 		compile 'org.springframework.boot:spring-boot-starter'
 		compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.1'
 		compile 'org.codehaus.groovy:groovy-dateutil:3.0.1'
+		compile 'org.codehaus.groovy:groovy-yaml:3.0.1'
 		compile 'org.codehaus.groovy:groovy-all:3.0.1'
 		compile 'org.apache.ivy:ivy:2.4.0'
 		compile 'bsf:bsf:2.4.0'
@@ -200,6 +201,9 @@ allprojects {
 		testRuntime('org.junit.jupiter:junit-jupiter-engine:5.6.2')
 	}
 	test { //String activeProfile =  System.properties['spring.profiles.active']
+		doFirst {
+			mkdir "build/spock"
+		}
 		systemProperty "spring.profiles.active", 'test'
 		useJUnitPlatform()
 	}

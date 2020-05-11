@@ -1,0 +1,22 @@
+bootJar {
+	enabled = true
+	mainClassName = 'com.zions.pipeline.services.cli.CliApplication'
+	archiveName = "zions-pipeline-services.jar"
+	//version =  "${version}"
+}
+
+configurations {
+	runtime.exclude module: 'zions-common-data'
+}
+
+dependencies {
+//	compile project(':zions-vsts-services')
+//	compile project(':zions-xld-services')
+//	compile project(':zions-xlr-services')
+	compile project(':zions-common')
+    compile 'org.apache.ant:ant:1.9.4'
+	compile 'org.jyaml:jyaml:1.3'
+	compile 'org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r'
+	
+}
+
