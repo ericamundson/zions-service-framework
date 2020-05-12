@@ -9,7 +9,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.setowner.SetOwnerApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--tfs.url=https://dev.azure.com&#13;&#10;--tfs.collection=eto-dev &#13;&#10;--tfs.user=z091182 &#13;&#10;--tfs.token=pzyybyd3zq5kzbdpkn4e656i6d3b7zfe43tms5s3v35gsifdngoq&#13;&#10;--websocket.url=ws://utmvti0192:9000/ws&#13;&#10;--tfs.types=Feature,Task"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--tfs.url=https://dev.azure.com&#13;&#10;--tfs.collection=eto-dev &#13;&#10;--tfs.user=z091182 &#13;&#10;--tfs.token=pzyybyd3zq5kzbdpkn4e656i6d3b7zfe43tms5s3v35gsifdngoq&#13;&#10;--websocket.url=ws://utmvti0192:9000/ws&#13;&#10;--tfs.types=Feature,Task&#13;&#10;--routing.exchange.name=WorkItem-exchange &#13;&#10;--routing.direct.key=setowner&#13;&#10;--queue.name=WorkItem-setowner-queue"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-setowner-microservice"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=spock -Dproxy.Host=172.18.4.116  -Dproxy.Port=8080 -Dproxy.User=z097331 -Dproxy.Password=februar1L!berty"/>
 </launchConfiguration>
