@@ -38,7 +38,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 
 		then: "No updates should be made"
-		resp == false
+		resp == 'Not a target work item type'
 	}
 	
 	def "State is not Closed"() {
@@ -49,7 +49,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 
 		then: "No updates should be made"
-		resp == false
+		resp == 'Work item not closed'
 	}
 	
 	def "Work Item Aready Assigned"() {
@@ -60,7 +60,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 
 		then: "No updates should be made"
-		resp == false
+		resp == 'Work item already assigned'
 	}
 	
 	def "Work Item Has No Parent"() {
@@ -71,7 +71,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 
 		then: "No updates should be made"
-		resp == false
+		resp == 'No parent'
 	}
 
 	def "Parent is Unassigned"() {
@@ -87,7 +87,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 
 		then: "No updates should be made"
-		resp == false
+		resp == 'Parent is unassigned'
 	}
 	
 	def "Successful Assignment to Parent Owner"() {
@@ -109,7 +109,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 		
 		then: "Update should be made"
-		resp == true
+		resp == 'Work item successfully assigned'
 	}
 	
 }
