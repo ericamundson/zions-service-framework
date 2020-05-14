@@ -1,0 +1,157 @@
+{
+    "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
+    "notificationId": 338,
+    "id": "0bddedf3-f3da-40d2-b946-1e53124898c5",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": {
+        "text": "Task #947726 (task 4 activation test) transitioned to Active and assigned to Michael Angelastro by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947726)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=947726\">Task #947726</a> (task 4 activation test) transitioned to Active and assigned to Michael Angelastro by Michael Angelastro",
+        "markdown": "[Task #947726](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947726) (task 4 activation test) transitioned to Active and assigned to Michael Angelastro by Michael Angelastro"
+    },
+    "detailedMessage": {
+        "text": "Task #947726 (task 4 activation test) transitioned to Active and assigned to Michael Angelastro by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947726)\r\n\r\n- New State: Active\r\n- New Assigned to: Michael Angelastro <Michael.Angelastro@zionsbancorp.com>\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=947726\">Task #947726</a> (task 4 activation test) transitioned to Active and assigned to Michael Angelastro by Michael Angelastro<ul>\r\n<li>New State: Active</li>\r\n<li>New Assigned to: Michael Angelastro <Michael.Angelastro@zionsbancorp.com></li></ul>",
+        "markdown": "[Task #947726](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947726) (task 4 activation test) transitioned to Active and assigned to Michael Angelastro by Michael Angelastro\r\n\r\n* New State: Active\r\n* New Assigned to: Michael Angelastro <Michael.Angelastro@zionsbancorp.com>\r\n"
+    },
+    "resource": {
+        "id": 2,
+        "workItemId": 947726,
+        "rev": 2,
+        "revisedBy": {
+            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
+            "name": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+            "displayName": "Michael Angelastro",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                }
+            },
+            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
+            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+        },
+        "revisedDate": "9999-01-01T00:00:00Z",
+        "fields": {
+            "System.Rev": {
+                "oldValue": 1,
+                "newValue": 2
+            },
+            "System.AuthorizedDate": {
+                "oldValue": "2020-04-30T15:15:35.073Z",
+                "newValue": "2020-04-30T15:20:44.003Z"
+            },
+            "System.RevisedDate": {
+                "oldValue": "2020-04-30T15:20:44.003Z",
+                "newValue": "9999-01-01T00:00:00Z"
+            },
+            "System.State": {
+                "oldValue": "New",
+                "newValue": "Active"
+            },
+            "System.Reason": {
+                "oldValue": "New",
+                "newValue": "Work started"
+            },
+            "System.AssignedTo": {
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "System.ChangedDate": {
+                "oldValue": "2020-04-30T15:15:35.073Z",
+                "newValue": "2020-04-30T15:20:44.003Z"
+            },
+            "System.Watermark": {
+                "oldValue": 327440,
+                "newValue": 327442
+            },
+            "Microsoft.VSTS.Common.StateChangeDate": {
+                "oldValue": "2020-04-30T15:15:35.073Z",
+                "newValue": "2020-04-30T15:20:44.003Z"
+            },
+            "Microsoft.VSTS.Common.ActivatedDate": {
+                "newValue": "2020-04-30T15:20:44.003Z"
+            },
+            "Microsoft.VSTS.Common.ActivatedBy": {
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            }
+        },
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947726/updates/2"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947726/updates"
+            },
+            "parent": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947726"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947726"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947726/updates/2",
+        "revision": {
+            "id": 947726,
+            "rev": 2,
+            "fields": {
+                "System.AreaPath": "ALMOpsTest",
+                "System.TeamProject": "ALMOpsTest",
+                "System.IterationPath": "ALMOpsTest\\Iteration 1",
+                "System.WorkItemType": "Task",
+                "System.State": "Active",
+                "System.Reason": "Work started",
+                "System.AssignedTo": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CreatedDate": "2020-04-30T15:15:35.073Z",
+                "System.CreatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.ChangedDate": "2020-04-30T15:20:44.003Z",
+                "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CommentCount": 0,
+                "System.Title": "task 4 activation test",
+                "Microsoft.VSTS.Common.StateChangeDate": "2020-04-30T15:20:44.003Z",
+                "Microsoft.VSTS.Common.ActivatedDate": "2020-04-30T15:20:44.003Z",
+                "Microsoft.VSTS.Common.ActivatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "Microsoft.VSTS.Common.Priority": 2,
+                "System.Parent": 947722
+            },
+            "relations": [
+                {
+                    "rel": "System.LinkTypes.Hierarchy-Reverse",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947722",
+                    "attributes": {
+                        "isLocked": false,
+                        "name": "Parent"
+                    }
+                }
+            ],
+            "_links": {
+                "self": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947726/revisions/2"
+                },
+                "workItemRevisions": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947726/revisions"
+                },
+                "parent": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947726"
+                }
+            },
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947726/revisions/2"
+        }
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1bec1897-29a0-44d0-80a8-670c5ae5ef4a",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "account": {
+            "id": "6e6d6b08-2e41-4c55-a624-0d1ec79969dd",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "project": {
+            "id": "030d62a4-ce8b-405e-a331-8678df1a6efe",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        }
+    },
+    "createdDate": "2020-04-30T15:20:51.8940827Z"
+}

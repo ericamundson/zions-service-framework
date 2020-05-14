@@ -22,11 +22,11 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
 
 
 @SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration,EmbeddedMongoAutoConfiguration,LdapAutoConfiguration])
-public class SetOwnerApplication {
+public class ParentActivationApplication {
 
 	public static void main(String[] args) {
 		
- 		SpringApplication app = new SpringApplication(SetOwnerApplication.class);
+ 		SpringApplication app = new SpringApplication(ParentActivationApplication.class);
 		app.run(args);
 				
 

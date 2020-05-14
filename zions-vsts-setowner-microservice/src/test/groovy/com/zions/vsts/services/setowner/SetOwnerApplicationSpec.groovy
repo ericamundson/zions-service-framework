@@ -17,7 +17,7 @@ import org.springframework.test.context.ContextConfiguration
 
 import spock.lang.Specification
 
-@ContextConfiguration(classes=[SetOwnerApplicationTestConfig])
+@ContextConfiguration(classes=[SetOwnerApplicationSpecConfig])
 class SetOwnerApplicationSpec extends Specification {
 	
 	@Autowired
@@ -43,7 +43,7 @@ class SetOwnerApplicationSpec extends Specification {
 @Profile("test")
 //@ComponentScan("com.zions.vsts.services.tfs.rest")
 @PropertySource("classpath:test.properties")
-class SetOwnerApplicationTestConfig {
+class SetOwnerApplicationSpecConfig {
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return new GenericRestClient('http://localhost:8080/ws', '', '')

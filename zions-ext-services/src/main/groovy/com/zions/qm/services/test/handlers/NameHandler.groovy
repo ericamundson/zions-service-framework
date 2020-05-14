@@ -17,8 +17,7 @@ class NameHandler extends QmBaseAttributeHandler {
 		if (outVal.length() > SIZE) {
 			outVal = outVal.substring(0, SIZE-1)
 		}
-		//outVal = outVal.replaceAll(/[\u0022\u2018\u2019​\u201B\u201C\u201D\u201F]/, "'")
-		//outVal = outVal.replaceAll(/[\u009D]/, "")
+
 		outVal = cleanTextContent(outVal)
 		return outVal;
 	}
