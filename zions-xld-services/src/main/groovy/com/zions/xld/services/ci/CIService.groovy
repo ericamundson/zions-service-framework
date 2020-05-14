@@ -24,7 +24,8 @@ class CIService {
 		def result = xldGenericRestClient.post(
 			contentType: ContentType.JSON,
 			requestContentType: ContentType.JSON,
-			uri: "${xldGenericRestClient.xldUrl}/deployit/repository/ci/${path}"
+			uri: "${xldGenericRestClient.xldUrl}/deployit/repository/ci/${path}",
+			body: jsonData
 		)
 	}
 }
