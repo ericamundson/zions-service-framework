@@ -35,8 +35,8 @@ import org.apache.commons.io.IOUtils
 @Component
 class JamaRequirementsManagementService {
 	@Autowired
-	@Value('${jama.url}')
-	String jamaUrl
+	@Value('${jama.projectid}')
+	String jamaProjectID
 		
 	@Autowired
 	@Value('${tfs.url}')
@@ -53,13 +53,21 @@ class JamaRequirementsManagementService {
 	JamaRequirementsManagementService() {
 	}
 		
-	//single giant query but should cache ok
-	def query() {
-		String uri = this.jamaGenericRestClient.jamaUrl + "/rest/latest/projects/26316/itemtypes"
+	// Get top level components for the project
+	def queryComponents() {
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/abstractitems?project=$jamaProjectID&itemType=94000"
 		def results = jamaGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/json'] );
-		def i = 1
+		return results
 	}
-	
+	// Get complete document
+	def queryDocument(def componentID) {
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/items/$componentID/children"
+		def children = jamaGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/json'] );
+		return children
+	}
+
 }

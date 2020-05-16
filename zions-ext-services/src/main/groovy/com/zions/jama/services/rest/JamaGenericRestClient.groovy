@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 /**
- * Handles Jama rest request to reporting host which is base
+ * Handles CLM rest request to reporting host which is base
  * authenticated.
  * 
  * @author z097331
@@ -41,7 +41,7 @@ class JamaGenericRestClient extends AGenericRestClient {
 	 */
 	public JamaGenericRestClient(RESTClient client) {
 		delegate = client
-		checked = true
+		checked = false
 	}
 
 	@Autowired
@@ -54,9 +54,9 @@ class JamaGenericRestClient extends AGenericRestClient {
 		delegate = new RESTClient(jamaUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
-		//setProxy()
+		setProxy()
 		setCredentials(user, password);
-		checked = true;
+		checked = false;
 	}
 	
 	/* (non-Javadoc)
