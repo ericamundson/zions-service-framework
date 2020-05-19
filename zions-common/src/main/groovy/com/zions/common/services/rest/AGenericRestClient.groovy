@@ -42,9 +42,7 @@ import groovyx.net.http.RESTClient
 @Slf4j
 abstract class AGenericRestClient implements IGenericRestClient {
 	RESTClient delegate;
-	
-	boolean checked = false
-	
+		
 	@Value('${output.test.data.flag:false}')
 	boolean outputTestDataFlag = false
 	
@@ -125,12 +123,8 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			withHeader = input.withHeader
 		}
 		input.remove('withHeader')
-		Map oinput = input
-		if (checked) {
-			oinput = checkBlankCollection(input)
-		}
 		//log.debug("GenericRestClient::get -- URI after checkBlankCollection: "+oinput.uri)
-		HttpResponseDecorator resp = delegate.get(oinput)
+		HttpResponseDecorator resp = delegate.get(input)
 		if (resp.data == null) {
 			//log.warn("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
 		}
@@ -202,11 +196,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			withHeader = input.withHeader
 		}
 		input.remove('withHeader')
-		Map oinput = input
-		if (checked) {
-			oinput = checkBlankCollection(input)
-		}
-		HttpResponseDecorator resp = delegate.put(oinput)
+		HttpResponseDecorator resp = delegate.put(input)
 		
 		if (resp.status != 200) {
 			log.error("GenericRestClient::put -- Failed. Status: "+resp.getStatusLine());
@@ -228,11 +218,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def delete(Map input) {
-		Map oinput = input
-		if (checked) {
-			oinput = checkBlankCollection(input)
-		}
-		HttpResponseDecorator resp = delegate.delete(oinput)
+		HttpResponseDecorator resp = delegate.delete(input)
 		if (resp.status != 204) {
 			return null;
 		}
@@ -249,15 +235,11 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			withHeader = input.withHeader
 		}
 		input.remove('withHeader')
-		Map oinput = input
-		if (checked) {
-			oinput = checkBlankCollection(input)
-		}
 		def sinput = null
 		try {
-			sinput = deepcopy(oinput)
+			sinput = deepcopy(input)
 		} catch (e) {}
-		HttpResponseDecorator resp = delegate.patch(oinput)
+		HttpResponseDecorator resp = delegate.patch(input)
 		
 		int status = resp.status
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
@@ -322,15 +304,11 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			withHeader = input.withHeader
 		}
 		input.remove('withHeader')
-		Map oinput = input
-		if (checked) {
-			oinput = checkBlankCollection(input)
-		}
 		def sinput = null
 		try {
-			sinput = deepcopy(oinput)
+			sinput = deepcopy(input)
 		} catch (e) {}
-		HttpResponseDecorator resp = delegate.post(oinput)
+		HttpResponseDecorator resp = delegate.post(input)
 		//JsonOutput t
 		
 		int status = resp.status
@@ -366,26 +344,6 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		return resp.data;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#checkBlankCollection(java.util.Map)
-	 */
-	def checkBlankCollection(Map input) {
-		String uri = "${input.uri}"
-		String checkedUri = "${this.tfsUrl}//"
-		if (this.tfsUrl && uri.startsWith(checkedUri) ) {
-		
-			uri = "${this.tfsUrl}/${uri.substring(checkedUri.length())}"
-			input.uri = uri
-		}
-		if (input.headers != null && input.headers.Referer != null) {
-			String refUri = input.headers.Referer
-			if (refUri.startsWith(checkedUri)) {
-				refUri = "${this.tfsUrl}/${refUri.substring(checkedUri.length())}"
-				input.headers.Referer = refUri
-			}
-		}
-		return input
-	}
 
 	public Object rateLimitPost(Map input,  Closure encoderFunction = null) {
 		boolean withHeader = false
@@ -393,15 +351,11 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			withHeader = input.withHeader
 		}
 		input.remove('withHeader')
-		Map oinput = input
-		if (checked) {
-			oinput = checkBlankCollection(input)
-		}
 		def currentEncoder = null
 		if (encoderFunction) {
 			String requestContentType = 'application/json'
-			if (oinput.requestContentType) {
-				requestContentType  = "${oinput.requestContentType}"
+			if (input.requestContentType) {
+				requestContentType  = "${input.requestContentType}"
 			}
 			currentEncoder = delegate.encoder."${requestContentType}"
 			delegate.encoder."${requestContentType}" = encoderFunction
@@ -410,12 +364,12 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		Map retryCopy
 		if (rcopy) {
 			try {
-				retryCopy = deepcopy(oinput)
+				retryCopy = deepcopy(input)
 			} catch (e) {}
 		}
 		HttpResponseDecorator resp
 		try {
-			resp = delegate.post(oinput)
+			resp = delegate.post(input)
 		} catch (e) {
 			log.error "GenericRestClient::rateLimitPost --  Response error: ${e.message}"
 			System.sleep(10000)			
@@ -423,8 +377,8 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		} finally {
 			if (encoderFunction || currentEncoder) {
 				String requestContentType = 'application/json'
-				if (oinput.requestContentType) {
-					requestContentType  = "${oinput.requestContentType}"
+				if (input.requestContentType) {
+					requestContentType  = "${input.requestContentType}"
 				}
 				delegate.encoder."${requestContentType}" = currentEncoder
 				
@@ -439,8 +393,8 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			System.sleep(10000)			
 			if (encoderFunction || currentEncoder) {
 				String requestContentType = 'application/json'
-				if (oinput.requestContentType) {
-					requestContentType  = "${oinput.requestContentType}"
+				if (input.requestContentType) {
+					requestContentType  = "${input.requestContentType}"
 				}
 				delegate.encoder."${requestContentType}" = currentEncoder
 				
@@ -457,8 +411,8 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			if (status == 413) {
 				if (encoderFunction || currentEncoder) {
 					String requestContentType = 'application/json'
-					if (oinput.requestContentType) {
-						requestContentType  = "${oinput.requestContentType}"
+					if (input.requestContentType) {
+						requestContentType  = "${input.requestContentType}"
 					}
 					delegate.encoder."${requestContentType}" = currentEncoder
 					
@@ -469,8 +423,8 @@ abstract class AGenericRestClient implements IGenericRestClient {
 				System.sleep(20000)
 				if (encoderFunction || currentEncoder) {
 					String requestContentType = 'application/json'
-					if (oinput.requestContentType) {
-						requestContentType  = "${oinput.requestContentType}"
+					if (input.requestContentType) {
+						requestContentType  = "${input.requestContentType}"
 					}
 					delegate.encoder."${requestContentType}" = currentEncoder
 					

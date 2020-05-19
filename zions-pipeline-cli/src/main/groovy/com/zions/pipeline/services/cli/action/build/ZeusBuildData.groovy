@@ -204,7 +204,11 @@ class ZeusBuildData implements CliAction {
 		}
 		List wi = []
 		buildWorkitems.each { ref ->
-			wi.push("${ref.id}")
+			def awi = workManagementService.getWorkItem(ref.url)
+			String aproject = "${awi.fields.'System.TeamProject'}"
+			if (aproject == "Zeus") {
+				wi.push("${ref.id}")
+			}
 		}
 		if (wi.empty) {
 			println "##vso[task.setvariable variable=hasChanges]false"

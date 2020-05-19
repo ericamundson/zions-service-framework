@@ -1,6 +1,7 @@
 package com.zions.clm.services.rest
 
 import com.zions.common.services.rest.AGenericRestClient
+import com.zions.common.services.rest.CollectionInterceptor
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.HttpResponseDecorator
@@ -25,6 +26,10 @@ import org.springframework.stereotype.Component
 @Component
 @Slf4j
 class ClmBGenericRestClient extends AGenericRestClient {
+	
+	static {
+		CollectionInterceptor.injectIn(ClmBGenericRestClient)
+	}
 		
 	public String tfsUrl;
 	
@@ -41,7 +46,6 @@ class ClmBGenericRestClient extends AGenericRestClient {
 	 */
 	public ClmBGenericRestClient(RESTClient client) {
 		delegate = client
-		checked = true
 	}
 
 	@Autowired
@@ -56,7 +60,6 @@ class ClmBGenericRestClient extends AGenericRestClient {
 		delegate.handler.failure = { it }
 		//setProxy()
 		setCredentials(user, password);
-		checked = true;
 	}
 	
 	/* (non-Javadoc)
