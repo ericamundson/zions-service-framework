@@ -24,7 +24,6 @@ class GenericRestClientSpecTest extends Specification {
 	IGenericRestClient genericRestClient
 	RESTClient delegate
 	
-	boolean checked = true
 
 	public void setup() {
 		delegate = Mock(RESTClient)
