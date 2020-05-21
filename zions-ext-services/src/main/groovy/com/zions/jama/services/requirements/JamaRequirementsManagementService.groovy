@@ -110,8 +110,19 @@ class JamaRequirementsManagementService {
 		return clmModule
 	}
 	def getBaselineItems(def baselineId) {
-		// TBD... Need to call queryBaselineItems(baselineId) to get items and build orderedArtifacts list
-		
+		def orderedArtifacts = []
+		def children = queryBaselineItems(baselineId)
+		if (children.size() > 0) {
+			// Instantiate element and add to orderedArtifacts
+			children.each { child ->
+				def seq = child.baselineLocation.sequence
+				int depth = 1 + seq.chars().filter({ch -> ch == '.'}).count()
+				ClmModuleElement artifact = new ClmModuleElement(child.fields.name, depth, '', 'false', '')
+				extractAttributes(artifact.attributeMap, child)
+				orderedArtifacts.add(artifact) 
+			}
+		}
+		return orderedArtifacts
 	}
 	def extractAttributes(Map attributeMap, def item) {
 		attributeMap.put('Identifier',item.documentKey)
