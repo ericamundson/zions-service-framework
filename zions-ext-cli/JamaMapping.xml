@@ -1,0 +1,113 @@
+<witmapping>
+	<exclude>
+	</exclude>
+	<wit source="Component" target="Document" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="reasonHandler" target="System.Reason"/>
+		<field source="documentTypeHandler" target="Custom.DocumentType"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+
+	<wit source="Default" target="PlaceHolder" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="reasonHandler" target="System.Reason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+	
+	<wit source="Business Requirement" target="Business Requirement" translateUnmappedFields="false">
+		<field source="priorityHandler" target="Custom.Priority"/>
+		<field source="sourceNameHandler" target="Custom.Source"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="reasonHandler" target="System.Reason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Functional Requirement" target="Functional Requirement" translateUnmappedFields="false">
+		<field source="priorityHandler" target="Custom.Priority"/>
+		<field source="sourceNameHandler" target="Custom.Source"/>
+		<field source="frTypeHandler" target="Custom.FunctionalType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="reasonHandler" target="System.Reason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+
+	<wit source="Non Functional Requirement" target="Non Functional Requirement" translateUnmappedFields="false">
+		<field source="sourceNameHandler" target="Custom.Source"/>
+		<field source="nfrTypeHandler" target="Custom.NFRType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="reasonHandler" target="System.Reason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>
+	
+	
+	<wit source="Text" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="reasonHandler" target="System.Reason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+
+	<wit source="Set" target="Section" translateUnmappedFields="false">
+		<field source="sectionTypeHandler" target="Custom.SectionType"/>
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="reasonHandler" target="System.Reason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<wit source="Use Case" target="Use Case" translateUnmappedFields="false">
+		<field source="createdHandler" target="System.CreatedDate"/>
+		<field source="nameHandler" target="System.Title"/>
+		<field source="descriptionHandler" target="System.Description"/>
+		<field source="creatorHandler" target="System.CreatedBy"/>
+		<field source="idHandler" target="Custom.ExternalID"/>
+		<field source="stateHandler" target="System.State"/>
+		<field source="reasonHandler" target="System.Reason"/>
+		<field source="artifactTypeHandler" target="Custom.SourceArtifactType"/>
+		<field source="areaPathHandler" target="System.AreaPath"/>		
+	</wit>	
+	
+	<links>
+	</links>
+</witmapping>

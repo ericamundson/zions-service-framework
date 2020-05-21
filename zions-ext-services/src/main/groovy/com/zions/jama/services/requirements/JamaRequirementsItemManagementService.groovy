@@ -9,8 +9,7 @@ import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.common.services.util.ObjectUtil
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.rm.services.requirements.RequirementsMappingManagementService
-import com.zions.rm.services.requirements.handlers.RmBaseAttributeHandler
-import com.zions.rm.services.requirements.RequirementQueryData
+import com.zions.jama.services.requirements.handlers.RmBaseAttributeHandler
 
 import groovy.json.JsonSlurper
 import groovy.xml.XmlUtil

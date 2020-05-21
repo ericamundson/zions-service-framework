@@ -56,6 +56,11 @@ class TranslateJamaModulesToADO implements CliAction {
 		} catch (e) {}
 		String tfsProjectURI = data.getOptionValues('tfs.projectUri')[0]
 		String tfsProject = data.getOptionValues('tfs.project')[0]
+		String tfsUrl = data.getOptionValues('tfs.url')[0]
+		String mrTemplate = data.getOptionValues('mr.template')[0]
+		String mrFolder = data.getOptionValues('mr.folder')[0]
+		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
+		String tfsCollectionGUID = data.getOptionValues('tfs.collectionId')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -65,12 +70,17 @@ class TranslateJamaModulesToADO implements CliAction {
 			log.info('Getting ADO Project Members...')
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
 			def components = jamaRequirementsManagementService.queryComponents()
-			components.data.each { component ->
+			def moduleCount = 0
+			components.each { component ->
 				if (component.location.parent.project) { // Only take top level components
 //					String json = new JsonBuilder(component).toPrettyString()
 //					println(json)
+					moduleCount++
+					int count = 0
+					def changeList = []
+					def idMap = [:]
 					log.info("Retrieving Module: ${component.fields.name} ...")
-					def module = jamaRequirementsManagementService.getJamaDocument(component)
+					def module = jamaRequirementsManagementService.getComponentDocument(component)
 					log.info("Processing Module: ${module.getTitle()} ...")
 					
 					// Add Module artifact to ChangeList (to create Document)
@@ -82,42 +92,14 @@ class TranslateJamaModulesToADO implements CliAction {
 						changeList.add(val)
 						count++		
 					}
-	/*							
+								
 					// Iterate through all module elements and add them to changeList
 					def ubound = module.orderedArtifacts.size() - 1
 					def lastSection = 0
-					0.upto(ubound, {
-		
-						// If Heading is immediately followed by a type of artifact that should include it's title, 
-						// move Heading title to following artifact and logically delete Heading artifact
-						if (module.orderedArtifacts[it].getIsHeading() && 
-							it < module.orderedArtifacts.size()-1 && 
-							isToMergeWithHeading(module,it+1)) {
-							
-							module.orderedArtifacts[it+1].setTitle(module.orderedArtifacts[it].getTitle())
-							module.orderedArtifacts[it+1].setDepth(module.orderedArtifacts[it].getDepth())
-							module.orderedArtifacts[it].setIsDeleted(true)
-							return  // Skip Heading artifact 
-						}
-						// If simple heading, remove duplicate description
-						else if (module.orderedArtifacts[it].getIsHeading()) {
-							module.orderedArtifacts[it].setDescription('') 
-						}
-						// If Reporting Requirement is in Reporting RRZ (or included in RSZ), do not migrate the artifact
-						else if ((module.getArtifactType() == 'Reporting RRZ' || module.getArtifactType() == 'RSZ Specification') && 
-								  module.orderedArtifacts[it].getFormat() == 'Text' &&
-								 (module.orderedArtifacts[it].getArtifactType() == 'Reporting Requirement'||
-								  module.orderedArtifacts[it].getArtifactType() == 'Reporting RRZ')) {
-							module.orderedArtifacts[it].setIsDeleted(true)
-						}
-						// Do not migrate Subtopic artifacts
-						else if (module.orderedArtifacts[it].getArtifactType() == 'Subtopic') {
-							module.orderedArtifacts[it].setIsMigrating(false)
-						}
-	
+					0.upto(ubound, {	
 						// Only store first occurrence of an artifact in the module
 						if (!module.orderedArtifacts[it].getIsDuplicate() && module.orderedArtifacts[it].getIsMigrating()) {  
-							changes = clmRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
+							changes = jamaRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
 							aid = module.orderedArtifacts[it].getCacheID()
 							changes.each { key, val ->
 								String idkey = "${aid}"
@@ -129,13 +111,6 @@ class TranslateJamaModulesToADO implements CliAction {
 						else {
 							log.info("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
 						}
-						// Adjust depth to preserve outline numbering
-						if (lastSection > 0 && module.orderedArtifacts[it].getTfsWorkitemType() != 'Section' &&
-							module.orderedArtifacts[it].getTfsWorkitemType() != 'Document' &&
-							module.orderedArtifacts[it].getDepth() <= module.orderedArtifacts[lastSection].getDepth()){ 
-							// For all requirement content under a section, increment the depth if not already incremented so as to preserve outline numbering from DOORS
-							module.orderedArtifacts[it].incrementDepth(1)
-						}					
 						// save index of last section
 						if (module.orderedArtifacts[it].getTfsWorkitemType() == 'Section') {
 							lastSection = it
@@ -144,13 +119,13 @@ class TranslateJamaModulesToADO implements CliAction {
 					})
 					
 					// Create/update work items and SmartDoc container in Azure DevOps
-					if (changeList.size() > 0 && errCount == 0) {
+					if (changeList.size() > 0) {
 						// Process work item changes in Azure DevOps
-						log.info("${getCurTimestamp()} - Processing work item changes...")
+						log.info("Processing work item changes...")
 						workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 						
 						// Create/update the SmartDoc
-						log.info("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
+						log.info("Creating SmartDoc: ${module.getTitle()}")
 						def result = smartDocManagementService.ensureSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, mrTemplate, mrFolder)
 						if (result == null) {
 							log.info("SmartDoc API returned null")
@@ -163,7 +138,7 @@ class TranslateJamaModulesToADO implements CliAction {
 						}
 	
 					}
-		*/
+		
 				}
 			}
 			log.info("Processing completed")
