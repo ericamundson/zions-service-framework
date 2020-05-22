@@ -28,7 +28,6 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 	//@Value('${tfs.types:}')
 	@Value('${tfs.types}')
 	String wiTypes
-	
 
 	public PopulateChildMicroService()
 	{
@@ -79,18 +78,17 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		//should return children payload
 		
 		def result = workManagementService.getChildren(collection, project, id)
-		//def children = result.relations
 		
+		/**	For unit testing !! Uncomment code below to capture child playload for test */
+		  /* String json = new JsonBuilder(result).toPrettyString()
+		   println(json)*/
 		
-		//iterate through the children assigned to work item in question
+		 //iterate through the children assigned to work item in question
 		def changes = []
 		def idMap = [:]
 		def count = 0
-		//children.each { child ->
 		result.each { child ->
-			
 			def childwi = workManagementService.getWorkItem(child.url)
-			
 			//Define child work item types
 			String type = "${childwi.fields['System.WorkItemType']}"
 			//Define OTLNumber of child fields
@@ -116,10 +114,9 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			// Process work item changes in Azure DevOps
 			log.info("Processing work item changes...")
 			workManagementService.batchWIChanges(collection, project, changes, idMap)
+			return logResult('Update Succeeded')
 		}
 	}
-
-		
 		
 		/**			For unit testing !! Uncomment code below to capture parent playload for test
 		 * String json = new JsonBuilder(parentWI).toPrettyString()
@@ -134,10 +131,8 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		def idData1 = [op: 'test', path: '/rev', value: rev.toInteger()]
 		wiData.body.add(idData1)
 		
-
 		// Add work item type in case it changed
 		def idData2 = [ op: 'add', path: '/fields/Custom.OTLNumber', value: "$otlField"]
-		
 		
 		wiData.body.add(idData2)
 		return wiData

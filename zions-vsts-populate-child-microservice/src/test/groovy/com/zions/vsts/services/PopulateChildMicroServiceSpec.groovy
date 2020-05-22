@@ -22,7 +22,7 @@ import groovy.json.JsonSlurper
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
-@ContextConfiguration(classes=[ParentActivationMicroserviceTestConfig])
+@ContextConfiguration(classes=[PopulateChildMicroserviceTestConfig])
 class PopulateChildMicroServiceSpec extends Specification {
 	@Autowired
 	PopulateChildMicroService underTest;
@@ -30,7 +30,7 @@ class PopulateChildMicroServiceSpec extends Specification {
 	@Autowired
 	WorkManagementService workManagementService;
 	
-	def "Successful Population of Child Fields"() {
+		def "Successful Population of Child Fields"() {
 		given: "A mock ADO event payload exists that meets all criteria for update"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataEpicTwoChildren.json').text)
 
@@ -42,18 +42,19 @@ class PopulateChildMicroServiceSpec extends Specification {
 		
 		and: "stub workManagementService.updateItem()"
 		
-			workManagementService.getWorkItem(_,_,_) >> {
-			String data = "${args[3]}"
+			//workManagementService.getWorkItem(_,_,_) >> {
+			workManagementService.getChildren(_,_,_) >> {
+				String data = "${args[3]}"
 			
-			  
-			  assert(data.toString() == '[[op:test  paht:/rev, value:2], [op:add, path:/fields/Custom.OTLNumber, value: "$otlField"]]')
+			  //assert(data.toString() == '[[op:test  path:/rev, value:2], [op:add, path:/fields/Custom.OTLNumber, value: "$otlField"]]')
+			  assert(data.toString() == '[[op:test  path:/rev, value:2], [op:add, path:/fields/Custom.OTLNumber, value: 1000]]')
 		}
 
 		when: "calling method under test processADOData()"
 		def resp = underTest.processADOData(adoMap)
 		
 		then: "Update should be made"
-		resp == 'Update Succeeded'
+		resp == 'Update Succeeded'	
 	}
 	
 }
@@ -62,7 +63,7 @@ class PopulateChildMicroServiceSpec extends Specification {
 @Profile("test")
 @ComponentScan(["com.zions.vsts.services.work.WorkManagementService","com.zions.common.services.rest"])
 @PropertySource("classpath:test.properties")
-class ParentActivationMicroserviceTestConfig {
+class PopulateChildMicroserviceTestConfig {
 	def mockFactory = new DetachedMockFactory()
 	
 	@Value('${tfs.types}') 
@@ -74,12 +75,10 @@ class ParentActivationMicroserviceTestConfig {
 	}
 	@Bean
 	WorkManagementService workManagementService() {
-		//return mockFactory.Mock(WorkManagementService)
 		return mockFactory.Stub(WorkManagementService)
 	}
 	@Bean
 	IGenericRestClient genericRestClient() {
-		//return new GenericRestClient('http://localhost:8080/ws', '', '')
 		return mockFactory.Stub(GenericRestClient)
 	}
 }
