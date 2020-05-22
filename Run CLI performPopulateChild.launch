@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-vsts-populate-child-microservice/src/main/groovy/com/zions/vsts/services/PopulateChildApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.PopulateChildApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--tfs.url=https://dev.azure.com/eto-dev&#13;&#10;--tfs.user=z070187 &#13;&#10;--tfs.token=bhgqrrnixqhdt4loar2ea7z74oervswykldygrwo2yzolropyuqa &#13;&#10;--websocketUrl=ws://utmvti0192:9000/ws &#13;&#10;--tfs.types=Epic,Component,Sub Component,Feature,User Story&#13;&#10;--routing.exchange.name=WorkItem-exchange &#13;&#10;--routing.direct.key=populatechild&#13;&#10;--queue.name=WorkItem-populatechild-queue"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-populate-child-microservice"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=spock -Dproxy.Host=172.18.4.116  -Dproxy.Port=8080 -Dproxy.User=z070187 -Dproxy.Password=t35T1ng10002!@!"/>
+</launchConfiguration>
