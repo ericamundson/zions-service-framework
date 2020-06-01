@@ -1,6 +1,7 @@
 package com.zions.vsts.services.tfs.rest
 
 import com.zions.common.services.rest.AGenericRestClient
+import com.zions.common.services.rest.ARESTClient
 import com.zions.common.services.rest.CollectionInterceptor
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
@@ -57,7 +58,7 @@ class GenericRestClient extends AGenericRestClient {
 		this.tfsUrl = tfsUrl
 		this.token = token;
 		this.user = user;
-		delegate = new RESTClient(tfsUrl)
+		delegate = new ARESTClient(tfsUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		setProxy()

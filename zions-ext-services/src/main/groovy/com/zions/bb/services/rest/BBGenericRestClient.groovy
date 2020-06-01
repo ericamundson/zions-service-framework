@@ -4,6 +4,7 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient;
+import com.zions.common.services.rest.ARESTClient
 
 import java.util.Map
 
@@ -32,7 +33,7 @@ class BBGenericRestClient extends AGenericRestClient {
 		this.bbUrl = bbUrl
 		this.password = password;
 		this.user = user;
-		delegate = new RESTClient(bbUrl)
+		delegate = new ARESTClient(bbUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		setProxy()
