@@ -8,6 +8,7 @@ class ClmArtifact {
 	def attributeMap = [:]
 	def collectionArtifacts = []
 	def links = []
+	def attachments = []
 	def changes = [:]
 	def adoFileInfo = []
 	def cacheWI // cached work item from ADO

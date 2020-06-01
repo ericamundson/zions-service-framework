@@ -50,7 +50,7 @@ class JamaRequirementsManagementService {
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
 		
-	def itemMap = [93997:'Business Requirement',94000:'Component',94005:'Functional Requirement',94010:'Non Functional Requirement',94001:'Set',94003:'Text',94006:'Use Case']
+	def itemTypeMap = [93997:'Business Requirement',94000:'Component',94005:'Functional Requirement',94010:'Non Functional Requirement',94001:'Set',94003:'Text',94006:'Use Case',94023:'Attachment',101485:'Attachments',94002:'Folder']
 	
 	JamaRequirementsManagementService() {
 	}
@@ -58,6 +58,14 @@ class JamaRequirementsManagementService {
 	// Get top level components for the project
 	def queryComponents() {
 		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/abstractitems?project=$jamaProjectID&itemType=94000"
+		def results = jamaGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/json'] );
+		return results.data
+	}
+	// Get project data
+	def queryProjectData() {
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/projects/$jamaProjectID"
 		def results = jamaGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/json'] );
@@ -72,84 +80,112 @@ class JamaRequirementsManagementService {
 		return results.data
 	}
 	// Get item's children
-	def queryItemChildren(def itemID) {
-		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/items/$itemID/children"
-		def children = jamaGenericRestClient.get(
+	def queryProjectItems(def project, int startNdx, int max) {
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/items?project=${project.id}&startAt=$startNdx&maxResults=$max"
+		def result = jamaGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/json'] );
-		return children.data
+		return result
 	}
-	def queryBaselineItems(def baselineId) {
-		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/baselines/$baselineId/versioneditems"
-		def children = jamaGenericRestClient.get(
+	def queryBaselineItems(def baseline, int startNdx, int max) {
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/baselines/${baseline.id}/versioneditems?startAt=$startNdx&maxResults=$max"
+		def result = jamaGenericRestClient.get(
 				uri: uri,
 				headers: [Accept: 'application/json'] );
-		return children.data
+		return result
 	}
 	// Get Jama Document (we will stick it in a ClmRequirementsModule structure to facilitate Smart Doc creation
-	def getComponentDocument(def component) {
-		// Create the top-level Jama Document for the Smart Doc
-		Map moduleAttributeMap = [:]
-		def orderedArtifacts = []
-		// Extract module attributes and members
-		String moduleType = "Component"
-		int depth = 1
-		extractAttributes(moduleAttributeMap, component)
-		getChildHierarchy(orderedArtifacts, component, depth)
-		ClmRequirementsModule clmModule = new ClmRequirementsModule(component.fields.name, null, null, moduleType, null, moduleAttributeMap,orderedArtifacts)
-		return clmModule
-	}
-	// Get Jama Document (we will stick it in a ClmRequirementsModule structure to facilitate Smart Doc creation
-	def getBaselineDocument(def baseline) {
+	def getDocument(def baseline, def project) {
 		// First create a top-level Jama Document for the Smart Doc
-		// Note:  this is still under development.  If it is picked up again, NetReveal Platform 7.7 project seems like a good test bed.  Baseline v0.1
 		Map moduleAttributeMap = [:]
-		String moduleType = "Component"
-		def orderedArtifacts = getBaselineItems(baseline.id)
-		ClmRequirementsModule clmModule = new ClmRequirementsModule(baseline.name, null, null, moduleType, null, moduleAttributeMap, orderedArtifacts)
+		String docName = getProjectName(project)
+		if (baseline) {
+			extractRootDocumentAttributes(moduleAttributeMap, 'BL', baseline, docName )
+		} else {
+			extractRootDocumentAttributes(moduleAttributeMap, 'PRJ', project, docName )
+		}
+		String moduleType = moduleAttributeMap['Artifact Type']
+		def moduleAttachments = []
+		def orderedArtifacts = getItems(baseline,project,moduleAttachments)
+		ClmRequirementsModule clmModule = new ClmRequirementsModule(docName, null, null, moduleType, null, moduleAttributeMap, orderedArtifacts)
+		clmModule.attachments = moduleAttachments
 		return clmModule
 	}
-	def getBaselineItems(def baselineId) {
+	String getProjectName(def project) {
+		return "${project.fields.name}"
+	}
+	def getItems(def baseline, def project, def moduleAttachments) {
 		def orderedArtifacts = []
-		def children = queryBaselineItems(baselineId)
-		if (children.size() > 0) {
-			// Instantiate element and add to orderedArtifacts
-			children.each { child ->
-				def seq = child.baselineLocation.sequence
-				int depth = 1 + seq.chars().filter({ch -> ch == '.'}).count()
-				ClmModuleElement artifact = new ClmModuleElement(child.fields.name, depth, '', 'false', '')
-				extractAttributes(artifact.attributeMap, child)
-				orderedArtifacts.add(artifact) 
+		int startNdx = 0
+		int maxCount = 50
+		int remainCount = 999
+		while (remainCount > 0) {
+			def result
+			if (baseline) {
+				result = queryBaselineItems(baseline, startNdx, maxCount)
 			}
+			else {
+				result = queryProjectItems(project, startNdx, maxCount)
+			}
+			if (result.data.size() > 0) {
+				// Instantiate element and add to orderedArtifacts
+				result.data.each { child ->
+					def location
+					if (baseline) {
+						location = child.baselineLocation
+					} else {
+						location = child.location
+					}
+					if (location) {
+						def seq = location.sequence
+						int depth = 1 + seq.chars().filter({ch -> ch == '.'}).count()
+						ClmModuleElement artifact = new ClmModuleElement(child.fields.name, depth, '', 'false', '')
+						extractAttributes(artifact.attributeMap, child)
+						if (child.fields.attachment) {
+							artifact.attachments.add(child.fields.attachment)
+						}
+						orderedArtifacts.add(artifact) 
+					}
+					else if (this.itemTypeMap[child.itemType] == 'Attachment'){
+						if (child.fields.attachment) {
+							moduleAttachments.add(child.id)
+						}
+					}
+					else {
+						println('skipping item, no location in document')
+					}
+				}
+			}
+		    int resultCount = result.meta.pageInfo.resultCount
+			remainCount = result.meta.pageInfo.totalResults - (startNdx + resultCount)
+			startNdx = startNdx + resultCount
 		}
 		return orderedArtifacts
 	}
+	def extractRootDocumentAttributes(Map attributeMap, def idPrefix, def item, String projectName) {
+		attributeMap.put('api_id',item.id)
+		attributeMap.put('Identifier', idPrefix + item.id)
+		attributeMap.put('globalId',item.id)
+		attributeMap.put('itemType',item.type)
+		attributeMap.put('Artifact Type',item.type)
+		attributeMap.put('createdDate',item.createdDate)
+		attributeMap.put('createdBy',item.createdBy)
+		attributeMap.put('name',projectName)
+	}
 	def extractAttributes(Map attributeMap, def item) {
-		attributeMap.put('Identifier',item.documentKey)
+		attributeMap.put('api_id',item.id)
+		attributeMap.put('Identifier',item.globalId)
 		attributeMap.put('globalId',item.globalId)
 		attributeMap.put('itemType',item.itemType)
-		attributeMap.put('Artifact Type',this.itemMap[item.itemType])
+		attributeMap.put('Artifact Type',this.itemTypeMap[item.itemType])
 		attributeMap.put('createdDate',item.createdDate)
 		attributeMap.put('modifiedDate',item.modifiedDate)
 		attributeMap.put('createdBy',item.createdBy)
 		item.fields.each { field ->
 			attributeMap.put(field.key, field.value)
 		}
-
-	}
-	def getChildHierarchy(def orderedArtifacts, def item, def depth) {
-		def children = queryItemChildren(item.id)
-		if (children.size() > 0) {
-			depth++
-			// Instantiate element and add to orderedArtifacts
-			children.each { child ->
-				ClmModuleElement artifact = new ClmModuleElement(child.fields.name, depth, '', 'false', '')
-				extractAttributes(artifact.attributeMap, child)
-				orderedArtifacts.add(artifact) 
-				if (child.itemType == 94001 ) { // This is a set that may have children
-					getChildHierarchy(orderedArtifacts, child, depth)
-				}
-			}
+		if (attributeMap['Artifact Type'] == null) {
+			log.info("Warning:  Unhandled itemType=$item.itemType")
 		}
 	}
 	def getUserEmail(def id) {
@@ -170,5 +206,28 @@ class JamaRequirementsManagementService {
 			}
 		}
 		return userEmails
+	}
+	def getContent(int itemId) {
+//		def itemId = url.find(/.\d+./)
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/attachments/$itemId/file"
+		def result = jamaGenericRestClient.get(
+			withHeader: true,
+			uri: uri,
+			headers: ['Accept': ContentType.BINARY] );
+		return result
+	}
+	def getContent(String uri) {
+		def result = jamaGenericRestClient.get(
+			withHeader: true,
+			uri: uri,
+			headers: ['Accept': ContentType.BINARY] );
+		return result
+	}
+	def getAttachment(def itemId) {
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/attachments/${itemId}"
+		def result = jamaGenericRestClient.get(
+			uri: uri,
+			headers: [Accept: 'application/json'] );
+		return result
 	}
 }

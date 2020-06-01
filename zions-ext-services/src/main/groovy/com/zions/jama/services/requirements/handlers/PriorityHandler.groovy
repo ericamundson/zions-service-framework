@@ -13,10 +13,18 @@ class PriorityHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		if (value == 'Unassigned' || value == '') {
+		if (value == 165492) {
+			return 3
+		}
+		else if (value == 165493) {
+			return 2
+		}
+		else if (value == 165494) {
+			return 1
+		}
+		else {
 			return null
 		}
-		return value;
 	}
 
 }

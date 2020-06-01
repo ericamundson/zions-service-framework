@@ -33,7 +33,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("jama")
-@ComponentScan(["com.zions.jama.services","com.zions.vsts.services.admin.member","com.zions.vsts.services.admin.project","com.zions.vsts.services.work","com.zions.spock.services","com.zions.common.services.spock", 
+@ComponentScan(["com.zions.jama.services","com.zions.vsts.services.admin.member","com.zions.vsts.services.admin.project","com.zions.vsts.services.work","com.zions.vsts.services.attachments","com.zions.spock.services","com.zions.common.services.spock", 
 	"com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.cacheaspect",
 	"com.zions.rm.services.requirements.ClmArtifact.groovy","com.zions.rm.services.requirements.ClmModuleElement.groovy","com.zions.rm.services.requirements.ClmRequirementsModule.groovy"])
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
