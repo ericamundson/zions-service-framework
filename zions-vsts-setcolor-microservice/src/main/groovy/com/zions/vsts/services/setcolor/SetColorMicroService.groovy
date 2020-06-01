@@ -1,8 +1,9 @@
 package com.zions.vsts.services.setcolor
 
 import com.zions.vsts.services.asset.SharedAssetService
+import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
 import com.zions.vsts.services.work.WorkManagementService
-import com.zions.vsts.services.ws.client.AbstractWebSocketMicroService
+import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
 
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +25,7 @@ import groovy.json.JsonSlurper
  */
 @Component
 @Slf4j
-class SetColorMicroService extends AbstractWebSocketMicroService {
+class SetColorMicroService implements MessageReceiverTrait {
 	@Autowired
 	WorkManagementService workManagementService
 
@@ -41,13 +42,7 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
     private String eventTopic
 
 	@Autowired
-	public SetColorMicroService(@Value('${websocket.url:}') websocketUrl, 
-		@Value('${websocket.user:#{null}}') websocketUser,
-		@Value('${websocket.password:#{null}}') websocketPassword) {
-		super(websocketUrl, websocketUser, websocketPassword)
-	}
 	public SetColorMicroService() {
-		// Constructor for unit testing
 	}
 	/**
 	 * Perform assignment operation
@@ -143,15 +138,5 @@ class SetColorMicroService extends AbstractWebSocketMicroService {
 		log.info("Result: $msg")
 		return msg
 	}
-
-	@Override
-	public String topic() {
-		return null
-	}
-	@Override
-	public String[] topics() {
-		return ['workitem.updated','workitem.created']
-	}
-
 }
 

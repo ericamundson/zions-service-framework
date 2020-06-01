@@ -275,7 +275,7 @@ metadata:
 		if (createRelease) {
 			//println "XLR Url: ${xlrUrl}"
 			log.info "Creating new release: ${packageName}"
-			new AntBuilder().exec(dir: "${xlwLocation}", executable: 'cmd', failonerror: true) {
+			new AntBuilder().exec(dir: "${xlwLocation}", executable: 'cmd', failonerror: false) {
 				arg( line: "/c xlw.bat apply -f xl-create-release.yaml --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword} --values app_version=${packageName},release_name=\"${xldApplicationShortName}-${packageName}\"")
 			}
 

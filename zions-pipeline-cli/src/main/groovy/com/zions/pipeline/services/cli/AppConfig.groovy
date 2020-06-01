@@ -18,7 +18,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("default")
-@ComponentScan(["com.zions.pipeline.services,com.zions.vsts.services,com.zions.xld.services,com.zions.xlr.services"])
+@ComponentScan(["com.zions.pipeline.services,com.zions.vsts.services,com.zions.xld.services,com.zions.xlr.services,com.zions.common.services.rest"])
 public class AppConfig {
 	Map<String, CliAction> actions;
 	

@@ -22,6 +22,7 @@ import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.WorkManagementServiceConfig
 import groovy.json.JsonSlurper
 import spock.lang.Specification
+import spock.lang.Ignore
 import spock.mock.DetachedMockFactory
 
 @ContextConfiguration(classes=[TestManagementServiceSpecConfig])
@@ -311,6 +312,7 @@ class TestManagementServiceSpec extends Specification {
 		true
 	}
 	
+	@Ignore
 	def 'cleanupTestItems normal flow'() {
 		given: 'stub to query for team area test work items'
 		1 * cacheManagementService.cacheModule >> 'CCM'

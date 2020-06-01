@@ -113,7 +113,6 @@
                 "System.WorkItemType": "Task",
                 "System.State": "Active",
                 "System.Reason": "Reactivated",
-                "System.AssignedTo": "Robert Huet <robert.huet@zionsbancorp.com>",
                 "System.CreatedDate": "2020-04-24T16:02:04.267Z",
                 "System.CreatedBy": "Robert Huet <robert.huet@zionsbancorp.com>",
                 "System.ChangedDate": "2020-04-24T21:41:32.833Z",

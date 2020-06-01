@@ -1,5 +1,6 @@
 package com.zions.vsts.services.setowner
 
+import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.ws.client.AbstractWebSocketMicroService
 import groovy.util.logging.Slf4j
@@ -16,7 +17,7 @@ import groovy.json.JsonBuilder
  */
 @Component
 @Slf4j
-class SetOwnerMicroService extends AbstractWebSocketMicroService {
+class SetOwnerMicroService implements MessageReceiverTrait {
 
 	@Autowired
 	WorkManagementService workManagementService
@@ -28,14 +29,7 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 	String wiTypes
 
 	@Autowired
-	public SetOwnerMicroService(@Value('${websocket.url:}') websocketUrl, 
-		@Value('${websocket.user:#{null}}') websocketUser,
-		@Value('${websocket.password:#{null}}') websocketPassword) {
-		super(websocketUrl, websocketUser, websocketPassword)
-		
-	}
-	public SetOwnerMicroService() {
-		// Constructor for unit testing
+	public SetOwnerMicroService() {		
 	}
 
 	/**
@@ -55,9 +49,9 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		String owner = "${wiResource.revision.fields.'System.AssignedTo'}"
 		String status = "${wiResource.revision.fields.'System.State'}"
-		if (!types.contains(wiType)) return false
-		if (owner != 'null') return false
-		if (status != 'Closed') return false
+		if (!types.contains(wiType)) return logResult('Not a target work item type')
+		if (owner != 'null') return logResult('Work item already assigned')
+		if (status != 'Closed') return logResult('Work item not closed')
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		String id = "${wiResource.revision.id}"
 		String rev = "${wiResource.revision.rev}"
@@ -69,21 +63,20 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 //			String json = new JsonBuilder(parentWI).toPrettyString()
 //			println(json)
 			def parentOwner = parentWI.fields.'System.AssignedTo'
-			if (parentOwner == 'null') return false
+			if (parentOwner == 'null' || parentOwner == null) return logResult('Parent is unassigned')
 			
 			log.info("Updating owner of $wiType #$id")
 			try {
 				setToParentOwner(project, id, rev, parentOwner)
-				log.info("Updated succeeded")
-				return true
+				return logResult('Work item successfully assigned')
 			}
 			catch (e){
-				log.info("Error updating System.AssigedTo: ${e.message}")
-				return false
+				log.error("Error updating System.AssigedTo: ${e.message}")
+				return 'Error assigning work item'
 			}
 		}
 		else {
-			return false;
+			return logResult('No parent')
 		}
 	}
 
@@ -95,10 +88,9 @@ class SetOwnerMicroService extends AbstractWebSocketMicroService {
 		data.add(e)
 		workManagementService.updateWorkItem(collection, project, id, data)
 	}
-
-	@Override
-	public String topic() {
-		return 'workitem.updated';
+	private def logResult(def msg) {
+		log.info("Result: $msg")
+		return msg
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.zions.xlr.services.rest.client
 
 import com.zions.common.services.rest.AGenericRestClient
+import com.zions.common.services.rest.ARESTClient
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.HttpResponseDecorator
@@ -29,7 +30,7 @@ class XlrGenericRestClient extends AGenericRestClient {
 		this.xlrUrl = url
 		this.user = user
 		this.password = password
-		delegate = new RESTClient(xlrUrl)
+		delegate = new ARESTClient(xlrUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		setProxy()

@@ -1,6 +1,8 @@
 package com.zions.vsts.services.tfs.rest
 
 import com.zions.common.services.rest.AGenericRestClient
+import com.zions.common.services.rest.ARESTClient
+import com.zions.common.services.rest.CollectionInterceptor
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.HttpResponseDecorator
@@ -27,6 +29,10 @@ import org.springframework.stereotype.Component
 @Component
 @Slf4j
 class GenericRestClient extends AGenericRestClient {
+	
+	static {
+		CollectionInterceptor.injectIn(GenericRestClient)
+	}
 		
 	String tfsUrl;
 	
@@ -43,7 +49,6 @@ class GenericRestClient extends AGenericRestClient {
 	 */
 	public GenericRestClient(RESTClient client) {
 		delegate = client
-		checked = true
 	}
 
 	@Autowired
@@ -53,13 +58,12 @@ class GenericRestClient extends AGenericRestClient {
 		this.tfsUrl = tfsUrl
 		this.token = token;
 		this.user = user;
-		delegate = new RESTClient(tfsUrl)
+		delegate = new ARESTClient(tfsUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		setProxy()
 		setCredentials(user, token);
 		//setupTimeouts()
-		checked = true;
 		
 		//retryConnect()
 	}
