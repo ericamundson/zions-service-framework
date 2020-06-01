@@ -41,7 +41,7 @@ import groovyx.net.http.RESTClient
  */
 @Slf4j
 abstract class AGenericRestClient implements IGenericRestClient {
-	RESTClient delegate;
+	ARESTClient delegate;
 		
 	@Value('${output.test.data.flag:false}')
 	boolean outputTestDataFlag = false
@@ -102,7 +102,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#get(java.util.Map)
 	 */
 	@Override
-	def get(Map input) {
+	def get(Map input, Closure parserFunction = null) {
 		//log.debug("GenericRestClient::get -- URI before checkBlankCollection: "+input.uri)
 		String url
 		def query = null
@@ -118,6 +118,16 @@ abstract class AGenericRestClient implements IGenericRestClient {
 				
 			}
 		}
+		def currentParser = null
+		if (parserFunction) {
+			String contentType = 'application/json'
+			if (input.contentType) {
+				contentType  = "${input.contentType}"
+			}
+			currentParser = delegate.parser."${contentType}"
+			delegate.parser."${contentType}" = parserFunction
+			
+		}
 		boolean withHeader = false
 		if (input.withHeader) {
 			withHeader = input.withHeader
@@ -125,6 +135,14 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		input.remove('withHeader')
 		//log.debug("GenericRestClient::get -- URI after checkBlankCollection: "+oinput.uri)
 		HttpResponseDecorator resp = delegate.get(input)
+		if (parserFunction || currentParser) {
+			String contentType = 'application/json'
+			if (input.contentType) {
+				contentType  = "${input.contentType}"
+			}
+			delegate.parser."${contentType}" = currentParser
+			
+		}
 		if (resp.data == null) {
 			//log.warn("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
 		}

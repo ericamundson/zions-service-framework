@@ -1,6 +1,7 @@
 package com.zions.clm.services.rest
 
 import com.zions.common.services.rest.AGenericRestClient
+import com.zions.common.services.rest.ARESTClient
 import com.zions.common.services.rest.CollectionInterceptor
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
@@ -55,7 +56,7 @@ class ClmBGenericRestClient extends AGenericRestClient {
 		this.tfsUrl = clmUrl
 		this.password = password;
 		this.user = user;
-		delegate = new RESTClient(clmUrl)
+		delegate = new ARESTClient(clmUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		//setProxy()

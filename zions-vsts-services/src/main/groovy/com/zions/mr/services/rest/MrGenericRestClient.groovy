@@ -1,6 +1,7 @@
 package com.zions.mr.services.rest
 
 import com.zions.common.services.rest.AGenericRestClient
+import com.zions.common.services.rest.ARESTClient
 import com.zions.common.services.rest.IGenericRestClient
 import groovy.json.JsonBuilder
 import groovy.json.JsonOutput
@@ -61,7 +62,7 @@ class MrGenericRestClient extends AGenericRestClient {
 
 		this.mrUrl = mrUrl
 		this.userid = tfsUserid
-		delegate = new RESTClient(mrUrl)
+		delegate = new ARESTClient(mrUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		setProxy();
