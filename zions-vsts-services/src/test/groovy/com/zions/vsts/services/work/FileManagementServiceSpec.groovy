@@ -16,6 +16,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
+import com.zions.common.services.rest.ARESTClient
 import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
 import spock.lang.Specification
@@ -61,7 +62,7 @@ class FileManagementServiceSpecConfig {
 
 	@Bean
 	IGenericRestClient genericRestClient() {
-		RESTClient delegate = new RESTClient()
+		ARESTClient delegate = new ARESTClient()
 		IGenericRestClient out = mockFactory.Spy(GenericRestClient, constructorArgs: [delegate])
 		return out
 	}

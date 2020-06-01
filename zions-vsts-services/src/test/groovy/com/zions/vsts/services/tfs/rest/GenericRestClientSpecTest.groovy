@@ -3,6 +3,7 @@ package com.zions.vsts.services.tfs.rest
 import static org.junit.Assert.*
 
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.common.services.rest.ARESTClient
 import com.zions.common.services.rest.ThrottleException
 import com.zions.common.services.test.SpockLabeler
 import groovyx.net.http.ContentType
@@ -22,11 +23,11 @@ import org.springframework.spring.*
 class GenericRestClientSpecTest extends Specification {
 	
 	IGenericRestClient genericRestClient
-	RESTClient delegate
+	ARESTClient delegate
 	
 
 	public void setup() {
-		delegate = Mock(RESTClient)
+		delegate = Mock(ARESTClient)
 		genericRestClient = new GenericRestClient(delegate)
 	}	
 
