@@ -1,0 +1,88 @@
+{
+	"triggers": [
+		{
+			"branchFilters": [],
+			"pathFilters": [],
+			"settingsSourceType": 2,
+			"batchChanges": false,
+			"maxConcurrentBuildsPerBranch": 1,
+			"triggerType": "continuousIntegration"
+		}
+	],
+	"properties": {
+		
+	},
+	"tags": [],
+	"_links": {
+		"self": {
+			"href": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/build/Definitions/1326?revision=3"
+		},
+		"web": {
+			"href": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_build/definition?definitionId=1326"
+		},
+		"editor": {
+			"href": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_build/designer?id=1326&_a=edit-build-definition"
+		},
+		"badge": {
+			"href": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/build/status/1326"
+		}
+	},
+	"jobAuthorizationScope": "projectCollection",
+	"jobTimeoutInMinutes": 60,
+	"jobCancelTimeoutInMinutes": 5,
+	"process": {
+		"yamlFilename": "pipelines/almops-release.yml",
+		"type": 2
+	},
+	"repository": {
+		"properties": {
+			"cloneUrl": "https://ZionsETO@dev.azure.com/ZionsETO/DTS/_git/zions-service-framework",
+			"fullName": "zions-service-framework",
+			"defaultBranch": "refs/heads/master",
+			"isFork": "False",
+			"safeRepository": "565c38bd-ee05-4b67-9b94-41b62f4201f6",
+			"reportBuildStatus": "true"
+		},
+		"id": "565c38bd-ee05-4b67-9b94-41b62f4201f6",
+		"type": "TfsGit",
+		"name": "zions-service-framework",
+		"url": "https://dev.azure.com/ZionsETO/DTS/_git/zions-service-framework",
+		"defaultBranch": "refs/heads/master",
+		"clean": null,
+		"checkoutSubmodules": false
+	},
+	"quality": "definition",
+	"authoredBy": {
+		"displayName": "Eric Amundson",
+		"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+			}
+		},
+		"id": "34cfc788-d82e-61e0-bf5d-9eabfb8194dc",
+		"uniqueName": "eric.amundson2@zionsbancorp.com",
+		"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj",
+		"descriptor": "aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj"
+	},
+	"drafts": [],
+	"queue": {
+		"_links": {
+			"self": {
+				"href": "https://dev.azure.com/ZionsETO/_apis/build/Queues/83"
+			}
+		},
+		"id": 83,
+		"name": "Hosted Ubuntu 1604",
+		"url": "https://dev.azure.com/ZionsETO/_apis/build/Queues/83",
+		"pool": {
+			"id": 6,
+			"name": "Hosted Ubuntu 1604",
+			"isHosted": true
+		}
+	},
+	"id": 1326,
+	"name": "almops-Release",
+	"url": "https://dev.azure.com/ZionsETO/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648/_apis/build/Definitions/1326?revision=3",
+	"uri": "vstfs:///Build/Definition/1326",
+	"path": "\\","type":"build","queueStatus":"enabled","revision":3,"createdDate":"2020-02-24T13:00:26.167Z","project":{"id":"4d92b2fc-cdec-4a2e-b598-3bfd9fb80648","name":"DTS","description":"DeliveryTools&Services","url":"https://dev.azure.com/ZionsETO/_apis/projects/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648","state":"wellFormed","revision":2425,"visibility":"private","lastUpdateTime":"2020-01-15T14:55:23.81Z"}}"\\","type":"build","queueStatus":"enabled","revision":3,"createdDate":"2020-02-24T13:00:26.167Z","project":{"id":"4d92b2fc-cdec-4a2e-b598-3bfd9fb80648","name":"DTS","description":"Delivery Tools & Services","url":"https://dev.azure.com/ZionsETO/_apis/projects/4d92b2fc-cdec-4a2e-b598-3bfd9fb80648","state":"wellFormed","revision":2425,"visibility":"private","lastUpdateTime":"2020-01-15T14:55:23.81Z"}}

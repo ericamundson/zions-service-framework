@@ -1,9 +1,13 @@
+variables:
+- group: 'XebiaLabs CLI (Prod)'
+
 trigger:
   branches:
     include:
     - master
   paths:
     include:
+
     - 'zions-vsts-setcolor-microservice/*'
     - 'zions-vsts-services/src/main/groovy/com/zions/vsts/services/asset/*'
     - 'zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*'
@@ -23,7 +27,7 @@ stages:
 
     steps:
     - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
-      displayName: 'Tag Pending'
+      displayName: 'Tag'
       inputs:
         OutputVariable: buildTag
         InitialVersionPrefix: 7.0.0

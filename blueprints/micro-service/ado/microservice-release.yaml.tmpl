@@ -1,4 +1,8 @@
 {{$app := .AppName }}
+
+variables:
+- group: 'XebiaLabs CLI (Prod)'
+
 trigger:
   branches:
     include:
@@ -25,7 +29,7 @@ stages:
 
     steps:
     - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
-      displayName: 'Tag Pending'
+      displayName: 'Tag'
       inputs:
         OutputVariable: buildTag
         InitialVersionPrefix: 7.0.0
@@ -36,7 +40,7 @@ stages:
       inputs:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
         workingDirectory: '$(Build.SourcesDirectory)'
-        options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservice'
+        options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
         {{if .UseQueue}}
         tasks: 'clean zions-queuing-microservice:build {{$app}}:build'
         {{else}}
