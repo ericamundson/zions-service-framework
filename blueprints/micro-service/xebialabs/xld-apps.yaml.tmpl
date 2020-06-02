@@ -1,0 +1,75 @@
+{{$app := .AppName | kebabcase}}
+apiVersion: xl-deploy/v1
+kind: Applications
+spec:
+- name: DTS
+  type: core.Directory
+  children:
+  - name: {{$app}}
+    type: udm.Application
+    children:
+    - name: !value "app_version"
+      type: udm.DeploymentPackage
+      deployables:
+      {{if .UseQueue}}
+      - name: {{$app}}-queuing.xml
+        type: file.File
+        scanPlaceholders: true
+        targetPath: '[[deploy.path]]'
+        createTargetPath: "true"
+        file: !file "service/queue.xml"
+      - name: zions-queuing-microservice.jar
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '[[deploy.path]]'
+        createTargetPath: "true"
+        file: !file "../../zions-queuing-microservice/build/libs/zions-queuing-microservice.jar"
+      - name: {{$app}}-queuing.exe
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '[[deploy.path]]'
+        createTargetPath: "true"
+        file: !file "./service/WinSW.NET4.exe"
+      - name: run queuing install
+        type: advcmd.Command
+        command: -|
+          [[deploy.path]]/{{$app}}-queuing.exe uninstall
+          [[deploy.path]]/{{$app}}-queuing.exe install
+          [[deploy.path]]/{{$app}}-queuing.exe start
+        createOrder: "61"
+        destroyOrder: "41"
+        alwaysRun: "true"
+        noopOrder: "61"
+        undoCommand: 'echo "No action needed for undoCommand"'
+      {{end}}
+      - name: {{$app}}.xml
+        type: file.File
+        scanPlaceholders: true
+        targetPath: '[[deploy.path]]'
+        createTargetPath: "true"
+        file: !file "./service/service.xml"
+      - name: {{$app}}.jar
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '[[deploy.path]]'
+        createTargetPath: "true"
+        file: !file "../build/libs/{{$app}}.jar"
+      - name: {{$app}}.exe
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '[[deploy.path]]'
+        createTargetPath: "true"
+        file: !file "./service/WinSW.NET4.exe"
+      - name: run install
+        type: advcmd.Command
+        command: -|
+          [[deploy.path]]/{{$app}}.exe uninstall
+          [[deploy.path]]/{{$app}}.exe install
+          [[deploy.path]]/{{$app}}.exe start
+        createOrder: "62"
+        destroyOrder: "42"
+        alwaysRun: "true"
+        noopOrder: "62"
+        undoCommand: 'echo "No action needed for undoCommand"'
+        
+        

@@ -6,8 +6,7 @@ trigger:
     include:
     - 'zions-pipeline-cli/*'
     - 'zions-vsts-services/*'
-    - 'zions-common/*'
-    - 'zions-common-data/*'
+    - 'zions-common/src/main/groovy/com/zions/common/services/rest/*'
     - 'zions-xlr-services/*'
     - 'zions-xld-services/*'
     

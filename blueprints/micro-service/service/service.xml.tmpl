@@ -1,0 +1,13 @@
+{{$app := .AppName }}
+<service>
+      <id>{{$app}}</id>
+      <name>{{$app}}</name>
+      <description>This service runs {{$app}}.</description>
+      <executable>java</executable>
+      {{if .UseQueue}}
+      <arguments>-Xrs -Xmx256m -jar "[[deploy.path]]/{{$app}}.jar" --routing.exchange.name={{.Exchangename}} --queue.name={{.Queuename}} --routing.direct.key={{.Keyname}} --tfs.url=[[tfs.url]] --logging.file="[[deploy.path]]/{{$app}}.log" </arguments>
+      {{else}}
+      <arguments>-Xrs -Xmx256m -jar "[[deploy.path]]/{{$app}}.jar" --websocket.url=[[ws.url]] --tfs.url=[[tfs.url]] --logging.file="[[deploy.path]]/{{$app}}.log" </arguments>
+	  {{end}}
+      <logmode>rotate</logmode>
+</service>

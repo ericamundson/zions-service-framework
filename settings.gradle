@@ -45,6 +45,7 @@ if ("${context}" == 'microservices')	{
 	include ':zions-common-data'
 	include ':zions-xld-services'
 	include ':zions-xlr-services'
+	include ':zions-pipeline-services'
 	include ':zions-vsts-gateway'
 	include ':zions-content-microservice'
 	include ':zions-queuing-microservice'
