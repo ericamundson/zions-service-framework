@@ -23,33 +23,6 @@ spec:
         type: xlrelease.ParallelGroup
         tasks:
         
-        - name: DEV
-          type: xlrelease.SequentialGroup
-          tasks:
-          - name: Deploy zions-vsts-setcolor-microservice for eto-dev testing.
-            type: xldeploy.Deploy
-            server: XL Deploy Server
-            deploymentApplication: 
-            deploymentVersion:
-            deploymentPackage: Applications/DTS/zions-vsts-setcolor-microservice/${deploymentPackage.name}
-            deploymentEnvironment: Environments/DTS/zions-vsts-setcolor-microservice/Dev
-            rollbackOnFailure: false
-            cancelOnError: false
-            failOnPause: false
-          - name: DEV - zions-vsts-setcolor-microservice deployment ready for testing
-            type: xlrelease.NotificationTask
-            addresses:
-            - Eric.Amundson2@zionsbancorp.com
-            - DL-ALMOps@zionsbancorp.com
-            subject: 'zions-vsts-setcolor-microservice: ${deploymentPackage.name} ready for testing'
-            body: |-
-              # Dev ready for testing
-              A new version of zions-vsts-setcolor-microservice has been deployed:
-
-              ## ${deploymentPackage.name}
-
-              Please validate all new changes.
-        
         - name: PROD
           type: xlrelease.SequentialGroup
           tasks:
