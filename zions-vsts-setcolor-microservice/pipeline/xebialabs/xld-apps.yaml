@@ -29,6 +29,12 @@ spec:
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
         file: !file "../service/queue.exe"
+      - name: zions-vsts-setcolor-microservice-queuing.exe.config
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '{{deploy.path}}'
+        createTargetPath: "true"
+        file: !file "../service/queue.exe.config"
       - name: run queuing install
         type: advcmd.Command
         command: |-
@@ -59,6 +65,12 @@ spec:
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
         file: !file "../service/service.exe"
+      - name: zions-vsts-setcolor-microservice.exe.config
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '{{deploy.path}}'
+        createTargetPath: "true"
+        file: !file "../service/service.exe.config"
       - name: run install
         type: advcmd.Command
         command: |-

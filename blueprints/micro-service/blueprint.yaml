@@ -69,6 +69,8 @@ spec:
   - path: service/service.xml.tmpl
   - path: service/service.exe
   - path: service/queue.exe
+  - path: service/service.exe.config
+  - path: service/queue.exe.config
   - path: executable/builddefinition.yaml.tmpl
   - path: ado/microservice-release.yaml.tmpl
   - path: xebialabs/xld-apps.yaml.tmpl

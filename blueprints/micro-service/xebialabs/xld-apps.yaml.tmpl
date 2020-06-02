@@ -30,6 +30,12 @@ spec:
         targetPath: '[[deploy.path]]'
         createTargetPath: "true"
         file: !file "../service/queue.exe"
+      - name: {{$app}}-queuing.exe.config
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '[[deploy.path]]'
+        createTargetPath: "true"
+        file: !file "../service/queue.exe.config"
       - name: run queuing install
         type: advcmd.Command
         command: |-
@@ -60,6 +66,12 @@ spec:
         targetPath: '[[deploy.path]]'
         createTargetPath: "true"
         file: !file "../service/service.exe"
+      - name: {{$app}}.exe.config
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '[[deploy.path]]'
+        createTargetPath: "true"
+        file: !file "../service/service.exe.config"
       - name: run install
         type: advcmd.Command
         command: |-
