@@ -1,0 +1,8 @@
+blueprint:
+  current-repository: test
+  repositories:
+    - name: test
+      type: local
+      path: D:\git\xl-blueprints
+      ignored-dirs: .git, .vscode
+      ignored-files: .DS_Store, .gitignore

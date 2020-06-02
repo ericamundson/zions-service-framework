@@ -1,0 +1,11 @@
+---
+AppName: "zions-vsts-setcolor-microservice"
+BuildIncludes: "zions-vsts-setcolor-microservice/*,zions-vsts-services/src/main/groovy/com/zions/vsts/services/asset/*,zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*"
+UseQueue: true
+Exchangename: "WorkItem-exchange"
+Queuename: "WorkItem-setcolor-queue"
+Keyname: "setcolor"
+WSTopics: "workitem.created,workitem.updated"
+DeployDev: true
+DevWSUrl: "ws://localhost:9000/ws"
+ProdWSUrl: "ws://localhost:9000/ws"

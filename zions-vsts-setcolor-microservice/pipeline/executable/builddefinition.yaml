@@ -1,0 +1,7 @@
+executables:
+- name: zions-vsts-setcolor-microservice-release
+  type: buildDefinition
+  context: zionseto
+  project: DTS
+  repository: zions-service-framework
+  buildyaml: zions-vsts-setcolor-microservice/pipeline/ado/microservice-release.yaml

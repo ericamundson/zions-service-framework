@@ -1,0 +1,76 @@
+apiVersion: xl/v2
+kind: Blueprint
+
+metadata:
+  name: dts-micro-service
+  description: |
+    Outline of ADO/XLD/XLR to build deploy microservices.
+  author: XebiaLabs
+  version: 2.0
+  instructions: none
+
+spec:
+  parameters:
+  - name: AppName
+    type: Input
+    prompt: What is the name of the micro-service project?
+            
+  - name: BuildIncludes
+    type: Input
+    prompt: Enter a comma delimited list of projects or sub-folders to include to determine if new release is required.
+
+  - name: UseQueue
+    type: Confirm
+    prompt: Does this service require a queue?
+    description: "Will be used to determine queue setup."
+
+  - name: Exchangename
+    type: Input
+    prompt: What is the exchange name?
+    promptIf: !expr "UseQueue"
+
+  - name: Queuename
+    type: Input
+    prompt: What is the queue name?
+    promptIf: !expr "UseQueue"
+    
+  - name: Keyname
+    type: Input
+    prompt: What is the routing key name?
+    promptIf: !expr "UseQueue"
+    
+  - name: WSTopics
+    type: Input
+    prompt: Enter comma delimited list of ADO event topics.
+    promptIf: !expr "UseQueue"
+
+  - name: DeployDev
+    type: Confirm
+    prompt:  Will this be deployed to eto-dev?
+    
+  - name: DevWSUrl
+    type: Input
+    prompt: What is eto-dev web socket url?
+    default: ws://localhost:9000/ws
+    promptIf: !expr "DeployDev"
+        
+  - name: ProdWSUrl
+    type: Input
+    prompt: What is zionseto web socket url?
+    default: ws://localhost:9000/ws
+
+
+  files:
+  - path: xl-deploy.yaml
+  - path: xl-release.yaml
+  - path: xebialabs/USAGE.md.tmpl
+  - path: service/queue.xml.tmpl
+    writeIf: !expr "UseQueue"
+  - path: service/service.xml.tmpl
+  - path: service/WinSW.NET4.exe
+  - path: executable/builddefinition.yaml.tmpl
+  - path: ado/microservice-release.yaml.tmpl
+  - path: xebialabs/xld-apps.yaml.tmpl
+  - path: xebialabs/xld-infra-env.yaml.tmpl
+  - path: xebialabs/xlr-pipeline-ci-cd.yaml.tmpl
+  - path: xebialabs/xlr-pipeline-destroy.yaml.tmpl

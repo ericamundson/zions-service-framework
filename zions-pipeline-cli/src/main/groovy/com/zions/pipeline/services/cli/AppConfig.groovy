@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
+import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
 @Configuration
 @Profile("default")
@@ -57,7 +58,7 @@ public class AppConfig {
 	
 	@Bean
 	IGenericRestClient genericRestClient() {
-		return new GenericRestClient(tfsUrl, tfsUser, tfsToken)
+		return new MultiUserGenericRestClient()
 	}
 	
 	@Bean

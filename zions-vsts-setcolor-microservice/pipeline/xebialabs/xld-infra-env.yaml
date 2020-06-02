@@ -1,0 +1,54 @@
+apiVersion: xl-deploy/v1
+kind: Environments
+spec:
+- name: DTS/zions-vsts-setcolor-microservice
+  type: core.Directory
+  children:
+  
+  - name: Dev
+    type: udm.Environment
+    members:
+    - DTS/micro-service/Dev
+    dictionaries:
+    - DTS/zions-vsts-setcolor-microservice/_Dictionaries/Dev_Dict
+  
+  - name: Prod
+    type: udm.Environment
+    members:
+    - DTS/micro-service/Prod
+    dictionaries:
+    - DTS/zions-vsts-setcolor-microservice/_Dictionaries/Prod_dict
+  - directory: _Dictionaries
+    children:
+    
+    - name: Dev_Dict
+      type: udm.Dictionary
+      entries:
+        deploy.dir: d:/app/azure/services/zions-vsts-setcolor-microservice
+        ws.url: ws://localhost:9000/ws
+        tfs.url: https://dev.azure.com/eto-dev
+    
+    - name: Prod_Dict
+      type: udm.Dictionary
+      entries:
+        deploy.dir: d:/app/azure/services/zions-vsts-setcolor-microservice
+        ws.url: ws://localhost:9000/ws
+        tfs.url: https://dev.azure.com/zionseto
+---
+
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+- name: DTS/micro-service
+  type: core.Directory
+  children:
+  - name: Dev
+    type: overthere.CifsHost
+    address: UTMVPI0192
+    username: svc-vsbuildagent@zbc.internal
+    password: !value "svc_account_passwd"
+  - name: Prod
+    type: overthere.CifsHost
+    address: UTMVPI0144
+    username: svc-vsbuildagent@zbc.internal
+    password: !value "svc_account_passwd"
