@@ -1,3 +1,4 @@
+---
 apiVersion: xl-deploy/v1
 kind: Environments
 spec:
@@ -35,7 +36,6 @@ spec:
         ws.url: ws://localhost:9000/ws
         tfs.url: https://dev.azure.com/zionseto
 ---
-
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
