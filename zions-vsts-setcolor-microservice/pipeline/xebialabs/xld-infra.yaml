@@ -2,7 +2,7 @@
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
-- name: DTS/micro-service
+- name: Infrastructure/DTS/micro-service
   type: core.Directory
   children:
   - name: Dev
