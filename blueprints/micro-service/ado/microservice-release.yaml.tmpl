@@ -7,13 +7,13 @@ trigger:
     include:
 {{ $splitIncludes := splitList "," .BuildIncludes }}
 {{- range $include := $splitIncludes }}
-    - {{ $include | trim }}
+    - '{{ $include | trim }}'
 {{- end }}
     
 pool:
-  name: Default
+  name: On-Prem Production
   demands:
-  - agent.name -equals bagent
+  - agent.computername -equals UTMVPI0144
   
  
 stages:
