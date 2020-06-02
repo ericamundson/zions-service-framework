@@ -4,9 +4,9 @@ trigger:
     - master
   paths:
     include:
-    - zions-vsts-setcolor-microservice/*
-    - zions-vsts-services/src/main/groovy/com/zions/vsts/services/asset/*
-    - zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*
+    - 'zions-vsts-setcolor-microservice/*'
+    - 'zions-vsts-services/src/main/groovy/com/zions/vsts/services/asset/*'
+    - 'zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*'
     
 pool:
   name: On-Prem Production
