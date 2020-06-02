@@ -71,6 +71,7 @@ spec:
   - path: executable/builddefinition.yaml.tmpl
   - path: ado/microservice-release.yaml.tmpl
   - path: xebialabs/xld-apps.yaml.tmpl
-  - path: xebialabs/xld-infra-env.yaml.tmpl
+  - path: xebialabs/xld-infra.yaml.tmpl
+  - path: xebialabs/xld-env.yaml.tmpl
   - path: xebialabs/xlr-pipeline-ci-cd.yaml.tmpl
   - path: xebialabs/xlr-pipeline-destroy.yaml.tmpl

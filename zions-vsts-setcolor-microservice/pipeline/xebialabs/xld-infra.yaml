@@ -1,0 +1,17 @@
+---
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+- name: DTS/micro-service
+  type: core.Directory
+  children:
+  - name: Dev
+    type: overthere.CifsHost
+    address: UTMVPI0192
+    username: svc-vsbuildagent@zbc.internal
+    password: !value "svc_account_passwd"
+  - name: Prod
+    type: overthere.CifsHost
+    address: UTMVPI0144
+    username: svc-vsbuildagent@zbc.internal
+    password: !value "svc_account_passwd"
