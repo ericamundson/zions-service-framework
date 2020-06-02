@@ -20,7 +20,7 @@ spec:
       members:
       - Infrastructure/DTS/microservice/Prod
       dictionaries:
-      - Environments/DTS/zions-vsts-setcolor-microservice/_Dictionaries/Prod_dict
+      - Environments/DTS/zions-vsts-setcolor-microservice/_Dictionaries/Prod_Dict
     - directory: _Dictionaries
       children:
       
