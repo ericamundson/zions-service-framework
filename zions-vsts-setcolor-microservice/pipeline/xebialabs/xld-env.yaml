@@ -2,36 +2,38 @@
 apiVersion: xl-deploy/v1
 kind: Environments
 spec:
-- name: Environments/DTS/zions-vsts-setcolor-microservice
+- name: Environments/DTS
   type: core.Directory
   children:
-  
-  - name: Dev
-    type: udm.Environment
-    members:
-    - DTS/micro-service/Dev
-    dictionaries:
-    - DTS/zions-vsts-setcolor-microservice/_Dictionaries/Dev_Dict
-  
-  - name: Prod
-    type: udm.Environment
-    members:
-    - DTS/micro-service/Prod
-    dictionaries:
-    - DTS/zions-vsts-setcolor-microservice/_Dictionaries/Prod_dict
-  - directory: _Dictionaries
+  - directory: zions-vsts-setcolor-microservice
     children:
     
-    - name: Dev_Dict
-      type: udm.Dictionary
-      entries:
-        deploy.dir: d:/app/azure/services/zions-vsts-setcolor-microservice
-        ws.url: ws://localhost:9000/ws
-        tfs.url: https://dev.azure.com/eto-dev
+    - name: Dev
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Dev
+      dictionaries:
+      - Environments/DTS/zions-vsts-setcolor-microservice/_Dictionaries/Dev_Dict
     
-    - name: Prod_Dict
-      type: udm.Dictionary
-      entries:
-        deploy.dir: d:/app/azure/services/zions-vsts-setcolor-microservice
-        ws.url: ws://localhost:9000/ws
-        tfs.url: https://dev.azure.com/zionseto
+    - name: Prod
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Prod
+      dictionaries:
+      - Environments/DTS/zions-vsts-setcolor-microservice/_Dictionaries/Prod_dict
+    - directory: _Dictionaries
+      children:
+      
+      - name: Dev_Dict
+        type: udm.Dictionary
+        entries:
+          deploy.dir: d:/app/azure/services/zions-vsts-setcolor-microservice
+          ws.url: ws://localhost:9000/ws
+          tfs.url: https://dev.azure.com/eto-dev
+      
+      - name: Prod_Dict
+        type: udm.Dictionary
+        entries:
+          deploy.dir: d:/app/azure/services/zions-vsts-setcolor-microservice
+          ws.url: ws://localhost:9000/ws
+          tfs.url: https://dev.azure.com/zionseto
