@@ -1,4 +1,5 @@
 {{$app := .AppName | kebabcase}}
+---
 apiVersion: xl-deploy/v1
 kind: Environments
 spec:
@@ -36,7 +37,6 @@ spec:
         ws.url: {{.ProdWSUrl}}
         tfs.url: https://dev.azure.com/zionseto
 ---
-
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
