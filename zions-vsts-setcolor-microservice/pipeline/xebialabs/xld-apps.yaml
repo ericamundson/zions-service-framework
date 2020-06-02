@@ -31,7 +31,7 @@ spec:
         file: !file "../service/queue.exe"
       - name: run queuing install
         type: advcmd.Command
-        command: -|
+        command: |-
           {{deploy.path}}/zions-vsts-setcolor-microservice-queuing.exe uninstall
           {{deploy.path}}/zions-vsts-setcolor-microservice-queuing.exe install
           {{deploy.path}}/zions-vsts-setcolor-microservice-queuing.exe start
@@ -61,7 +61,7 @@ spec:
         file: !file "../service/service.exe"
       - name: run install
         type: advcmd.Command
-        command: -|
+        command: |-
           {{deploy.path}}/zions-vsts-setcolor-microservice.exe uninstall
           {{deploy.path}}/zions-vsts-setcolor-microservice.exe install
           {{deploy.path}}/zions-vsts-setcolor-microservice.exe start

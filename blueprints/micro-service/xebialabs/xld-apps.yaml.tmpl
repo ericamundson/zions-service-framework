@@ -32,7 +32,7 @@ spec:
         file: !file "../service/queue.exe"
       - name: run queuing install
         type: advcmd.Command
-        command: -|
+        command: |-
           [[deploy.path]]/{{$app}}-queuing.exe uninstall
           [[deploy.path]]/{{$app}}-queuing.exe install
           [[deploy.path]]/{{$app}}-queuing.exe start
@@ -62,7 +62,7 @@ spec:
         file: !file "../service/service.exe"
       - name: run install
         type: advcmd.Command
-        command: -|
+        command: |-
           [[deploy.path]]/{{$app}}.exe uninstall
           [[deploy.path]]/{{$app}}.exe install
           [[deploy.path]]/{{$app}}.exe start
