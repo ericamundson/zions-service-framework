@@ -28,7 +28,7 @@ spec:
         scanPlaceholders: false
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
-        file: !file "../service/WinSW.NET4.exe"
+        file: !file "../service/queue.exe"
       - name: run queuing install
         type: advcmd.Command
         command: -|
@@ -58,7 +58,7 @@ spec:
         scanPlaceholders: false
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
-        file: !file "../service/WinSW.NET4.exe"
+        file: !file "../service/service.exe"
       - name: run install
         type: advcmd.Command
         command: -|
