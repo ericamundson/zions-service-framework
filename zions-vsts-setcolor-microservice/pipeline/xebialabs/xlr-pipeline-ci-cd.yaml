@@ -31,8 +31,8 @@ spec:
             server: XL Deploy Server
             deploymentApplication: 
             deploymentVersion:
-            deploymentPackage: !format DTS/zions-vsts-setcolor-microservice
-            deploymentEnvironment: !format DTS/zions-vsts-setcolor-microservice/Dev
+            deploymentPackage: Applications/DTS/zions-vsts-setcolor-microservice/${deploymentPackage.name}
+            deploymentEnvironment: Environments/DTS/zions-vsts-setcolor-microservice/Dev
             rollbackOnFailure: false
             cancelOnError: false
             failOnPause: false
@@ -58,8 +58,8 @@ spec:
             server: XL Deploy Server
             deploymentApplication: 
             deploymentVersion:
-            deploymentPackage: DTS/zions-vsts-setcolor-microservice
-            deploymentEnvironment: DTS/zions-vsts-setcolor-microservice/Prod
+            deploymentPackage: Applications/DTS/zions-vsts-setcolor-microservice/${deploymentPackage.name}
+            deploymentEnvironment: Environments/DTS/zions-vsts-setcolor-microservice/Prod
             rollbackOnFailure: false
             cancelOnError: false
             failOnPause: false
