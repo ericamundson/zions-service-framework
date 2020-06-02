@@ -32,8 +32,8 @@ spec:
             server: XL Deploy Server
             deploymentApplication: 
             deploymentVersion:
-            deploymentPackage: !format DTS/{{$app}}
-            deploymentEnvironment: !format DTS/{{$app}}/Dev
+            deploymentPackage: Applications/DTS/{{$app}}/${deploymentPackage.name}
+            deploymentEnvironment: Environments/DTS/{{$app}}/Dev
             rollbackOnFailure: false
             cancelOnError: false
             failOnPause: false
@@ -59,8 +59,8 @@ spec:
             server: XL Deploy Server
             deploymentApplication: 
             deploymentVersion:
-            deploymentPackage: DTS/{{$app}}
-            deploymentEnvironment: DTS/{{$app}}/Prod
+            deploymentPackage: Applications/DTS/{{$app}}/${deploymentPackage.name}
+            deploymentEnvironment: Environments/DTS/{{$app}}/Prod
             rollbackOnFailure: false
             cancelOnError: false
             failOnPause: false
