@@ -67,7 +67,8 @@ spec:
   - path: service/queue.xml.tmpl
     writeIf: !expr "UseQueue"
   - path: service/service.xml.tmpl
-  - path: service/WinSW.NET4.exe
+  - path: service/service.exe
+  - path: service/queue.exe
   - path: executable/builddefinition.yaml.tmpl
   - path: ado/microservice-release.yaml.tmpl
   - path: xebialabs/xld-apps.yaml.tmpl
