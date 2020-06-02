@@ -76,3 +76,4 @@ spec:
   - path: xebialabs/xld-env.yaml.tmpl
   - path: xebialabs/xlr-pipeline-ci-cd.yaml.tmpl
   - path: xebialabs/xlr-pipeline-destroy.yaml.tmpl
+  - path: xebialabs/xlr-release.yaml.tmpl
