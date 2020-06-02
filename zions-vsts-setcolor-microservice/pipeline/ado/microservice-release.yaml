@@ -10,9 +10,9 @@ trigger:
     - zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*
     
 pool:
-  name: Default
+  name: On-Prem Production
   demands:
-  - agent.name -equals bagent
+  - agent.computername -equals UTMVPI0144
   
  
 stages:
