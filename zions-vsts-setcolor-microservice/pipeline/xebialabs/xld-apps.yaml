@@ -1,7 +1,7 @@
 apiVersion: xl-deploy/v1
 kind: Applications
 spec:
-- name: DTS
+- name: Applications/DTS
   type: core.Directory
   children:
   - name: zions-vsts-setcolor-microservice

@@ -2,7 +2,7 @@
 apiVersion: xl-deploy/v1
 kind: Environments
 spec:
-- name: DTS/zions-vsts-setcolor-microservice
+- name: Environments/DTS/zions-vsts-setcolor-microservice
   type: core.Directory
   children:
   
