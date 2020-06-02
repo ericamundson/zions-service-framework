@@ -22,14 +22,15 @@ class BuildDefinition implements IExecutableYamlHandler {
 		
 		def project = projectManagementService.getProject('', yaml.project)
 		def build = buildManagementService.getBuild('', project, yaml.name)
+		def queue = buildManagementService.getQueue('',project, yaml.queue)
 		if (!build) {
 			def repo = codeManagementService.getRepo('', project, yaml.repository)
-			def bDef = [name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, queue:[id: 163, name: 'On-Prem Production'], type:2] ]
+			def bDef = [name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue ]
 			def query = ['api-version':'5.1']
 			buildManagementService.writeBuildDefinition('', project, bDef, query)
 		} else {
 			def repo = codeManagementService.getRepo('', project, yaml.repository)
-			def bDef = [id: build.id, name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, queue:[id: 163, name: 'On-Prem Production'], type:2] ]
+			def bDef = [id: build.id, name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue ]
 //			def bDef = [id: build.id, name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2] ]
 			def query = ['api-version':'5.1']
 			buildManagementService.updateBuildDefinition('', project, bDef, query)
