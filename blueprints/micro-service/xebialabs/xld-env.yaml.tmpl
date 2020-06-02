@@ -3,37 +3,39 @@
 apiVersion: xl-deploy/v1
 kind: Environments
 spec:
-- name: Environments/DTS/{{$app}}
+- name: Environments/DTS
   type: core.Directory
   children:
-  {{if .DeployDev}}
-  - name: Dev
-    type: udm.Environment
-    members:
-    - DTS/micro-service/Dev
-    dictionaries:
-    - DTS/{{$app}}/_Dictionaries/Dev_Dict
-  {{end}}
-  - name: Prod
-    type: udm.Environment
-    members:
-    - DTS/micro-service/Prod
-    dictionaries:
-    - DTS/{{$app}}/_Dictionaries/Prod_dict
-  - directory: _Dictionaries
+  - directory: {{$app}}
     children:
     {{if .DeployDev}}
-    - name: Dev_Dict
-      type: udm.Dictionary
-      entries:
-        deploy.dir: d:/app/azure/services/{{$app}}
-        ws.url: {{.DevWSUrl}}
-        tfs.url: https://dev.azure.com/eto-dev
+    - name: Dev
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Dev
+      dictionaries:
+      - Environments/DTS/{{$app}}/_Dictionaries/Dev_Dict
     {{end}}
-    - name: Prod_Dict
-      type: udm.Dictionary
-      entries:
-        deploy.dir: d:/app/azure/services/{{$app}}
-        ws.url: {{.ProdWSUrl}}
-        tfs.url: https://dev.azure.com/zionseto
+    - name: Prod
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Prod
+      dictionaries:
+      - Environments/DTS/{{$app}}/_Dictionaries/Prod_dict
+    - directory: _Dictionaries
+      children:
+      {{if .DeployDev}}
+      - name: Dev_Dict
+        type: udm.Dictionary
+        entries:
+          deploy.dir: d:/app/azure/services/{{$app}}
+          ws.url: {{.DevWSUrl}}
+          tfs.url: https://dev.azure.com/eto-dev
+      {{end}}
+      - name: Prod_Dict
+        type: udm.Dictionary
+        entries:
+          deploy.dir: d:/app/azure/services/{{$app}}
+          ws.url: {{.ProdWSUrl}}
+          tfs.url: https://dev.azure.com/zionseto
     
