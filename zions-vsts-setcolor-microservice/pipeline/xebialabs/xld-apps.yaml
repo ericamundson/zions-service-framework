@@ -16,19 +16,19 @@ spec:
         scanPlaceholders: true
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
-        file: !file "service/queue.xml"
+        file: !file "../service/queue.xml"
       - name: zions-queuing-microservice.jar
         type: file.File
         scanPlaceholders: false
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
-        file: !file "../../zions-queuing-microservice/build/libs/zions-queuing-microservice.jar"
+        file: !file "../../../zions-queuing-microservice/build/libs/zions-queuing-microservice.jar"
       - name: zions-vsts-setcolor-microservice-queuing.exe
         type: file.File
         scanPlaceholders: false
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
-        file: !file "./service/WinSW.NET4.exe"
+        file: !file "../service/WinSW.NET4.exe"
       - name: run queuing install
         type: advcmd.Command
         command: -|
@@ -46,19 +46,19 @@ spec:
         scanPlaceholders: true
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
-        file: !file "./service/service.xml"
+        file: !file "../service/service.xml"
       - name: zions-vsts-setcolor-microservice.jar
         type: file.File
         scanPlaceholders: false
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
-        file: !file "../build/libs/zions-vsts-setcolor-microservice.jar"
+        file: !file "../../build/libs/zions-vsts-setcolor-microservice.jar"
       - name: zions-vsts-setcolor-microservice.exe
         type: file.File
         scanPlaceholders: false
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
-        file: !file "./service/WinSW.NET4.exe"
+        file: !file "../service/WinSW.NET4.exe"
       - name: run install
         type: advcmd.Command
         command: -|
