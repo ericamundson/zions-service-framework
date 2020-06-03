@@ -28,14 +28,14 @@ spec:
       - name: Dev_Dict
         type: udm.Dictionary
         entries:
-          deploy.path: d:/app/azure/services/{{$app}}
+          deploy.path: d:\app\azure\services\{{$app}}
           ws.url: {{.DevWSUrl}}
           tfs.url: https://dev.azure.com/eto-dev
       {{end}}
       - name: Prod_Dict
         type: udm.Dictionary
         entries:
-          deploy.path: d:/app/azure/services/{{$app}}
+          deploy.path: d:\app\azure\services\{{$app}}
           ws.url: {{.ProdWSUrl}}
           tfs.url: https://dev.azure.com/zionseto
     
