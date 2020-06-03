@@ -210,7 +210,8 @@ trait WebSocketMicroServiceTrait implements StompSessionHandler {
 	 */
 	@Override
 	public void handleTransportError(StompSession session, Throwable exception) {
-		log.error("Transport fail", exception.message)
+		log.error("Transport fail=: ${exception.message}")
+		exception.printStackTrace()
 			
 	}
 		

@@ -24,8 +24,9 @@ class BuildDefinition implements IExecutableYamlHandler {
 		def build = buildManagementService.getBuild('', project, yaml.name)
 		def queue = buildManagementService.getQueue('',project, yaml.queue)
 		if (!build) {
+			def trigger = [batchChanges: false, pollingJobId: null, pollingInterval: 0, pathFilters:[], branchFilters: ['+refs/heads/master'], defaultSettingsSourceType: 2, isSettingsSourceOptionSupported: true, settingsSourceType: 2, triggerType: 2]
 			def repo = codeManagementService.getRepo('', project, yaml.repository)
-			def bDef = [name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue ]
+			def bDef = [name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue, triggers:[trigger] ]
 			def query = ['api-version':'5.1']
 			buildManagementService.writeBuildDefinition('', project, bDef, query)
 		} else {
