@@ -13,6 +13,6 @@ class CreatedHandler extends RmBaseAttributeHandler {
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
-		return "${value}".replace('+0000','Z')
+		return "${value}".replace('.000+0000','Z')
 	}
 }

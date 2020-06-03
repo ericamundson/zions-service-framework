@@ -1,6 +1,7 @@
 package com.zions.jama.services.rest
 
 import com.zions.common.services.rest.AGenericRestClient
+import com.zions.common.services.rest.ARESTClient
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.HttpResponseDecorator
@@ -36,14 +37,6 @@ class JamaGenericRestClient extends AGenericRestClient {
 		return jamaUrl
 	}
 	
-	/**
-	 * For unit testing
-	 */
-	public JamaGenericRestClient(RESTClient client) {
-		delegate = client
-		checked = false
-	}
-
 	@Autowired
 	public JamaGenericRestClient(@Value('${jama.url}') String jamaUrl,
 		@Value('${jama.user}') String user,
@@ -51,12 +44,11 @@ class JamaGenericRestClient extends AGenericRestClient {
 		this.jamaUrl = jamaUrl
 		this.password = password;
 		this.user = user;
-		delegate = new RESTClient(jamaUrl)
+		delegate = new ARESTClient(jamaUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
 		setProxy()
 		setCredentials(user, password);
-		checked = false;
 	}
 	
 	/* (non-Javadoc)

@@ -220,7 +220,7 @@ class JamaRequirementsManagementService {
 		def result = jamaGenericRestClient.get(
 			withHeader: true,
 			uri: uri,
-			headers: ['Accept': ContentType.BINARY] );
+			headers: [Accept: 'image/webp,image/apng,image/*,*/*;q=0.8','Accept-Encoding': 'gzip, deflate, br','Accept-Language': 'en-US,en;q=0.9'] );
 		return result
 	}
 	def getAttachment(def itemId) {

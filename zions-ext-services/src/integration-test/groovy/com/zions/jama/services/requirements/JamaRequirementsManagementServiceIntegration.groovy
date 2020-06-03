@@ -66,7 +66,7 @@ class JamaRequirementsManagementServiceIntegration extends Specification {
 
 @TestConfiguration
 @Profile("integration-test")
-@ComponentScan(["com.zions.common.services.rest", "com.zions.common.services.cacheaspect", "com.zions.common.services.cache", "com.zions.ext.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.test","com.zions.rm.services.requirements.handlers"])
+@ComponentScan(["com.zions.common.services.rest.IGenericRestClient", "com.zions.common.services.cache.MongoDBCacheManagementService", "com.zions.common.services.cacheaspect", "com.zions.common.services.cache.ICacheManagementService", "com.zions.ext.services", "com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.test","com.zions.jama.services.requirements.handlers"])
 @PropertySource("classpath:integration-test.properties")
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
 public class JamaRequirementsManagementServiceSpecConfig {

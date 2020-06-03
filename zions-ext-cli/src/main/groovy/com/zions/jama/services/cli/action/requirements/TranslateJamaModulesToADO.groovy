@@ -85,11 +85,21 @@ class TranslateJamaModulesToADO implements CliAction {
 			def changeList = []
 			def idMap = [:]
 			def project = jamaRequirementsManagementService.queryProjectData()
-			if (baseline) log.info("Retrieving baseline items: ${baseline.name} ...")
-			else log.info("Retrieving project items: ${project.fields.name} ...")
+			log.info("Retrieving project items: ${project.fields.name} ...")
 
 			def module = jamaRequirementsManagementService.getDocument(baseline, project)
 			log.info("Processing Module: ${module.getTitle()} ...")
+			
+
+			// Process attachments
+			if (module.attachments.size() > 0) {
+				jamaFileManagementService.ensureMultipleFileAttachments(module, module.attachments)
+			}
+			module.orderedArtifacts.each { item ->
+				if (item.attachments.size() > 0) {
+					jamaFileManagementService.ensureMultipleFileAttachments(item, item.attachments)
+				}
+			}
 			
 			// Add Module artifact to ChangeList (to create Document)
 			def changes = jamaRequirementsItemManagementService.getChanges(tfsProject, module, memberMap)
@@ -126,15 +136,6 @@ class TranslateJamaModulesToADO implements CliAction {
 
 			})
 			
-			// Process attachments
-			if (module.attachments.size() > 0) {
-				jamaFileManagementService.ensureMultipleFileAttachments(module, module.attachments)
-			}
-			module.orderedArtifacts.each { item ->
-				if (item.attachments.size() > 0) {
-					jamaFileManagementService.ensureMultipleFileAttachments(item, item.attachments)
-				}
-			}
 			
 			// Create/update work items and SmartDoc container in Azure DevOps
 			if (changeList.size() > 0) {

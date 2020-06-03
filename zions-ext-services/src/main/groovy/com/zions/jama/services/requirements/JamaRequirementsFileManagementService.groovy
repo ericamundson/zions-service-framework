@@ -31,24 +31,23 @@ class JamaRequirementsFileManagementService {
 
 		String attUrl
 		def cacheLink = null
-		def cacheWI = itemData.getCacheWI()
+		def cacheWI = cacheManagementService.getFromCache("${itemData.getCacheID()}", ICacheManagementService.WI_DATA)
 		def iStart = url.lastIndexOf('/')+1
 		String filename = url.substring(iStart,url.length())
 		if (cacheWI != null) {
 			cacheLink = getCacheLink(cacheWI, filename)
 		}
 		if (cacheLink == null) { // Upload attachment to ADO
-			return null
 			def result = jamaRequirementsManagementService.getContent(url)
-			if (!result.data) {
-				log.error("Attachment not found:$url")
+			if (result.headers['Content-Type'] != 'application/octet-stream') {
+				log.error('Error retrieving embedded image')
 				return null
 			}
-			def file = cacheManagementService.saveBinaryAsAttachment(result.data, filename, itemData.getCacheID())
-			def attData = attachmentService.sendAttachment([file:file])
+			ByteArrayInputStream content = result.data
+			def attData = attachmentService.sendAttachment(content.bytes, filename)
 			if (attData) {
-			attUrl = attData.url
-			itemData.adoFileInfo.add([file: file, comment: "Added attachment ${filename}", url:attUrl])
+				attUrl = attData.url
+				itemData.adoFileInfo.add([comment: "Added attachment ${filename}", url:attUrl])
 			} else {
 //					if (checkpointManagementService != null) {
 //						checkpointManagementService.addLogentry("File upload attempt failed for Artifact ID: ${itemData.getIdentifier()} Filename: ${filename}")
@@ -68,22 +67,18 @@ class JamaRequirementsFileManagementService {
 			String attUrl
 			def cacheLink = null
 			def attResult = jamaRequirementsManagementService.getAttachment(id)
-			def filename = "${attResult.data.fileName}"
-			def cacheWI = itemData.getCacheWI()
+			String filename = "${attResult.data.fileName}"
+			def cacheWI = cacheManagementService.getFromCache("${itemData.getCacheID()}", ICacheManagementService.WI_DATA)
 			if (cacheWI != null) {
 				cacheLink = getCacheLink(cacheWI, filename)
 			}
 			if (cacheLink == null) { // Upload attachment to ADO
 				def result = jamaRequirementsManagementService.getContent(id)
-				if (!result) {
-					log.error("Attachment not found:$url")
-					return null
-				}
-				def file = cacheManagementService.saveBinaryAsAttachment(result.data, filename, itemData.getCacheID())
-				def attData = attachmentService.sendAttachment([file:file])
+				ByteArrayInputStream content = result.data
+				def attData = attachmentService.sendAttachment(content.bytes, filename)
 				if (attData) {
-				attUrl = attData.url
-				itemData.adoFileInfo.add([file: file, comment: "Added attachment ${filename}", url:attUrl])
+					attUrl = attData.url
+					itemData.adoFileInfo.add([comment: "Added attachment ${filename}", url:attUrl])
 				} else {
 	//					if (checkpointManagementService != null) {
 	//						checkpointManagementService.addLogentry("File upload attempt failed for Artifact ID: ${itemData.getIdentifier()} Filename: ${filename}")
@@ -95,13 +90,16 @@ class JamaRequirementsFileManagementService {
 		}
 	}
 	private def getCacheLink(def cacheWI, String fileName) {
-		def link = cacheWI.relations.find { rel ->
-			def name = ""
-			if (rel.attributes != null && rel.attributes.name != null) {
-				name = "${rel.attributes.name}"
+		if (cacheWI.relations) {
+			def link = cacheWI.relations.find { rel ->
+				def name = ""
+				if (rel.attributes != null && rel.attributes.name != null) {
+					name = "${rel.attributes.name}"
+				}
+				"${rel.rel}" == 'AttachedFile' && "${name}" == "${fileName}"
 			}
-			"${rel.rel}" == 'AttachedFile' && "${name}" == "${fileName}"
+			return link
 		}
-		return link
+		else return null
 	}
 }
