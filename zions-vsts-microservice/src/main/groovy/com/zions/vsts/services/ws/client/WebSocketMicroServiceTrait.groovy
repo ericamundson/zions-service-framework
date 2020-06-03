@@ -72,7 +72,7 @@ trait WebSocketMicroServiceTrait implements StompSessionHandler {
     public static final String SSL_CONTEXT_PROPERTY =
             "org.apache.tomcat.websocket.SSL_CONTEXT";
 			
-	static Logger log = LoggerFactory.getLogger('com.zions.vsts.services.ws.client.WebSocketMicroServiceTrait')
+	Logger log = LoggerFactory.getLogger('com.zions.vsts.services.ws.client.WebSocketMicroServiceTrait')
 	TaskScheduler heartBeatScheduler
 	
 	StompSession session
@@ -210,7 +210,8 @@ trait WebSocketMicroServiceTrait implements StompSessionHandler {
 	 */
 	@Override
 	public void handleTransportError(StompSession session, Throwable exception) {
-			log.error("Transport fail", exception.message)
+		log.error("Transport fail", exception.message)
+			
 	}
 		
 	void setupSSL(HttpClientBuilder clientBuilder)
