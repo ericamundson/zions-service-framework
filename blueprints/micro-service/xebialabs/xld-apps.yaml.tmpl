@@ -24,12 +24,6 @@ spec:
         targetPath: '[[deploy.path]]'
         createTargetPath: "true"
         file: !file "../../../zions-queuing-microservice/build/libs/zions-queuing-microservice.jar"
-      - name: {{$app}}-queuing.exe
-        type: file.File
-        scanPlaceholders: false
-        targetPath: '[[deploy.path]]'
-        createTargetPath: "true"
-        file: !file "../service/queue.exe"
       - name: {{$app}}-queuing.exe.config
         type: file.File
         scanPlaceholders: false
@@ -39,9 +33,9 @@ spec:
       - name: run queuing install
         type: advcmd.Command
         command: |-
-          [[deploy.path]]/{{$app}}-queuing.exe uninstall
+          copy [[deploy.path]]/../WinSW.NET4 [[deploy.path]]/{{$app}}-queuing.exe
           [[deploy.path]]/{{$app}}-queuing.exe install
-          [[deploy.path]]/{{$app}}-queuing.exe start
+          [[deploy.path]]/{{$app}}-queuing.exe restart
         createOrder: "61"
         destroyOrder: "41"
         alwaysRun: "true"
@@ -60,12 +54,6 @@ spec:
         targetPath: '[[deploy.path]]'
         createTargetPath: "true"
         file: !file "../../build/libs/{{$app}}.jar"
-      - name: {{$app}}.exe
-        type: file.File
-        scanPlaceholders: false
-        targetPath: '[[deploy.path]]'
-        createTargetPath: "true"
-        file: !file "../service/service.exe"
       - name: {{$app}}.exe.config
         type: file.File
         scanPlaceholders: false
@@ -75,9 +63,9 @@ spec:
       - name: run install
         type: advcmd.Command
         command: |-
-          [[deploy.path]]/{{$app}}.exe uninstall
+          copy [[deploy.path]]/../WinSW.NET4 [[deploy.path]]/{{$app}}.exe
           [[deploy.path]]/{{$app}}.exe install
-          [[deploy.path]]/{{$app}}.exe start
+          [[deploy.path]]/{{$app}}.exe restart
         createOrder: "62"
         destroyOrder: "42"
         alwaysRun: "true"

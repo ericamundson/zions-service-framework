@@ -23,12 +23,6 @@ spec:
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
         file: !file "../../../zions-queuing-microservice/build/libs/zions-queuing-microservice.jar"
-      - name: zions-vsts-setcolor-microservice-queuing.exe
-        type: file.File
-        scanPlaceholders: false
-        targetPath: '{{deploy.path}}'
-        createTargetPath: "true"
-        file: !file "../service/queue.exe"
       - name: zions-vsts-setcolor-microservice-queuing.exe.config
         type: file.File
         scanPlaceholders: false
@@ -38,9 +32,9 @@ spec:
       - name: run queuing install
         type: advcmd.Command
         command: |-
-          {{deploy.path}}/zions-vsts-setcolor-microservice-queuing.exe uninstall
+          copy {{deploy.path}}/../WinSW.NET4 {{deploy.path}}/zions-vsts-setcolor-microservice-queuing.exe
           {{deploy.path}}/zions-vsts-setcolor-microservice-queuing.exe install
-          {{deploy.path}}/zions-vsts-setcolor-microservice-queuing.exe start
+          {{deploy.path}}/zions-vsts-setcolor-microservice-queuing.exe restart
         createOrder: "61"
         destroyOrder: "41"
         alwaysRun: "true"
@@ -59,12 +53,6 @@ spec:
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
         file: !file "../../build/libs/zions-vsts-setcolor-microservice.jar"
-      - name: zions-vsts-setcolor-microservice.exe
-        type: file.File
-        scanPlaceholders: false
-        targetPath: '{{deploy.path}}'
-        createTargetPath: "true"
-        file: !file "../service/service.exe"
       - name: zions-vsts-setcolor-microservice.exe.config
         type: file.File
         scanPlaceholders: false
@@ -74,9 +62,9 @@ spec:
       - name: run install
         type: advcmd.Command
         command: |-
-          {{deploy.path}}/zions-vsts-setcolor-microservice.exe uninstall
+          copy {{deploy.path}}/../WinSW.NET4 {{deploy.path}}/zions-vsts-setcolor-microservice.exe
           {{deploy.path}}/zions-vsts-setcolor-microservice.exe install
-          {{deploy.path}}/zions-vsts-setcolor-microservice.exe start
+          {{deploy.path}}/zions-vsts-setcolor-microservice.exe restart
         createOrder: "62"
         destroyOrder: "42"
         alwaysRun: "true"
