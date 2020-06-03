@@ -18,7 +18,7 @@ spec:
         targetPath: '[[deploy.path]]'
         createTargetPath: "true"
         file: !file "../service/queue.xml"
-      - name: zions-queuing-microservice.jar
+      - name: zions-queuing-microservice-hold.jar
         type: file.File
         scanPlaceholders: false
         targetPath: '[[deploy.path]]'
@@ -35,7 +35,9 @@ spec:
         command: |-
           copy /Y [[deploy.path]]\..\WinSW.NET4 [[deploy.path]]\{{$app}}-queuing.exe
           [[deploy.path]]\{{$app}}-queuing.exe install
-          [[deploy.path]]\{{$app}}-queuing.exe restart
+          [[deploy.path]]\{{$app}}-queuing.exe stop
+          copy /Y [[deploy.path]]\zions-queuing-microservice-hold.jar [[deploy.path]]\zions-queuing-microservice.jar
+          [[deploy.path]]\{{$app}}-queuing.exe start
         createOrder: "61"
         destroyOrder: "41"
         alwaysRun: "true"
@@ -48,7 +50,7 @@ spec:
         targetPath: '[[deploy.path]]'
         createTargetPath: "true"
         file: !file "../service/service.xml"
-      - name: {{$app}}.jar
+      - name: {{$app}}-hold.jar
         type: file.File
         scanPlaceholders: false
         targetPath: '[[deploy.path]]'
@@ -65,7 +67,10 @@ spec:
         command: |-
           copy /Y [[deploy.path]]\..\WinSW.NET4 [[deploy.path]]\{{$app}}.exe
           [[deploy.path]]\{{$app}}.exe install
-          [[deploy.path]]\{{$app}}.exe restart
+          [[deploy.path]]\{{$app}}.exe stop
+          copy /Y [[deploy.path]]\{{$app}}-hold.jar [[deploy.path]]\{{$app}}.jar
+          [[deploy.path]]\{{$app}}.exe start
+          
         createOrder: "62"
         destroyOrder: "42"
         alwaysRun: "true"
