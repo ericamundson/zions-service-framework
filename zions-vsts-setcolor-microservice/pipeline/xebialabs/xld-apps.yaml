@@ -17,7 +17,7 @@ spec:
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
         file: !file "../service/queue.xml"
-      - name: zions-queuing-microservice.jar
+      - name: zions-queuing-microservice-hold.jar
         type: file.File
         scanPlaceholders: false
         targetPath: '{{deploy.path}}'
@@ -34,7 +34,9 @@ spec:
         command: |-
           copy /Y {{deploy.path}}\..\WinSW.NET4 {{deploy.path}}\zions-vsts-setcolor-microservice-queuing.exe
           {{deploy.path}}\zions-vsts-setcolor-microservice-queuing.exe install
-          {{deploy.path}}\zions-vsts-setcolor-microservice-queuing.exe restart
+          {{deploy.path}}\zions-vsts-setcolor-microservice-queuing.exe stop
+          copy /Y {{deploy.path}}\zions-queuing-microservice-hold.jar {{deploy.path}}\zions-queuing-microservice.jar
+          {{deploy.path}}\zions-vsts-setcolor-microservice-queuing.exe start
         createOrder: "61"
         destroyOrder: "41"
         alwaysRun: "true"
@@ -47,7 +49,7 @@ spec:
         targetPath: '{{deploy.path}}'
         createTargetPath: "true"
         file: !file "../service/service.xml"
-      - name: zions-vsts-setcolor-microservice.jar
+      - name: zions-vsts-setcolor-microservice-hold.jar
         type: file.File
         scanPlaceholders: false
         targetPath: '{{deploy.path}}'
@@ -64,7 +66,10 @@ spec:
         command: |-
           copy /Y {{deploy.path}}\..\WinSW.NET4 {{deploy.path}}\zions-vsts-setcolor-microservice.exe
           {{deploy.path}}\zions-vsts-setcolor-microservice.exe install
-          {{deploy.path}}\zions-vsts-setcolor-microservice.exe restart
+          {{deploy.path}}\zions-vsts-setcolor-microservice.exe stop
+          copy /Y {{deploy.path}}\zions-vsts-setcolor-microservice-hold.jar {{deploy.path}}\zions-vsts-setcolor-microservice.jar
+          {{deploy.path}}\zions-vsts-setcolor-microservice.exe start
+          
         createOrder: "62"
         destroyOrder: "42"
         alwaysRun: "true"
