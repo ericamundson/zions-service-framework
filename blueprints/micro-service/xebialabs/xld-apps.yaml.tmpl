@@ -33,9 +33,9 @@ spec:
       - name: run queuing install
         type: advcmd.Command
         command: |-
-          copy [[deploy.path]]/../WinSW.NET4 [[deploy.path]]/{{$app}}-queuing.exe
-          [[deploy.path]]/{{$app}}-queuing.exe install
-          [[deploy.path]]/{{$app}}-queuing.exe restart
+          copy /Y [[deploy.path]]\..\WinSW.NET4 [[deploy.path]]\{{$app}}-queuing.exe
+          [[deploy.path]]\{{$app}}-queuing.exe install
+          [[deploy.path]]\{{$app}}-queuing.exe restart
         createOrder: "61"
         destroyOrder: "41"
         alwaysRun: "true"
@@ -63,9 +63,9 @@ spec:
       - name: run install
         type: advcmd.Command
         command: |-
-          copy [[deploy.path]]/../WinSW.NET4 [[deploy.path]]/{{$app}}.exe
-          [[deploy.path]]/{{$app}}.exe install
-          [[deploy.path]]/{{$app}}.exe restart
+          copy /Y [[deploy.path]]\..\WinSW.NET4 [[deploy.path]]\{{$app}}.exe
+          [[deploy.path]]\{{$app}}.exe install
+          [[deploy.path]]\{{$app}}.exe restart
         createOrder: "62"
         destroyOrder: "42"
         alwaysRun: "true"
