@@ -9,7 +9,7 @@ spec:
     children:
     - name: Dev
       type: overthere.CifsHost
-      address: UTMVPI0192
+      address: UTMVTI0192
       username: svc-vsbuildagent@zbc.internal
       password: !value "svc_account_passwd"
     - name: Prod
