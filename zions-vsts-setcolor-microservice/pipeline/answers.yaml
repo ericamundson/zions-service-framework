@@ -5,6 +5,6 @@ UseQueue: true
 Exchangename: "WorkItem-exchange"
 Queuename: "WorkItem-setcolor-queue"
 Keyname: "setcolor"
-WSTopics: "workitem.created,workitem.updated"
+WSTopics: "workitem.changed,workitem.updated"
 DeployDev: false
-ProdWSUrl: "ws://localhost:9000/ws"
+ProdWSUrl: "ws://UTMVPI0144:9000/ws"
