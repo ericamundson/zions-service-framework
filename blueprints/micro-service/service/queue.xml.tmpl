@@ -4,6 +4,6 @@
       <name>{{$app}}-queuing</name>
       <description>This service runs {{$app}}-queuing</description>
       <executable>java</executable>
-      <arguments>-Xrs -Xmx256m -jar "[[deploy.path]]/zions-queuing-microservice.jar" --ado.topics={{.WSTopics}} --websocket.url=[[ws.url]] --tfs.url=[[tfs.url]] --logging.file="[[deploy.path]]/{{$app}}-queuing.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "[[deploy.path]]/zions-queuing-microservice.jar" --routing.exchange.name={{.Exchangename}}  --routing.direct.key={{.Keyname}} --ado.topics={{.WSTopics}} --websocket.url=[[ws.url]] --tfs.url=[[tfs.url]] --logging.file="[[deploy.path]]/{{$app}}-queuing.log" </arguments>
       <logmode>rotate</logmode>
 </service>
