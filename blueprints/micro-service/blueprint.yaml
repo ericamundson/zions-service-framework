@@ -14,6 +14,14 @@ spec:
   - name: AppName
     type: Input
     prompt: What is the name of the micro-service project?
+    
+  - name: IsWindows
+    type: Confirm
+    prompt: Is this a Windows deploy (Y/N)?
+    
+  - name: RequiresCollection
+    type: Confirm
+    prompt: Does this require tfs.collection property (Y/N)?
             
   - name: BuildIncludes
     type: Input
@@ -61,19 +69,31 @@ spec:
 
 
   files:
-  - path: xl-deploy.yaml
+  - path: xl-deploy.yaml.tmpl
   - path: xl-release.yaml
   - path: xebialabs/USAGE.md.tmpl
   - path: service/queue.xml.tmpl
     writeIf: !expr "UseQueue"
   - path: service/service.xml.tmpl
+    writeIf: !expr "IsWindows == true"
   - path: service/service.exe
+    writeIf: !expr "IsWindows == true"
   - path: service/queue.exe
+    writeIf: !expr "IsWindows == true"
   - path: service/service.exe.config
+    writeIf: !expr "IsWindows == true"
   - path: service/queue.exe.config
+    writeIf: !expr "IsWindows == true"
+  - path: service/microservice.service.tmpl
+    writeIf: !expr "IsWindows == false"
+  - path: service/queue.service.tmpl
+    writeIf: !expr "IsWindows == false"
   - path: executable/builddefinition.yaml.tmpl
   - path: ado/microservice-release.yaml.tmpl
-  - path: xebialabs/xld-apps.yaml.tmpl
+  - path: xebialabs/xld-apps-windows.yaml.tmpl
+    writeIf: !expr "IsWindows == true"
+  - path: xebialabs/xld-apps-redhat.yaml.tmpl
+    writeIf: !expr "IsWindows == false"
   - path: xebialabs/xld-infra.yaml.tmpl
   - path: xebialabs/xld-env.yaml.tmpl
   - path: xebialabs/xlr-pipeline-ci-cd.yaml.tmpl
