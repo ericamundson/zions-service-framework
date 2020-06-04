@@ -21,5 +21,5 @@ spec:
         type: udm.Dictionary
         entries:
           deploy.path: d:\app\azure\services\zions-vsts-setcolor-microservice
-          ws.url: ws://UTMVPI0144:9000/ws
+          ws.url: ws://localhost:9000/ws
           tfs.url: https://dev.azure.com/zionseto
