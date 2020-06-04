@@ -22,4 +22,4 @@ spec:
         entries:
           deploy.path: d:\app\azure\services\zions-vsts-setcolor-microservice
           ws.url: ws://localhost:9000/ws
-          tfs.organization: zionseto
+          tfs.collection: zionseto

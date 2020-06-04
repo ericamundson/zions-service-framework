@@ -4,7 +4,7 @@
       <description>This service runs zions-vsts-setcolor-microservice.</description>
       <executable>java</executable>
       
-      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-setcolor-microservice.jar" --routing.exchange.name=WorkItem-exchange --queue.name=WorkItem-setcolor-queue --routing.direct.key=setcolor --tfs.organization={{tfs.organization}} --tfs.url=https://dev.azure.com --logging.file="{{deploy.path}}/zions-vsts-setcolor-microservice.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-setcolor-microservice.jar" --routing.exchange.name=WorkItem-exchange --queue.name=WorkItem-setcolor-queue --routing.direct.key=setcolor --tfs.collection={{tfs.collection}} --tfs.url=https://dev.azure.com --logging.file="{{deploy.path}}/zions-vsts-setcolor-microservice.log" </arguments>
       
       <logmode>rotate</logmode>
 </service>
