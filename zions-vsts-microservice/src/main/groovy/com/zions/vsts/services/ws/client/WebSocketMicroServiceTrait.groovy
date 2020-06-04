@@ -145,6 +145,7 @@ trait WebSocketMicroServiceTrait implements StompSessionHandler {
 		stompClient = new WebSocketStompClient(sockJsClient);
 		stompClient.setMessageConverter(new StringMessageConverter());
 		stompClient.setAutoStartup(true);
+		stompClient.setInboundMessageSizeLimit(512*1014)
 		if (this.websocketUser && this.websocketPassword) {
 			String plainCredentials="${websocketUser}:${websocketPassword}";
 			String base64Credentials = Base64.getEncoder().encodeToString(plainCredentials.getBytes());
