@@ -151,7 +151,8 @@ abstract class AbstractWebSocketMicroService extends StompSessionHandlerAdapter 
 	public def connect() {
 		StandardWebSocketClient client = new StandardWebSocketClient();
 		setupSSL(client);
-		List<Transport> webSocketTransports = Arrays.asList(new WebSocketTransport(client),  new RestTemplateXhrTransport(getRestTemplate()));
+//		List<Transport> webSocketTransports = Arrays.asList(new WebSocketTransport(client),  new RestTemplateXhrTransport(getRestTemplate()));
+		List<Transport> webSocketTransports = Arrays.asList(new RestTemplateXhrTransport(getRestTemplate()));
 		SockJsClient sockJsClient = new SockJsClient(webSocketTransports);
 		stompClient = new WebSocketStompClient(sockJsClient);
 		stompClient.setMessageConverter(new StringMessageConverter());
