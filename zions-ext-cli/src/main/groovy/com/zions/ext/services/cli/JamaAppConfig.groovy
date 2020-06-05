@@ -10,6 +10,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
+import com.zions.vsts.services.test.TestManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.jama.services.rest.JamaGenericRestClient
 import com.zions.jama.services.rest.JamaFormGenericRestClient
@@ -35,7 +36,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("jama")
-@ComponentScan(["com.zions.jama.services","com.zions.vsts.services.admin.member","com.zions.vsts.services.admin.project","com.zions.vsts.services.work","com.zions.spock.services","com.zions.common.services.spock", 
+@ComponentScan(["com.zions.jama.services","com.zions.vsts.services.admin.member","com.zions.vsts.services.test","com.zions.vsts.services.admin.project","com.zions.vsts.services.work","com.zions.spock.services","com.zions.common.services.spock", 
 	"com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.cacheaspect",
 	"com.zions.rm.services.requirements.ClmArtifact.groovy","com.zions.rm.services.requirements.ClmModuleElement.groovy","com.zions.rm.services.requirements.ClmRequirementsModule.groovy"])
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
