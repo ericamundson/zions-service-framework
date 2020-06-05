@@ -30,31 +30,112 @@ class PopulateChildMicroServiceSpec extends Specification {
 	@Autowired
 	WorkManagementService workManagementService;
 	
-		def "Successful Population of Child Fields"() {
+	//done
+	def "No valid child types to update"() {
+		given: "A mock ADO event payload exists for invalid child type"
+		
+		//epic json file with work items
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataInvalidChild.json').text)
+		
+		//figure out how to pull and iterate through child json files
+				
+		and: 'stub of inside get child data, get children of Epics (features)'
+		
+		def childData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/childDataInvalidType.json').text)
+		
+		workManagementService.getChildren(_,_,_) >> childData
+		
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+		
+
+		then: "No Updates should be made"
+		resp == 'no target children to update'
+	}
+	
+	//passing
+	def "Parent field not populated"() {
+		given: "A mock ADO event payload where parent work item field is not populated"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataFieldNotPopulated.json').text)
+		
+		
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "No updates should be made"
+		resp == 'field not populated'
+	}
+	
+	
+	
+	def "Child field matches parent field"() {
+		given: "A mock ADO event payload where child work item field is already Populated"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataFieldAlreadyPopulated.json').text)
+		
+
+		and: 'stub of inside get child data, get children of Epics (features)'
+		def childData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/childDataNoUpdateNeeded.json').text)
+		
+		workManagementService.getChildren(_,_,_) >> childData
+		
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+		
+
+		then: "No Updates should be made"
+		resp == 'no target children to update'		
+	}
+	
+	def "child does not exist for parent"() {
+		given: "A mock ADO event payload where parent work item field is not populated"
+		
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataFieldNoChild.json').text)
+		
+		and: 'stub of inside get child data, get children of Epics (features)'
+		
+		def emptyList = []
+		def childData = workManagementService.getChildren(_,_,_) << emptyList
+		//def childData = workManagementService.getChildren(_,_,_) << null
+		 
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+		
+		then: "No updates should be made"
+		resp == 'child not present'
+		 
+	}
+	
+
+	def "Successful child field update"() {
 		given: "A mock ADO event payload exists that meets all criteria for update"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataEpicTwoChildren.json').text)
-
-		and: "stub workManagementService.getWorkItem()"
-		workManagementService.getWorkItem(_,_,_) >> {
 		
-			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/childData.json').text)
-		}
+		and: 'stub of inside get child data, get children of Epics (features)'
+		def childData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/childData.json').text)
+		
+		workManagementService.getChildren(_,_,_) >> childData
 		
 		and: "stub workManagementService.updateItem()"
 		
-			//workManagementService.getWorkItem(_,_,_) >> {
-			workManagementService.getChildren(_,_,_) >> {
-				String data = "${args[3]}"
 			
-			  //assert(data.toString() == '[[op:test  path:/rev, value:2], [op:add, path:/fields/Custom.OTLNumber, value: "$otlField"]]')
-			  assert(data.toString() == '[[op:test  path:/rev, value:2], [op:add, path:/fields/Custom.OTLNumber, value: 1000]]')
+		workManagementService.batchWIChanges(_,_,_,_) >> { args ->
+			
+				
+				def changes = args[2]
+				//workManagementService.batchWIChanges(collection, project, changes, idMap)
+				changes.each { change -> 
+					assert(change.body.toString() == '[[op:test, path:/rev, value:4], [op:add, path:/fields/Custom.OTLNumber, value:1000]]')
+															
+					//assert(change.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/Custom.OTLNumber, value:1000]]')
+				}
+				
 		}
 
 		when: "calling method under test processADOData()"
 		def resp = underTest.processADOData(adoMap)
 		
 		then: "Update should be made"
-		resp == 'Update Succeeded'	
+		resp == 'Update Succeeded'
 	}
 	
 }
@@ -66,7 +147,7 @@ class PopulateChildMicroServiceSpec extends Specification {
 class PopulateChildMicroserviceTestConfig {
 	def mockFactory = new DetachedMockFactory()
 	
-	@Value('${tfs.types}') 
+	@Value('${tfs.types}')
 	String wiTypes
 	
 	@Bean
@@ -75,10 +156,12 @@ class PopulateChildMicroserviceTestConfig {
 	}
 	@Bean
 	WorkManagementService workManagementService() {
+		//return mockFactory.Mock(WorkManagementService)
 		return mockFactory.Stub(WorkManagementService)
 	}
 	@Bean
 	IGenericRestClient genericRestClient() {
+		//return new GenericRestClient('http://localhost:8080/ws', '', '')
 		return mockFactory.Stub(GenericRestClient)
 	}
 }

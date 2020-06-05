@@ -43,9 +43,9 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 	public Object processADOData(Object adoData) {
 		log.info("Entering PopulateChild MicroService:: processADOData")
 		
-		//Uncomment code below to capture adoData payload for test
+		/*Uncomment code below to capture adoData payload for test*/
 		/* String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)*/ 
+		 println(json)*/
 		
 		
 		def outData = adoData
@@ -67,28 +67,29 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			return logResult('field not populated')
 			
 		}
-			
+		
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		//this is the work item id
 		String id = "${wiResource.revision.id}"
 		
-		//Need to get child data for work item
-		//def wi = workManagementService.getWorkItem(collection, project, id)
-		def wi = workManagementService.getWorkItem(collection, project, id)
-		//should return children payload
-		
+		//should return children payload - method to mock
 		def result = workManagementService.getChildren(collection, project, id)
-		
-		/**	For unit testing !! Uncomment code below to capture child playload for test */
-		  /* String json = new JsonBuilder(result).toPrettyString()
-		   println(json)*/
+		//if (!result || result == 'null' || result == '') {
+		if (result == []) {
+		println(result.toString())
+			return logResult('child not present')
+			
+		}
+		/**	For unit testing !! Uncomment code below to capture child payload for test */
+		/**  String json = new JsonBuilder(result).toPrettyString()
+		  println(json)*/
 		
 		 //iterate through the children assigned to work item in question
 		def changes = []
 		def idMap = [:]
 		def count = 0
-		result.each { child ->
-			def childwi = workManagementService.getWorkItem(child.url)
+		result.each { childwi ->
+			
 			//Define child work item types
 			String type = "${childwi.fields['System.WorkItemType']}"
 			//Define OTLNumber of child fields
@@ -97,32 +98,32 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			String rev = "${childwi.rev}"
 
 			//If child work item is feature or story - update OTLNumber
-			
 			if ((type == 'Feature' || type == 'User Story') && cField != otlField) {
 			
 				log.info("Getting the changes for child work item $wiType #$id")
-				changes.add(getChanges(project, rev, child, otlField))
-				idMap[count] = "${child.id}"
+				changes.add(getChanges(project, rev, childwi, otlField))
+				idMap[count] = "${childwi.id}"
 				}
-			else {
 				
-				return logResult('no update needed for this child')
-			}
+	
 		}
 			
 		if (changes.size() > 0) {
+			changes.each{change ->
+			//capture test data	
+			println(change.body.toString())	
+			}
 			// Process work item changes in Azure DevOps
 			log.info("Processing work item changes...")
 			workManagementService.batchWIChanges(collection, project, changes, idMap)
 			return logResult('Update Succeeded')
 		}
-	}
-		
-		/**			For unit testing !! Uncomment code below to capture parent playload for test
-		 * String json = new JsonBuilder(parentWI).toPrettyString()
-		 * println(json)*/
-		
-		
+		else {
+			
+			return logResult('no target children to update')
+		}
+	}		
+
 	//define get changes method and create batch call
 	private def getChanges(String project, String rev, def child, def otlField) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
@@ -132,6 +133,7 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		wiData.body.add(idData1)
 		
 		// Add work item type in case it changed
+		//could convert idData2 to String
 		def idData2 = [ op: 'add', path: '/fields/Custom.OTLNumber', value: "$otlField"]
 		
 		wiData.body.add(idData2)
