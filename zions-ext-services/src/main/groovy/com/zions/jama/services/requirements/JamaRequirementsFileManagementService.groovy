@@ -39,7 +39,7 @@ class JamaRequirementsFileManagementService {
 		}
 		if (cacheLink == null) { // Upload attachment to ADO
 			def result = jamaRequirementsManagementService.getContent(url)
-			if (result.headers['Content-Type'] != 'application/octet-stream') {
+			if ("${result.headers['Content-Type']}".substring(0,5) != 'image') {
 				log.error('Error retrieving embedded image')
 				return null
 			}

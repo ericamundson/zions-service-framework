@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 
 import groovy.util.logging.Slf4j
+import groovy.util.slurpersupport.NodeChild
 import groovy.xml.XmlUtil
+import groovy.xml.StreamingMarkupBuilder
 
 @Component
 @Slf4j
@@ -19,6 +21,17 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	@Value('${jama.url}')
 	String jamaUrl
 
+	def DescriptionHandler() {
+		// Add method to NodeChild to support conversion to html
+		NodeChild.metaClass.toXmlString = {
+			def self = delegate
+			new StreamingMarkupBuilder().bind {
+//				delegate.mkp.xmlDeclaration() // Use this if you want an XML declaration
+				delegate.out << self
+			}.toString()
+		}
+
+	}
 	@Override
 	public String getFieldName() {
 		
@@ -64,8 +77,9 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 
 		}
 
-		// Return html as string, but remove <?xml tag as it causes issues
-		return XmlUtil.asString(htmlData)
+		// Return html as string
+		def sHtml = htmlData.toXmlString()
+		return sHtml
 
 	}
 

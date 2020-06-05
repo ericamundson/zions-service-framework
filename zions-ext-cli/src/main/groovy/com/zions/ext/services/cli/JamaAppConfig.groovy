@@ -11,6 +11,8 @@ import com.zions.common.services.cache.MongoDBCacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.jama.services.rest.JamaGenericRestClient
+import com.zions.jama.services.rest.JamaFormGenericRestClient
 import com.zions.common.services.restart.CheckpointManagementService
 import com.zions.common.services.restart.ICheckpointManagementService
 import com.zions.common.services.restart.IRestartManagementService
@@ -33,7 +35,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("jama")
-@ComponentScan(["com.zions.jama.services","com.zions.vsts.services.admin.member","com.zions.vsts.services.admin.project","com.zions.vsts.services.work","com.zions.vsts.services.attachments","com.zions.spock.services","com.zions.common.services.spock", 
+@ComponentScan(["com.zions.jama.services","com.zions.vsts.services.admin.member","com.zions.vsts.services.admin.project","com.zions.vsts.services.work","com.zions.spock.services","com.zions.common.services.spock", 
 	"com.zions.common.services.restart", "com.zions.common.services.cache.db", "com.zions.common.services.cacheaspect",
 	"com.zions.rm.services.requirements.ClmArtifact.groovy","com.zions.rm.services.requirements.ClmModuleElement.groovy","com.zions.rm.services.requirements.ClmRequirementsModule.groovy"])
 @EnableMongoRepositories(basePackages = "com.zions.common.services.cache.db")
@@ -98,6 +100,10 @@ public class JamaAppConfig {
 		return new JamaGenericRestClient(jamaUrl, jamaUser, jamaPassword)
 	}
 	@Bean
+	IGenericRestClient jamaFormGenericRestClient() {
+		return new JamaFormGenericRestClient(jamaUrl, jamaUser, jamaPassword)
+	}
+	@Bean
 	IGenericRestClient mrGenericRestClient() {
 		return new MrGenericRestClient(mrUrl, tfsUserid)
 	}
@@ -110,10 +116,10 @@ public class JamaAppConfig {
 	SmartDocManagementService smartDoManagementService() {
 		return new SmartDocManagementService(tfsUsers, tfsTokens)
 	}
-//	@Bean
-//	IAttachments attachmentsService() {
-//		return new AttachmentManagementService();
-//	}
+	@Bean
+	IAttachments attachmentsService() {
+		return new AttachmentManagementService();
+	}
 	@Value('${spring.data.mongodb.host:utmsdev0598}')
 	String dbHost
 

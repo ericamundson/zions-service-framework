@@ -10,6 +10,7 @@ import com.zions.common.services.link.LinkInfo
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.rm.services.requirements.ClmRequirementsModule
 import com.zions.rm.services.requirements.ClmModuleElement
+import com.zions.jama.services.rest.JamaFormGenericRestClient
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -46,7 +47,16 @@ class JamaRequirementsManagementService {
 	
 	@Autowired
 	IGenericRestClient jamaGenericRestClient
-	
+	@Value('${jama.url}')
+	String jamaUrl
+	@Value('${jama.user}')
+	String jamaUser
+	@Value('${jama.password}')
+	String jamaPassword
+
+	@Autowired
+	IGenericRestClient jamaFormGenericRestClient
+
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
 		
@@ -63,6 +73,13 @@ class JamaRequirementsManagementService {
 				headers: [Accept: 'application/json'] );
 		return results.data
 	}
+	def queryAbstractItem(def itemId) {
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/abstractitems/$itemId"
+		def results = jamaGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/json'] );
+		return results.data
+	}
 	// Get project data
 	def queryProjectData() {
 		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/projects/$jamaProjectID"
@@ -70,6 +87,21 @@ class JamaRequirementsManagementService {
 				uri: uri,
 				headers: [Accept: 'application/json'] );
 		return results.data
+	}
+	// Get projects
+	def queryProjects(int startNdx, int max) {
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/projects?startAt=$startNdx&maxResults=$max"
+		def result = jamaGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/json'] );
+		return result
+	}
+	def queryUsers(int startNdx, int max) {
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/users?includeInactive=true&startAt=$startNdx&maxResults=$max"
+		def results = jamaGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/json'] );
+		return results
 	}
 	// Get project baselines
 	def queryBaselines() {
@@ -94,6 +126,15 @@ class JamaRequirementsManagementService {
 				headers: [Accept: 'application/json'] );
 		return result
 	}
+	def getAbstractItemName(def itemId) {
+		def results = queryAbstractItem(itemId)
+		if (results.data) {
+			return results.data.fields.name
+		}
+		else {
+			return ''
+		}
+	}
 	// Get Jama Document (we will stick it in a ClmRequirementsModule structure to facilitate Smart Doc creation
 	def getDocument(def baseline, def project) {
 		// First create a top-level Jama Document for the Smart Doc
@@ -113,6 +154,24 @@ class JamaRequirementsManagementService {
 	}
 	String getProjectName(def project) {
 		return "${project.fields.name}"
+	}
+	def getAllProjects() {
+		def projectList = []
+		int startNdx = 0
+		int maxCount = 50
+		int remainCount = 999
+		while (remainCount > 0) {
+			def result = queryProjects( startNdx, maxCount)
+			if (result.data.size() > 0) {
+				result.data.each { child ->
+						projectList.add(child) 
+				}
+			}
+		    int resultCount = result.meta.pageInfo.resultCount
+			remainCount = result.meta.pageInfo.totalResults - (startNdx + resultCount)
+			startNdx = startNdx + resultCount
+		}
+		return projectList
 	}
 	def getItems(def baseline, def project, def moduleAttachments) {
 		def orderedArtifacts = []
@@ -195,15 +254,20 @@ class JamaRequirementsManagementService {
 		return userEmails[id]
 	}
 	def getAllUserEmails() {
-		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/users?maxResults=50"
-		def results = jamaGenericRestClient.get(
-				uri: uri,
-				headers: [Accept: 'application/json'] );
 		def userEmails = [:]
-		if (results) {
-			results.data.each { user ->
-				userEmails.put(user.id, user.email)
+		int startNdx = 0
+		int maxCount = 50
+		int remainCount = 999
+		while (remainCount > 0) {
+			def result = queryUsers( startNdx, maxCount)
+			if (result) {
+				result.data.each { user ->
+					userEmails.put(user.id, user.email)
+				}
 			}
+		    int resultCount = result.meta.pageInfo.resultCount
+			remainCount = result.meta.pageInfo.totalResults - (startNdx + resultCount)
+			startNdx = startNdx + resultCount
 		}
 		return userEmails
 	}
@@ -217,10 +281,11 @@ class JamaRequirementsManagementService {
 		return result
 	}
 	def getContent(String uri) {
-		def result = jamaGenericRestClient.get(
+//		def jamaFormGenericRestClient = new JamaFormGenericRestClient(jamaUrl,jamaUser,jamaPassword)
+		def result = jamaFormGenericRestClient.get(
 			withHeader: true,
 			uri: uri,
-			headers: [Accept: 'image/webp,image/apng,image/*,*/*;q=0.8','Accept-Encoding': 'gzip, deflate, br','Accept-Language': 'en-US,en;q=0.9'] );
+			headers: ['Accept': ContentType.BINARY] );
 		return result
 	}
 	def getAttachment(def itemId) {
