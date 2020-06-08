@@ -140,7 +140,7 @@ trait WebSocketMicroServiceTrait implements StompSessionHandler {
 	
 	public def connect() {
 		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-		container.setDefaultMaxTextMessageBufferSize(20*1024*1024);
+		container.setDefaultMaxTextMessageBufferSize(512*1024);
 		StandardWebSocketClient client = new StandardWebSocketClient(container);
 		//setupSSL(client);
 //		List<Transport> webSocketTransports = Arrays.asList(new WebSocketTransport(client),  new RestTemplateXhrTransport(getRestTemplate()));
