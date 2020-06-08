@@ -3,7 +3,7 @@ Description={{$app}}-queuing
 
 [Service]
 WorkingDirectory=[[deploy.path]]
-ExecStart=/bin/java -Xrs -Xmx256m -jar "[[deploy.path]]/zions-queuing-microservice.jar" --routing.exchange.name={{.Exchangename}}  --routing.direct.key={{.Keyname}} --ado.topics={{.WSTopics}} --websocket.url=[[ws.url]] --logging.file="[[deploy.path]]/{{$app}}-queuing.log"
+ExecStart=/bin/java -Xrs -Xmx1024m -jar "[[deploy.path]]/zions-queuing-microservice.jar" --routing.exchange.name={{.Exchangename}}  --routing.direct.key={{.Keyname}} --ado.topics={{.WSTopics}} --websocket.url=[[ws.url]] --logging.file="[[deploy.path]]/{{$app}}-queuing.log"
 User=jvmapps
 Type=simple
 Restart=on-failure
