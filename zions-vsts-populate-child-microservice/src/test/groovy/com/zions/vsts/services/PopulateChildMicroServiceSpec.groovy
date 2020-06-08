@@ -88,23 +88,24 @@ class PopulateChildMicroServiceSpec extends Specification {
 	
 	def "child does not exist for parent"() {
 		given: "A mock ADO event payload where parent work item field is not populated"
-		
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataFieldNoChild.json').text)
 		
 		and: 'stub of inside get child data, get children of Epics (features)'
+		def childData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/emptychildData.json').text)
 		
-		def emptyList = []
-		def childData = workManagementService.getChildren(_,_,_) << emptyList
-		//def childData = workManagementService.getChildren(_,_,_) << null
-		 
-		when: "ADO sends notification for work item change who's type is not in configured target list"
-		def resp = underTest.processADOData(adoMap)
+		  workManagementService.getChildren(_,_,_) >> childData
 		
-		then: "No updates should be made"
-		resp == 'child not present'
-		 
+		  /*def emptyList = []
+		  def childData = workManagementService.getChildren(_,_,_) << emptyList*/
+		  
+		 when: "ADO sends notification for work item change who's type is not in configured target list"
+		 def resp = underTest.processADOData(adoMap)
+		
+		 then: "No updates should be made"
+		 //1 * resp == 'child not present'
+		 resp == 'child not present'
+		
 	}
-	
 
 	def "Successful child field update"() {
 		given: "A mock ADO event payload exists that meets all criteria for update"

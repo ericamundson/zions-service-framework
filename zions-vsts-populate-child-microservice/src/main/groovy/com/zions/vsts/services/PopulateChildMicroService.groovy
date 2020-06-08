@@ -74,9 +74,8 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		
 		//should return children payload - method to mock
 		def result = workManagementService.getChildren(collection, project, id)
-		//if (!result || result == 'null' || result == '') {
-		if (result == []) {
-		println(result.toString())
+		if (!result || result == 'null' || result == '' || result == []) {
+		//println(result.toString())
 			return logResult('child not present')
 			
 		}
