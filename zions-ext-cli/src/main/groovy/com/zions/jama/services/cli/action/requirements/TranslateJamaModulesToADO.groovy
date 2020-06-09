@@ -3,8 +3,11 @@ package com.zions.jama.services.cli.action.requirements
 import java.util.Map
 import org.apache.ivy.core.module.descriptor.ModuleDescriptor
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
+
+import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.query.IFilter
 import com.zions.qm.services.metadata.QmMetadataManagementService
@@ -14,6 +17,7 @@ import com.zions.jama.services.requirements.JamaRequirementsFileManagementServic
 import com.zions.jama.services.requirements.JamaRequirementsItemManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.mr.SmartDocManagementService
+import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
@@ -43,6 +47,10 @@ class TranslateJamaModulesToADO implements CliAction {
 	WorkManagementService workManagementService
 	@Autowired
 	SmartDocManagementService smartDocManagementService
+	@Autowired(required=false)
+	ICacheManagementService cacheManagementService
+	
+	String jamaBaseline = '0'  // Disable parameter for now.  Might need later.
 	
 	public TranslateJamaModulesToADO() {
 	}
@@ -64,7 +72,6 @@ class TranslateJamaModulesToADO implements CliAction {
 		String mrFolder = data.getOptionValues('mr.folder')[0]
 		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
 		String tfsCollectionGUID = data.getOptionValues('tfs.collectionId')[0]
-		String jamaBaseline = data.getOptionValues('jama.baseline')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -88,9 +95,8 @@ class TranslateJamaModulesToADO implements CliAction {
 			log.info("Retrieving project items: ${project.fields.name} ...")
 
 			def module = jamaRequirementsManagementService.getDocument(baseline, project)
-			log.info("Processing Module: ${module.getTitle()} ...")
 			
-
+			log.info("Uploading attachments for module: ${module.getTitle()} ...")
 			// Process attachments
 			if (module.attachments.size() > 0) {
 				jamaFileManagementService.ensureMultipleFileAttachments(module, module.attachments)
@@ -101,6 +107,7 @@ class TranslateJamaModulesToADO implements CliAction {
 				}
 			}
 			
+			log.info("Processing and caching module: ${module.getTitle()} ...")
 			// Add Module artifact to ChangeList (to create Document)
 			def changes = jamaRequirementsItemManagementService.getChanges(tfsProject, module, memberMap)
 			def aid = module.getCacheID()
@@ -140,7 +147,7 @@ class TranslateJamaModulesToADO implements CliAction {
 			// Create/update work items and SmartDoc container in Azure DevOps
 			if (changeList.size() > 0) {
 				// Process work item changes in Azure DevOps
-				log.info("Processing work item changes...")
+				log.info("Updating ADO with work item changes...")
 				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
 				
 				
@@ -161,7 +168,28 @@ class TranslateJamaModulesToADO implements CliAction {
 			log.info("Processing completed")
 		}
 
-
+		if (includes['linkViaCache']) {
+			int page = 0
+			ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
+			while (true) {
+				def linkinfos = cacheManagementService.getAllOfType('LinkInfo', page)
+				if (linkinfos.size() == 0) break
+				linkinfos.each { link ->
+					int id = Integer.parseInt("${link.key}")
+					jamaRequirementsItemManagementService.getWILinkChanges(id, tfsProject) { key, changes ->
+						if (key == 'WorkItem') {
+							clManager.add("${id}", changes)
+						}
+					}
+				}
+				if (clManager.size() > 0) {
+					log.info("Flushing ${clManager.size()} links from page ${page}")
+					clManager.flush()
+				}
+				page++
+			}
+		}
+			
 	}
 
 	

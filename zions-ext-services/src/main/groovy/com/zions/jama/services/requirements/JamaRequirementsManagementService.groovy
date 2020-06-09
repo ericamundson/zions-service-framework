@@ -56,9 +56,6 @@ class JamaRequirementsManagementService {
 
 	@Autowired
 	IGenericRestClient jamaFormGenericRestClient
-
-	@Autowired(required=true)
-	ICacheManagementService cacheManagementService
 		
 	def itemTypeMap = [93997:'Business Requirement',94000:'Component',94005:'Functional Requirement',94010:'Non Functional Requirement',94001:'Set',94003:'Text',94006:'Use Case',94023:'Attachment',101485:'Attachments',94002:'Folder']
 	
@@ -119,6 +116,13 @@ class JamaRequirementsManagementService {
 				headers: [Accept: 'application/json'] );
 		return result
 	}
+	def queryItemRelationships(def item, int startNdx, int max) {
+		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/items/${item.id}/downstreamrelationships?startAt=$startNdx&maxResults=$max"
+		def result = jamaGenericRestClient.get(
+				uri: uri,
+				headers: [Accept: 'application/json'] );
+		return result
+	}
 	def queryBaselineItems(def baseline, int startNdx, int max) {
 		String uri = this.jamaGenericRestClient.getJamaUrl() + "/rest/latest/baselines/${baseline.id}/versioneditems?startAt=$startNdx&maxResults=$max"
 		def result = jamaGenericRestClient.get(
@@ -173,6 +177,24 @@ class JamaRequirementsManagementService {
 		}
 		return projectList
 	}
+	def getAllItemRelationships(def item) {
+		def relationshipList = []
+		int startNdx = 0
+		int maxCount = 50
+		int remainCount = 999
+		while (remainCount > 0) {
+			def result = queryItemRelationships( item, startNdx, maxCount)
+			if (result.data.size() > 0) {
+				result.data.each { child ->
+						relationshipList.add(child) 
+				}
+			}
+		    int resultCount = result.meta.pageInfo.resultCount
+			remainCount = result.meta.pageInfo.totalResults - (startNdx + resultCount)
+			startNdx = startNdx + resultCount
+		}
+		return relationshipList
+	}
 	def getItems(def baseline, def project, def moduleAttachments) {
 		def orderedArtifacts = []
 		int startNdx = 0
@@ -203,6 +225,8 @@ class JamaRequirementsManagementService {
 						if (child.fields.attachment) {
 							artifact.attachments.add(child.fields.attachment)
 						}
+						// Get relationships (if any)
+						artifact.links = getAllItemRelationships(child)
 						orderedArtifacts.add(artifact) 
 					}
 					else if (this.itemTypeMap[child.itemType] == 'Attachment'){
@@ -222,7 +246,6 @@ class JamaRequirementsManagementService {
 		return orderedArtifacts
 	}
 	def extractRootDocumentAttributes(Map attributeMap, def idPrefix, def item, String projectName) {
-		attributeMap.put('api_id',item.id)
 		attributeMap.put('Identifier', idPrefix + item.id)
 		attributeMap.put('globalId',item.id)
 		attributeMap.put('itemType',item.type)
@@ -232,8 +255,7 @@ class JamaRequirementsManagementService {
 		attributeMap.put('name',projectName)
 	}
 	def extractAttributes(Map attributeMap, def item) {
-		attributeMap.put('api_id',item.id)
-		attributeMap.put('Identifier',item.globalId)
+		attributeMap.put('Identifier',item.id)
 		attributeMap.put('globalId',item.globalId)
 		attributeMap.put('itemType',item.itemType)
 		attributeMap.put('Artifact Type',this.itemTypeMap[item.itemType])
@@ -295,4 +317,5 @@ class JamaRequirementsManagementService {
 			headers: [Accept: 'application/json'] );
 		return result
 	}
+	
 }

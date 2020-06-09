@@ -28,7 +28,6 @@ class JamaRequirementsFileManagementService {
 	}
 
 	public def ensureRequirementFileAttachment(def itemData, String url) {
-
 		String attUrl
 		def cacheLink = null
 		def cacheWI = cacheManagementService.getFromCache("${itemData.getCacheID()}", ICacheManagementService.WI_DATA)
@@ -49,9 +48,6 @@ class JamaRequirementsFileManagementService {
 				attUrl = attData.url
 				itemData.adoFileInfo.add([comment: "Added attachment ${filename}", url:attUrl])
 			} else {
-//					if (checkpointManagementService != null) {
-//						checkpointManagementService.addLogentry("File upload attempt failed for Artifact ID: ${itemData.getIdentifier()} Filename: ${filename}")
-//					}
 				return null
 			}
 		}
@@ -62,6 +58,7 @@ class JamaRequirementsFileManagementService {
 		
 		return [fileName: filename, url: attUrl]
 	}
+	
 	public def ensureMultipleFileAttachments(def itemData, def attIds) {
 		attIds.each { id -> 
 			String attUrl
@@ -80,9 +77,6 @@ class JamaRequirementsFileManagementService {
 					attUrl = attData.url
 					itemData.adoFileInfo.add([comment: "Added attachment ${filename}", url:attUrl])
 				} else {
-	//					if (checkpointManagementService != null) {
-	//						checkpointManagementService.addLogentry("File upload attempt failed for Artifact ID: ${itemData.getIdentifier()} Filename: ${filename}")
-	//					}
 					return null
 				}
 			}
