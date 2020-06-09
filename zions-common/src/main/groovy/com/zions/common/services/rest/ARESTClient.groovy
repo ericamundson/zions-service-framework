@@ -36,7 +36,6 @@ class ARESTClient extends RESTClient {
         super( defaultURI, defaultContentType );
     }
 	
-	@Override
 	protected HttpResponseDecorator defaultSuccessHandler( HttpResponseDecorator resp, Object data )
 			throws ResponseParseException {
 		resp.setData(odefaultSuccessHandler( resp, data ) );

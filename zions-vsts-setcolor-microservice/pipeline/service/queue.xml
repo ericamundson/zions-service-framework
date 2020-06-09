@@ -1,0 +1,8 @@
+<service>
+      <id>zions-vsts-setcolor-microservice-queuing</id>
+      <name>zions-vsts-setcolor-microservice-queuing</name>
+      <description>This service runs zions-vsts-setcolor-microservice-queuing</description>
+      <executable>java</executable>
+      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-queuing-microservice.jar" --routing.exchange.name=WorkItem-exchange  --routing.direct.key=setcolor --ado.topics=workitem.created,workitem.updated --websocket.url={{ws.url}} --logging.file="{{deploy.path}}/zions-vsts-setcolor-microservice-queuing.log" </arguments>
+      <logmode>rotate</logmode>
+</service>

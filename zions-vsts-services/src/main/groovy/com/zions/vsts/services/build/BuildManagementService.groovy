@@ -550,7 +550,7 @@ public class BuildManagementService {
 		return writeBuildDefinition(collection, project, bDef)
 	}
 
-	def writeBuildDefinition(def collection, def project, def bDef) {
+	def writeBuildDefinition(def collection, def project, def bDef, def query = null) {
 		def body = new JsonBuilder(bDef).toPrettyString()
 		log.debug("BuildManagementService::writeBuildDefinition --> ${body}")
 		
@@ -558,12 +558,24 @@ public class BuildManagementService {
 //		def o = f.newDataOutputStream()
 //		o << body
 //		o.close()
-		def result = genericRestClient.post(
+		def result = null
+		if (query) {
+			result = genericRestClient.post(
+					requestContentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
+					body: body,
+					query: query
+					//headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true'],
+					)
+		} else {
+			result = genericRestClient.post(
 				requestContentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
 				body: body,
-				headers: [Accept: 'application/json;api-version=4.1;excludeUrls=true'],
+				headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true'],
 				)
+
+		}
 		return result
 	}
 	
@@ -1100,16 +1112,26 @@ public class BuildManagementService {
 			
 	}
 
-	def updateBuildDefinition(def collection, def project, def bDef) {
+	def updateBuildDefinition(def collection, def project, def bDef, def query) {
 		def body = new JsonBuilder(bDef).toPrettyString()
 		log.debug("BuildManagementService::updateBuildDefinition --> ${body}")
 		
-		def result = genericRestClient.put(
-			requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${bDef.id}",
-			body: body,
-			headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true'],
-		)
+		def result = null
+		if (query) {
+			result = genericRestClient.put(
+				requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${bDef.id}",
+				body: body,
+				query: query
+			)
+		} else {
+			result = genericRestClient.put(
+				requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${bDef.id}",
+				body: body,
+				headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true'],
+			)
+		}
 		return result
 	}
 	

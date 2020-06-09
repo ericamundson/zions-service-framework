@@ -38,7 +38,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.socket.WebSocketHttpHeaders
-import org.springframework.web.socket.client.WebSocketClient
+import org.springframework.web.socket.WebSocketHttpHeaders
+import javax.websocket.ContainerProvider
+import javax.websocket.WebSocketContainer
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.messaging.WebSocketStompClient
 import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport
@@ -72,7 +74,7 @@ trait WebSocketMicroServiceTrait implements StompSessionHandler {
     public static final String SSL_CONTEXT_PROPERTY =
             "org.apache.tomcat.websocket.SSL_CONTEXT";
 			
-	static Logger log = LoggerFactory.getLogger('com.zions.vsts.services.ws.client.WebSocketMicroServiceTrait')
+	Logger log = LoggerFactory.getLogger('com.zions.vsts.services.ws.client.WebSocketMicroServiceTrait')
 	TaskScheduler heartBeatScheduler
 	
 	StompSession session
@@ -137,13 +139,19 @@ trait WebSocketMicroServiceTrait implements StompSessionHandler {
 	}
 	
 	public def connect() {
-		StandardWebSocketClient client = new StandardWebSocketClient();
-		setupSSL(client);
-		List<Transport> webSocketTransports = Arrays.asList(new WebSocketTransport(client),  new RestTemplateXhrTransport(getRestTemplate()));
+		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+		container.setDefaultMaxTextMessageBufferSize(20*1024*1024);
+		StandardWebSocketClient client = new StandardWebSocketClient(container);
+		//setupSSL(client);
+//		List<Transport> webSocketTransports = Arrays.asList(new WebSocketTransport(client),  new RestTemplateXhrTransport(getRestTemplate()));
+		List<Transport> webSocketTransports = Arrays.asList(new WebSocketTransport(client));
 		SockJsClient sockJsClient = new SockJsClient(webSocketTransports);
 		stompClient = new WebSocketStompClient(sockJsClient);
-		stompClient.setMessageConverter(new StringMessageConverter());
+		StringMessageConverter converter = new StringMessageConverter()
+		stompClient.setMessageConverter(converter);
 		stompClient.setAutoStartup(true);
+		//stompClient.setInboundMessageSizeLimit(512*1014)
+		
 		if (this.websocketUser && this.websocketPassword) {
 			String plainCredentials="${websocketUser}:${websocketPassword}";
 			String base64Credentials = Base64.getEncoder().encodeToString(plainCredentials.getBytes());
@@ -210,7 +218,10 @@ trait WebSocketMicroServiceTrait implements StompSessionHandler {
 	 */
 	@Override
 	public void handleTransportError(StompSession session, Throwable exception) {
-			log.error("Transport fail", exception.message)
+		log.error("Transport fail: ${exception.message}")
+		exception.printStackTrace()
+		this.connect()
+		
 	}
 		
 	void setupSSL(HttpClientBuilder clientBuilder)

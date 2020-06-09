@@ -285,10 +285,93 @@ public class PolicyManagementService {
 		log.debug("PolicyManagementService::ensureGitAttributesFile -- result = "+res)
 	}
 
+	public def getBranchPolicyReport(def collection, def project) {
+		log.debug("PolicyManagementService::getBranchPolicyReport -- Started")
+		def policyReport = [repos: []]
+		def repoColl = []
+		def repos = codeManagementService.getRepos(collection, project)
+		repos.value.each { repo ->
+			def repoObj = [repoName: "${repo.name}"]
+			def branchColl = []
+			repoObj.branches = branchColl
+			def branches = codeManagementService.getBranches(collection, project, repo)
+			branches.value.each { branch ->
+				String branchName = "${branch.name}".toLowerCase()
+				if (branchName.startsWith("refs/heads/master") || 
+					branchName.startsWith("refs/heads/release") ||
+					branchName.startsWith("refs/heads/feature/ifb") ||
+					branchName.startsWith("refs/heads/ifb/"))
+				{
+					String bName = "${branch.name}".substring("refs/heads/".length())
+					def branchObj = [branchName: bName]
+					
+					def policyObj = [
+							hasBuildPolicy: false,
+							hasMinimumReviewersPolicy: false,
+							hasLinkedWorkItemsPolicy: false,
+							hasMergeStrategyPolicy: false,
+							hasCommentResolutionPolicy: false]
+					// check for policies on branch
+					//log.debug("PolicyManagementService::getBranchPolicyReport -- Getting branch policies ...")
+					def policies = getBranchPolicies(collection, project, repo.id, branchName)
+					policies.value.each { policy ->
+						// check for build validation policy
+						if ("${policy.type.id}" == "0609b952-1397-4640-95ec-e00a01b2c241") {
+							policyObj.hasBuildPolicy = true
+							// get build def for CI build and 
+							def build = buildManagementService.getBuildById(collection, project, policy.settings.buildDefinitionId)
+							if (build == null) {
+								//
+							} else {
+								policyObj.ciBuildName = "${build.name}"
+							}
+						} else
+						if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd") {
+							policyObj.hasMinimumReviewersPolicy = true
+							policyObj.minimumNumReviewers = policy.settings.minimumApproverCount
+							policyObj.creatorCanApprove = policy.settings.creatorVoteCounts
+							policyObj.allowDownvotes = policy.settings.allowDownvotes
+							policyObj.resetIfChanged = policy.settings.resetOnSourcePush
+						} else
+						if ("${policy.type.id}" == "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e") {
+							policyObj.hasLinkedWorkItemsPolicy = true
+						} else
+						if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab") {
+							policyObj.hasMergeStrategyPolicy = true
+							// what's the merge strategy -- NOT in settings ??
+						} else
+						if ("${policy.type.id}" == "c6a1889d-b943-4856-b76f-9e46bb6b0df2") {
+							policyObj.hasCommentResolutionPolicy = true
+						}
+					}
+					branchObj.policyInfo = policyObj
+					branchColl.add(branchObj)
+				}
+			}
+			repoColl.add(repoObj)
+		}
+		policyReport.repos = repoColl
+
+		log.debug("PolicyManagementService::getBranchPolicyReport -- Done")
+		return policyReport
+	}
+
+	public def getBranchPolicies(def collection, def project, def repoId, def branchName) {
+		log.debug("PolicyManagementService::getBranchPolicies -- Get policies for branch ${branchName}")
+		def query = ['repositoryId':"${repoId}", 'refName':"${branchName}" ]
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/policy/configurations",
+				query: query,
+				headers: [Accept: 'application/json;api-version=5.1-preview;excludeUrls=true']
+		)
+		return result
+	}
 
 	private loadProperties(def collection, def repoData, def branchName) {
 		def branch = "${branchName}".substring("refs/heads/".length())
 		log.debug("PolicyManagementService::loadProperties -- Get build properties for branch ${branch}")
+		// initialize branch properties instance
 		this.branchProps = null
 		def buildPropertiesFile = codeManagementService.getFileContent(collection, repoData.project, repoData, buildPropsFileName, branch)
 		if (buildPropertiesFile != null) {

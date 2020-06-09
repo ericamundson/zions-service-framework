@@ -19,13 +19,42 @@ public class PhaseService {
 	
 	public PhaseService() {}
 	
-	def createTemplate(String folderId, def templateData) {
+	def addPhase(String releaseId, def phaseData) {
 		def result = xlrGenericRestClient.post(
 				requestContentType: ContentType.JSON,
 				contentType: ContentType.JSON,
-				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/templates",
-				body: templateData,
-				query: [folderId: folderId]
+				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/phases/${releaseId}/phase",
+				body: phaseData
 			)
 	}
+	
+	def updatePhase(String phaseId, def phaseData) {
+		def result = xlrGenericRestClient.put(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/phases/${phaseId}",
+				body: phaseData
+			)
+	}
+	
+	def copyPhase(String releaseId, def phaseData, int position = 1) {
+		def result = xlrGenericRestClient.post(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/phases/${releaseId}/copy",
+				body: phaseData,
+				query:[targetPosition: position]
+			)
+	}
+	
+	def deletePhase(String releaseId, def phaseData, int position = 1) {
+		def result = xlrGenericRestClient.post(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/phases/${releaseId}/copy",
+				body: phaseData,
+				query:[targetPosition: position]
+			)
+	}
+
 }

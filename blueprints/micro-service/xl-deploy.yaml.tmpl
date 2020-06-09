@@ -1,0 +1,12 @@
+{{$app := .AppName | kebabcase}}
+apiVersion: xl/v1
+kind: Import
+metadata:
+  imports:
+  - xebialabs/xld-infra.yaml
+  - xebialabs/xld-env.yaml
+  {{if .IsWindows}}
+  - xebialabs/xld-apps-windows.yaml
+  {{else}}
+  - xebialabs/xld-apps-redhat.yaml
+  {{end}}

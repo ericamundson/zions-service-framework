@@ -1,0 +1,101 @@
+apiVersion: xl/v2
+kind: Blueprint
+
+metadata:
+  name: dts-micro-service
+  description: |
+    Outline of ADO/XLD/XLR to build deploy microservices.
+  author: XebiaLabs
+  version: 2.0
+  instructions: none
+
+spec:
+  parameters:
+  - name: AppName
+    type: Input
+    prompt: What is the name of the micro-service project?
+    
+  - name: IsWindows
+    type: Confirm
+    prompt: Is this a Windows deploy (Y/N)?
+    
+  - name: RequiresCollection
+    type: Confirm
+    prompt: Does this require tfs.collection property (Y/N)?
+            
+  - name: BuildIncludes
+    type: Input
+    prompt: Enter a comma delimited list of projects or sub-folders to include to determine if new release is required.
+
+  - name: UseQueue
+    type: Confirm
+    prompt: Does this service require a queue?
+    description: "Will be used to determine queue setup."
+
+  - name: Exchangename
+    type: Input
+    prompt: What is the exchange name?
+    promptIf: !expr "UseQueue"
+
+  - name: Queuename
+    type: Input
+    prompt: What is the queue name?
+    promptIf: !expr "UseQueue"
+    
+  - name: Keyname
+    type: Input
+    prompt: What is the routing key name?
+    promptIf: !expr "UseQueue"
+    
+  - name: WSTopics
+    type: Input
+    prompt: Enter comma delimited list of ADO event topics.
+    promptIf: !expr "UseQueue"
+
+  - name: DeployDev
+    type: Confirm
+    prompt:  Will this be deployed to eto-dev?
+    
+  - name: DevWSUrl
+    type: Input
+    prompt: What is eto-dev web socket url?
+    default: ws://localhost:9000/ws
+    promptIf: !expr "DeployDev"
+        
+  - name: ProdWSUrl
+    type: Input
+    prompt: What is zionseto web socket url?
+    default: ws://localhost:9000/ws
+
+
+  files:
+  - path: xl-deploy.yaml.tmpl
+  - path: xl-release.yaml
+  - path: xebialabs/USAGE.md.tmpl
+  - path: service/queue.xml.tmpl
+    writeIf: !expr "UseQueue"
+  - path: service/service.xml.tmpl
+    writeIf: !expr "IsWindows == true"
+  - path: service/service.exe
+    writeIf: !expr "IsWindows == true"
+  - path: service/queue.exe
+    writeIf: !expr "IsWindows == true"
+  - path: service/service.exe.config
+    writeIf: !expr "IsWindows == true"
+  - path: service/queue.exe.config
+    writeIf: !expr "IsWindows == true"
+  - path: service/microservice.service.tmpl
+    writeIf: !expr "IsWindows == false"
+  - path: service/queue.service.tmpl
+    writeIf: !expr "IsWindows == false"
+  - path: executable/builddefinition.yaml.tmpl
+  - path: ado/microservice-release.yaml.tmpl
+  - path: xebialabs/xld-apps-windows.yaml.tmpl
+    writeIf: !expr "IsWindows == true"
+  - path: xebialabs/xld-apps-redhat.yaml.tmpl
+    writeIf: !expr "IsWindows == false"
+  - path: xebialabs/xld-infra.yaml.tmpl
+  - path: xebialabs/xld-env.yaml.tmpl
+  - path: xebialabs/xlr-pipeline-ci-cd.yaml.tmpl
+  - path: xebialabs/xlr-pipeline-destroy.yaml.tmpl
+  - path: xebialabs/xlr-release.yaml.tmpl

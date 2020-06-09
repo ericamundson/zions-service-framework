@@ -19,13 +19,25 @@ public class TaskService {
 	
 	public TaskService() {}
 	
-	def addTask(String folderId, def templateData) {
-		def result = xlrGenericRestClient.post(
+	def addTask(String containerId, def taskData, int position = -1) {
+		def result = null
+		if (position != -1) {
+			result = xlrGenericRestClient.post(
 				requestContentType: ContentType.JSON,
 				contentType: ContentType.JSON,
-				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/templates",
-				body: templateData,
-				query: [folderId: folderId]
+				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/tasks/${containerId}/tasks",
+				body: taskData,
+				query:[position: position]
 			)
+		} else {
+			result = xlrGenericRestClient.post(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/tasks/${containerId}/tasks",
+				body: taskData
+			)
+
+
+		}
 	}
 }

@@ -1,0 +1,57 @@
+{{$app := .AppName | kebabcase}}
+---
+apiVersion: xl-deploy/v1
+kind: Environments
+spec:
+- name: Environments/DTS
+  type: core.Directory
+  children:
+  - directory: {{$app}}
+    children:
+    {{if .DeployDev}}
+    - name: Dev
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Dev
+      dictionaries:
+      - Environments/DTS/{{$app}}/_Dictionaries/Dev_Dict
+    {{end}}
+    - name: Prod
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Prod
+      dictionaries:
+      - Environments/DTS/{{$app}}/_Dictionaries/Prod_Dict
+    - directory: _Dictionaries
+      children:
+      {{if .DeployDev}}
+      - name: Dev_Dict
+        type: udm.Dictionary
+        entries:
+          {{if .IsWindows}}
+          deploy.path: d:\app\azure\services\{{$app}}
+          {{else}}
+          deploy.path: /app/azure/services/{{$app}}
+          {{end}}
+          ws.url: {{.DevWSUrl}}
+          {{if .RequiresCollection}}
+          tfs.collection: eto-dev
+          {{else}}
+          tfs.url: https://dev.azure.com/eto-dev
+		  {{end}}          
+      {{end}}
+      - name: Prod_Dict
+        type: udm.Dictionary
+        entries:
+          {{if .IsWindows}}
+          deploy.path: d:\app\azure\services\{{$app}}
+          {{else}}
+          deploy.path: /app/azure/services/{{$app}}
+          {{end}}
+          ws.url: {{.ProdWSUrl}}
+          {{if .RequiresCollection}}
+          tfs.collection: zionseto
+          {{else}}
+          tfs.url: https://dev.azure.com/zionseto
+		  {{end}}          
+    

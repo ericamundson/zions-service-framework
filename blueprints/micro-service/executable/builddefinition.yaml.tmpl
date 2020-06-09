@@ -1,0 +1,9 @@
+{{$app := .AppName }}
+executables:
+- name: {{$app}}-release
+  type: buildDefinition
+  context: zionseto
+  project: DTS
+  queue: 'On-Prem Production'
+  repository: zions-service-framework
+  buildyaml: {{$app}}/pipeline/ado/microservice-release.yaml

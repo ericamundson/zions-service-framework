@@ -1,0 +1,45 @@
+{{$app := .AppName | kebabcase}}
+---
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+- name: Infrastructure/DTS
+  type: core.Directory
+  children:
+  - directory: microservice
+    children:
+    {{if .IsWindows}}
+    - name: Dev
+      type: overthere.CifsHost
+      address: UTMVTI0192
+      username: svc-vsbuildagent@zbc.internal
+      password: !value "svc_account_passwd"
+    - name: Prod
+      type: overthere.CifsHost
+      address: UTMVPI0144
+      username: svc-vsbuildagent@zbc.internal
+      password: !value "svc_account_passwd"
+    {{else}}
+    - name: Dev
+      type: overthere.SshHost
+      address: none
+      jumpstation: Infrastructure/SshJumpstations/Test_01
+      sudoUsername: appadm
+      temporaryDirectoryPath: /tmp
+      stagingDirectoryPath: /app/deploy
+      os: UNIX
+      connectionType: SUDO
+      username: shd-xldp
+      privateKeyFile: /home/scmuser/.ssh/id_rsa
+    - name: Prod
+      type: overthere.SshHost
+      address: utlxa1846
+      jumpstation: Infrastructure/SshJumpstations/Prod_01
+      sudoUsername: appadm
+      temporaryDirectoryPath: /tmp
+      stagingDirectoryPath: /app/deploy
+      os: UNIX
+      connectionType: SUDO
+      username: shd-xldp
+      privateKeyFile: /home/scmuser/.ssh/id_rsa
+    {{end}}

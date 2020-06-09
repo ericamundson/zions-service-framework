@@ -1,12 +1,12 @@
 # levels for loggers, e.g. "logging.level.org.springframework=DEBUG" (TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF)
 logging:
   level:
-     org:
-       springframework: WARN
-     com:
-       zions:
-         vsts: DEBUG
-         common: DEBUG
+    org:
+      springframework: WARN
+    com:
+      zions:
+        vsts: DEBUG
+        common: DEBUG
 
 #spring boot logging configuration
   file: policymanagement.log
@@ -20,7 +20,8 @@ error:
 spring:
   velocity:
     enabled: false
-
+  main:
+    web-application-type: NONE
 # TFS connection properties
 tfs:
 # test
