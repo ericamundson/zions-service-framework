@@ -27,53 +27,24 @@ spec:
     type: Input
     prompt: Enter a comma delimited list of projects or sub-folders to include to determine if new release is required.
 
-  - name: UseQueue
-    type: Confirm
-    prompt: Does this service require a queue?
-    description: "Will be used to determine queue setup."
-
-  - name: Exchangename
-    type: Input
-    prompt: What is the exchange name?
-    promptIf: !expr "UseQueue"
-
   - name: Queuename
     type: Input
     prompt: What is the queue name?
-    promptIf: !expr "UseQueue"
-    
-  - name: Keyname
-    type: Input
-    prompt: What is the routing key name?
-    promptIf: !expr "UseQueue"
     
   - name: WSTopics
     type: Input
     prompt: Enter comma delimited list of ADO event topics.
-    promptIf: !expr "UseQueue"
 
   - name: DeployDev
     type: Confirm
     prompt:  Will this be deployed to eto-dev?
     
-  - name: DevWSUrl
-    type: Input
-    prompt: What is eto-dev web socket url?
-    default: ws://localhost:9000/ws
-    promptIf: !expr "DeployDev"
-        
-  - name: ProdWSUrl
-    type: Input
-    prompt: What is zionseto web socket url?
-    default: ws://localhost:9000/ws
 
 
   files:
   - path: xl-deploy.yaml.tmpl
   - path: xl-release.yaml
   - path: xebialabs/USAGE.md.tmpl
-  - path: service/queue.xml.tmpl
-    writeIf: !expr "UseQueue"
   - path: service/service.xml.tmpl
     writeIf: !expr "IsWindows == true"
   - path: service/service.exe

@@ -23,7 +23,7 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.vsts.services.asset.SharedAssetService
 import com.zions.vsts.services.attachments.AttachmentManagementService
-import com.zions.vsts.services.rmq.mixins.MessageConfigTrait
+import com.zions.vsts.services.rmq.mixins.MessageFanoutConfigTrait
 import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
 
@@ -32,7 +32,7 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
 @Configuration
 @ComponentScan(["com.zions.vsts.services.work","com.zions.vsts.services.admin","com.zions.common.services.logging"])
-public class AppConfig implements MessageConfigTrait {
+public class AppConfig implements MessageFanoutConfigTrait {
 	
 	
 	@Bean

@@ -139,12 +139,12 @@ trait WebSocketMicroServiceTrait implements StompSessionHandler {
 	}
 	
 	public def connect() {
-		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-		container.setDefaultMaxTextMessageBufferSize(512*1024);
-		StandardWebSocketClient client = new StandardWebSocketClient(container);
+//		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+//		container.setDefaultMaxTextMessageBufferSize(512*1024);
+//		StandardWebSocketClient client = new StandardWebSocketClient(container);
 		//setupSSL(client);
-//		List<Transport> webSocketTransports = Arrays.asList(new WebSocketTransport(client),  new RestTemplateXhrTransport(getRestTemplate()));
-		List<Transport> webSocketTransports = Arrays.asList(new WebSocketTransport(client));
+		List<Transport> webSocketTransports = Arrays.asList(new RestTemplateXhrTransport(getRestTemplate()));
+//		List<Transport> webSocketTransports = Arrays.asList(new WebSocketTransport(client));
 		SockJsClient sockJsClient = new SockJsClient(webSocketTransports);
 		stompClient = new WebSocketStompClient(sockJsClient);
 		StringMessageConverter converter = new StringMessageConverter()
@@ -177,6 +177,7 @@ trait WebSocketMicroServiceTrait implements StompSessionHandler {
 			session.subscribe("/topic/${aTopic}", this);
 		}
 		this.session = session;
+		this.session.setAutoReceipt(true)
 	}
 	
 	public Type getPayloadType(StompHeaders headers) {

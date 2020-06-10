@@ -13,8 +13,8 @@
 <booleanAttribute key="show_console_view" value="true"/>
 <booleanAttribute key="show_execution_view" value="true"/>
 <listAttribute key="tasks">
+<listEntry value="clean"/>
 <listEntry value="build"/>
-<listEntry value="updateBatJarVersion"/>
 </listAttribute>
 <stringAttribute key="working_dir" value="${workspace_loc:/zions-service-framework}"/>
 </launchConfiguration>

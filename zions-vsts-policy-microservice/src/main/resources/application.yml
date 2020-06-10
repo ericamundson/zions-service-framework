@@ -22,6 +22,21 @@ spring:
     enabled: false
   main:
     web-application-type: NONE
+    allow-bean-definition-overriding: true
+  mail:
+    host:  outboundrelay.cs.zionsbank.com
+    port:  25
+    properties:
+      mail:
+        smtp:
+          connectiontimeout:  5000
+          timeout:  5000
+          writetimeout:  5000
+  rabbitmq:
+    host: localhost
+    password: guest
+    port: 5672
+    username: guest          
 # TFS connection properties
 tfs:
 # test
@@ -60,17 +75,6 @@ endpoints:
 management:
   add-application-context-header: false
 
-# spring mail properties
-spring:
-  mail:
-    host:  outboundrelay.cs.zionsbank.com
-    port:  25
-    properties:
-      mail:
-        smtp:
-          connectiontimeout:  5000
-          timeout:  5000
-          writetimeout:  5000
 
 email:
   recipient:

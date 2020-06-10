@@ -13,10 +13,12 @@ import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.attachments.AttachmentManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
+import com.zions.mr.services.rest.MrGenericRestClient
+import com.zions.vsts.services.rmq.mixins.MessageFanoutConfigTrait
 
 @Configuration
 @ComponentScan("com.zions.vsts.services")
-public class AppConfig {
+public class AppConfig implements MessageFanoutConfigTrait {
 	@Bean 
 	ICacheManagementService cacheManagementService() {
 		return new CacheManagementService(cacheLocation)
@@ -43,6 +45,12 @@ public class AppConfig {
 	IGenericRestClient genericRestClient() {
 		return new GenericRestClient(tfsUrl, tfsUser, tfsToken)
 	}
+	
+	@Bean
+	IGenericRestClient mrGenericRestClient() {
+		return new MrGenericRestClient('', '')
+	}
+
 
 	@Autowired
 	@Value('${cache.location}')

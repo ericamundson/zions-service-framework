@@ -13,7 +13,7 @@ import groovy.util.logging.Slf4j
 import groovy.json.JsonSlurper
 
 import com.zions.vsts.services.policy.PolicyManagementService;
-import com.zions.vsts.services.ws.client.AbstractWebSocketMicroService
+import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
 
 /**
  * ReST Controller for TFS Policy Management service. 
@@ -22,14 +22,14 @@ import com.zions.vsts.services.ws.client.AbstractWebSocketMicroService
  */
 @Component
 @Slf4j
-public class PolicyEndPoint extends AbstractWebSocketMicroService {
+public class PolicyEndPoint implements MessageReceiverTrait {
 
     @Autowired
     private PolicyManagementService policyManagementService;
 
 	@Autowired
-	public PolicyEndPoint(@Value('${websocket.url:}') websocketUrl) {
-		super(websocketUrl)
+	public PolicyEndPoint() {
+		//init(websocketUrl, null, null)
 	}
 
     /**
@@ -37,7 +37,6 @@ public class PolicyEndPoint extends AbstractWebSocketMicroService {
      *  
      * @return
      */
-	@Override
 	public Object processADOData(Object adoData) {
 		//log.debug("In PolicyEndPoint - adoData:\n"+adoData)
 		try {
@@ -68,10 +67,10 @@ public class PolicyEndPoint extends AbstractWebSocketMicroService {
 		return ResponseEntity.ok(HttpStatus.OK)
 	}
 
-	@Override
-	public String topic() {
-		return 'git.push';
-	}
+//	@Override
+//	public String topic() {
+//		return 'git.push';
+//	}
 
     private def getCollectionName(def containerData) {
 		def collectionName = ""
