@@ -1,9 +1,5 @@
 package com.zions.jama.services.requirements
 
-import com.zions.common.services.cache.ICacheManagementService
-import com.zions.common.services.cache.MongoDBCacheManagementService
-import com.zions.common.services.cacheaspect.CacheInterceptor
-import com.zions.common.services.cacheaspect.CacheWData
 import com.zions.common.services.db.DatabaseQueryService
 import com.zions.common.services.db.IDatabaseQueryService
 import com.zions.common.services.link.LinkInfo
@@ -37,8 +33,6 @@ import org.apache.commons.io.IOUtils
 @Component
 class JamaRequirementsManagementService {
 	def userEmails
-	@Autowired
-	@Value('${jama.projectid}')
 	String jamaProjectID
 		
 	@Autowired

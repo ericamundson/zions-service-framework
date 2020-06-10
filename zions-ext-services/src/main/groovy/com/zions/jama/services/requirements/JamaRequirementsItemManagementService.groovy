@@ -68,6 +68,7 @@ class JamaRequirementsItemManagementService {
 
 	int newId = -1
 	
+	def jamaReptionshipTypeMap = [9361:'Related to',9362:'Dependent on',9363:'Derived from']
 	
 	def resetNewId() {
 		newId = -1
@@ -196,13 +197,13 @@ class JamaRequirementsItemManagementService {
 			def cid = cacheWI.id
 			List<LinkInfo> info = getLinkInfoFromCache(sid)
 			if (info) {
-			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-			def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
-			wiData.body.add(rev)
-			wiData = generateWILinkChanges(wiData, info, cacheWI)
-			if (wiData.body.size() > 1) {
-				closure.call('WorkItem', wiData)
-			}
+				def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+				def rev = [ op: 'test', path: '/rev', value: cacheWI.rev]
+				wiData.body.add(rev)
+				wiData = generateWILinkChanges(wiData, info, cacheWI)
+				if (wiData.body.size() > 1) {
+					closure.call('WorkItem', wiData)
+				}
 			} else {
 				//log.debug("No links for ${sid}")
 			}
@@ -210,53 +211,59 @@ class JamaRequirementsItemManagementService {
 		}
 	}
 
-	def generateWILinkChanges(def wiData, links, cacheWI) {
+	def generateWILinkChanges(def wiData, def links, def cacheWI) {
 		//def linksList = links.split(',')
-		links = getLinks(links)
-		links.each { LinkInfo info ->
+		links.each { def info ->
 			String id = info.itemIdRelated
 			String module = info.moduleRelated
 			def url = null
-			//def linkMap = linkMapping[info.type]
 			def linkType = info.type
 			def linkMap = 'System.LinkTypes.Related'
-			if (linkType == 'Interface For') {
-				linkMap = 'System.LinkTypes.Hierarchy-Forward'
-			}
-			if (linkType == 'Interface') {
-				linkMap = 'System.LinkTypes.Hierarchy-Reverse'
-			}
 			def runId = null
 			def linkId = null
-			if (linkMap) {
-				if (module == 'rm') {
-					def linkWI = cacheManagementService.getFromCache(id, 'RM', ICacheManagementService.WI_DATA)
-					if (linkWI) {
-						linkId = linkWI.id
-						url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
-					}
-				}
-				if (linkId && !linkExists(cacheWI, linkMap, linkId, runId) && "${linkId}" != "${cacheWI.id}") {
-					def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap}", url: url, attributes:[comment: "DNG Link: ${linkType}"]]]
-					wiData.body.add(change)
-				}
+			def linkWI = cacheManagementService.getFromCache(id, 'TL', ICacheManagementService.WI_DATA)
+			if (linkWI) {
+				linkId = linkWI.id
+				url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
+			}
+			if (linkId && !linkExists(cacheWI, linkMap, linkId, runId) && "${linkId}" != "${cacheWI.id}") {
+				def change = [op: 'add', path: '/relations/-', value: [rel: "${linkMap}", url: url, attributes:[comment: "Jama Link: ${linkType}"]]]
+				wiData.body.add(change)
 			}
 		}
 		return wiData
 	}
-	public def getLinkInfoFromCache(def sid) {
+	/**
+	 * Check work item cache to see if link exists on work item.
+	 *
+	 * @param cacheWI
+	 * @param targetName
+	 * @param linkId
+	 * @return
+	 */
+	boolean linkExists(cacheWI, targetName, linkId, String runId = null) {
+		def url = "${tfsUrl}/_apis/wit/workItems/${linkId}"
+		if (runId) {
+			url = "${tfsUrl}/_TestManagement/Runs?_a=resultSummary&runId=${runId}&resultId=${linkId}"
+		}
+		def link = cacheWI.relations.find { rel ->
+			"${rel.rel}" == "${targetName}" && url == "${rel.url}"
+		}
+		return link != null
+	}
+	private def getLinkInfoFromCache(def sid) {
 		if (!sid) {
 			return null
 		}
-		return cacheManagementService.getFromCache(sid, 'RM','LinkInfo')
+		return cacheManagementService.getFromCache(sid, 'TL','LinkInfo')
 	}
 	private void cacheAllLinks(String itemId, def itemLinks) {
 		List<LinkInfo> links = new ArrayList<LinkInfo>()
 		itemLinks.each { link ->
-			String key = "${link.id}"
+			String type = "${jamaReptionshipTypeMap[link.relationshipType]}"
 			String id = "${link.fromItem}"
 			String rid = "${link.toItem}"
-			def info = new LinkInfo(type: key, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'jama', moduleRelated: 'jama')
+			def info = new LinkInfo(type: type, itemIdCurrent: id, itemIdRelated: rid, moduleCurrent: 'jama', moduleRelated: 'jama')
 			links.add(info)
 		}
 		if (links.size() > 0) {

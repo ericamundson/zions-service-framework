@@ -79,7 +79,7 @@ class SmartDocManagementService {
 			wiDetails = """${getWorkitemDetails(0, module).detailString}"""
 		}
 		// Need to replace characters that will cause the Modern Requirements API to fail
-		def docName = "$docTitle".replace('/','-').replace(':','-')
+		def docName = "$docTitle".replaceAll('[/:<>\\*?|]',' ')
 		body = """
 			{
 			"userId": "${altCreds.user}",

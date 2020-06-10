@@ -49,6 +49,8 @@ class TranslateJamaModulesToADO implements CliAction {
 	SmartDocManagementService smartDocManagementService
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
+	@Value('${spring.data.mongodb.database}')
+	String mongodb_name
 	
 	String jamaBaseline = '0'  // Disable parameter for now.  Might need later.
 	
@@ -68,6 +70,7 @@ class TranslateJamaModulesToADO implements CliAction {
 		String tfsProjectURI = data.getOptionValues('tfs.projectUri')[0]
 		String tfsProject = data.getOptionValues('tfs.project')[0]
 		String tfsUrl = data.getOptionValues('tfs.url')[0]
+		String projectInputFile = data.getOptionValues('jama.inputFile')[0]
 		String mrTemplate = data.getOptionValues('mr.template')[0]
 		String mrFolder = data.getOptionValues('mr.folder')[0]
 		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
@@ -80,95 +83,102 @@ class TranslateJamaModulesToADO implements CliAction {
 		if (includes['phases'] != null) {
 			log.info('Getting ADO Project Members...')
 			def memberMap = memberManagementService.getProjectMembersMap(collection, tfsProject)
-			def baselines = jamaRequirementsManagementService.queryBaselines()
 			def baseline 
-			if (baselines.size > 0) {
-				baseline = baselines.find({it.id == jamaBaseline.toInteger() })
-			}
 
-//			String json = new JsonBuilder(component).toPrettyString()
-//			println(json)
-			int count = 0
-			def changeList = []
-			def idMap = [:]
-			def project = jamaRequirementsManagementService.queryProjectData()
-			log.info("Retrieving project items: ${project.fields.name} ...")
-
-			def module = jamaRequirementsManagementService.getDocument(baseline, project)
-			
-			log.info("Uploading attachments for module: ${module.getTitle()} ...")
-			// Process attachments
-			if (module.attachments.size() > 0) {
-				jamaFileManagementService.ensureMultipleFileAttachments(module, module.attachments)
-			}
-			module.orderedArtifacts.each { item ->
-				if (item.attachments.size() > 0) {
-					jamaFileManagementService.ensureMultipleFileAttachments(item, item.attachments)
+			// Get list of project IDs to migrate
+			String fileContents = new File(projectInputFile).text
+			def projectList = fileContents.split(',')
+			int projectCounter = 0
+			projectList.each { projectID -> 
+				if (projectCounter > 2) return
+				projectCounter++
+				def projectFile = new File(getProjectMarkerFilename(projectID))
+				if (projectFile.exists()) return
+				jamaRequirementsManagementService.jamaProjectID = projectID
+				int count = 0
+				def changeList = []
+				def idMap = [:]
+				def project = jamaRequirementsManagementService.queryProjectData()
+				log.info("Retrieving project $projectCounter of ${projectList.size()}: ${project.fields.name} ...")
+	
+				def module = jamaRequirementsManagementService.getDocument(baseline, project)
+				
+				// Process attachments
+				if (module.attachments.size() > 0) {
+					log.info("Uploading ${module.attachments.size()} attachments for module: ${module.getTitle()} ...")
+					jamaFileManagementService.ensureMultipleFileAttachments(module, module.attachments)
 				}
-			}
-			
-			log.info("Processing and caching module: ${module.getTitle()} ...")
-			// Add Module artifact to ChangeList (to create Document)
-			def changes = jamaRequirementsItemManagementService.getChanges(tfsProject, module, memberMap)
-			def aid = module.getCacheID()
-			changes.each { key, val ->
-				String idkey = "${aid}"
-				idMap[count] = idkey
-				changeList.add(val)
-				count++		
-			}
-						
-			// Iterate through all module elements and add them to changeList
-			def ubound = module.orderedArtifacts.size() - 1
-			def lastSection = 0
-			0.upto(ubound, {	
-				// Only store first occurrence of an artifact in the module
-				if (!module.orderedArtifacts[it].getIsDuplicate() && module.orderedArtifacts[it].getIsMigrating()) {  
-					changes = jamaRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
-					aid = module.orderedArtifacts[it].getCacheID()
-					changes.each { key, val ->
-						String idkey = "${aid}"
-						idMap[count] = idkey
-						changeList.add(val)
-						count++
+				module.orderedArtifacts.each { item ->
+					if (item.attachments.size() > 0) {
+						jamaFileManagementService.ensureMultipleFileAttachments(item, item.attachments)
 					}
 				}
-				else {
-					log.info("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
+				
+				log.info("Processing and caching module: ${module.getTitle()} ...")
+				// Add Module artifact to ChangeList (to create Document)
+				def changes = jamaRequirementsItemManagementService.getChanges(tfsProject, module, memberMap)
+				def aid = module.getCacheID()
+				changes.each { key, val ->
+					String idkey = "${aid}"
+					idMap[count] = idkey
+					changeList.add(val)
+					count++		
 				}
-				// save index of last section
-				if (module.orderedArtifacts[it].getTfsWorkitemType() == 'Section') {
-					lastSection = it
-				}
-
-			})
-			
-			
-			// Create/update work items and SmartDoc container in Azure DevOps
-			if (changeList.size() > 0) {
-				// Process work item changes in Azure DevOps
-				log.info("Updating ADO with work item changes...")
-				workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+							
+				// Iterate through all module elements and add them to changeList
+				def ubound = module.orderedArtifacts.size() - 1
+				def lastSection = 0
+				0.upto(ubound, {	
+					// Only store first occurrence of an artifact in the module
+					if (!module.orderedArtifacts[it].getIsDuplicate() && module.orderedArtifacts[it].getIsMigrating()) {  
+						changes = jamaRequirementsItemManagementService.getChanges(tfsProject, module.orderedArtifacts[it], memberMap)
+						aid = module.orderedArtifacts[it].getCacheID()
+						changes.each { key, val ->
+							String idkey = "${aid}"
+							idMap[count] = idkey
+							changeList.add(val)
+							count++
+						}
+					}
+					else {
+						log.info("Skipping duplicate requirement #${module.orderedArtifacts[it].getID()}")
+					}
+					// save index of last section
+					if (module.orderedArtifacts[it].getTfsWorkitemType() == 'Section') {
+						lastSection = it
+					}
+	
+				})
 				
 				
-				// Create/update the SmartDoc
-				log.info("Creating SmartDoc: ${module.getTitle()}")
-				def result = smartDocManagementService.ensureSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, mrTemplate, mrFolder)
-				if (result == null) {
-					log.info("SmartDoc API returned null")
+				// Create/update work items and SmartDoc container in Azure DevOps
+				if (changeList.size() > 0) {
+					// Process work item changes in Azure DevOps
+					log.info("Updating ADO with work item changes...")
+					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+					
+					
+					// Create/update the SmartDoc
+					log.info("Creating SmartDoc: ${module.getTitle()}")
+					def result = smartDocManagementService.ensureSmartDoc(module, tfsUrl, collection, tfsCollectionGUID, tfsProject, tfsProjectURI, tfsTeamGUID, mrTemplate, mrFolder)
+					if (result == null) {
+						log.info("SmartDoc API returned null")
+					}
+					else if (result.error != null && result.error.code != "null") {
+						log.info("SmartDoc API failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
+					}
+					else {
+						log.info("SmartDoc API succeeded. Result: ${result.result}")
+						createFileMarker(projectID)
+					}
+	
 				}
-				else if (result.error != null && result.error.code != "null") {
-					log.info("SmartDoc API failed.  Error code: ${result.error.code}, Error message: ${result.error.message}, Error name: ${result.error.name}")
-				}
-				else {
-					log.info("SmartDoc API succeeded. Result: ${result.result}")
-				}
-
 			}
-			log.info("Processing completed")
+			log.info("Project migration completed")
 		}
 
 		if (includes['linkViaCache']) {
+			log.info('Establishing work item links for all migrated projects...')
 			int page = 0
 			ChangeListManager clManager = new ChangeListManager(collection, tfsProject, workManagementService )
 			while (true) {
@@ -193,13 +203,13 @@ class TranslateJamaModulesToADO implements CliAction {
 	}
 
 	
-	def filtered(def items, String filter) {
-		if (this.filterMap[filter] != null) {
-			return this.filterMap[filter].filter(items)
-		}
-		return items.entry.findAll { ti ->
-			true
-		}
+	def createFileMarker(def projectID) {
+       File file = new File(getProjectMarkerFilename(projectID))
+	   file << 'success'
+	}
+	
+	def getProjectMarkerFilename(def projectID) {
+		return "C:/$mongodb_name/$projectID" + ".txt"
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
