@@ -2,7 +2,7 @@ package com.zions.vsts.services
 
 import com.zions.vsts.services.work.WorkManagementService
 
-import com.zions.vsts.services.ws.client.AbstractWebSocketMicroService
+import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -17,7 +17,7 @@ import groovy.json.JsonBuilder
  */
 @Component
 @Slf4j
-class ParentActivationMicroService extends AbstractWebSocketMicroService {
+class ParentActivationMicroService implements MessageReceiverTrait {
 
 	@Autowired
 	WorkManagementService workManagementService
@@ -30,18 +30,9 @@ class ParentActivationMicroService extends AbstractWebSocketMicroService {
 	String wiTypes
 
 
-	@Autowired
-	public ParentActivationMicroService(@Value('${websocket.url:}') websocketUrl,
-		@Value('${websocket.user:#{null}}') websocketUser,
-		@Value('${websocket.password:#{null}}') websocketPassword) {
-		super(websocketUrl, websocketUser, websocketPassword)
-		
-	}
-	 
 	public ParentActivationMicroService() 
 	{
-		// Constructor for unit testing
-		
+			
 	}
 	
 	 /**
@@ -136,9 +127,5 @@ class ParentActivationMicroService extends AbstractWebSocketMicroService {
 		return msg
 	}
 	
-	@Override
-	public String topic() {
-		return 'workitem.updated';
-	}
-
+		
 }
