@@ -11,7 +11,7 @@ spec:
     - name: !value "app_version"
       type: udm.DeploymentPackage
       deployables:
-     - name: {{$app}}.xml
+      - name: {{$app}}.xml
         type: file.File
         scanPlaceholders: true
         targetPath: '[[deploy.path]]'
