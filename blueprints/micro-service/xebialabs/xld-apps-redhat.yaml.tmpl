@@ -11,33 +11,6 @@ spec:
     - name: !value "app_version"
       type: udm.DeploymentPackage
       deployables:
-      {{if .UseQueue}}
-      - name: {{$app}}-queuing.service
-        type: file.File
-        scanPlaceholders: true
-        targetPath: '[[deploy.path]]'
-        createTargetPath: "true"
-        file: !file "../service/queue.service"
-      - name: zions-queuing-microservice-hold.jar
-        type: file.File
-        scanPlaceholders: false
-        targetPath: '[[deploy.path]]'
-        createTargetPath: "true"
-        file: !file "../../../zions-queuing-microservice/build/libs/zions-queuing-microservice.jar"
-      - name: run queuing install
-        type: advcmd.Command
-        command: |-
-          systemctl stop {{$app}}-queuing.service
-          cp -f {{$app}}-queuing.service /etc/systemd/system
-          cp -f [[deploy.path]]/{{$app}}-hold.jar [[deploy.path]]/{{$app}}.jar
-          systemctl daemon-reload
-          systemctl start {{$app}}-queuing.service          
-        createOrder: "61"
-        destroyOrder: "41"
-        alwaysRun: "true"
-        noopOrder: "61"
-        undoCommand: 'echo "No action needed for undoCommand"'
-      {{end}}
       - name: {{$app}}.service
         type: file.File
         scanPlaceholders: true

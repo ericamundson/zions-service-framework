@@ -41,11 +41,7 @@ stages:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
         workingDirectory: '$(Build.SourcesDirectory)'
         options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
-        {{if .UseQueue}}
-        tasks: 'clean zions-queuing-microservice:build {{$app}}:build'
-        {{else}}
         tasks: 'clean {{$app}}:build'
-        {{end}}    
         publishJUnitResults: false
 
     - task: BatchScript@1

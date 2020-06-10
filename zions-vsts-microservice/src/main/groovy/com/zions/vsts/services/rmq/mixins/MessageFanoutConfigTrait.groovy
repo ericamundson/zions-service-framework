@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.amqp.core.Queue
-import org.springframework.amqp.core.DirectExchange
+import org.springframework.amqp.core.FanoutExchange
 import org.springframework.amqp.core.AmqpAdmin
 import org.springframework.amqp.rabbit.core.RabbitAdmin
 import org.springframework.amqp.rabbit.core.RabbitTemplate
@@ -15,14 +15,13 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Declarables;
 import org.springframework.amqp.core.AcknowledgeMode
 
-trait MessageConfigTrait {
-	@Value('${routing.exchange.name:}')
-	String routingExchangeName
+trait MessageFanoutConfigTrait {
 
-	@Value('${routing.direct.key:}')
-	String routingDirectKey
+	@Value('${ado.topics:}')
+	String[] adoTopics
 
 	@Value('${queue.name:}')
 	String queueName
@@ -39,13 +38,23 @@ trait MessageConfigTrait {
 	}
 
 	@Bean
-	DirectExchange exchange() {
-		return new DirectExchange(routingExchangeName, exchangeDurable, false);
+	Declarables exchanges() {
+		Declarables dec = new Declarables()
+		adoTopics.each { topic ->
+			dec.declarables.add(new FanoutExchange(topic, exchangeDurable, false))
+		}
+		return dec;
 	}
 
 	@Bean
-	Binding binding(Queue queue, DirectExchange exchange) {
-		return BindingBuilder.bind(queue).to(exchange).with(routingDirectKey);
+	Declarables binding(Queue queue, Declarables exchanges) {
+		Declarables dec = new Declarables()
+		exchanges.declarables.each { FanoutExchange exchange ->
+			String exchangeName = exchange.name
+			Binding b = new Binding(queueName, Binding.DestinationType.QUEUE, exchangeName, '', null)
+			dec.declarables.add(b)
+		}
+		return dec;
 	}
 	
 //	@Bean

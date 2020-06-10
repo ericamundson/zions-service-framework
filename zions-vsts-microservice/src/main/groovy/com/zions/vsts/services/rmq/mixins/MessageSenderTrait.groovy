@@ -12,7 +12,7 @@ trait MessageSenderTrait {
 	@Value('${routing.exchange.name:}')
 	String routingExchangeName
 	
-	@Value('${routing.direct.key:}')
+	@Value('${routing.key:}')
 	String routingDirectKey
 
 	def sendMessage(def adoData) {
