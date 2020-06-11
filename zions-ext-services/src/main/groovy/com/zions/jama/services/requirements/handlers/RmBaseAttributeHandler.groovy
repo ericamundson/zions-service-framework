@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component
  */
 abstract class RmBaseAttributeHandler implements IFieldHandler {
 	static int MAX_STRING_SIZE = 255
+	def stateMap = [165496:'Draft',165497:'Approved',165498:'Completed',165499:'Rejected',196518:'Pending']
 	
 	public Object execute(Object data) {
 		def itemData = data.itemData

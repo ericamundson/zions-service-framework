@@ -90,10 +90,12 @@ class TranslateJamaModulesToADO implements CliAction {
 			def projectList = fileContents.split(',')
 			int projectCounter = 0
 			projectList.each { projectID -> 
-				if (projectCounter > 2) return
 				projectCounter++
 				def projectFile = new File(getProjectMarkerFilename(projectID))
-				if (projectFile.exists()) return
+				if (projectFile.exists()) {
+					log.info("Skipping $projectID")
+					return
+				}
 				jamaRequirementsManagementService.jamaProjectID = projectID
 				int count = 0
 				def changeList = []
@@ -103,6 +105,11 @@ class TranslateJamaModulesToADO implements CliAction {
 	
 				def module = jamaRequirementsManagementService.getDocument(baseline, project)
 				
+				// If this project has no items, then go to the next
+				if (module.orderedArtifacts.size() == 0) {
+					log.info("***No items for module: ${module.getTitle()}(project ID: $projectID). Will not migrate.")
+					return
+				}
 				// Process attachments
 				if (module.attachments.size() > 0) {
 					log.info("Uploading ${module.attachments.size()} attachments for module: ${module.getTitle()} ...")

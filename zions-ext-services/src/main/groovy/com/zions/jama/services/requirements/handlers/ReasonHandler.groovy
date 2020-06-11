@@ -8,17 +8,20 @@ class ReasonHandler extends RmBaseAttributeHandler {
 	@Override
 	public String getFieldName() {
 		
-		return 'Requirement Status'
+		return 'status'
 	}
 
 	@Override
 	public Object formatValue(Object value, Object itemData) {
 		// Handle cleanup via the DELETE IN ADO Release value - set status to Closed
-		if (value == 'Draft') {
-			return ''
+		if (stateMap[value] == 'Draft') {
+			return null
 		}
-		else {  // Reason should be set to legacy status
-			return value
+		else if (value && value != '') {  // Reason should be set to legacy status
+			return stateMap[value]
+		}
+		else {
+			return null
 		}
 	}
 
