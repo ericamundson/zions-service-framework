@@ -39,9 +39,7 @@ stages:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
         workingDirectory: '$(Build.SourcesDirectory)'
         options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
-        
-        tasks: 'clean zions-queuing-microservice:build zions-vsts-setcolor-microservice:build'
-            
+        tasks: 'clean zions-vsts-setcolor-microservice:build'
         publishJUnitResults: false
 
     - task: BatchScript@1

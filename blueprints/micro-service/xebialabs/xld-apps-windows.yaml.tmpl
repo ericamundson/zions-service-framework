@@ -11,39 +11,6 @@ spec:
     - name: !value "app_version"
       type: udm.DeploymentPackage
       deployables:
-      {{if .UseQueue}}
-      - name: {{$app}}-queuing.xml
-        type: file.File
-        scanPlaceholders: true
-        targetPath: '[[deploy.path]]'
-        createTargetPath: "true"
-        file: !file "../service/queue.xml"
-      - name: zions-queuing-microservice-hold.jar
-        type: file.File
-        scanPlaceholders: false
-        targetPath: '[[deploy.path]]'
-        createTargetPath: "true"
-        file: !file "../../../zions-queuing-microservice/build/libs/zions-queuing-microservice.jar"
-      - name: {{$app}}-queuing.exe.config
-        type: file.File
-        scanPlaceholders: false
-        targetPath: '[[deploy.path]]'
-        createTargetPath: "true"
-        file: !file "../service/queue.exe.config"
-      - name: run queuing install
-        type: advcmd.Command
-        command: |-
-          copy /Y [[deploy.path]]\..\WinSW.NET4 [[deploy.path]]\{{$app}}-queuing.exe
-          [[deploy.path]]\{{$app}}-queuing.exe install
-          [[deploy.path]]\{{$app}}-queuing.exe stop
-          copy /Y [[deploy.path]]\zions-queuing-microservice-hold.jar [[deploy.path]]\zions-queuing-microservice.jar
-          [[deploy.path]]\{{$app}}-queuing.exe start
-        createOrder: "61"
-        destroyOrder: "41"
-        alwaysRun: "true"
-        noopOrder: "61"
-        undoCommand: 'echo "No action needed for undoCommand"'
-      {{end}}
       - name: {{$app}}.xml
         type: file.File
         scanPlaceholders: true
