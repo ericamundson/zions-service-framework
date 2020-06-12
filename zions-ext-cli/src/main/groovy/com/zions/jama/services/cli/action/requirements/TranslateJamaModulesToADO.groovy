@@ -21,6 +21,8 @@ import com.zions.vsts.services.work.ChangeListManager
 import com.zions.vsts.services.work.FileManagementService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
+import com.zions.vsts.services.work.planning.AreaPathManagementService
+import com.zions.rm.services.requirements.ClmArtifact
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
@@ -47,6 +49,8 @@ class TranslateJamaModulesToADO implements CliAction {
 	WorkManagementService workManagementService
 	@Autowired
 	SmartDocManagementService smartDocManagementService
+	@Autowired
+	AreaPathManagementService areaPathManagementService
 	@Autowired(required=false)
 	ICacheManagementService cacheManagementService
 	@Value('${spring.data.mongodb.database}')
@@ -75,6 +79,7 @@ class TranslateJamaModulesToADO implements CliAction {
 		String mrFolder = data.getOptionValues('mr.folder')[0]
 		String tfsTeamGUID = data.getOptionValues('tfs.teamGuid')[0]
 		String tfsCollectionGUID = data.getOptionValues('tfs.collectionId')[0]
+		String tfsAreaPathBase = data.getOptionValues('tfs.areapath')[0]
 		String collection = ""
 		try {
 			collection = data.getOptionValues('tfs.collection')[0]
@@ -101,6 +106,7 @@ class TranslateJamaModulesToADO implements CliAction {
 				def changeList = []
 				def idMap = [:]
 				def project = jamaRequirementsManagementService.queryProjectData()
+				
 				log.info("Retrieving project $projectCounter of ${projectList.size()}: ${project.fields.name} ...")
 	
 				def module = jamaRequirementsManagementService.getDocument(baseline, project)
@@ -110,7 +116,14 @@ class TranslateJamaModulesToADO implements CliAction {
 					log.info("***No items for module: ${module.getTitle()}(project ID: $projectID). Will not migrate.")
 					return
 				}
-				// Process attachments
+				
+				// Create area path for this project and set it for all artifacts
+				def areaPath = "\\${tfsProject}\\${tfsAreaPathBase}\\${module.getTitle()}"
+				if (!areaPathManagementService.createAreaPath(collection, tfsProject, tfsAreaPathBase, module.getTitle())) {
+					log.info("Warning: Area Path $areaPath already exists") }
+				ClmArtifact.areaPath = areaPath
+
+									// Process attachments
 				if (module.attachments.size() > 0) {
 					log.info("Uploading ${module.attachments.size()} attachments for module: ${module.getTitle()} ...")
 					jamaFileManagementService.ensureMultipleFileAttachments(module, module.attachments)

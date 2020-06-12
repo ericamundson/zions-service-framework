@@ -39,7 +39,7 @@
 	
 	<wit source="Business Requirement" target="Business Requirement" translateUnmappedFields="false">
 		<field source="priorityHandler" target="Microsoft.VSTS.Common.Priority"/>
-		<field source="sourceNameHandler" target="Custom.Source"/>
+		<field source="sourceNameHandler" target="External.source"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
 		<field source="descriptionHandler" target="System.Description"/>
@@ -53,7 +53,7 @@
 	
 	<wit source="Functional Requirement" target="Functional Requirement" translateUnmappedFields="false">
 		<field source="priorityHandler" target="Microsoft.VSTS.Common.Priority"/>
-		<field source="sourceNameHandler" target="Custom.Source"/>
+		<field source="sourceNameHandler" target="External.source"/>
 		<field source="frTypeHandler" target="Custom.FunctionalType"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>
@@ -67,7 +67,7 @@
 	</wit>
 
 	<wit source="Non Functional Requirement" target="Non Functional Requirement" translateUnmappedFields="false">
-		<field source="sourceNameHandler" target="Custom.Source"/>
+		<field source="sourceNameHandler" target="External.source"/>
 		<field source="nfrTypeHandler" target="Custom.NFRType"/>
 		<field source="createdHandler" target="System.CreatedDate"/>
 		<field source="nameHandler" target="System.Title"/>

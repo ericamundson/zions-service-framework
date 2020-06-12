@@ -150,8 +150,8 @@ class JamaRequirementsManagementService {
 		clmModule.attachments = moduleAttachments
 		return clmModule
 	}
-	String getProjectName(def project) {
-		return "${project.fields.name}"
+	public String getProjectName(def project) {
+		return "${project.fields.name}".replaceAll('[/:;+=<>\\*?|]',' ')
 	}
 	def getAllProjects() {
 		def projectList = []

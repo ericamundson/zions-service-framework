@@ -1,6 +1,7 @@
 package com.zions.rm.services.requirements
 
 class ClmArtifact {
+	static String areaPath
 	String format
 	String tfsWorkitemType
 	String fileHref

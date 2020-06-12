@@ -6,9 +6,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class AreaPathHandler extends RmBaseAttributeHandler {
-	@Autowired
-	@Value('${tfs.areapath}')
-	String tfsAreaPath
 	
 	@Override
 	public String getFieldName() {
@@ -19,7 +16,7 @@ class AreaPathHandler extends RmBaseAttributeHandler {
 	@Override
 	public Object formatValue(Object val, Object itemData) {
 		
-		return tfsAreaPath
+		return itemData.areaPath
 	}
 
 }

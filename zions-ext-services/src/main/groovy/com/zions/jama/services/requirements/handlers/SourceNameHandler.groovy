@@ -8,7 +8,7 @@ class SourceNameHandler extends RmBaseAttributeHandler {
 	@Override
 	public String getFieldName() {
 		
-		return 'sourceName'
+		return 'source$93997'
 	}
 
 	@Override

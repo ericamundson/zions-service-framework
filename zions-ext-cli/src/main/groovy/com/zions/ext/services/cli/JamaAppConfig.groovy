@@ -21,6 +21,7 @@ import com.zions.common.services.restart.RestartManagementService
 import com.zions.vsts.services.attachments.AttachmentManagementService
 import com.zions.jama.services.rest.JamaGenericRestClient
 import com.zions.vsts.services.mr.SmartDocManagementService
+import com.zions.vsts.services.work.planning.AreaPathManagementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -95,6 +96,10 @@ public class JamaAppConfig {
 	@Bean
 	CommandManagementService commandManagementService() {
 		return new CommandManagementService();
+	}
+	@Bean
+	AreaPathManagementService areaPathManagementService() {
+		return new AreaPathManagementService();
 	}
 	@Bean
 	IGenericRestClient jamaGenericRestClient() {
