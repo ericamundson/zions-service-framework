@@ -31,10 +31,16 @@ trait MessageFanoutConfigTrait {
 	
 	@Value('${queue.durable:true}')
 	boolean queueDurable
+	
+	@Value('${queue.exclusive:false}')
+	boolean queueExclusive
+	
+	@Value('${queue.autoDelete:false}')
+	boolean queueAutoDelete
 
 	@Bean
 	Queue queue() {
-		return new Queue(queueName, queueDurable);
+		return new Queue(queueName, queueDurable, queueExclusive, queueAutoDelete);
 	}
 
 	@Bean
