@@ -56,7 +56,7 @@ class SmartDocManagementService {
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
 	
-	public SmartDocManagementService(def tfsUsers, def tfsTokens) {
+	public SmartDocManagementService(@Value('${tfs.users:}') String[] tfsUsers, @Value('${tfs.tokens:}') String[] tfsTokens) {
 		serverAltCreds = new ServerAltCreds(tfsUsers, tfsTokens)
 	}
 	
