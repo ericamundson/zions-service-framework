@@ -34,9 +34,12 @@ class SmartDocManagementService {
 		def curIndex
 		def serverCount
 		def serverCreds = []
-		ServerAltCreds() {
+		ServerAltCreds(def tfsUsers, def tfsTokens) {
 			curIndex = -1
-			serverCreds = [[user: 'svc-cloud-vsmigration@zionsbancorporation.onmicrosoft.com', pswd: 'me6cvg6ggjbhbcy4aj5v2xb7hnfvjtfzf4bud6wf5wkmxe2z6slq'],[user: 'svc-cloud-vsmigration002@zionsbancorporation.onmicrosoft.com', pswd: 'vcbqfunfkfyqxk2i5wgldk3qeqzixocljalgzbzqsubynpciq2da'],[user: 'svc-cloud-vsmigration003@zionsbancorporation.onmicrosoft.com', pswd: 'ideocq4d6kzq4ild6qj25ysobtxno7jccvpn6xozrmgxjnndkura'],[user: 'svc-cloud-vsmigration004@zionsbancorporation.onmicrosoft.com', pswd: 'ms4zekfl2436dyvpvv4apwcjamonoeq5wjnmowgq6aymkrlykv2a'],[user: 'rbhuet', pswd: 'Asc3ndant']] //in_altCreds
+			def ubound = tfsUsers.size() - 1
+			0.upto(ubound, { 
+				serverCreds.add([user:tfsUsers[it], pswd:tfsTokens[it]])
+			})
 			if (serverCreds) serverCount = serverCreds.size()
 			
 		}
@@ -46,11 +49,6 @@ class SmartDocManagementService {
 			return serverCreds[curIndex]
 		}
 	}
-/*	
-	@Autowired
-	@Value('${tfs.serverAltCreds}')
-	String tfsServerAltCreds
-*/
 
 	@Autowired(required=false)
 	private IGenericRestClient mrGenericRestClient
@@ -58,8 +56,8 @@ class SmartDocManagementService {
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
 	
-	public SmartDocManagementService() {
-		serverAltCreds = new ServerAltCreds()
+	public SmartDocManagementService(def tfsUsers, def tfsTokens) {
+		serverAltCreds = new ServerAltCreds(tfsUsers, tfsTokens)
 	}
 	
 	def ensureSmartDoc(def module, def tfsUrl, def collection, def tfsCollectionGUID, def tfsProject, def tfsProjectURI, def tfsTeamGUID, def mrTemplate, def mrFolder) {
@@ -81,7 +79,7 @@ class SmartDocManagementService {
 			wiDetails = """${getWorkitemDetails(0, module).detailString}"""
 		}
 		// Need to replace characters that will cause the Modern Requirements API to fail
-		def docName = "$docTitle".replace('/','-').replace(':','-')
+		def docName = "$docTitle"
 		body = """
 			{
 			"userId": "${altCreds.user}",
