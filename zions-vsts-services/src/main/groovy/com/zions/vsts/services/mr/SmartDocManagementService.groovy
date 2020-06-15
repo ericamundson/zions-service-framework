@@ -37,11 +37,15 @@ class SmartDocManagementService {
 		ServerAltCreds(def tfsUsers, def tfsTokens) {
 			curIndex = -1
 			def ubound = tfsUsers.size() - 1
-			0.upto(ubound, { 
-				serverCreds.add([user:tfsUsers[it], pswd:tfsTokens[it]])
-			})
-			if (serverCreds) serverCount = serverCreds.size()
-			
+			if (ubound > -1) {
+				0.upto(ubound, { 
+					serverCreds.add([user:tfsUsers[it], pswd:tfsTokens[it]])
+				})
+				if (serverCreds) serverCount = serverCreds.size()
+			}
+			else {
+				serverCount = 0
+			}
 		}
 		def getNextCreds() {
 			curIndex++
@@ -56,7 +60,7 @@ class SmartDocManagementService {
 	@Autowired(required=true)
 	ICacheManagementService cacheManagementService
 	
-	public SmartDocManagementService(def tfsUsers, def tfsTokens) {
+	public SmartDocManagementService(@Value('${tfs.users:}') String[] tfsUsers, @Value('${tfs.tokens:}') String[] tfsTokens) {
 		serverAltCreds = new ServerAltCreds(tfsUsers, tfsTokens)
 	}
 	
