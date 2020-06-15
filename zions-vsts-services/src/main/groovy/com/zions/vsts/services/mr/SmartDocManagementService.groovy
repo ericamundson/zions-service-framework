@@ -37,11 +37,15 @@ class SmartDocManagementService {
 		ServerAltCreds(def tfsUsers, def tfsTokens) {
 			curIndex = -1
 			def ubound = tfsUsers.size() - 1
-			0.upto(ubound, { 
-				serverCreds.add([user:tfsUsers[it], pswd:tfsTokens[it]])
-			})
-			if (serverCreds) serverCount = serverCreds.size()
-			
+			if (ubound > -1) {
+				0.upto(ubound, { 
+					serverCreds.add([user:tfsUsers[it], pswd:tfsTokens[it]])
+				})
+				if (serverCreds) serverCount = serverCreds.size()
+			}
+			else {
+				serverCount = 0
+			}
 		}
 		def getNextCreds() {
 			curIndex++
