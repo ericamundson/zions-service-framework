@@ -50,15 +50,19 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 		String owner = "${wiResource.revision.fields.'System.AssignedTo'}"
 		String status = "${wiResource.revision.fields.'System.State'}"
 		if (!types.contains(wiType)) return logResult('Not a target work item type')
-		if (owner != 'null') return logResult('Work item already assigned')
-		if (status != 'Closed') return logResult('Work item not closed')
+		if (owner && owner != 'null') return logResult('Work item already assigned')
+		if (status && status != 'Closed') return logResult('Work item not closed')
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		String id = "${wiResource.revision.id}"
 		String rev = "${wiResource.revision.rev}"
 		String parentId = "${wiResource.revision.fields.'System.Parent'}"
-		if (parentId != 'null') {
+		if (parentId && parentId != 'null') {
 			// First get parent wi data
 			def parentWI = workManagementService.getWorkItem(collection, project, parentId)
+			if (!parentWI) {
+				log.error("Error retrieving work item $parentId")
+				return 'ADO Error'
+			}
 //			Uncomment code below to capture parent playload for test
 //			String json = new JsonBuilder(parentWI).toPrettyString()
 //			println(json)
