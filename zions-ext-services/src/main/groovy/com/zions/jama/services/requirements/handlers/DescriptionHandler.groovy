@@ -53,6 +53,7 @@ class DescriptionHandler extends RmBaseAttributeHandler {
 	def processHtml(String html, String sId, def itemData) {
 		def htmlData
 		try {
+			html = '<div>' + html.replace('&ldquo;','"').replace('&rdquo;','"').replace('&nbsp;', ' ') + '</div>'
 			htmlData = new XmlSlurper().parseText(html)
 		}
 		catch (Exception e) {
