@@ -15,6 +15,8 @@ interface IAttachments {
 	 * @return [url: <store location url>]
 	 */
 	def sendAttachment(def info)
+
+	def sendAttachment(byte[] content, String filename)
 	
 	def ensureResultAttachments(def adoresult, def binaries, String rwebId)
 	

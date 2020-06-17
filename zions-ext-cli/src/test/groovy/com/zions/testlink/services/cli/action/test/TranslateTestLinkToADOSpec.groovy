@@ -80,6 +80,7 @@ class TranslateTestLinkToADOSpec extends Specification {
 		
 	@Ignore
 	public void 'Simulate all phases plus clean'() {
+		/*
 		setup: 'TestLink stubs'
 		cacheManagementService.cacheModule = 'TL'
 		restartManagementService.includePhases = 'testcase,plans,links,executions,attachments'
@@ -96,7 +97,7 @@ class TranslateTestLinkToADOSpec extends Specification {
 		
 		cleanup: 'Cleanup ADO data'		
 		testManagementService.cleanupTestItems('', 'IntegrationTests', "IntegrationTests\\testlink")
-		
+	*/	
 	}
 	
 	private setupTestLinkStubs() {

@@ -45,6 +45,15 @@ class AttachmentManagementService implements IAttachments {
 		}
 	}
 	
+	public def sendAttachment(byte[] content, String filename) {
+		if (content) {
+			return fileManagementService.uploadAttachment(tfsCollection, this.tfsProject, this.tfsProject, content, filename)
+		} else {
+			log.debug("sendAttachment was provided with a null file, skipping upload attempt")
+			return null
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see com.zions.common.services.attachments.IAttachments#sendAttachment(java.lang.Object)
 	 */

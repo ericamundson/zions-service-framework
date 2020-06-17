@@ -58,7 +58,7 @@ class MrGenericRestClient extends AGenericRestClient {
 	String mrUrl = ""
 	
 	@Autowired
-	public MrGenericRestClient(@Value('${mr.url}') String mrUrl,@Value('${tfs.user}') String tfsUserid) {
+	public MrGenericRestClient(@Value('${mr.url:}') String mrUrl,@Value('${tfs.user:}') String tfsUserid) {
 
 		this.mrUrl = mrUrl
 		this.userid = tfsUserid

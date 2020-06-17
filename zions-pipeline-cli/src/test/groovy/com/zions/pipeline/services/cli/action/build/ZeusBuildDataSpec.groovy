@@ -224,7 +224,7 @@ class ZeusBuildDataSpec extends Specification {
 
 @TestConfiguration
 @Profile("test")
-@ComponentScan(["com.zions.vsts.services", "com.zions.common.services.test"])
+@ComponentScan(["com.zions.vsts.services","com.zions.common.services.test"])
 //@PropertySource("classpath:test.properties")
 class ZeusBuildDataSpecConfig {
 	def factory = new DetachedMockFactory()

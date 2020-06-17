@@ -1,6 +1,7 @@
 package com.zions.rm.services.requirements
 
 class ClmArtifact {
+	static String areaPath
 	String format
 	String tfsWorkitemType
 	String fileHref
@@ -8,6 +9,7 @@ class ClmArtifact {
 	def attributeMap = [:]
 	def collectionArtifacts = []
 	def links = []
+	def attachments = []
 	def changes = [:]
 	def adoFileInfo = []
 	def cacheWI // cached work item from ADO
