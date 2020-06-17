@@ -25,7 +25,7 @@
 		<link>
 			<name>resources</name>
 			<type>2</type>
-			<location>D:/git/zions-service-framework/common/resources</location>
+			<location>../common/resources</location>
 		</link>
 	</linkedResources>
 </projectDescription>
