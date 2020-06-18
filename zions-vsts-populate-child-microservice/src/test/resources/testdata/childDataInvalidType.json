@@ -1,5 +1,5 @@
 [
-	{
+    {
         "id": 947863,
         "rev": 1,
         "fields": {
@@ -65,5 +65,5 @@
             }
         },
         "url": "https://dev.azure.com/eto-dev/_apis/wit/workItems/947863"
-	}
+    }
 ]

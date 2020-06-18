@@ -46,11 +46,17 @@ class PopulateChildMicroServiceSpec extends Specification {
 		workManagementService.getChildren(_,_,_) >> childData
 		
 		when: "ADO sends notification for work item change who's type is not in configured target list"
+		//adoMap.resource.revision.fields.'Custom.OTLNumber' = otlField
 		def resp = underTest.processADOData(adoMap)
 		
 
 		then: "No Updates should be made"
 		resp == 'no target children to update'
+		
+		
+
+		
+				 
 	}
 	
 	
@@ -124,8 +130,9 @@ class PopulateChildMicroServiceSpec extends Specification {
 				//workManagementService.batchWIChanges(collection, project, changes, idMap)
 				changes.each { change ->
 					assert(change.body.toString() == '[[op:test, path:/rev, value:4], [op:add, path:/fields/Custom.OTLNumber, value:1000]]')
-															
-					//assert(change.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/Custom.OTLNumber, value:1000]]')
+					//add parameterization to test - 
+					//assert(change.body.toString() == '[[op:test, path:/rev, value:4], [op:add, path:"/fields/${wiCfields}", value:1000]]')
+					
 				}
 				
 		}

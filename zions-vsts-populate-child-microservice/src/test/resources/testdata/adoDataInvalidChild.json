@@ -1,7 +1,7 @@
 {
     "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
-    "notificationId": 624,
-    "id": "0c634862-5c1d-42ff-b77b-548e4b39b582",
+    "notificationId": 793,
+    "id": "51a4cc96-8209-4840-bfbe-24ddaf89e7e8",
     "eventType": "workitem.updated",
     "publisherId": "tfs",
     "message": {
@@ -15,9 +15,9 @@
         "markdown": "[Epic #947862](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947862) (Epic with invalid child for population) updated by Michael Angelastro\r\n\r\n"
     },
     "resource": {
-        "id": 3,
+        "id": 8,
         "workItemId": 947862,
-        "rev": 2,
+        "rev": 7,
         "revisedBy": {
             "id": "b469b2eb-26de-609a-a49a-a173e186971d",
             "name": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
@@ -35,32 +35,33 @@
         "revisedDate": "9999-01-01T00:00:00Z",
         "fields": {
             "System.Rev": {
-                "oldValue": 1,
-                "newValue": 2
+                "oldValue": 6,
+                "newValue": 7
             },
             "System.AuthorizedDate": {
-                "oldValue": "2020-06-04T20:38:07.637Z",
-                "newValue": "2020-06-04T20:50:02.787Z"
+                "oldValue": "2020-06-17T02:30:40.213Z",
+                "newValue": "2020-06-17T02:33:23.547Z"
             },
             "System.RevisedDate": {
-                "oldValue": "2020-06-04T20:50:02.787Z",
+                "oldValue": "2020-06-17T02:33:23.547Z",
                 "newValue": "9999-01-01T00:00:00Z"
             },
             "System.ChangedDate": {
-                "oldValue": "2020-06-04T20:38:07.637Z",
-                "newValue": "2020-06-04T20:50:02.787Z"
+                "oldValue": "2020-06-17T02:30:40.213Z",
+                "newValue": "2020-06-17T02:33:23.547Z"
             },
             "System.Watermark": {
-                "oldValue": 327886,
-                "newValue": 327888
+                "oldValue": 328071,
+                "newValue": 328072
             },
             "Custom.OTLNumber": {
-                "newValue": "200"
+                "oldValue": "20012",
+                "newValue": "123"
             }
         },
         "_links": {
             "self": {
-                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862/updates/3"
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862/updates/8"
             },
             "workItemUpdates": {
                 "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862/updates"
@@ -72,10 +73,10 @@
                 "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947862"
             }
         },
-        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862/updates/3",
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862/updates/8",
         "revision": {
             "id": 947862,
-            "rev": 2,
+            "rev": 7,
             "fields": {
                 "System.AreaPath": "ALMOpsTest",
                 "System.TeamProject": "ALMOpsTest",
@@ -85,7 +86,7 @@
                 "System.Reason": "New",
                 "System.CreatedDate": "2020-06-04T20:38:07.637Z",
                 "System.CreatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
-                "System.ChangedDate": "2020-06-04T20:50:02.787Z",
+                "System.ChangedDate": "2020-06-17T02:33:23.547Z",
                 "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
                 "System.CommentCount": 0,
                 "System.Title": "Epic with invalid child for population",
@@ -96,7 +97,7 @@
                 "Microsoft.VSTS.Common.ValueArea": "Business",
                 "WEF_50EF162195514EDDBA9895A4B28AB725_Kanban.Column": "New",
                 "WEF_50EF162195514EDDBA9895A4B28AB725_Kanban.Column.Done": false,
-                "Custom.OTLNumber": "200"
+                "Custom.OTLNumber": "123"
             },
             "relations": [
                 {
@@ -110,7 +111,7 @@
             ],
             "_links": {
                 "self": {
-                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862/revisions/2"
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862/revisions/7"
                 },
                 "workItemRevisions": {
                     "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862/revisions"
@@ -119,7 +120,7 @@
                     "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862"
                 }
             },
-            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862/revisions/2"
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947862/revisions/7"
         }
     },
     "resourceVersion": "1.0",
@@ -137,5 +138,5 @@
             "baseUrl": "https://dev.azure.com/eto-dev/"
         }
     },
-    "createdDate": "2020-06-04T20:50:10.8975699Z"
+    "createdDate": "2020-06-17T02:33:30.3940544Z"
 }

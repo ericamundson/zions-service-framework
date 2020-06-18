@@ -51,8 +51,8 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		log.info("Entering PopulateChild MicroService:: processADOData")
 		
 		/*Uncomment code below to capture adoData payload for test*/
-		/* String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)*/
+		/*String json = new JsonBuilder(adoData).toPrettyString()
+		println(json)*/
 		
 		
 		def outData = adoData
@@ -100,9 +100,10 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			//Define child work item types
 			String type = "${childwi.fields['System.WorkItemType']}"
 			//Define OTLNumber of child fields
-			//String cField = "${childwi.fields.'Custom.OTLNumber'}"
-			def val2 = wiResource.revision.fields["${'wiCfields'}"]
-			String cField = "${val2}"
+		    // String cField = "${childwi.fields.'Custom.OTLNumber'}"
+						 
+			 def val2 = childwi.fields["${wiCfields}"]
+			 String cField = "${val2}"
 			
 			//get revision id for child - needed to handle concurrency
 			String rev = "${childwi.rev}"
@@ -115,7 +116,6 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 				idMap[count] = "${childwi.id}"
 				}
 				
-	
 		}
 			
 		if (changes.size() > 0) {
