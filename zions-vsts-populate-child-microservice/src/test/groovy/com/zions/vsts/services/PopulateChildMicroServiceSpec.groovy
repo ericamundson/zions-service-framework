@@ -54,10 +54,19 @@ class PopulateChildMicroServiceSpec extends Specification {
 		resp == 'no target children to update'
 		
 		
+}
 
-		
-				 
-	}
+
+	def "Not a valid parent work item type"() {
+		given: "A mock ADO event payload exists for wrong work item type"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataInvalidParentType.json').text)
+
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "No updates should be made"
+		resp == 'not a valid work item type'
+}
 	
 	
 	def "Parent field not populated"() {

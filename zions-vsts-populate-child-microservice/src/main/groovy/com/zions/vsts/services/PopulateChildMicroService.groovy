@@ -51,10 +51,10 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		log.info("Entering PopulateChild MicroService:: processADOData")
 		
 		/*Uncomment code below to capture adoData payload for test*/
-		/*String json = new JsonBuilder(adoData).toPrettyString()
-		println(json)*/
+		String json = new JsonBuilder(adoData).toPrettyString()
+		println(json)
 		
-		
+		def types = wiTypes.split(',')
 		def outData = adoData
 		def wiResource = adoData.resource
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
@@ -64,7 +64,8 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		def val = wiResource.revision.fields["${wiPfields}"]
 		String otlField = "${val}"
 		// Make sure the work items are Component/Epic work items
-		if (!wiType && !types.contains(wiType))
+		//if (!wiType && !types.contains(wiType))
+		if (!types.contains(wiType))
 		{
 			return logResult('not a valid work item type')
 		
@@ -88,8 +89,8 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			
 		}
 		/**	For unit testing !! Uncomment code below to capture child payload for test */
-		  String json = new JsonBuilder(result).toPrettyString()
-		  println(json)
+		/*  String json = new JsonBuilder(result).toPrettyString()
+		  println(json)*/
 		
 		 //iterate through the children assigned to work item in question
 		def changes = []
