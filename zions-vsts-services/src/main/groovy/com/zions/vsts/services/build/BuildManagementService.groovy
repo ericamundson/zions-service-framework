@@ -707,7 +707,8 @@ public class BuildManagementService {
 		builds.each { build -> 
 			String bid = "${build.id}"
 			def owis = getExecutionWorkItems(collection, project, bid)
-			wis.addAll(owis)
+			def data = [build: build, workitems: owis]
+			wis.addAll(data)
 		}
 //		def swis = wis.toSet()
 		return wis

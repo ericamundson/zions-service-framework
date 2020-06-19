@@ -9,7 +9,7 @@ import java.util.regex.Pattern
 import java.util.regex.Matcher
 
 import com.zions.common.services.cli.action.CliAction
-import com.zions.xld.services.ci.CIService
+import com.zions.xld.services.ci.CiService
 import static groovy.io.FileType.*
 
 @Component
@@ -69,7 +69,7 @@ class DeployableCheck implements CliAction {
 	boolean scanFull
 
 	@Autowired
-	CIService cIService
+	CiService ciService
 
 
 
@@ -172,7 +172,7 @@ metadata:
 					packageName = packageName.substring(m.start(), m.end())
 					DeployableCheck.log.info "Package: ${packageName}"
 					String hPackageCIPath = "${xldApplicationName}/${packageName}"
-					def pCI = cIService.getCI(hPackageCIPath)
+					def pCI = ciService.getCI(hPackageCIPath)
 					if (!pCI) {
 						def files = []
 						files.add(file)
@@ -195,7 +195,7 @@ metadata:
 				packageName = packageName.substring(m.start(), m.end())
 				DeployableCheck.log.info "Package: ${packageName}"
 				String hPackageCIPath = "${xldApplicationName}/${packageName}"
-				def pCI = cIService.getCI(hPackageCIPath)
+				def pCI = ciService.getCI(hPackageCIPath)
 				if (!pCI) {
 					def files = []
 					files.add(file)
@@ -216,7 +216,7 @@ metadata:
 					packageName = packageName.substring(m.start(), m.end())
 					DeployableCheck.log.info "Package: ${packageName}"
 					String hPackageCIPath = "${xldApplicationName}/${packageName}"
-					def pCI = cIService.getCI(hPackageCIPath)
+					def pCI = ciService.getCI(hPackageCIPath)
 					if (!pCI) {
 						def files = []
 						files.add(file)

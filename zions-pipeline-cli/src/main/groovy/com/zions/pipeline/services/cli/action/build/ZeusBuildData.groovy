@@ -15,8 +15,10 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.work.WorkManagementService
-import com.zions.xld.services.ci.CIService
+import com.zions.xld.services.ci.CiService
 import com.zions.xld.services.deployment.DeploymentService
+import com.zions.xlr.services.query.ReleaseQueryService
+import com.zions.xlr.services.items.ReleaseItemService
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
@@ -90,7 +92,9 @@ class ZeusBuildData implements CliAction {
 	@Autowired
 	CodeManagementService codeManagementService
 	@Autowired
-	CIService cIService
+	CiService ciService
+	@Autowired
+	ReleaseQueryService releaseQueryService
 	@Autowired
 	DeploymentService deploymentService
 
@@ -117,6 +121,15 @@ class ZeusBuildData implements CliAction {
 	
 	@Value('${build.tag.filter:none}')
 	String buildTagFilter
+	
+	@Value('${xlr.folder:Applications/Folder47147eb877c148ba94d6e647fc1fe9fe}')
+	String xlrFolder
+	
+	@Value('${create.tag:false}')
+	boolean createTag
+	
+	@Value('${wi.list:}')
+	String[] wiList
 
 	@Override
 	public def execute(ApplicationArguments data) {
@@ -166,7 +179,7 @@ class ZeusBuildData implements CliAction {
 			println "##vso[task.setvariable variable=devRelease]${v}"
 			String appId = "Applications/Zeus/Releases/${v}/Zeus_${v}_Provision"
 			String environmentId = "Environments/Zeus/Releases/${v}/Testbed/Provision"
-			def devTestBedProvisioning = cIService.getCI(appId)
+			def devTestBedProvisioning = ciService.getCI(appId)
 			if (devTestBedProvisioning) {
 				boolean hasDeploy = deploymentService.hasDeployment(appId, environmentId)
 				if (hasDeploy) {
@@ -185,6 +198,10 @@ class ZeusBuildData implements CliAction {
 		if ((!releaseId || releaseId.size() == 0) && sourceBranch.contains('release/')) {
 			releaseId = "${sourceBranch.substring(sourceBranch.lastIndexOf('/')+1)}"
 		}
+		
+		if (createTag) {
+			tagBuild(build, releaseId)
+		}
 
 		//Setup crq and release date from Release work item with title of release id.
 		//		def crqAndRelease = getCRQAndReleaseDate(releaseId)
@@ -197,18 +214,29 @@ class ZeusBuildData implements CliAction {
 		}
 		def buildWorkitems = null
 		if (!builds) {
-			buildWorkitems = buildManagementService.getExecutionWorkItems(collection, project, buildId)
+			def wis = buildManagementService.getExecutionWorkItems(collection, project, buildId)
+			buildWorkitems = [[build: build, workitems: wis]]
 		} else {
 			buildWorkitems = buildManagementService.getExecutionWorkItemsByBuilds(collection, project, builds)
 
 		}
 		List wi = []
-		buildWorkitems.each { ref ->
-			def awi = workManagementService.getWorkItem(ref.url)
-			String aproject = "${awi.fields.'System.TeamProject'}"
-			if (aproject == "Zeus") {
-				wi.push("${ref.id}")
+		builds = []
+		buildWorkitems.each { bdata ->
+			boolean ok = includeBuild(bdata)
+			if (ok) {
+				builds.add(bdata.build)
+				//println("Build #:  ${bdata.build.buildNumber}")
+				def wis = bdata.workitems
+				wis.each { ref ->
+					def awi = workManagementService.getWorkItem(ref.url)
+					String aproject = "${awi.fields.'System.TeamProject'}"
+					if (aproject == "Zeus") {
+						wi.push("${ref.id}")
+					}
+				}
 			}
+			
 		}
 		if (wi.empty) {
 			println "##vso[task.setvariable variable=hasChanges]false"
@@ -430,6 +458,48 @@ class ZeusBuildData implements CliAction {
 		File xlrTemplateYaml = new File("${inRepoDir}/xl/xebialabs/xlr-template.yaml")
 		//writeXLRTemplateYaml(affiliatesList, xlrTemplateYaml)
 		return null
+	}
+	
+	boolean includeBuild(data) {
+		if (wiList == null || wiList.size() == 0 || (wiList.size() == 1 && wiList[0] == 'none')) return true
+		List<String> theWIList = new ArrayList()
+		theWIList.addAll(wiList)
+		
+		def bWis = data.workitems
+		for (def wi in bWis) { 
+			String bwiId = "${wi.id}"
+			if (theWIList.contains(bwiId)) return true
+		}
+		return false
+ 	}
+	 
+	def tagBuild(def build, String releaseId) {
+		def tags = buildManagementService.getTags('', 'Zeus', releaseId)
+		int count = releaseCount(releaseId)
+		String tag = "${releaseId}.${count}"
+		buildManagementService.tagBuild(build, tag)
+	}
+	
+	int releaseCount(releaseId) {
+		String title = "Zeus-${releaseId}-BladeLogic"
+		def templates = releaseQueryService.getTemplates(title)
+		def template = null
+		if (templates.size() > 0) {
+			template = templates[0]
+		}
+		if (!template) return 0
+		String templateId = "${template.id}"
+		def query = [ parentId: xlrFolder, completed: true]
+
+		def releases = releaseQueryService.getReleases(query)
+		int count = 0
+		releases.each { release -> 
+			String rTemplateId = "${release.originTemplateId}"
+			if (rTemplateId == templateId) {
+				count++
+			}
+		}
+		return count
 	}
 
 	def getDevProdReleases(String collection, String project, String repoName, boolean createBranch) {
