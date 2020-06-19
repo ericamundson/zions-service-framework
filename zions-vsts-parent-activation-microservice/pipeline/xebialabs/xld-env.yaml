@@ -1,0 +1,46 @@
+---
+apiVersion: xl-deploy/v1
+kind: Environments
+spec:
+- name: Environments/DTS
+  type: core.Directory
+  children:
+  - directory: zions-vsts-parent-activation-microservice
+    children:
+    
+    - name: Dev
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Dev
+      dictionaries:
+      - Environments/DTS/zions-vsts-parent-activation-microservice/_Dictionaries/Dev_Dict
+    
+    - name: Prod
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Prod
+      dictionaries:
+      - Environments/DTS/zions-vsts-parent-activation-microservice/_Dictionaries/Prod_Dict
+    - directory: _Dictionaries
+      children:
+      
+      - name: Dev_Dict
+        type: udm.Dictionary
+        entries:
+          
+          deploy.path: d:\app\azure\services\zions-vsts-parent-activation-microservice
+          
+          ws.url: <no value>
+          
+          tfs.collection: eto-dev
+                    
+      
+      - name: Prod_Dict
+        type: udm.Dictionary
+        entries:
+          
+          deploy.path: d:\app\azure\services\zions-vsts-parent-activation-microservice
+          
+          ws.url: <no value>
+          
+          tfs.collection: zionseto
