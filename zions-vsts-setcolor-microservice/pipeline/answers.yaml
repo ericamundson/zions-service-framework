@@ -4,5 +4,5 @@ IsWindows: true
 RequiresCollection: true
 BuildIncludes: "zions-vsts-setcolor-microservice/*,zions-vsts-services/src/main/groovy/com/zions/vsts/services/asset/*,zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*"
 Queuename: "WorkItem-setcolor-queue"
-WSTopics: "workitem.created,workitem.updated"
+WSTopics: "workitem.updated,workitem.created"
 DeployDev: false

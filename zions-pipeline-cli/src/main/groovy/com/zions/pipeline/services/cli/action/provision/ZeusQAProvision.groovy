@@ -9,7 +9,7 @@ import java.util.regex.Pattern
 import java.util.regex.Matcher
 
 import com.zions.common.services.cli.action.CliAction
-import com.zions.xld.services.ci.CIService
+import com.zions.xld.services.ci.CiService
 import static groovy.io.FileType.*
 
 @Component

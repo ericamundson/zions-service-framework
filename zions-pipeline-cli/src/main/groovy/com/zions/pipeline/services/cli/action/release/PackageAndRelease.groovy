@@ -9,7 +9,7 @@ import java.util.regex.Pattern
 import java.util.regex.Matcher
 
 import com.zions.common.services.cli.action.CliAction
-import com.zions.xld.services.ci.CIService
+import com.zions.xld.services.ci.CiService
 import static groovy.io.FileType.*
 
 @Component
@@ -61,7 +61,7 @@ class PackageAndRelease implements CliAction {
 	boolean createRelease
 	
 	@Autowired
-	CIService cIService
+	CiService ciService
 	
 
 	
@@ -129,7 +129,7 @@ metadata:
 			files.add(file)
 		}
 		String hPackageCIPath = "${xldApplicationName}/${packageName}"
-		def pCI = cIService.getCI(hPackageCIPath) 
+		def pCI = ciService.getCI(hPackageCIPath) 
 		if (!pCI) {
 			//File oDir = new File(outDir)
 			buildFolder(packageName, outDir, files)

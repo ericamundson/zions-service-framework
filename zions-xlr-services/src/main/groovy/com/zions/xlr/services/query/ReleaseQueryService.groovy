@@ -12,6 +12,26 @@ public class ReleaseQueryService {
 	@Autowired
 	XlrGenericRestClient xlrGenericRestClient
 	
+	def getTemplates(def title, int depth = 0) {
+		def templates = []
+		int page = 0
+		int pageSize = 25
+		while (true) {
+			def result = xlrGenericRestClient.get(
+				//requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/templates",
+				query: [title: title, depth: depth, page:page, resultsPerPage: pageSize]
+				
+			)
+			templates.addAll(result)
+			if (result.size() < pageSize) break
+			page++
+		}
+		return templates
+
+	}
+	
 	
 	def getReleases(def query) {
 		def releases = []

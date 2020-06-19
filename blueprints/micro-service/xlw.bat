@@ -11,7 +11,7 @@ set PROG_DIR=%~dp0
 
 FOR /F "tokens=1,2 delims==" %%a IN (%PROG_DIR%\.xebialabs\wrapper.conf) DO (set %%a=%%~b)
 
-set XL_WRAPPER_HOME=%LOCALAPPDATA%\.xebialabs\wrapper\%CLI_VERSION%
+set XL_WRAPPER_HOME=%PROG_DIR%\.xebialabs\wrapper\%CLI_VERSION%
 
 IF not exist %XL_WRAPPER_HOME% (mkdir %XL_WRAPPER_HOME%)
 
