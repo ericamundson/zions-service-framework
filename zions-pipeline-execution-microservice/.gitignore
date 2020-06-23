@@ -1,0 +1,9 @@
+
+**/*.class
+/bin/
+/.gradle/
+/build/
+/dist/
+/gitPublish/
+.classpath
+.project

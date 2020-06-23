@@ -608,7 +608,7 @@ public class BuildManagementService {
 
 	public def getBuild(def collection, def project, def repo, def qualifier) {
 		log.debug("BuildManagementService::getBuild -- buildName = "+repo.name+"-"+qualifier)
-		def query = ['api-version':'4.1','name':"${repo.name}-${qualifier}"]
+		def query = ['api-version':'5.1','name':"${repo.name}-${qualifier}"]
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
@@ -662,7 +662,7 @@ public class BuildManagementService {
 
 	public def getDRBuild(def collection, def project, def repo, def qualifier) {
 		log.debug("BuildManagementService::getDRBuild -- buildName = "+repo.name+"-dr-"+qualifier)
-		def query = ['api-version':'4.1','name':"${repo.name}-dr-${qualifier}"]
+		def query = ['api-version':'5.1','name':"${repo.name}-dr-${qualifier}"]
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
@@ -1113,8 +1113,9 @@ public class BuildManagementService {
 			
 	}
 
-	def updateBuildDefinition(def collection, def project, def bDef, def query) {
+	def updateBuildDefinition(def collection, def project, def bDef, def query = null) {
 		def body = new JsonBuilder(bDef).toPrettyString()
+		//println body
 		log.debug("BuildManagementService::updateBuildDefinition --> ${body}")
 		
 		def result = null
@@ -1123,7 +1124,8 @@ public class BuildManagementService {
 				requestContentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${bDef.id}",
 				body: body,
-				query: query
+				query: query,
+				headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true']
 			)
 		} else {
 			result = genericRestClient.put(

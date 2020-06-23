@@ -27,14 +27,51 @@ class BuildDefinition implements IExecutableYamlHandler {
 			def trigger = [batchChanges: false, pollingJobId: null, pollingInterval: 0, pathFilters:[], branchFilters: ['+refs/heads/master'], defaultSettingsSourceType: 2, isSettingsSourceOptionSupported: true, settingsSourceType: 2, triggerType: 2]
 			def repo = codeManagementService.getRepo('', project, yaml.repository)
 			def bDef = [name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue, triggers:[trigger] ]
+			if (yaml.variables) {
+				bDef.variables = [:]
+				yaml.variables.each { var ->
+					if (!var.name) return
+					bDef.variables[var.name] = [:]
+					if (var.allowOverride) {
+						bDef.variables[var.name].allowOverride = var.allowOverride
+					}
+					if (var.isSecret) {
+						bDef.variables[var.name].isSecret = var.isSecret
+					}
+					if (var.'value') {
+						bDef.variables[var.name].'value' = var.'value'
+					}
+					
+				}
+			}
 			def query = ['api-version':'5.1']
 			buildManagementService.writeBuildDefinition('', project, bDef, query)
 		} else {
 			def repo = codeManagementService.getRepo('', project, yaml.repository)
-			def bDef = [id: build.id, name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue ]
+			def bDef = build
+			bDef.repository = repo
+			bDef.repository.type = 'TfsGit'
+			bDef.process.yamlFilename = yaml.buildyaml
+			bDef.queue = queue
+			if (yaml.variables) {
+				bDef.variables = [:]
+				yaml.variables.each { var ->
+					bDef.variables[var.name] = [:]
+					if (var.allowOverride) {
+						bDef.variables[var.name].allowOverride = var.allowOverride
+					}
+					if (var.isSecret) {
+						bDef.variables[var.name].isSecret = var.isSecret
+					}
+					if (var.'value') {
+						bDef.variables[var.name].'value' = var.'value'
+					}
+					
+				}
+			}
 //			def bDef = [id: build.id, name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2] ]
-			def query = ['api-version':'5.1']
-			buildManagementService.updateBuildDefinition('', project, bDef, query)
+			//def query = ['api-version':'5.1']
+			buildManagementService.updateBuildDefinition('', project, bDef)
 			
 		}
 	}
