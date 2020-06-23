@@ -4,17 +4,9 @@ Description={{$app}}
 [Service]
 WorkingDirectory=[[deploy.path]]
 {{if .RequiresCollection}}
-{{if .UseQueue}}
-ExecStart=/bin/java -Xrs -Xmx256m -jar "[[deploy.path]]/{{$app}}.jar" --routing.exchange.name={{.Exchangename}} --queue.name={{.Queuename}} --routing.direct.key={{.Keyname}}  --tfs.collection=[[tfs.collection]] --tfs.url=https://dev.azure.com --logging.file="[[deploy.path]]/{{$app}}.log"
+ExecStart=/bin/java -Xrs -Xmx256m -jar "[[deploy.path]]/{{$app}}.jar" --queue.name={{.Queuename}} --ado.topics={{.WSTopics}} --tfs.collection=[[tfs.collection]] --tfs.url=https://dev.azure.com --logging.file="[[deploy.path]]/{{$app}}.log"
 {{else}}
-ExecStart=/bin/java -Xrs -Xmx256m -jar "[[deploy.path]]/{{$app}}.jar" --websocket.url=[[ws.url]] --tfs.collection=[[tfs.collection]] --tfs.url=https://dev.azure.com --logging.file="[[deploy.path]]/{{$app}}.log"
-{{end}}
-{{else}}
-{{if .UseQueue}}
-ExecStart=/bin/java -Xrs -Xmx256m -jar "[[deploy.path]]/{{$app}}.jar" --routing.exchange.name={{.Exchangename}} --queue.name={{.Queuename}} --routing.direct.key={{.Keyname}} --tfs.url=[[tfs.url]] --logging.file="[[deploy.path]]/{{$app}}.log"
-{{else}}
-ExecStart=/bin/java -Xrs -Xmx256m -jar "[[deploy.path]]/{{$app}}.jar" --websocket.url=[[ws.url]] --tfs.url=[[tfs.url]] --logging.file="[[deploy.path]]/{{$app}}.log"
-{{end}}
+ExecStart=/bin/java -Xrs -Xmx256m -jar "[[deploy.path]]/{{$app}}.jar" --queue.name={{.Queuename}} --ado.topics={{.WSTopics}} --tfs.url=[[tfs.url]] --logging.file="[[deploy.path]]/{{$app}}.log"
 {{end}}
 User=jvmapps
 Type=simple
