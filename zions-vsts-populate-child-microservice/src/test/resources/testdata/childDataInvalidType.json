@@ -1,0 +1,69 @@
+[
+    {
+        "id": 947863,
+        "rev": 1,
+        "fields": {
+            "System.Id": 947863,
+            "System.AreaId": 132,
+            "System.AreaPath": "ALMOpsTest",
+            "System.TeamProject": "ALMOpsTest",
+            "System.NodeName": "ALMOpsTest",
+            "System.AreaLevel1": "ALMOpsTest",
+            "System.Rev": 1,
+            "System.AuthorizedDate": "2020-06-04T20:44:51.923Z",
+            "System.RevisedDate": "9999-01-01T00:00:00Z",
+            "System.IterationId": 127,
+            "System.IterationPath": "ALMOpsTest",
+            "System.IterationLevel1": "ALMOpsTest",
+            "System.WorkItemType": "Task",
+            "System.State": "New",
+            "System.Reason": "New",
+            "System.CreatedDate": "2020-06-04T20:44:51.923Z",
+            "System.CreatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+            "System.ChangedDate": "2020-06-04T20:44:51.923Z",
+            "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+            "System.AuthorizedAs": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+            "System.PersonId": 88125542,
+            "System.Watermark": 327887,
+            "System.CommentCount": 0,
+            "System.Title": "invalid child type task work item",
+            "Microsoft.VSTS.Common.StateChangeDate": "2020-06-04T20:44:51.923Z",
+            "Microsoft.VSTS.Common.Priority": 2,
+            "System.Parent": 947862
+        },
+        "relations": [
+            {
+                "rel": "System.LinkTypes.Hierarchy-Reverse",
+                "url": "https://dev.azure.com/eto-dev/_apis/wit/workItems/947862",
+                "attributes": {
+                    "isLocked": false,
+                    "name": "Parent"
+                }
+            }
+        ],
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/_apis/wit/workItems/947863"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/_apis/wit/workItems/947863/updates"
+            },
+            "workItemRevisions": {
+                "href": "https://dev.azure.com/eto-dev/_apis/wit/workItems/947863/revisions"
+            },
+            "workItemHistory": {
+                "href": "https://dev.azure.com/eto-dev/_apis/wit/workItems/947863/history"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_workitems/edit/947863"
+            },
+            "workItemType": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItemTypes/Task"
+            },
+            "fields": {
+                "href": "https://dev.azure.com/eto-dev/_apis/wit/fields"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/_apis/wit/workItems/947863"
+    }
+]
