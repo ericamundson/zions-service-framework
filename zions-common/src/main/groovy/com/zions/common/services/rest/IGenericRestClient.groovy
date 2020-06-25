@@ -55,7 +55,8 @@ public interface IGenericRestClient {
 	 * @return
 	 */
 	def patch(Map input);
-
+	def patch(Map input, Closure handleResponse);
+	
 	/**
 	 * Make http POST request.
 	 * @param input - object structure of request data.
