@@ -29,6 +29,10 @@ class BlueprintTemplateInterpretorService {
 	
 	@Value('${out.dir:}')
 	File outDir
+	
+	@Value('${pipeline.folder:.pipeline}')
+	String pipelineFolder
+	
 	@Value('${in.placeholder.delimiters:[[,]]}')
 	String[] inDelimiters
 	
@@ -60,30 +64,32 @@ class BlueprintTemplateInterpretorService {
 	
 	def outputPipeline(Map answers) {
 		//initialize pipeline dir
-		new AntBuilder().copy( todir: "${outDir}/pipeline", overwrite: true ) {
-			fileset( dir: "${blueprintDir}/${blueprint}" ) {
-					include( name: "xlw.bat")
-					include( name: "xlw")
-					include( name: ".xebialabs/**/*")
-				}
-		}
+		loadXLCli()
 		//write answers file.
 		def answersOut = new YamlBuilder()
 		answersOut.call(answers)
 		String answersStr = answersOut.toString()
-		File pipelineDir = new File(outDir, 'pipeline')
+		File pipelineDir = new File(outDir, pipelineFolder)
 		File answersFile = new File(pipelineDir, 'answers.yaml')
 		def os = answersFile.newDataOutputStream()
 		os << answersStr
 		os.close()
+		String osname = System.getProperty('os.name')
 		
 		//Generate pipeline
-		new AntBuilder().exec(dir: "${outDir}/pipeline", executable: 'cmd', failonerror: true) {
-			arg( line: "/c xlw.bat blueprint -a ${outDir}/pipeline/answers.yaml -l ${blueprintDir} -b ${blueprint} -s")
+		if (osname.contains('Windows')) {
+			new AntBuilder().exec(dir: "${outDir}/${pipelineFolder}", executable: 'cmd', failonerror: true) {
+				arg( line: "/c ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/pipeline/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s")
+			}
+		} else {
+			new AntBuilder().exec(dir: "${outDir}/${pipelineFolder}", executable: '/bin/sh', failonerror: true) {
+				arg( line: "-c ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/pipeline/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s")
+			}
+
 		}
 		
 		//fix placeholders.
-		new AntBuilder().replace(dir: "${outDir}/pipeline") {
+		new AntBuilder().replace(dir: "${outDir}/${pipelineFolder}") {
 			replacefilter( token: "${inDelimiters[0]}", value: '{{')
 			replacefilter( token: "${inDelimiters[1]}", value: '}}')
 		}
@@ -97,7 +103,7 @@ class BlueprintTemplateInterpretorService {
 								
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
-					yamlHandler.handleYaml(exe)
+					yamlHandler.handleYaml(exe, null)
 				}
 			}
 		}
@@ -117,5 +123,32 @@ class BlueprintTemplateInterpretorService {
 		}
 		return executableYaml
 
+	}
+	
+	def loadXLCli() {
+		String osname = System.getProperty('os.name')
+			
+		if (osname.contains('Windows')) {
+			InputStream istream = this.getClass().getResourceAsStream('/xl/windows/xl.exe')
+			File pipelineDir = new File(outDir, pipelineFolder)
+			if (!pipelineDir) {
+				pipelineDir.mkdirs()
+			}
+			File of = new File(blueprintDir, 'xl.exe')
+			def aos = of.newDataOutputStream()
+			aos << istream
+			aos.close()
+		} else {
+			InputStream istream = this.getClass().getResourceAsStream('/xl/linux/xl')
+			File pipelineDir = new File(outDir, pipelineFolder)
+			if (!pipelineDir) {
+				pipelineDir.mkdirs()
+			}
+			File of = new File(pipelineDir, 'xl')
+			def aos = of.newDataOutputStream()
+			aos << istream
+			aos.close()
+
+		}
 	}
 }

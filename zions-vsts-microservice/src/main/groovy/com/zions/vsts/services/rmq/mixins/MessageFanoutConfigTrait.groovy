@@ -40,7 +40,7 @@ trait MessageFanoutConfigTrait {
 
 	@Bean
 	Queue queue() {
-		Queue queue = new Queue(queueName, queueDurable, queueExclusive, queueAutoDelete, ['x-single-active-consumer': true]);
+		Queue queue = new Queue(queueName, queueDurable, queueExclusive, queueAutoDelete);
 		
 		return queue
 	}

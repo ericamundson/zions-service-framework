@@ -23,7 +23,7 @@ import org.apache.commons.codec.binary.Base64;
 import com.zions.vsts.services.rmq.mixins.MessageSenderFanoutTrait
 
 /**
- * ReST Controller for forwarding Azure DevOps through subscriptions via websockets.
+ * ReST Controller for forwarding Azure DevOps through subscriptions via RabbitMQ.
  * 
  * @author Eric Amundson
  * 

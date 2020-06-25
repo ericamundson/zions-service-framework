@@ -1,0 +1,30 @@
+{
+	"changeCounts": {
+		"Edit": 2
+	},
+	"changes": [
+		{
+			"item": {
+				"objectId": "28a4ea9a7c8df3eba695bd486dc2c46de212b196",
+				"originalObjectId": "2435f19ad3320010be46ff30651a3d07037e2f2f",
+				"gitObjectType": "tree",
+				"commitId": "50cd1f3ee5d1f645f03008603c88f9c906d84ffc",
+				"path": "/pipeline",
+				"isFolder": true,
+				"url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/git/repositories/b6f60bdd-8dc5-4518-a5a1-6e543f190e5f/items/pipeline?versionType=Commit&version=50cd1f3ee5d1f645f03008603c88f9c906d84ffc"
+			},
+			"changeType": "edit"
+		},
+		{
+			"item": {
+				"objectId": "f1f411c9b73b574379bda36b9620b20c8245a179",
+				"originalObjectId": "5161aff429962f5d94ed4ea9691e3dc44cecfb1e",
+				"gitObjectType": "blob",
+				"commitId": "50cd1f3ee5d1f645f03008603c88f9c906d84ffc",
+				"path": "/pipeline/doc.txt",
+				"url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/git/repositories/b6f60bdd-8dc5-4518-a5a1-6e543f190e5f/items/pipeline%2Fdoc.txt?versionType=Commit&version=50cd1f3ee5d1f645f03008603c88f9c906d84ffc"
+			},
+			"changeType": "edit"
+		}
+	]
+}

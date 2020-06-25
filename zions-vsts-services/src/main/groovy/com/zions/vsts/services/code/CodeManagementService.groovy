@@ -39,6 +39,22 @@ class CodeManagementService {
 		
 	}
 	
+	def getCommits(String url) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: url,
+			query: ['api-version': '5.1']
+			)
+	}
+	
+	def getChanges(String url) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: url,
+			query: ['api-version': '5.1']
+			)
+	}
+	
 	public def ensureRepo(String collection, def project, String repoName) {
 		def repo = getRepo(collection, project, repoName)
 		if (repo == null) {
