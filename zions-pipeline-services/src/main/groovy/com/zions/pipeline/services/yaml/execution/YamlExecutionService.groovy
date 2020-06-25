@@ -20,15 +20,21 @@ class YamlExecutionService {
 	@Autowired
 	GitService gitService
 	
+	@Value('${pipeline.folders:.pipeline,pipeline}')
+	String[] pipelineFolders
+
+	@Value('${always.execute.folder:executables}')
+	String alwaysExecuteFolder
+
 	def runExecutableYaml(String repoUrl, String repoName, def scanLocations) {
-		File dir = gitService.loadChanges(repoUrl, repoName)
-		def exeYaml = findExecutableYaml(dir, scanLocations)
+		File repo = gitService.loadChanges(repoUrl, repoName)
+		def exeYaml = findExecutableYaml(repo, scanLocations)
 		for (def yaml in exeYaml) { 
 			for (def exe in yaml.executables) {
 								
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
-					yamlHandler.handleYaml(exe)
+					yamlHandler.handleYaml(exe, repo, scanLocations)
 				}
 			}
 		}
@@ -42,6 +48,21 @@ class YamlExecutionService {
 			def executables = eyaml.executables
 			if (executables) {
 				executableYaml.add(eyaml)
+			}
+		}
+		pipelineFolders.each { String pipelineFolder ->
+			File pipelineDir = new File(repoDir, pipelineFolder)
+			if (pipelineDir.exists()) {
+				File executables = new File(pipelineDir, alwaysExecuteFolder)
+				if (executables.exists()) {
+					executables.eachFile() { File eFile ->
+						String name = eFile.name
+						if (name.endsWith('.yaml')) {
+							def eyaml = new YamlSlurper().parseText(eFile.text)
+							executableYaml.add(eFile)
+						}
+					}
+				}
 			}
 		}
 		return executableYaml

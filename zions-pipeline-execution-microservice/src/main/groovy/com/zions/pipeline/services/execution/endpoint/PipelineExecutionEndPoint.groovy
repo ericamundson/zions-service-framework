@@ -35,6 +35,10 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 	
 	@Autowired
 	YamlExecutionService yamlExecutionService
+	
+	@Value('${pipeline.folders:.pipeline,pipeline}')
+	String[] pipelineFolders
+
 
 	public PipelineExecutionEndPoint() {
 		//init(websocketUrl, null, null)
@@ -74,9 +78,12 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 			def changes = codeManagementService.getChanges(changesUrl)
 			for (def change in changes.changes) {
 				String path = "${change.item.path}"
-				if ((path.contains('/pipeline') || path.contains('/.pipeline')) && path.endsWith('.yaml')) locations.add(path)
+				pipelineFolders.each { String pipelineFolder -> 
+					if (path.contains("${pipelineFolder}") && path.endsWith('.yaml')) locations.add(path)
+				}
 			}
 		}
+		
 		return locations
 	}
 
