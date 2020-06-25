@@ -99,11 +99,11 @@ class MultiUserGenericRestClient implements IGenericRestClient {
 	}
 
 	@Override
-	public Object patch(Map input) {
+	public Object patch(Map input, Closure handleReponse = null) {
 		def dInput = deepcopy(input)
 		def retVal
 		try {
-			retVal =  getClient().patch(input);
+			retVal =  getClient().patch(input,handleReponse);
 		} catch (ThrottleException e) {
 			log.info("Current user throttled, moving to (${tfsUsers[currentClient]})")
 			retVal = patch(dInput);
