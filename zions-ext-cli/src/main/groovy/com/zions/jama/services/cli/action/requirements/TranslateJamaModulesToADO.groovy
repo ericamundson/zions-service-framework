@@ -118,8 +118,9 @@ class TranslateJamaModulesToADO implements CliAction {
 				}
 				
 				// Create area path for this project and set it for all artifacts
-				def areaPath = "\\${tfsProject}\\${tfsAreaPathBase}\\${module.getTitle()}"
-				if (!areaPathManagementService.createAreaPath(collection, tfsProject, tfsAreaPathBase, module.getTitle())) {
+				String moduleTitle = "${module.getTitle().replace('&','-').trim()}"
+				def areaPath = "\\${tfsProject}\\${tfsAreaPathBase}\\$moduleTitle"
+				if (!areaPathManagementService.createAreaPath(collection, tfsProject, tfsAreaPathBase, moduleTitle)) {
 					log.info("Warning: Area Path $areaPath already exists") }
 				ClmArtifact.areaPath = areaPath
 
