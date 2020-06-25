@@ -61,7 +61,7 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 			def parentWI = workManagementService.getWorkItem(collection, project, parentId)
 			if (!parentWI) {
 				log.error("Error retrieving work item $parentId")
-				return 'ADO Error'
+				return 'Error Retrieving Parent'
 			}
 //			Uncomment code below to capture parent playload for test
 //			String json = new JsonBuilder(parentWI).toPrettyString()
@@ -70,13 +70,11 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 			if (parentOwner == 'null' || parentOwner == null) return logResult('Parent is unassigned')
 			
 			log.info("Updating owner of $wiType #$id")
-			try {
-				setToParentOwner(project, id, rev, parentOwner)
+			if (setToParentOwner(project, id, rev, parentOwner)) {
 				return logResult('Work item successfully assigned')
 			}
-			catch (e){
-				log.error("Error updating System.AssigedTo: ${e.message}")
-				return 'Error assigning work item'
+			else {
+				return logResult('Error updating System.AssigedTo')
 			}
 		}
 		else {
@@ -90,7 +88,7 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 		data.add(t)
 		def e = [op: 'add', path: '/fields/System.AssignedTo', value: parentOwner.uniqueName]
 		data.add(e)
-		workManagementService.updateWorkItem(collection, project, id, data)
+		return workManagementService.updateWorkItem(collection, project, id, data)
 	}
 	private def logResult(def msg) {
 		log.info("Result: $msg")

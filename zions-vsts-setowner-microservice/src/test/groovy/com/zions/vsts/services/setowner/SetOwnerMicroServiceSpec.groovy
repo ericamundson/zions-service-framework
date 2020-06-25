@@ -89,7 +89,21 @@ class SetOwnerMicroServiceSpec extends Specification {
 		then: "No updates should be made"
 		resp == 'Parent is unassigned'
 	}
-	
+
+	def "Error Retrieving Parent Work Item"() {
+		given: "A mock ADO event payload exists that meets all criteria for update"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment.json').text)
+
+		and: "stub workManagementService.getWorkItem()"
+		workManagementService.getWorkItem(_,_,_) >> null // could not retrieve parent
+
+		when: "calling method under test processADOData()"
+		def resp = underTest.processADOData(adoMap)
+		
+		then: "Error Retrieving Parent"
+		resp == 'Error Retrieving Parent'
+	}
+
 	def "Successful Assignment to Parent Owner"() {
 		given: "A mock ADO event payload exists that meets all criteria for update"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment.json').text)
@@ -103,6 +117,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 		workManagementService.updateWorkItem(_,_,_,_) >> { args ->
 			String data = "${args[3]}"
 			assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/System.AssignedTo, value:robert.huet@zionsbancorp.com]]')
+			return true
 		}
 
 		when: "calling method under test processADOData()"
@@ -112,6 +127,25 @@ class SetOwnerMicroServiceSpec extends Specification {
 		resp == 'Work item successfully assigned'
 	}
 	
+	def "Unsuccessful Assignment to Parent Owner"() {
+		given: "A mock ADO event payload exists that meets all criteria for update"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment.json').text)
+
+		and: "stub workManagementService.getWorkItem()"
+		workManagementService.getWorkItem(_,_,_) >> {
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/parentData.json').text)
+		}
+		
+		and: "stub workManagementService.updateItem()"
+		workManagementService.updateWorkItem(_,_,_,_) >> null // patch returned an error
+
+		when: "calling method under test processADOData()"
+		def resp = underTest.processADOData(adoMap)
+		
+		then: "Update should not be made"
+		resp == 'Error updating System.AssigedTo'
+	}
+
 }
 
 @TestConfiguration
