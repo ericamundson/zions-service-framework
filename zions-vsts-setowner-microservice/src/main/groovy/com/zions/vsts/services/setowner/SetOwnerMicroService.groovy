@@ -18,7 +18,6 @@ import groovy.json.JsonBuilder
 @Component
 @Slf4j
 class SetOwnerMicroService implements MessageReceiverTrait {
-
 	@Autowired
 	WorkManagementService workManagementService
 
@@ -26,7 +25,36 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 	String collection	
 
 	@Value('${tfs.types}')
-	String wiTypes
+	String[] wiTypes
+	
+	@Value('${tfs.project.includes}')
+	String[] includeProjects
+
+	// Handle HTTP 412 retry when work item revision has changed
+	boolean retryFailed
+	def attemptedProject
+	def attemptedId
+	def attemptedOwner
+	Closure responseHandler = { resp ->
+		if (resp.status == 412) {
+			// Get fresh copy of work item
+			def wi = workManagementService.getWorkItem(collection, attemptedProject, attemptedId)
+			def owner = wi.fields.'System.AssignedTo'
+			String rev = "${wi.rev}"
+			if (owner == 'null' || owner == null ) { // Process if still unassigned
+				if (setOwner(this.attemptedProject, this.attemptedId, rev, this.attemptedOwner)) {
+					return logResult('Work item successfully assigned after 412 retry')
+				}
+				else {
+					this.retryFailed = true
+					log.error('Failed update after 412 retry')
+					return 'Failed update after 412 retry'
+				}
+	
+			}
+			return
+		}
+	}
 
 	@Autowired
 	public SetOwnerMicroService() {		
@@ -39,25 +67,39 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.info("Entering SetOwnerMicroService:: processADOData")
+		log.debug("Entering SetOwnerMicroService:: processADOData")
 //		Uncomment code below to capture adoData payload for test
 //		String json = new JsonBuilder(adoData).toPrettyString()
 //		println(json)
-		def types = wiTypes.split(',')
 		def outData = adoData
 		def wiResource = adoData.resource
+		String project = "${wiResource.revision.fields.'System.TeamProject'}"
+		boolean foo = includeProjects.contains(project)
+		if (includeProjects && !includeProjects.contains(project)) return logResult('Project not included')
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		String owner = "${wiResource.revision.fields.'System.AssignedTo'}"
 		String status = "${wiResource.revision.fields.'System.State'}"
-		if (!types.contains(wiType)) return logResult('Not a target work item type')
+		if (!wiTypes.contains(wiType)) return logResult('Not a target work item type')
 		if (owner && owner != 'null') return logResult('Work item already assigned')
-		if (status && status != 'Closed') return logResult('Work item not closed')
-		String project = "${wiResource.revision.fields.'System.TeamProject'}"
+		if (status != 'Closed' || !wiResource.fields.'System.State') return logResult('Work item not closed')
 		String id = "${wiResource.revision.id}"
 		String rev = "${wiResource.revision.rev}"
 		String parentId = "${wiResource.revision.fields.'System.Parent'}"
-		if (parentId && parentId != 'null') {
-			// First get parent wi data
+		def revisedBy = wiResource.revisedBy
+		String revisedUsername = "${revisedBy.uniqueName}"
+		if (revisedUsername.toLowerCase().indexOf('svc-') == -1) { // This was not closed by a service account
+			// Set ownership to user that closed this work item
+			log.info("Updating owner of $wiType #$id")
+			if (setOwner(project, id, rev, revisedBy, responseHandler)) {
+				return logResult('Work item successfully assigned to modifier')
+			}
+			else if (this.retryFailed) {
+				log.error('Error updating System.AssigedTo')
+				return 'Error updating System.AssigedTo'
+			}
+		}
+		else if (parentId && parentId != 'null') {
+			// Set ownership to parent's owner
 			def parentWI = workManagementService.getWorkItem(collection, project, parentId)
 			if (!parentWI) {
 				log.error("Error retrieving work item $parentId")
@@ -70,11 +112,12 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 			if (parentOwner == 'null' || parentOwner == null) return logResult('Parent is unassigned')
 			
 			log.info("Updating owner of $wiType #$id")
-			if (setToParentOwner(project, id, rev, parentOwner)) {
-				return logResult('Work item successfully assigned')
+			if (setOwner(project, id, rev, parentOwner, responseHandler)) {
+				return logResult('Work item successfully assigned to parent')
 			}
-			else {
-				return logResult('Error updating System.AssigedTo')
+			else if (this.retryFailed) {
+				log.error('Error updating System.AssigedTo')
+				return 'Error updating System.AssigedTo'
 			}
 		}
 		else {
@@ -82,16 +125,20 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 		}
 	}
 
-	private def setToParentOwner(def project, def id, String rev, def parentOwner) {
+	private def setOwner(def project, def id, String rev, def owner, Closure respHandler = null) {
 		def data = []
 		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 		data.add(t)
-		def e = [op: 'add', path: '/fields/System.AssignedTo', value: parentOwner.uniqueName]
+		def e = [op: 'add', path: '/fields/System.AssignedTo', value: owner.uniqueName]
 		data.add(e)
-		return workManagementService.updateWorkItem(collection, project, id, data)
+		this.retryFailed = false
+		this.attemptedProject = project
+		this.attemptedId = id
+		this.attemptedOwner = owner
+		return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
 	}
 	private def logResult(def msg) {
-		log.info("Result: $msg")
+		log.debug("Result: $msg")
 		return msg
 	}
 

@@ -65,7 +65,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 	
 	def "Work Item Has No Parent"() {
 		given: "A mock ADO event payload where work item has no parent"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoParent.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoParent-SvcAccount.json').text)
 
 		when: "ADO sends notification for work item change who's type is not in configured target list"
 		def resp = underTest.processADOData(adoMap)
@@ -74,9 +74,9 @@ class SetOwnerMicroServiceSpec extends Specification {
 		resp == 'No parent'
 	}
 
-	def "Parent is Unassigned"() {
+	def "Svc Account and Parent is Unassigned"() {
 		given: "A mock ADO event payload for WI having unassigned parent"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataParentNotAssigned.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataParentNotAssigned-SvcAccount.json').text)
 		
 		and: "stub workManagementService.getWorkItem()"
 		workManagementService.getWorkItem(_,_,_) >> {
@@ -92,7 +92,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 
 	def "Error Retrieving Parent Work Item"() {
 		given: "A mock ADO event payload exists that meets all criteria for update"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment-SvcAccount.json').text)
 
 		and: "stub workManagementService.getWorkItem()"
 		workManagementService.getWorkItem(_,_,_) >> null // could not retrieve parent
@@ -104,17 +104,12 @@ class SetOwnerMicroServiceSpec extends Specification {
 		resp == 'Error Retrieving Parent'
 	}
 
-	def "Successful Assignment to Parent Owner"() {
+	def "Successful Assignment to Modifier"() {
 		given: "A mock ADO event payload exists that meets all criteria for update"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment.json').text)
 
-		and: "stub workManagementService.getWorkItem()"
-		workManagementService.getWorkItem(_,_,_) >> {
-			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/parentData.json').text)
-		}
-		
 		and: "stub workManagementService.updateItem()"
-		workManagementService.updateWorkItem(_,_,_,_) >> { args ->
+		workManagementService.updateWorkItem(_,_,_,_,_) >> { args ->
 			String data = "${args[3]}"
 			assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/System.AssignedTo, value:robert.huet@zionsbancorp.com]]')
 			return true
@@ -124,12 +119,25 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 		
 		then: "Update should be made"
-		resp == 'Work item successfully assigned'
+		resp == 'Work item successfully assigned to modifier'
 	}
-	
-	def "Unsuccessful Assignment to Parent Owner"() {
+	def "Unsuccessful Assignment to Modifier"() {
 		given: "A mock ADO event payload exists that meets all criteria for update"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment.json').text)
+
+		and: "stub workManagementService.updateItem()"
+		workManagementService.updateWorkItem(_,_,_,_,_) >> null
+
+		when: "calling method under test processADOData()"
+		def resp = underTest.processADOData(adoMap)
+		
+		then: "Update should not be made"
+		resp == 'Error updating System.AssigedTo'
+	}
+
+	def "Successful Assignment to Parent Owner"() {
+		given: "A mock ADO event payload exists that meets all criteria for update"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment-SvcAccount.json').text)
 
 		and: "stub workManagementService.getWorkItem()"
 		workManagementService.getWorkItem(_,_,_) >> {
@@ -137,7 +145,30 @@ class SetOwnerMicroServiceSpec extends Specification {
 		}
 		
 		and: "stub workManagementService.updateItem()"
-		workManagementService.updateWorkItem(_,_,_,_) >> null // patch returned an error
+		workManagementService.updateWorkItem(_,_,_,_,_) >> { args ->
+			String data = "${args[3]}"
+			assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/System.AssignedTo, value:robert.huet@zionsbancorp.com]]')
+			return true
+		}
+
+		when: "calling method under test processADOData()"
+		def resp = underTest.processADOData(adoMap)
+		
+		then: "Update should be made"
+		resp == 'Work item successfully assigned to parent'
+	}
+	
+	def "Unsuccessful Assignment to Parent Owner"() {
+		given: "A mock ADO event payload exists that meets all criteria for update"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment-SvcAccount.json').text)
+
+		and: "stub workManagementService.getWorkItem()"
+		workManagementService.getWorkItem(_,_,_) >> {
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/parentData.json').text)
+		}
+		
+		and: "stub workManagementService.updateItem()"
+		workManagementService.updateWorkItem(_,_,_,_,_) >> null // patch returned an error
 
 		when: "calling method under test processADOData()"
 		def resp = underTest.processADOData(adoMap)
