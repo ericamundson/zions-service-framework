@@ -25,9 +25,9 @@ class XldGenericRestClient extends AGenericRestClient {
 
 	@Autowired
 	public XldGenericRestClient(
-		@Value('${xld.url}') String url, 
-		@Value('${xld.user}') String user, 
-		@Value('${xld.password}') String password) {
+		@Value('${xld.url:}') String url, 
+		@Value('${xld.user:}') String user, 
+		@Value('${xld.password:}') String password) {
 		this.xldUrl = url
 		this.user = user
 		this.password = password

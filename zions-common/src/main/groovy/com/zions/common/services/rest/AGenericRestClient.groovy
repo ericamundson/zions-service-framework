@@ -247,7 +247,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#patch(java.util.Map)
 	 */
 	@Override
-	def patch(Map input) {
+	def patch(Map input, Closure handleResponse = null) {
 		boolean withHeader = false
 		if (input.withHeader) {
 			withHeader = input.withHeader
@@ -258,7 +258,9 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			sinput = deepcopy(input)
 		} catch (e) {}
 		HttpResponseDecorator resp = delegate.patch(input)
-		
+		if (handleResponse) {
+			handleResponse(resp)
+		}
 		int status = resp.status
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
 		if ((status == 200 || status == 201) && dHeader != null) {

@@ -832,17 +832,17 @@ class WorkManagementService {
 
 	}
 
-	public updateWorkItem(collection, project, id, data) {
+	public updateWorkItem(collection, project, id, data, Closure responseHandler = null) {
             def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
             //def body = new JsonBuilder(data).toPrettyString()
             def result = genericRestClient.patch(
-                        contentType: 'application/json',
+                        [contentType: 'application/json',
                         requestContentType: 'application/json',
                         uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
                         body: data,
                         query: ['api-version': '5.0', bypassRules:true],
-                        headers: ['Content-Type': 'application/json-patch+json']
-
+                        headers: ['Content-Type': 'application/json-patch+json']]
+						,responseHandler
                         )
 	}
 

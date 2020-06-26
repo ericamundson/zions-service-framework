@@ -39,6 +39,22 @@ class CodeManagementService {
 		
 	}
 	
+	def getCommits(String url) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: url,
+			query: ['api-version': '5.1']
+			)
+	}
+	
+	def getChanges(String url) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: url,
+			query: ['api-version': '5.1']
+			)
+	}
+	
 	public def ensureRepo(String collection, def project, String repoName) {
 		def repo = getRepo(collection, project, repoName)
 		if (repo == null) {
@@ -197,7 +213,7 @@ class CodeManagementService {
 	public def importRepo(String collection, String project, String repoName, String importUrl, String bbUser, String bbPassword) {
 		def projectData = projectManagementService.getProject(collection, project)
 		def repo = ensureRepo(collection, projectData, repoName)
-		def endpoint = endpointManagementService.createServiceEndpoint(collection, projectData.id, importUrl, bbUser, bbPassword)
+		def endpoint = endpointManagementService.createGITServiceEndpoint(collection, projectData.id, importUrl, bbUser, bbPassword)
 		def query = ['api-version':'4.1-preview.1']
 		def reqObj = [parameters: [deleteServiceEndpointAfterImportIsDone: true, gitSource: [url: importUrl, overwrite: false], serviceEndpointId: endpoint.id, tfvcSource: null]]
 		def body = new JsonBuilder(reqObj).toString()

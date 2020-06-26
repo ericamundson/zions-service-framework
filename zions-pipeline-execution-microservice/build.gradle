@@ -1,0 +1,15 @@
+bootJar {
+	enabled = true
+	mainClassName = 'com.zions.pipeline.service.PipelineExecutionApplication'
+	archiveName = 'zions-vsts-policy.jar'
+	//version =  "${version}"
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+	compile project(':zions-vsts-microservice')
+	compile project(':zions-vsts-services')
+	compile project(':zions-pipeline-services')
+	compile project(':zions-common')
+}

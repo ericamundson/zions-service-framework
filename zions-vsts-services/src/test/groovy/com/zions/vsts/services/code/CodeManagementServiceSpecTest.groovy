@@ -275,7 +275,7 @@ class CodeManagementServiceSpecTest extends Specification {
 		
 		and: 'stub endpointManagementService.createServiceEndpoint'
 		def endpoint = new JsonSlurper().parseText(this.getClass().getResource('/testdata/serviceendpoints.json').text)
-		1 * endpointManagementService.createServiceEndpoint(_,_,_,_,_) >> endpoint
+		1 * endpointManagementService.createGITServiceEndpoint(_,_,_,_,_) >> endpoint
 	
 		and: 'stub rest call for import requests'
 		String json = this.getClass().getResource('/testdata/importRequests.json').text

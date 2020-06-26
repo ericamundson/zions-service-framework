@@ -24,7 +24,7 @@ import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.xld.services.rest.client.XldGenericRestClient
-import com.zions.xld.services.ci.CIService
+import com.zions.xld.services.ci.CiService
 import com.zions.xld.services.deployment.DeploymentService
 import com.zions.vsts.services.work.WorkManagementService
 import groovy.json.JsonSlurper
@@ -224,8 +224,8 @@ class ZeusBuildDataSpec extends Specification {
 
 @TestConfiguration
 @Profile("test")
-@ComponentScan(["com.zions.vsts.services","com.zions.common.services.test"])
-//@PropertySource("classpath:test.properties")
+@ComponentScan(["com.zions.vsts.services","com.zions.xld.services","com.zions.xlr.services","com.zions.common.services.test"])
+@PropertySource("classpath:test.properties")
 class ZeusBuildDataSpecConfig {
 	def factory = new DetachedMockFactory()
 	
@@ -267,8 +267,8 @@ class ZeusBuildDataSpecConfig {
 		return new CommandManagementService();
 	}
 	@Bean
-	CIService ciService() {
-		return new CIService();
+	CiService ciService() {
+		return new CiService();
 	}
 	@Bean
 	DeploymentService deploymentService() {

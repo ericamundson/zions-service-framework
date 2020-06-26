@@ -33,7 +33,7 @@ public class EndpointManagementService {
 		return endpoint
 	}
 	
-	public def createServiceEndpoint(String collection, String projectId, String repoUrl, String bbUser, String bbPassword) {
+	public def createGITServiceEndpoint(String collection, String projectId, String repoUrl, String bbUser, String bbPassword) {
 		def epname = RandomStringUtils.random(5,true,false)
 		epname = epname.toLowerCase()
 		def query = ['api-version':'4.1-preview.2']
