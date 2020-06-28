@@ -98,8 +98,11 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		String childState = "${wiResource.revision.fields.'System.State'}"
 		if (!types.contains(wiType))return logResult('not a valid work item type')
 		//parameterize state values?
-		//if (!(childState == "${cstateTrigger}"))
-		if (!(childState == 'Active' || childState == 'Closed')) return logResult('not a valid child state')
+		//if (!(childState == 'Active' || childState == 'Closed')) return logResult('not a valid child state')
+		if (!cstateTrigger.contains(childState)) return logResult('Not a target work item type')
+		//if (!states.contains("${cstateTrigger}")) return logResult('not a valid child state')
+		
+		
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		//this is child id
 		String id = "${wiResource.revision.id}"
