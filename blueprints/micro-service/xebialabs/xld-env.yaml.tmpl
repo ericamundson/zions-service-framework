@@ -44,9 +44,11 @@ spec:
         type: udm.Dictionary
         entries:
           {{if .IsWindows}}
+          stage.path: d:\app\azure\_work\{{$app}}
           deploy.path: d:\app\azure\services\{{$app}}
           {{else}}
-          deploy.path: /app/azure/services/{{$app}}
+          stage.path: /app/azure/_work/{{$app}}
+          deploy.path: d:\app\azure\services\{{$app}}
           {{end}}
           ws.url: {{.ProdWSUrl}}
           {{if .RequiresCollection}}
