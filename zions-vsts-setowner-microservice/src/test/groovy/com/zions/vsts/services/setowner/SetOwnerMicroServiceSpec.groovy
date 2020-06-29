@@ -41,7 +41,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 		resp == 'Not a target work item type'
 	}
 	
-	def "State is not Closed"() {
+	def "State is not being Closed"() {
 		given: "A mock ADO event payload where state is not Closed"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataStateNotClosed.json').text)
 
@@ -49,7 +49,7 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 
 		then: "No updates should be made"
-		resp == 'Work item not closed'
+		resp == 'Work item not being closed'
 	}
 	
 	def "Work Item Aready Assigned"() {
@@ -126,13 +126,16 @@ class SetOwnerMicroServiceSpec extends Specification {
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulAssignment.json').text)
 
 		and: "stub workManagementService.updateItem()"
-		workManagementService.updateWorkItem(_,_,_,_,_) >> null
+		workManagementService.updateWorkItem(_,_,_,_,_) >> {
+			underTest.retryFailed = true
+			return null // patch returned an error
+		}
 
 		when: "calling method under test processADOData()"
 		def resp = underTest.processADOData(adoMap)
 		
 		then: "Update should not be made"
-		resp == 'Error updating System.AssigedTo'
+		resp == 'Error assigning to modifier'
 	}
 
 	def "Successful Assignment to Parent Owner"() {
@@ -168,13 +171,16 @@ class SetOwnerMicroServiceSpec extends Specification {
 		}
 		
 		and: "stub workManagementService.updateItem()"
-		workManagementService.updateWorkItem(_,_,_,_,_) >> null // patch returned an error
+		workManagementService.updateWorkItem(_,_,_,_,_) >> {
+			underTest.retryFailed = true
+			return null // patch returned an error
+		}
 
 		when: "calling method under test processADOData()"
 		def resp = underTest.processADOData(adoMap)
 		
 		then: "Update should not be made"
-		resp == 'Error updating System.AssigedTo'
+		resp == 'Error assigning to parent owner'
 	}
 
 }

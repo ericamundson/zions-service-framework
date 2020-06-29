@@ -67,22 +67,21 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.debug("Entering SetOwnerMicroService:: processADOData")
 //		Uncomment code below to capture adoData payload for test
 //		String json = new JsonBuilder(adoData).toPrettyString()
 //		println(json)
 		def outData = adoData
 		def wiResource = adoData.resource
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
-		boolean foo = includeProjects.contains(project)
-		if (includeProjects && !includeProjects.contains(project)) return logResult('Project not included')
+		String id = "${wiResource.revision.id}"
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
+		log.debug("Entering SetOwnerMicroService:: processADOData for $project, $wiType #$id")
+		if (includeProjects && !includeProjects.contains(project)) return logResult('Project not included')
 		String owner = "${wiResource.revision.fields.'System.AssignedTo'}"
 		String status = "${wiResource.revision.fields.'System.State'}"
 		if (!wiTypes.contains(wiType)) return logResult('Not a target work item type')
 		if (owner && owner != 'null') return logResult('Work item already assigned')
-		if (status != 'Closed' || !wiResource.fields.'System.State') return logResult('Work item not closed')
-		String id = "${wiResource.revision.id}"
+		if (status != 'Closed' || !wiResource.fields.'System.State') return logResult('Work item not being closed')
 		String rev = "${wiResource.revision.rev}"
 		String parentId = "${wiResource.revision.fields.'System.Parent'}"
 		def revisedBy = wiResource.revisedBy
@@ -95,7 +94,7 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 			}
 			else if (this.retryFailed) {
 				log.error('Error updating System.AssigedTo')
-				return 'Error updating System.AssigedTo'
+				return 'Error assigning to modifier'
 			}
 		}
 		else if (parentId && parentId != 'null') {
@@ -117,7 +116,7 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 			}
 			else if (this.retryFailed) {
 				log.error('Error updating System.AssigedTo')
-				return 'Error updating System.AssigedTo'
+				return 'Error assigning to parent owner'
 			}
 		}
 		else {
