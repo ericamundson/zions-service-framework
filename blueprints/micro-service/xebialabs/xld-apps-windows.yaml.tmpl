@@ -33,6 +33,7 @@ spec:
         type: advcmd.Command
         command: |-
           copy /Y [[deploy.path]]\..\WinSW.NET4.exe [[deploy.path]]\{{$app}}.exe
+          copy /Y [[stage.path]]\{{$app}}.xml [[deploy.path]]\{{$app}}.xml
           [[deploy.path]]\{{$app}}.exe install
           [[deploy.path]]\{{$app}}.exe stop
           copy /Y [[stage.path]]\{{$app}}-hold.jar [[deploy.path]]\{{$app}}.jar
