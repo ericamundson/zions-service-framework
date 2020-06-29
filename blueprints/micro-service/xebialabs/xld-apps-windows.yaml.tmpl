@@ -32,12 +32,12 @@ spec:
       - name: run install
         type: advcmd.Command
         command: |-
-          copy /Y [[deploy.path]]\..\WinSW.NET4 [[deploy.path]]\{{$app}}.exe
+          copy /Y [[deploy.path]]\..\WinSW.NET4.exe [[deploy.path]]\{{$app}}.exe
+          copy /Y [[stage.path]]\{{$app}}.xml [[deploy.path]]\{{$app}}.xml
           [[deploy.path]]\{{$app}}.exe install
           [[deploy.path]]\{{$app}}.exe stop
           copy /Y [[stage.path]]\{{$app}}-hold.jar [[deploy.path]]\{{$app}}.jar
-          [[deploy.path]]\{{$app}}.exe start
-          
+          [[deploy.path]]\{{$app}}.exe start          
         createOrder: "62"
         destroyOrder: "42"
         alwaysRun: "true"

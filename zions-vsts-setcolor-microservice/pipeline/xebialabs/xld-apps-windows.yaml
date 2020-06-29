@@ -31,12 +31,12 @@ spec:
       - name: run install
         type: advcmd.Command
         command: |-
-          copy /Y {{deploy.path}}\..\WinSW.NET4 {{deploy.path}}\zions-vsts-setcolor-microservice.exe
+          copy /Y {{deploy.path}}\..\WinSW.NET4.exe {{deploy.path}}\zions-vsts-setcolor-microservice.exe
+          copy /Y {{stage.path}}\zions-vsts-setcolor-microservice.xml {{deploy.path}}\zions-vsts-setcolor-microservice.xml
           {{deploy.path}}\zions-vsts-setcolor-microservice.exe install
           {{deploy.path}}\zions-vsts-setcolor-microservice.exe stop
           copy /Y {{stage.path}}\zions-vsts-setcolor-microservice-hold.jar {{deploy.path}}\zions-vsts-setcolor-microservice.jar
-          {{deploy.path}}\zions-vsts-setcolor-microservice.exe start
-          
+          {{deploy.path}}\zions-vsts-setcolor-microservice.exe start          
         createOrder: "62"
         destroyOrder: "42"
         alwaysRun: "true"
