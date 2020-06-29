@@ -70,6 +70,9 @@ class BlueprintTemplateInterpretorService {
 		answersOut.call(answers)
 		String answersStr = answersOut.toString()
 		File pipelineDir = new File(outDir, pipelineFolder)
+		if (!pipelineDir.exists()) {
+			pipelineDir.mkdirs()
+		}
 		File answersFile = new File(pipelineDir, 'answers.yaml')
 		def os = answersFile.newDataOutputStream()
 		os << answersStr
@@ -134,7 +137,7 @@ class BlueprintTemplateInterpretorService {
 			if (!pipelineDir) {
 				pipelineDir.mkdirs()
 			}
-			File of = new File(blueprintDir, 'xl.exe')
+			File of = new File(pipelineDir, 'xl.exe')
 			def aos = of.newDataOutputStream()
 			aos << istream
 			aos.close()

@@ -13,19 +13,19 @@ spec:
       - name: zions-vsts-setcolor-microservice.xml
         type: file.File
         scanPlaceholders: true
-        targetPath: '{{deploy.path}}'
+        targetPath: '{{stage.path}}'
         createTargetPath: "true"
         file: !file "../service/service.xml"
       - name: zions-vsts-setcolor-microservice-hold.jar
         type: file.File
         scanPlaceholders: false
-        targetPath: '{{deploy.path}}'
+        targetPath: '{{stage.path}}'
         createTargetPath: "true"
         file: !file "../../build/libs/zions-vsts-setcolor-microservice.jar"
       - name: zions-vsts-setcolor-microservice.exe.config
         type: file.File
         scanPlaceholders: false
-        targetPath: '{{deploy.path}}'
+        targetPath: '{{stage.path}}'
         createTargetPath: "true"
         file: !file "../service/service.exe.config"
       - name: run install
@@ -34,7 +34,7 @@ spec:
           copy /Y {{deploy.path}}\..\WinSW.NET4 {{deploy.path}}\zions-vsts-setcolor-microservice.exe
           {{deploy.path}}\zions-vsts-setcolor-microservice.exe install
           {{deploy.path}}\zions-vsts-setcolor-microservice.exe stop
-          copy /Y {{deploy.path}}\zions-vsts-setcolor-microservice-hold.jar {{deploy.path}}\zions-vsts-setcolor-microservice.jar
+          copy /Y {{stage.path}}\zions-vsts-setcolor-microservice-hold.jar {{deploy.path}}\zions-vsts-setcolor-microservice.jar
           {{deploy.path}}\zions-vsts-setcolor-microservice.exe start
           
         createOrder: "62"
