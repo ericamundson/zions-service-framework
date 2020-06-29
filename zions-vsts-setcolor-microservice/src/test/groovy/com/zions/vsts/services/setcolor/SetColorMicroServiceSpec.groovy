@@ -48,20 +48,6 @@ class SetColorMicroServiceSpec extends Specification {
 		resp == 'Not a Bug'
 	}
 	
-	def "No change to Severity, Priority or Color"() {
-		given: "A mock ADO event payload where state is not Closed"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoRelevantChanges.json').text)
-
-		and: "stub sharedAssetService.getAsset()"
-		sharedAssetService.getAsset(_,_) >> loadColormap()
-		
-		when: "ADO sends notification"
-		def resp = underTest.processADOData(adoMap)
-
-		then: "No updates should be made"
-		resp == 'No change to Severity, Priority or Color'
-	}
-	
 	def "Severity and Priority are set, but Color is unassigned"() {
 		given: "A mock ADO event payload where Assigned To is already set"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataMissingColor.json').text)
