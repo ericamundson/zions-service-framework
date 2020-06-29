@@ -30,13 +30,13 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 
 	//@Value('${tfs.types:}')
 	@Value('${tfs.types}')
-	String wiTypes
+	String[] types
 
 	@Value('${tfs.cstatetrigger}')
 	String cstateTrigger
 	
-	/*@Value('${tfs.project.includes}')
-	String[] includeProjects*/
+	@Value('${tfs.project.includes}')
+	String[] includeProjects
 	
 	// Handle HTTP 412 retry when work item revision has changed
 	boolean retryFailed
@@ -85,14 +85,15 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		 * String json = new JsonBuilder(adoData).toPrettyString()
 		 * println(json) */
 		
-		def types = wiTypes.split(',')
+		//def types = wiTypes.split(',')
 		def outData = adoData
 		def wiResource = adoData.resource
 		
 		//**Check for qualifying projects how to setup in runtime settings?
-		/*boolean foo = includeProjects.contains(project)
+		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		if (includeProjects && !includeProjects.contains(project))
-			return logResult('Project not included')*/
+			return logResult('Project not included')
+			
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 																									  
 		String childState = "${wiResource.revision.fields.'System.State'}"
@@ -103,7 +104,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		//if (!states.contains("${cstateTrigger}")) return logResult('not a valid child state')
 		
 		
-		String project = "${wiResource.revision.fields.'System.TeamProject'}"
+		
 		//this is child id
 		String id = "${wiResource.revision.id}"
 										   
