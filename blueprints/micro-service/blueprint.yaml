@@ -34,10 +34,6 @@ spec:
   - name: WSTopics
     type: Input
     prompt: Enter comma delimited list of ADO event topics.
-
-  - name: DeployDev
-    type: Confirm
-    prompt:  Will this be deployed to eto-dev?
     
 
 
