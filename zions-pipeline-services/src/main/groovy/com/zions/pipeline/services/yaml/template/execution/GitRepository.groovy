@@ -25,7 +25,7 @@ class GitRepository implements IExecutableYamlHandler {
 		String repoName = yaml.name
 		def project = projectManagementService.getProject('', projectName)
 		def repository = codeManagementService.ensureRepo('', project, repoName)
-		
+		codeManagementService.ensureFile('', project, repository, '/README.md', "##${repoName}")
 		yaml.branches.each { def branch ->
 			String baseName = branch.baseName
 			String branchName = branch.name
