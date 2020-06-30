@@ -21,6 +21,7 @@ spec:
         type: udm.Dictionary
         entries:
           
+          stage.path: d:\app\azure\_work\zions-vsts-setowner-microservice
           deploy.path: d:\app\azure\services\zions-vsts-setowner-microservice
           
           ws.url: <no value>

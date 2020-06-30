@@ -5,4 +5,3 @@ RequiresCollection: true
 BuildIncludes: "zions-vsts-setowner-microservice/*, zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*"
 Queuename: "WorkItem-setowner-queue"
 WSTopics: "workitem.updated"
-DeployDev: false
