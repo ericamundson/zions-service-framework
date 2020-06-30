@@ -287,6 +287,13 @@ class CodeManagementService {
 		}
 	}
 	
+	public def ensureFile(def collection, def project, def filepath, String fileContent) {
+		def manifest = getFileContent(collection, project, repo, filepath, 'master')
+		if (manifest == null) {
+			manifest = createDeployManifest(collection, project, repo)
+		}
+	}
+
 	public def ensureGitAttributes(def collection, def project, def repo) {
 		def gitAttriibutes = getGitAttributes(collection, project, repo)
 		if (gitAttriibutes == null) {
@@ -343,7 +350,35 @@ class CodeManagementService {
 			body: body
 			)
 	}
-	
+	def createFile(def collection, def project, def repo, String filepath, String outC) {
+		def query = [filter:'head', 'api-version': '4.1']
+		def head = getRefHead(collection, project, repo)
+		if (head == null) return null
+		def manifestData = [commits: [[changes:[[changeType: 1, item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "Added ${filepath}"]],
+			refUpdates:[[name:'refs/heads/master', oldObjectId: head.objectId]]]
+		def body = new JsonBuilder(manifestData).toString()
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: 'application/json',
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/git/repositories/${repo.id}/pushes",
+			query: query,
+			body: body
+			)
+	    def dItems = []
+		
+		def items = [includeContentMetadata: true, itemDescriptors:[[path: "${filepath}", version: 'master', versionType: 'branch', versionLevel: 4],
+			[path: '/dar', version: 'master', versionType: 'branch', versionLevel: 4],
+			[path: '/', version: 'master', versionType: 'branch', versionLevel: 4]]]
+		body = new JsonBuilder(items).toString()
+		result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: 'application/json',
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/itemsBatch",
+			query: query,
+			body: body
+			)
+	}
+
 	def getDeployManifest(def collection, def project, def repo) {
 		def query = ['api-version':'4.1','scopePath':'/dar/', 'recursionLevel':'OneLevel', latestProcessedChange:true, 'versionDescriptor.version': 'master']
 		def result = genericRestClient.get(

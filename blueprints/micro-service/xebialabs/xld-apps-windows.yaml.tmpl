@@ -29,7 +29,7 @@ spec:
         targetPath: '[[stage.path]]'
         createTargetPath: "true"
         file: !file "../service/service.exe.config"
-      - name: run install
+      - name: {{$app}} run install
         type: advcmd.Command
         command: |-
           copy /Y [[deploy.path]]\..\WinSW.NET4.exe [[deploy.path]]\{{$app}}.exe

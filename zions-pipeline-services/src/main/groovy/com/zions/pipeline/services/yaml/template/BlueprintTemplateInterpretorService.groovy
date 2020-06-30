@@ -106,7 +106,7 @@ class BlueprintTemplateInterpretorService {
 								
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
-					yamlHandler.handleYaml(exe, null)
+					yamlHandler.handleYaml(exe, null, [])
 				}
 			}
 		}
