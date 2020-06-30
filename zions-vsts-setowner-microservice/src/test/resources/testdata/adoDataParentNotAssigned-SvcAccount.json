@@ -20,15 +20,15 @@
         "rev": 2,
         "revisedBy": {
             "id": "2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
-            "name": "Robert Huet <robert.huet@zionsbancorp.com>",
-            "displayName": "Robert Huet",
+            "name": "svc-cloud-adomaint001 <svc-cloud-adomaint001@zionsbancorporation.onmicrosoft.com>",
+            "displayName": "svc-cloud-adomaint001",
             "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
             "_links": {
                 "avatar": {
                     "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
                 }
             },
-            "uniqueName": "robert.huet@zionsbancorp.com",
+            "uniqueName": "svc-cloud-adomaint001@zionsbancorporation.onmicrosoft.com",
             "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4",
             "descriptor": "aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
         },
