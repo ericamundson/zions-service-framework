@@ -38,9 +38,6 @@ class SetColorMicroService implements MessageReceiverTrait {
 	@Value('${tfs.colorMapUID:}')
 	String colorMapUID	
 
-	@Value('${websocket.topic}')
-    private String eventTopic
-
 	@Autowired
 	public SetColorMicroService() {
 	}
@@ -58,18 +55,9 @@ class SetColorMicroService implements MessageReceiverTrait {
 		def eventType = adoData.eventType
 		def wiResource = adoData.resource
 		String id = getRootFieldValue('id', eventType, wiResource)
-		log.info("Entering SetColorMicroService:: processADOData <$eventType> #$id")
+		log.debug("Entering SetColorMicroService:: processADOData <$eventType> #$id")
 		String wiType = getFieldValue('System.WorkItemType', eventType, wiResource)
 		if (wiType != 'Bug') return logResult('Not a Bug')
-		boolean needColorUpdate
-		if (wiResource.fields) {
-			needColorUpdate = wiResource.fields.'Microsoft.VSTS.Common.Priority' != null ||
-							wiResource.fields.'Microsoft.VSTS.Common.Severity' != null ||
-							wiResource.fields.'Custom.Color' != null
-		} else {
-			needColorUpdate = false
-		}
-		if (!needColorUpdate) return logResult('No change to Severity, Priority or Color')
 		Integer priority = getFieldValue('Microsoft.VSTS.Common.Priority', eventType, wiResource)
 		String severity = getFieldValue('Microsoft.VSTS.Common.Severity', eventType, wiResource)
 		String color = getFieldValue('Custom.Color', eventType, wiResource)
@@ -135,7 +123,7 @@ class SetColorMicroService implements MessageReceiverTrait {
 	}
 	
 	private def logResult(def msg) {
-		log.info("Result: $msg")
+		log.debug("Result: $msg")
 		return msg
 	}
 }

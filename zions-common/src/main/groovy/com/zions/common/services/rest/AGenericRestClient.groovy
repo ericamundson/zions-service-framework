@@ -275,6 +275,9 @@ abstract class AGenericRestClient implements IGenericRestClient {
 				throw new ThrottleException("Throttled: http ${status}")
 				
 			}
+			if (status == 401 || status == 403) {
+				log.error("User: ${this.user}")
+			}
 			if (sinput) {
 				String json = new JsonBuilder(sinput).toPrettyString()
 				log.error("Input data: ${json}");
