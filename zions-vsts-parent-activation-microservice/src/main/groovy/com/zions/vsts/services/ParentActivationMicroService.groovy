@@ -99,17 +99,13 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		String childState = "${wiResource.revision.fields.'System.State'}"
 		if (!types.contains(wiType))return logResult('not a valid work item type')
 		
-		//parameterize state values?
-		//if (!(childState == 'Active' || childState == 'Closed')) return logResult('not a valid child state')
 		if (!cstateTrigger.contains(childState)) return logResult('Not a target work item type')
-		//if (!states.contains("${cstateTrigger}")) return logResult('not a valid child state')
-		
-		
 		
 		//this is child id
 		String id = "${wiResource.revision.id}"
 										   
 		String parentId = "${wiResource.revision.fields.'System.Parent'}"
+		
 		//check to see if parent is assigned to child work item
 		if (!parentId || parentId == 'null' || parentId == '') return logResult('parent not assigned')
 		def parentWI = workManagementService.getWorkItem(collection, project, parentId)
@@ -122,11 +118,10 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		
 		//If parent state is new perform activation steps
 		if (pState == 'New') {
-			
-		log.info("Updating parent of $wiType #$id")
+			log.info("Updating parent of $wiType #$id")
 		
-		if (performParentActivation(project, rev, parentId, responseHandler)) {
-			return logResult('Update Succeeded')
+			if (performParentActivation(project, rev, parentId, responseHandler)) {
+				return logResult('Update Succeeded')
 		}
 
 		else if (this.retryFailed) {
@@ -141,7 +136,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 			
 	}
 }
-	private def performParentActivation(String project, String rev, def parentId, def pState, Closure respHandler = null) {
+		private def performParentActivation(String project, String rev, def parentId, def pState, Closure respHandler = null) {
 
 												
 		def data = []
@@ -159,8 +154,8 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		
 	}
 	
-	private def logResult(def msg)
-	{
+	private def logResult(def msg) {
+	
 		log.info(msg)
 		return msg
 	}
