@@ -67,8 +67,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		}
 	}
 
-	public ParentActivationMicroService()
-	{
+	public ParentActivationMicroService() {
 			
 	}
 	
@@ -122,11 +121,11 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		
 			if (performParentActivation(project, rev, parentId, responseHandler)) {
 				return logResult('Update Succeeded')
-		}
+			}
 
-		else if (this.retryFailed) {
-			 log.error('Error updating System.State')
-			return 'Error updating System.State'
+			else if (this.retryFailed) {
+				log.error('Error updating System.State')
+				return 'Error updating System.State'
 			}
 		}
 		
@@ -134,11 +133,10 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 			
 			return logResult('parent is already active')
 			
+		}
 	}
-}
-		private def performParentActivation(String project, String rev, def parentId, def pState, Closure respHandler = null) {
+	private def performParentActivation(String project, String rev, def parentId, def pState, Closure respHandler = null) {
 
-												
 		def data = []
 		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 		data.add(t)
