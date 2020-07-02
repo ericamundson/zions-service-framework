@@ -49,6 +49,7 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 			// Get fresh copy of parent work item
 			def bugWI = workManagementService.getWorkItem(collection, attemptedProject, attemptedBugId)
 			String rev = "${bugWI.rev}"
+			
 			//ado event structure different from work item structure - bugWI.fields represents work item structure
 			def statechangeCount = bugWI.fields.'Custom.ReOpenCounter'
 			
@@ -81,9 +82,9 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 	public Object processADOData(Object adoData) {
 		log.info("Entering StateChangeCounterMicroService:: processADOData")
 		
-		/**		Uncomment code below to capture adoData payload for test
-		 * String json = new JsonBuilder(adoData).toPrettyString()
-		 * println(json) */
+		/**		Uncomment code below to capture adoData payload for test*/
+		/* String json = new JsonBuilder(adoData).toPrettyString()
+		 println(json)*/
 		
 		//def types = wiTypes.split(',')
 		def outData = adoData
@@ -104,28 +105,28 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		String newState = stateField.newValue
 		
 		
-		def statechangeCount = wiResource.revision.fields.'Custom.ReOpenCounter'
+		def statechangeCount = wiResource.revision.fields.'Custom.ReOpenCounter' 
 		//println(statechangeCount)
 		
 		if (!statechangeCount || statechangeCount == 'null' || statechangeCount == '')
-
 			statechangeCount = 0;
 			
 		if (!types.contains(wiType))return logResult('not a valid work item type')
 			
 		//this is bug id
 		String id = "${wiResource.revision.id}"
-			
-		//need to compare new state to old state "Resolved" to "New"
-		def bugWI = workManagementService.getWorkItem(collection, project, id)
-		String rev = "${bugWI.rev}"
-	    
-
+		
+		//this is rev id
+		String rev = "${wiResource.rev}"
+		
 		
 		//process qualifying state changes
 		if ((oldState == 'Resolved' || oldState == 'Closed') && (newState == 'New' || newState == 'Active')) {
 			log.info("Updating count of $wiType #$id")
-		
+			
+
+			//How to log message for non target states?
+			//if ((oldState != 'Resolved' || oldState != 'Closed') && (newState != 'New' || newState != 'Active')) return logResult('not a state change')
 	
 			if (performIncrementCounter(project, rev, id, statechangeCount, responseHandler)) {
 				return logResult('Update Succeeded')
@@ -140,7 +141,12 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 						 
 				return logResult('will not be counted')
 			}
-		} 			
+		}
+		
+		else {
+			
+			return logResult('state change not applicable')
+		}
 	}	
 
 	//Increment Counter would be something like

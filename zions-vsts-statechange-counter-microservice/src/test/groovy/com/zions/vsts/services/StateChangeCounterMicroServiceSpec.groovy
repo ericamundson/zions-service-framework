@@ -30,67 +30,73 @@ class StateChangeCounterMicroServiceSpec extends Specification {
 	@Autowired
 	WorkManagementService workManagementService;
 	
-	def "Not a valid child state for parent activation"() {
+	def "Not a valid type for state change counter"() {
 		given: "A mock ADO event payload exists for invalid child state"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataWrongState.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/invalidType.json').text)
 
 		when: "ADO sends notification for work item change who's type is not in configured target list"
 		def resp = underTest.processADOData(adoMap)
 
 		then: "No Updates should be made"
-		resp == 'not a valid child state'
+		resp == 'not a valid work item type'
 	}
 	
-	def "Parent work item is already active"() {
-		given: "A mock ADO event payload where parent work item state is already Active"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataAlreadyActive.json').text)
-		
-		and: "stub workManagementService.getWorkItem()"
-		workManagementService.getWorkItem(_,_,_) >> {
-		
-		return new JsonSlurper().parseText(this.getClass().getResource('/testdata/parentDataAlreadyActive.json').text)
-		}
+	def "Reset after counting a reopen event"() {
+		given: "A mock ADO event payload exists for resetting reopen event"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resetafterCount.json').text)
 
 		when: "ADO sends notification for work item change who's type is not in configured target list"
 		def resp = underTest.processADOData(adoMap)
 
-		then: "No updates should be made"
-		resp == 'parent is already active'
+		then: "No Updates should be made"
+		resp == 'not a state change'
+
+	
+	}
+	
+	def "Non applicable state change events should not be counted"() {
+		given: "A mock ADO event payload exists for resetting reopen event"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataWrongState.json').text)
+
+		
+		and: "stub workManagementService.getWorkItem()"
+		workManagementService.getWorkItem(_,_,_) >> {
+		
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataWrongState.json').text)
+		}
+		
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "No Updates should be made"
+		resp == 'state change not applicable'
+
+	
 	}
 	
 
-	def "Work Item Has No Parent"() {
+	def "valid state change event for ReOpen Counter"() {
 		given: "A mock ADO event payload where work item has no parent"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoParent.json').text)
-
-		when: "ADO sends notification for work item change who's type is not in configured target list"
-		def resp = underTest.processADOData(adoMap)
-
-		then: "No updates should be made"
-		resp == 'parent not assigned'
-	}
-
-	def "Successful Activation of Parent Work Item"() {
-		given: "A mock ADO event payload exists that meets all criteria for update"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataSuccessfulActivation.json').text)
-
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/validbugCount.json').text)
+		//override work item and get work item details and return json file with valid bug count values
 		and: "stub workManagementService.getWorkItem()"
 		workManagementService.getWorkItem(_,_,_) >> {
 		
-			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/parentData.json').text)
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/validbugCount.json').text)
 		}
 		
+		//override update work item with test data values
 		and: "stub workManagementService.updateItem()"
 		
-			workManagementService.getWorkItem(_,_,_) >> {
+			workManagementService.updateWorkItem(_,_,_,_) >> {
 			String data = "${args[3]}"
 			
-			  assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/System.State, value:Active]]')
+			  assert(data.toString() == '[[op:test, path:/rev, value:79], [op:add, path:/fields/Custom.ReOpenCounter, value:9]]')
 		}
-
-		when: "calling method under test processADOData()"
-		def resp = underTest.processADOData(adoMap)
 		
+		when: "ADO sends notification for work item change who's type is in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
 		then: "Update should be made"
 		resp == 'Update Succeeded'
 	}

@@ -17,7 +17,7 @@ import org.springframework.test.context.ContextConfiguration
 
 import spock.lang.Specification
 
-@ContextConfiguration(classes=[ParentActivationApplicationTestConfig])
+@ContextConfiguration(classes=[StateChangeCounterApplicationTestConfig])
 class StateChangeCounterApplicationSpec extends Specification {
 	
 	@Autowired
@@ -43,7 +43,7 @@ class StateChangeCounterApplicationSpec extends Specification {
 @Profile("test")
 //@ComponentScan("com.zions.vsts.services.tfs.rest")
 @PropertySource("classpath:test.properties")
-class ParentActivationApplicationTestConfig {
+class StateChangeCounterApplicationTestConfig {
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return new GenericRestClient('http://localhost:8080/ws', '', '')

@@ -31,7 +31,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 	//@Value('${tfs.types:}')
 	@Value('${tfs.types}')
 	String[] types
-
+	
 	@Value('${tfs.cstatetrigger}')
 	String cstateTrigger
 	
@@ -85,7 +85,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		 * String json = new JsonBuilder(adoData).toPrettyString()
 		 * println(json) */
 		
-		//def types = wiTypes.split(',')
+		
 		def outData = adoData
 		def wiResource = adoData.resource
 		
@@ -98,6 +98,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 																									  
 		String childState = "${wiResource.revision.fields.'System.State'}"
 		if (!types.contains(wiType))return logResult('not a valid work item type')
+		
 		//parameterize state values?
 		//if (!(childState == 'Active' || childState == 'Closed')) return logResult('not a valid child state')
 		if (!cstateTrigger.contains(childState)) return logResult('Not a target work item type')
@@ -153,8 +154,8 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		this.attemptedProject = project
 		this.attemptedParentId = parentId
 		this.attemptedActivation = pState
-		return workManagementService.updateWorkItem(collection, project, parentId, data, respHandler)
 		
+		return workManagementService.updateWorkItem(collection, project, parentId, data, respHandler)
 		
 	}
 	

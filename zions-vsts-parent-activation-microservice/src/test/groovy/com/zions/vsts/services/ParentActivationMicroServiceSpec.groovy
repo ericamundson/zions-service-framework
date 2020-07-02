@@ -38,7 +38,8 @@ class ParentActivationMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 
 		then: "No Updates should be made"
-		resp == 'not a valid child state'
+		//resp == 'not a valid work item type'
+		resp == 'Not a target work item type'
 	}
 	
 	def "Parent work item is already active"() {
@@ -56,8 +57,8 @@ class ParentActivationMicroServiceSpec extends Specification {
 
 		then: "No updates should be made"
 		resp == 'parent is already active'
-	}
 	
+	    }
 
 	def "Work Item Has No Parent"() {
 		given: "A mock ADO event payload where work item has no parent"
@@ -68,7 +69,7 @@ class ParentActivationMicroServiceSpec extends Specification {
 
 		then: "No updates should be made"
 		resp == 'parent not assigned'
-	}
+	    }
 
 	def "Successful Activation of Parent Work Item"() {
 		given: "A mock ADO event payload exists that meets all criteria for update"
@@ -82,7 +83,9 @@ class ParentActivationMicroServiceSpec extends Specification {
 		
 		and: "stub workManagementService.updateItem()"
 		
-			workManagementService.getWorkItem(_,_,_) >> {
+			//workManagementService.getWorkItem(_,_,_) >> {
+			workManagementService.updateWorkItem(_,_,_,_) >> {
+			
 			String data = "${args[3]}"
 			
 			  assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/System.State, value:Active]]')
@@ -106,6 +109,8 @@ class ParentActivationMicroserviceTestConfig {
 	
 	@Value('${tfs.types}') 
 	String wiTypes
+	
+
 	
 	@Bean
 	ParentActivationMicroService underTest() {
