@@ -31,8 +31,11 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 	@Value('${tfs.types}')
 	String[] types
 
-	@Value('${tfs.cstatetrigger}')
-	String cstateTrigger
+	@Value('${tfs.sourcestate}')
+	String sourceState
+	
+	@Value('${tfs.deststate}')
+	String destState
 	
 	@Value('${tfs.project.includes}')
 	String[] includeProjects
@@ -86,7 +89,6 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		/* String json = new JsonBuilder(adoData).toPrettyString()
 		 println(json)*/
 		
-		//def types = wiTypes.split(',')
 		def outData = adoData
 		def wiResource = adoData.resource
 		
@@ -104,9 +106,7 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		String oldState = stateField.oldValue
 		String newState = stateField.newValue
 		
-		
 		def statechangeCount = wiResource.revision.fields.'Custom.ReOpenCounter' 
-		//println(statechangeCount)
 		
 		if (!statechangeCount || statechangeCount == 'null' || statechangeCount == '')
 			statechangeCount = 0;
@@ -119,14 +119,9 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		//this is rev id
 		String rev = "${wiResource.rev}"
 		
-		
-		//process qualifying state changes
-		if ((oldState == 'Resolved' || oldState == 'Closed') && (newState == 'New' || newState == 'Active')) {
+		//parameterize source/destination states for bug count
+		if (sourceState.contains(oldState) && (destState.contains(newState))) { 
 			log.info("Updating count of $wiType #$id")
-			
-
-			//How to log message for non target states?
-			//if ((oldState != 'Resolved' || oldState != 'Closed') && (newState != 'New' || newState != 'Active')) return logResult('not a state change')
 	
 			if (performIncrementCounter(project, rev, id, statechangeCount, responseHandler)) {
 				return logResult('Update Succeeded')
