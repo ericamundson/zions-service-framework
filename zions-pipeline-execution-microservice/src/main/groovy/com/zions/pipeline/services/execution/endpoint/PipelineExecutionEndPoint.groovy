@@ -79,7 +79,7 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 			for (def change in changes.changes) {
 				String path = "${change.item.path}"
 				pipelineFolders.each { String pipelineFolder -> 
-					if (path.contains("${pipelineFolder}") && path.endsWith('.yaml')) locations.add(path)
+					if (path.contains("${pipelineFolder}") && path.endsWith('.yaml') && !locations.contains(path)) locations.add(path)
 				}
 			}
 		}

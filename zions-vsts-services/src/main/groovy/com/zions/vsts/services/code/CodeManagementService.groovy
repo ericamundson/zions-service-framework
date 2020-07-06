@@ -289,8 +289,10 @@ class CodeManagementService {
 	
 	public def ensureFile(def collection, def project, def repo,  def filepath, String fileContent) {
 		def content = getFileContent(collection, project, repo, filepath, 'master')
-		if (content == null) {
+		if (!content) {
 			content = createFile(collection, project, repo, filepath, fileContent)
+		} else {
+			content = updateFile(collection, project, repo, filepath, fileContent)
 		}
 		return content
 	}
@@ -353,10 +355,14 @@ class CodeManagementService {
 	}
 	def createFile(def collection, def project, def repo, String filepath, String outC) {
 		def query = [filter:'head', 'api-version': '4.1']
-//		def head = getRefHead(collection, project, repo)
+		def head = getRefHead(collection, project, repo)
 //		if (head == null) return null
-		def fileData = [commits: [[changes:[[changeType: 1, item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "Added ${filepath}"]],
+		def fileData = [commits: [[changes:[[changeType: 'add', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "Added ${filepath}"]],
 			refUpdates:[[name:'refs/heads/master', oldObjectId: '0000000000000000000000000000000000000000']]]
+		if (head != null) {
+			fileData = [commits: [[changes:[[changeType: 'add', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "Added/Updated ${filepath}"]],
+				refUpdates:[[name:'refs/heads/master', oldObjectId: head.objectId]]]
+		}
 		def body = new JsonBuilder(fileData).toString()
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
@@ -373,6 +379,47 @@ class CodeManagementService {
 //			dItems.add([path:iOut,version: 'master', versionType: 'branch', versionLevel:4])
 //			sOut = "${sOut}/${item}"
 //			
+//		}
+//		String iOut = "${sOut}"
+//		dItems.add([path:iOut,version: 'master', versionType: 'branch', versionLevel:4])
+//		def items = [includeContentMetadata: true, itemDescriptors:[dItems]]
+//		body = new JsonBuilder(items).toString()
+//		result = genericRestClient.post(
+//			contentType: ContentType.JSON,
+//			requestContentType: 'application/json',
+//			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/itemsBatch",
+//			query: query,
+//			body: body
+//			)
+	}
+	
+	def updateFile(def collection, def project, def repo, String filepath, String outC) {
+		def query = [filter:'head', 'api-version': '4.1']
+		def head = getRefHead(collection, project, repo)
+		def fileData = [commits: [[changes:[[changeType: 'edit', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "Added ${filepath}"]],
+			refUpdates:[[name:'refs/heads/master', oldObjectId: '0000000000000000000000000000000000000000']]]
+		if (head != null) {
+			fileData = [commits: [[changes:[[changeType: 'edit', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "Added/Updated ${filepath}"]],
+				refUpdates:[[name:'refs/heads/master', oldObjectId: head.objectId]]]
+		}
+		def body = new JsonBuilder(fileData).toString()
+		//println body
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: 'application/json',
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/git/repositories/${repo.id}/pushes",
+			query: query,
+			body: body
+			)
+		return outC
+//	    def dItems = []
+//		String[] fileItems = filepath.split('/')
+//		String sOut = '/'
+//		fileItems.each { String item ->
+//			String iOut = "${sOut}"
+//			dItems.add([path:iOut,version: 'master', versionType: 'branch', versionLevel:4])
+//			sOut = "${sOut}/${item}"
+//
 //		}
 //		String iOut = "${sOut}"
 //		dItems.add([path:iOut,version: 'master', versionType: 'branch', versionLevel:4])

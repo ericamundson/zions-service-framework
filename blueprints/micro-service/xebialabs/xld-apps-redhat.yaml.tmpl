@@ -14,21 +14,21 @@ spec:
       - name: {{$app}}.service
         type: file.File
         scanPlaceholders: true
-        targetPath: '[[stage.path]]'
+        targetPath: '{{"{{stage.path}}"}}'
         createTargetPath: "true"
         file: !file "../service/microservice.service"
       - name: {{$app}}-hold.jar
         type: file.File
         scanPlaceholders: false
-        targetPath: '[[stage.path]]'
+        targetPath: '{{"{{stage.path}}"}}'
         createTargetPath: "true"
         file: !file "../../build/libs/{{$app}}.jar"
       - name: run install
         type: advcmd.Command
         command: |-
           systemctl stop {{$app}}.service
-          cp -f [[stage.path]]/{{$app}}.service /etc/systemd/system
-          cp -f [[stage.path]]/{{$app}}-hold.jar [[deploy.path]]/{{$app}}.jar
+          cp -f {{"{{stage.path}}"}}/{{$app}}.service /etc/systemd/system
+          cp -f {{"{{stage.path}}"}}/{{$app}}-hold.jar {{"{{deploy.path}}"}}/{{$app}}.jar
           systemctl daemon-reload
           systemctl start {{$app}}.service          
         createOrder: "62"
