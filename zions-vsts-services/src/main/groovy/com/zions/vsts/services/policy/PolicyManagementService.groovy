@@ -390,5 +390,31 @@ public class PolicyManagementService {
 		}
 		return true;
 	}
+	
+	public def clearBranchPolicies(def collection, def project, def repoId, def branchName) {
+		def policies = getBranchPolicies(collection, project, repoId, branchName)
+		if (!policies) return []
+		policies.value.each { policy ->
+			def result = genericRestClient.delete(
+				uri: "${policy._links.self.href}",
+				query: ['api-version': '5.1'])
+		}
+		return policies
+	}
+	
+	public def restoreBranchPolicies(def collection, def project, def repoId, def branchName, def policies) {
+		if (!policies.value) return policies
+		policies.value.each { policy ->
+			def policyR = [:]
+			policyR.isEnabled = policy.isEnabled
+			policyR.isBlocking = policy.isBlocking
+			policyR.type = policy.type
+			policyR.settings = policy.settings
+			def result = createPolicy(collection, project, policyR)
+		}
+		def rpolicies = getBranchPolicies(collection, project, repoId, branchName)
+		
+		return rpolicies
+	}
 }
 
