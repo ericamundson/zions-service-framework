@@ -14,7 +14,7 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
-import org.springframework.retry.interceptor.StatefulRetryOperationsInterceptor
+import org.springframework.retry.interceptor.RetryOperationsInterceptor
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Declarables;
@@ -48,10 +48,9 @@ trait MessageFanoutConfigTrait {
 	}
 	
 	@Bean
-	public StatefulRetryOperationsInterceptor interceptor() {
-		return RetryInterceptorBuilder.stateful()
+	public RetryOperationsInterceptor interceptor() {
+		return RetryInterceptorBuilder.stateless()
 				.maxAttempts(3)
-				.backOffOptions(1000, 2.0, 10000) // initialInterval, multiplier, maxInterval
 				.build();
 	}
 	
