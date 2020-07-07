@@ -1,0 +1,92 @@
+<witmapping>
+	<wit source="testplan"  target="Test Plan" translateUnmappedFields="false" notWorkItem="true">
+		<field source="nameHandler" target="name"/>
+		<field source="descriptionHandler" target="description"/>
+		<field source="planOwnerHandler" target="owner"/>
+		<field source="stateHandler" target="state">
+			<defaultvalue target="Active"/>
+		</field>
+		<field source="planBlankHandler" target="area">
+			<defaultvalue target="FutureCore\Test"/>
+		</field>
+		<field source="blankHandler" target="iteration">
+			<defaultvalue target="FutureCore"/>		
+		</field>
+	</wit>
+	<wit source="testsuite"  target="Test Suite" translateUnmappedFields="false" notWorkItem="true">
+		<field source="nameHandler" target="name"/>
+		<field source="descriptionHandler" target="description"/>
+		<field source="planOwnerHandler" target="owner"/>
+		<field source="stateHandler" target="state">
+			<defaultvalue target="Active"/>
+		</field>
+		<field source="planBlankHandler" target="area">
+			<defaultvalue target="FutureCore\Test"/>
+		</field>
+		<field source="blankHandler" target="iteration">
+			<defaultvalue target="FutureCore"/>		
+		</field>
+	</wit>
+	<wit source="testcase"  target="Test Case" translateUnmappedFields="false">
+		<field source="nameHandler" target="System.Title"/>
+		<field source="testCaseDescriptionHandler" target="System.Description"/>
+		<field source="ownerHandler" target="System.AssignedTo"/>
+		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
+		<field source="stateHandler" target="System.State">
+			<defaultvalue target="Design"/>
+		</field>
+		<field source="blankHandler" target="System.AreaPath">
+			<defaultvalue target="FutureCore\Test"/>
+		</field>
+		<field source="blankHandler" target="System.IterationPath">
+			<defaultvalue target="FutureCore"/>		
+		</field>
+		<field source="stepsHandler" target="Microsoft.VSTS.TCM.Steps"/>
+	</wit>
+	<wit source="executionresult"  target="Result" translateUnmappedFields="false">
+		<field source="resultIdHandler" target="id"/>
+		<field source="resultStartDateHandler" target="startedDate"/>
+		<field source="resultTestcaseTitleHandler" target="testCaseTitle"/>
+		<field source="blankHandler" target="priority">
+			<defaultvalue target="2"/>		
+		</field>
+		
+		<field source="resultStateHandler" target="outcome">
+			<defaultvalue target="Active"/>		
+			<value source="com.ibm.rqm.execution.common.state.passed" target="Passed"/>
+			<value source="com.ibm.rqm.execution.common.state.paused" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.inprogress" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.notrun" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.perm_failed" target="Failed"/> 
+			<value source="com.ibm.rqm.execution.common.state.incomplete" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.inconclusive" target="Active"/> 
+			<value source="com.ibm.rqm.execution.common.state.part_blocked" target="Block"/> 
+			<value source="com.ibm.rqm.execution.common.state.deferred" target="Not applicable"/> 
+			<value source="com.ibm.rqm.execution.common.state.failed" target="Failed"/> 
+			<value source="com.ibm.rqm.execution.common.state.error" target="Failed"/> 
+			<value source="com.ibm.rqm.execution.common.state.blocked" target="Block"/> 		
+			</field>
+		<field source="resultStateHandler" target="state">
+			<defaultvalue target="Pending"/>		
+			<value source="com.ibm.rqm.execution.common.state.passed" target="Completed"/>
+			<value source="com.ibm.rqm.execution.common.state.perm_failed" target="Completed"/> 
+			<value source="com.ibm.rqm.execution.common.state.deferred" target="Completed"/> 
+			<value source="com.ibm.rqm.execution.common.state.failed" target="Completed"/> 
+			<value source="com.ibm.rqm.execution.common.state.error" target="Completed"/> 
+			<value source="com.ibm.rqm.execution.common.state.blocked" target="Completed"/> 		
+		</field>
+		<!-- <field source="resultOwnerHandler" target="owner"/> -->
+		
+	</wit>
+	<wit source="configuration"  target="Configuration" translateUnmappedFields="false">
+		<field source="nameHandler" target="name"/>
+		<field source="summaryHandler" target="description"/>
+		<field source="blankHandler" target="state">
+			<defaultvalue target="Active"/>
+		</field>
+	</wit>
+	<wit source="testplan"  target="Test Plan WI" translateUnmappedFields="false">
+		<field source="customAttributesHandler" target="Custom.CustomAttributes"/>
+	</wit>
+	
+</witmapping>

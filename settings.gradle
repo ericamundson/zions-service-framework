@@ -7,6 +7,7 @@ if ("${context}" == 'all') {
 	include ':zions-vsts-admin-microservice'
 	include ':zions-vsts-policy-microservice'
 	include ':zions-ext-cli'
+	include ':zions-web-monitoring'
 	include ':zions-ext-services'
 	include ':zions-common'
 	include ':zions-common-data'
