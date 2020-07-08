@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 import org.springframework.amqp.core.Queue
+import org.springframework.amqp.core.QueueBuilder
 import org.springframework.amqp.core.FanoutExchange
+import org.springframework.amqp.core.DirectExchange
 import org.springframework.amqp.core.AmqpAdmin
 import org.springframework.amqp.rabbit.core.RabbitAdmin
 import org.springframework.amqp.rabbit.core.RabbitTemplate
@@ -40,38 +43,65 @@ trait MessageFanoutConfigTrait {
 	@Value('${queue.autoDelete:false}')
 	boolean queueAutoDelete
 
-	@Bean
-	Queue queue() {
-		Queue queue = new Queue(queueName, queueDurable, queueExclusive, queueAutoDelete);
+//	@Bean
+//	@Qualifier('primaryQueue')
+//	Queue primaryQueue() {
+//		Queue queue = new Queue(queueName, queueDurable, queueExclusive, queueAutoDelete, ['x-dead-letter-exchange': '', 'x-dead-letter-routing-key': "${queueName}-dead"]);
+//		
+//		return queue
+//	}
+//	
+//	@Bean
+//	@Qualifier('deadLetterQueue')
+//	public Queue deadLetterQueue() {
+//		return new Queue("${queueName}-dead");
+//	}
 		
-		return queue
-	}
-	
-	@Bean
-	public RetryOperationsInterceptor interceptor() {
-		return RetryInterceptorBuilder.stateless()
-				.maxAttempts(3)
-				.build();
-	}
-	
+
 
 	@Bean
-	Declarables exchanges() {
+	Declarables declarables() {
 		Declarables dec = new Declarables()
+		dec.declarables.add(new DirectExchange('dead-letter-exchange', exchangeDurable, false))
+		Queue dead = null	
+		if (queueAutoDelete) {
+			dead = QueueBuilder.durable("${queueName}-dead")
+					.autoDelete()
+		            //.deadLetterExchange('dead-letter-exchange')
+		            //.deadLetterRoutingKey("${queueName}")
+					//.ttl(1000)
+		            .build();
+		} else {
+			dead = QueueBuilder.durable("${queueName}-dead")
+					//.deadLetterExchange('dead-letter-exchange')
+					//.deadLetterRoutingKey("${queueName}")
+					//.ttl(1000)
+					.build();
+
+		}
+		dec.declarables.add(dead)
+		Queue prim = null 
+		if (queueAutoDelete) {
+			prim = QueueBuilder.durable(queueName)
+					.autoDelete()
+		            //.deadLetterExchange('dead-letter-exchange')
+		            //.deadLetterRoutingKey("${queueName}-dead")
+		            .build();
+		} else {
+			prim = QueueBuilder.durable(queueName)
+					//.deadLetterExchange('dead-letter-exchange')
+					//.deadLetterRoutingKey("${queueName}-dead")
+					.build();
+
+		}
+		dec.declarables.add(prim)
 		adoTopics.each { topic ->
 			dec.declarables.add(new FanoutExchange(topic, exchangeDurable, false))
-		}
-		return dec;
-	}
-
-	@Bean
-	Declarables binding(Queue queue, Declarables exchanges) {
-		Declarables dec = new Declarables()
-		exchanges.declarables.each { FanoutExchange exchange ->
-			String exchangeName = exchange.name
-			Binding b = new Binding(queueName, Binding.DestinationType.QUEUE, exchangeName, '', null)
+			Binding b = new Binding(queueName, Binding.DestinationType.QUEUE, topic, '', null)
 			dec.declarables.add(b)
 		}
+		Binding b = new Binding("${queueName}-dead", Binding.DestinationType.QUEUE, 'dead-letter-exchange', "${queueName}-dead", null)
+		dec.declarables.add(b)
 		return dec;
 	}
 	
@@ -95,13 +125,14 @@ trait MessageFanoutConfigTrait {
 		container.setConnectionFactory(connectionFactory);
 		container.setQueueNames(queueName);
 		container.setMessageListener(listenerAdapter);
-		container.setAcknowledgeMode(AcknowledgeMode.AUTO);
+		//container.setDefaultRequeueRejected(false);
+		//container.setAcknowledgeMode(AcknowledgeMode.AUTO);
 		return container;
 	}
 
 	@Bean
 	MessageListenerAdapter listenerAdapter(MessageReceiverTrait receiver) {
-		return new MessageListenerAdapter(receiver, "receive");
+		return new MessageListenerAdapter(receiver);
 	}
 	
 	
