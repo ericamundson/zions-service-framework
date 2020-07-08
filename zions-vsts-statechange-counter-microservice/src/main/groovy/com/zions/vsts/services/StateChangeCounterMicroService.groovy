@@ -106,13 +106,15 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		String oldState = stateField.oldValue
 		String newState = stateField.newValue
 		
-		def statechangeCount = wiResource.revision.fields.'Custom.ReOpenCounter' 
+		def statechangeCount = wiResource.revision.fields.'Custom.ReOpenCounter'
 		
 		if (!statechangeCount || statechangeCount == 'null' || statechangeCount == '')
 			statechangeCount = 0;
 			
 		if (!types.contains(wiType))return logResult('not a valid work item type')
-			
+		//handle possibe null pointer exception	
+		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('Work item not changed or closed')
+		
 		//this is bug id
 		String id = "${wiResource.revision.id}"
 		
@@ -120,7 +122,7 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		String rev = "${wiResource.rev}"
 		
 		//parameterize source/destination states for bug count
-		if (sourceState.contains(oldState) && (destState.contains(newState))) { 
+		if (sourceState.contains(oldState) && (destState.contains(newState))) {
 			log.info("Updating count of $wiType #$id")
 	
 			if (performIncrementCounter(project, rev, id, statechangeCount, responseHandler)) {
@@ -142,12 +144,12 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 			
 			return logResult('state change not applicable')
 		}
-	}	
+	}
 
 	//Increment Counter would be something like
 	private def performIncrementCounter(String project, String rev, def bugId, def statechangeCount, Closure respHandler = null) {
 
-			int totalCount = statechangeCount + 1; 
+			int totalCount = statechangeCount + 1;
 			
 			def data = []
 			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
@@ -167,4 +169,4 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		log.info(msg)
 		return msg
 	}
-} 
+}

@@ -59,8 +59,20 @@ class ParentActivationMicroServiceSpec extends Specification {
 		resp == 'parent is already active'
 	
 	    }
+		
+	def "No fields were changed"() {
+			given: "A mock ADO event payload where unrelated changes are made"
+			def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoValidChanges.json').text)
+	
+			when: "ADO sends notification for work item change who's type is not in configured target list"
+			def resp = underTest.processADOData(adoMap)
+	
+			then: "No updates should be made"
+			resp == 'No valid changes made'
+		}
 
-	def "Work Item Has No Parent"() {
+	
+		def "Work Item Has No Parent"() {
 		given: "A mock ADO event payload where work item has no parent"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoParent.json').text)
 
