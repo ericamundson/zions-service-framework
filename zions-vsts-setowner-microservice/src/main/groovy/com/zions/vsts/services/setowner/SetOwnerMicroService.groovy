@@ -81,7 +81,7 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 		String status = "${wiResource.revision.fields.'System.State'}"
 		if (!wiTypes.contains(wiType)) return logResult('Not a target work item type')
 		if (owner && owner != 'null') return logResult('Work item already assigned')
-		if (status != 'Closed' || !wiResource.fields.'System.State') return logResult('Work item not being closed')
+		if (status != 'Closed' || !wiResource.fields || !wiResource.fields.'System.State') return logResult('Work item not being closed')
 		String rev = "${wiResource.revision.rev}"
 		String parentId = "${wiResource.revision.fields.'System.Parent'}"
 		def revisedBy = wiResource.revisedBy
