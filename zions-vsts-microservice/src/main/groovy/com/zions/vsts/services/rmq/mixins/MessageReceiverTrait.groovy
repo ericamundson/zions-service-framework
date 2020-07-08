@@ -9,7 +9,7 @@ import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.beans.factory.annotation.Value
 
 trait MessageReceiverTrait implements MessageListener {
-	@Autowired
+	@Autowired(required=false)
 	RabbitTemplate rabbitTemplate
 	
 	@Value('${queue.name:}')
