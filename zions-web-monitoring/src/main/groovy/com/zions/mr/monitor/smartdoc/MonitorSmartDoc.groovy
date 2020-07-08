@@ -5,9 +5,14 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.cli.action.CliAction
 import groovy.util.logging.Slf4j
 import org.openqa.selenium.WebDriver
-//import org.openqa.selenium.firefox.FirefoxDriver
-//comment the above line and uncomment below line to use Chrome
+import org.openqa.selenium.WebElement
+import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.WebDriverWait
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.WebElement
+import org.openqa.selenium.By
+import org.openqa.selenium.NoSuchElementException
+import java.util.concurrent.TimeUnit
 
 @Component
 @Slf4j
@@ -25,13 +30,30 @@ class MonitorSmartDoc  implements CliAction {
 		WebDriver driver = new ChromeDriver();
     	
         String baseUrl = 'https://login.microsoftonline.com/'
-        String expectedTitle = "Welcome: Mercury Tours";
+        String expectedTitle = "Smart Docs - Boards";
         String actualTitle = "";
 
         // launch Fire fox and direct it to the Base URL
         driver.get(baseUrl);
+		WebDriverWait wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("i0116"))).sendKeys('robert.huet@zionsbancorp.com')	
+		wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9'))).click() // Click Next
+
+		// Check for prompt for account type
+		try {
+			WebElement troubleLocatingAccount = driver.findElement(By.id('loginDescription'))
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.id('aadTileTitle'))).click()
+			wait(driver,2)
+		} catch (NoSuchElementException e) {
+		}
+		
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id('i0118'))).sendKeys('augus1L!berty')
+		wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9'))).click() // Click Log in
+
+		driver.get('https://dev.azure.com/ZionsETO/DTS/_apps/hub/edevtech-mr.iGVSO-OnPrem-mrserviceus1008.subHubWork-SmartDocs-OnPrem#teamId=ab30c6e9-39b1-47bf-a42b-b0c63c48a54b')
 
         // get the actual value of the title
+		wait.until(ExpectedConditions.titleIs(expectedTitle))
         actualTitle = driver.getTitle();
 
         /*
@@ -39,13 +61,14 @@ class MonitorSmartDoc  implements CliAction {
          * the result as "Passed" or "Failed"
          */
         if (actualTitle.contentEquals(expectedTitle)){
-            System.out.println("Test Passed!");
+            println("Test Passed!");
         } else {
-            System.out.println("Test Failed");
+            println("Test Failed");
         }
-       
+		WebElement smartDocLink = driver.findElement(By.xpath("//*[text()='TestDoc']"))
+		
         //close Browser
-//        driver.close();
+        driver.close();
 	}
 	public Object validate(ApplicationArguments args) throws Exception {
 		def required = ['mr.url']
@@ -55,6 +78,9 @@ class MonitorSmartDoc  implements CliAction {
 			}
 		}
 		return true
+	}
+	private void wait(WebDriver driver, int sec) {
+		driver.manage().timeouts().implicitlyWait(sec, TimeUnit.SECONDS)
 	}
 
 }
