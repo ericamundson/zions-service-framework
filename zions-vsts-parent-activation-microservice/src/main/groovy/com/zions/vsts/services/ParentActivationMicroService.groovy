@@ -80,9 +80,9 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 	public Object processADOData(Object adoData) {
 		log.info("Entering ParentActivationMicroService:: processADOData")
 		
-		/**		Uncomment code below to capture adoData payload for test
-		 * String json = new JsonBuilder(adoData).toPrettyString()
-		 * println(json) */
+		/**		Uncomment code below to capture adoData payload for test*/
+		/* String json = new JsonBuilder(adoData).toPrettyString()
+		 println(json)*/
 		
 		
 		def outData = adoData
@@ -96,10 +96,14 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 																									  
 		String childState = "${wiResource.revision.fields.'System.State'}"
+		
+		//code to address null pointer exception
+		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('No valid changes made')
+	
 		if (!types.contains(wiType))return logResult('not a valid work item type')
 		
 		if (!cstateTrigger.contains(childState)) return logResult('Not a target work item type')
-		
+			
 		//this is child id
 		String id = "${wiResource.revision.id}"
 										   
