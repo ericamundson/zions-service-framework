@@ -26,6 +26,7 @@ spec:
       - name: run install
         type: advcmd.Command
         command: |-
+          mkdir -p {{"{{deploy.path}}"}}
           systemctl stop {{$app}}.service
           cp -f {{"{{stage.path}}"}}/{{$app}}.service /etc/systemd/system
           cp -f {{"{{stage.path}}"}}/{{$app}}-hold.jar {{"{{deploy.path}}"}}/{{$app}}.jar

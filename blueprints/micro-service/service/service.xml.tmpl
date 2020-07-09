@@ -5,9 +5,9 @@
       <description>This service runs {{$app}}.</description>
       <executable>java</executable>
       {{if .RequiresCollection}}
-      <arguments>-Xrs -Xmx256m -jar "[[deploy.path]]/{{$app}}.jar" --queue.name={{.Queuename}} --ado.topics={{.WSTopics}} --tfs.collection=[[tfs.collection]] --tfs.url=https://dev.azure.com --logging.file="[[deploy.path]]/{{$app}}.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "{{"{{deploy.path}}"}}/{{$app}}.jar" --queue.name={{.Queuename}} --ado.topics={{.WSTopics}} --tfs.collection={{"{{tfs.collection}}"}} --tfs.url=https://dev.azure.com --logging.file="{{"{{deploy.path}}"}}/{{$app}}.log" </arguments>
  	  {{else}}
-      <arguments>-Xrs -Xmx256m -jar "[[deploy.path]]/{{$app}}.jar" --queue.name={{.Queuename}}  --ado.topics={{.WSTopics}} --tfs.url=[[tfs.url]] --logging.file="[[deploy.path]]/{{$app}}.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "{{"{{deploy.path}}"}}/{{$app}}.jar" --queue.name={{.Queuename}}  --ado.topics={{.WSTopics}} --tfs.url={{"{{tfs.url}}"}} --logging.file="{{"{{deploy.path}}"}}/{{$app}}.log" </arguments>
 	  {{end}}
       <logmode>rotate</logmode>
 </service>
