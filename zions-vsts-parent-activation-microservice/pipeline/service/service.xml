@@ -4,7 +4,7 @@
       <description>This service runs zions-vsts-parent-activation-microservice.</description>
       <executable>java</executable>
       
-      <arguments>-Xrs -Xmx256m -jar "{{"{{deploy.path}}"}}/zions-vsts-parent-activation-microservice.jar" --queue.name=WorkItem-parentactivation-queue --ado.topics=workitem.updated --tfs.collection={{"{{tfs.collection}}"}} --tfs.url=https://dev.azure.com --logging.file="{{"{{deploy.path}}"}}/zions-vsts-parent-activation-microservice.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-parent-activation-microservice.jar" --queue.name=WorkItem-parentactivation-queue --ado.topics=workitem.updated --tfs.collection={{tfs.collection}} --tfs.url=https://dev.azure.com --logging.file="{{deploy.path}}/zions-vsts-parent-activation-microservice.log" </arguments>
  	  
       <logmode>rotate</logmode>
 </service>
