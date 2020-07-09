@@ -32,6 +32,7 @@ spec:
       - name: {{$app}} run install
         type: advcmd.Command
         command: |-
+          mkdir {{"{{deploy.path}}"}}
           copy /Y {{"{{deploy.path}}"}}\..\WinSW.NET4.exe {{"{{deploy.path}}"}}\{{$app}}.exe
           copy /Y {{"{{stage.path}}"}}\{{$app}}.xml {{"{{deploy.path}}"}}\{{$app}}.xml
           {{"{{deploy.path}}"}}\{{$app}}.exe install
