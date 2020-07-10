@@ -78,7 +78,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.info("Entering ParentActivationMicroService:: processADOData")
+		log.debug("Entering ParentActivationMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
 		/* String json = new JsonBuilder(adoData).toPrettyString()
@@ -92,9 +92,10 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		if (includeProjects && !includeProjects.contains(project))
 			return logResult('Project not included')
-			
+		
+		
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
-																									  
+		
 		String childState = "${wiResource.revision.fields.'System.State'}"
 		
 		//code to address null pointer exception
@@ -121,7 +122,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		
 		//If parent state is new perform activation steps
 		if (pState == 'New') {
-			log.info("Updating parent of $wiType #$id")
+			log.debug("Updating parent of $wiType #$id")
 		
 			if (performParentActivation(project, rev, parentId, responseHandler)) {
 				return logResult('Update Succeeded')
