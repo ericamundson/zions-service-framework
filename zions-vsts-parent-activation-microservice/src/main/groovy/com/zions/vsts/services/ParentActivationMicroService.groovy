@@ -159,7 +159,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 	
 	private def logResult(def msg) {
 	
-		log.info(msg)
+		log.debug(msg)
 		return msg
 	}
 	
