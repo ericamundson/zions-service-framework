@@ -1,7 +1,7 @@
 bootJar {
 	enabled = true
 	mainClassName = 'com.zions.vsts.services.ParentActivationApplication'
-	archiveName = 'zions-vsts-parentactivation-microservice.jar'
+	archiveName = 'zions-vsts-parent-activation-microservice.jar'
 	//version =  "${version}"
 }
 

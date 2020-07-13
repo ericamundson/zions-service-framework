@@ -95,4 +95,15 @@ class GitService {
 			
 		return repo
 	}
+	
+	def pushChanges(String repoName, String filePattern = '.', String comment = 'Update pipeline') {
+		File repo = new File(repos, "${repoName}")
+		Git.open(repo).add().addFilepattern(filePattern).call();
+		Git.open(repo).add().setUpdate(true).addFilepattern(filePattern).call();
+		Git.open(repo).commit().setMessage(comment).call();
+		Git.open(repo)
+			.push()
+			.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
+			.call()
+	}
 }

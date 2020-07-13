@@ -1,0 +1,8 @@
+<service>
+      <id>parentactivationms</id>
+      <name>parentactivationms</name>
+      <description>This service runs parent activation micro-service.</description>
+      <executable>java</executable>
+      <arguments>-Xrs -Xmx256m -jar "d:\bin\service\zions-vsts-parentactivation-microservice.jar" --websocket.url=wss://104.42.59.51/ws --tfs.url=https://dev.azure.com/eto-dev --tfs.user=z070187 --tfs.token=bhgqrrnixqhdt4loar2ea7z74oervswykldygrwo2yzolropyuqa --logging.file="d:\bin\service\parentactivation.log"</arguments>
+      <logmode>rotate</logmode>
+</service>
