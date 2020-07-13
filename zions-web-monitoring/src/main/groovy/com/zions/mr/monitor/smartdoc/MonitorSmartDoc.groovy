@@ -1,9 +1,12 @@
 package com.zions.mr.monitor.smartdoc
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 import com.zions.common.services.cli.action.CliAction
+import com.zions.vsts.services.work.WorkManagementService
+
 import groovy.util.logging.Slf4j
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
@@ -19,20 +22,38 @@ import java.util.concurrent.TimeUnit
 @Component
 @Slf4j
 class MonitorSmartDoc  implements CliAction {
+	static String LOGIN_FAILURE = 'ADO login failure'
+	static String SMARTDOC_FAILURE = 'Smart Doc failure'
+
+	@Autowired
+	WorkManagementService workManagementService
+
+	@Value('${tfs.project:}')
+	String project
+
+	@Value('${tfs.collection:}')
+	String collection
+	
+	@Value('${tfs.areapath:}')
+	String areapath
+
 	@Value('${mr.url}')
 	String mrUrl
 
 	@Value('${mr.smartdoc.name}')
 	String smartDocName
 
-	@Value('${tfs.login}')
-	String tfsLogin
+	@Value('${ms.login}')
+	String msLogin
 
 	@Value('${tfs.user}')
 	String tfsUser
 
-	@Value('${tfs.token}')
-	String tfsToken
+	@Value('${tfs.password}')
+	String tfsPassword
+
+	@Value('${sel.timeout.sec}')
+	int waitTimeoutSec
 
 	public MonitorSmartDoc() {
 	}
@@ -44,18 +65,23 @@ class MonitorSmartDoc  implements CliAction {
 //		WebDriver driver = new FirefoxDriver();
 		//comment the above 2 lines and uncomment below 2 lines to use Chrome
 		System.setProperty("webdriver.chrome.driver","c:\\chrome-83\\chromedriver.exe");
+
 		WebDriver driver = new ChromeDriver();
-		WebDriverWait wait = new WebDriverWait(driver, 40);
-    	
+		WebDriverWait wait = new WebDriverWait(driver, waitTimeoutSec);
+  	
 		//******** Setup - log into ADO ******
 		try {
 	        // launch browser and direct it to the login page
-	        driver.get(tfsLogin);
+	        driver.get(msLogin);
 			
 			// Enter userid (email) and click Next
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.id("i0116"))).sendKeys(tfsUser)	
 			println('Entered userid')
 			wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9'))).click()
+			// try again in case click did not take
+			try {
+				driver.findElement(By.id('idSIButton9')).click() 
+			} catch(e) {}
 			println('Clicked Next')
 			
 			// Check for prompt for account type (in case it pops up)
@@ -69,54 +95,72 @@ class MonitorSmartDoc  implements CliAction {
 			// Enter password and click Sing in
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.id('i0118')))
 			Thread.sleep(1000) //pause 1 sec
-			driver.findElement(By.id('i0118')).sendKeys(tfsToken)
+			driver.findElement(By.id('i0118')).sendKeys(tfsPassword)
 			println('Entered password')
+
 			// Click Log in
-			wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9')))
-			Thread.sleep(1000) //pause 1 sec
-			driver.findElement(By.id('idSIButton9')).click() 
+			wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9'))).click()
+			// try one more time in case button did not get clicked
+			try {
+				driver.findElement(By.id('idSIButton9')).click() 
+			} catch(e) {}
 			println('Clicked Sign in')
 		}
 		catch (e) {
-			log.error("Failed to log into ADO: ${e.message}")
-			driver.close();
+			log.error("$LOGIN_FAILURE: ${e.message}")
+			CloseBrowser(driver)
+			createBug(e,LOGIN_FAILURE)
 			return
 		}
 		
-		//********** Begin Test *******//
+		//********** Begin Test *******
 		try {
 			// Navigate to Modern Requirements Smart Docs page
 			driver.get(mrUrl)
 			println('Loading Smart Doc Page')			
 			wait.until(ExpectedConditions.titleIs('Smart Docs - Boards'))
-			println('Title Found')
 			
 			// Activate stakeholder license
 			driver.switchTo().frame(0);
-			println('Switched to frame')
-		//	driver.findElement(By.cssSelector("html")).click()
-		//	println('Clicked on html')
-		    wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@value=\'Continue as StakeHolder\']"))).click()		    
+			String buttonSearchText = "//input[@value=\'Continue as StakeHolder\']"
+		    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(buttonSearchText)))  
+			Thread.sleep(1000) //pause 1 sec
+			driver.findElement(By.xpath(buttonSearchText)).click()
+			// try again in case click did not take
+			try {
+				driver.findElement(By.xpath(buttonSearchText)).click() 
+			} catch(e) {}
 			println('clicked on Continue as Stakeholder')
 			
 			// Click on the SmartDoc Entry in the tree view
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(.,\'$smartDocName\')]"))).click()
 			
 			// Check that the root Document work item has rendered in the Smart Doc editor
-//			WebElement wiTitle = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ig-smd-grid-wititle-div")))
 			WebElement wiTitle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id=\'smd-main-workitemgrid\']/div[3]/table/tbody/tr/td[3]/div/div[2]")))
 		}
 		catch( e ) {
-			log.error("Smart Doc wellness check failed with error: ${e.message}")
-			driver.close()
+			log.error("$SMARTDOC_FAILURE: ${e.message}")
+			CloseBrowser(driver)
+			createBug(e,SMARTDOC_FAILURE)
 			return
 		}
 		
 		// Success!!!
 		log.info("Smart Doc wellness check succeeded")
-		
+	
         //close Browser
-        driver.close();
+        CloseBrowser(driver)
+
+	}
+	public void createBug(Exception e, String failureType) {
+		println("Creating Bug for: $failureType")
+		def data = []
+		def title = "Smart Doc Monitoring $failureType"
+		def desc = "<div>${e.message}<br><br>" + "${e.cause}".replace('\n','<br>') + '</div>'
+		data.add([op:'add', path:"/fields/System.Title", value: title])
+		data.add([op:'add', path:"/fields/System.Description", value: desc])
+		data.add([op:'add', path:"/fields/System.AreaPath", value: areapath])
+		workManagementService.createWorkItem(collection, project, 'Bug', data)
 	}
 	public Object validate(ApplicationArguments args) throws Exception {
 		def required = ['mr.url']
@@ -127,6 +171,10 @@ class MonitorSmartDoc  implements CliAction {
 		}
 		return true
 	}
-
+	public void CloseBrowser(WebDriver driver)
+	{
+		driver.close();
+		driver.quit();
+	}
 }
 
