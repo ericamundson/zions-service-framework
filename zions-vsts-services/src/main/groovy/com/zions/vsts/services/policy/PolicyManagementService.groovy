@@ -292,9 +292,11 @@ public class PolicyManagementService {
 		def repos = codeManagementService.getRepos(collection, project)
 		repos.value.each { repo ->
 			def repoObj = [repoName: "${repo.name}"]
+			repoObj.repoId = "${repo.id}"
+			repoObj.repoURL = "${repo.url}"
 			def branchColl = []
 			repoObj.branches = branchColl
-			def branches = codeManagementService.getBranches(collection, project, repo)
+			def branches = codeManagementService.getBranches("${collection}", "${project}", "${repo}")
 			branches.value.each { branch ->
 				String branchName = "${branch.name}".toLowerCase()
 				if (branchName.startsWith("refs/heads/master") || 
@@ -312,7 +314,7 @@ public class PolicyManagementService {
 							hasMergeStrategyPolicy: false,
 							hasCommentResolutionPolicy: false]
 					// check for policies on branch
-					//log.debug("PolicyManagementService::getBranchPolicyReport -- Getting branch policies ...")
+					log.debug("PolicyManagementService::getBranchPolicyReport -- Getting branch policies for branch " + bName + " ...")
 					def policies = getBranchPolicies(collection, project, repo.id, branchName)
 					policies.value.each { policy ->
 						// check for build validation policy
@@ -339,6 +341,10 @@ public class PolicyManagementService {
 						if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab") {
 							policyObj.hasMergeStrategyPolicy = true
 							// what's the merge strategy -- NOT in settings ??
+							policyObj.allowNoFastForward = policy.settings.allowNoFastForward
+							policyObj.allowSquash = policy.settings.allowSquash
+							policyObj.allowRebase = policy.settings.allowRebase
+							policyObj.allowRebaseMerge = policy.settings.allowRebaseMerge
 						} else
 						if ("${policy.type.id}" == "c6a1889d-b943-4856-b76f-9e46bb6b0df2") {
 							policyObj.hasCommentResolutionPolicy = true

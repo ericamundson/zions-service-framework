@@ -1,4 +1,5 @@
 package com.zions.pipeline.services.yaml.template.execution
+import groovy.json.JsonBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -18,9 +19,12 @@ class WebHookSubscriptions implements IExecutableYamlHandler {
 	SubscriptionService subscriptionService
 
 	def handleYaml(def yaml, File containedRepo, def locations) {
+		//System.out.println("In handleYaml - yaml:\n" + yaml)
 		String[] eventTypes = yaml.eventTypes.split(',')
-		eventTypes.each { String eventType -> 
-			def subscriptionData = [consumerId: 'webHooks', consumerActionId: 'httpRequest', eventType: eventType, publisherId: 'tfs', consumerInputs: [url: yaml.consumerUrl, basicAuthUsername: yaml.consumerUserName, basicAuthPassword: yaml.consumerPassword], publisherInputs:[areaPath:'', workItemType:'', projectId: null], resourceVersion: '1.0', scope: 1]
+		eventTypes.each { String eventType ->
+			def subscriptionData = [consumerId: 'webHooks', consumerActionId: 'httpRequest', eventType: eventType, publisherId: 'tfs', consumerInputs: [url: yaml.consumerUrl, basicAuthUsername: yaml.consumerUserName, basicAuthPassword: yaml.consumerPassword], publisherInputs:[], resourceVersion: '1.0', scope: 1]
+			subscriptionData.publisherInputs = new JsonBuilder(yaml.publisherInputs).getContent()
+			//System.out.println("In handleYaml - subscriptionData:\n" + subscriptionData)
 			
 			String projects = "${yaml.projects}"
 			if ( projects == 'all') {
@@ -31,6 +35,7 @@ class WebHookSubscriptions implements IExecutableYamlHandler {
 			} else {
 				String[] projectList = projects.split(',')
 				projectList.each { String pName ->
+					//System.out.println("In handleYaml - Calling projectManagementService.getProject for: " + pName)
 					def project = projectManagementService.getProject('', pName)
 					if (project) {
 						subscriptionService.ensureSubscription(project, subscriptionData)

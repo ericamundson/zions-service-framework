@@ -36,7 +36,8 @@ spring:
     host: localhost
     password: guest
     port: 5672
-    username: guest          
+    username: guest
+
 # TFS connection properties
 tfs:
 # test
@@ -74,7 +75,6 @@ endpoints:
 #disable the automatic adding of the `X-Application-Context` HTTP header
 management:
   add-application-context-header: false
-
 
 email:
   recipient:
