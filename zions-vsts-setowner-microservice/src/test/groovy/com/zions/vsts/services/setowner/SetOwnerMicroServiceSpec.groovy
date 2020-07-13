@@ -52,6 +52,17 @@ class SetOwnerMicroServiceSpec extends Specification {
 		resp == 'Work item not being closed'
 	}
 	
+	def "No fields were changed"() {
+		given: "A mock ADO event payload where state is not Closed"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataNoFieldsChanged.json').text)
+
+		when: "ADO sends notification for work item change who's type is not in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "No updates should be made"
+		resp == 'Work item not being closed'
+	}
+
 	def "Work Item Aready Assigned"() {
 		given: "A mock ADO event payload where Assigned To is already set"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataAlreadyAssigned.json').text)

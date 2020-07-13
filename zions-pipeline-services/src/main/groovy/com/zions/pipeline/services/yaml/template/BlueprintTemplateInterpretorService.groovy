@@ -16,6 +16,7 @@ import com.zions.pipeline.services.yaml.template.execution.IExecutableYamlHandle
 
 
 @Component
+@Slf4j
 class BlueprintTemplateInterpretorService {
 	
 	@Autowired
@@ -92,10 +93,10 @@ class BlueprintTemplateInterpretorService {
 		}
 		
 		//fix placeholders.
-		new AntBuilder().replace(dir: "${outDir}/${pipelineFolder}") {
-			replacefilter( token: "${inDelimiters[0]}", value: '{{')
-			replacefilter( token: "${inDelimiters[1]}", value: '}}')
-		}
+//		new AntBuilder().replace(dir: "${outDir}/${pipelineFolder}") {
+//			replacefilter( token: "${inDelimiters[0]}", value: '{{')
+//			replacefilter( token: "${inDelimiters[1]}", value: '}}')
+//		}
 
 	}
 	
@@ -106,7 +107,12 @@ class BlueprintTemplateInterpretorService {
 								
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
-					yamlHandler.handleYaml(exe, null, [])
+					try {
+						yamlHandler.handleYaml(exe, null, [])
+					} catch (e) {
+						log.error("Failed running executable yaml:  ${exe.type} :: ${e.message}")
+						e.printStackTrace()
+					}
 				}
 			}
 		}
