@@ -3,9 +3,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import groovy.util.logging.Slf4j
 import groovyx.net.http.ContentType
 
 @Component
+@Slf4j
 class SubscriptionService {
 	
 	
@@ -14,6 +16,8 @@ class SubscriptionService {
 	
 	def ensureSubscription(def projectInfo, def subscriptionData) {
 		//def projectInfo = projectManagementService.getProject('', project)
+		System.out.println("projectInfo.id = "+projectInfo.id)
+		//System.out.println("projectId from publisherInputs = "+subscriptionData.publisherInputs.projectId)
 		subscriptionData.publisherInputs.projectId = projectInfo.id
 		def sub = getSubscription(projectInfo, subscriptionData)
 		if (sub) {
@@ -34,8 +38,11 @@ class SubscriptionService {
 		results.'value'.each { sub ->
 			String projectIdSub = "${sub.publisherInputs.projectId}"
 			String cProjectId = "${project.id}"
+			// TODO: only checking project. probably need to verify other inputs, ie. changedFields, workItemType, etc.
 			if (projectIdSub == cProjectId) {
 				retVal = sub
+				System.out.println("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType}")
+				log.info("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType}")
 				return
 			}
 		}
