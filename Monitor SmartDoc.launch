@@ -11,7 +11,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.web.monitor.CliWebMonitor"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="monitorSmartDoc&#13;&#10;--tfs.url=https://dev.azure.com&#13;&#10;--tfs.project=DTS&#13;&#10;--tfs.collection=ZionsETO&#13;&#10;--tfs.areapath=&quot;DTS\ALMOps\ModernRequirements&quot;&#13;&#10;--mr.url=https://dev.azure.com/ZionsETO/DTS/_apps/hub/edevtech-mr.iGVSO-OnPrem-mrserviceus1008.subHubWork-SmartDocs-OnPrem&#13;&#10;--mr.smartdoc.name=Test222"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="monitorSmartDoc&#13;&#10;--tfs.url=https://dev.azure.com&#13;&#10;--tfs.project=DTS&#13;&#10;--tfs.collection=ZionsETO&#13;&#10;--tfs.areapath=&quot;DTS\ALMOps\ModernRequirements&quot;&#13;&#10;--mr.url=https://dev.azure.com/ZionsETO/DTS/_apps/hub/edevtech-mr.iGVSO-OnPrem-mrserviceus1008.subHubWork-SmartDocs-OnPrem&#13;&#10;--mr.smartdoc.name=TestDoc&#13;&#10;--mr.haslicense=true"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-web-monitoring"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=smartdoc -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=z097331 -Dproxy.Password=augus1L!berty"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>

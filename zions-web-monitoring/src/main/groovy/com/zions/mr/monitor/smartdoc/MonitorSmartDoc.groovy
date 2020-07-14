@@ -24,7 +24,8 @@ import java.util.concurrent.TimeUnit
 class MonitorSmartDoc  implements CliAction {
 	static String LOGIN_FAILURE = 'ADO login failure'
 	static String SMARTDOC_FAILURE = 'Smart Doc failure'
-
+	static String REVIEW_FAILURE = 'Review Request failure'
+	
 	@Autowired
 	WorkManagementService workManagementService
 
@@ -54,6 +55,9 @@ class MonitorSmartDoc  implements CliAction {
 
 	@Value('${sel.timeout.sec}')
 	int waitTimeoutSec
+
+	@Value('${mr.haslicense}')
+	boolean hasLicense
 
 	public MonitorSmartDoc() {
 	}
@@ -113,36 +117,70 @@ class MonitorSmartDoc  implements CliAction {
 			return
 		}
 		
-		//********** Begin Test *******
+		//********** Begin Tests *******
+		// Test Smart Doc availability
 		try {
 			// Navigate to Modern Requirements Smart Docs page
 			driver.get(mrUrl)
 			println('Loading Smart Doc Page')			
 			wait.until(ExpectedConditions.titleIs('Smart Docs - Boards'))
+			driver.switchTo().frame(0)
 			
-			// Activate stakeholder license
-			driver.switchTo().frame(0);
-			String buttonSearchText = "//input[@value=\'Continue as StakeHolder\']"
-		    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(buttonSearchText)))  
-			Thread.sleep(1000) //pause 1 sec
-			driver.findElement(By.xpath(buttonSearchText)).click()
-			// try again in case click did not take
-			try {
-				driver.findElement(By.xpath(buttonSearchText)).click() 
-			} catch(e) {}
-			println('clicked on Continue as Stakeholder')
+			// Activate stakeholder license, if the user does not have a permanent account
+			if (!hasLicense) {
+				String buttonSearchText = "//input[@value=\'Continue as StakeHolder\']"
+			    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(buttonSearchText)))  
+				Thread.sleep(1000) //pause 1 sec
+				driver.findElement(By.xpath(buttonSearchText)).click()
+				// try again in case click did not take
+				try {
+					driver.findElement(By.xpath(buttonSearchText)).click() 
+				} catch(e) {}
+				println('clicked on Continue as Stakeholder')
+			}
 			
 			// Click on the SmartDoc Entry in the tree view
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(.,\'$smartDocName\')]"))).click()
+			println('clicked on Smart Doc name')
 			
 			// Check that the root Document work item has rendered in the Smart Doc editor
-			WebElement wiTitle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id=\'smd-main-workitemgrid\']/div[3]/table/tbody/tr/td[3]/div/div[2]")))
+			if (hasLicense)
+				wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ig-smd-grid-wititle-div")))
+			else
+				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id=\'smd-main-workitemgrid\']/div[3]/table/tbody/tr/td[3]/div/div[2]")))
+			println('validated root work item presence')
+			
 		}
 		catch( e ) {
 			log.error("$SMARTDOC_FAILURE: ${e.message}")
 			CloseBrowser(driver)
 			createBug(e,SMARTDOC_FAILURE)
 			return
+		}
+		
+		// Test Review Request dialog (must have license to do this)
+		if (hasLicense) {
+			try {
+				// Open the Review Request dialog
+				def reviewRequestButton = "#smd-create-review-request > .k-link"
+				driver.findElement(By.cssSelector(reviewRequestButton)).click()
+				// try again in case click did not take
+				try {
+					driver.findElement(By.cssSelector(reviewRequestButton)).click() 
+				} catch(e) {}
+				println('clicked on Review Request')
+				// Check for availability of review title field
+				String reviewTitle = "//div[@id=\'phReqReviewTitle\']/div"
+				wait.until(ExpectedConditions.elementToBeClickable(By.xpath(reviewTitle)))
+				driver.findElement(By.xpath(reviewTitle)).click()
+				println('Review Title is available')
+			}
+			catch( e ) {
+				log.error("$REVIEW_FAILURE: ${e.message}")
+				CloseBrowser(driver)
+				createBug(e,REVIEW_FAILURE)
+				return
+			}
 		}
 		
 		// Success!!!
