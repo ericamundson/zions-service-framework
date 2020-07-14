@@ -831,6 +831,20 @@ class WorkManagementService {
 		}
 
 	}
+	
+	public createWorkItem(collection, project, type, data, Closure responseHandler = null) {
+		def etype = URLEncoder.encode("$type", 'utf-8').replace('+', '%20')
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def body = new JsonBuilder(data).toPrettyString()
+		def result = genericRestClient.post(
+					[contentType: 'application/json',
+					requestContentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/\$${etype}",
+					body: body,
+					query: ['api-version': '5.0', bypassRules:true],
+					headers: ['Content-Type': 'application/json-patch+json']]
+					)
+	}
 
 	public updateWorkItem(collection, project, id, data, Closure responseHandler = null) {
             def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
