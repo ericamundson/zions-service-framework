@@ -1,0 +1,153 @@
+{
+    "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
+    "notificationId": 1654,
+    "id": "9e0482e3-2f63-432d-b061-8bd65132e1ba",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": {
+        "text": "Feature #947997 (Feature Test 0709) updated by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947997)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=947997\">Feature #947997</a> (Feature Test 0709) updated by Michael Angelastro",
+        "markdown": "[Feature #947997](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947997) (Feature Test 0709) updated by Michael Angelastro"
+    },
+    "detailedMessage": {
+        "text": "Feature #947997 (Feature Test 0709) updated by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947997)\r\n\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=947997\">Feature #947997</a> (Feature Test 0709) updated by Michael Angelastro<ul></ul>",
+        "markdown": "[Feature #947997](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947997) (Feature Test 0709) updated by Michael Angelastro\r\n\r\n"
+    },
+    "resource": {
+        "id": 6,
+        "workItemId": 947997,
+        "rev": 5,
+        "revisedBy": {
+            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
+            "name": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+            "displayName": "Michael Angelastro",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                }
+            },
+            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
+            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+        },
+        "revisedDate": "9999-01-01T00:00:00Z",
+        "fields": {
+            "System.Rev": {
+                "oldValue": 4,
+                "newValue": 5
+            },
+            "System.AuthorizedDate": {
+                "oldValue": "2020-07-10T12:30:37.953Z",
+                "newValue": "2020-07-10T12:45:34.17Z"
+            },
+            "System.RevisedDate": {
+                "oldValue": "2020-07-10T12:45:34.17Z",
+                "newValue": "9999-01-01T00:00:00Z"
+            },
+            "System.ChangedDate": {
+                "oldValue": "2020-07-10T12:30:37.953Z",
+                "newValue": "2020-07-10T12:45:34.17Z"
+            },
+            "System.Watermark": {
+                "oldValue": 328873,
+                "newValue": 328874
+            },
+            "Custom.Sizing": {
+                "oldValue": "XL",
+                "newValue": "M"
+            }
+        },
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947997/updates/6"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947997/updates"
+            },
+            "parent": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947997"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947997"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947997/updates/6",
+        "revision": {
+            "id": 947997,
+            "rev": 5,
+            "fields": {
+                "System.AreaPath": "ALMOpsTest",
+                "System.TeamProject": "ALMOpsTest",
+                "System.IterationPath": "ALMOpsTest",
+                "System.WorkItemType": "Feature",
+                "System.State": "Active",
+                "System.Reason": "New",
+                "System.CreatedDate": "2020-07-09T22:21:48.137Z",
+                "System.CreatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.ChangedDate": "2020-07-10T12:45:34.17Z",
+                "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CommentCount": 1,
+                "System.Title": "Feature Test 0709",
+                "System.BoardColumn": "Active",
+                "System.BoardColumnDone": false,
+                "Microsoft.VSTS.Common.StateChangeDate": "2020-07-09T22:21:48.137Z",
+                "Microsoft.VSTS.Common.Priority": 2,
+                "Microsoft.VSTS.Common.StackRank": 1.0,
+                "Microsoft.VSTS.Common.ValueArea": "Business",
+                "Custom.Sizing": "M",
+                "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column": "Active",
+                "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column.Done": false,
+                "Custom.OTLNumber": "612",
+                "System.Parent": 947973
+            },
+            "relations": [
+                {
+                    "rel": "System.LinkTypes.Hierarchy-Forward",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947998",
+                    "attributes": {
+                        "isLocked": false,
+                        "name": "Child"
+                    }
+                },
+                {
+                    "rel": "System.LinkTypes.Hierarchy-Reverse",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947973",
+                    "attributes": {
+                        "isLocked": false,
+                        "name": "Parent"
+                    }
+                }
+            ],
+            "_links": {
+                "self": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947997/revisions/5"
+                },
+                "workItemRevisions": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947997/revisions"
+                },
+                "parent": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947997"
+                }
+            },
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947997/revisions/5"
+        }
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1bec1897-29a0-44d0-80a8-670c5ae5ef4a",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "account": {
+            "id": "6e6d6b08-2e41-4c55-a624-0d1ec79969dd",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "project": {
+            "id": "030d62a4-ce8b-405e-a331-8678df1a6efe",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        }
+    },
+    "createdDate": "2020-07-10T12:45:41.9882182Z"
+}

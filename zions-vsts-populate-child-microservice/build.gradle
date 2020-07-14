@@ -1,7 +1,7 @@
 bootJar {
 	enabled = true
 	mainClassName = 'com.zions.vsts.services.PopulateChildApplication'
-	archiveName = 'zions-vsts-populatechild-microservice.jar'
+	archiveName = 'zions-vsts-populate-child-microservice.jar'
 	//version =  "${version}"
 }
 

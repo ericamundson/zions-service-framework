@@ -51,8 +51,8 @@ class StateChangeCounterMicroServiceSpec extends Specification {
 		then: "No Updates should be made"
 		resp == 'not a state change'
 
-	
 	}
+	
 	
 	def "Non applicable state change events should not be counted"() {
 		given: "A mock ADO event payload exists for resetting reopen event"
