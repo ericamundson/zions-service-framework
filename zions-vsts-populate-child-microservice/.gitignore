@@ -1,0 +1,7 @@
+/.gradle/
+/build/
+**/*.cmapx
+**/*.png
+/gitPublish/
+.classpath
+.project
