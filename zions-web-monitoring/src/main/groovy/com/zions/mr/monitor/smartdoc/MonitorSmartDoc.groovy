@@ -163,6 +163,7 @@ class MonitorSmartDoc  implements CliAction {
 			try {
 				// Open the Review Request dialog
 				def reviewRequestButton = "#smd-create-review-request > .k-link"
+				wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(reviewRequestButton)))
 				driver.findElement(By.cssSelector(reviewRequestButton)).click()
 				// try again in case click did not take
 				try {
@@ -192,12 +193,14 @@ class MonitorSmartDoc  implements CliAction {
 	}
 	public void createBug(Exception e, String failureType) {
 		println("Creating Bug for: $failureType")
+		def now = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 		def data = []
 		def title = "Smart Doc Monitoring $failureType"
 		def desc = "<div>${e.message}<br><br>" + "${e.cause}".replace('\n','<br>') + '</div>'
 		data.add([op:'add', path:"/fields/System.Title", value: title])
 		data.add([op:'add', path:"/fields/System.Description", value: desc])
 		data.add([op:'add', path:"/fields/System.AreaPath", value: areapath])
+		data.add([op:'add', path:"/fields/System.CreatedDate", value: now])
 		workManagementService.createWorkItem(collection, project, 'Bug', data)
 	}
 	public Object validate(ApplicationArguments args) throws Exception {
