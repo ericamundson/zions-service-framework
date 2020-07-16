@@ -34,10 +34,10 @@ import com.zions.vsts.services.rmq.mixins.MessageFanoutConfigTrait
 public class AppConfig implements MessageFanoutConfigTrait {
 	
 	
-	@Bean
-	JavaMailSender sender() {
-		return new JavaMailSenderImpl()
-	}
+//	@Bean
+//	JavaMailSender sender() {
+//		return new JavaMailSenderImpl()
+//	}
 
 	@Bean
 	ICacheManagementService cacheManagementService() {

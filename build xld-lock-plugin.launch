@@ -6,7 +6,7 @@
 <booleanAttribute key="build_scans_enabled" value="false"/>
 <stringAttribute key="gradle_distribution" value="GRADLE_DISTRIBUTION(WRAPPER)"/>
 <stringAttribute key="gradle_user_home" value="C:\bin\user_home4.6"/>
-<stringAttribute key="java_home" value=""/>
+<stringAttribute key="java_home" value="C:\bin\OracleJdk"/>
 <listAttribute key="jvm_arguments"/>
 <booleanAttribute key="offline_mode" value="false"/>
 <booleanAttribute key="override_workspace_settings" value="true"/>
