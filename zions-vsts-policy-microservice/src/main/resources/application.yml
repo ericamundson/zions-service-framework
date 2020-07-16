@@ -37,6 +37,11 @@ spring:
     password: guest
     port: 5672
     username: guest          
+email:
+  recipient:
+    addresses: DL-ReleaseEngineering@zionsbancorp.com,DL-ALMOps@zionsbancorp.com
+  sender:
+    address: DL-ReleaseEngineering@zionsbancorp.com
 # TFS connection properties
 tfs:
 # test

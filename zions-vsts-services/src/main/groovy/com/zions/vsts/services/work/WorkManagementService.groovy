@@ -832,7 +832,7 @@ class WorkManagementService {
 
 	}
 
-	public updateWorkItem(collection, project, id, data, Closure responseHandler = null) {
+	public def updateWorkItem(collection, project, id, data, Closure responseHandler = null) {
             def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
             //def body = new JsonBuilder(data).toPrettyString()
             def result = genericRestClient.patch(
@@ -844,6 +844,24 @@ class WorkManagementService {
                         headers: ['Content-Type': 'application/json-patch+json']]
 						,responseHandler
                         )
+						
+			return result
+	}
+	
+	public def createWorkItem(collection, project, wiType, data) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def body = new JsonBuilder(data).toPrettyString()
+		def result = genericRestClient.post(
+					contentType: 'application/json',
+					//requestContentType: 'application/json',
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/\$${wiType}",
+					body: body,
+					query: ['api-version': '5.0', bypassRules:true],
+					headers: ['Content-Type': 'application/json-patch+json']
+					
+					)
+					
+		return result
 	}
 
 	def cacheResult(result, idMap) {
