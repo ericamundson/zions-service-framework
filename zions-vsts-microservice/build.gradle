@@ -11,7 +11,6 @@ dependencies {
 	compile("org.springframework:spring-messaging")
     //compile("org.springframework.amqp:spring-rabbit-test:")
 	compile 'org.apache.ant:ant:1.9.4'
-	
 	compile project(':zions-vsts-services')
 	compile project(':zions-common')
 }

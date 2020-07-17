@@ -36,8 +36,15 @@ spring:
     host: localhost
     password: guest
     port: 5672
-    username: guest
-
+    username: guest          
+# email:
+#   recipient:
+#     address: SCMTeam@zionsbancorp.com
+email:
+  recipient:
+    addresses: SCMTeam@zionsbancorp.com
+  sender:
+    address: DL-ReleaseEngineering@zionsbancorp.com
 # TFS connection properties
 tfs:
 # test
@@ -76,9 +83,6 @@ endpoints:
 management:
   add-application-context-header: false
 
-email:
-  recipient:
-    address: SCMTeam@zionsbancorp.com
 
 # type map placeholder
 type:

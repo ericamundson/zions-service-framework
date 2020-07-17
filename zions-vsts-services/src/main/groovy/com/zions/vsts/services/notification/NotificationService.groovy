@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value;
 
 import groovy.util.logging.Slf4j;
+import groovy.json.JsonSlurper
+import groovy.json.JsonBuilder
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -23,7 +25,13 @@ public class NotificationService {
 	@Value('${email.recipient.address:}')
 	private String recipientEmailAddress
 	
-    @Autowired
+	@Value('${email.recipient.addresses:}')
+	private String[] recipientEmailAddresses
+	
+	@Value('${email.sender.address:}')
+	private String senderAddress
+
+    @Autowired(required=false)
     private JavaMailSender sender
 
 	public NotificationService() {
@@ -72,6 +80,43 @@ public class NotificationService {
 			String body = "The following batch action has completed: ${action}, phases:  ${phasesRun}."
 			helper.setText(body)
 			helper.setSubject("Batch ${action} completed!")
+			
+			sender.send(message)
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error"
+		}
+		return "success";
+
+	}
+	
+	def sendMicroServiceIssueNotification(def msg) {
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		
+		try {
+			helper.setValidateAddresses(false)
+			if (senderAddress) {
+				helper.setFrom(senderAddress)
+			}
+			if (recipientEmailAddresses.length > 0) {
+				recipientEmailAddresses.each { String address ->
+					helper.addTo(address)
+				}
+			} else {
+				helper.setTo("${recipientEmailAddress}")
+			}
+			Map<String, Object> headers = msg.getMessageProperties().getHeaders();
+			String queue = headers['x-origin-queue']
+			String error = headers['x-error']
+			String trace = headers['x-trace']
+			String mBody = new String(msg.body)
+			def adoData = new JsonSlurper().parseText(mBody)
+			String pBody = new JsonBuilder(adoData).toPrettyString()
+			String sep = System.lineSeparator()
+			String body = " ${error}${sep}${sep}Trace:${sep}${trace}${sep}${sep}Failed message sent to 'parked-queue'${sep}${sep}Message body:${sep}${pBody}"
+			helper.setText(body)
+			helper.setSubject("Micro-service on queue: ${queue}:  failed.")
 			
 			sender.send(message)
 		} catch (Exception e) {

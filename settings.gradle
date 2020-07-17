@@ -7,6 +7,7 @@ if ("${context}" == 'all') {
 	include ':zions-vsts-admin-microservice'
 	include ':zions-vsts-policy-microservice'
 	include ':zions-ext-cli'
+	include ':zions-web-monitoring'
 	include ':zions-ext-services'
 	include ':zions-common'
 	include ':zions-common-data'
@@ -30,6 +31,7 @@ if ("${context}" == 'all') {
 	include ':zions-vsts-microservice'
 	include ':zions-vsts-event-microservice'
 	include ':zions-xld-plugins'
+	include ':zions-msgraph-services'
 	include ':zions-pipeline-cli'
 	include ':zions-pipeline-services'
 }
@@ -68,6 +70,7 @@ if ("${context}" == 'microservices')	{
 	include ':zions-vsts-admin-microservice'
 	include ':zions-vsts-policy-microservice'
 	include ':zions-vsts-services'
+	include ':zions-msgraph-services'
 	
 }
 if ("${context}" == 'pipeline')	{
