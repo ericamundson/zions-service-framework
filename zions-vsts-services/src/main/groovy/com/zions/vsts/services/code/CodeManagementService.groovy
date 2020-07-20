@@ -142,6 +142,7 @@ class CodeManagementService {
 		)
 		return result
 	}
+
 	public def getBranch(String collection, String project, String repo, String name) {
 		def query = ['api-version':'5.1', 'baseVersionDescriptor.versionType': 'branch']
 		def result = genericRestClient.get(
@@ -320,6 +321,15 @@ class CodeManagementService {
 		return head
 	}
 	
+	def getBranches(def collection, def project, def repo) {
+		def query = [filter:'heads/','api-version':'5.1']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/refs",
+			query: query,
+			)
+		return result
+	}
 	def createDeployManifest(def collection, def project, def repo) {
 		def query = [filter:'head', 'api-version': '4.1']
 		def head = getRefHead(collection, project, repo)
