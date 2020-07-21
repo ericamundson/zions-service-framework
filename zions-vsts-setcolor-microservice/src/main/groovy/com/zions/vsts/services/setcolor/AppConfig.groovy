@@ -31,7 +31,7 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 /* Will set default configs for ContentApplication */
 
 @Configuration
-@ComponentScan(["com.zions.vsts.services.work","com.zions.vsts.services.admin","com.zions.common.services.logging"])
+@ComponentScan(["com.zions.vsts.services.notification","com.zions.vsts.services.work","com.zions.vsts.services.admin","com.zions.common.services.logging"])
 public class AppConfig implements MessageFanoutConfigTrait {
 	
 	

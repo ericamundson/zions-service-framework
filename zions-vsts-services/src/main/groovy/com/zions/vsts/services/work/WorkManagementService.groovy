@@ -857,7 +857,7 @@ class WorkManagementService {
 					headers: ['Content-Type': 'application/json']]
 					)
 	}
-	public updateWorkItem(collection, project, id, data, Closure responseHandler = null) {
+	public def updateWorkItem(collection, project, id, data, Closure responseHandler = null) {
             def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
             //def body = new JsonBuilder(data).toPrettyString()
             def result = genericRestClient.patch(
@@ -869,8 +869,10 @@ class WorkManagementService {
                         headers: ['Content-Type': 'application/json-patch+json']]
 						,responseHandler
                         )
+						
+			return result
 	}
-
+	
 	def cacheResult(result, idMap) {
 		int count = 0
 		int mapSize = idMap.size()
