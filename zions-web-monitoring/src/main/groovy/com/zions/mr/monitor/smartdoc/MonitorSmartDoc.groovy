@@ -39,6 +39,9 @@ class MonitorSmartDoc  implements CliAction {
 	@Autowired
 	IAttachments attachmentService
 
+	@Value('${cache.file:"c:/lastBugId.txt"}')
+	String cacheFile
+	
 	@Value('${tfs.project:}')
 	String project
 
@@ -47,6 +50,9 @@ class MonitorSmartDoc  implements CliAction {
 	
 	@Value('${tfs.areapath:}')
 	String areapath
+
+	@Value('${tfs.owner:}')
+	String owner
 
 	@Value('${mr.url}')
 	String mrUrl
@@ -211,14 +217,55 @@ class MonitorSmartDoc  implements CliAction {
 		
 		// Success!!!
 		completedSteps.each { step -> println(step) }
+		String lastBug = getLastBugId()
+		if (lastBug && lastBug.length() > 0) {
+			updateBugSuccessfulRetest(lastBug)
+			deleteCachedBug()
+		}
 		log.info("Smart Doc wellness check succeeded")
 	
         //close Browser
         CloseBrowser(driver)
 
 	}
-	public void reportError(WebDriver driver, Exception e, String failureType) {
+	private void reportError(WebDriver driver, Exception e, String failureType) {
 		log.error("$failureType: ${e.message}")
+
+		// Check to see if a Bug already exists
+		String lastBugId = getLastBugId()
+		
+		if (lastBugId && lastBugId.length() > 0) updateBugContinuedFailure(lastBugId, e, failureType)
+		else createBug(driver, e, failureType)
+	}
+	private def deleteCachedBug() {
+		try {
+			File file = new File(cacheFile)
+			if (file.exists()) {
+				file.delete()
+			}
+		} catch (IOException e) {
+			log.error("An error occurred deleting cached Bug file: $e.message");
+		}
+
+	}
+	private def getLastBugId() {
+	    try {
+			File file = new File(cacheFile)
+			if (!file.exists()) return null
+			else {
+				Scanner myReader = new Scanner(file)
+				if (myReader.hasNextLine()) {
+				  String bugId = myReader.nextLine()
+				  return bugId
+				}
+				else return null
+				myReader.close();
+			}
+		} catch (IOException e) {
+		    log.error("An error occurred reading cached Bug Id: $e.message");
+		}
+	}
+	private def createBug(WebDriver driver, Exception e, String failureType) {
 
 		// Get a screen snaphot and upload to ADO
 		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
@@ -227,26 +274,61 @@ class MonitorSmartDoc  implements CliAction {
 		String fname = path.substring(path.lastIndexOf('\\')+1,path.length())
 		byte[] fileContent = Files.readAllBytes(scrFile.toPath())
 		def attData = attachmentService.sendAttachment(fileContent, fname)
-
+		
 		// Create a bug in ADO
 		println("Creating Bug for: $failureType")
 		def now = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 		def data = []
 		def title = "Smart Doc Monitoring $failureType"
-		def desc = "<div>${e.message}" + "<p>" + "${e.cause}".replace('\n','<br>') + "</p>" + formatCompletedSteps() + '</div>' 
+		def desc = "<div>${e.message}" + "<p>" + "${e.cause}".replace('\n','<br>') + '</p></div>' 
+		def steps = "<div>" + formatCompletedSteps() + '</div>' 
+		data.add([ op: 'add', path: '/id', value: -1])
 		data.add([op:'add', path:"/fields/System.Title", value: title])
 		data.add([op:'add', path:"/fields/System.Description", value: desc])
 		data.add([op:'add', path:"/fields/System.AreaPath", value: areapath])
+		data.add([op:'add', path:"/fields/System.AssignedTo", value: owner])
 		data.add([op:'add', path:"/fields/System.CreatedDate", value: now])
+		data.add([op:'add', path:"/fields/Microsoft.VSTS.TCM.ReproSteps", value: steps])
+		data.add([op:'add', path:"/fields/System.Tags", value: 'CURRENT OUTAGE'])
 		if (attData) {
 			def attUrl = attData.url
 			data.add([op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: attUrl, attributes:[comment: 'Selenium Screenshot']]])
 		} else {
 			log.error("Attachment upload failed: $path")
 		}
-		workManagementService.createWorkItem(collection, project, 'Bug', data)
+		def result = workManagementService.createWorkItem(collection, project, 'Bug', data)
+		
+		// Save bug number to local file
+		if (result) {
+			cacheBugId(result.id)
+			println("Created new bug")
+		}
+		else log.error('Failed to create Bug')
+		
 	}
-	public String formatCompletedSteps() {
+	private def updateBugSuccessfulRetest(String id) {
+		def data = []
+		data.add([op:'add', path:"/fields/System.Tags", value: 'SUCCESSFUL RETEST'])
+		def result = workManagementService.updateWorkItem(collection, project, id, data)
+		if (result) println("Updated bug with successful restest")
+	}
+	private def updateBugContinuedFailure(String id, Exception e, String failureType) {
+		def data = [text:"Subsequent test failure: ${e.message}"]
+		def result = workManagementService.addWorkItemComment(collection, project, id, data)
+		if (result) println("Updated bug with comment")
+	}
+	private def cacheBugId(def id) {
+		try {
+			FileWriter myWriter = new FileWriter(cacheFile)
+			myWriter.write("$id")
+			myWriter.flush()
+			myWriter.close()
+		} catch (IOException e) {
+			log.error("An error occurred writing to cache file '$cacheFile'.  Error: $e.message");
+		}
+	  
+	}
+	private String formatCompletedSteps() {
 		String html = '<br><p>Completed Steps:<br><ol>'
 		completedSteps.forEach { step ->
 			html = html + '<li>' + step + '</li>'
