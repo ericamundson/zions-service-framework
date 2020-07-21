@@ -43,24 +43,25 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 	// Handle HTTP 412 retry when work item revision has changed
 	boolean retryFailed
 	def attemptedProject
-	def attemptedBugId
-	def attemptedCount
+	def attemptedId
+	
 	Closure responseHandler = { resp ->
 		
 		if (resp.status == 412) {
 			
 			// Get fresh copy of parent work item
-			def bugWI = workManagementService.getWorkItem(collection, attemptedProject, attemptedBugId)
-			String rev = "${bugWI.rev}"
+			def bugWI = workManagementService.getWorkItem(collection, attemptedProject, attemptedId)
 			
 			//ado event structure different from work item structure - bugWI.fields represents work item structure
 			def statechangeCount = bugWI.fields.'Custom.ReOpenCounter'
+			String rev = "${bugWI.rev}"
 			
 			if (!statechangeCount || statechangeCount == 'null' || statechangeCount == '')
 					statechangeCount = 0;
 	
-			if (performIncrementCounter(this.attemptedProject, this.attemptedBugId, rev, statechangeCount)) {
-				return logResult('Work item successfully activated after 412 retry')
+			//if (performIncrementCounter(this.attemptedProject, this.attemptedId, rev, statechangeCount)) {
+			if (performIncrementCounter(this.attemptedProject, rev, this.attemptedId, statechangeCount)) {
+				return logResult('Work item successfully counted after 412 retry')
 			}
 			else {
 				this.retryFailed = true
@@ -83,7 +84,7 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.info("Entering StateChangeCounterMicroService:: processADOData")
+		log.debug("Entering StateChangeCounterMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
 		/* String json = new JsonBuilder(adoData).toPrettyString()
@@ -123,7 +124,7 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		
 		//parameterize source/destination states for bug count
 		if (sourceState.contains(oldState) && (destState.contains(newState))) {
-			log.info("Updating count of $wiType #$id")
+			log.debug("Updating count of $wiType #$id")
 	
 			if (performIncrementCounter(project, rev, id, statechangeCount, responseHandler)) {
 				return logResult('Update Succeeded')
@@ -134,10 +135,6 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 				return 'Error updating Custom.ReopenCounter'
 			}
 					 
-			else {
-						 
-				return logResult('will not be counted')
-			}
 		}
 		
 		else {
@@ -147,7 +144,7 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 	}
 
 	//Increment Counter would be something like
-	private def performIncrementCounter(String project, String rev, def bugId, def statechangeCount, Closure respHandler = null) {
+	private def performIncrementCounter(String project, String rev, def id, def statechangeCount, Closure respHandler = null) {
 
 			int totalCount = statechangeCount + 1;
 			
@@ -160,13 +157,13 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 			data.add(e)
 			this.retryFailed = false
 			this.attemptedProject = project
-			this.attemptedBugId = bugId
-			this.attemptedCount = statechangeCount
-			return workManagementService.updateWorkItem(collection, project, bugId, data, respHandler)
+			this.attemptedId = id
+			
+			return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
 			}
 		
 	private def logResult(def msg) {
-		log.info(msg)
+		log.debug(msg)
 		return msg
 	}
 }
