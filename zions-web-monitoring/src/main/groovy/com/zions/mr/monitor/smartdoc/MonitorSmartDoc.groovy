@@ -104,11 +104,12 @@ class MonitorSmartDoc  implements CliAction {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.id("i0116"))).sendKeys(tfsUser)	
 			completedSteps.add('LOGIN: Entered userid')
 			wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9'))).click()
+			completedSteps.add('LOGIN: Clicked Next')
 			// try again in case click did not take
 			try {
 				driver.findElement(By.id('idSIButton9')).click() 
+				completedSteps.add('LOGIN: Completed second attempt at clicking on Next')
 			} catch(e) {}
-			completedSteps.add('LOGIN: Clicked Next')
 			
 			// Check for prompt for account type (in case it pops up)
 			try {
@@ -120,17 +121,19 @@ class MonitorSmartDoc  implements CliAction {
 			
 			// Enter password and click Sing in
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.id('i0118')))
+			completedSteps.add('LOGIN: Located password entry')
 			Thread.sleep(1000) //pause 1 sec
 			driver.findElement(By.id('i0118')).sendKeys(tfsPassword)
 			completedSteps.add('LOGIN: Entered password')
 
 			// Click Log in
 			wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9'))).click()
+			completedSteps.add('LOGIN: Clicked Sign in')
 			// try one more time in case button did not get clicked
 			try {
 				driver.findElement(By.id('idSIButton9')).click() 
+				completedSteps.add('LOGIN: Completed second attempt to click Sign in')
 			} catch(e) {}
-			completedSteps.add('LOGIN: Clicked Sign in')
 		}
 		catch (e) {
 			reportError(driver, e,LOGIN_FAILURE)
@@ -151,13 +154,15 @@ class MonitorSmartDoc  implements CliAction {
 			if (!hasLicense) {
 				String buttonSearchText = "//input[@value=\'Continue as StakeHolder\']"
 			    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(buttonSearchText)))  
+				completedSteps.add('SMART DOC VALIDATION: Waited for Continue as StakeHolder button to be clickable')			
 				Thread.sleep(1000) //pause 1 sec
 				driver.findElement(By.xpath(buttonSearchText)).click()
+				completedSteps.add('SMART DOC VALIDATION: clicked on Continue as Stakeholder')
 				// try again in case click did not take
 				try {
 					driver.findElement(By.xpath(buttonSearchText)).click() 
+					completedSteps.add('SMART DOC VALIDATION: Completed second attempt at clicking Continue as Stakeholder')			
 				} catch(e) {}
-				completedSteps.add('SMART DOC VALIDATION: clicked on Continue as Stakeholder')
 			}
 			
 			// Click on the SmartDoc Entry in the tree view
@@ -240,11 +245,11 @@ class MonitorSmartDoc  implements CliAction {
 	private def deleteCachedBug() {
 		try {
 			File file = new File(cacheFile)
-			if (file.exists()) {
-				file.delete()
-			}
+			if (file.exists()) file.delete()
+			return true
 		} catch (IOException e) {
 			log.error("An error occurred deleting cached Bug file: $e.message");
+			return false
 		}
 
 	}
@@ -326,7 +331,6 @@ class MonitorSmartDoc  implements CliAction {
 		} catch (IOException e) {
 			log.error("An error occurred writing to cache file '$cacheFile'.  Error: $e.message");
 		}
-	  
 	}
 	private String formatCompletedSteps() {
 		String html = '<br><p>Completed Steps:<br><ol>'
