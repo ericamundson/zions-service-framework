@@ -11,7 +11,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 
-
+import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
@@ -20,6 +20,7 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.vsts.services.asset.SharedAssetService
 import com.zions.vsts.services.attachments.AttachmentManagementService
+import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
 
@@ -38,5 +39,15 @@ public class SmartDocAppConfig {
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return new MultiUserGenericRestClient()
+	}
+	
+	@Bean
+	IAttachments attachmentService() {
+		return new AttachmentManagementService();
+	}
+	
+	@Bean
+	TestManagementService testService() {
+		return new TestManagementService();
 	}
 }
