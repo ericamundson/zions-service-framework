@@ -1,7 +1,7 @@
 bootJar {
 	enabled = true
 	mainClassName = 'com.zions.vsts.services.StateChangeCounterApplication'
-	archiveName = 'zions-vsts-statechangecounter-microservice.jar'
+	archiveName = 'zions-vsts-statechange-counter-microservice.jar'
 	//version =  "${version}"
 }
 
