@@ -32,6 +32,8 @@ class MonitorSmartDoc  implements CliAction {
 	static String REVIEW_FAILURE = 'Review Request failure'
 	
 	def completedSteps = []
+	def startTime = (new Date().getTime())
+	long elapsedSec = 0
 	
 	@Autowired
 	WorkManagementService workManagementService
@@ -71,6 +73,9 @@ class MonitorSmartDoc  implements CliAction {
 
 	@Value('${sel.timeout.sec}')
 	int waitTimeoutSec
+	
+	@Value('${sel.toomany.sec}')
+	int tooManySec
 
 	@Value('${mr.haslicense}')
 	boolean hasLicense
@@ -99,40 +104,41 @@ class MonitorSmartDoc  implements CliAction {
 		try {
 	        // launch browser and direct it to the login page
 	        driver.get(msLogin);
+			addStep('LOGIN: Launched Login Page')
 			
 			// Enter userid (email) and click Next
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.id("i0116"))).sendKeys(tfsUser)	
-			completedSteps.add('LOGIN: Entered userid')
+			addStep('LOGIN: Entered userid')
 			wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9'))).click()
-			completedSteps.add('LOGIN: Clicked Next')
+			addStep('LOGIN: Clicked Next')
 			// try again in case click did not take
 			try {
 				driver.findElement(By.id('idSIButton9')).click() 
-				completedSteps.add('LOGIN: Completed second attempt at clicking on Next')
+				addStep('LOGIN: Completed second attempt at clicking on Next')
 			} catch(e) {}
 			
 			// Check for prompt for account type (in case it pops up)
 			try {
 				WebElement troubleLocatingAccount = driver.findElement(By.id('loginDescription'))
-				completedSteps.add('LOGIN: Found prompt for account type')
+				addStep('LOGIN: Found prompt for account type')
 				wait.until(ExpectedConditions.presenceOfElementLocated(By.id('aadTileTitle'))).click()
-				completedSteps.add('LOGIN: Selected account type')
+				addStep('LOGIN: Selected account type')
 			} catch (NoSuchElementException e) {}
 			
 			// Enter password and click Sing in
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.id('i0118')))
-			completedSteps.add('LOGIN: Located password entry')
+			addStep('LOGIN: Located password entry')
 			Thread.sleep(1000) //pause 1 sec
 			driver.findElement(By.id('i0118')).sendKeys(tfsPassword)
-			completedSteps.add('LOGIN: Entered password')
+			addStep('LOGIN: Entered password')
 
 			// Click Log in
 			wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9'))).click()
-			completedSteps.add('LOGIN: Clicked Sign in')
+			addStep('LOGIN: Clicked Sign in')
 			// try one more time in case button did not get clicked
 			try {
 				driver.findElement(By.id('idSIButton9')).click() 
-				completedSteps.add('LOGIN: Completed second attempt to click Sign in')
+				addStep('LOGIN: Completed second attempt to click Sign in')
 			} catch(e) {}
 		}
 		catch (e) {
@@ -146,7 +152,7 @@ class MonitorSmartDoc  implements CliAction {
 		try {
 			// Navigate to Modern Requirements Smart Docs page
 			driver.get(mrUrl)
-			completedSteps.add('SMART DOC VALIDATION: Loading Smart Doc Page')			
+			addStep('SMART DOC VALIDATION: Loading Smart Doc Page')			
 			wait.until(ExpectedConditions.titleIs('Smart Docs - Boards'))
 			driver.switchTo().frame(0)
 			
@@ -154,14 +160,14 @@ class MonitorSmartDoc  implements CliAction {
 			if (!hasLicense) {
 				String buttonSearchText = "//input[@value=\'Continue as StakeHolder\']"
 			    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(buttonSearchText)))  
-				completedSteps.add('SMART DOC VALIDATION: Waited for Continue as StakeHolder button to be clickable')			
+				addStep('SMART DOC VALIDATION: Waited for Continue as StakeHolder button to be clickable')			
 				Thread.sleep(1000) //pause 1 sec
 				driver.findElement(By.xpath(buttonSearchText)).click()
-				completedSteps.add('SMART DOC VALIDATION: clicked on Continue as Stakeholder')
+				addStep('SMART DOC VALIDATION: clicked on Continue as Stakeholder')
 				// try again in case click did not take
 				try {
 					driver.findElement(By.xpath(buttonSearchText)).click() 
-					completedSteps.add('SMART DOC VALIDATION: Completed second attempt at clicking Continue as Stakeholder')			
+					addStep('SMART DOC VALIDATION: Completed second attempt at clicking Continue as Stakeholder')			
 				} catch(e) {}
 			}
 			
@@ -170,14 +176,14 @@ class MonitorSmartDoc  implements CliAction {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(smartDocXpath)))
 			Thread.sleep(1000) //pause 1 sec
 			driver.findElement(By.xpath(smartDocXpath)).click()
-			completedSteps.add('SMART DOC VALIDATION: clicked on Smart Doc name')
+			addStep('SMART DOC VALIDATION: clicked on Smart Doc name')
 			
 			// Check that the root Document work item has rendered in the Smart Doc editor
 			if (hasLicense)
 				wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ig-smd-grid-wititle-div")))
 			else
 				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id=\'smd-main-workitemgrid\']/div[3]/table/tbody/tr/td[3]/div/div[2]")))
-			completedSteps.add('SMART DOC VALIDATION: validated root work item presence')
+			addStep('SMART DOC VALIDATION: validated root work item presence')
 			
 		}
 		catch( e ) {
@@ -197,20 +203,24 @@ class MonitorSmartDoc  implements CliAction {
 				try {
 					driver.findElement(By.cssSelector(reviewRequestButton)).click()
 				} catch(e) {}
-				completedSteps.add('REVIEW VALIDATION: clicked on Review Request')
+				addStep('REVIEW VALIDATION: clicked on Review Request')
 				Thread.sleep(5000) //pause 5 sec for dialog to load
 				// Check for availability of review title field
 				String reviewTitle = "//div[@id=\'phReqReviewTitle\']/div"
 				wait.until(ExpectedConditions.elementToBeClickable(By.xpath(reviewTitle)))
-				try {
-					driver.findElement(By.xpath(reviewTitle)).click()
-					completedSteps.add('REVIEW VALIDATION: clicked on Review Title')
-				} catch(e) {
-					completedSteps.add('REVIEW VALIDATION: clicked on Review Title but unavailable - sleeping 5 sec before trying again')
-					Thread.sleep(5000) //pause 5 sec
-					// Try again
-					driver.findElement(By.xpath(reviewTitle)).click()
-					completedSteps.add('REVIEW VALIDATION: clicked on Review Title')
+				addStep('REVIEW VALIDATION: waited for Review Title to be clickable')
+				// Try to click up to 4 times
+				boolean activated = false
+				(0..3).each { 
+					if (activated) return
+					try {
+						driver.findElement(By.xpath(reviewTitle)).click()
+						addStep('REVIEW VALIDATION: clicked on Review Title')
+						activated = true
+					} catch(e) {
+						addStep('REVIEW VALIDATION: Review Title click failed - waiting 5 sec before retry')
+						Thread.sleep(5000) //pause 5 sec
+					}
 				}
 			}
 			catch( e ) {
@@ -222,16 +232,23 @@ class MonitorSmartDoc  implements CliAction {
 		
 		// Success!!!
 		completedSteps.each { step -> println(step) }
+		
+		// If system is running too slowly, then report this
 		String lastBug = getLastBugId()
 		if (lastBug && lastBug.length() > 0) {
 			updateBugSuccessfulRetest(lastBug)
-			deleteCachedBug()
+			if (deleteCachedBug()) println('Cache file deleted')
 		}
-		log.info("Smart Doc wellness check succeeded")
+		log.info("Smart Doc wellness check succeeded.  Elapsed time = $elapsedSec sec")
+		if (elapsedSec >= tooManySec) reportSlowResponse()
 	
         //close Browser
         CloseBrowser(driver)
 
+	}
+	private void addStep(stepName) {
+		elapsedSec = ((new Date().getTime()) - startTime) / 1000
+		completedSteps.add(stepName + " (Elapsed seconds: $elapsedSec)")
 	}
 	private void reportError(WebDriver driver, Exception e, String failureType) {
 		log.error("$failureType: ${e.message}")
@@ -242,29 +259,31 @@ class MonitorSmartDoc  implements CliAction {
 		if (lastBugId && lastBugId.length() > 0) updateBugContinuedFailure(lastBugId, e, failureType)
 		else createBug(driver, e, failureType)
 	}
-	private def deleteCachedBug() {
+	private boolean deleteCachedBug() {
+		boolean deleted = false
 		try {
 			File file = new File(cacheFile)
-			if (file.exists()) file.delete()
-			return true
-		} catch (IOException e) {
+			if (file.exists()) {
+				if (file.delete()) 
+					deleted = true
+				else
+					log.error("Unable to delete cache file: $cacheFile")
+			}
+		} catch (e) {
 			log.error("An error occurred deleting cached Bug file: $e.message");
-			return false
 		}
-
+		return deleted
 	}
 	private def getLastBugId() {
 	    try {
 			File file = new File(cacheFile)
 			if (!file.exists()) return null
 			else {
-				Scanner myReader = new Scanner(file)
-				if (myReader.hasNextLine()) {
-				  String bugId = myReader.nextLine()
-				  return bugId
-				}
-				else return null
-				myReader.close();
+			    file.withReader { reader ->
+			        def line = reader.readLine()
+					reader.close()
+					return line
+			    }
 			}
 		} catch (IOException e) {
 		    log.error("An error occurred reading cached Bug Id: $e.message");
@@ -282,7 +301,6 @@ class MonitorSmartDoc  implements CliAction {
 		
 		// Create a bug in ADO
 		println("Creating Bug for: $failureType")
-		def now = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 		def data = []
 		def title = "Smart Doc Monitoring $failureType"
 		def desc = "<div>${e.message}" + "<p>" + "${e.cause}".replace('\n','<br>') + '</p></div>' 
@@ -292,7 +310,6 @@ class MonitorSmartDoc  implements CliAction {
 		data.add([op:'add', path:"/fields/System.Description", value: desc])
 		data.add([op:'add', path:"/fields/System.AreaPath", value: areapath])
 		data.add([op:'add', path:"/fields/System.AssignedTo", value: owner])
-		data.add([op:'add', path:"/fields/System.CreatedDate", value: now])
 		data.add([op:'add', path:"/fields/Microsoft.VSTS.TCM.ReproSteps", value: steps])
 		data.add([op:'add', path:"/fields/System.Tags", value: 'CURRENT OUTAGE'])
 		if (attData) {
@@ -339,6 +356,13 @@ class MonitorSmartDoc  implements CliAction {
 		}
 		html = html + '</ol></p>'
 	}
+	private String formatCompletedStepsForLog() {
+		String str = 'Completed Steps:\n'
+		completedSteps.forEach { step ->
+			str = str + '* ' + step + '\n'
+		}
+		return str
+	}
 	public Object validate(ApplicationArguments args) throws Exception {
 		def required = ['mr.url']
 		required.each { name ->
@@ -352,6 +376,9 @@ class MonitorSmartDoc  implements CliAction {
 	{
 		driver.close()
 		driver.quit()
+	}
+	private void reportSlowResponse() {
+		log.error("WARNING:  Unexpected slow response:\n" + formatCompletedSteps())
 	}
 }
 
