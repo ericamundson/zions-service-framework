@@ -275,9 +275,6 @@ abstract class AGenericRestClient implements IGenericRestClient {
 				throw new ThrottleException("Throttled: http ${status}")
 				
 			}
-			if (status == 401 || status == 403) {
-				log.error("User: ${this.user}")
-			}
 			if (sinput) {
 				String json = new JsonBuilder(sinput).toPrettyString()
 				log.error("Input data: ${json}");
@@ -338,9 +335,6 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		if (status != 200 && status != 201) {
 			
 			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
-			if (status == 401 || status == 403) {
-				log.error("User: ${this.user}")
-			}
 			if (sinput) {
 				String json = new JsonBuilder(sinput).toPrettyString()
 				log.error("Input data: ${json}");
@@ -430,9 +424,6 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		//JsonOutput t
 		if (status != 200 && status != 201) {
 			log.error("GenericRestClient::rateLimitPost -- Failed. Status: "+resp.getStatusLine());
-			if (status == 401 || status == 403) {
-				log.error("User: ${this.user}")
-			}
 			if (retryCopy) {
 				String json = new JsonBuilder(retryCopy).toPrettyString()
 				log.error("Input data: ${json}");
