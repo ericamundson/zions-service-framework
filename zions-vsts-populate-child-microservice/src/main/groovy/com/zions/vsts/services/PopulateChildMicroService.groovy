@@ -94,8 +94,8 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		log.info("Entering PopulateChild MicroService:: processADOData")
 		
 		/*Uncomment code below to capture adoData payload for test*/
-		String json = new JsonBuilder(adoData).toPrettyString()
-		println(json)
+		/*String json = new JsonBuilder(adoData).toPrettyString()
+		println(json)*/
 		
 		def outData = adoData
 		def wiResource = adoData.resource
@@ -136,8 +136,8 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			
 		}
 		/**	For unit testing !! Uncomment code below to capture child payload for test */
-		  String json2 = new JsonBuilder(result).toPrettyString()
-		  println(json2)
+		  /*String json2 = new JsonBuilder(result).toPrettyString()
+		  println(json2)*/
 		
 		
 		 //iterate through the children assigned to work item in question
@@ -171,7 +171,7 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			
 			if (childNeedsUpdate) {
 				log.info("Getting the changes for child work item $wiType #$id")
-				//changes.add(getChanges(project, rev, childwi, updField))
+			
 				changes.add(getChanges(project, rev, childwi, parentValues))
 				idMap[count] = "${childwi.id}"
 			}
@@ -219,7 +219,6 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		this.retryFailed = false
 		this.attemptedProject = project
 		this.attemptedId = child
-		//this.attemptedUpdate = parentValues
 		return workManagementService.updateWorkItem(collection, project, child, wiData, respHandler)
 		
 		
