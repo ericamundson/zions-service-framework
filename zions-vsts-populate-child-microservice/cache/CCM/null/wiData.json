@@ -1,6 +1,6 @@
 {
     "id": 947905,
-    "rev": 50,
+    "rev": 62,
     "fields": {
         "System.AreaPath": "ALMOpsTest",
         "System.TeamProject": "ALMOpsTest",
@@ -35,19 +35,19 @@
             "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
             "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
         },
-        "System.ChangedDate": "2020-07-24T14:45:20.867Z",
+        "System.ChangedDate": "2020-07-26T23:43:31.82Z",
         "System.ChangedBy": {
-            "displayName": "Michael Angelastro",
-            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "displayName": "SVC-CLOUD-ADOMAINT003",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b855abd7-fbb9-6aa3-9525-21c2ab485741",
             "_links": {
                 "avatar": {
-                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.Yjg1NWFiZDctZmJiOS03YWEzLTk1MjUtMjFjMmFiNDg1NzQx"
                 }
             },
-            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
-            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
-            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
-            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+            "id": "b855abd7-fbb9-6aa3-9525-21c2ab485741",
+            "uniqueName": "SVC-CLOUD-ADOMAINT003@zionsbancorporation.onmicrosoft.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.Yjg1NWFiZDctZmJiOS03YWEzLTk1MjUtMjFjMmFiNDg1NzQx",
+            "descriptor": "aad.Yjg1NWFiZDctZmJiOS03YWEzLTk1MjUtMjFjMmFiNDg1NzQx"
         },
         "System.CommentCount": 1,
         "System.Title": "feature 1 for epic 1",
@@ -56,9 +56,10 @@
         "Microsoft.VSTS.Common.StateChangeDate": "2020-06-19T14:40:46.73Z",
         "Microsoft.VSTS.Common.Priority": 2,
         "Microsoft.VSTS.Common.ValueArea": "Business",
+        "Custom.ExternalID": "654",
         "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column": "Active",
         "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column.Done": false,
-        "Custom.OTLNumber": "110",
+        "Custom.OTLNumber": "123",
         "System.Parent": 35845
     },
     "relations": [

@@ -113,8 +113,6 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 				updField = "";
 			
 			parentValues.add(updField)
-			
-			
 
 		}
 		
@@ -128,8 +126,11 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		if (!wiResource.fields) return logResult('No valid changes made')
 		
 		//should return children payload - method to mock
-		
 		def result = workManagementService.getChildren(collection, project, id)
+		//error starts here-
+		//handle nullpoint here.
+		if (!wiResource.fields) return logResult('No valid changes made')
+			
 		if (!result || result == 'null' || result == '' || result == []) {
 		//println(result.toString())
 			return logResult('child not present')
@@ -148,9 +149,7 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			
 			//Define child work item types
 			String type = "${childwi.fields['System.WorkItemType']}"
-		
-			// String cField = "${childwi.fields.'Custom.OTLNumber'}"
-			
+	
 			//# add each loop for val2 similar to above
 			wiPfields.each { field ->
 				def val2 = childwi.fields["${field}"]
@@ -184,7 +183,7 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		if (changes.size() > 0) {
 			changes.each{change ->
 			//capture test data
-			println(change.body.toString())
+			//println(change.body.toString())
 			}
 			// Process work item changes in Azure DevOps
 			log.info("Processing work item changes...")

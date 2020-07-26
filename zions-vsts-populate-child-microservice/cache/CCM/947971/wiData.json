@@ -1,6 +1,6 @@
 {
     "id": 947971,
-    "rev": 39,
+    "rev": 48,
     "fields": {
         "System.AreaPath": "ALMOpsTest",
         "System.TeamProject": "ALMOpsTest",
@@ -35,7 +35,7 @@
             "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
             "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
         },
-        "System.ChangedDate": "2020-07-23T20:49:09.243Z",
+        "System.ChangedDate": "2020-07-26T23:43:41.533Z",
         "System.ChangedBy": {
             "displayName": "SVC-CLOUD-ADOMAINT003",
             "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b855abd7-fbb9-6aa3-9525-21c2ab485741",
@@ -70,11 +70,11 @@
         },
         "Microsoft.VSTS.Common.Priority": 2,
         "Microsoft.VSTS.Common.ValueArea": "Business",
-        "Custom.ExternalID": "111",
+        "Custom.ExternalID": "654",
         "Custom.SubState": "New",
         "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": "Active",
         "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column.Done": false,
-        "Custom.OTLNumber": "11",
+        "Custom.OTLNumber": "123",
         "System.Parent": 947905
     },
     "relations": [
