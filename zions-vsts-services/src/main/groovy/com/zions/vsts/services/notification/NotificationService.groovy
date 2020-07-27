@@ -89,7 +89,38 @@ public class NotificationService {
 		return "success";
 
 	}
-	
+
+	def sendModernRequirementsFailureNotification(def msg) {
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true);
+		
+		try {
+			helper.setValidateAddresses(false)
+			if (senderAddress) {
+				helper.setFrom(senderAddress)
+			}
+			if (recipientEmailAddresses.length > 0) {
+				recipientEmailAddresses.each { String address ->
+					helper.addTo(address)
+				}
+			} else {
+				helper.setTo("${recipientEmailAddress}")
+			}
+			String sep = System.lineSeparator()
+			String body = "Zions automated monitoring has detected an outage with ModernRequirements4DevOps in ZionsETO.${sep}${sep}${msg.steps}${sep}${sep}Error:${sep}${msg.error}${sep}${sep}${msg.cause}"
+			helper.setText(body)
+			helper.setSubject("${msg.title} Zions Bug# ${msg.curBugId}")
+			helper.addAttachment(msg.attName, msg.attFile)
+			
+			sender.send(message)
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "$e.message"
+		}
+		return "success";
+
+	}
+		
 	def sendMicroServiceIssueNotification(def msg) {
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);

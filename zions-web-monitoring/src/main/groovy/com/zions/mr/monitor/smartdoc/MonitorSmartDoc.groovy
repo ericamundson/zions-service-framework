@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cli.action.CliAction
 import com.zions.vsts.services.work.WorkManagementService
+import com.zions.vsts.services.notification.NotificationService
 
 import groovy.util.logging.Slf4j
 import org.openqa.selenium.WebDriver
@@ -24,26 +25,45 @@ import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.NoSuchElementException
 import java.util.concurrent.TimeUnit
 import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+import groovy.json.JsonSlurper
+import groovy.json.JsonBuilder
+
 @Component
 @Slf4j
 class MonitorSmartDoc  implements CliAction {
 	static String LOGIN_FAILURE = 'ADO login failure'
-	static String SMARTDOC_FAILURE = 'Smart Doc failure'
+	static String SMARTDOC_FAILURE = 'page load failure'
 	static String REVIEW_FAILURE = 'Review Request failure'
+	
+	static String LOGIN_BUTTON = 'idSIButton9'
+	static String PASSWORD_FIELD = 'i0118'
+	static String USERID_FIELD = 'i0116'
 	
 	def completedSteps = []
 	def startTime = (new Date().getTime())
 	long elapsedSec = 0
+	def status
 	
 	@Autowired
 	WorkManagementService workManagementService
 
 	@Autowired
 	IAttachments attachmentService
-
-	@Value('${cache.file:"c:/lastBugId.txt"}')
-	String cacheFile
 	
+	@Autowired
+	NotificationService notificationService
+
+	@Value('${email.recipient.addresses:}')
+	private String[] recipientEmailAddresses
+
+	@Value('${cache.filename:"status.json"}')
+	String cacheFilename
+	
+	@Value('${cache.dir:"c:/SmartDocMonitoring"}')
+	String cacheDir
+
 	@Value('${tfs.project:}')
 	String project
 
@@ -76,6 +96,9 @@ class MonitorSmartDoc  implements CliAction {
 	
 	@Value('${sel.toomany.sec}')
 	int tooManySec
+	
+	@Value('${ticket.creation.count}')
+	int ticketCount
 
 	@Value('${mr.haslicense}')
 	boolean hasLicense
@@ -84,17 +107,11 @@ class MonitorSmartDoc  implements CliAction {
 	}
 
 	public def execute(ApplicationArguments data) {
-		/*
-		String path = "c:\\screenshot.png"
-		File scrFile = new File(path)
-		byte[] fileContent = Files.readAllBytes(scrFile.toPath())
-		def attData = attachmentService.sendAttachment(fileContent, 'screenshot.png')
-		println(attData.url)
-		return
-		*/
-		System.setProperty("webdriver.chrome.driver","c:\\chrome-83\\chromedriver.exe");
+		// Get status from last execution
+		status = new MonitorStatus()
 
 		// Open Chrome driver
+		System.setProperty("webdriver.chrome.driver","c:\\chrome-83\\chromedriver.exe");
 		ChromeOptions options = new ChromeOptions()
 		options.addArguments("start-maximized")
 		WebDriver driver = new ChromeDriver(options);
@@ -107,15 +124,23 @@ class MonitorSmartDoc  implements CliAction {
 			addStep('LOGIN: Launched Login Page')
 			
 			// Enter userid (email) and click Next
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.id("i0116"))).sendKeys(tfsUser)	
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.id(USERID_FIELD))).sendKeys(tfsUser)	
 			addStep('LOGIN: Entered userid')
-			wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9'))).click()
-			addStep('LOGIN: Clicked Next')
-			// try again in case click did not take
 			try {
-				driver.findElement(By.id('idSIButton9')).click() 
+				wait.until(ExpectedConditions.elementToBeClickable(By.id(LOGIN_BUTTON))).click()
+				addStep('LOGIN: Clicked Next')
+				// try again in case click did not take
+				try {
+					driver.findElement(By.id(LOGIN_BUTTON)).click() 
+					completedSteps.add('LOGIN: Completed second attempt at clicking on Next')
+				} catch(e) {}
+			}
+			catch (e) { // Next button never became clickable - try re-entering userid
+				wait.until(ExpectedConditions.presenceOfElementLocated(By.id(USERID_FIELD))).sendKeys(tfsUser)
+				addStep('LOGIN: Completed second attempt at entering userid')
+				wait.until(ExpectedConditions.elementToBeClickable(By.id(LOGIN_BUTTON))).click()
 				addStep('LOGIN: Completed second attempt at clicking on Next')
-			} catch(e) {}
+			}
 			
 			// Check for prompt for account type (in case it pops up)
 			try {
@@ -125,19 +150,26 @@ class MonitorSmartDoc  implements CliAction {
 				addStep('LOGIN: Selected account type')
 			} catch (NoSuchElementException e) {}
 			
-			// Enter password and click Sing in
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.id('i0118')))
+			// Enter password and click Sign in
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.id(PASSWORD_FIELD)))
 			addStep('LOGIN: Located password entry')
 			Thread.sleep(1000) //pause 1 sec
-			driver.findElement(By.id('i0118')).sendKeys(tfsPassword)
-			addStep('LOGIN: Entered password')
+			try {
+				driver.findElement(By.id(PASSWORD_FIELD)).sendKeys(tfsPassword)
+				addStep('LOGIN: Entered password')
+			}
+			catch (e) {
+				Thread.sleep(5000) //pause 5 sec
+				driver.findElement(By.id(PASSWORD_FIELD)).sendKeys(tfsPassword)
+				addStep('LOGIN: Entered password a second time after pause')
+			}
 
 			// Click Log in
-			wait.until(ExpectedConditions.elementToBeClickable(By.id('idSIButton9'))).click()
+			wait.until(ExpectedConditions.elementToBeClickable(By.id(LOGIN_BUTTON))).click()
 			addStep('LOGIN: Clicked Sign in')
 			// try one more time in case button did not get clicked
 			try {
-				driver.findElement(By.id('idSIButton9')).click() 
+				driver.findElement(By.id(LOGIN_BUTTON)).click() 
 				addStep('LOGIN: Completed second attempt to click Sign in')
 			} catch(e) {}
 		}
@@ -206,22 +238,11 @@ class MonitorSmartDoc  implements CliAction {
 				addStep('REVIEW VALIDATION: clicked on Review Request')
 				Thread.sleep(5000) //pause 5 sec for dialog to load
 				// Check for availability of review title field
-				String reviewTitle = "//div[@id=\'phReqReviewTitle\']/div"
-				wait.until(ExpectedConditions.elementToBeClickable(By.xpath(reviewTitle)))
+				String reviewXpath = "//div[@id=\'phReqReviewTitle\']/div"
+				wait.until(ExpectedConditions.elementToBeClickable(By.xpath(reviewXpath)))
 				addStep('REVIEW VALIDATION: waited for Review Title to be clickable')
 				// Try to click up to 4 times
-				boolean activated = false
-				(0..3).each { 
-					if (activated) return
-					try {
-						driver.findElement(By.xpath(reviewTitle)).click()
-						addStep('REVIEW VALIDATION: clicked on Review Title')
-						activated = true
-					} catch(e) {
-						addStep('REVIEW VALIDATION: Review Title click failed - waiting 5 sec before retry')
-						Thread.sleep(5000) //pause 5 sec
-					}
-				}
+				multitryXpathClick(driver, 'REVIEW VALIDATION: clicked on Review Title', reviewXpath)
 			}
 			catch( e ) {
 				reportError(driver, e,REVIEW_FAILURE)
@@ -233,76 +254,88 @@ class MonitorSmartDoc  implements CliAction {
 		// Success!!!
 		completedSteps.each { step -> println(step) }
 		
-		// If system is running too slowly, then report this
-		String lastBug = getLastBugId()
-		if (lastBug && lastBug.length() > 0) {
-			updateBugSuccessfulRetest(lastBug)
-			if (deleteCachedBug()) println('Cache file deleted')
+		// If there is a currently failed bug (or previous one), set to SUCCESSFUL RETEST
+		if (status.curBugId) {
+			updateBugSuccessfulRetest(status.curBugId)
+			if (status.prevFail && status.prevFail != '') updateBugSuccessfulRetest(status.prevFail)
+			if (status.delete()) println('Status file deleted')
 		}
+		// If system is running too slowly, then report this
 		log.info("Smart Doc wellness check succeeded.  Elapsed time = $elapsedSec sec")
-		if (elapsedSec >= tooManySec) reportSlowResponse()
+//		if (elapsedSec >= tooManySec) reportSlowResponse()
 	
         //close Browser
         CloseBrowser(driver)
+
+	}
+	private multitryXpathClick(WebDriver driver, String stepTitle, String elementId) {
+		boolean activated = false
+		(0..3).each {
+			if (activated) return
+			try {
+				driver.findElement(By.xpath(elementId)).click()
+				addStep(stepTitle)
+				activated = true
+			} catch(e) {
+				addStep("$stepTitle failed - waiting 5 sec before retry")
+				Thread.sleep(5000) //pause 5 sec
+			}
+		}
 
 	}
 	private void addStep(stepName) {
 		elapsedSec = ((new Date().getTime()) - startTime) / 1000
 		completedSteps.add(stepName + " (Elapsed seconds: $elapsedSec)")
 	}
-	private void reportError(WebDriver driver, Exception e, String failureType) {
-		log.error("$failureType: ${e.message}")
+	private void reportError(WebDriver driver, Exception e, String newFailType) {
+		log.error("$newFailType: ${e.message}")
 
-		// Check to see if a Bug already exists
-		String lastBugId = getLastBugId()
-		
-		if (lastBugId && lastBugId.length() > 0) updateBugContinuedFailure(lastBugId, e, failureType)
-		else createBug(driver, e, failureType)
-	}
-	private boolean deleteCachedBug() {
-		boolean deleted = false
-		try {
-			File file = new File(cacheFile)
-			if (file.exists()) {
-				if (file.delete()) 
-					deleted = true
+		// If active bug exists for same failure, just add failure comment.  Else, create new Bug.
+		if (status.curBugId && newFailType == status.failType) {
+			boolean sentEmail = false
+			if ((status.failCount == ticketCount - 1) && newFailType != LOGIN_FAILURE) {
+				// Send out email to Modern Requirements Support
+				def result
+				if (notificationService) result = notificationService.sendModernRequirementsFailureNotification(status)
+				if (result == 'success') {
+					log.info("Sent support request to $recipientEmailAddresses")	
+					sentEmail = true
+				}
 				else
-					log.error("Unable to delete cache file: $cacheFile")
+					log.error("Failed to sent support request to Modern Requirements: $result")	
 			}
-		} catch (e) {
-			log.error("An error occurred deleting cached Bug file: $e.message");
+			updateBugContinuedFailure(status.curBugId, e, newFailType, sentEmail)
 		}
-		return deleted
-	}
-	private def getLastBugId() {
-	    try {
-			File file = new File(cacheFile)
-			if (!file.exists()) return null
-			else {
-			    file.withReader { reader ->
-			        def line = reader.readLine()
-					reader.close()
-					return line
-			    }
-			}
-		} catch (IOException e) {
-		    log.error("An error occurred reading cached Bug Id: $e.message");
+		else { // Creating new bug
+			String prevFail
+			// If previous failure was a login failure, and new failure is not a login failure, then tag previous bug as passed
+			if (status.curBugId && status.failType == LOGIN_FAILURE && newFailType != LOGIN_FAILURE)
+				updateBugSuccessfulRetest(status.curBugId)
+			// If previous failure was a SD page load, and new failure is Review Request failure, then tag previous bug as passed
+			else if (status.curBugId && status.failType == SMARTDOC_FAILURE && newFailType == REVIEW_FAILURE)
+				updateBugSuccessfulRetest(status.curBugId)
+			else if (status.curBugId)
+				prevFail = status.curBugId
+			createBug(driver, e, newFailType, prevFail)
 		}
 	}
-	private def createBug(WebDriver driver, Exception e, String failureType) {
-
+	private def createBug(WebDriver driver, Exception e, String newFailType, String prevFail) {
+		// Delete cache if it exists
+		if (status.curBugId) status.delete()
+			
 		// Get a screen snaphot and upload to ADO
-		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE)
 		String path = "${scrFile.path}"
-		log.error("Screenshot at: $path")
 		String fname = path.substring(path.lastIndexOf('\\')+1,path.length())
+		String cachePath = cacheDir + fname
+		copyFile(path, cachePath)
 		byte[] fileContent = Files.readAllBytes(scrFile.toPath())
 		def attData = attachmentService.sendAttachment(fileContent, fname)
 		
 		// Create a bug in ADO
-		println("Creating Bug for: $failureType")
+		println("Creating Bug for: $newFailType")
 		def data = []
-		def title = "Smart Doc Monitoring $failureType"
+		def title = "Smart Doc Monitoring $newFailType"
 		def desc = "<div>${e.message}" + "<p>" + "${e.cause}".replace('\n','<br>') + '</p></div>' 
 		def steps = "<div>" + formatCompletedSteps() + '</div>' 
 		data.add([ op: 'add', path: '/id', value: -1])
@@ -320,34 +353,52 @@ class MonitorSmartDoc  implements CliAction {
 		}
 		def result = workManagementService.createWorkItem(collection, project, 'Bug', data)
 		
-		// Save bug number to local file
+		// Save status to local file
 		if (result) {
-			cacheBugId(result.id)
-			println("Created new bug")
+			status.curBugId = result.id
+			status.failCount = 1
+			status.failType = newFailType
+			status.title = title
+			status.steps = formatCompletedStepsForLog()
+			status.error = e.message
+			status.cause = e.cause
+			status.attName = fname
+			status.attPath = cachePath
+			status.prevFail = prevFail
+			status.save()
+			log.info("Created new bug #${status.curBugId}")
 		}
 		else log.error('Failed to create Bug')
 		
+	}
+	private copyFile(String source, String dest) {
+		Path sourceFile = Paths.get(source)
+		Path targetFile = Paths.get(dest)
+		 
+		try {
+			Files.copy(sourceFile, targetFile)
+		} catch (IOException ex) {
+			log.error("I/O Error when copying file $source to $dest");
+		}
 	}
 	private def updateBugSuccessfulRetest(String id) {
 		def data = []
 		data.add([op:'add', path:"/fields/System.Tags", value: 'SUCCESSFUL RETEST'])
 		def result = workManagementService.updateWorkItem(collection, project, id, data)
-		if (result) println("Updated bug with successful restest")
+		if (result) log.info("Updated bug #$id with successful restest")
 	}
-	private def updateBugContinuedFailure(String id, Exception e, String failureType) {
-		def data = [text:"Subsequent test failure: ${e.message}"]
+	private def updateBugContinuedFailure(String id, Exception e, String failType, boolean emailSent) {
+		String comment = "Subsequent test failure: ${e.message}"
+		if (emailSent) comment = comment + "<br><br>Support request sent to $recipientEmailAddresses"
+		def data = [text: "<div>$comment</div>"]
 		def result = workManagementService.addWorkItemComment(collection, project, id, data)
-		if (result) println("Updated bug with comment")
-	}
-	private def cacheBugId(def id) {
-		try {
-			FileWriter myWriter = new FileWriter(cacheFile)
-			myWriter.write("$id")
-			myWriter.flush()
-			myWriter.close()
-		} catch (IOException e) {
-			log.error("An error occurred writing to cache file '$cacheFile'.  Error: $e.message");
+		// Save status to local file
+		if (result) {
+			status.failCount = status.failCount + 1
+			status.save()
+			log.info("Updated bug #$id with comment.  Failure count = ${status.failCount}")
 		}
+		else log.error('Failed to update Bug with comment')
 	}
 	private String formatCompletedSteps() {
 		String html = '<br><p>Completed Steps:<br><ol>'
@@ -378,7 +429,82 @@ class MonitorSmartDoc  implements CliAction {
 		driver.quit()
 	}
 	private void reportSlowResponse() {
-		log.error("WARNING:  Unexpected slow response:\n" + formatCompletedSteps())
+		log.error("WARNING:  Unexpected slow response:\n" + formatCompletedStepsForLog())
+	}
+	
+	
+	// Supporting Class that holds persistent monitoring status across invocations
+	class MonitorStatus {
+		String cachePath
+		String curBugId
+		int failCount = 0
+		String failType
+		String title
+		String steps
+		String error
+		String cause
+		String attName
+		String attPath
+		String prevFail
+		File attFile
+		public MonitorStatus() {
+			try {
+				cachePath = cacheDir + cacheFilename
+				File file = new File(cachePath)
+				if (file.exists()) {
+					BufferedReader reader = file.newReader()
+					def data = reader.text
+					reader.close()
+					def status = new JsonSlurper().parseText(data)
+					this.curBugId = status.id
+					this.failCount = status.failCount
+					this.failType = status.failType
+					this.title = status.title
+					this.steps = status.steps
+					this.error = status.error
+					this.cause = status.cause
+					this.attName = status.attName
+					this.attPath = status.attPath
+					this.prevFail = status.prevFail
+					this.attFile = new File(attPath)
+				}
+			} catch (e) {
+				log.error("An error occurred reading cached status: $e.message")
+			}
+		}
+		boolean save() {
+			boolean saved = false
+			try {
+				FileWriter myWriter = new FileWriter(cachePath)
+				def output = [id: curBugId, failCount: failCount, failType: failType, title: title, steps: steps, error: error, cause: cause, attName: attName, attPath: attPath, prevFail: prevFail]
+				myWriter.write(new JsonBuilder(output).toPrettyString())
+				myWriter.flush()
+				myWriter.close()
+				saved = true
+			} catch (IOException e) {
+				log.error("An error occurred writing to cache file '$cachePath'.  Error: $e.message");
+			}
+			return saved
+		}
+		boolean delete() {
+			boolean deleted = true
+			try {
+				File cacheFile = new File(cachePath)
+				if (cacheFile.exists()) {
+					if (!attFile.delete()) {
+						log.error("Unable to delete attachment file: $attFile.path")
+						deleted = false
+					}
+					if (!cacheFile.delete()) {
+						log.error("Unable to delete status file: $cacheFile.path")
+						deleted = false
+					}
+				}
+			} catch (e) {
+				log.error("An error occurred deleting status file: $e.message");
+			}
+			return deleted
+		}
 	}
 }
 
