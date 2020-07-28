@@ -64,6 +64,9 @@ class MonitorSmartDoc  implements CliAction {
 	
 	@Value('${cache.dir:"c:/SmartDocMonitoring"}')
 	String cacheDir
+	
+	@Value('${maint.window:}')
+	String maintWindow // format is HH:MM-HH:MM
 
 	@Value('${tfs.project:}')
 	String project
@@ -111,6 +114,14 @@ class MonitorSmartDoc  implements CliAction {
 	}
 
 	public def execute(ApplicationArguments data) {
+		
+		// Don't process if during maintenance window
+		MaintenanceWindow window = new MaintenanceWindow(maintWindow)
+		if ( window.isActive()) {
+			log.info('In maintenance window.  No monitoring.')
+			return
+		}
+		
 		// Get status from last execution
 		status = new MonitorStatus()
 
@@ -449,6 +460,29 @@ class MonitorSmartDoc  implements CliAction {
 		log.error("WARNING:  Unexpected slow response:\n" + formatCompletedStepsForLog())
 	}
 	
+	// Supporting Class Maintenance Window
+	class MaintenanceWindow {
+		Date startTime = new Date()
+		Date endTime = new Date()
+		public MaintenanceWindow(String maintWindow) {
+			try {
+				startTime.set(hourOfDay: maintWindow.substring(0,2).toInteger(), minute: maintWindow.substring(3,5).toInteger(), second: 0)
+				endTime.set(hourOfDay: maintWindow.substring(6,8).toInteger(), minute: maintWindow.substring(9,11).toInteger(), second: 0)
+			}
+			catch (e) {
+				log.error("Invalid maint.window parameter: $maintWindow.  Must be in format HH:MM-HH:MM")
+			}
+		}
+		boolean isActive() {
+			if (!startTime || !endTime) return false
+			
+			Date cur = new Date()
+			if (cur >= startTime && cur <= endTime)
+				return true
+			else
+				return false
+		}
+	}
 	
 	// Supporting Class that holds persistent monitoring status across invocations
 	class MonitorStatus {
