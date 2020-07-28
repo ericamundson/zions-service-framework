@@ -34,7 +34,8 @@ import groovy.json.JsonBuilder
 @Slf4j
 class MonitorSmartDoc  implements CliAction {
 	static String LOGIN_FAILURE = 'ADO login failure'
-	static String SMARTDOC_FAILURE = 'page load failure'
+	static String ADO_FAILURE = 'ADO site not available'
+	static String SMARTDOC_FAILURE = 'SD page load failure'
 	static String REVIEW_FAILURE = 'Review Request failure'
 	
 	static String LOGIN_BUTTON = 'idSIButton9'
@@ -84,7 +85,10 @@ class MonitorSmartDoc  implements CliAction {
 
 	@Value('${ms.login}')
 	String msLogin
-
+	
+	@Value('${tfs.url}')
+	String tfsUrl
+	
 	@Value('${tfs.user}')
 	String tfsUser
 
@@ -179,7 +183,20 @@ class MonitorSmartDoc  implements CliAction {
 			return
 		}
 		
-		//********** Begin Tests *******
+		// Check ADO availability
+		try {
+			 // Navigate to ADO collection page
+			 driver.get("$tfsUrl/$collection")
+			 addStep('ADO VALIDATION: Loading ADO collection page')
+			 wait.until(ExpectedConditions.titleIs('Projects - Home'))
+		 }
+		 catch( e ) {
+			 reportError(driver, e,ADO_FAILURE)
+			 CloseBrowser(driver)
+			 return
+		 }
+
+		//********** Begin Modern Requirements Tests *******
 		// Test Smart Doc availability
 		try {
 			// Navigate to Modern Requirements Smart Docs page
@@ -293,8 +310,8 @@ class MonitorSmartDoc  implements CliAction {
 		// If active bug exists for same failure, just add failure comment.  Else, create new Bug.
 		if (status.curBugId && newFailType == status.failType) {
 			boolean sentEmail = false
-			if ((status.failCount == ticketCount - 1) && newFailType != LOGIN_FAILURE) {
-				// Send out email to Modern Requirements Support
+			if ((status.failCount == ticketCount - 1) && newFailType != LOGIN_FAILURE && newFailType != ADO_FAILURE) {
+				// Send out email to Modern Requirements Support since it is not a login or ADO failure
 				def result
 				if (notificationService) result = notificationService.sendModernRequirementsFailureNotification(status)
 				if (result == 'success') {
@@ -308,8 +325,8 @@ class MonitorSmartDoc  implements CliAction {
 		}
 		else { // Creating new bug
 			String prevFail
-			// If previous failure was a login failure, and new failure is not a login failure, then tag previous bug as passed
-			if (status.curBugId && status.failType == LOGIN_FAILURE && newFailType != LOGIN_FAILURE)
+			// If previous failure was a login or ADO failure, then tag previous bug as passed
+			if (status.curBugId && (status.failType == LOGIN_FAILURE || status.failType == ADO_FAILURE))
 				updateBugSuccessfulRetest(status.curBugId)
 			// If previous failure was a SD page load, and new failure is Review Request failure, then tag previous bug as passed
 			else if (status.curBugId && status.failType == SMARTDOC_FAILURE && newFailType == REVIEW_FAILURE)
