@@ -33,14 +33,20 @@ import groovy.json.JsonBuilder
 @Component
 @Slf4j
 class MonitorSmartDoc  implements CliAction {
+	// Failure types
 	static String LOGIN_FAILURE = 'ADO login failure'
 	static String ADO_FAILURE = 'ADO site not available'
 	static String SMARTDOC_FAILURE = 'SD page load failure'
 	static String REVIEW_FAILURE = 'Review Request failure'
 	
+	// UI elements
 	static String LOGIN_BUTTON = 'idSIButton9'
 	static String PASSWORD_FIELD = 'i0118'
 	static String USERID_FIELD = 'i0116'
+	
+	// Tags
+	static String FAILURE_TAG = 'CURRENT OUTAGE'
+	static String SUCCESS_TAG = 'SUCCESSFUL RETEST'
 	
 	def completedSteps = []
 	def startTime = (new Date().getTime())
@@ -283,11 +289,8 @@ class MonitorSmartDoc  implements CliAction {
 		completedSteps.each { step -> println(step) }
 		
 		// If there is a currently failed bug (or previous one), set to SUCCESSFUL RETEST
-		if (status.curBugId) {
-			updateBugSuccessfulRetest(status.curBugId)
-			if (status.prevFail && status.prevFail != '') updateBugSuccessfulRetest(status.prevFail)
-			if (status.delete()) println('Status file deleted')
-		}
+		resetStatus()
+		
 		// If system is running too slowly, then report this
 		log.info("Smart Doc wellness check succeeded.  Elapsed time = $elapsedSec sec")
 //		if (elapsedSec >= tooManySec) reportSlowResponse()
@@ -296,7 +299,19 @@ class MonitorSmartDoc  implements CliAction {
         CloseBrowser(driver)
 
 	}
-	private multitryXpathClick(WebDriver driver, String stepTitle, String elementId) {
+	private void resetStatus() {
+		if (status.curBugId) {
+			if (updateBugSuccessfulRetest("$status.curBugId")) {
+				// Also reset previous open bug
+				if (status.prevFail && status.prevFail != '') updateBugSuccessfulRetest("${status.prevFail}")
+				// try to delete status file
+				if (status.delete()) println('Status file deleted')
+			} else {
+				log.error("Update to $SUCCESS_TAG failed.  The status file will not be deleted")
+			}
+		}
+	}
+	private void multitryXpathClick(WebDriver driver, String stepTitle, String elementId) {
 		boolean activated = false
 		(0..3).each {
 			if (activated) return
@@ -337,11 +352,13 @@ class MonitorSmartDoc  implements CliAction {
 		else { // Creating new bug
 			String prevFail
 			// If previous failure was a login or ADO failure, then tag previous bug as passed
-			if (status.curBugId && (status.failType == LOGIN_FAILURE || status.failType == ADO_FAILURE))
-				updateBugSuccessfulRetest(status.curBugId)
+			if (status.curBugId && (status.failType == LOGIN_FAILURE || status.failType == ADO_FAILURE)) {
+				if (!updateBugSuccessfulRetest(status.curBugId)) prevFail = status.curBugId
+			}
 			// If previous failure was a SD page load, and new failure is Review Request failure, then tag previous bug as passed
-			else if (status.curBugId && status.failType == SMARTDOC_FAILURE && newFailType == REVIEW_FAILURE)
-				updateBugSuccessfulRetest(status.curBugId)
+			else if (status.curBugId && status.failType == SMARTDOC_FAILURE && newFailType == REVIEW_FAILURE) {
+				if (!updateBugSuccessfulRetest(status.curBugId)) prevFail = status.curBugId
+			}
 			else if (status.curBugId)
 				prevFail = status.curBugId
 			createBug(driver, e, newFailType, prevFail)
@@ -372,7 +389,7 @@ class MonitorSmartDoc  implements CliAction {
 		data.add([op:'add', path:"/fields/System.AreaPath", value: areapath])
 		data.add([op:'add', path:"/fields/System.AssignedTo", value: owner])
 		data.add([op:'add', path:"/fields/Microsoft.VSTS.TCM.ReproSteps", value: steps])
-		data.add([op:'add', path:"/fields/System.Tags", value: 'CURRENT OUTAGE'])
+		data.add([op:'add', path:"/fields/System.Tags", value: FAILURE_TAG])
 		if (attData) {
 			def attUrl = attData.url
 			data.add([op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: attUrl, attributes:[comment: 'Selenium Screenshot']]])
@@ -411,9 +428,10 @@ class MonitorSmartDoc  implements CliAction {
 	}
 	private def updateBugSuccessfulRetest(String id) {
 		def data = []
-		data.add([op:'add', path:"/fields/System.Tags", value: 'SUCCESSFUL RETEST'])
+		data.add([op:'add', path:"/fields/System.Tags", value: SUCCESS_TAG])
 		def result = workManagementService.updateWorkItem(collection, project, id, data)
 		if (result) log.info("Updated bug #$id with successful restest")
+		return result
 	}
 	private def updateBugContinuedFailure(String id, Exception e, String failType, boolean emailSent) {
 		String comment = "Subsequent test failure: ${e.message}"
