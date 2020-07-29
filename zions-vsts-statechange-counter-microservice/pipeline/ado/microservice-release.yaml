@@ -13,9 +13,9 @@ trigger:
     - 'zions-vsts-microservice/*'
     
 pool:
-  name: On-Prem Production
+  name: Default
   demands:
-  - agent.computername -equals UTMVPI0144
+  - agent.name -equals bagent
   
  
 stages:
