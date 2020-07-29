@@ -845,7 +845,18 @@ class WorkManagementService {
 					headers: ['Content-Type': 'application/json-patch+json']]
 					)
 	}
-
+	public addWorkItemComment(collection, project, id, data) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def body = new JsonBuilder(data).toPrettyString()
+		def result = genericRestClient.post(
+					[contentType: 'application/json',
+                    requestContentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}/comments",
+					body: body,
+					query: ['api-version': '5.1-preview.3'],
+					headers: ['Content-Type': 'application/json']]
+					)
+	}
 	public def updateWorkItem(collection, project, id, data, Closure responseHandler = null) {
             def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
             //def body = new JsonBuilder(data).toPrettyString()

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import groovy.json.JsonBuilder
 
 /**
- * Will activate parent work item when child is activated.
+ * Will populate parent field changes to child work items
  *
  * @author z070187
  *
@@ -25,19 +25,62 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 	@Value('${tfs.collection:}')
 	String collection
 	
-	//@Value('${tfs.types:}')
 	@Value('${tfs.types}')
-	String wiTypes
+	String[] types
 	
 	@Value('${tfs.pfield}')
-	String wiPfields
+	String[] wiPfields
+	
+	/*@Value('${tfs.pfield}')
+	 String[] wiPfields*/
+	
+	
+	//@Value('${tfs.pfield}')
+	//String[] wiPfields
 	
 	
 	@Value('${tfs.cfield}')
 	String wiCfields
 
-	public PopulateChildMicroService()
-	{
+	// Handle HTTP 412 retry when work item revision has changed
+	boolean retryFailed
+	def attemptedProject
+	def attemptedId
+	//def attemptedUpdate
+	Closure responseHandler = { resp ->
+		
+		if (resp.status == 412) {
+			
+			// Get fresh copy of child work items
+			def childwi = workManagementService.getWorkItem(collection, attemptedProject, attemptedId)
+			def cid = childwi.id
+			String rev = "${childwi.rev}"
+			def parentValues = []
+			//will need to iterate through all child records to see if fields were populated
+			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+			
+			//add data to the body with for loop for number of children under parent
+			wiData.body.add([op: 'test', path: '/rev', value: rev.toInteger()])
+			for(int i=0; i<wiPfields.size(); i++) {
+							
+				wiData.body.add([ op: 'add', path: "/fields/${wiPfields[i]}", value: "${parentValues[i]}"])
+			}
+
+				if (getChanges(this.attemptedProject, rev, this.attemptedId, parentValues)) {
+					return logResult('Work item successfully activated after 412 retry')
+				}
+				else {
+					this.retryFailed = true
+					log.error('Failed update after 412 retry')
+					return 'Failed update after 412 retry'
+				}
+			}
+		}
+	
+
+
+	
+	public PopulateChildMicroService() {
 			
 	}
 	
@@ -51,46 +94,52 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		log.info("Entering PopulateChild MicroService:: processADOData")
 		
 		/*Uncomment code below to capture adoData payload for test*/
-		String json = new JsonBuilder(adoData).toPrettyString()
-		println(json)
+		/*String json = new JsonBuilder(adoData).toPrettyString()
+		println(json)*/
 		
-		def types = wiTypes.split(',')
 		def outData = adoData
 		def wiResource = adoData.resource
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
+		def parentValues = []
+		def childValues = []
 		
-		// get the OTLNumber * will parameterize later on *
-		//String otlField = "${wiResource.revision.fields.'Custom.OTLNumber'}"
-		def val = wiResource.revision.fields["${wiPfields}"]
-		String otlField = "${val}"
-		// Make sure the work items are Component/Epic work items
-		//if (!wiType && !types.contains(wiType))
-		if (!types.contains(wiType))
-		{
-			return logResult('not a valid work item type')
+		//String updField = "${wiResource.revision.fields.'Custom.OTLNumber'}"
 		
-		}
-		// Check to see OTLNumber is populated
-		if (!otlField || otlField == 'null' || otlField == '') {
+		wiPfields.each { field ->
+			def val4 = wiResource.revision.fields["${field}"]
+			String updField = "${val4}"
+			//convert null value to ""
+			if (!updField || updField == 'null' || updField == '')
+				updField = "";
 			
-			return logResult('field not populated')
-			
+			parentValues.add(updField)
+
 		}
 		
+		if (!types.contains(wiType))return logResult('not a valid work item type')
+
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		//this is the work item id
 		String id = "${wiResource.revision.id}"
 		
+		//code to address null pointer exception
+		if (!wiResource.fields) return logResult('No valid changes made')
+		
 		//should return children payload - method to mock
 		def result = workManagementService.getChildren(collection, project, id)
+		//error starts here-
+		//handle nullpoint here.
+		if (!wiResource.fields) return logResult('No valid changes made')
+			
 		if (!result || result == 'null' || result == '' || result == []) {
 		//println(result.toString())
 			return logResult('child not present')
 			
 		}
 		/**	For unit testing !! Uncomment code below to capture child payload for test */
-		/*  String json = new JsonBuilder(result).toPrettyString()
-		  println(json)*/
+		  /*String json2 = new JsonBuilder(result).toPrettyString()
+		  println(json2)*/
+		
 		
 		 //iterate through the children assigned to work item in question
 		def changes = []
@@ -100,29 +149,41 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			
 			//Define child work item types
 			String type = "${childwi.fields['System.WorkItemType']}"
-			//Define OTLNumber of child fields
-		    // String cField = "${childwi.fields.'Custom.OTLNumber'}"
-						 
-			 def val2 = childwi.fields["${wiCfields}"]
-			 String cField = "${val2}"
+	
+			//# add each loop for val2 similar to above
+			wiPfields.each { field ->
+				def val2 = childwi.fields["${field}"]
+				String cField = "${val2}"
+				childValues.add(cField)
+				
+			
+			}
 			
 			//get revision id for child - needed to handle concurrency
+			boolean childNeedsUpdate = false
+			  
 			String rev = "${childwi.rev}"
-
-			//If child work item is feature or story - update OTLNumber
-			if ((type == 'Feature' || type == 'User Story') && cField != otlField) {
+			for(int i=0; i<wiPfields.size(); i++) {
+				if (childValues[i] != parentValues[i]) childNeedsUpdate = true
+					else log.info("no update needed")
+			}
 			
+			if (childNeedsUpdate) {
 				log.info("Getting the changes for child work item $wiType #$id")
-				changes.add(getChanges(project, rev, childwi, otlField))
+			
+				changes.add(getChanges(project, rev, childwi, parentValues))
 				idMap[count] = "${childwi.id}"
-				}
-				
+			}
+			
+
 		}
+			
+			
 			
 		if (changes.size() > 0) {
 			changes.each{change ->
 			//capture test data
-			println(change.body.toString())
+			//println(change.body.toString())
 			}
 			// Process work item changes in Azure DevOps
 			log.info("Processing work item changes...")
@@ -131,25 +192,34 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		}
 		else {
 			
-			return logResult('no target children to update')
+			return logResult('work item changes do not apply')
 		}
 	}
 
-	//define get changes method and create batch call
-	private def getChanges(String project, String rev, def child, def otlField) {
+
+	//pass parentValues to getChanges
+	private def getChanges(String project, String rev, def child, def parentValues, Closure respHandler = null) {
+
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def cid = child.id
+		
 		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-		def idData1 = [op: 'test', path: '/rev', value: rev.toInteger()]
-		wiData.body.add(idData1)
 		
-		// Add work item type in case it changed
-		//could convert idData2 to String
-		//def idData2 = [ op: 'add', path: '/fields/Custom.OTLNumber', value: "$otlField"]
-		def idData2 = [ op: 'add', path: "/fields/${wiCfields}", value: "$otlField"]
+		wiData.body.add([op: 'test', path: '/rev', value: rev.toInteger()])
+		for(int i=0; i<wiPfields.size(); i++) {
+						
+			wiData.body.add([ op: 'add', path: "/fields/${wiPfields[i]}", value: "${parentValues[i]}"])
+		}
 		
-		wiData.body.add(idData2)
+
 		return wiData
+
+		//412 retry block
+		this.retryFailed = false
+		this.attemptedProject = project
+		this.attemptedId = child
+		return workManagementService.updateWorkItem(collection, project, child, wiData, respHandler)
+		
 		
 	}
 	

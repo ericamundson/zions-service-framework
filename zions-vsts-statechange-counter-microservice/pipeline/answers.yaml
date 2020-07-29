@@ -1,0 +1,7 @@
+---
+AppName: "zions-vsts-statechange-counter-microservice"
+IsWindows: true
+RequiresCollection: true
+BuildIncludes: "zions-vsts-parent-activation-microservice/*, zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*,zions-vsts-microservice/*"
+Queuename: "WorkItem-statechangecounter-queue"
+WSTopics: "workitem.updated"

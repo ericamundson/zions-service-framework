@@ -1,23 +1,23 @@
 {
     "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
-    "notificationId": 622,
-    "id": "550fca6b-08d2-40d0-9ba5-233316eee23a",
+    "notificationId": 2083,
+    "id": "17996585-0bd2-4450-8d40-315dcb4840df",
     "eventType": "workitem.updated",
     "publisherId": "tfs",
     "message": {
-        "text": "Epic #569102 (Kevin Testing) updated by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=569102)",
-        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=569102\">Epic #569102</a> (Kevin Testing) updated by Michael Angelastro",
-        "markdown": "[Epic #569102](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=569102) (Kevin Testing) updated by Michael Angelastro"
+        "text": "Epic #35845 (epic 1) updated by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=35845)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=35845\">Epic #35845</a> (epic 1) updated by Michael Angelastro",
+        "markdown": "[Epic #35845](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=35845) (epic 1) updated by Michael Angelastro"
     },
     "detailedMessage": {
-        "text": "Epic #569102 (Kevin Testing) updated by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=569102)\r\n\r\n",
-        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=569102\">Epic #569102</a> (Kevin Testing) updated by Michael Angelastro<ul></ul>",
-        "markdown": "[Epic #569102](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=569102) (Kevin Testing) updated by Michael Angelastro\r\n\r\n"
+        "text": "Epic #35845 (epic 1) updated by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=35845)\r\n\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=35845\">Epic #35845</a> (epic 1) updated by Michael Angelastro<ul></ul>",
+        "markdown": "[Epic #35845](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=35845) (epic 1) updated by Michael Angelastro\r\n\r\n"
     },
     "resource": {
-        "id": 7,
-        "workItemId": 569102,
-        "rev": 4,
+        "id": 105,
+        "workItemId": 35845,
+        "rev": 101,
         "revisedBy": {
             "id": "b469b2eb-26de-609a-a49a-a173e186971d",
             "name": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
@@ -35,72 +35,88 @@
         "revisedDate": "9999-01-01T00:00:00Z",
         "fields": {
             "System.Rev": {
-                "oldValue": 3,
-                "newValue": 4
+                "oldValue": 100,
+                "newValue": 101
             },
             "System.AuthorizedDate": {
-                "oldValue": "2020-06-04T20:30:07.45Z",
-                "newValue": "2020-06-04T20:30:25.48Z"
+                "oldValue": "2020-07-23T20:48:52.953Z",
+                "newValue": "2020-07-24T14:30:07.747Z"
             },
             "System.RevisedDate": {
-                "oldValue": "2020-06-04T20:30:25.48Z",
+                "oldValue": "2020-07-24T14:30:07.747Z",
                 "newValue": "9999-01-01T00:00:00Z"
             },
             "System.ChangedDate": {
-                "oldValue": "2020-06-04T20:30:07.45Z",
-                "newValue": "2020-06-04T20:30:25.48Z"
+                "oldValue": "2020-07-23T20:48:52.953Z",
+                "newValue": "2020-07-24T14:30:07.747Z"
             },
             "System.Watermark": {
-                "oldValue": 327883,
-                "newValue": 327885
+                "oldValue": 329279,
+                "newValue": 329298
             },
-            "Custom.OTLNumber": {
-                "oldValue": "2"
+            "Microsoft.VSTS.Scheduling.TargetDate": {
+                "newValue": "2020-08-05T06:00:00Z"
             }
         },
         "_links": {
             "self": {
-                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/569102/updates/7"
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/35845/updates/105"
             },
             "workItemUpdates": {
-                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/569102/updates"
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/35845/updates"
             },
             "parent": {
-                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/569102"
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/35845"
             },
             "html": {
-                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=569102"
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=35845"
             }
         },
-        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/569102/updates/7",
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/35845/updates/105",
         "revision": {
-            "id": 569102,
-            "rev": 4,
+            "id": 35845,
+            "rev": 101,
             "fields": {
                 "System.AreaPath": "ALMOpsTest",
                 "System.TeamProject": "ALMOpsTest",
                 "System.IterationPath": "ALMOpsTest",
                 "System.WorkItemType": "Epic",
-                "System.State": "New",
+                "System.State": "Active",
                 "System.Reason": "New",
-                "System.CreatedDate": "2019-07-09T15:47:56.13Z",
-                "System.CreatedBy": "Kevin Gruis <Kevin.Gruis@zionsbancorp.com>",
-                "System.ChangedDate": "2020-06-04T20:30:25.48Z",
+                "System.AssignedTo": "Matthew Van Wagoner <Matthew.Vanwagoner@zionsbancorp.com>",
+                "System.CreatedDate": "2019-01-29T23:39:14.923Z",
+                "System.CreatedBy": "Matthew Van Wagoner <Matthew.Vanwagoner@zionsbancorp.com>",
+                "System.ChangedDate": "2020-07-24T14:30:07.747Z",
                 "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
                 "System.CommentCount": 0,
-                "System.Title": "Kevin Testing",
-                "System.BoardColumn": "New",
+                "System.Title": "epic 1",
+                "System.BoardColumn": "Active",
                 "System.BoardColumnDone": false,
-                "Microsoft.VSTS.Common.StateChangeDate": "2019-07-09T15:47:56.13Z",
+                "Microsoft.VSTS.Common.StateChangeDate": "2019-01-29T23:39:14.923Z",
                 "Microsoft.VSTS.Common.Priority": 2,
                 "Microsoft.VSTS.Common.ValueArea": "Business",
-                "WEF_50EF162195514EDDBA9895A4B28AB725_Kanban.Column": "New",
-                "WEF_50EF162195514EDDBA9895A4B28AB725_Kanban.Column.Done": false
+                "Microsoft.VSTS.Scheduling.TargetDate": "2020-08-05T06:00:00Z",
+                "Custom.Sizing": "XS",
+                "Custom.ExternalID": "111",
+                "Custom.SubState": "Cannot Reproduce",
+                "WEF_50EF162195514EDDBA9895A4B28AB725_Kanban.Column": "Active",
+                "WEF_50EF162195514EDDBA9895A4B28AB725_Kanban.Column.Done": false,
+                "Custom.OTLNumber": "11",
+                "System.Description": "test epic",
+                "Custom.StrategicArea3": "Commercial;Affluent"
             },
             "relations": [
                 {
                     "rel": "System.LinkTypes.Hierarchy-Forward",
-                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947861",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947909",
+                    "attributes": {
+                        "isLocked": false,
+                        "name": "Child"
+                    }
+                },
+                {
+                    "rel": "System.LinkTypes.Hierarchy-Forward",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947905",
                     "attributes": {
                         "isLocked": false,
                         "name": "Child"
@@ -109,16 +125,16 @@
             ],
             "_links": {
                 "self": {
-                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/569102/revisions/4"
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/35845/revisions/101"
                 },
                 "workItemRevisions": {
-                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/569102/revisions"
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/35845/revisions"
                 },
                 "parent": {
-                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/569102"
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/35845"
                 }
             },
-            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/569102/revisions/4"
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/35845/revisions/101"
         }
     },
     "resourceVersion": "1.0",
@@ -136,5 +152,5 @@
             "baseUrl": "https://dev.azure.com/eto-dev/"
         }
     },
-    "createdDate": "2020-06-04T20:30:32.0647563Z"
+    "createdDate": "2020-07-24T14:30:16.5494056Z"
 }

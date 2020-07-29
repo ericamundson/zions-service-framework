@@ -1,4 +1,4 @@
-D:
-cd "D:\git\zions-service-framework\zions-web-monitoring"
-java -Dspring.profiles.active=smartdoc -jar D:\git\zions-service-framework\zions-web-monitoring\build\libs\zions-web-monitoring-latest.jar monitorSmartDoc --tfs.url=https://dev.azure.com --tfs.project=DTS --tfs.collection=ZionsETO --tfs.areapath="DTS\ALMOps\ModernRequirements" --mr.url=https://dev.azure.com/ZionsETO/DTS/_apps/hub/edevtech-mr.iGVSO-OnPrem-mrserviceus1008.subHubWork-SmartDocs-OnPrem --mr.smartdoc.name=TestDoc --mr.haslicense=true --logging.level.root=INFO --logging.file=c:/logs/SmartDocLivenessCheck.log"
+C:
+cd "C:\SmartDocMonitoring"
+java -Dspring.profiles.active=smartdoc -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=sbc-confluence -Dproxy.Password=C0nflu1nc1!@dm1n1$tr@t8r -jar C:\SmartDocMonitoring\build\libs\zions-web-monitoring-latest.jar monitorSmartDoc --tfs.url=https://dev.azure.com --tfs.project=DTS --tfs.collection=ZionsETO --tfs.areapath="DTS\ALMOps\ModernRequirements\Bug" --tfs.owner=robert.huet@zionsbancorp.com --mr.url=https://dev.azure.com/ZionsETO/DTS/_apps/hub/edevtech-mr.iGVSO-OnPrem-mrserviceus1008.subHubWork-SmartDocs-OnPrem --mr.smartdoc.name=TestDoc --mr.haslicense=true --logging.level.root=INFO --logging.file=c:/logs/SmartDocLivenessCheck.log"
 exit
