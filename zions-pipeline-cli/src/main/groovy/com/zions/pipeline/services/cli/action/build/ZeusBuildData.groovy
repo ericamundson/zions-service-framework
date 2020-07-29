@@ -690,7 +690,7 @@ class ZeusBuildData implements CliAction {
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'build.id', 'out.dir', 'change.request']
+		def required = ['tfs.url', 'tfs.project', 'build.id', 'out.dir', 'change.request']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

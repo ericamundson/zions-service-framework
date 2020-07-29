@@ -1,3 +1,7 @@
+variables:
+- group: 'XebiaLabs CLI (Prod)'
+- group: 'ADO Credentials'
+
 trigger:
   branches:
     include:
@@ -28,6 +32,10 @@ stages:
 #      clean: none
 
     steps:
+    - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+      displayName: 'Replace tokens in **/*.properties'
+      inputs:
+        targetFiles: '**/*.properties'
     - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
       displayName: 'Tag Pending'
       inputs:

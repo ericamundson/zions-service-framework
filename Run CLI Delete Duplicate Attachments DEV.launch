@@ -9,8 +9,8 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="deleteDuplicateAdoAttachments   --tfs.url=https://dev.azure.com --tfs.collection=eto-dev --tfs.user=robert.huet@zionsbancorp.com --tfs.queryID=cdd252f0-7d8a-499f-a7bb-6be41ebd9103  --tfs.project=FutureCore --process.name=ZionsAgile   --logging.file=c:\\adomigration_dev\\attachmentDedupe.log --clm.url=https://clm.cs.zionsbank.com --clm.user=svc-rtcmigration --clm.password=t35T1ng411rTcM!gR@t10n --mr.url=http://utmvti0190:8026 --tfs.areapath=FutureCore\Requirements\R3   --clm.pageSize=100  --rm.mapping.file=./CoreRRMMapping.xml"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="deleteDuplicateAdoAttachments   --tfs.url=https://dev.azure.com --tfs.collection=eto-dev  --tfs.queryID=cdd252f0-7d8a-499f-a7bb-6be41ebd9103  --tfs.project=FutureCore --process.name=ZionsAgile   --logging.file=c:\\adomigration_dev\\attachmentDedupe.log --clm.url=https://clm.cs.zionsbank.com   --mr.url=http://utmvti0190:8026 --tfs.areapath=FutureCore\Requirements\R3   --clm.pageSize=100  --rm.mapping.file=./CoreRRMMapping.xml"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=rmdb -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User=svc-rtcmigration -Dproxy.Password=t35T1ng411rTcM!gR@t10n"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=rmdb   
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
 </launchConfiguration>
