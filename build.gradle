@@ -1,5 +1,7 @@
 buildscript {
-	ext { springBootVersion = '2.2.2.RELEASE' }
+	ext { springBootVersion = '2.2.2.RELEASE'
+		springCloudVersion = 'Greenwich.SR2'
+	}
 	repositories {
 		if ("${queue}" == 'Hosted') {
 			mavenCentral()
@@ -132,9 +134,11 @@ allprojects {
 //		
 //	}
 	// End generation of framework documentation
-	sourceSets.main.resources{
+	sourceSets.main.resources {
 		srcDir '../common/resources'
+		srcDir "${vaultResources}"
 	}
+		
 
 
 	bootJar { enabled = false }
@@ -160,12 +164,14 @@ allprojects {
 			name 'ZionsNexusPublic'
 			url "${nexusUrl}/repository/public/"
 		}
+		//mavenCentral()
 	}
 
 	dependencies {
 		// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
 		// https://mvnrepository.com/artifact/com.github.rholder/gradle-one-jar
 		compile 'org.springframework.boot:spring-boot-starter'
+		compile('org.springframework.cloud:spring-cloud-starter-vault-config')
 		compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.1'
 		compile 'org.codehaus.groovy:groovy-dateutil:3.0.1'
 		compile 'org.codehaus.groovy:groovy-yaml:3.0.1'
@@ -179,7 +185,6 @@ allprojects {
 		//		compile group: 'xom', name: 'xom', version: '1.2.5'
 
 		compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.2') { exclude(module: 'groovy') }
-		
 	
 		testCompile(
 			'org.springframework.boot:spring-boot-starter-test',
@@ -199,6 +204,11 @@ allprojects {
 		//testImplementation files('libs/spock-reports-1.6.2.jar')
 		//implementation ('org.junit.jupiter:junit-jupiter-api:5.5.2')
 		testRuntime('org.junit.jupiter:junit-jupiter-engine:5.6.2')
+	}
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		}
 	}
 	test { //String activeProfile =  System.properties['spring.profiles.active']
 		doFirst {

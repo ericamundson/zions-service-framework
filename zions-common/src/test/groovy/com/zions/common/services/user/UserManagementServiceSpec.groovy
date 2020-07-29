@@ -18,6 +18,7 @@ import org.springframework.ldap.core.support.LdapContextSource
 import org.springframework.test.context.ContextConfiguration
 
 import spock.lang.Specification
+import spock.lang.Ignore
 
 
 @ContextConfiguration(classes=[UserManagementServiceSpecConfig])
@@ -25,10 +26,10 @@ class UserManagementServiceSpec extends Specification {
 	@Autowired
 	UserManagementService userManagementService
 
+	@Ignore
 	public 'Find user info'() {
 		
 		when: 'Access user by id'
-		//boolean auth = userManagementService.authenticate('z091182', '4878Middy002')
 		User testU = userManagementService.getUserById('z004421')
 		
 		then: 'validate user found'
