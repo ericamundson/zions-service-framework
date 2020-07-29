@@ -9,7 +9,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.setcolor.SetColorApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--ado.topics=workitem.updated,workitem.created&#13;&#10;--tfs.url=https://dev.azure.com&#13;&#10;--tfs.collection=eto-dev &#13;&#10; &#13;&#10; &#13;&#10;--routing.direct.key=setcolor&#13;&#10;--queue.name=WorkItem-setcolor-queue&#13;&#10;--queue.autoDelete=true"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--ado.topics=workitem.updated,workitem.created&#13;&#10;--tfs.url=https://dev.azure.com&#13;&#10;--tfs.collection=eto-dev&#13;&#10;--spring.rabbitmq.host=utmvti0192 &#13;&#10;&#13;&#10; &#13;&#10; &#13;&#10;--routing.direct.key=setcolor&#13;&#10;--queue.name=WorkItem-setcolor-queue&#13;&#10;--queue.autoDelete=true"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-setcolor-microservice"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=spock"/>
 </launchConfiguration>
