@@ -33,13 +33,20 @@ import groovy.json.JsonBuilder
 @Component
 @Slf4j
 class MonitorSmartDoc  implements CliAction {
+	// Failure types
 	static String LOGIN_FAILURE = 'ADO login failure'
-	static String SMARTDOC_FAILURE = 'page load failure'
+	static String ADO_FAILURE = 'ADO site not available'
+	static String SMARTDOC_FAILURE = 'SD page load failure'
 	static String REVIEW_FAILURE = 'Review Request failure'
 	
+	// UI elements
 	static String LOGIN_BUTTON = 'idSIButton9'
 	static String PASSWORD_FIELD = 'i0118'
 	static String USERID_FIELD = 'i0116'
+	
+	// Tags
+	static String FAILURE_TAG = 'CURRENT OUTAGE'
+	static String SUCCESS_TAG = 'SUCCESSFUL RETEST'
 	
 	def completedSteps = []
 	def startTime = (new Date().getTime())
@@ -63,6 +70,9 @@ class MonitorSmartDoc  implements CliAction {
 	
 	@Value('${cache.dir:"c:/SmartDocMonitoring"}')
 	String cacheDir
+	
+	@Value('${maint.window:}')
+	String maintWindow // format is HH:MM-HH:MM
 
 	@Value('${tfs.project:}')
 	String project
@@ -84,7 +94,10 @@ class MonitorSmartDoc  implements CliAction {
 
 	@Value('${ms.login}')
 	String msLogin
-
+	
+	@Value('${tfs.url}')
+	String tfsUrl
+	
 	@Value('${tfs.user}')
 	String tfsUser
 
@@ -107,6 +120,14 @@ class MonitorSmartDoc  implements CliAction {
 	}
 
 	public def execute(ApplicationArguments data) {
+		
+		// Don't process if during maintenance window
+		MaintenanceWindow window = new MaintenanceWindow(maintWindow)
+		if ( window.isActive()) {
+			log.info('In maintenance window.  No monitoring.')
+			return
+		}
+		
 		// Get status from last execution
 		status = new MonitorStatus()
 
@@ -179,7 +200,20 @@ class MonitorSmartDoc  implements CliAction {
 			return
 		}
 		
-		//********** Begin Tests *******
+		// Check ADO availability
+		try {
+			 // Navigate to ADO collection page
+			 driver.get("$tfsUrl/$collection")
+			 addStep('ADO VALIDATION: Loading ADO collection page')
+			 wait.until(ExpectedConditions.titleIs('Projects - Home'))
+		 }
+		 catch( e ) {
+			 reportError(driver, e,ADO_FAILURE)
+			 CloseBrowser(driver)
+			 return
+		 }
+
+		//********** Begin Modern Requirements Tests *******
 		// Test Smart Doc availability
 		try {
 			// Navigate to Modern Requirements Smart Docs page
@@ -255,11 +289,8 @@ class MonitorSmartDoc  implements CliAction {
 		completedSteps.each { step -> println(step) }
 		
 		// If there is a currently failed bug (or previous one), set to SUCCESSFUL RETEST
-		if (status.curBugId) {
-			updateBugSuccessfulRetest(status.curBugId)
-			if (status.prevFail && status.prevFail != '') updateBugSuccessfulRetest(status.prevFail)
-			if (status.delete()) println('Status file deleted')
-		}
+		resetStatus()
+		
 		// If system is running too slowly, then report this
 		log.info("Smart Doc wellness check succeeded.  Elapsed time = $elapsedSec sec")
 //		if (elapsedSec >= tooManySec) reportSlowResponse()
@@ -268,7 +299,19 @@ class MonitorSmartDoc  implements CliAction {
         CloseBrowser(driver)
 
 	}
-	private multitryXpathClick(WebDriver driver, String stepTitle, String elementId) {
+	private void resetStatus() {
+		if (status.curBugId) {
+			if (updateBugSuccessfulRetest("$status.curBugId")) {
+				// Also reset previous open bug
+				if (status.prevFail && status.prevFail != '') updateBugSuccessfulRetest("${status.prevFail}")
+				// try to delete status file
+				if (status.delete()) println('Status file deleted')
+			} else {
+				log.error("Update to $SUCCESS_TAG failed.  The status file will not be deleted")
+			}
+		}
+	}
+	private void multitryXpathClick(WebDriver driver, String stepTitle, String elementId) {
 		boolean activated = false
 		(0..3).each {
 			if (activated) return
@@ -293,8 +336,8 @@ class MonitorSmartDoc  implements CliAction {
 		// If active bug exists for same failure, just add failure comment.  Else, create new Bug.
 		if (status.curBugId && newFailType == status.failType) {
 			boolean sentEmail = false
-			if ((status.failCount == ticketCount - 1) && newFailType != LOGIN_FAILURE) {
-				// Send out email to Modern Requirements Support
+			if ((status.failCount == ticketCount - 1) && newFailType != LOGIN_FAILURE && newFailType != ADO_FAILURE) {
+				// Send out email to Modern Requirements Support since it is not a login or ADO failure
 				def result
 				if (notificationService) result = notificationService.sendModernRequirementsFailureNotification(status)
 				if (result == 'success') {
@@ -308,12 +351,14 @@ class MonitorSmartDoc  implements CliAction {
 		}
 		else { // Creating new bug
 			String prevFail
-			// If previous failure was a login failure, and new failure is not a login failure, then tag previous bug as passed
-			if (status.curBugId && status.failType == LOGIN_FAILURE && newFailType != LOGIN_FAILURE)
-				updateBugSuccessfulRetest(status.curBugId)
+			// If previous failure was a login or ADO failure, then tag previous bug as passed
+			if (status.curBugId && (status.failType == LOGIN_FAILURE || status.failType == ADO_FAILURE)) {
+				if (!updateBugSuccessfulRetest(status.curBugId)) prevFail = status.curBugId
+			}
 			// If previous failure was a SD page load, and new failure is Review Request failure, then tag previous bug as passed
-			else if (status.curBugId && status.failType == SMARTDOC_FAILURE && newFailType == REVIEW_FAILURE)
-				updateBugSuccessfulRetest(status.curBugId)
+			else if (status.curBugId && status.failType == SMARTDOC_FAILURE && newFailType == REVIEW_FAILURE) {
+				if (!updateBugSuccessfulRetest(status.curBugId)) prevFail = status.curBugId
+			}
 			else if (status.curBugId)
 				prevFail = status.curBugId
 			createBug(driver, e, newFailType, prevFail)
@@ -344,7 +389,7 @@ class MonitorSmartDoc  implements CliAction {
 		data.add([op:'add', path:"/fields/System.AreaPath", value: areapath])
 		data.add([op:'add', path:"/fields/System.AssignedTo", value: owner])
 		data.add([op:'add', path:"/fields/Microsoft.VSTS.TCM.ReproSteps", value: steps])
-		data.add([op:'add', path:"/fields/System.Tags", value: 'CURRENT OUTAGE'])
+		data.add([op:'add', path:"/fields/System.Tags", value: FAILURE_TAG])
 		if (attData) {
 			def attUrl = attData.url
 			data.add([op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: attUrl, attributes:[comment: 'Selenium Screenshot']]])
@@ -383,9 +428,10 @@ class MonitorSmartDoc  implements CliAction {
 	}
 	private def updateBugSuccessfulRetest(String id) {
 		def data = []
-		data.add([op:'add', path:"/fields/System.Tags", value: 'SUCCESSFUL RETEST'])
+		data.add([op:'add', path:"/fields/System.Tags", value: SUCCESS_TAG])
 		def result = workManagementService.updateWorkItem(collection, project, id, data)
 		if (result) log.info("Updated bug #$id with successful restest")
+		return result
 	}
 	private def updateBugContinuedFailure(String id, Exception e, String failType, boolean emailSent) {
 		String comment = "Subsequent test failure: ${e.message}"
@@ -432,6 +478,29 @@ class MonitorSmartDoc  implements CliAction {
 		log.error("WARNING:  Unexpected slow response:\n" + formatCompletedStepsForLog())
 	}
 	
+	// Supporting Class Maintenance Window
+	class MaintenanceWindow {
+		Date startTime = new Date()
+		Date endTime = new Date()
+		public MaintenanceWindow(String maintWindow) {
+			try {
+				startTime.set(hourOfDay: maintWindow.substring(0,2).toInteger(), minute: maintWindow.substring(3,5).toInteger(), second: 0)
+				endTime.set(hourOfDay: maintWindow.substring(6,8).toInteger(), minute: maintWindow.substring(9,11).toInteger(), second: 0)
+			}
+			catch (e) {
+				log.error("Invalid maint.window parameter: $maintWindow.  Must be in format HH:MM-HH:MM")
+			}
+		}
+		boolean isActive() {
+			if (!startTime || !endTime) return false
+			
+			Date cur = new Date()
+			if (cur >= startTime && cur <= endTime)
+				return true
+			else
+				return false
+		}
+	}
 	
 	// Supporting Class that holds persistent monitoring status across invocations
 	class MonitorStatus {
