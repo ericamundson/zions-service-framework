@@ -8,6 +8,25 @@ import org.springframework.stereotype.Component
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.servicehooks.SubscriptionService
 
+/**
+ * Accepts yaml in the form (publisherInputs will vary by eventType):
+ * executables:
+ * - type: webHookSubscriptions
+ *   context: eto-dev
+ *   projects: ReleaseEngineering
+ *   eventTypes: git.push
+ *   consumerUrl: https://releaseengineeringprovisioner-zionsbancorporation.msappproxy.net
+ *   consumerUserName: svc-cloud-vsbuildagent
+ *   consumerPassword: !value "webhookPassword"
+ *   publisherInputs:
+ *     repository: ""
+ *     branch: ""
+ *     pushedBy: ""
+ *     projectId: ""
+ *
+ * @author z091556
+ *
+ */
 @Component
 class WebHookSubscriptions implements IExecutableYamlHandler {
 	
