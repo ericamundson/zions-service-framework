@@ -1,0 +1,29 @@
+---
+apiVersion: xl-deploy/v1
+kind: Environments
+spec:
+- name: Environments/DTS
+  type: core.Directory
+  children:
+  - directory: zions-issue-notification-microservice
+    children:
+    
+    - name: Prod
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Prod
+      dictionaries:
+      - Environments/DTS/zions-issue-notification-microservice/_Dictionaries/Prod_Dict
+    - directory: _Dictionaries
+      children:
+      
+      - name: Prod_Dict
+        type: udm.Dictionary
+        entries:
+          
+          stage.path: d:\app\azure\_work\zions-issue-notification-microservice
+          deploy.path: d:\app\azure\services\zions-issue-notification-microservice
+          
+          ws.url: <no value>
+          
+          tfs.url: https://dev.azure.com/zionseto

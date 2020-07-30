@@ -1,0 +1,8 @@
+---
+apiVersion: xl-release/v1
+kind: Release
+spec:
+  name: !format "zions-issue-notification-microservice %app_version%"
+  template: !format DTS/zions-issue-notification-microservice - Master
+  variables:
+    deploymentPackage.name: !value "app_version"

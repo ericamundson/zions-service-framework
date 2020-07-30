@@ -1,0 +1,8 @@
+executables:
+- name: zions-issue-notification-microservice-release
+  type: buildDefinition
+  context: zionseto
+  project: DTS
+  queue: 'On-Prem Production'
+  repository: zions-service-framework
+  buildyaml: zions-issue-notification-microservice/pipeline/ado/microservice-release.yaml
