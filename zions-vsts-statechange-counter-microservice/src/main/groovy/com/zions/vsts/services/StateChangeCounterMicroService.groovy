@@ -127,7 +127,6 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		//this is rev id
 		String rev = "${wiResource.rev}"
 		
-		//parameterize source/destination states for bug count
 		if (sourceState.contains(oldState) && (destState.contains(newState))) {
 			log.debug("Updating count of $wiType #$id")
 	
@@ -148,7 +147,7 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		}
 	}
 
-	//Increment Counter would be something like
+	//will increment the count by 1
 	private def performIncrementCounter(String project, String rev, def id, def statechangeCount, Closure respHandler = null) {
 
 			int totalCount = statechangeCount + 1;
@@ -157,7 +156,6 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 			data.add(t)
 			
-			//def e = [op: 'add', path: '/fields/Custom.ReOpenCounter', value: 'Active']
 			def e = [op: 'add', path: '/fields/Custom.ReOpenCounter', value: totalCount]
 			data.add(e)
 			this.retryFailed = false
