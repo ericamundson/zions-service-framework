@@ -1,3 +1,6 @@
+# list of branch names / types to handle
+branchNames: master,release/,ifb/,dr/,adoinit
+
 # levels for loggers, e.g. "logging.level.org.springframework=DEBUG" (TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF)
 logging:
   level:

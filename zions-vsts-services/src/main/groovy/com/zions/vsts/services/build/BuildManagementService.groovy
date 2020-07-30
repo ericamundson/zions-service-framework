@@ -49,8 +49,6 @@ public class BuildManagementService {
 	@Autowired
 	MemberManagementService memberManagementService
 	
-	//private boolean isYAMLPipeline = false
-	
 	public BuildManagementService() {
 	}
 
@@ -129,7 +127,7 @@ public class BuildManagementService {
 		}
 	}
 	
-	public def ensureBuildsForBranch(def collection, def projectData, def repo, boolean isDRBranch, def ciTemplate, def releaseTemplate) {
+	public def ensureBuildsForBranch(def collection, def projectData, def repo, boolean isDRBranch, def ciTemplate, def releaseTemplate, boolean isInitBranch) {
 		// if this is for a DR branch, call special operation
 		if (isDRBranch) {
 			return ensureDRBuilds(collection, projectData, repo)
@@ -145,7 +143,11 @@ public class BuildManagementService {
 		// check for YAML pipeline in use
 		boolean isYAMLPipeline = false
 		def pipelineFileName = "azure-pipelines.yml"
-		def azurePipelinesFile = codeManagementService.getFileContent(collection, repo.project, repo, pipelineFileName, "master")
+		def branchName = "master"
+		if (isInitBranch) {
+			branchName = "adoinit"
+		}
+		def azurePipelinesFile = codeManagementService.getFileContent(collection, repo.project, repo, pipelineFileName, branchName)
 		if (azurePipelinesFile != null) {
 			// indicate the repo/branch is using a YAML pipeline
 			isYAMLPipeline = true
