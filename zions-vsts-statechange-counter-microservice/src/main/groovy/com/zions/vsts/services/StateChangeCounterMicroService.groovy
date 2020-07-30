@@ -93,29 +93,40 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		def outData = adoData
 		def wiResource = adoData.resource
 		
-		//**Check for qualifying projects how to setup in runtime settings?
+		//**Check for qualifying projects
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		if (includeProjects && !includeProjects.contains(project))
 			return logResult('Project not included')
-			
+		
+		//detect the work item type involved in the edit
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
+		
+		//If Bug execute counter code
+		if (!types.contains(wiType))return logResult('not a valid work item type')
+		
 		//define a variable to get just fields System.State
+		//def stateField = wiResource.fields.'System.State'
+		
+		//if (!stateField || stateField == 'null' || stateField == '') return logResult('not a state change')
+	
+		//handle possibe null pointer exception
+	
+		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('no changes made to state')
+		
+		//if (!stateField) return logResult('not a state change')
 		def stateField = wiResource.fields.'System.State'
-		
-		if (!stateField) return logResult('not a state change')
-		
+			
+		if (!stateField || stateField == 'null' || stateField == '') return logResult('not a state change')
+			
 		String oldState = stateField.oldValue
 		String newState = stateField.newValue
+		
 		
 		def statechangeCount = wiResource.revision.fields.'Custom.ReOpenCounter'
 		
 		if (!statechangeCount || statechangeCount == 'null' || statechangeCount == '')
 			statechangeCount = 0;
 			
-		if (!types.contains(wiType))return logResult('not a valid work item type')
-		//handle possibe null pointer exception	
-		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('Work item not changed or closed')
-		
 		//this is bug id
 		String id = "${wiResource.revision.id}"
 		

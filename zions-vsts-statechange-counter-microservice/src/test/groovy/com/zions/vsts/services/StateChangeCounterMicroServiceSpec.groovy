@@ -49,7 +49,7 @@ class StateChangeCounterMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 
 		then: "No Updates should be made"
-		resp == 'not a state change'
+		resp == 'no changes made to state'
 
 	
 	}
