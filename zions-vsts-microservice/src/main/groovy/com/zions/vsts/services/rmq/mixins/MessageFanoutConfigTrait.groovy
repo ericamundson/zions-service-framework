@@ -84,6 +84,23 @@ trait MessageFanoutConfigTrait {
 
 		}
 		dec.declarables.add(parked)
+		Queue notify = null	
+		if (queueAutoDelete) {
+			notify = QueueBuilder.durable('notification-queue')
+					.autoDelete()
+		            //.deadLetterExchange('dead-letter-exchange')
+		            //.deadLetterRoutingKey("${queueName}")
+					//.ttl(1000)
+		            .build();
+		} else {
+			notify = QueueBuilder.durable('notification-queue')
+					//.deadLetterExchange('dead-letter-exchange')
+					//.deadLetterRoutingKey("${queueName}")
+					//.ttl(1000)
+					.build();
+
+		}
+		dec.declarables.add(notify)
 		Queue prim = null 
 		if (queueAutoDelete) {
 			prim = QueueBuilder.durable(queueName)
@@ -107,6 +124,8 @@ trait MessageFanoutConfigTrait {
 		Binding b = new Binding("${queueName}", Binding.DestinationType.QUEUE, 'delay-exchange', "${queueName}", null)
 		dec.declarables.add(b)
 		b = new Binding('parked-queue', Binding.DestinationType.QUEUE, 'dead-letter-exchange', 'parked-queue', null)
+		dec.declarables.add(b)
+		b = new Binding('notification-queue', Binding.DestinationType.QUEUE, 'dead-letter-exchange', 'notification-queue', null)
 		dec.declarables.add(b)
 		return dec;
 	}
