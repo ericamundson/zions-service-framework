@@ -1,6 +1,6 @@
 bootJar {
 	enabled = true
-	mainClassName = 'com.zions.content.services.IssueNotificationApplication'
+	mainClassName = 'com.zions.vsts.services.IssueNotificationApplication'
 	archiveName = 'zions-issue-notification-microservice.jar'
 	//version =  "${version}"
 }
