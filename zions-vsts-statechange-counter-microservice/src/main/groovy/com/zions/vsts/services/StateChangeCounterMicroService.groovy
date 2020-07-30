@@ -104,20 +104,14 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		//If Bug execute counter code
 		if (!types.contains(wiType))return logResult('not a valid work item type')
 		
-		//define a variable to get just fields System.State
-		//def stateField = wiResource.fields.'System.State'
-		
-		//if (!stateField || stateField == 'null' || stateField == '') return logResult('not a state change')
-	
-		//handle possibe null pointer exception
-	
 		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('no changes made to state')
 		
 		//if (!stateField) return logResult('not a state change')
 		def stateField = wiResource.fields.'System.State'
 			
 		if (!stateField || stateField == 'null' || stateField == '') return logResult('not a state change')
-			
+		
+		//restrieve old/new state field values for comparison	
 		String oldState = stateField.oldValue
 		String newState = stateField.newValue
 		
