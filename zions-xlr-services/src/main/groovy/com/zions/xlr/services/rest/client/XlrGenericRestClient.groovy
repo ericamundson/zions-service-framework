@@ -25,8 +25,8 @@ class XlrGenericRestClient extends AGenericRestClient {
 
 	@Autowired
 	public XlrGenericRestClient(@Value('${xlr.url:}') String url, 
-		@Value('${xlr.user:}') String user, 
-		@Value('${xlr.password:}') String password) {
+		@Value('${xl.user:}') String user, 
+		@Value('${xl.password:}') String password) {
 		this.xlrUrl = url
 		this.user = user
 		this.password = password

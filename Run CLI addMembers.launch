@@ -8,6 +8,6 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="addMembers --tfs.url=http://localhost:8080/tfs --tfs.collection=defaultcollection --tfs.user=z091182 --tfs.token=&quot;hqi4isjwkg7orbwer6sjtlxkcqfme5yfvsgkphlgpp2oi3u4uapa&quot; --member.file.name=members.json"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="addMembers --tfs.url=http://localhost:8080/tfs --tfs.collection=defaultcollection   --member.file.name=members.json"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
 </launchConfiguration>
