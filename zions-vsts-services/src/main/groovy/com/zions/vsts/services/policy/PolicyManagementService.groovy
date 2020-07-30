@@ -257,7 +257,7 @@ public class PolicyManagementService {
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
-		def policyRes = getBranchPolicy(projectData, repoData.id, branchName)
+		def policyRes = getBranchPolicy("40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e", projectData.id, repoData.id, branchName)
 		if (!policyRes) {
 			policyRes = createPolicy(collection, projectData, policy)
 		}
@@ -461,11 +461,11 @@ public class PolicyManagementService {
 		return result
 	}
 
-	def getBranchPolicy( def policyType, def project, def repoId, def branchName ) {
+	def getBranchPolicy( def policyType, def projectId, def repoId, def branchName ) {
 		def query = ['repositoryId':"${repoId}", 'refName':"${branchName}" , 'policyType':"${policyType}" ]
 		def results = genericRestClient.get(
 			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${project.id}/_apis/git/policy/configurations",
+			uri: "${genericRestClient.getTfsUrl()}/${projectId}/_apis/git/policy/configurations",
 			query: query,
 			headers: [Accept: 'application/json;api-version=5.1']
 		)
