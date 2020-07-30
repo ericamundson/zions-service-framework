@@ -1,0 +1,10 @@
+<service>
+      <id>zions-issue-notification-microservice</id>
+      <name>zions-issue-notification-microservice</name>
+      <description>This service runs zions-issue-notification-microservice.</description>
+      <executable>java</executable>
+      
+      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-issue-notification-microservice.jar" --queue.name=notification-queue  --tfs.url={{tfs.url}} --logging.file="{{deploy.path}}/zions-issue-notification-microservice.log" </arguments>
+	  
+      <logmode>rotate</logmode>
+</service>

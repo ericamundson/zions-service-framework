@@ -1,0 +1,7 @@
+---
+AppName: "zions-issue-notification-microservice"
+IsWindows: true
+RequiresCollection: false
+BuildIncludes: "zions-issue-notification-microservice/*,zions-vsts-services/src/main/groovy/com/zions/vsts/services/notification/*,zions-vsts-microservice/*"
+Queuename: "notification-queue"
+WSTopics: "workitem.updated"

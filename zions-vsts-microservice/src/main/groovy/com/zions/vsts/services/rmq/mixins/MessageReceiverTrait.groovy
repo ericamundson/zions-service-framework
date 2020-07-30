@@ -15,8 +15,8 @@ trait MessageReceiverTrait implements MessageListener {
 	@Autowired(required=false)
 	RabbitTemplate rabbitTemplate
 	
-	@Autowired(required=false)
-	NotificationService notificationService
+//	@Autowired(required=false)
+//	NotificationService notificationService
 	
 	@Value('${queue.name:}')
 	String queueName
@@ -33,7 +33,7 @@ trait MessageReceiverTrait implements MessageListener {
 			if (doRetries && !metRetryLimit(message, e)) {
 				//throw new AmqpRejectAndDontRequeueException(e.message)
 				throw e
-			} 
+			}
 //			else {
 //				putIntoDeadQueue(message)
 //			}		
@@ -60,9 +60,10 @@ trait MessageReceiverTrait implements MessageListener {
 			exception.printStackTrace(pw);
 			headers['x-trace'] = "${sw}"
 			this.rabbitTemplate.send('dead-letter-exchange', 'parked-queue', failedMessage);
-			if (notificationService) {
-				notificationService.sendMicroServiceIssueNotification(failedMessage)
-			}
+			this.rabbitTemplate.send('dead-letter-exchange', 'notification-queue', failedMessage);
+//			if (notificationService) {
+//				notificationService.sendMicroServiceIssueNotification(failedMessage)
+//			}
 			return true
 		}
 		return false

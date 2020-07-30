@@ -140,7 +140,7 @@ class BlueprintTemplateInterpretorService {
 		if (osname.contains('Windows')) {
 			InputStream istream = this.getClass().getResourceAsStream('/xl/windows/xl.exe')
 			File pipelineDir = new File(outDir, pipelineFolder)
-			if (!pipelineDir) {
+			if (!pipelineDir.exists()) {
 				pipelineDir.mkdirs()
 			}
 			File of = new File(pipelineDir, 'xl.exe')
@@ -150,7 +150,7 @@ class BlueprintTemplateInterpretorService {
 		} else {
 			InputStream istream = this.getClass().getResourceAsStream('/xl/linux/xl')
 			File pipelineDir = new File(outDir, pipelineFolder)
-			if (!pipelineDir) {
+			if (!pipelineDir.exists()) {
 				pipelineDir.mkdirs()
 			}
 			File of = new File(pipelineDir, 'xl')
