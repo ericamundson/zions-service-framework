@@ -423,7 +423,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
 		
 		when: 'call ensureBuildsForBranch'
-		def result = underTest.ensureBuildsForBranch('', projectData, repo, false, null, null)
+		def result = underTest.ensureBuildsForBranch('', projectData, repo, false, null, null, false)
 		
 		then: "resultFolderName is empty"
 		"${result.folderName}" == ""
@@ -442,7 +442,7 @@ class BuildManagementServiceSpecTest extends Specification {
 		def repo = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repo.json').text)
 		
 		when: 'call ensureBuildsForBranch'
-		def result = underTest.ensureBuildsForBranch('', projectData, repo, false, null, null)
+		def result = underTest.ensureBuildsForBranch('', projectData, repo, false, null, null, false)
 		
 		then: 'result.folderName is empty'
 		"${result.folderName}" == ""
