@@ -9,7 +9,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.ext.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="syncTestCase --tfs.url=https://dev.azure.com/eto-dev  --tfs.user=z091182 --tfs.token=&quot;ejl3unyuuxdt7kawlsxysxdlzmm7gbjucvksq72fswmzvzxbf5aa&quot;  --report.search.dir=D:\git\zions-service-framework --tfs.project=DTS --ado.area.path=DTS\ALMOps --ado.iteration.path=DTS --cache.location=d:\spockcache"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="syncTestCase --tfs.url=https://dev.azure.com/eto-dev     --report.search.dir=D:\git\zions-service-framework --tfs.project=DTS --ado.area.path=DTS\ALMOps --ado.iteration.path=DTS --cache.location=d:\spockcache"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-ext-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=spock"/>
 </launchConfiguration>

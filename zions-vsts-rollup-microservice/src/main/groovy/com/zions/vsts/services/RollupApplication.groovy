@@ -19,10 +19,14 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration
-
+import org.springframework.vault.VaultException
+import com.zions.common.services.vault.VaultService
+import org.springframework.beans.factory.annotation.Autowired
 
 @SpringBootApplication(exclude=[MongoAutoConfiguration,MongoDataAutoConfiguration,EmbeddedMongoAutoConfiguration,LdapAutoConfiguration])
-public class RollupApplication {
+public class RollupApplication implements ApplicationRunner {
+	@Autowired
+	VaultService vaultService
 
 	public static void main(String[] args) {
 		
@@ -30,5 +34,7 @@ public class RollupApplication {
 		app.run(args);
 				
 
+	}
+	public void run(ApplicationArguments  args) throws Exception {
 	}
 }

@@ -28,9 +28,14 @@
 			<locationURI>PARENT-5-PROJECT_LOC/Resources</locationURI>
 		</link>
 		<link>
+			<name>Vault-resources</name>
+			<type>2</type>
+			<location>c:/Vault/resources</location>
+		</link>
+		<link>
 			<name>common-resources</name>
 			<type>2</type>
-			<location>../common/resources</location>
+			<location>D:/git/zions-service-framework/common/resources</location>
 		</link>
 	</linkedResources>
 </projectDescription>
