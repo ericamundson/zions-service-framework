@@ -43,6 +43,8 @@ class MonitorSmartDoc  implements CliAction {
 	static String LOGIN_BUTTON = 'idSIButton9'
 	static String PASSWORD_FIELD = 'i0118'
 	static String USERID_FIELD = 'i0116'
+	static String CONFIRM_BUTTON = "confirm-dialog-ok-button-rvm-req-confirmation-dialog"
+	static String MR_LOGOUT_BUTTON = "smd_left_panel_footerbtn-container"
 	
 	// Tags
 	static String FAILURE_TAG = 'CURRENT OUTAGE'
@@ -276,7 +278,13 @@ class MonitorSmartDoc  implements CliAction {
 				wait.until(ExpectedConditions.elementToBeClickable(By.xpath(reviewXpath)))
 				addStep('REVIEW VALIDATION: waited for Review Title to be clickable')
 				// Try to click up to 4 times
-				multitryXpathClick(driver, 'REVIEW VALIDATION: clicked on Review Title', reviewXpath)
+				multitryClick(driver, 'REVIEW VALIDATION: clicked on Review Title', {By.xpath(reviewXpath)})
+				// Close the dialog
+				driver.findElement(By.cssSelector(".k-i-rvm-req-dialog-close")).click()
+				wait.until(ExpectedConditions.elementToBeClickable(By.id(CONFIRM_BUTTON)))
+				Thread.sleep(2000) //pause 2 sec for dialog to load
+				// Try to click up to 4 times
+				multitryClick(driver, 'REVIEW VALIDATION: clicked on Confirm Button', {By.id(CONFIRM_BUTTON)})
 			}
 			catch( e ) {
 				reportError(driver, e,REVIEW_FAILURE)
@@ -287,14 +295,24 @@ class MonitorSmartDoc  implements CliAction {
 		
 		// Success!!!
 		completedSteps.each { step -> println(step) }
+		log.info("Smart Doc wellness check succeeded.  Elapsed time = $elapsedSec sec")
 		
 		// If there is a currently failed bug (or previous one), set to SUCCESSFUL RETEST
 		resetStatus()
 		
 		// If system is running too slowly, then report this
-		log.info("Smart Doc wellness check succeeded.  Elapsed time = $elapsedSec sec")
 //		if (elapsedSec >= tooManySec) reportSlowResponse()
 	
+		// Log out of both Modern Requirements and ADO
+		wait.until(ExpectedConditions.elementToBeClickable(By.id(MR_LOGOUT_BUTTON)))
+		driver.findElement(By.id(MR_LOGOUT_BUTTON)).click()
+		driver.switchTo().defaultContent()
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("mectrl_headerPicture")))
+		driver.findElement(By.id("mectrl_headerPicture")).click()
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("mectrl_body_signOut")))
+		driver.findElement(By.id("mectrl_body_signOut")).click()
+		Thread.sleep(10000) //pause 10 sec
+		
         //close Browser
         CloseBrowser(driver)
 
@@ -311,12 +329,12 @@ class MonitorSmartDoc  implements CliAction {
 			}
 		}
 	}
-	private void multitryXpathClick(WebDriver driver, String stepTitle, String elementId) {
+	private void multitryClick(WebDriver driver, String stepTitle, Closure by) {
 		boolean activated = false
 		(0..3).each {
 			if (activated) return
 			try {
-				driver.findElement(By.xpath(elementId)).click()
+				driver.findElement(by.call()).click()
 				addStep(stepTitle)
 				activated = true
 			} catch(e) {
