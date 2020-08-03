@@ -159,11 +159,11 @@ class CodeManagementService {
 	}
 
 	public def ensureBranch(String collection, String project, String repo, String baseName, String name) {
-		def bBranch = getBranch(collection, project, repo, baseName)
 		def nBranch = getBranch(collection, project, repo, name)
 		if (nBranch) {
 			return nBranch
 		} else {
+			def bBranch = getBranch(collection, project, repo, baseName)
 			nBranch = createBranch(collection, project, repo, bBranch, name)
 			nBranch = getBranch(collection, project, repo, name)
 		}
@@ -330,6 +330,7 @@ class CodeManagementService {
 			)
 		return result
 	}
+
 	def createDeployManifest(def collection, def project, def repo) {
 		def query = [filter:'head', 'api-version': '4.1']
 		def head = getRefHead(collection, project, repo)

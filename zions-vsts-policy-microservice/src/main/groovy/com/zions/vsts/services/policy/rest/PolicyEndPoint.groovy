@@ -25,7 +25,13 @@ import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
 public class PolicyEndPoint implements MessageReceiverTrait {
 
     @Autowired
+	@Value('${branchNames:none}')
+    private String branchNameStr;
+
+    @Autowired
     private PolicyManagementService policyManagementService;
+
+    private String[] branchNames;
 
 	@Autowired
 	public PolicyEndPoint() {
@@ -45,16 +51,14 @@ public class PolicyEndPoint implements MessageReceiverTrait {
 			def eventData = adoData
 			def changeSet = eventData.resource;
 			changeSet.refUpdates.each { update ->
-				// only protect certain branch types / patterns
-				String branchName = "${update.name}".toLowerCase()
-				if (branchName.startsWith("refs/heads/master") || 
-					branchName.startsWith("refs/heads/release") ||
-					branchName.startsWith("refs/heads/feature/ifb") ||
-					branchName.startsWith("refs/heads/ifb/") ||
-					branchName.startsWith("refs/heads/dr/")) {
-					// only when branch is new
-					if ("${update.oldObjectId}" == "0000000000000000000000000000000000000000") {
-						log.debug("In PolicyEndPoint - changes:\n"+changeSet)
+				// only when branch is new
+				if ("${update.oldObjectId}" == "0000000000000000000000000000000000000000") {
+					log.debug("In PolicyEndPoint - changes:\n"+changeSet)
+					branchNames = branchNameStr.split(',')
+					// only protect certain branch types / patterns
+					String branchName = "${update.name}".toLowerCase()
+					if (isProtectedBranch(branchName)) {
+						log.debug("PolicyEndPoint::processADOData -- Found protected branch: " + branchName)
 						def collection = getCollectionName(eventData.resourceContainers);
 						policyManagementService.handleNewBranch(changeSet, collection, update.name)
 					}
@@ -72,6 +76,18 @@ public class PolicyEndPoint implements MessageReceiverTrait {
 //		return 'git.push';
 //	}
 
+    private boolean isProtectedBranch(String branchName) {
+		//log.debug("PolicyEndPoint::isProtectedBranch -- branchName: "+branchName)
+		boolean isProtected = false
+		branchNames.any { String bName ->
+			String bNameCmp = "refs/heads/${bName}"
+			if (branchName.startsWith(bNameCmp)) {
+				isProtected = true
+			}
+		}
+		return isProtected
+	}
+
     private def getCollectionName(def containerData) {
 		def collectionName = ""
     	try {
@@ -84,6 +100,7 @@ public class PolicyEndPoint implements MessageReceiverTrait {
     	}
     	return collectionName
     }
+
     private def getCollectionId(def containerData) {
     	def collectionId = containerData.collection.id
     	return collectionId

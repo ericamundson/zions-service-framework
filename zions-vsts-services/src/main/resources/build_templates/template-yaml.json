@@ -1,0 +1,99 @@
+{
+	"triggers": [{
+			"branchFilters": [],
+			"pathFilters": [],
+			"settingsSourceType": 2,
+			"batchChanges": false,
+			"maxConcurrentBuildsPerBranch": 1,
+			"triggerType": "continuousIntegration"
+		}
+	],
+	"variables": {
+		"system.debug": {
+			"value": "false",
+			"allowOverride": true
+		}
+	},
+	"properties": {},
+	"tags": [],
+	"_links": {
+		"self": {
+			"href": "https://dev.azure.com/ZionsETO/1e20e0f0-ed81-45a8-affa-25d473be3e9d/_apis/build/Definitions/752?revision=6"
+		},
+		"web": {
+			"href": "https://dev.azure.com/ZionsETO/1e20e0f0-ed81-45a8-affa-25d473be3e9d/_build/definition?definitionId=752"
+		},
+		"editor": {
+			"href": "https://dev.azure.com/ZionsETO/1e20e0f0-ed81-45a8-affa-25d473be3e9d/_build/designer?id=752&_a=edit-build-definition"
+		},
+		"badge": {
+			"href": "https://dev.azure.com/ZionsETO/1e20e0f0-ed81-45a8-affa-25d473be3e9d/_apis/build/status/752"
+		}
+	},
+	"buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+	"jobAuthorizationScope": "projectCollection",
+	"process": {
+		"yamlFilename": "/azure-pipelines.yml",
+		"type": 2
+	},
+	"repository": {
+		"properties": {
+			"reportBuildStatus": "true"
+		},
+		"id": "26cfe188-ca54-4b42-a566-fe4fa46e59c4",
+		"type": "TfsGit",
+		"name": "apiproxy-parent",
+		"url": "https://dev.azure.com/ZionsETO/IFAPI/_git/apiproxy-parent",
+		"defaultBranch": "refs/heads/master",
+		"clean": null,
+		"checkoutSubmodules": false
+	},
+	"quality": "definition",
+	"authoredBy": {
+		"displayName": "Brian Codella",
+		"url": "https://spsprodcus2.vssps.visualstudio.com/Ab3e0e430-9372-437e-8a92-1f844981f587/_apis/Identities/08698fbd-c454-67a0-9014-97994cc1db7b",
+		"_links": {
+			"avatar": {
+				"href": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MDg2OThmYmQtYzQ1NC03N2EwLTkwMTQtOTc5OTRjYzFkYjdi"
+			}
+		},
+		"id": "08698fbd-c454-67a0-9014-97994cc1db7b",
+		"uniqueName": "Brian.Codella@zionsbancorp.com",
+		"imageUrl": "https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MDg2OThmYmQtYzQ1NC03N2EwLTkwMTQtOTc5OTRjYzFkYjdi",
+		"descriptor": "aad.MDg2OThmYmQtYzQ1NC03N2EwLTkwMTQtOTc5OTRjYzFkYjdi"
+	},
+	"drafts": [],
+	"queue": {
+		"_links": {
+			"self": {
+				"href": "https://dev.azure.com/ZionsETO/_apis/build/Queues/572"
+			}
+		},
+		"id": 572,
+		"name": "On-Prem Production",
+		"url": "https://dev.azure.com/ZionsETO/_apis/build/Queues/572",
+		"pool": {
+			"id": 11,
+			"name": "On-Prem Production"
+		}
+	},
+	"id": 752,
+	"name": "apiproxy-parent CI",
+	"url": "https://dev.azure.com/ZionsETO/1e20e0f0-ed81-45a8-affa-25d473be3e9d/_apis/build/Definitions/752?revision=6",
+	"uri": "vstfs:///Build/Definition/752",
+	"path": "\\apiproxy-parent",
+	"type": "build",
+	"queueStatus": "enabled",
+	"revision": 6,
+	"createdDate": "2019-08-09T15:08:19.917Z",
+	"project": {
+		"id": "1e20e0f0-ed81-45a8-affa-25d473be3e9d",
+		"name": "IFAPI",
+		"description": "Integration Fabric API",
+		"url": "https://dev.azure.com/ZionsETO/_apis/projects/1e20e0f0-ed81-45a8-affa-25d473be3e9d",
+		"state": "wellFormed",
+		"revision": 2284,
+		"visibility": "private",
+		"lastUpdateTime": "2019-10-29T15:45:30.753Z"
+	}
+}
