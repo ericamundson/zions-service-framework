@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import groovy.json.JsonBuilder
-import org.joda.time.LocalDate
+
 
 
 
@@ -68,8 +68,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			if (!daystoClose|| daystoClose == 'null' || daystoClose == '')
 				daystoClose = 0;
 	
-			//if (performIncrementCounter(this.attemptedProject, this.attemptedId, rev, statechangeCount)) {
-			if (performIncrementCounter(this.attemptedProject, rev, this.attemptedId, statechangeCount)) {
+			
+			if (performIncrementCounter(this.attemptedProject, rev, this.attemptedId, daystoClose)) {
 				return logResult('Work item successfully counted after 412 retry')
 			}
 			else {
@@ -220,8 +220,6 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		//will reset the counter
 	private def performResetCounter(String project, String rev, def id, def daystoClose, Closure respHandler = null) {
 	
-		int totalCount = daystoClose + 1;
-		
 		def data = []
 		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 		data.add(t)
