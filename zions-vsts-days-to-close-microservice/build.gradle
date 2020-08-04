@@ -1,0 +1,12 @@
+bootJar {
+	enabled = true
+	mainClassName = 'com.zions.vsts.services.DaysToCloseApplication'
+	archiveName = 'zions-vsts-days-to-close-microservice.jar'
+	//version =  "${version}"
+}
+
+dependencies {
+	compile project(':zions-vsts-services')
+	compile project(':zions-vsts-microservice')
+	compile project(':zions-common')
+}
