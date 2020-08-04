@@ -612,6 +612,21 @@ class WorkManagementService {
 		return result
 
 	}
+	
+	def getQueryWorkItems(String collection, String project, String team, String queryId) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def eteam = URLEncoder.encode(team, 'utf-8')
+		eteam = eteam.replace('+', '%20')
+		def result = genericRestClient.get(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/${eteam}/_apis/wit/wiql/${queryId}",
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '5.0']
+				)
+		return result
+	}
 
 	def getWorkItem(String collection, String project, String id) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
@@ -766,7 +781,7 @@ class WorkManagementService {
 
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${eproject}/_apis/wit/workitems",
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems",
 				headers: [Accept: 'application/json'],
 				query: [ids: vstsIds.join(','), 'api-version': '4.1', '\$expand': 'all' ]
 				)
