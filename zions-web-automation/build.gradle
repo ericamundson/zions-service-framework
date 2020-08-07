@@ -1,0 +1,12 @@
+bootJar {
+	enabled = true
+	mainClassName = 'com.zions.webbot.cli.WebRunnerApp'
+	archiveName = "zions-web-automation-${version}.jar"
+	//version =  null
+}
+
+dependencies {
+	compile project(':zions-vsts-services')
+	compile project(':zions-common')
+	compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+}
