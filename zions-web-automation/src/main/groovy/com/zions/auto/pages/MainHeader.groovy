@@ -34,13 +34,13 @@ class MainHeader extends BasePage {
 		
 		error = null
 		try {
-			// launch browser and direct it to the login page
+			driver.switchTo().defaultContent()
 			wait.until(ExpectedConditions.elementToBeClickable(By.id(PROFILE_PIC)))
 			driver.findElement(By.id(PROFILE_PIC)).click()
 			steps.add('SIGNOUT: Clicked profile picture')
 			wait.until(ExpectedConditions.elementToBeClickable(By.id(SIGN_OUT)))
 			driver.findElement(By.id(SIGN_OUT)).click()
-			steps.add('SIGNOUT: Clilcked signout link')
+			steps.add('SIGNOUT: Clicked signout link')
 			Thread.sleep(10000) //pause 10 sec
 			return true
 		}

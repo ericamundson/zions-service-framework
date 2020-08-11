@@ -151,7 +151,7 @@ class MonitorSmartDoc  implements CliWebBot {
 			driver.get(mrUrl)
 			steps.add('SMART DOC VALIDATION: Loading Smart Doc Page')			
 			wait.until(ExpectedConditions.titleIs('Smart Docs - Boards'))
-			driver.switchTo().frame(0)
+			wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector("div[class*='external-content'] iframe")))
 			
 			// Activate stakeholder license, if the user does not have a permanent account
 			if (!hasLicense) {
@@ -209,6 +209,7 @@ class MonitorSmartDoc  implements CliWebBot {
 				multitryClick(driver, 'REVIEW VALIDATION: clicked on Review Title', {By.xpath(reviewXpath)})
 				// Close the dialog
 				driver.findElement(By.cssSelector(".k-i-rvm-req-dialog-close")).click()
+				steps.add('REVIEW VALIDATION: clicked on Close Button')
 				wait.until(ExpectedConditions.elementToBeClickable(By.id(CONFIRM_BUTTON)))
 				Thread.sleep(2000) //pause 2 sec for dialog to load
 				// Try to click up to 4 times

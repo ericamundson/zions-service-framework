@@ -8,6 +8,7 @@ class CompletedSteps {
 	void add(stepName) {
 		elapsedSec = ((new Date().getTime()) - startTime) / 1000
 		completedSteps.add(stepName + " (Elapsed seconds: $elapsedSec)")
+		println(stepName)
 	}
 	public String formatForHtml() {
 		String html = '<br><p>Completed Steps:<br><ol>'

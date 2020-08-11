@@ -106,18 +106,20 @@ class SetMrPermissions  implements CliWebBot {
 		
 		// Get all projects for Org
 		def projects = projectManagementService.getProjects(collection)
+		mrSettingsPage.set(driver, wait, steps)
 		projects.'value'.each { project ->
 			// TODO: Do some code to write project stuff
 			String pName = "${project.name}"
-			mrSettingsPage.set(driver, wait, steps)
 			if (!mrSettingsPage.go(pName)) {
 				log.error("Could not load project settings page for project $project: ${mrSettingsPage.error.message}")
 				return
 			}
-			mrSettingsPage.expandGroup('Contributors')
-			mrSettingsPage.enterGroupPermissions('MRUsers')
-			mrSettingsPage.enterGroupPermissions('MRAdmins')
-			mrSettingsPage.enterGroupPermissions('MRPowerUsers')
+			mrSettingsPage.enterGroupPermissions('MRUsers',['Allow','Deny','Allow','Deny','Deny','Allow','Deny','Deny'])
+			Thread.sleep(1000)
+			mrSettingsPage.enterGroupPermissions('MRAdmin',['Allow','Allow','Allow','Allow','Allow','Allow','Allow','Allow'])
+			Thread.sleep(1000)
+			mrSettingsPage.enterGroupPermissions('MRPowerUsers',['Allow','Deny','Allow','Deny','Allow','Allow','Allow','Allow'])
+			Thread.sleep(1000)
 		}
 		
 		// Log out of ADO

@@ -89,6 +89,8 @@ public class WebRunnerApp implements ApplicationRunner {
 					System.setProperty("webdriver.chrome.driver","c:\\chrome-83\\chromedriver.exe");
 					ChromeOptions options = new ChromeOptions()
 					options.addArguments("start-maximized")
+					options.addArguments("enable-automation")
+					options.addArguments("--window-size=1920,1080")
 					driver = new ChromeDriver(options);
 					wait = new WebDriverWait(driver, waitTimeoutSec);
 			
