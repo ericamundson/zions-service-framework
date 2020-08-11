@@ -95,7 +95,7 @@ class MonitorSmartDoc  implements CliWebBot {
 	@Value('${mr.url}')
 	String mrUrl
 
-	@Value('${mr.smartdoc.name}')
+	@Value('${mr.smartdoc.name:}')
 	String smartDocName
 	
 	@Value('${tfs.url}')
@@ -107,20 +107,22 @@ class MonitorSmartDoc  implements CliWebBot {
 	@Value('${ticket.creation.count}')
 	int ticketCount
 
-	@Value('${mr.haslicense}')
+	@Value('${mr.haslicense:false}')
 	boolean hasLicense
 
-	public MonitorSmartDoc() {
-	}
-
-	public def execute(ApplicationArguments data, WebDriver driver, WebDriverWait wait) {
-		
+	public boolean checkPreconditions(ApplicationArguments data) {
 		// Don't process if during maintenance window
 		MaintenanceWindow window = new MaintenanceWindow(maintWindow)
 		if ( window.isActive()) {
 			log.info('In maintenance window.  No monitoring.')
-			return
+			return false
 		}
+		else
+			return true
+	}
+	
+	public def execute(ApplicationArguments data, WebDriver driver, WebDriverWait wait) {
+		
 		
 		// Get status from last execution
 		status = new MonitorStatus()

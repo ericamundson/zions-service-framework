@@ -29,9 +29,9 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 /* Will set default configs for ContentApplication */
 
 @Configuration
-@Profile("smartdoc")
+@Profile("mrauto")
 @ComponentScan(["com.zions.mr","com.zions.auto","com.zions.vsts.services.work","com.zions.vsts.services.admin","com.zions.common.services.logging","com.zions.vsts.services.notification"])
-public class SmartDocAppConfig {
+public class MrAutoAppConfig {
 	@Bean
 	ICacheManagementService cacheManagementService() {
 		return new CacheManagementService('na')

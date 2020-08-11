@@ -40,47 +40,30 @@ import groovy.json.JsonBuilder
 class SetMrPermissions  implements CliWebBot {
 	// Failure types
 	static String LOGIN_FAILURE = 'ADO login failure'
-	static String ADO_FAILURE = 'ADO site not available'
-	static String SMARTDOC_FAILURE = 'SD page load failure'
-	static String REVIEW_FAILURE = 'Review Request failure'
-	
-	// UI elements
-	static String CONFIRM_BUTTON = "confirm-dialog-ok-button-rvm-req-confirmation-dialog"
-	static String MR_LOGOUT_BUTTON = "smd_left_panel_footerbtn-container"
-	
-	// Tags
-	static String FAILURE_TAG = 'CURRENT OUTAGE'
-	static String SUCCESS_TAG = 'SUCCESSFUL RETEST'
 	
 	def steps = new CompletedSteps()
-	def status
+	def projectsToProcess = []
+	def history
 	
 	@Autowired
 	ProjectManagementService projectManagementService
-
-	@Autowired
-	WorkManagementService workManagementService
-
-	@Autowired
-	IAttachments attachmentService
-	
-	@Autowired
-	NotificationService notificationService
 	
 	@Autowired
 	LoginPage loginPage
+	
 	@Autowired
 	MainHeader adoHeader
+	
 	@Autowired
 	MrProjectSettingsPage mrSettingsPage
 
 	@Value('${email.recipient.addresses:}')
 	private String[] recipientEmailAddresses
 
-	@Value('${cache.filename:"status.json"}')
+	@Value('${cache.filename:"history.json"}')
 	String cacheFilename
 	
-	@Value('${cache.dir:"c:/SmartDocMonitoring"}')
+	@Value('${cache.dir:"c:/ModernRequirementsPermissions"}')
 	String cacheDir
 
 	@Value('${tfs.collection:}')
@@ -92,11 +75,26 @@ class SetMrPermissions  implements CliWebBot {
 	@Value('${tfs.owner:}')
 	String owner
 
-
-	public MonitorSmartDoc() {
+	public boolean checkPreconditions(ApplicationArguments data) {
+		// Get projects already processed by previous executions
+		history = new HistoryCache()
+		
+		// Get all projects for Org
+		def projects = projectManagementService.getProjects(collection)
+		
+		// Get list of projects that have not yet been processed
+		projectsToProcess = history.getProjectsToProcess(projects.value)
+		
+		if (projectsToProcess.size() == 0) {
+			log.info("No more projects to process.  To process all projects, delete the history cache: $cacheFilename")
+			return false
+		}
+		else
+			return true
 	}
-
+	
 	public def execute(ApplicationArguments data, WebDriver driver, WebDriverWait wait) {
+
 		//******** Log into ADO ******
 		loginPage.set(driver, wait, steps)
 		if (!loginPage.login()) {
@@ -104,22 +102,21 @@ class SetMrPermissions  implements CliWebBot {
 			return
 		}
 		
-		// Get all projects for Org
-		def projects = projectManagementService.getProjects(collection)
+		// For each project to be processed, set Modern Requirements settings for the 3 MR groups
 		mrSettingsPage.set(driver, wait, steps)
-		projects.'value'.each { project ->
-			// TODO: Do some code to write project stuff
+		projectsToProcess.each { project ->
+			// For each project, go to MR Settings page to update permissions
 			String pName = "${project.name}"
+			log.info("*** Processing permissions updates for project: $pName")
 			if (!mrSettingsPage.go(pName)) {
 				log.error("Could not load project settings page for project $project: ${mrSettingsPage.error.message}")
 				return
 			}
 			mrSettingsPage.enterGroupPermissions('MRUsers',['Allow','Deny','Allow','Deny','Deny','Allow','Deny','Deny'])
-			Thread.sleep(1000)
 			mrSettingsPage.enterGroupPermissions('MRAdmin',['Allow','Allow','Allow','Allow','Allow','Allow','Allow','Allow'])
-			Thread.sleep(1000)
 			mrSettingsPage.enterGroupPermissions('MRPowerUsers',['Allow','Deny','Allow','Deny','Allow','Allow','Allow','Allow'])
-			Thread.sleep(1000)
+			
+			history.save(pName)
 		}
 		
 		// Log out of ADO
@@ -144,6 +141,65 @@ class SetMrPermissions  implements CliWebBot {
 			}
 		}
 		return true
+	}
+	// Supporting Class that holds persistent monitoring status across invocations
+	class HistoryCache {
+		def completedProjects = []
+		String cachePath
+		public HistoryCache() {
+			try {
+				cachePath = cacheDir + cacheFilename
+				File file = new File(cachePath)
+				if (file.exists()) {
+					BufferedReader reader = file.newReader()
+					def data = reader.text
+					reader.close()
+					def parsed = new JsonSlurper().parseText(data)
+					this.completedProjects = parsed.projects
+				}
+			} catch (e) {
+				log.error("An error occurred reading cached status: $e.message")
+			}
+		}
+		boolean save(String projectName) {
+			completedProjects.add(projectName)
+			
+			boolean saved = false
+			try {
+				FileWriter myWriter = new FileWriter(cachePath)
+				def output = [projects: completedProjects]
+				myWriter.write(new JsonBuilder(output).toPrettyString())
+				myWriter.flush()
+				myWriter.close()
+				saved = true
+			} catch (IOException e) {
+				log.error("An error occurred writing to cache file '$cachePath'.  Error: $e.message");
+			}
+			return saved
+		}
+		boolean delete() {
+			boolean deleted = true
+			try {
+				File cacheFile = new File(cachePath)
+				if (cacheFile.exists()) {
+					if (!cacheFile.delete()) {
+						log.error("Unable to delete status file: $cacheFile.path")
+						deleted = false
+					}
+				}
+			} catch (e) {
+				log.error("An error occurred deleting status file: $e.message");
+			}
+			return deleted
+		}
+		def getProjectsToProcess(def projects) {
+			def projectsToProcess = []
+			projects.each { project ->
+				if (!completedProjects.contains(project.name))
+					projectsToProcess.add(project)
+			}
+			return projectsToProcess
+		}
 	}
 }
 

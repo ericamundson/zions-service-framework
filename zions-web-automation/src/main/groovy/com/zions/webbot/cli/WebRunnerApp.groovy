@@ -75,7 +75,7 @@ public class WebRunnerApp implements ApplicationRunner {
 		def command = args.nonOptionArgs
 		if (command.size() == 1) {
 			CliWebBot action = actionsMap[command[0]]
-			if (action != null) {
+			if (action != null && action.checkPreconditions(args)) {
 				int waitTimeoutSec
 				try {
 					waitTimeoutSec = args.getOptionValues('sel.timeout.sec')[0].toInteger()
@@ -106,7 +106,7 @@ public class WebRunnerApp implements ApplicationRunner {
 						driver.quit()			
 					}
 				}
-			} else {
+			} else if (action == null){
 				log.error('No action related to command')
 				System.exit(1);
 			}

@@ -13,6 +13,12 @@ import org.springframework.boot.ApplicationArguments
  */
 interface CliWebBot {
 	/**
+	 * Check for preconditions
+	 * @param args
+	 * @return
+	 */
+	boolean checkPreconditions(ApplicationArguments args);
+	/**
 	 * Execute command line with provided arguments
 	 * @param args
 	 * @return
