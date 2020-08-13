@@ -117,10 +117,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 			log.error("Error retrieving work item $parentId")
 			return 'Error Retrieving Parent'
 		}
-		if (!parentWI.fields || parentWI.fields == null || !parentWI.fields.'System.State') {
-			log.error("Error retrieving work item $parentId")
-			return 'parent does not exist'
-		}
+
 		/**	 For unit testing !! Uncomment code below to capture parent playload for test
 		 * String json = new JsonBuilder(parentWI).toPrettyString()
 		 * println(json)*/
