@@ -5,7 +5,7 @@ spec:
 - name: Environments/DTS
   type: core.Directory
   children:
-  - directory: zions-vsts-statechange-counter-microservice
+  - directory: zions-vsts-days-to-close-microservice
     children:
     
     - name: Prod
@@ -13,7 +13,7 @@ spec:
       members:
       - Infrastructure/DTS/microservice/Prod
       dictionaries:
-      - Environments/DTS/zions-vsts-statechange-counter-microservice/_Dictionaries/Prod_Dict
+      - Environments/DTS/zions-vsts-days-to-close-microservice/_Dictionaries/Prod_Dict
     - directory: _Dictionaries
       children:
       
@@ -21,8 +21,8 @@ spec:
         type: udm.Dictionary
         entries:
           
-          stage.path: d:\app\azure\_work\zions-vsts-statechange-counter-microservice
-          deploy.path: d:\app\azure\services\zions-vsts-statechange-counter-microservice
+          stage.path: d:\app\azure\_work\zions-vsts-days-to-close-microservice
+          deploy.path: d:\app\azure\services\zions-vsts-days-to-close-microservice
           
           ws.url: <no value>
           

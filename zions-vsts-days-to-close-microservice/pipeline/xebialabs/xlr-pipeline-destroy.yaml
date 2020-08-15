@@ -4,7 +4,7 @@ spec:
 - name: _FOLDER_NAME_
   type: xlrelease.Folder
   children:
-  - name: zions-vsts-statechange-counter-microservice-destroy
+  - name: zions-vsts-days-to-close-microservice-destroy
     type: xlrelease.Release
     description: _DESCRIPTION_
     tags:

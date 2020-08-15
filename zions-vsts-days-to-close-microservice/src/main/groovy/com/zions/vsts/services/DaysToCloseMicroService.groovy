@@ -36,7 +36,6 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	@Value('${tfs.collection:}')
 	String collection
 
-	//@Value('${tfs.types:}')
 	@Value('${tfs.types}')
 	String[] types
 
@@ -72,6 +71,10 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			if (performIncrementCounter(this.attemptedProject, rev, this.attemptedId, daystoClose)) {
 				return logResult('Work item successfully counted after 412 retry')
 			}
+			
+			if (performResetCounter(this.attemptedProject, rev, this.attemptedId, daystoClose)) {
+				return logResult('Work item successfully reset 412 retry')
+			}
 			else {
 				this.retryFailed = true
 				log.error('Failed update after 412 retry')
@@ -96,8 +99,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		log.debug("Entering DaysToCloseMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
-		 String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)
+		 /*String json = new JsonBuilder(adoData).toPrettyString()
+		 println(json)*/
 		
 		def outData = adoData
 		def wiResource = adoData.resource
@@ -137,6 +140,10 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		
 		//Get Created Date
 		String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
+		if (!createDate) {
+			log.error("Error retrieving create date for work item $id")
+			return 'Error Retrieving Create Date'
+		}
 		//Format the Created Date
 		Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
 		createDate = convCreateDate.format('dd-MMM-yyyy')
@@ -166,6 +173,10 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				
 				//Get and format closedDate
 				def closedDate = wiResource.fields.'Microsoft.VSTS.Common.ClosedDate'
+				if (!closedDate) {
+					log.error("Error retrieving closed date for work item $id")
+					return 'Error Retrieving Closed Date'
+				}
 				String newClosedDate = closedDate.newValue
 				Date convClosedDate = Date.parse("yyyy-MM-dd", newClosedDate);
 				newClosedDate = convClosedDate.format('dd-MMM-yyyy')

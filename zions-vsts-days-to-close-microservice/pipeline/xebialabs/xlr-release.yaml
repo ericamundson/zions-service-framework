@@ -2,7 +2,7 @@
 apiVersion: xl-release/v1
 kind: Release
 spec:
-  name: !format "zions-vsts-statechange-counter-microservice %app_version%"
-  template: !format DTS/zions-vsts-statechange-counter-microservice - Master
+  name: !format "zions-vsts-days-to-close-microservice %app_version%"
+  template: !format DTS/zions-vsts-days-to-close-microservice - Master
   variables:
     deploymentPackage.name: !value "app_version"
