@@ -36,9 +36,10 @@ task buildJar(type: Jar) {
 }
 
 dependencies {
+    compile fileTree(dir: 'lib', include: ['*.jar'])
 	compile 'org.springframework.boot:spring-boot-starter'
 	compile('org.springframework.cloud:spring-cloud-starter-vault-config')
-	compile 'com.xebialabs.xlrelease:xlr-api:9.5.0'
+	//compile 'com.xebialabs.xlrelease:xlr-api:9.5.0'
 	compile project(':zions-vsts-microservice')
 	//compile project(':zions-xlr-services')
 	//compile project(':zions-common')
