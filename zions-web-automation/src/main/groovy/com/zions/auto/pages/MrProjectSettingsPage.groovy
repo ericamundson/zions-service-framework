@@ -13,7 +13,9 @@ import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.TakesScreenshot
+import org.openqa.selenium.Keys
 import org.openqa.selenium.By
+import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.NoSuchElementException
 import com.zions.auto.base.BasePage
@@ -30,8 +32,6 @@ class MrProjectSettingsPage extends BasePage {
 	String collection
 	static String SETTINGS = '__bolt-project-settings-text'
 	
-	public MrProjectSettingsPage() {
-	}
 	boolean go(String project) {
 		
 		this.error = null
@@ -50,6 +50,50 @@ class MrProjectSettingsPage extends BasePage {
 			return false
 		}
 	}
+
+	private boolean scrollDownToFindAndClick(Closure findElementBy) {
+//		JavascriptExecutor js = (JavascriptExecutor) driver
+//		js.executeScript("window.scrollTo(0,0)")
+		Actions actionObject = new Actions(driver)
+		WebElement element
+		int maxFailCount = 300
+		int count
+		boolean found = false
+		while (count <= maxFailCount && !found) {
+			try {
+				element = driver.findElement(findElementBy.call())
+
+				if (multiClick(element, "MR SETTINGS: click group")) {
+					found = true
+					if (count > 0) {
+						Thread.sleep(500);
+						((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element)
+						Thread.sleep(500);
+					}
+				}
+				else 
+					count = maxFailCount + 1
+			} 
+			catch (NoSuchElementException e) 
+			{
+				found = false
+				actionObject = actionObject.sendKeys(Keys.ARROW_DOWN)
+				actionObject.perform()
+				Thread.sleep(200)
+				count++
+				println("count=$count")
+				this.error = e
+			}
+			catch (other) 
+			{
+				found = false
+				count = maxFailCount + 1
+				this.error = other
+			}
+		}
+		return found
+		
+	}
 	boolean enterGroupPermissions(String group, def settings) {
 		String[] permissions = new String[8]
 		int i = 0
@@ -62,55 +106,77 @@ class MrProjectSettingsPage extends BasePage {
 		
 		this.error = null
 		int ms = 200
+		int count = 0
 		try {
-			click({By.xpath("//span[text()='$group']")})
+			String GROUP_LINK = "//span[text()='$group']"
+			if (!scrollDownToFindAndClick({By.xpath(GROUP_LINK)})) {
+				log.error("Failed to locate $group.  Error: ${this.error}")
+				return false
+			}
 			steps.add("MR SETTINGS: Selected group $group")
+			
+			wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Common Settings")))
+			steps.add("MR Settings: Settings displayed for $group")
 			Thread.sleep(1000)
+			
 			// Create/EditFolder
-			driver.findElement(By.xpath("//span/span/span/span")).click()
+			waitMultiClick({By.xpath("//span/span/span/span")},"MR SETTINGS: Click dropdown${++count}")
 			Thread.sleep(ms)
-			driver.findElement(By.xpath("//div[14]/div/div[2]/ul/li${permissions[0]}")).click()
+			waitMultiClick({By.xpath("//div[14]/div/div[2]/ul/li${permissions[0]}")},"MR SETTINGS: Click permission$count")
 			
 			// Delete Folder
-			driver.findElement(By.xpath("//div[2]/div/div/div[2]/span/span/span/span")).click()
+			waitMultiClick({By.xpath("//div[2]/div/div/div[2]/span/span/span/span")},"MR SETTINGS: Click dropdown${++count}")
 			Thread.sleep(ms)
-			driver.findElement(By.xpath("//div[15]/div/div[2]/ul/li${permissions[1]}")).click()
+			waitMultiClick({By.xpath("//div[15]/div/div[2]/ul/li${permissions[1]}")},"MR SETTINGS: Click permission$count")
 			
 			// Create/Update Artifact
-			driver.findElement(By.xpath("//div[3]/div/div/div[2]/span/span/span/span")).click()
+			waitMultiClick({By.xpath("//div[3]/div/div/div[2]/span/span/span/span")},"MR SETTINGS: Click dropdown${++count}")
 			Thread.sleep(ms)
-			driver.findElement(By.xpath("//div[16]/div/div[2]/ul/li${permissions[2]}")).click()
+			waitMultiClick({By.xpath("//div[16]/div/div[2]/ul/li${permissions[2]}")},"MR SETTINGS: Click permission$count")
 			
 			// Delete Artifact
-			driver.findElement(By.xpath("//div[4]/div/div/div[2]/span/span/span/span")).click()
+			waitMultiClick({By.xpath("//div[4]/div/div/div[2]/span/span/span/span")},"MR SETTINGS: Click dropdown${++count}")
 			Thread.sleep(ms)
-			driver.findElement(By.xpath("//div[17]/div/div[2]/ul/li${permissions[3]}")).click()
+			waitMultiClick({By.xpath("//div[17]/div/div[2]/ul/li${permissions[3]}")},"MR SETTINGS: Click permission$count")
 			
 			// Save As Template
-			driver.findElement(By.xpath("//div[5]/div/div/div[2]/span/span/span/span")).click()
+			waitMultiClick({By.xpath("//div[5]/div/div/div[2]/span/span/span/span")},"MR SETTINGS: Click dropdown${++count}")
 			Thread.sleep(ms)
-			driver.findElement(By.xpath("//div[18]/div/div[2]/ul/li${permissions[4]}")).click();
+			waitMultiClick({By.xpath("//div[18]/div/div[2]/ul/li${permissions[4]}")},"MR SETTINGS: Click permission$count")
 			
 			// Smart Report Generation
-			driver.findElement(By.xpath("//div[6]/div/div/div[2]/span/span/span/span")).click()
+			waitMultiClick({By.xpath("//div[6]/div/div/div[2]/span/span/span/span")},"MR SETTINGS: Click dropdown${++count}")
 			Thread.sleep(ms)
-			driver.findElement(By.xpath("//div[19]/div/div[2]/ul/li${permissions[5]}")).click()
+			waitMultiClick({By.xpath("//div[19]/div/div[2]/ul/li${permissions[5]}")},"MR SETTINGS: Click permission$count")
 			
 			// Smart Report Designer
-			driver.findElement(By.xpath("//div[7]/div/div/div[2]/span/span/span/span")).click()
+			waitMultiClick({By.xpath("//div[7]/div/div/div[2]/span/span/span/span")},"MR SETTINGS: Click dropdown${++count}")
 			Thread.sleep(ms)
-			driver.findElement(By.xpath("//div[20]/div/div[2]/ul/li${permissions[6]}")).click()
+			waitMultiClick({By.xpath("//div[20]/div/div[2]/ul/li${permissions[6]}")},"MR SETTINGS: Click permission$count")
 			
 			// Create/Update Meta Template
-			driver.findElement(By.xpath("//div[2]/div/div[5]/div/div/div[2]/span/span/span/span")).click()
+			waitMultiClick({By.xpath("//div[2]/div/div[5]/div/div/div[2]/span/span/span/span")},"MR SETTINGS: Click dropdown${++count}")
 			Thread.sleep(ms)
-			driver.findElement(By.xpath("//div[25]/div/div[2]/ul/li${permissions[7]}")).click()
-		
+			waitMultiClick({By.xpath("//div[25]/div/div[2]/ul/li${permissions[7]}")},"MR SETTINGS: Click permission$count")
+
+			steps.add("MR SETTINGS: Permissions set for $group")
+			
 			return true
 		}
 		catch (e) {
 			this.error = e
 			return false
 		}
+	}
+	boolean clickGroup(String group) {
+		String GROUP_LINK = "//span[text()='$group']"
+		try {
+			click({By.xpath(GROUP_LINK)})
+			return true
+		}
+		catch (e) {
+			return false
+		}
+		
 	}
 }

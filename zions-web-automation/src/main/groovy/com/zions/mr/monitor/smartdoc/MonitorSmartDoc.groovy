@@ -10,9 +10,10 @@ import com.zions.vsts.services.work.WorkManagementService
 import com.zions.webbot.cli.CliWebBot
 import com.zions.vsts.services.notification.NotificationService
 import com.zions.auto.base.CompletedSteps
+import com.zions.auto.pages.CollectionPage
 import com.zions.auto.pages.LoginPage
 import com.zions.auto.pages.MainHeader
-
+import com.zions.auto.pages.SmartDocsPage
 import groovy.util.logging.Slf4j
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.OutputType
@@ -39,18 +40,15 @@ class MonitorSmartDoc  implements CliWebBot {
 	// Failure types
 	static String LOGIN_FAILURE = 'ADO login failure'
 	static String ADO_FAILURE = 'ADO site not available'
-	static String SMARTDOC_FAILURE = 'SD page load failure'
+	static String SMARTDOC_PAGE_FAILURE = 'SD page load failure'
+	static String SMARTDOC_DOCUMENT_FAILURE = 'SD document load failure'
 	static String REVIEW_FAILURE = 'Review Request failure'
 	
-	// UI elements
-	static String CONFIRM_BUTTON = "confirm-dialog-ok-button-rvm-req-confirmation-dialog"
-	static String MR_LOGOUT_BUTTON = "smd_left_panel_footerbtn-container"
 	
 	// Tags
 	static String FAILURE_TAG = 'CURRENT OUTAGE'
 	static String SUCCESS_TAG = 'SUCCESSFUL RETEST'
 	
-	def steps = new CompletedSteps()
 	def status
 	
 	@Autowired
@@ -64,17 +62,26 @@ class MonitorSmartDoc  implements CliWebBot {
 	
 	@Autowired
 	LoginPage loginPage
+	
+	@Autowired
+	CollectionPage collectionPage	
 
+	@Autowired
+	SmartDocsPage smartDocsPage
+		
 	@Autowired
 	MainHeader adoHeader
 	
+	@Value('${mr.haslicense:false}')
+	boolean hasLicense
+
 	@Value('${email.recipient.addresses:}')
 	private String[] recipientEmailAddresses
 
 	@Value('${cache.filename:"status.json"}')
 	String cacheFilename
 	
-	@Value('${cache.dir:"c:/SmartDocMonitoring"}')
+	@Value('${cache.dir}')
 	String cacheDir
 	
 	@Value('${maint.window:}')
@@ -91,24 +98,12 @@ class MonitorSmartDoc  implements CliWebBot {
 
 	@Value('${tfs.owner:}')
 	String owner
-
-	@Value('${mr.url}')
-	String mrUrl
-
-	@Value('${mr.smartdoc.name:}')
-	String smartDocName
-	
-	@Value('${tfs.url}')
-	String tfsUrl
 	
 	@Value('${sel.toomany.sec}')
 	int tooManySec
 	
 	@Value('${ticket.creation.count}')
 	int ticketCount
-
-	@Value('${mr.haslicense:false}')
-	boolean hasLicense
 
 	public boolean checkPreconditions(ApplicationArguments data) {
 		// Don't process if during maintenance window
@@ -121,120 +116,58 @@ class MonitorSmartDoc  implements CliWebBot {
 			return true
 	}
 	
-	public def execute(ApplicationArguments data, WebDriver driver, WebDriverWait wait) {
-		
+	public def execute(ApplicationArguments data, WebDriver driver, WebDriverWait wait, CompletedSteps steps) {
 		
 		// Get status from last execution
 		status = new MonitorStatus()
 
 		//******** Log into ADO ******
-		loginPage.set(driver, wait, steps)
 		if (!loginPage.login()) {
-			reportError(driver, loginPage.error,LOGIN_FAILURE)
+			reportError(driver, loginPage.error, LOGIN_FAILURE)
 			return
 		}
 		
-		// Check ADO availability
-		try {
-			 // Navigate to ADO collection page
-			 driver.get("$tfsUrl/$collection")
-			 steps.add('ADO VALIDATION: Loading ADO collection page')
-			 wait.until(ExpectedConditions.titleIs('Projects - Home'))
-		 }
-		 catch( e ) {
-			 reportError(driver, e,ADO_FAILURE)
-			 return
+		// ******** Check ADO availability ********
+		if (!collectionPage.go()) {
+			 steps.add('ADO VALIDATION: Failed.  Trying one more attempt')
+			 if (!loginPage.login()) {
+				 reportError(driver, loginPage.error, LOGIN_FAILURE)
+				 return
+			 }
+			 else {
+				 if (!collectionPage.go()) {
+					 reportError(driver, collectionPage.error, ADO_FAILURE)
+					 return
+				 }
+			 }
 		 }
 
 		//********** Begin Modern Requirements Tests *******
 		// Test Smart Doc availability
-		try {
-			// Navigate to Modern Requirements Smart Docs page
-			driver.get(mrUrl)
-			steps.add('SMART DOC VALIDATION: Loading Smart Doc Page')			
-			wait.until(ExpectedConditions.titleIs('Smart Docs - Boards'))
-			wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector("div[class*='external-content'] iframe")))
-			
-			// Activate stakeholder license, if the user does not have a permanent account
-			if (!hasLicense) {
-				String buttonSearchText = "//input[@value=\'Continue as StakeHolder\']"
-			    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(buttonSearchText)))  
-				steps.add('SMART DOC VALIDATION: Waited for Continue as StakeHolder button to be clickable')			
-				Thread.sleep(1000) //pause 1 sec
-				driver.findElement(By.xpath(buttonSearchText)).click()
-				steps.add('SMART DOC VALIDATION: clicked on Continue as Stakeholder')
-				// try again in case click did not take
-				try {
-					driver.findElement(By.xpath(buttonSearchText)).click() 
-					steps.add('SMART DOC VALIDATION: Completed second attempt at clicking Continue as Stakeholder')			
-				} catch(e) {}
+		if (smartDocsPage.go()) {
+			if (!smartDocsPage.loadSmartDoc()) {
+				reportError(driver, smartDocsPage.error, SMARTDOC_DOCUMENT_FAILURE)
+				return
 			}
-			
-			// Click on the SmartDoc Entry in the tree view
-			String smartDocXpath = "//span[contains(.,\'$smartDocName\')]"
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(smartDocXpath)))
-			Thread.sleep(1000) //pause 1 sec
-			driver.findElement(By.xpath(smartDocXpath)).click()
-			steps.add('SMART DOC VALIDATION: clicked on Smart Doc name')
-			
-			// Check that the root Document work item has rendered in the Smart Doc editor
-			if (hasLicense)
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ig-smd-grid-wititle-div")))
-			else
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id=\'smd-main-workitemgrid\']/div[3]/table/tbody/tr/td[3]/div/div[2]")))
-			steps.add('SMART DOC VALIDATION: validated root work item presence')
-			
 		}
-		catch( e ) {
-			reportError(driver, e,SMARTDOC_FAILURE)
+		else {
+			reportError(driver, smartDocsPage.error, SMARTDOC_PAGE_FAILURE)
 			return
 		}
 		
 		// Test Review Request dialog (must have license to do this)
 		if (hasLicense) {
-			try {
-				// Open the Review Request dialog
-				def reviewRequestButton = "#smd-create-review-request > .k-link"
-				wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(reviewRequestButton)))
-				driver.findElement(By.cssSelector(reviewRequestButton)).click()
-				// try again in case click did not take
-				try {
-					driver.findElement(By.cssSelector(reviewRequestButton)).click()
-				} catch(e) {}
-				steps.add('REVIEW VALIDATION: clicked on Review Request')
-				Thread.sleep(5000) //pause 5 sec for dialog to load
-				// Check for availability of review title field
-				String reviewXpath = "//div[@id=\'phReqReviewTitle\']/div"
-				wait.until(ExpectedConditions.elementToBeClickable(By.xpath(reviewXpath)))
-				steps.add('REVIEW VALIDATION: waited for Review Title to be clickable')
-				// Try to click up to 4 times
-				multitryClick(driver, 'REVIEW VALIDATION: clicked on Review Title', {By.xpath(reviewXpath)})
-				// Close the dialog
-				driver.findElement(By.cssSelector(".k-i-rvm-req-dialog-close")).click()
-				steps.add('REVIEW VALIDATION: clicked on Close Button')
-				wait.until(ExpectedConditions.elementToBeClickable(By.id(CONFIRM_BUTTON)))
-				Thread.sleep(2000) //pause 2 sec for dialog to load
-				// Try to click up to 4 times
-				multitryClick(driver, 'REVIEW VALIDATION: clicked on Confirm Button', {By.id(CONFIRM_BUTTON)})
-			}
-			catch( e ) {
-				reportError(driver, e,REVIEW_FAILURE)
+			if (!smartDocsPage.openReviewRequest()) {
+				reportError(driver, smartDocsPage.error, REVIEW_FAILURE)
 				return
 			}
 		}
 		
-		// ********** Signout of MR and ADO
-		try {
-			// Log out of Modern Requirements
-			wait.until(ExpectedConditions.elementToBeClickable(By.id(MR_LOGOUT_BUTTON)))
-			driver.findElement(By.id(MR_LOGOUT_BUTTON)).click()
-			driver.switchTo().defaultContent()
-		}
-		catch (e) {
-			log.error("WARNING: Error loging out of Modern Requirements: ${e.message}")
+		// ********** Signout of MR and ADO ***********
+		if (!smartDocsPage.mrLogOut()) {
+			log.error("WARNING: Error loging out of Modern Requirements: ${smartDocsPage.error}")
 		}
 		// Log out of ADO
-		adoHeader.set(driver, wait, steps)
 		if (!adoHeader.signout()) 
 			log.error("WARNING: Error loging out of ADO: ${adoHeader.error}")
 		
@@ -262,21 +195,6 @@ class MonitorSmartDoc  implements CliWebBot {
 			}
 		}
 	}
-	private void multitryClick(WebDriver driver, String stepTitle, Closure by) {
-		boolean activated = false
-		(0..3).each {
-			if (activated) return
-			try {
-				driver.findElement(by.call()).click()
-				steps.add(stepTitle)
-				activated = true
-			} catch(e) {
-				steps.add("$stepTitle failed - waiting 5 sec before retry")
-				Thread.sleep(5000) //pause 5 sec
-			}
-		}
-
-	}
 	private void reportError(WebDriver driver, Exception e, String newFailType) {
 		log.error("$newFailType: ${e.message}")
 
@@ -303,7 +221,7 @@ class MonitorSmartDoc  implements CliWebBot {
 				if (!updateBugSuccessfulRetest(status.curBugId)) prevFail = status.curBugId
 			}
 			// If previous failure was a SD page load, and new failure is Review Request failure, then tag previous bug as passed
-			else if (status.curBugId && status.failType == SMARTDOC_FAILURE && newFailType == REVIEW_FAILURE) {
+			else if (status.curBugId && status.failType == SMARTDOC_PAGE_FAILURE && newFailType == REVIEW_FAILURE) {
 				if (!updateBugSuccessfulRetest(status.curBugId)) prevFail = status.curBugId
 			}
 			else if (status.curBugId)

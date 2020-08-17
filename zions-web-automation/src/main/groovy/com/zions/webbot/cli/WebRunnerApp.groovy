@@ -26,6 +26,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import com.zions.auto.base.BasePage
+import com.zions.auto.base.CompletedSteps
 
 /**
  * Application main for all command-line web automation clients (CliWebBot).  Without mongodb integration.
@@ -56,6 +58,10 @@ public class WebRunnerApp implements ApplicationRunner {
 	@Autowired(required=false)
 	SettingsManagementService settingsManagementService
 	
+	@Value('${sel.timeout.sec}')
+	int waitTimeoutSec
+
+	
 	
 	/**
 	 * 
@@ -76,34 +82,34 @@ public class WebRunnerApp implements ApplicationRunner {
 		if (command.size() == 1) {
 			CliWebBot action = actionsMap[command[0]]
 			if (action != null && action.checkPreconditions(args)) {
-				int waitTimeoutSec
-				try {
-					waitTimeoutSec = args.getOptionValues('sel.timeout.sec')[0].toInteger()
-				}
-				catch (e) {
-					log.error("Could not get valid integer value for sel.timeout.sec because: ${e.message}")
-				}
 				try {
 					action.validate(args);
 					// Open Chrome driver
 					System.setProperty("webdriver.chrome.driver","c:\\chrome-83\\chromedriver.exe");
 					ChromeOptions options = new ChromeOptions()
-					options.addArguments("start-maximized")
 					options.addArguments("enable-automation")
 					options.addArguments("--window-size=1920,1080")
 					driver = new ChromeDriver(options);
 					wait = new WebDriverWait(driver, waitTimeoutSec);
-			
-					action.execute(args, driver, wait);
+					CompletedSteps steps = new CompletedSteps()
+					BasePage.set(driver, wait, steps)
+					action.execute(args, driver, wait, steps);
 				} catch (e) {
 					e.printStackTrace()
 					log.error(e)
 					System.exit(1);
 				} finally {
 					// Close browser
+//					driver = null // Prevent closing for troubleshooting
 					if (driver) {
 						driver.close()
 						driver.quit()			
+						try {
+							Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe")
+						} catch (IOException e1) {
+							e1.printStackTrace()
+						}
+						log.info("Driver was shut down")
 					}
 				}
 			} else if (action == null){

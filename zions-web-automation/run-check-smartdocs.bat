@@ -6,5 +6,5 @@ set log_file=%drive%\logs\SmartDocLivenessCheck.log
 %drive%
 CD %monitor_home%
 echo monitor_home=%monitor_home%
-java -Dspring.profiles.active=smartdoc -Dproxy.Host=172.18.4.115 -Dproxy.Port=8080 -Dproxy.User= -Dproxy.Password= -jar .\build\libs\zions-web-runner-latest.jar monitorSmartDoc --cache.dir=%monitor_home% --tfs.url=https://dev.azure.com --tfs.project=DTS --tfs.collection=ZionsETO --tfs.areapath="DTS\ALMOps\ModernRequirements\Bug" --tfs.owner=robert.huet@zionsbancorp.com --mr.url=https://dev.azure.com/ZionsETO/DTS/_apps/hub/edevtech-mr.iGVSO-OnPrem-mrserviceus1008.subHubWork-SmartDocs-OnPrem --mr.smartdoc.name=TestDoc --mr.haslicense=true --logging.level.root=INFO --logging.file=%log_file%
+java -Dspring.profiles.active=mrauto -Dproxy.Host=172.18.4.115 -Dproxy.Port=8080 -Dproxy.User= -Dproxy.Password= -jar .\build\libs\zions-web-automation-latest.jar monitorSmartDoc --cache.dir=%monitor_home% --tfs.url=https://dev.azure.com --tfs.project=DTS --tfs.collection=ZionsETO --tfs.areapath="DTS\ALMOps\ModernRequirements\Bug" --tfs.owner=robert.huet@zionsbancorp.com --mr.url=https://dev.azure.com/ZionsETO/DTS/_apps/hub/edevtech-mr.iGVSO-OnPrem-mrserviceus1008.subHubWork-SmartDocs-OnPrem --mr.smartdoc.name=TestDoc --mr.haslicense=true --logging.level.root=INFO --logging.file=%log_file%
 exit
