@@ -10,4 +10,5 @@
       <arguments>-Xrs -Xmx256m -jar "{{"{{deploy.path}}"}}/{{$app}}.jar" --queue.name={{.Queuename}}  --ado.topics={{.WSTopics}} --tfs.url={{"{{tfs.url}}"}} --logging.file="{{"{{deploy.path}}"}}/{{$app}}.log" </arguments>
 	  {{end}}
       <logmode>rotate</logmode>
+      <logpath>"{{"{{deploy.path}}"}}\wrapper-logs\{{$app}}</logpath>
 </service>

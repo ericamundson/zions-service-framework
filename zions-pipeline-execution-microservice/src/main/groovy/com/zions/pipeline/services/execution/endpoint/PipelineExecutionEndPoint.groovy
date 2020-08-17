@@ -59,13 +59,14 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 		def changeSet = eventData.resource;
 		if (adoData.resource && adoData.resource._links && adoData.resource._links.commits) {
 			def commitsUrl = "${adoData.resource._links.commits.href}"
+			String branch = "${adoData.resource.refUpdates[0].name}"
 			
 			def commits = codeManagementService.getCommits(commitsUrl)
 			def locations = getPipelineChangeLocations(commits)
 			if (locations.size() > 0) {
 				String repoUrl = "${adoData.resource.repository.remoteUrl}"
 				String name = "${adoData.resource.repository.name}"
-				yamlExecutionService.runExecutableYaml(repoUrl,name, locations)
+				yamlExecutionService.runExecutableYaml(repoUrl,name,locations, branch)
 			}
 		}
 		return null
@@ -83,7 +84,6 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 				}
 			}
 		}
-		
 		return locations
 	}
 

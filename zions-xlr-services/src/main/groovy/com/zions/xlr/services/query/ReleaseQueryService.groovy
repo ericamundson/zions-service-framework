@@ -55,6 +55,14 @@ public class ReleaseQueryService {
 		
 	}
 	
+	def getRelease(String id) {
+		def result = xlrGenericRestClient.get(
+			contentType: ContentType.JSON,
+			uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/releases/${id}"
+			)
+		return result
+		
+	}
 	int getReleaseCount(def query) {
 		
 	}

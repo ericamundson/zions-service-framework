@@ -26,15 +26,15 @@ class YamlExecutionService {
 	@Value('${always.execute.folder:executables}')
 	String alwaysExecuteFolder
 
-	def runExecutableYaml(String repoUrl, String repoName, def scanLocations) {
-		File repo = gitService.loadChanges(repoUrl, repoName)
+	def runExecutableYaml(String repoUrl, String repoName, def scanLocations, String branch) {
+		File repo = gitService.loadChanges(repoUrl, repoName, branch)
 		def exeYaml = findExecutableYaml(repo, scanLocations)
 		for (def yaml in exeYaml) { 
 			for (def exe in yaml.executables) {
 								
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
-					yamlHandler.handleYaml(exe, repo, scanLocations)
+					yamlHandler.handleYaml(exe, repo, scanLocations, branch)
 				}
 			}
 		}

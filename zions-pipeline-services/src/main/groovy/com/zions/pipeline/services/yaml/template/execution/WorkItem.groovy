@@ -15,7 +15,7 @@ class WorkItem implements IExecutableYamlHandler {
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations) {
+	def handleYaml(def yaml, File repo, def locations, String branch) {
 		String project = yaml.project
 		String title = yaml.title
 		String description = yaml.description

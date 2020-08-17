@@ -629,6 +629,16 @@ public class BuildManagementService {
 		return result
 	}
 	
+	public def deleteTag(def build, String tag) {
+		String url = "${build.url}/tags/${tag}"
+		def result = genericRestClient.delete(
+			//requestContentType: ContentType.JSON,
+			uri: url,
+			query: ['api-version': '5.1']
+			)
+		return result
+	}
+
 	public def getRelatedBuilds(def collection, def project, def build, boolean isProdBranch = false, String buildTagFilter = 'none') {
 		//log.debug("BuildManagementService::getBuild -- buildName = "+repo.name+"-"+qualifier)
 		if (isProdBranch) {
@@ -737,6 +747,8 @@ public class BuildManagementService {
 		}
 		return tags
 	}
+	
+	
 
 	public def getExecutionChanges(String collection, String project, String buildId, boolean includeSourceChange = false) {
 		def eproject = URLEncoder.encode(project, 'utf-8')

@@ -19,7 +19,7 @@ class RunXLDeployApply implements IExecutableYamlHandler {
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations) {
+	def handleYaml(def yaml, File repo, def locations, String branch) {
 		if (!performExecute(yaml, locations)) return
 		String xlOutPath = "${yaml.path}"
 		String xlDeployFile = "${repo.absolutePath}/${yaml.file}"
@@ -41,7 +41,9 @@ class RunXLDeployApply implements IExecutableYamlHandler {
 			option = '-c'
 		}
 		new AntBuilder().exec(dir: "${repo.absolutePath}", executable: "${command}", failonerror: true) {
-			env( key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080")
+			if (useProxy) {
+				env( key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080")
+			}
 			if (values.size() > 0) {
 				arg( line: "${option} ${repo.absolutePath}/xl apply -p ${xlOutPath} -f ${xlDeployFile} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}  --values ${valuesStr}")
 			} else {

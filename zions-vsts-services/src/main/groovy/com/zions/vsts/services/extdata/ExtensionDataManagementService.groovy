@@ -52,7 +52,7 @@ class ExtensionDataManagementService implements IExtensionData {
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${extUrl}/_apis/ExtensionManagement/InstalledExtensions/${extPublisher}/${extName}/Data/Scopes/Default/Current/Collections/${tfsCollection}/Documents/${ekey}",
-			headers: [Accept: 'application/json;api-version=3.1-preview.1;excludeUrls=true']
+			headers: [Accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true']
 			//query: query,
 			)
 		return result
@@ -78,7 +78,7 @@ class ExtensionDataManagementService implements IExtensionData {
 			requestContentType: ContentType.JSON,
 			uri: "${extUrl}/_apis/ExtensionManagement/InstalledExtensions/${extPublisher}/${extName}/Data/Scopes/Default/Current/Collections/${tfsCollection}/Documents",
 			body: body,
-			headers: [Accept: 'application/json;api-version=3.1-preview.1;excludeUrls=true']
+			headers: [Accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true']
 			)
 		return result
 
@@ -92,7 +92,7 @@ class ExtensionDataManagementService implements IExtensionData {
 			requestContentType: ContentType.JSON,
 			uri: "${extUrl}/_apis/ExtensionManagement/InstalledExtensions/${extPublisher}/${extName}/Data/Scopes/Default/Current/Collections/${tfsCollection}/Documents",
 			body: body,
-			headers: [Accept: 'application/json;api-version=3.1-preview.1;excludeUrls=true']
+			headers: [Accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true']
 			)
 		return result
 

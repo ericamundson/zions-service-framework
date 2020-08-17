@@ -36,6 +36,8 @@ if ("${context}" == 'all') {
 	include ':zions-msgraph-services'
 	include ':zions-pipeline-cli'
 	include ':zions-pipeline-services'
+	include ':zions-xlr-event-publisher-extension'
+	include ':zions-xlrtoado-event-microservice'
 }
 if ("${context}" == 'ALMOps') {
 	include ':zions-vsts-cli'
@@ -75,6 +77,8 @@ if ("${context}" == 'microservices')	{
 	include ':zions-vsts-policy-microservice'
 	include ':zions-vsts-services'
 	include ':zions-msgraph-services'
+	include ':zions-xlrtoado-event-microservice'
+	include ':zions-xlr-event-publisher-extension'
 	
 }
 if ("${context}" == 'pipeline')	{

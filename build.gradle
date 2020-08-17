@@ -165,6 +165,9 @@ allprojects {
 			url "${nexusUrl}/repository/public/"
 		}
 		//mavenCentral()
+		  maven {
+		    url 'https://dist.xebialabs.com/public/maven2'
+		  }
 	}
 
 	dependencies {
