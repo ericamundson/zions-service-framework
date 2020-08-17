@@ -36,7 +36,7 @@ class BranchPolicy implements IExecutableYamlHandler {
 	@Autowired
 	PolicyManagementService policyManagementService
 
-	def handleYaml(def yaml, File containedRepo, def locations) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
 		String pName = "${yaml.project}"
 		//System.out.println("BranchPolicy::handleYaml - Calling projectManagementService.getProject for: " + pName)
@@ -46,10 +46,10 @@ class BranchPolicy implements IExecutableYamlHandler {
 			String[] branchNames = yaml.branchNames.split(',')
 			branchNames.each { String branchName ->
 				def repoData = [consumerId: 'webHooks', consumerActionId: 'httpRequest', eventType: eventType, publisherId: 'tfs', consumerInputs: [url: yaml.consumerUrl, basicAuthUsername: yaml.consumerUserName, basicAuthPassword: yaml.consumerPassword], publisherInputs:[], resourceVersion: '1.0', scope: 1]
-				subscriptionData.publisherInputs = new JsonBuilder(yaml.publisherInputs).getContent()
+				//def subscriptionData.publisherInputs = new JsonBuilder(yaml.publisherInputs).getContent()
 				//System.out.println("BranchPolicy::handleYaml - subscriptionData:\n" + subscriptionData)
 				
-				policyManagementService.ensurePolicies(collection, repoData, branchName)
+				policyManagementService.ensurePolicies('', repoData, branchName)
 			}
 		}
 	}
