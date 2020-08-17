@@ -69,7 +69,8 @@ class GitService {
 		});
 	}
 	
-	File loadChanges(String url,String repoName) {
+	File loadChanges(String url,String repoName, String branch = 'refs/heads/master') {
+		String aBranch = branch.substring( 'refs/heads/'.length())
 		String nUrl = url
 		if (nUrl.contains('https://dev')) {
 			nUrl = nUrl.replace('https://dev', "https://${tfsToken}@dev")
@@ -85,11 +86,16 @@ class GitService {
 				.setURI(nUrl)
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
 				.setDirectory(repo)
+				.setBranchesToClone(Arrays.asList(branch))
+				.setBranch(branch)
+				.setRemote('origin')
 				.call();
 		} else {
 			Git.open(repo)
 				.pull()
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
+				.setRemote("origin")
+				.setRemoteBranchName(aBranch)
 				.call()
 		}
 			

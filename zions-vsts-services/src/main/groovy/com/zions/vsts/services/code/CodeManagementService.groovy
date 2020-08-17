@@ -54,7 +54,15 @@ class CodeManagementService {
 			query: ['api-version': '5.1']
 			)
 	}
-	
+	def getCommitChanges(String curl) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${curl}/changes",
+			query: ['api-version': '5.1']
+			)
+		return result
+	}
+
 	public def ensureRepo(String collection, def project, String repoName) {
 		def repo = getRepo(collection, project, repoName)
 		if (repo == null) {
@@ -119,6 +127,69 @@ class CodeManagementService {
 		return repos
 
 	}
+	
+	public def getPullRequests(String collection, def project, def repo, String state = 'completed', String branchName = 'refs/heads/master') {
+		def query = ['api-version':'5.1', 'searchCriteria.status': state, 'searchCriteria.targetRefName': "${branchName}"]
+//		def repo = getRepo(collection, project, repoName)
+//		def repoNameE = URLEncoder.encode(repoName, 'UTF-8')
+//		repoNameE= repoNameE.replace('+', '%20')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/pullrequests",
+			query: query,
+			)
+		return result
+
+	}
+	
+	public def getPullRequestCommits(String collection, def project, def repo, String pId) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/pullrequests/${pId}/commits",
+			query: ['api-version': '5.1'],
+			)
+		return result
+
+	}
+	
+	public def getChangesForWorkitems(String collection, def project, def repo, String[] workItemIds, String branch = 'refs/heads/master') {
+		def pullRequests = getPullRequests(collection, project, repo, 'completed', branch)
+		def changes = []
+		def wiIds = []
+		Collections.addAll(wiIds, workItemIds)
+		if (!pullRequests.'value') return changes[]
+		pullRequests.'value'.each { pr ->
+			def wiRefs = getWorkitemsForPullRequest(collection, project, repo, "${pr.pullRequestId}")
+			if (wiRefs.'value') {
+				wiRefs.'value'.each { ref ->
+					String rId = "${ref.id}"
+					if (wiIds.contains(rId)) {
+						def commits = getPullRequestCommits(collection, project, repo, "${pr.pullRequestId}")
+						if (commits.'value') {
+							commits.'value'.each { c -> 
+								String cUrl = "${c.url}"
+								def cc = getCommitChanges(cUrl)
+								if (cc.changes) {
+									changes.addAll(cc.changes)
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return changes
+	}
+	
+	public def getWorkitemsForPullRequest(String collection, def project, def repo, String pullrequestId) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/pullrequests/${pullrequestId}/workitems",
+			query: ['api-version': '5.1']
+		)
+		return result
+	}
+
 
 	public def listTopLevel(def collection, def project, def repo) {
 		//log.debug("CodeManagementService::listTopLevel -- collection: ${collection}, project: ${project.id}, repo: ${repo.id}")

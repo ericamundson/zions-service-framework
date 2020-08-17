@@ -22,6 +22,38 @@ public class ReleaseItemService {
 		)
 
 	}
+	
+	def startReleaseFromTemplate(String templateId, def data) {
+		String body = new JsonBuilder(data).toPrettyString()
+		def result = xlrGenericRestClient.post(
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/templates/${templateId}/start",
+			body: body
+		)
+
+	}
+	
+	def createRelease(String templateId, def data) {
+		String body = new JsonBuilder(data).toString()
+		def result = xlrGenericRestClient.post(
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/templates/Applications/${templateId}/create",
+			body: body
+		)
+		return result
+	}
+	
+	def startPlannedRelease(String releaseId) {
+		def result = xlrGenericRestClient.post(
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/releases/Applications/${releaseId}/start"
+			
+		)
+		return result
+	}
 
 	def abortRelease(String releaseId, String newReleaseTitle = null) {
 		def message = [abortComment: "A newer release has been started."]

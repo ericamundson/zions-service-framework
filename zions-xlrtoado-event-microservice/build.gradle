@@ -1,0 +1,13 @@
+bootJar {
+	enabled = true
+	mainClassName = 'com.zions.vsts.services.XlrToADOEventsApplication'
+	archiveName = 'zions-xlrtoado-event-microservice.jar'
+	//version =  "${version}"
+}
+
+dependencies {
+	compile project(':zions-vsts-services')
+	compile project(':zions-vsts-microservice')
+	compile project(':zions-xlr-services')
+	compile project(':zions-common')
+}

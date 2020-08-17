@@ -56,7 +56,11 @@ class RunXLBlueprints implements IExecutableYamlHandler {
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations) {
+	def handleYaml(def yaml, File repo, def locations, String branch) {
+		boolean useProxy = false
+		if (yaml.useProxy) {
+			useProxy = yaml.useProxy
+		}
 		def repoName = yaml.name
 		def project = yaml.project
 		
@@ -98,17 +102,19 @@ class RunXLBlueprints implements IExecutableYamlHandler {
 				sAF << answers
 				sAF.close()
 				new AntBuilder().exec(dir: "${outrepo.absolutePath}/${pipelineFolder}", executable: "${command}", failonerror: true) {
-					//env( key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080")
-					arg( line: "/c ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s")
+					if (useProxy) {
+						env( key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080")
+					}
+					arg( line: "${option} ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s")
 				}
 			} catch (e) {
 				log.error("Blueprint run failed:  ${e.message}")
 			}
 		}
 		try {
-			def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, '/refs/heads/master')
+			def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, branch)
 			gitService.pushChanges(repoName)
-			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, '/refs/heads/master', policies)
+			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, branch, policies)
 		} catch (e) {
 			log.error("Failed push of blueprint changes:  ${e.message}")
 		}

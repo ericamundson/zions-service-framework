@@ -18,7 +18,7 @@ class WebHookSubscriptions implements IExecutableYamlHandler {
 	@Autowired
 	SubscriptionService subscriptionService
 
-	def handleYaml(def yaml, File containedRepo, def locations) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
 		String[] eventTypes = yaml.eventTypes.split(',')
 		eventTypes.each { String eventType ->

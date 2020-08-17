@@ -108,7 +108,7 @@ class BlueprintTemplateInterpretorService {
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
 					try {
-						yamlHandler.handleYaml(exe, null, [])
+						yamlHandler.handleYaml(exe, null, [], 'refs/heads/master')
 					} catch (e) {
 						log.error("Failed running executable yaml:  ${exe.type} :: ${e.message}")
 						e.printStackTrace()

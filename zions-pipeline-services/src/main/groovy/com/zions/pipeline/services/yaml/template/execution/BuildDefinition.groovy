@@ -18,7 +18,7 @@ class BuildDefinition implements IExecutableYamlHandler {
 	@Autowired
 	ProjectManagementService projectManagementService
 
-	def handleYaml(def yaml, File containedRepo, def locations) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch) {
 		
 		def project = projectManagementService.getProject('', yaml.project)
 		def build = buildManagementService.getBuild('', project, yaml.name)
