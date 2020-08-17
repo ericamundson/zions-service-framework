@@ -1,5 +1,6 @@
 package com.zions.webbot.cli
 
+import com.zions.auto.base.CompletedSteps
 import com.zions.common.services.logging.FlowInterceptor
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.WebDriverWait
@@ -23,7 +24,7 @@ interface CliWebBot {
 	 * @param args
 	 * @return
 	 */
-	def execute(ApplicationArguments args, WebDriver driver, WebDriverWait wait);
+	def execute(ApplicationArguments args, WebDriver driver, WebDriverWait wait, CompletedSteps steps);
 	/**
 	 * Validate command line arguments
 	 * @param args

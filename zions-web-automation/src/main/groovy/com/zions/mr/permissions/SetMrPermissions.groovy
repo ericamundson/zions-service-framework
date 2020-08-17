@@ -10,6 +10,7 @@ import com.zions.vsts.services.work.WorkManagementService
 import com.zions.webbot.cli.CliWebBot
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.notification.NotificationService
+import com.zions.auto.base.BasePage
 import com.zions.auto.base.CompletedSteps
 import com.zions.auto.pages.LoginPage
 import com.zions.auto.pages.MainHeader
@@ -41,9 +42,8 @@ class SetMrPermissions  implements CliWebBot {
 	// Failure types
 	static String LOGIN_FAILURE = 'ADO login failure'
 	
-	def steps = new CompletedSteps()
 	def projectsToProcess = []
-	def history
+	HistoryCache history
 	
 	@Autowired
 	ProjectManagementService projectManagementService
@@ -57,10 +57,7 @@ class SetMrPermissions  implements CliWebBot {
 	@Autowired
 	MrProjectSettingsPage mrSettingsPage
 
-	@Value('${email.recipient.addresses:}')
-	private String[] recipientEmailAddresses
-
-	@Value('${cache.filename:"history.json"}')
+	@Value('${cache.filename:"status.json"}')
 	String cacheFilename
 	
 	@Value('${cache.dir:"c:/ModernRequirementsPermissions"}')
@@ -68,12 +65,6 @@ class SetMrPermissions  implements CliWebBot {
 
 	@Value('${tfs.collection:}')
 	String collection
-	
-	@Value('${tfs.areapath:}')
-	String areapath
-
-	@Value('${tfs.owner:}')
-	String owner
 
 	public boolean checkPreconditions(ApplicationArguments data) {
 		// Get projects already processed by previous executions
@@ -81,6 +72,10 @@ class SetMrPermissions  implements CliWebBot {
 		
 		// Get all projects for Org
 		def projects = projectManagementService.getProjects(collection)
+		if (!projects) {
+			log.error("Could not retrieve projects for: $collection")
+			return false
+		}
 		
 		// Get list of projects that have not yet been processed
 		projectsToProcess = history.getProjectsToProcess(projects.value)
@@ -93,39 +88,56 @@ class SetMrPermissions  implements CliWebBot {
 			return true
 	}
 	
-	public def execute(ApplicationArguments data, WebDriver driver, WebDriverWait wait) {
-
+	public def execute(ApplicationArguments data, WebDriver driver, WebDriverWait wait, CompletedSteps steps) {
 		//******** Log into ADO ******
-		loginPage.set(driver, wait, steps)
 		if (!loginPage.login()) {
 			reportError(driver, loginPage.error,LOGIN_FAILURE)
 			return
 		}
-		
+		def numProjectsToProcess = projectsToProcess.size()
+		def count = 0
 		// For each project to be processed, set Modern Requirements settings for the 3 MR groups
-		mrSettingsPage.set(driver, wait, steps)
-		projectsToProcess.each { project ->
-			// For each project, go to MR Settings page to update permissions
-			String pName = "${project.name}"
-			log.info("*** Processing permissions updates for project: $pName")
-			if (!mrSettingsPage.go(pName)) {
-				log.error("Could not load project settings page for project $project: ${mrSettingsPage.error.message}")
-				return
+		try {
+			projectsToProcess.each { project ->
+				log.info("Processing ${++count} of $numProjectsToProcess")
+				// For each project, go to MR Settings page to update permissions
+				String pName = "${project.name}"
+				log.info("*** Processing permissions updates for project: $pName")
+				if (!mrSettingsPage.go(pName)) {
+					log.error("Could not load project settings page for project $project: ${mrSettingsPage.error.message}")
+					return
+				}
+				// Need to wait here for Common Settings to show up
+				wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Common Settings")))
+				
+				// Click AllUsers - seems unnecessary, but had issue where left nav was not in focus - this might be removed in future
+				if (!mrSettingsPage.clickGroup('AllUsers'))
+					throw new PermissionsException("Failed clicking on All Users: ${mrSettingsPage.error}")
+				else
+					steps.add("MR Settings: Clicked on AllUsers")
+					
+				// Set permissions for 3 MR groups
+				if (!mrSettingsPage.enterGroupPermissions('MRAdmin',['Allow','Allow','Allow','Allow','Allow','Allow','Allow','Allow'])) 
+					throw new PermissionsException("Failed updating MAdmin: ${mrSettingsPage.error}")
+				if (!mrSettingsPage.enterGroupPermissions('MRPowerUsers',['Allow','Deny','Allow','Deny','Allow','Allow','Allow','Allow'])) 
+					throw new PermissionsException("Failed updating MRPowerUsers: ${mrSettingsPage.error}")
+				if (!mrSettingsPage.enterGroupPermissions('MRUsers',['Allow','Deny','Allow','Deny','Deny','Allow','Deny','Deny'])) 
+					throw new PermissionsException("Failed updating MRUsers: ${mrSettingsPage.error}")
+				
+				history.save(pName)
 			}
-			mrSettingsPage.enterGroupPermissions('MRUsers',['Allow','Deny','Allow','Deny','Deny','Allow','Deny','Deny'])
-			mrSettingsPage.enterGroupPermissions('MRAdmin',['Allow','Allow','Allow','Allow','Allow','Allow','Allow','Allow'])
-			mrSettingsPage.enterGroupPermissions('MRPowerUsers',['Allow','Deny','Allow','Deny','Allow','Allow','Allow','Allow'])
-			
-			history.save(pName)
+		}
+		catch (e) {
+			log.error("Aborting: ${e.message}")
+			log.error(steps.formatForLog())
+			return
 		}
 		
 		// Log out of ADO
-		adoHeader.set(driver, wait, steps)
 		if (!adoHeader.signout()) 
 			log.error("WARNING: Error loging out of ADO: ${adoHeader.error}")
 			
 		// Success!!!
-		steps.completedSteps.each { step -> println(step) }
 		println(steps.formatForLog())
 		
 	}
@@ -200,6 +212,11 @@ class SetMrPermissions  implements CliWebBot {
 			}
 			return projectsToProcess
 		}
+	}
+	public class PermissionsException extends Exception { 
+	    public PermissionsException(String errorMessage) {
+	        super(errorMessage);
+	    }
 	}
 }
 

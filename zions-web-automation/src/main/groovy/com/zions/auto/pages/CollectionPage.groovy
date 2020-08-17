@@ -23,27 +23,26 @@ import groovy.util.logging.Slf4j
 
 @Component
 @Slf4j
-class MainHeader extends BasePage {
-
-	static String PROFILE_PIC = 'mectrl_headerPicture'
-	static String SIGN_OUT = 'mectrl_body_signOut'
+class CollectionPage extends BasePage {
+	@Value('${tfs.collection:}')
+	String collection
 	
-	boolean signout() {
+	@Value('${tfs.url}')
+	String tfsUrl
+
+	boolean go() {
 		
-		error = null
+		this.error = null
 		try {
-			driver.switchTo().defaultContent()
-			wait.until(ExpectedConditions.elementToBeClickable(By.id(PROFILE_PIC)))
-			driver.findElement(By.id(PROFILE_PIC)).click()
-			steps.add('SIGNOUT: Clicked profile picture')
-			wait.until(ExpectedConditions.elementToBeClickable(By.id(SIGN_OUT)))
-			driver.findElement(By.id(SIGN_OUT)).click()
-			steps.add('SIGNOUT: Clicked signout link')
-			Thread.sleep(10000) //pause 10 sec
+			// Navigate to ADO collection page
+			driver.get("$tfsUrl/$collection")
+			steps.add('ADO VALIDATION: Loading ADO collection page')
+			wait.until(ExpectedConditions.titleIs('Projects - Home'))
+			steps.add("ADO VALIDATION: ADO collection page was loaded")
 			return true
 		}
 		catch (e) {
-			error = e
+			this.error = e
 			return false
 		}
 	}
