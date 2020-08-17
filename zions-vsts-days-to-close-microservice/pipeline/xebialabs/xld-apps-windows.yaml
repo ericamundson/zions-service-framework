@@ -1,0 +1,45 @@
+apiVersion: xl-deploy/v1
+kind: Applications
+spec:
+- name: Applications/DTS
+  type: core.Directory
+  children:
+  - name: zions-vsts-days-to-close-microservice
+    type: udm.Application
+    children:
+    - name: !value "app_version"
+      type: udm.DeploymentPackage
+      deployables:
+      - name: zions-vsts-days-to-close-microservice.xml
+        type: file.File
+        scanPlaceholders: true
+        targetPath: '{{stage.path}}'
+        createTargetPath: "true"
+        file: !file "../service/service.xml"
+      - name: zions-vsts-days-to-close-microservice-hold.jar
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '{{stage.path}}'
+        createTargetPath: "true"
+        file: !file "../../build/libs/zions-vsts-days-to-close-microservice.jar"
+      - name: zions-vsts-days-to-close-microservice.exe.config
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '{{stage.path}}'
+        createTargetPath: "true"
+        file: !file "../service/service.exe.config"
+      - name: zions-vsts-days-to-close-microservice run install
+        type: advcmd.Command
+        command: |-
+          mkdir {{deploy.path}}
+          copy /Y {{deploy.path}}\..\WinSW.NET4.exe {{deploy.path}}\zions-vsts-days-to-close-microservice.exe
+          copy /Y {{stage.path}}\zions-vsts-days-to-close-microservice.xml {{deploy.path}}\zions-vsts-days-to-close-microservice.xml
+          {{deploy.path}}\zions-vsts-days-to-close-microservice.exe install
+          {{deploy.path}}\zions-vsts-days-to-close-microservice.exe stop
+          copy /Y {{stage.path}}\zions-vsts-days-to-close-microservice-hold.jar {{deploy.path}}\zions-vsts-days-to-close-microservice.jar
+          {{deploy.path}}\zions-vsts-days-to-close-microservice.exe start          
+        createOrder: "62"
+        destroyOrder: "42"
+        alwaysRun: "true"
+        noopOrder: "62"
+        undoCommand: 'echo "No action needed for undoCommand"'

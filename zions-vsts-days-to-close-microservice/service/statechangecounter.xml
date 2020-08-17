@@ -1,0 +1,8 @@
+<service>
+      <id>statechangecounterms</id>
+      <name>statechangecounterms</name>
+      <description>This service runs state change counter micro-service.</description>
+      <executable>java</executable>
+      <arguments>-Xrs -Xmx256m -jar "d:\bin\service\zions-vsts-statechange-counter-microservice.jar" --websocket.url=wss://104.42.59.51/ws --tfs.url=https://dev.azure.com/eto-dev --tfs.user=z070187 --tfs.token=bhgqrrnixqhdt4loar2ea7z74oervswykldygrwo2yzolropyuqa --logging.file="d:\bin\service\zions-vsts-statechange-counter-microservice.log"</arguments>
+      <logmode>rotate</logmode>
+</service>

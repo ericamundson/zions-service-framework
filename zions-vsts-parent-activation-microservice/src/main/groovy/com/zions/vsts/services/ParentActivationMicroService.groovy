@@ -113,10 +113,16 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		//check to see if parent is assigned to child work item
 		if (!parentId || parentId == 'null' || parentId == '') return logResult('parent not assigned')
 		def parentWI = workManagementService.getWorkItem(collection, project, parentId)
-		
+		if (!parentWI) {
+			log.error("Error retrieving work item $parentId")
+			return 'Error Retrieving Parent'
+		}
+
 		/**	 For unit testing !! Uncomment code below to capture parent playload for test
 		 * String json = new JsonBuilder(parentWI).toPrettyString()
 		 * println(json)*/
+			
+		
 		def pState = parentWI.fields.'System.State'
 		String rev = "${parentWI.rev}"
 		

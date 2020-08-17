@@ -8,7 +8,7 @@ trigger:
   paths:
     include:
 
-    - 'zions-vsts-parent-activation-microservice/*'
+    - 'zions-vsts-statechange-counter-microservice/*'
     - 'zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*'
     - 'zions-vsts-microservice/*'
     

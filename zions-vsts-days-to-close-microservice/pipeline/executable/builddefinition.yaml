@@ -1,0 +1,8 @@
+executables:
+- name: zions-vsts-days-to-close-microservice-release
+  type: buildDefinition
+  context: zionseto
+  project: DTS
+  queue: 'On-Prem Production'
+  repository: zions-service-framework
+  buildyaml: zions-vsts-days-to-close-microservice/pipeline/ado/microservice-release.yaml

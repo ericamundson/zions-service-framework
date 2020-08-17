@@ -93,36 +93,40 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		def outData = adoData
 		def wiResource = adoData.resource
 		
-		//**Check for qualifying projects how to setup in runtime settings?
+		//**Check for qualifying projects
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		if (includeProjects && !includeProjects.contains(project))
 			return logResult('Project not included')
-			
+		
+		//detect the work item type involved in the edit
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
-		//define a variable to get just fields System.State
+		
+		//If Bug execute counter code
+		if (!types.contains(wiType))return logResult('not a valid work item type')
+		
+		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('no changes made to state')
+		
+		//if (!stateField) return logResult('not a state change')
 		def stateField = wiResource.fields.'System.State'
+			
+		if (!stateField || stateField == 'null' || stateField == '') return logResult('not a state change')
 		
-		if (!stateField) return logResult('not a state change')
-		
+		//restrieve old/new state field values for comparison	
 		String oldState = stateField.oldValue
 		String newState = stateField.newValue
+		
 		
 		def statechangeCount = wiResource.revision.fields.'Custom.ReOpenCounter'
 		
 		if (!statechangeCount || statechangeCount == 'null' || statechangeCount == '')
 			statechangeCount = 0;
 			
-		if (!types.contains(wiType))return logResult('not a valid work item type')
-		//handle possibe null pointer exception	
-		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('Work item not changed or closed')
-		
 		//this is bug id
 		String id = "${wiResource.revision.id}"
 		
 		//this is rev id
 		String rev = "${wiResource.rev}"
 		
-		//parameterize source/destination states for bug count
 		if (sourceState.contains(oldState) && (destState.contains(newState))) {
 			log.debug("Updating count of $wiType #$id")
 	
@@ -143,7 +147,7 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		}
 	}
 
-	//Increment Counter would be something like
+	//will increment the count by 1
 	private def performIncrementCounter(String project, String rev, def id, def statechangeCount, Closure respHandler = null) {
 
 			int totalCount = statechangeCount + 1;
@@ -152,7 +156,6 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 			data.add(t)
 			
-			//def e = [op: 'add', path: '/fields/Custom.ReOpenCounter', value: 'Active']
 			def e = [op: 'add', path: '/fields/Custom.ReOpenCounter', value: totalCount]
 			data.add(e)
 			this.retryFailed = false

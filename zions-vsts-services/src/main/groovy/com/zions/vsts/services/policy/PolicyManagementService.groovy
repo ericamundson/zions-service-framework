@@ -79,6 +79,7 @@ public class PolicyManagementService {
 		boolean enforceLinkedWorkItems = true
 		boolean enforceMergeStrategy = true
 		boolean enforceCommentResolution = true
+		boolean isInitBranch = false
 
 		this.loadProperties(collection, repoData, branchName)
 		// if we're dealing with an 'IFB' branch, check for custom branch build / policy configuration
@@ -110,6 +111,13 @@ public class PolicyManagementService {
 			buildManagementService.ensureInitialTag(collection, repoData.project, repoData, branchName)
 		}
 		
+		// Check for special 'adoinit' branch used to patch master branch build / policy configuration
+		if (branchName.toLowerCase().equals("refs/heads/adoinit")) {
+			log.debug("PolicyManagementService::ensurePolicies -- Found ADO init branch. Applying policies to master")
+			branchName = "refs/heads/master"
+			isInitBranch = true
+		}
+
 		log.debug("PolicyManagementService::ensurePolicies -- Build validation policy enforced = "+enforceBuildValidation)
 		log.debug("PolicyManagementService::ensurePolicies -- Minimum approvers policy enforced = "+enforceMinimumApprovers)
 		log.debug("PolicyManagementService::ensurePolicies -- Linked work items policy enforced = "+enforceLinkedWorkItems)
@@ -117,7 +125,7 @@ public class PolicyManagementService {
 		log.debug("PolicyManagementService::ensurePolicies -- Comment resolution policy enforced = "+enforceCommentResolution)
 		if (enforceBuildValidation) {
 			// first create the CI build validation policy
-			ensureBuildPolicy(collection, repoData, branchName)
+			ensureBuildPolicy(collection, repoData, branchName, isInitBranch)
 		}
 		// create other policies ...
 		if (enforceMinimumApprovers) {
@@ -140,7 +148,7 @@ public class PolicyManagementService {
 	 *  
 	 *  @return Response
 	 */
-	public def ensureBuildPolicy(def collection, def repoData, def branchName) {
+	public def ensureBuildPolicy(def collection, def repoData, def branchName, boolean isInitBranch) {
 		
 		// get the CI build
 		def projectData = repoData.project
@@ -158,7 +166,7 @@ public class PolicyManagementService {
 		}
 
 		// result is a JSON object
-		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, isDRBranch, ciBuildTemplate, relBuildTemplate)
+		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, isDRBranch, ciBuildTemplate, relBuildTemplate, isInitBranch)
 		int ciBuildId = result.ciBuildId
 		if (ciBuildId == -1) {
 			log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was found or created. Unable to create the validation build policy!")
@@ -249,8 +257,12 @@ public class PolicyManagementService {
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
-		def res = createPolicy(collection, projectData, policy)
-		log.debug("PolicyManagementService::ensureLinkedWorkItemsPolicy -- result = "+res)
+		def policyRes = getBranchPolicy("40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e", projectData.id, repoData.id, branchName)
+		if (!policyRes) {
+			policyRes = createPolicy(collection, projectData, policy)
+		}
+		log.debug("PolicyManagementService::ensureLinkedWorkItemsPolicy -- result = "+policyRes)
+		return policyRes
 	}
 	
 	public def ensureMergeStrategyPolicy(def collection, def repoData, def branchName) {
@@ -258,7 +270,7 @@ public class PolicyManagementService {
 		log.debug("PolicyManagementService::ensureMergeStrategyPolicy -- ")
 		def policy = [id: -5, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
 		    type: [id: "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab"],
-		    settings:[useSquashMerge: false,
+		    settings:[allowNoFastForward: true,
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
@@ -296,7 +308,6 @@ public class PolicyManagementService {
 			repoObj.repoURL = "${repo.url}"
 			def branchColl = []
 			repoObj.branches = branchColl
-			//def branches = codeManagementService.getBranches("${collection}", "${project.id}", "${repo.id}")
 			def branches = codeManagementService.getBranches(collection, project, repo)
 			branches.value.each { branch ->
 				String branchName = "${branch.name}".toLowerCase()
@@ -316,7 +327,7 @@ public class PolicyManagementService {
 							hasCommentResolutionPolicy: false]
 					// check for policies on branch
 					log.debug("PolicyManagementService::getBranchPolicyReport -- Getting branch policies for branch " + bName + " ...")
-					def policies = getBranchPolicies(collection, project, repo.id, branchName)
+					def policies = getBranchPolicies(project, repo.id, branchName)
 					policies.value.each { policy ->
 						// check for build validation policy
 						if ("${policy.type.id}" == "0609b952-1397-4640-95ec-e00a01b2c241") {
@@ -374,7 +385,6 @@ public class PolicyManagementService {
 			repoObj.repoURL = "${repo.url}"
 			def branchColl = []
 			repoObj.branches = branchColl
-			//def branches = codeManagementService.getBranches("${collection}", "${project.id}", "${repo.id}")
 			def branches = codeManagementService.getBranches(collection, project, repo)
 			branches.value.each { branch ->
 				String branchName = "${branch.name}".toLowerCase()
@@ -392,7 +402,7 @@ public class PolicyManagementService {
 							hasCommentResolutionPolicy: false]
 					// check for policies on branch
 					log.debug("PolicyManagementService::getPolicyExceptionReport -- Getting branch policies for branch " + bName + " ...")
-					def policies = getBranchPolicies(collection, project, repo.id, branchName)
+					def policies = getBranchPolicies(project, repo.id, branchName)
 					policies.value.each { policy ->
 						// check for build validation policy
 						if ("${policy.type.id}" == "0609b952-1397-4640-95ec-e00a01b2c241") {
@@ -439,18 +449,39 @@ public class PolicyManagementService {
 		return policyReport
 	}
 
-	public def getBranchPolicies(def collection, def project, def repoId, def branchName) {
+	public def getBranchPolicies( def project, def repoId, def branchName ) {
 		log.debug("PolicyManagementService::getBranchPolicies -- Get policies for branch ${branchName}")
 		def query = ['repositoryId':"${repoId}", 'refName':"${branchName}" ]
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/policy/configurations",
+				uri: "${genericRestClient.getTfsUrl()}/${project.id}/_apis/git/policy/configurations",
 				query: query,
-				headers: [Accept: 'application/json;api-version=5.1-preview;excludeUrls=true']
+				headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true']
 		)
 		return result
 	}
 
+	def getBranchPolicy( def policyType, def projectId, def repoId, def branchName ) {
+		def query = ['repositoryId':"${repoId}", 'refName':"${branchName}" , 'policyType':"${policyType}" ]
+		def results = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${projectId}/_apis/git/policy/configurations",
+			query: query,
+			headers: [Accept: 'application/json;api-version=5.1']
+		)
+		def retVal = null	
+		results.'value'.each { policy ->
+			// Need to verify isEnabled
+			if (policy.isEnabled) {
+				retVal = policy
+				System.out.println("PolicyManagementService::getBranchPolicy -- Found existing branch policy for ${policyType}")
+				log.info("PolicyManagementService::getBranchPolicy -- Found existing branch policy for ${policyType}")
+				return
+			}
+		}
+		return retVal
+	}
+	
 	private loadProperties(def collection, def repoData, def branchName) {
 		def branch = "${branchName}".substring("refs/heads/".length())
 		log.debug("PolicyManagementService::loadProperties -- Get build properties for branch ${branch}")

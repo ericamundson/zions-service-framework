@@ -1,3 +1,6 @@
+# list of branch names / types to handle
+branchNames: master,release/,ifb/,dr/,adoinit
+
 # levels for loggers, e.g. "logging.level.org.springframework=DEBUG" (TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF)
 logging:
   level:
@@ -33,10 +36,8 @@ spring:
           timeout:  5000
           writetimeout:  5000
   rabbitmq:
-    host: localhost
-    password: guest
+    host: utmvti0144
     port: 5672
-    username: guest          
 # email:
 #   recipient:
 #     address: SCMTeam@zionsbancorp.com
@@ -49,12 +50,8 @@ email:
 tfs:
 # test
 #  url: https://dev.azure.com/eto-dev
-#  user: z091556
-#  token: emjfvuveeugbljidpareidxmya5zdvugt3gqp5ptidakh52ekq3q
 # prod
   url: https://dev.azure.com/ZionsETO
-  user: svc-cloud-vsbuildagent@zionsbancorporation.onmicrosoft.com
-  token: hpwk4nbqnk4sm2fia5ww6ais4lvp2fiiu6zwvnbinbwf7akpxira
   project: dummy
   collection:
   build:
