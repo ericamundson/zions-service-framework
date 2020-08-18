@@ -73,8 +73,7 @@ class LoginPage extends BasePage {
 			try {
 				WebElement troubleLocatingAccount = driver.findElement(By.id('loginDescription'))
 				steps.add('LOGIN: Found prompt for account type')
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.id('aadTileTitle'))).click()
-				steps.add('LOGIN: Selected account type')
+				waitMultiClick({By.id('aadTileTitle')},'LOGIN: Selected account type',50)
 			} catch (NoSuchElementException e) {}
 			
 			// Enter password and click Sign in
