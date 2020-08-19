@@ -1,0 +1,155 @@
+{
+    "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
+    "notificationId": 3716,
+    "id": "4559fe3a-441d-4fe3-bbc6-f6e71aee7a88",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": {
+        "text": "Feature #948169 (Feature Film) updated by SVC-CLOUD-ADOMAINT003\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=948169)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=948169\">Feature #948169</a> (Feature Film) updated by SVC-CLOUD-ADOMAINT003",
+        "markdown": "[Feature #948169](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=948169) (Feature Film) updated by SVC-CLOUD-ADOMAINT003"
+    },
+    "detailedMessage": {
+        "text": "Feature #948169 (Feature Film) updated by SVC-CLOUD-ADOMAINT003\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=948169)\r\n\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=948169\">Feature #948169</a> (Feature Film) updated by SVC-CLOUD-ADOMAINT003<ul></ul>",
+        "markdown": "[Feature #948169](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=948169) (Feature Film) updated by SVC-CLOUD-ADOMAINT003\r\n\r\n"
+    },
+    "resource": {
+        "id": 5,
+        "workItemId": 948169,
+        "rev": 3,
+        "revisedBy": {
+            "id": "b855abd7-fbb9-6aa3-9525-21c2ab485741",
+            "name": "SVC-CLOUD-ADOMAINT003 <SVC-CLOUD-ADOMAINT003@zionsbancorporation.onmicrosoft.com>",
+            "displayName": "SVC-CLOUD-ADOMAINT003",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b855abd7-fbb9-6aa3-9525-21c2ab485741",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.Yjg1NWFiZDctZmJiOS03YWEzLTk1MjUtMjFjMmFiNDg1NzQx"
+                }
+            },
+            "uniqueName": "SVC-CLOUD-ADOMAINT003@zionsbancorporation.onmicrosoft.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.Yjg1NWFiZDctZmJiOS03YWEzLTk1MjUtMjFjMmFiNDg1NzQx",
+            "descriptor": "aad.Yjg1NWFiZDctZmJiOS03YWEzLTk1MjUtMjFjMmFiNDg1NzQx"
+        },
+        "revisedDate": "9999-01-01T00:00:00Z",
+        "fields": {
+            "System.Rev": {
+                "oldValue": 2,
+                "newValue": 3
+            },
+            "System.AuthorizedDate": {
+                "oldValue": "2020-08-17T01:44:55.353Z",
+                "newValue": "2020-08-17T13:47:31Z"
+            },
+            "System.RevisedDate": {
+                "oldValue": "2020-08-17T13:47:31Z",
+                "newValue": "9999-01-01T00:00:00Z"
+            },
+            "System.ChangedDate": {
+                "oldValue": "2020-08-17T01:44:55.353Z",
+                "newValue": "2020-08-17T13:47:31Z"
+            },
+            "System.ChangedBy": {
+                "oldValue": "SVC-CLOUD-ADOMAINT001 <SVC-CLOUD-ADOMAINT001@zionsbancorporation.onmicrosoft.com>",
+                "newValue": "SVC-CLOUD-ADOMAINT003 <SVC-CLOUD-ADOMAINT003@zionsbancorporation.onmicrosoft.com>"
+            },
+            "System.AuthorizedAs": {
+                "oldValue": "SVC-CLOUD-ADOMAINT001 <SVC-CLOUD-ADOMAINT001@zionsbancorporation.onmicrosoft.com>",
+                "newValue": "SVC-CLOUD-ADOMAINT003 <SVC-CLOUD-ADOMAINT003@zionsbancorporation.onmicrosoft.com>"
+            },
+            "System.PersonId": {
+                "oldValue": 99895085,
+                "newValue": 99895087
+            },
+            "System.Watermark": {
+                "oldValue": 330549,
+                "newValue": 330562
+            },
+            "Custom.ExternalID": {
+                "oldValue": "223"
+            },
+            "Custom.OTLNumber": {
+                "oldValue": "122"
+            }
+        },
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948169/updates/5"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948169/updates"
+            },
+            "parent": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948169"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=948169"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948169/updates/5",
+        "revision": {
+            "id": 948169,
+            "rev": 3,
+            "fields": {
+                "System.AreaPath": "ALMOpsTest",
+                "System.TeamProject": "ALMOpsTest",
+                "System.IterationPath": "ALMOpsTest",
+                "System.WorkItemType": "Feature",
+                "System.State": "New",
+                "System.Reason": "New",
+                "System.CreatedDate": "2020-08-17T01:39:40.02Z",
+                "System.CreatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.ChangedDate": "2020-08-17T13:47:31Z",
+                "System.ChangedBy": "SVC-CLOUD-ADOMAINT003 <SVC-CLOUD-ADOMAINT003@zionsbancorporation.onmicrosoft.com>",
+                "System.CommentCount": 0,
+                "System.Title": "Feature Film",
+                "System.BoardColumn": "New",
+                "System.BoardColumnDone": false,
+                "Microsoft.VSTS.Common.StateChangeDate": "2020-08-17T01:39:40.02Z",
+                "Microsoft.VSTS.Common.Priority": 2,
+                "Microsoft.VSTS.Common.ValueArea": "Business",
+                "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column": "New",
+                "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column.Done": false
+            },
+            "relations": [
+                {
+                    "rel": "System.LinkTypes.Hierarchy-Forward",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948172",
+                    "attributes": {
+                        "isLocked": false,
+                        "name": "Child"
+                    }
+                }
+            ],
+            "_links": {
+                "self": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948169/revisions/3"
+                },
+                "workItemRevisions": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948169/revisions"
+                },
+                "parent": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948169"
+                }
+            },
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948169/revisions/3"
+        }
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1bec1897-29a0-44d0-80a8-670c5ae5ef4a",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "account": {
+            "id": "6e6d6b08-2e41-4c55-a624-0d1ec79969dd",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "project": {
+            "id": "030d62a4-ce8b-405e-a331-8678df1a6efe",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        }
+    },
+    "createdDate": "2020-08-17T13:47:38.639886Z"
+}
