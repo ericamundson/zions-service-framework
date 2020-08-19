@@ -38,18 +38,20 @@ import groovy.json.JsonBuilder
 @Slf4j
 class MonitorSmartDoc  implements CliWebBot {
 	// Failure types
-	static String LOGIN_FAILURE = 'ADO login failure'
-	static String ADO_FAILURE = 'ADO site not available'
-	static String SMARTDOC_PAGE_FAILURE = 'SD page load failure'
-	static String SMARTDOC_DOCUMENT_FAILURE = 'SD document load failure'
-	static String REVIEW_FAILURE = 'Review Request failure'
+	String LOGIN_FAILURE = 'ADO login failure'
+	String ADO_FAILURE = 'ADO site not available'
+	String SMARTDOC_PAGE_FAILURE = 'SD page load failure'
+	String SMARTDOC_DOCUMENT_FAILURE = 'SD document load failure'
+	String REVIEW_FAILURE = 'Review Request failure'
 	
+	def failSequence  = [(LOGIN_FAILURE):1,(ADO_FAILURE):2,(SMARTDOC_PAGE_FAILURE):3,(SMARTDOC_DOCUMENT_FAILURE):4,(REVIEW_FAILURE):5]
 	
 	// Tags
 	static String FAILURE_TAG = 'CURRENT OUTAGE'
 	static String SUCCESS_TAG = 'SUCCESSFUL RETEST'
 	
-	def status
+	MonitorStatus status
+	CompletedSteps steps
 	
 	@Autowired
 	WorkManagementService workManagementService
@@ -120,6 +122,8 @@ class MonitorSmartDoc  implements CliWebBot {
 		
 		// Get status from last execution
 		status = new MonitorStatus()
+		
+		this.steps = steps
 
 		//******** Log into ADO ******
 		if (!loginPage.login()) {
@@ -201,7 +205,7 @@ class MonitorSmartDoc  implements CliWebBot {
 		// If active bug exists for same failure, just add failure comment.  Else, create new Bug.
 		if (status.curBugId && newFailType == status.failType) {
 			boolean sentEmail = false
-			if ((status.failCount == ticketCount - 1) && newFailType != LOGIN_FAILURE && newFailType != ADO_FAILURE) {
+			if ((status.failCount == ticketCount - 1) && failSequence[newFailType] > failSequence[ADO_FAILURE]) {
 				// Send out email to Modern Requirements Support since it is not a login or ADO failure
 				def result
 				if (notificationService) result = notificationService.sendModernRequirementsFailureNotification(status)
@@ -216,14 +220,11 @@ class MonitorSmartDoc  implements CliWebBot {
 		}
 		else { // Creating new bug
 			String prevFail
-			// If previous failure was a login or ADO failure, then tag previous bug as passed
-			if (status.curBugId && (status.failType == LOGIN_FAILURE || status.failType == ADO_FAILURE)) {
+			// If previous failure was earlier in sequence, then tag previous bug as passed
+			if (status.curBugId && failSequence["${status.failType}"] < failSequence[newFailType]) {
 				if (!updateBugSuccessfulRetest(status.curBugId)) prevFail = status.curBugId
 			}
-			// If previous failure was a SD page load, and new failure is Review Request failure, then tag previous bug as passed
-			else if (status.curBugId && status.failType == SMARTDOC_PAGE_FAILURE && newFailType == REVIEW_FAILURE) {
-				if (!updateBugSuccessfulRetest(status.curBugId)) prevFail = status.curBugId
-			}
+			// else save in status
 			else if (status.curBugId)
 				prevFail = status.curBugId
 			createBug(driver, e, newFailType, prevFail)
@@ -321,7 +322,7 @@ class MonitorSmartDoc  implements CliWebBot {
 		return true
 	}
 	private void reportSlowResponse() {
-		log.error("WARNING:  Unexpected slow response:\n" + formatCompletedStepsForLog())
+		log.error("WARNING:  Unexpected slow response:\n" + steps.formatForLog())
 	}
 	
 	// Supporting Class Maintenance Window

@@ -42,10 +42,11 @@ class SmartDocsPage extends BasePage {
 	// UI elements
 	static String CONFIRM_BUTTON = "confirm-dialog-ok-button-rvm-req-confirmation-dialog"
 	static String MR_LOGOUT_BUTTON = "smd_left_panel_footerbtn-container"
-	static String SMARTDOC_XPATH
+	static String SMARTDOC_NAME_XPATH
+	static String SMARTDOC_WI_TITLE_CSS = ".ig-smd-grid-wititle-div"
 
 	boolean go() {
-		SMARTDOC_XPATH = "//span[contains(.,\'$smartDocName\')]"
+		SMARTDOC_NAME_XPATH = "//span[contains(.,\'$smartDocName\')]"
 		
 		this.error = null
 		try {
@@ -71,7 +72,7 @@ class SmartDocsPage extends BasePage {
 			}
 			
 			
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(SMARTDOC_XPATH)))
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(SMARTDOC_NAME_XPATH)))
 			steps.add("SMART DOC VALIDATION: Smart Docs Page was loaded")
 			return true
 		}
@@ -86,12 +87,12 @@ class SmartDocsPage extends BasePage {
 		try {
 			// Click on the SmartDoc Entry in the tree view
 			Thread.sleep(1000) //pause 1 sec
-			driver.findElement(By.xpath(SMARTDOC_XPATH)).click()
+			driver.findElement(By.xpath(SMARTDOC_NAME_XPATH)).click()
 			steps.add('SMART DOC VALIDATION: clicked on Smart Doc name')
 			
 			// Check that the root Document work item has rendered in the Smart Doc editor
 			if (hasLicense)
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ig-smd-grid-wititle-div")))
+				wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(SMARTDOC_WI_TITLE_CSS)))
 			else
 				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id=\'smd-main-workitemgrid\']/div[3]/table/tbody/tr/td[3]/div/div[2]")))
 			steps.add('SMART DOC VALIDATION: validated root work item presence')
