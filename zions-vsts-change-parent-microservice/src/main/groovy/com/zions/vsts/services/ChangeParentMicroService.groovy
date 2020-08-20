@@ -98,8 +98,8 @@ class ChangeParentMicroService implements MessageReceiverTrait {
 		log.info("Entering Change Parent MicroService:: processADOData")
 		
 		/*Uncomment code below to capture adoData payload for test*/
-		//String json = new JsonBuilder(adoData).toPrettyString()
-		//println(json)
+		/*String json = new JsonBuilder(adoData).toPrettyString()
+		println(json)*/
 		
 		def outData = adoData
 		def wiResource = adoData.resource
@@ -114,7 +114,10 @@ class ChangeParentMicroService implements MessageReceiverTrait {
 		//get parentID
 		def parId = "${wiResource.revision.fields.'System.Parent'}"
 		def parentWI = workManagementService.getWorkItem(collection, project, parId)
-		
+		/**	 For unit testing !! Uncomment code below to capture parent playload for test*/
+		/* String json2 = new JsonBuilder(parentWI).toPrettyString()
+		 println(json2)*/
+			
 		boolean parentAdded = false
 		boolean parentRemoved = false
 		def changes = []
@@ -122,14 +125,15 @@ class ChangeParentMicroService implements MessageReceiverTrait {
 		def count = 0
 		//this is the work item id
 		String id = "${wiResource.revision.id}"
-		//Define removed link type
-		//def remLinks = "${wiResource.revision.relations['rel']}"
-		//code to address null pointer exception
 		
-	    if (!wiResource.relations) return logResult('No valid changes made')
-		  def remLinks = wiResource.relations.removed
 
-		//verify added relations? is .added?
+		//code to address null pointer exception
+		if (!wiResource.relations) return logResult('No valid changes made')
+			
+		//Define removed link type
+		def remLinks = wiResource.relations.removed
+
+		//Define added link type
 		def addLinks = wiResource.relations.added
 		
 		if (remLinks) {
@@ -190,7 +194,7 @@ class ChangeParentMicroService implements MessageReceiverTrait {
 			log.error("Error retrieving work item $parId")
 			return 'Error Retrieving Parent'
 			}
-			def pState = parentWI.fields.'System.State'
+			//def pState = parentWI.fields.'System.State'
 			wiPfields.each { field ->
 				def pVal = parentWI.fields["${field}"]
 			//	def pVal = wiResource.revision.fields["${field}"]
