@@ -2,6 +2,6 @@
 AppName: "zions-vsts-days-to-close-microservice"
 IsWindows: true
 RequiresCollection: true
-BuildIncludes: "zions-vsts-days-to-close-microservice/*, zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*,zions-vsts-microservice/*"
+BuildIncludes: " zions-vsts-days-to-close-microservice/*, zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*,zions-vsts-microservice/*"
 Queuename: "WorkItem-daystoclose-queue"
 WSTopics: "workitem.updated"

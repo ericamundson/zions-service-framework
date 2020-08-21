@@ -38,18 +38,20 @@ import groovy.json.JsonBuilder
 @Slf4j
 class MonitorSmartDoc  implements CliWebBot {
 	// Failure types
-	static String LOGIN_FAILURE = 'ADO login failure'
-	static String ADO_FAILURE = 'ADO site not available'
-	static String SMARTDOC_PAGE_FAILURE = 'SD page load failure'
-	static String SMARTDOC_DOCUMENT_FAILURE = 'SD document load failure'
-	static String REVIEW_FAILURE = 'Review Request failure'
+	String LOGIN_FAILURE = 'ADO login failure'
+	String ADO_FAILURE = 'ADO site not available'
+	String SMARTDOC_PAGE_FAILURE = 'SD page load failure'
+	String SMARTDOC_DOCUMENT_FAILURE = 'SD document load failure'
+	String REVIEW_FAILURE = 'Review Request failure'
 	
+	def failSequence  = [(LOGIN_FAILURE):1,(ADO_FAILURE):2,(SMARTDOC_PAGE_FAILURE):3,(SMARTDOC_DOCUMENT_FAILURE):4,(REVIEW_FAILURE):5]
 	
 	// Tags
 	static String FAILURE_TAG = 'CURRENT OUTAGE'
 	static String SUCCESS_TAG = 'SUCCESSFUL RETEST'
 	
-	def status
+	MonitorStatus status
+	CompletedSteps steps
 	
 	@Autowired
 	WorkManagementService workManagementService
@@ -120,39 +122,49 @@ class MonitorSmartDoc  implements CliWebBot {
 		
 		// Get status from last execution
 		status = new MonitorStatus()
+		
+		this.steps = steps
 
 		//******** Log into ADO ******
 		if (!loginPage.login()) {
-			reportError(driver, loginPage.error, LOGIN_FAILURE)
-			return
+			// try one more time
+			steps.add("ERROR: $LOGIN_FAILURE.  Making one more attempt")
+			if (!loginPage.login()) {
+				reportError(driver, loginPage.error, LOGIN_FAILURE)
+				return
+			}
 		}
 		
 		// ******** Check ADO availability ********
 		if (!collectionPage.go()) {
-			 steps.add('ADO VALIDATION: Failed.  Trying one more attempt')
+			 steps.add("ERROR: $ADO_FAILURE.  Making one more attempt")
+			 // Start over with login attempt
 			 if (!loginPage.login()) {
 				 reportError(driver, loginPage.error, LOGIN_FAILURE)
 				 return
 			 }
-			 else {
-				 if (!collectionPage.go()) {
-					 reportError(driver, collectionPage.error, ADO_FAILURE)
-					 return
-				 }
+			 else if (!collectionPage.go()) {
+				 reportError(driver, collectionPage.error, ADO_FAILURE)
+				 return
 			 }
 		 }
 
 		//********** Begin Modern Requirements Tests *******
-		// Test Smart Doc availability
-		if (smartDocsPage.go()) {
+		// Test Smart Docs landing page availability
+		if (!smartDocsPage.go()) {
+			steps.add("ERROR: $SMARTDOC_PAGE_FAILURE.  Making one more attempt")
+			if (!smartDocsPage.go()) {
+				reportError(driver, smartDocsPage.error, SMARTDOC_PAGE_FAILURE)
+				return
+			}
+		}
+		// Test loading of document contents
+		if (!smartDocsPage.loadSmartDoc()) {
+			steps.add("ERROR: $SMARTDOC_DOCUMENT_FAILURE.  Making one more attempt")
 			if (!smartDocsPage.loadSmartDoc()) {
 				reportError(driver, smartDocsPage.error, SMARTDOC_DOCUMENT_FAILURE)
 				return
 			}
-		}
-		else {
-			reportError(driver, smartDocsPage.error, SMARTDOC_PAGE_FAILURE)
-			return
 		}
 		
 		// Test Review Request dialog (must have license to do this)
@@ -201,7 +213,7 @@ class MonitorSmartDoc  implements CliWebBot {
 		// If active bug exists for same failure, just add failure comment.  Else, create new Bug.
 		if (status.curBugId && newFailType == status.failType) {
 			boolean sentEmail = false
-			if ((status.failCount == ticketCount - 1) && newFailType != LOGIN_FAILURE && newFailType != ADO_FAILURE) {
+			if ((status.failCount == ticketCount - 1) && failSequence[newFailType] > failSequence[ADO_FAILURE]) {
 				// Send out email to Modern Requirements Support since it is not a login or ADO failure
 				def result
 				if (notificationService) result = notificationService.sendModernRequirementsFailureNotification(status)
@@ -216,14 +228,11 @@ class MonitorSmartDoc  implements CliWebBot {
 		}
 		else { // Creating new bug
 			String prevFail
-			// If previous failure was a login or ADO failure, then tag previous bug as passed
-			if (status.curBugId && (status.failType == LOGIN_FAILURE || status.failType == ADO_FAILURE)) {
+			// If previous failure was earlier in sequence, then tag previous bug as passed
+			if (status.curBugId && failSequence["${status.failType}"] < failSequence[newFailType]) {
 				if (!updateBugSuccessfulRetest(status.curBugId)) prevFail = status.curBugId
 			}
-			// If previous failure was a SD page load, and new failure is Review Request failure, then tag previous bug as passed
-			else if (status.curBugId && status.failType == SMARTDOC_PAGE_FAILURE && newFailType == REVIEW_FAILURE) {
-				if (!updateBugSuccessfulRetest(status.curBugId)) prevFail = status.curBugId
-			}
+			// else save in status
 			else if (status.curBugId)
 				prevFail = status.curBugId
 			createBug(driver, e, newFailType, prevFail)
@@ -247,13 +256,13 @@ class MonitorSmartDoc  implements CliWebBot {
 		def data = []
 		def title = "Smart Doc Monitoring $newFailType"
 		def desc = "<div>${e.message}" + "<p>" + "${e.cause}".replace('\n','<br>') + '</p></div>' 
-		def steps = "<div>" + this.steps.formatForHtml() + '</div>' 
+		def reproSteps = "<div>" + this.steps.formatForHtml() + '</div>' 
 		data.add([ op: 'add', path: '/id', value: -1])
 		data.add([op:'add', path:"/fields/System.Title", value: title])
 		data.add([op:'add', path:"/fields/System.Description", value: desc])
 		data.add([op:'add', path:"/fields/System.AreaPath", value: areapath])
 		data.add([op:'add', path:"/fields/System.AssignedTo", value: owner])
-		data.add([op:'add', path:"/fields/Microsoft.VSTS.TCM.ReproSteps", value: steps])
+		data.add([op:'add', path:"/fields/Microsoft.VSTS.TCM.ReproSteps", value: reproSteps])
 		data.add([op:'add', path:"/fields/System.Tags", value: FAILURE_TAG])
 		if (attData) {
 			def attUrl = attData.url
@@ -321,7 +330,7 @@ class MonitorSmartDoc  implements CliWebBot {
 		return true
 	}
 	private void reportSlowResponse() {
-		log.error("WARNING:  Unexpected slow response:\n" + formatCompletedStepsForLog())
+		log.error("WARNING:  Unexpected slow response:\n" + steps.formatForLog())
 	}
 	
 	// Supporting Class Maintenance Window
