@@ -127,36 +127,44 @@ class MonitorSmartDoc  implements CliWebBot {
 
 		//******** Log into ADO ******
 		if (!loginPage.login()) {
-			reportError(driver, loginPage.error, LOGIN_FAILURE)
-			return
+			// try one more time
+			steps.add("ERROR: $LOGIN_FAILURE.  Making one more attempt")
+			if (!loginPage.login()) {
+				reportError(driver, loginPage.error, LOGIN_FAILURE)
+				return
+			}
 		}
 		
 		// ******** Check ADO availability ********
 		if (!collectionPage.go()) {
-			 steps.add('ADO VALIDATION: Failed.  Trying one more attempt')
+			 steps.add("ERROR: $ADO_FAILURE.  Making one more attempt")
+			 // Start over with login attempt
 			 if (!loginPage.login()) {
 				 reportError(driver, loginPage.error, LOGIN_FAILURE)
 				 return
 			 }
-			 else {
-				 if (!collectionPage.go()) {
-					 reportError(driver, collectionPage.error, ADO_FAILURE)
-					 return
-				 }
+			 else if (!collectionPage.go()) {
+				 reportError(driver, collectionPage.error, ADO_FAILURE)
+				 return
 			 }
 		 }
 
 		//********** Begin Modern Requirements Tests *******
-		// Test Smart Doc availability
-		if (smartDocsPage.go()) {
+		// Test Smart Docs landing page availability
+		if (!smartDocsPage.go()) {
+			steps.add("ERROR: $SMARTDOC_PAGE_FAILURE.  Making one more attempt")
+			if (!smartDocsPage.go()) {
+				reportError(driver, smartDocsPage.error, SMARTDOC_PAGE_FAILURE)
+				return
+			}
+		}
+		// Test loading of document contents
+		if (!smartDocsPage.loadSmartDoc()) {
+			steps.add("ERROR: $SMARTDOC_DOCUMENT_FAILURE.  Making one more attempt")
 			if (!smartDocsPage.loadSmartDoc()) {
 				reportError(driver, smartDocsPage.error, SMARTDOC_DOCUMENT_FAILURE)
 				return
 			}
-		}
-		else {
-			reportError(driver, smartDocsPage.error, SMARTDOC_PAGE_FAILURE)
-			return
 		}
 		
 		// Test Review Request dialog (must have license to do this)
@@ -248,13 +256,13 @@ class MonitorSmartDoc  implements CliWebBot {
 		def data = []
 		def title = "Smart Doc Monitoring $newFailType"
 		def desc = "<div>${e.message}" + "<p>" + "${e.cause}".replace('\n','<br>') + '</p></div>' 
-		def steps = "<div>" + this.steps.formatForHtml() + '</div>' 
+		def reproSteps = "<div>" + this.steps.formatForHtml() + '</div>' 
 		data.add([ op: 'add', path: '/id', value: -1])
 		data.add([op:'add', path:"/fields/System.Title", value: title])
 		data.add([op:'add', path:"/fields/System.Description", value: desc])
 		data.add([op:'add', path:"/fields/System.AreaPath", value: areapath])
 		data.add([op:'add', path:"/fields/System.AssignedTo", value: owner])
-		data.add([op:'add', path:"/fields/Microsoft.VSTS.TCM.ReproSteps", value: steps])
+		data.add([op:'add', path:"/fields/Microsoft.VSTS.TCM.ReproSteps", value: reproSteps])
 		data.add([op:'add', path:"/fields/System.Tags", value: FAILURE_TAG])
 		if (attData) {
 			def attUrl = attData.url
