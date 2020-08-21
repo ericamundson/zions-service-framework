@@ -98,8 +98,8 @@ class ChangeParentMicroService implements MessageReceiverTrait {
 		log.info("Entering Change Parent MicroService:: processADOData")
 		
 		/*Uncomment code below to capture adoData payload for test*/
-		/*String json = new JsonBuilder(adoData).toPrettyString()
-		println(json)*/
+		String json = new JsonBuilder(adoData).toPrettyString()
+		println(json)
 		
 		def outData = adoData
 		def wiResource = adoData.resource
@@ -125,16 +125,25 @@ class ChangeParentMicroService implements MessageReceiverTrait {
 		def count = 0
 		//this is the work item id
 		String id = "${wiResource.revision.id}"
-		
+		//if (!wiResource.fields) return logResult('No valid changes made')
+			
 
-		//code to address null pointer exception
-		if (!wiResource.relations) return logResult('No valid changes made')
+		//code to address null pointer exception on 'removed' object
+		//if (wiResource.relations == 'null' || !wiResource.relations) return logResult('No valid link changes made 2')
+		if (wiResource.relations == 'null' || !wiResource.relations)
+			return logResult('No valid changes made') 
+	
+		//if (addLinks == 'null' || remLinks == 'null') return logResult('No valid link changes made')
+		
 			
 		//Define removed link type
 		def remLinks = wiResource.relations.removed
 
 		//Define added link type
 		def addLinks = wiResource.relations.added
+		
+		//if (!wiResource.relations) return logResult('No valid changes made')
+		if (addLinks == 'null' || remLinks == 'null') return logResult('No valid link changes made')
 		
 		if (remLinks) {
 			remLinks.each { link ->
@@ -180,7 +189,7 @@ class ChangeParentMicroService implements MessageReceiverTrait {
 				// Process work item changes in Azure DevOps
 				log.info("Processing work item changes...")
 				workManagementService.batchWIChanges(collection, project, changes, idMap)
-				return logResult('Update Succeeded')
+				return logResult('Remove Update Succeeded')
 			}
 		
 		}
@@ -218,7 +227,7 @@ class ChangeParentMicroService implements MessageReceiverTrait {
 				// Process work item changes in Azure DevOps
 				log.info("Processing work item changes...")
 				workManagementService.batchWIChanges(collection, project, changes, idMap)
-				return logResult('Update Succeeded')
+				return logResult('Add Update Succeeded')
 			}
 				
 		}

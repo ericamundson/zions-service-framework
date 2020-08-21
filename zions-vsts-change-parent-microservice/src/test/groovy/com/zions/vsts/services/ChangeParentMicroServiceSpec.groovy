@@ -76,16 +76,17 @@ class ChangeParentMicroServiceSpec extends Specification {
 		workManagementService.updateWorkItem(_,_,_,_) >> {
 			String data = "${args[3]}"
 			
-			  assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/Custom.OTLNumber, value:8005]]')
+			  assert(data.toString() == '[[op:test, path:/rev, value:5], [op:add, path:/fields/Custom.OTLNumber, value:8005]]')
 		}
 		
 		when: "calling method under test processADOData()"
 		def resp = underTest.processADOData(adoMap)
 		
 		then: "Update should be made"
-		resp == 'Update Succeeded'
+		resp == 'Add Update Succeeded'
 	}
 	
+	//working
 	def "valid event for clearing inherited values"() {
 		given: "A mock ADO event payload where work item has no parent"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/updateCurrent.json').text)
@@ -109,7 +110,7 @@ class ChangeParentMicroServiceSpec extends Specification {
 		def resp = underTest.processADOData(adoMap)
 
 		then: "Update should be made"
-		resp == 'Update Succeeded'
+		resp == 'Remove Update Succeeded'
 	}
 	
 }
