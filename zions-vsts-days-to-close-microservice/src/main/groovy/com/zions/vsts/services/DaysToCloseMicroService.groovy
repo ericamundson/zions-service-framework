@@ -189,6 +189,14 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				  
 				def values = duration.days
 				daystoClose = values
+				//set half day values to 0.5
+				if (createDate == newClosedDate) {
+					float sameDayClosure
+					sameDayClosure = 0.5
+					values = sameDayClosure
+					daystoClose = values
+					
+				}
 				
 	
 				//update the daystoClose field
