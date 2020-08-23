@@ -1,0 +1,12 @@
+bootJar {
+	enabled = true
+	mainClassName = 'com.zions.vsts.services.ParentChangeApplication'
+	archiveName = 'zions-vsts-parent-change-microservice.jar'
+	//version =  "${version}"
+}
+
+dependencies {
+	compile project(':zions-vsts-services')
+	compile project(':zions-vsts-microservice')
+	compile project(':zions-common')
+}
