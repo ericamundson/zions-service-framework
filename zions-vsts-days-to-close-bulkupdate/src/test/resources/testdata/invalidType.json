@@ -1,0 +1,180 @@
+{
+    "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
+    "notificationId": 1309,
+    "id": "72abf519-7dc5-4a37-8013-7becd3ccd59f",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": {
+        "text": "User Story #628869 (CDI Onboarding Request ) transitioned to New by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=628869)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=628869\">User Story #628869</a> (CDI Onboarding Request ) transitioned to New by Michael Angelastro",
+        "markdown": "[User Story #628869](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=628869) (CDI Onboarding Request ) transitioned to New by Michael Angelastro"
+    },
+    "detailedMessage": {
+        "text": "User Story #628869 (CDI Onboarding Request ) transitioned to New by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=628869)\r\n\r\n- New State: New\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=628869\">User Story #628869</a> (CDI Onboarding Request ) transitioned to New by Michael Angelastro<ul>\r\n<li>New State: New</li></ul>",
+        "markdown": "[User Story #628869](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=628869) (CDI Onboarding Request ) transitioned to New by Michael Angelastro\r\n\r\n* New State: New\r\n"
+    },
+    "resource": {
+        "id": 7,
+        "workItemId": 628869,
+        "rev": 5,
+        "revisedBy": {
+            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
+            "name": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+            "displayName": "Michael Angelastro",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                }
+            },
+            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
+            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+        },
+        "revisedDate": "9999-01-01T00:00:00Z",
+        "fields": {
+            "System.Rev": {
+                "oldValue": 4,
+                "newValue": 5
+            },
+            "System.AuthorizedDate": {
+                "oldValue": "2020-04-23T17:19:12.11Z",
+                "newValue": "2020-07-02T13:26:31.917Z"
+            },
+            "System.RevisedDate": {
+                "oldValue": "2020-07-02T13:26:31.917Z",
+                "newValue": "9999-01-01T00:00:00Z"
+            },
+            "System.State": {
+                "oldValue": "Closed",
+                "newValue": "New"
+            },
+            "System.Reason": {
+                "oldValue": "Acceptance tests pass",
+                "newValue": "Moved to the backlog"
+            },
+            "System.ChangedDate": {
+                "oldValue": "2020-04-23T17:19:12.11Z",
+                "newValue": "2020-07-02T13:26:31.917Z"
+            },
+            "System.Watermark": {
+                "oldValue": 327276,
+                "newValue": 328538
+            },
+            "System.BoardColumn": {
+                "oldValue": "Closed",
+                "newValue": "New"
+            },
+            "Microsoft.VSTS.Common.StateChangeDate": {
+                "oldValue": "2020-04-23T17:19:12.11Z",
+                "newValue": "2020-07-02T13:26:31.917Z"
+            },
+            "Microsoft.VSTS.Common.ResolvedDate": {
+                "oldValue": "2020-04-23T17:19:12.11Z"
+            },
+            "Microsoft.VSTS.Common.ResolvedBy": {
+                "oldValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "Microsoft.VSTS.Common.ClosedDate": {
+                "oldValue": "2020-04-23T17:19:12.11Z"
+            },
+            "Microsoft.VSTS.Common.ClosedBy": {
+                "oldValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": {
+                "oldValue": "Closed",
+                "newValue": "New"
+            }
+        },
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/628869/updates/7"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/628869/updates"
+            },
+            "parent": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/628869"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=628869"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/628869/updates/7",
+        "revision": {
+            "id": 628869,
+            "rev": 5,
+            "fields": {
+                "System.AreaPath": "ALMOpsTest",
+                "System.TeamProject": "ALMOpsTest",
+                "System.IterationPath": "ALMOpsTest",
+                "System.WorkItemType": "User Story",
+                "System.State": "New",
+                "System.Reason": "Moved to the backlog",
+                "System.CreatedDate": "2019-07-17T16:00:32.727Z",
+                "System.CreatedBy": "Matthew Van Wagoner <Matthew.Vanwagoner@zionsbancorp.com>",
+                "System.ChangedDate": "2020-07-02T13:26:31.917Z",
+                "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CommentCount": 0,
+                "System.Title": "CDI Onboarding Request ",
+                "System.BoardColumn": "New",
+                "System.BoardColumnDone": false,
+                "Microsoft.VSTS.Common.StateChangeDate": "2020-07-02T13:26:31.917Z",
+                "Microsoft.VSTS.Common.Priority": 2,
+                "Microsoft.VSTS.Common.ValueArea": "Business",
+                "Custom.SubState": "New",
+                "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": "New",
+                "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column.Done": false,
+                "System.Description": "This is a test for the Flow User Story creation\r\n\r\nMatthew Van Wagoner",
+                "System.Parent": 947687
+            },
+            "relations": [
+                {
+                    "rel": "System.LinkTypes.Hierarchy-Reverse",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947687",
+                    "attributes": {
+                        "isLocked": false,
+                        "name": "Parent"
+                    }
+                },
+                {
+                    "rel": "System.LinkTypes.Hierarchy-Forward",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947685",
+                    "attributes": {
+                        "isLocked": false,
+                        "name": "Child"
+                    }
+                }
+            ],
+            "_links": {
+                "self": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/628869/revisions/5"
+                },
+                "workItemRevisions": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/628869/revisions"
+                },
+                "parent": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/628869"
+                }
+            },
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/628869/revisions/5"
+        }
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1bec1897-29a0-44d0-80a8-670c5ae5ef4a",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "account": {
+            "id": "6e6d6b08-2e41-4c55-a624-0d1ec79969dd",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "project": {
+            "id": "030d62a4-ce8b-405e-a331-8678df1a6efe",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        }
+    },
+    "createdDate": "2020-07-02T13:26:39.6855899Z"
+}
