@@ -8,15 +8,26 @@ import groovy.util.logging.Slf4j
 @Component
 @Slf4j
 class Fiddler {
-	@Value('${fiddler.exe:}')
-	String fiddlerExe
+	@Value('${fiddler.app:}')
+	String fiddlerApp
+	@Value('${fiddler.cli:}')
+	String fiddlerCli
 	@Value('${fiddler.dump:}')
 	String fiddlerDump
+	Process fiddlerProcess
 
 	boolean hasDump = false
 		
-	public Fiddler() {
-		
+	public open() {
+		fiddlerProcess = new ProcessBuilder(fiddlerApp).start()
+		Thread.sleep(2000)
+	}
+	public close() {
+		stop()
+		Thread.sleep(1000)
+		clear()
+		Thread.sleep(1000)
+		fiddlerProcess.destroyForcibly()
 	}
 	public start() {
 		exec("start")
@@ -32,9 +43,9 @@ class Fiddler {
 		exec("clear")
 	}
 	private exec(String command) {
-		if (!fiddlerExe) 
+		if (!fiddlerCli) 
 			return null
 		else
-			return new ProcessBuilder(fiddlerExe,command).start()
+			return new ProcessBuilder(fiddlerCli,command).start()
 	}
 }

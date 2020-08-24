@@ -141,22 +141,19 @@ class MonitorSmartDoc  implements CliWebBot {
 		
 		// ******** Check ADO availability ********
 		if (!collectionPage.go()) {
-			 steps.add("ERROR: $ADO_FAILURE.  Making one more attempt")
-			 // Start over with login attempt
-			 if (!loginPage.login()) {
-				 reportError(driver, loginPage.error, LOGIN_FAILURE)
-				 return
-			 }
-			 else if (!collectionPage.go()) {
+			// Try one more time
+			steps.add("ERROR: $ADO_FAILURE.  Making one more attempt")
+			if (!collectionPage.go()) {
 				 reportError(driver, collectionPage.error, ADO_FAILURE)
 				 return
-			 }
+			}
 		 }
 
 		//********** Begin Modern Requirements Tests *******
 		// Test Smart Docs landing page availability
 		if (!smartDocsPage.go()) {
 			steps.add("ERROR: $SMARTDOC_PAGE_FAILURE.  Making one more attempt")
+			fiddler.open()
 			fiddler.start()
 			if (!smartDocsPage.go()) {
 				fiddler.stop()
@@ -164,11 +161,10 @@ class MonitorSmartDoc  implements CliWebBot {
 				fiddler.dump()
 				Thread.sleep(2000)
 				reportError(driver, smartDocsPage.error, SMARTDOC_PAGE_FAILURE)
+				fiddler.close()
 				return
 			}
-			fiddler.stop()
-			Thread.sleep(2000)
-			fiddler.clear()
+			fiddler.close()
 		}
 		// Test loading of document contents
 		if (!smartDocsPage.loadSmartDoc()) {
@@ -220,6 +216,10 @@ class MonitorSmartDoc  implements CliWebBot {
 		}
 	}
 	private void reportError(WebDriver driver, Exception e, String newFailType) {
+		if (!e) {
+			log.errorEnabled("Null error for $newFailType")
+			return
+		}
 		log.error("$newFailType: ${e.message}")
 
 		// If active bug exists for same failure, just add failure comment.  Else, create new Bug.
