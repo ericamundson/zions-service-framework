@@ -5,7 +5,7 @@ spec:
 - name: Environments/DTS
   type: core.Directory
   children:
-  - directory: zions-vsts-parent-activation-microservice
+  - directory: zions-vsts-parent-change-microservice
     children:
     
     - name: Prod
@@ -13,7 +13,7 @@ spec:
       members:
       - Infrastructure/DTS/microservice/Prod
       dictionaries:
-      - Environments/DTS/zions-vsts-parent-activation-microservice/_Dictionaries/Prod_Dict
+      - Environments/DTS/zions-vsts-parent-change-microservice/_Dictionaries/Prod_Dict
     - directory: _Dictionaries
       children:
       
@@ -21,8 +21,8 @@ spec:
         type: udm.Dictionary
         entries:
           
-          stage.path: d:\app\azure\_work\zions-vsts-parent-activation-microservice
-          deploy.path: d:\app\azure\services\zions-vsts-parent-activation-microservice
+          stage.path: d:\app\azure\_work\zions-vsts-parent-change-microservice
+          deploy.path: d:\app\azure\services\zions-vsts-parent-change-microservice
           
           ws.url: <no value>
           

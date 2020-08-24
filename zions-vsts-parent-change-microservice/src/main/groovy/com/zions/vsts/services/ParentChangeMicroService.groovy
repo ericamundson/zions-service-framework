@@ -93,7 +93,7 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.info("Entering Change Parent MicroService:: processADOData")
+		log.debug("Entering Change Parent MicroService:: processADOData")
 		
 		/*Uncomment code below to capture adoData payload for test*/
 		/*String json = new JsonBuilder(adoData).toPrettyString()
@@ -168,7 +168,7 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 				updField = ""
 				parentValues.add(updField)
 			}
-			log.info("Getting the changes for current work item $wiType #$id")
+			log.debug("Getting the changes for current work item $wiType #$id")
 			changes.add(getChanges(project, rev, id, parentValues))
 			idMap[count] = "${id}"
 			
@@ -178,7 +178,7 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 					//println(change.body.toString())
 				}
 				// Process work item changes in Azure DevOps
-				log.info("Processing work item changes...")
+				log.debug("Processing work item changes...")
 				workManagementService.batchWIChanges(collection, project, changes, idMap)
 				return logResult('Remove Update Succeeded')
 			}
@@ -203,7 +203,7 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 					parentValues.add(updField)
 			}
 			
-			log.info("Getting the changes for current work item $wiType #$id")
+			log.debug("Getting the changes for current work item $wiType #$id")
 			changes.add(getChanges(project, rev, id, parentValues))
 			idMap[count] = "${id}"
 			
@@ -213,7 +213,7 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 					//println(change.body.toString())
 				}
 				// Process work item changes in Azure DevOps
-				log.info("Processing work item changes...")
+				log.debug("Processing work item changes...")
 				workManagementService.batchWIChanges(collection, project, changes, idMap)
 				return logResult('Add Update Succeeded')
 			}

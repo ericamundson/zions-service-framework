@@ -1,6 +1,6 @@
 {
     "id": 947967,
-    "rev": 10,
+    "rev": 11,
     "fields": {
         "System.AreaPath": "ALMOpsTest\\Agile Test",
         "System.TeamProject": "ALMOpsTest",
@@ -35,19 +35,19 @@
             "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
             "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
         },
-        "System.ChangedDate": "2020-08-20T19:33:34.127Z",
+        "System.ChangedDate": "2020-08-24T19:29:10.897Z",
         "System.ChangedBy": {
-            "displayName": "SVC-CLOUD-ADOMAINT005",
-            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/379404ea-1eab-696c-aba5-1a298a545930",
+            "displayName": "SVC-CLOUD-ADOMAINT002",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/03cfb1a2-e49e-6bdf-b176-8c2c478ad6b1",
             "_links": {
                 "avatar": {
-                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.Mzc5NDA0ZWEtMWVhYi03OTZjLWFiYTUtMWEyOThhNTQ1OTMw"
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MDNjZmIxYTItZTQ5ZS03YmRmLWIxNzYtOGMyYzQ3OGFkNmIx"
                 }
             },
-            "id": "379404ea-1eab-696c-aba5-1a298a545930",
-            "uniqueName": "SVC-CLOUD-ADOMAINT005@zionsbancorporation.onmicrosoft.com",
-            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.Mzc5NDA0ZWEtMWVhYi03OTZjLWFiYTUtMWEyOThhNTQ1OTMw",
-            "descriptor": "aad.Mzc5NDA0ZWEtMWVhYi03OTZjLWFiYTUtMWEyOThhNTQ1OTMw"
+            "id": "03cfb1a2-e49e-6bdf-b176-8c2c478ad6b1",
+            "uniqueName": "SVC-CLOUD-ADOMAINT002@zionsbancorporation.onmicrosoft.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MDNjZmIxYTItZTQ5ZS03YmRmLWIxNzYtOGMyYzQ3OGFkNmIx",
+            "descriptor": "aad.MDNjZmIxYTItZTQ5ZS03YmRmLWIxNzYtOGMyYzQ3OGFkNmIx"
         },
         "System.CommentCount": 1,
         "System.Title": "test",
@@ -73,19 +73,9 @@
         "Custom.ExternalID": "545",
         "Custom.SubState": "Duplicate",
         "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column": "New",
-        "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column.Done": false,
-        "Custom.OTLNumber": "212",
-        "System.Parent": 929619
+        "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column.Done": false
     },
     "relations": [
-        {
-            "rel": "System.LinkTypes.Hierarchy-Reverse",
-            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/929619",
-            "attributes": {
-                "isLocked": false,
-                "name": "Parent"
-            }
-        },
         {
             "rel": "System.LinkTypes.Hierarchy-Forward",
             "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948189",

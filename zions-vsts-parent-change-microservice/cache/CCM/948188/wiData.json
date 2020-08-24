@@ -1,6 +1,6 @@
 {
     "id": 948188,
-    "rev": 6,
+    "rev": 8,
     "fields": {
         "System.AreaPath": "ALMOpsTest",
         "System.TeamProject": "ALMOpsTest",
@@ -22,7 +22,7 @@
             "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
             "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
         },
-        "System.ChangedDate": "2020-08-21T19:28:14.487Z",
+        "System.ChangedDate": "2020-08-24T20:34:44.073Z",
         "System.ChangedBy": {
             "displayName": "SVC-CLOUD-ADOMAINT002",
             "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/03cfb1a2-e49e-6bdf-b176-8c2c478ad6b1",
@@ -44,20 +44,8 @@
         "Microsoft.VSTS.Common.Priority": 2,
         "Microsoft.VSTS.Common.ValueArea": "Business",
         "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column": "New",
-        "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column.Done": false,
-        "Custom.OTLNumber": "8005",
-        "System.Parent": 947831
+        "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column.Done": false
     },
-    "relations": [
-        {
-            "rel": "System.LinkTypes.Hierarchy-Reverse",
-            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947831",
-            "attributes": {
-                "isLocked": false,
-                "name": "Parent"
-            }
-        }
-    ],
     "_links": {
         "self": {
             "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948188"
