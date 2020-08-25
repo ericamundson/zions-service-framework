@@ -7,5 +7,5 @@
       <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-populate-child-microservice.jar" --queue.name=WorkItem-populatechild-queue  --ado.topics=workitem.updated --tfs.url={{tfs.url}} --logging.file="{{deploy.path}}/zions-vsts-populate-child-microservice.log" </arguments>
 	  
       <logmode>rotate</logmode>
-      <logpath>"{{deploy.path}}\wrapper-logs\zions-vsts-populate-child-microservice</logpath>
+      <logpath>{{deploy.path}}\wrapper-logs\zions-vsts-populate-child-microservice</logpath>
 </service>

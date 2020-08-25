@@ -7,5 +7,5 @@
       <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-parent-change-microservice.jar" --queue.name=WorkItem-parentchange-queue --ado.topics=workitem.updated --tfs.collection={{tfs.collection}} --tfs.url=https://dev.azure.com --logging.file="{{deploy.path}}/zions-vsts-parent-change-microservice.log" </arguments>
  	  
       <logmode>rotate</logmode>
-      <logpath>"{{deploy.path}}\wrapper-logs\zions-vsts-parent-change-microservice</logpath>
+      <logpath>{{deploy.path}}\wrapper-logs\zions-vsts-parent-change-microservice</logpath>
 </service>
