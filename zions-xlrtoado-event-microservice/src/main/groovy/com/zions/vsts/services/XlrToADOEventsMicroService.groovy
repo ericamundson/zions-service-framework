@@ -54,11 +54,11 @@ class XlrToADOEventsMicroService implements MessageReceiverTrait {
 	 * @see com.zions.vsts.services.ws.client.AbstractWebSocketMicroService#processADOData(java.lang.Object)
 	 */
 	public def processADOData(def xlrData) {
-		log.info("Entering XlrToADOEventsMicroService:: processADOData")
+	    log.debug("Entering XlrToADOEventsMicroService:: processADOData")
 		XlrReleaseSubscription releaseSub = null
 		try {
 			releaseSub = xlrReleaseSubscriptionRepository.findByReleaseId(xlrData.releaseId)
-		} catch (e) { e.printStackTrace()}
+		} catch (e) { }
 		if (!releaseSub) return
 		def release = releaseQueryService.getRelease(xlrData.releaseId)
 		String extKey = "XLR_${releaseSub.adoProject}_${releaseSub.pipelineId}"

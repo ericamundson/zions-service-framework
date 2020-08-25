@@ -1,0 +1,8 @@
+executables:
+- name: zions-pipeline-execution-microservice-release
+  type: buildDefinition
+  context: zionseto
+  project: DTS
+  queue: 'On-Prem Production'
+  repository: zions-service-framework
+  buildyaml: zions-pipeline-execution-microservice/pipeline/ado/microservice-release.yaml
