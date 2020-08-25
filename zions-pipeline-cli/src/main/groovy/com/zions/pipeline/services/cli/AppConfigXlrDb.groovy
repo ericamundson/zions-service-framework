@@ -22,10 +22,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
 @Configuration
-@Profile("dev")
+@Profile("xlrdb")
 @ComponentScan(["com.zions.pipeline.services,com.zions.vsts.services,com.zions.xld.services,com.zions.xlr.services,com.zions.common.services.rest"])
 @EnableMongoRepositories(basePackages = "com.zions.xlr.services.events.db")
-public class AppConfigDev {
+public class AppConfigXlrDb {
 	Map<String, CliAction> actions;
 	
 	@Bean

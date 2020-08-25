@@ -27,7 +27,7 @@ class ZeusBLProvision implements CliAction {
 	
 	public def execute(ApplicationArguments data) {
 		buildOutTestBed(releaseVersion)
-		buildOutTestBed(prodVersion)
+		buildOutTestBed("${prodVersion}PR")
 	}
 	
 	def buildOutTestBed(String name) {
@@ -41,11 +41,11 @@ class ZeusBLProvision implements CliAction {
 			arg( line: "/c nsh create_template_instances.nsh -t ${name}")
 		}
 		new AntBuilder().exec(dir: "${blDir}", executable: 'cmd', failonerror: true) {
-			arg( line: "/c nsh discover_template_job.nsh -j ${name}")
-		}
-		new AntBuilder().exec(dir: "${blDir}", executable: 'cmd', failonerror: true) {
 			arg( line: "/c nsh create_affiliate_components.nsh -t ${name}")
 		}
+//		new AntBuilder().exec(dir: "${blDir}", executable: 'cmd', failonerror: true) {
+//			arg( line: "/c nsh discover_template_job.nsh -j ${name}")
+//		}
 
 	}
 

@@ -14,10 +14,13 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
+
+import groovy.util.logging.Slf4j
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.amqp.rabbit.connection.ConnectionFactory
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory
-
+import java.net.InetAddress
 
 
 /**
@@ -27,9 +30,16 @@ import org.springframework.amqp.rabbit.connection.CachingConnectionFactory
 @ComponentScan(["com.zions.xlr.services.publish","com.zions.xlr.services.query"])
 @PropertySource("classpath:eventpublisher.properties")
 //@EnableWebSocketMessageBroker
+@Slf4j
 public class AppConfig  {
-	@Value('${spring.rabbitmq.host:localhost}')
-	String rabbitmqHost
+//	@Value('${spring.rabbitmq.host:localhost}')
+//	String rabbitmqHost
+	
+	@Value('${xlr.hosts:}')
+	String[] xlrHosts
+	
+	@Value('#{${rabbit.hosts.map}}')
+	Map<String,String> rabbitHostMap
 	
 	@Bean
 	RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
@@ -39,8 +49,15 @@ public class AppConfig  {
 	
 	@Bean
 	ConnectionFactory connectionFactory() {
+		String xlHost = InetAddress.getLocalHost().getHostName().toLowerCase()
+		String rabbitmqHost = rabbitHostMap[xlHost]
+		if (!rabbitmqHost) {
+			rabbitmqHost = 'utmvti0192'
+		}
 		return new CachingConnectionFactory(rabbitmqHost)
 	}
+	
+	
 
 }
 
