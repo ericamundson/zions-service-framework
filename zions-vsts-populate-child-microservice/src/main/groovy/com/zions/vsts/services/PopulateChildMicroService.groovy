@@ -91,7 +91,7 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.info("Entering PopulateChild MicroService:: processADOData")
+		log.debug("Entering PopulateChild MicroService:: processADOData")
 		
 		/*Uncomment code below to capture adoData payload for test*/
 		/*String json = new JsonBuilder(adoData).toPrettyString()
@@ -127,12 +127,12 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		
 		//should return children payload - method to mock
 		def result = workManagementService.getChildren(collection, project, id)
-		//error starts here-
+		
 		//handle nullpoint here.
 		if (!wiResource.fields) return logResult('No valid changes made')
 			
 		if (!result || result == 'null' || result == '' || result == []) {
-		//println(result.toString())
+		
 			return logResult('child not present')
 			
 		}
@@ -165,11 +165,11 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			String rev = "${childwi.rev}"
 			for(int i=0; i<wiPfields.size(); i++) {
 				if (childValues[i] != parentValues[i]) childNeedsUpdate = true
-					else log.info("no update needed")
+					else log.debug("no update needed")
 			}
 			
 			if (childNeedsUpdate) {
-				log.info("Getting the changes for child work item $wiType #$id")
+				log.debug("Getting the changes for child work item $wiType #$id")
 			
 				changes.add(getChanges(project, rev, childwi, parentValues))
 				idMap[count] = "${childwi.id}"
@@ -186,7 +186,7 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			//println(change.body.toString())
 			}
 			// Process work item changes in Azure DevOps
-			log.info("Processing work item changes...")
+			log.debug("Processing work item changes...")
 			workManagementService.batchWIChanges(collection, project, changes, idMap)
 			return logResult('Update Succeeded')
 		}
@@ -225,7 +225,7 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 	
 	private def logResult(def msg)
 	{
-		log.info(msg)
+		log.debug(msg)
 		return msg
 	}
 }

@@ -1,7 +1,7 @@
 ---
-AppName: "zions-vsts-change-parent-microservice"
+AppName: "zions-vsts-parent-change-microservice"
 IsWindows: true
-RequiresCollection: false
-BuildIncludes: "zions-vsts-change-parent-microservice/*, zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*"
-Queuename: "WorkItem-parentactivation-queue"
+RequiresCollection: true
+BuildIncludes: "zions-vsts-parent-change-microservice/*, zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*,zions-vsts-microservice/*"
+Queuename: "WorkItem-parentchange-queue"
 WSTopics: "workitem.updated"

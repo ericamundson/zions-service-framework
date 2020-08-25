@@ -1,10 +1,11 @@
 <service>
-      <id>zions-vsts-parent-activation-microservice</id>
-      <name>zions-vsts-parent-activation-microservice</name>
-      <description>This service runs zions-vsts-parent-activation-microservice.</description>
+      <id>zions-vsts-parent-change-microservice</id>
+      <name>zions-vsts-parent-change-microservice</name>
+      <description>This service runs zions-vsts-parent-change-microservice.</description>
       <executable>java</executable>
       
-      <arguments>-Xrs -Xmx256m -jar "[[deploy.path]]/zions-vsts-parent-activation-microservice.jar" --queue.name=WorkItem-parentactivation-queue --ado.topics=workitem.updated --tfs.collection=[[tfs.collection]] --tfs.url=https://dev.azure.com --logging.file="[[deploy.path]]/zions-vsts-parent-activation-microservice.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-parent-change-microservice.jar" --queue.name=WorkItem-parentchange-queue --ado.topics=workitem.updated --tfs.collection={{tfs.collection}} --tfs.url=https://dev.azure.com --logging.file="{{deploy.path}}/zions-vsts-parent-change-microservice.log" </arguments>
  	  
       <logmode>rotate</logmode>
+      <logpath>"{{deploy.path}}\wrapper-logs\zions-vsts-parent-change-microservice</logpath>
 </service>

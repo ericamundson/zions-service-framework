@@ -8,7 +8,7 @@ trigger:
   paths:
     include:
 
-    - 'zions-vsts-days-to-close-microservice/*'
+    - 'zions-vsts-days-to-close-bulkupdate/*'
     - 'zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*'
     - 'zions-vsts-microservice/*'
     
@@ -39,23 +39,23 @@ stages:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
         workingDirectory: '$(Build.SourcesDirectory)'
         options: '--no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
-        tasks: 'clean zions-vsts-days-to-close-microservice:build'
+        tasks: 'clean zions-vsts-days-to-close-bulkupdate:build'
         publishJUnitResults: false
 
     - task: BatchScript@1
       displayName: 'XLW - xl-deploy.yaml'
       inputs:
-        filename: '$(Build.SourcesDirectory)\zions-vsts-days-to-close-microservice\pipeline\xl.exe'
+        filename: '$(Build.SourcesDirectory)\zions-vsts-days-to-close-bulkupdate\pipeline\xl.exe'
         arguments: 'apply -f xl-deploy.yaml --xl-deploy-url $(xld_cli_url) --xl-deploy-username $(xld_cli_user) --xl-deploy-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd)'
-        workingFolder: $(Build.SourcesDirectory)\zions-vsts-days-to-close-microservice\pipeline
+        workingFolder: $(Build.SourcesDirectory)\zions-vsts-days-to-close-bulkupdate\pipeline
       continueOnError: false
       enabled: true
       
     - task: BatchScript@1
       displayName: 'XLW - xl-release.yaml'
       inputs:
-        filename: '$(Build.SourcesDirectory)\zions-vsts-days-to-close-microservice\pipeline\xl.exe'
-        arguments: 'apply -f xl-release.yaml --xl-release-url $(xlr_cli_url) --xl-release-username $(xld_cli_user) --xl-release-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd),xlr_scriptUserPassword=$(xlr_scriptUserPassword),release_name="zions-vsts-days-to-close-microservice-$(buildTag)"'
-        workingFolder: $(Build.SourcesDirectory)\zions-vsts-days-to-close-microservice\pipeline
+        filename: '$(Build.SourcesDirectory)\zions-vsts-days-to-close-bulkupdate\pipeline\xl.exe'
+        arguments: 'apply -f xl-release.yaml --xl-release-url $(xlr_cli_url) --xl-release-username $(xld_cli_user) --xl-release-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd),xlr_scriptUserPassword=$(xlr_scriptUserPassword),release_name="zions-vsts-days-to-close-bulkupdate-$(buildTag)"'
+        workingFolder: $(Build.SourcesDirectory)\zions-vsts-days-to-close-bulkupdate\pipeline
       continueOnError: true
       enabled: true

@@ -143,7 +143,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		//Count previously closed bugs
 		//if (sourceState.contains(oldState) && (destState.contains(newState))) {
 		if (upd == 'Yes') {
-			log.debug("Updating count of $wiType #$id")
+			log.info("Updating count of $wiType #$id")
 			
 			//Get and format closedDate
 			def closedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ClosedDate'
@@ -205,7 +205,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		
 		
 	private def logResult(def msg) {
-		log.info(msg)
+		log.debug(msg)
 		return msg
 	}
 }
