@@ -28,8 +28,6 @@ class MainHeader extends BasePage {
 	static String PROFILE_PIC = 'mectrl_headerPicture'
 	static String SIGN_OUT = 'mectrl_body_signOut'
 	
-	public MainHeader() {
-	}
 	boolean signout() {
 		
 		error = null

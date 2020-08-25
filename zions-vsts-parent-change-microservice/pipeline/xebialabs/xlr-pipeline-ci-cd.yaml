@@ -1,0 +1,64 @@
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+- name: DTS
+  type: xlrelease.Folder
+  children:
+  - name: zions-vsts-parent-change-microservice - Master
+    type: xlrelease.Release
+    scriptUsername: svc-release
+    scriptUserPassword: !value "xlr_scriptUserPassword"
+    variables:
+    - type: xlrelease.StringVariable
+      key: deploymentPackage.name
+      label: Deployment Package Name
+      description: The application deployment package name
+      value: 1.0.4.00023
+    phases:
+    - name: DTS Internal Deployments
+      type: xlrelease.Phase
+      color: '#ff9e3b'
+      tasks:
+      - name: Deploy to environments
+        type: xlrelease.ParallelGroup
+        tasks:
+        
+        - name: PROD
+          type: xlrelease.SequentialGroup
+          tasks:
+          - name: Deploy zions-vsts-parent-change-microservice for zionseto use.
+            type: xldeploy.Deploy
+            server: XL Deploy Server
+            deploymentApplication: 
+            deploymentVersion:
+            deploymentPackage: Applications/DTS/zions-vsts-parent-change-microservice/${deploymentPackage.name}
+            deploymentEnvironment: Environments/DTS/zions-vsts-parent-change-microservice/Prod
+            rollbackOnFailure: false
+            cancelOnError: false
+            failOnPause: false
+          - name: Prod - zions-vsts-parent-change-microservice deployment ready for testing
+            type: xlrelease.NotificationTask
+            addresses:
+            - Eric.Amundson2@zionsbancorp.com
+            - DL-ALMOps@zionsbancorp.com
+            subject: 'zions-vsts-parent-change-microservice: ${deploymentPackage.name} ready for zionseto use.'
+            body: |-
+              # Prod ready for testing
+              A new version of zions-vsts-parent-change-microservice has been deployed:
+
+              ## ${deploymentPackage.name}
+
+              Please validate all new changes.
+  - type: xlrelease.Dashboard
+    tiles:
+    - name: Release progress
+      type: xlrelease.ReleaseProgressTile
+    - name: Release summary
+      type: xlrelease.ReleaseSummaryTile
+    - name: Resource usage
+      type: xlrelease.ResourceUsageTile
+    - name: Release timeline
+      type: xlrelease.TimelineTile
+    - name: Release health
+      type: xlrelease.ReleaseHealthTile
+    parentTemplate: zions-vsts-parent-change-microservice - Master

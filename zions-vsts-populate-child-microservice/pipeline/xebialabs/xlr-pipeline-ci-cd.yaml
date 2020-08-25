@@ -4,7 +4,7 @@ spec:
 - name: DTS
   type: xlrelease.Folder
   children:
-  - name: zions-vsts-parent-activation-microservice - Master
+  - name: zions-vsts-populate-child-microservice - Master
     type: xlrelease.Release
     scriptUsername: svc-release
     scriptUserPassword: !value "xlr_scriptUserPassword"
@@ -26,25 +26,25 @@ spec:
         - name: PROD
           type: xlrelease.SequentialGroup
           tasks:
-          - name: Deploy zions-vsts-parent-activation-microservice for zionseto use.
+          - name: Deploy zions-vsts-populate-child-microservice for zionseto use.
             type: xldeploy.Deploy
             server: XL Deploy Server
             deploymentApplication: 
             deploymentVersion:
-            deploymentPackage: Applications/DTS/zions-vsts-parent-activation-microservice/${deploymentPackage.name}
-            deploymentEnvironment: Environments/DTS/zions-vsts-parent-activation-microservice/Prod
+            deploymentPackage: Applications/DTS/zions-vsts-populate-child-microservice/${deploymentPackage.name}
+            deploymentEnvironment: Environments/DTS/zions-vsts-populate-child-microservice/Prod
             rollbackOnFailure: false
             cancelOnError: false
             failOnPause: false
-          - name: Prod - zions-vsts-parent-activation-microservice deployment ready for testing
+          - name: Prod - zions-vsts-populate-child-microservice deployment ready for testing
             type: xlrelease.NotificationTask
             addresses:
             - Eric.Amundson2@zionsbancorp.com
             - DL-ALMOps@zionsbancorp.com
-            subject: 'zions-vsts-parent-activation-microservice: ${deploymentPackage.name} ready for zionseto use.'
+            subject: 'zions-vsts-populate-child-microservice: ${deploymentPackage.name} ready for zionseto use.'
             body: |-
               # Prod ready for testing
-              A new version of zions-vsts-parent-activation-microservice has been deployed:
+              A new version of zions-vsts-populate-child-microservice has been deployed:
 
               ## ${deploymentPackage.name}
 
@@ -61,4 +61,4 @@ spec:
       type: xlrelease.TimelineTile
     - name: Release health
       type: xlrelease.ReleaseHealthTile
-    parentTemplate: zions-vsts-parent-activation-microservice - Master
+    parentTemplate: zions-vsts-populate-child-microservice - Master

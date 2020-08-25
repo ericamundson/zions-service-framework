@@ -73,8 +73,7 @@ class LoginPage extends BasePage {
 			try {
 				WebElement troubleLocatingAccount = driver.findElement(By.id('loginDescription'))
 				steps.add('LOGIN: Found prompt for account type')
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.id('aadTileTitle'))).click()
-				steps.add('LOGIN: Selected account type')
+				waitMultiClick({By.id('aadTileTitle')},'LOGIN: Selected account type',50)
 			} catch (NoSuchElementException e) {}
 			
 			// Enter password and click Sign in
@@ -92,13 +91,9 @@ class LoginPage extends BasePage {
 			}
 
 			// Click Log in
-			click({By.id(LOGIN_BUTTON)})
-			steps.add('LOGIN: Clicked Sign in')
-			// try one more time in case button did not get clicked
-			try {
-				driver.findElement(By.id(LOGIN_BUTTON)).click()
-				steps.add('LOGIN: Completed second attempt to click Sign in')
-			} catch(e) {}
+			waitMultiClick({By.id(LOGIN_BUTTON)}, 'LOGIN: Clicked Sign in',1)	
+			wait.until(ExpectedConditions.titleIs('Microsoft Office Home'))
+			
 			return true
 		}
 		catch (e) {

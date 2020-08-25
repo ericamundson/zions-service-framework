@@ -1,0 +1,11 @@
+<service>
+      <id>zions-vsts-days-to-close-bulkupdate</id>
+      <name>zions-vsts-days-to-close-bulkupdate</name>
+      <description>This service runs zions-vsts-days-to-close-bulkupdate.</description>
+      <executable>java</executable>
+      
+      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-days-to-close-bulkupdate.jar" --queue.name=WorkItem-bulkupdate-queue --ado.topics=workitem.updated --tfs.collection={{tfs.collection}} --tfs.url=https://dev.azure.com --logging.file="{{deploy.path}}/zions-vsts-days-to-close-bulkupdate.log" </arguments>
+ 	  
+      <logmode>rotate</logmode>
+      <logpath>{{deploy.path}}\wrapper-logs\zions-vsts-days-to-close-bulkupdate</logpath>
+</service>
