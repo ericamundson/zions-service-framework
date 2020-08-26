@@ -38,7 +38,14 @@ class CodeManagementService {
 	public CodeManagementService() {
 		
 	}
-	
+	def getCommit(String url) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: url,
+			query: ['api-version': '5.1']
+			)
+	}
+
 	def getCommits(String url) {
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,

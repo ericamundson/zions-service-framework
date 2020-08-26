@@ -28,14 +28,14 @@ import com.zions.pipeline.services.yaml.execution.YamlExecutionService
 @Component
 class PipelineExecutionEndPoint implements MessageReceiverTrait {
 
-//    @Autowired
-//    private PolicyManagementService policyManagementService;
+	//    @Autowired
+	//    private PolicyManagementService policyManagementService;
 	@Autowired
 	CodeManagementService codeManagementService
-	
+
 	@Autowired
 	YamlExecutionService yamlExecutionService
-	
+
 	@Value('${pipeline.folders:.pipeline,pipeline}')
 	String[] pipelineFolders
 
@@ -44,25 +44,24 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 		//init(websocketUrl, null, null)
 	}
 
-    /**
-     * Create branch policies for new Git branch when created. 
-     *  
-     * @return
-     */
+	/**
+	 * Create branch policies for new Git branch when created. 
+	 *  
+	 * @return
+	 */
 	public Object processADOData(Object adoData) {
 		//log.debug("In PolicyEndPoint - adoData:\n"+adoData)
-//			JsonSlurper slurper = new JsonSlurper()
-//			def eventData = slurper.parseText(adoData)
+		//			JsonSlurper slurper = new JsonSlurper()
+		//			def eventData = slurper.parseText(adoData)
 		String jsonStr = new JsonBuilder(adoData).toPrettyString()
 		//println jsonStr
 		def eventData = adoData
 		def changeSet = eventData.resource;
-		if (adoData.resource && adoData.resource._links && adoData.resource._links.commits) {
-			def commitsUrl = "${adoData.resource._links.commits.href}"
-			String branch = "${adoData.resource.refUpdates[0].name}"
-			
-			def commits = codeManagementService.getCommits(commitsUrl)
-			def locations = getPipelineChangeLocations(commits)
+		if (adoData.resource && adoData.resource.lastMergeCommit) {
+			String branch = "${adoData.resource.targetRefName}"
+			String commitUrl = "${adoData.resource.lastMergeCommit.url}"
+			def commit = codeManagementService.getCommit(commitUrl)
+			def locations = getPipelineChangeLocations(commit)
 			if (locations.size() > 0) {
 				String repoUrl = "${adoData.resource.repository.remoteUrl}"
 				String name = "${adoData.resource.repository.name}"
@@ -71,41 +70,39 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 		}
 		return null
 	}
-	
-	def getPipelineChangeLocations(def commits) {
+
+	def getPipelineChangeLocations(def commit) {
 		def locations = []
-		for (def commit in commits.'value') {
-			def changesUrl = "${commit._links.changes.href}"
-			def changes = codeManagementService.getChanges(changesUrl)
-			for (def change in changes.changes) {
-				String path = "${change.item.path}"
-				pipelineFolders.each { String pipelineFolder -> 
-					if (path.contains("${pipelineFolder}") && path.endsWith('.yaml') && !locations.contains(path)) locations.add(path)
-				}
+		def changesUrl = "${commit._links.changes.href}"
+		def changes = codeManagementService.getChanges(changesUrl)
+		for (def change in changes.changes) {
+			String path = "${change.item.path}"
+			pipelineFolders.each { String pipelineFolder ->
+				if (path.contains("${pipelineFolder}") && path.endsWith('.yaml') && !locations.contains(path)) locations.add(path)
 			}
 		}
 		return locations
 	}
 
-//	@Override
-//	public String topic() {
-//		return 'git.push';
-//	}
+	//	@Override
+	//	public String topic() {
+	//		return 'git.push';
+	//	}
 
-    private def getCollectionName(def containerData) {
+	private def getCollectionName(def containerData) {
 		def collectionName = ""
-    	try {
-	    	def serverUrl = containerData.server.baseUrl
-	    	def collectionUrl = containerData.collection.baseUrl
-	    	collectionName = collectionUrl.substring(serverUrl.length(), collectionUrl.length()-1)
-    	} catch (err) {
-    		// collection name is not available for VSTS
-    		log.info("PolicyEndPoint - No collection name when ADO event trapped: ${err.message}")
-    	}
-    	return collectionName
-    }
-    private def getCollectionId(def containerData) {
-    	def collectionId = containerData.collection.id
-    	return collectionId
-    }
- }
+		try {
+			def serverUrl = containerData.server.baseUrl
+			def collectionUrl = containerData.collection.baseUrl
+			collectionName = collectionUrl.substring(serverUrl.length(), collectionUrl.length()-1)
+		} catch (err) {
+			// collection name is not available for VSTS
+			log.info("PolicyEndPoint - No collection name when ADO event trapped: ${err.message}")
+		}
+		return collectionName
+	}
+	private def getCollectionId(def containerData) {
+		def collectionId = containerData.collection.id
+		return collectionId
+	}
+}
