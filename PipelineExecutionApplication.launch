@@ -9,6 +9,6 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.pipeline.services.PipelineExecutionApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--tfs.url=https://dev.azure.com/eto-dev&#13;&#10;--ado.topics=git.push  &#13;&#10;--queue.name=GIT-pipelineexecution-queue &#13;&#10;--spring.rabbitmq.host=utmvti0192 &#13;&#10;--queue.autoDelete=true"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--tfs.url=https://dev.azure.com/eto-dev&#13;&#10;--ado.topics=git.pullrequest.merged  &#13;&#10;--queue.name=GIT-pipelineexecution-queue &#13;&#10;--spring.rabbitmq.host=utmvti0192 &#13;&#10;--queue.autoDelete=true"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-pipeline-execution-microservice"/>
 </launchConfiguration>

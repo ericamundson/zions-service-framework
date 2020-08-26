@@ -506,7 +506,7 @@ public class PolicyManagementService {
 	}
 	
 	public def clearBranchPolicies(def collection, def project, def repoId, def branchName) {
-		def policies = getBranchPolicies(collection, project, repoId, branchName)
+		def policies = getBranchPolicies(project, repoId, branchName)
 		if (!policies) return []
 		policies.value.each { policy ->
 			def result = genericRestClient.delete(
@@ -526,7 +526,7 @@ public class PolicyManagementService {
 			policyR.settings = policy.settings
 			def result = createPolicy(collection, project, policyR)
 		}
-		def rpolicies = getBranchPolicies(collection, project, repoId, branchName)
+		def rpolicies = getBranchPolicies( project, repoId, branchName)
 		
 		return rpolicies
 	}
