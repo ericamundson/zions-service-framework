@@ -30,17 +30,19 @@ class YamlExecutionService {
 		File repo = gitService.loadChanges(repoUrl, repoName, branch)
 		def exeYaml = findExecutableYaml(repo, scanLocations)
 		for (def yaml in exeYaml) { 
-			for (def exe in yaml.executables) {
-								
-				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
-				if (yamlHandler) {
-					yamlHandler.handleYaml(exe, repo, scanLocations, branch)
+			if (yaml.executables) {
+				for (def exe in yaml.executables) {
+									
+					IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
+					if (yamlHandler) {
+						yamlHandler.handleYaml(exe, repo, scanLocations, branch)
+					}
 				}
 			}
 		}
 	}
 	
-	private def findExecutableYaml(def repoDir, def scanLocations) {
+	private def findExecutableYaml(File repoDir, def scanLocations) {
 		def executableYaml = []
 		scanLocations.each { String loc ->
 			File file = new File(repoDir, loc)
@@ -50,10 +52,11 @@ class YamlExecutionService {
 				executableYaml.add(eyaml)
 			}
 		}
-		pipelineFolders.each { String pipelineFolder ->
-			File pipelineDir = new File(repoDir, pipelineFolder)
-			if (pipelineDir.exists()) {
-				File executables = new File(pipelineDir, alwaysExecuteFolder)
+		List<String> pFolders = Arrays.asList(pipelineFolders)
+		repoDir.eachDirRecurse() { File d ->
+			String dname = d.name
+			if (pFolders.contains(dname)) {
+				File executables = new File(d, alwaysExecuteFolder)
 				if (executables.exists()) {
 					executables.eachFile() { File eFile ->
 						String name = eFile.name
@@ -63,8 +66,24 @@ class YamlExecutionService {
 						}
 					}
 				}
+
 			}
 		}
+//		pipelineFolders.each { String pipelineFolder ->
+//			File pipelineDir = new File(repoDir, pipelineFolder)
+//			if (pipelineDir.exists()) {
+//				File executables = new File(pipelineDir, alwaysExecuteFolder)
+//				if (executables.exists()) {
+//					executables.eachFile() { File eFile ->
+//						String name = eFile.name
+//						if (name.endsWith('.yaml')) {
+//							def eyaml = new YamlSlurper().parseText(eFile.text)
+//							executableYaml.add(eFile)
+//						}
+//					}
+//				}
+//			}
+//		}
 		return executableYaml
 
 	}
