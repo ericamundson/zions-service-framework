@@ -23,6 +23,10 @@ class RunXLDeployApply implements IExecutableYamlHandler {
 		if (!performExecute(yaml, locations)) return
 		String xlOutPath = "${yaml.path}"
 		String xlDeployFile = "${repo.absolutePath}/${yaml.file}"
+		Boolean useProxy = yaml.useProxy
+		if (!useProxy) {
+			useProxy = false
+		}
 		List<String> values = []
 		if (yaml.values) {
 			yaml.values.each { val ->
