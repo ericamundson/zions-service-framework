@@ -47,7 +47,7 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 		}
 		new AntBuilder().exec(dir: "${repo.absolutePath}", executable: "${command}", failonerror: true) {
 			if (useProxy) {
-				env( key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080")
+				env( key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080")
 			}
 			if (values.size() > 0) {
 				arg( line: "${option} ${repo.absolutePath}/xl apply -p ${xlOutPath} -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}")

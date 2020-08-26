@@ -107,14 +107,17 @@ class RunXLBlueprints implements IExecutableYamlHandler {
 					}
 					arg( line: "${option} ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s")
 				}
+//				def policies = policyManagementService.clearBranchPolicies('', projectData, bpRepoData.id, 'master')
+//				gitService.pushChanges(bpRepoName)
+//				policyManagementService.restoreBranchPolicies('', projectData, bpRepoData.id, 'master', policies)
 			} catch (e) {
 				log.error("Blueprint run failed:  ${e.message}")
 			}
 		}
 		try {
-			def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, branch)
+			def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
 			gitService.pushChanges(repoName)
-			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, branch, policies)
+			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
 		} catch (e) {
 			log.error("Failed push of blueprint changes:  ${e.message}")
 		}
