@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.policy.PolicyManagementService
-import com.zions.pipeline.services.git.GitService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 
 import groovy.util.logging.Slf4j
@@ -38,9 +37,6 @@ class GitRepository implements IExecutableYamlHandler {
 	@Autowired
 	PolicyManagementService policyManagementService
 
-	@Autowired
-	GitService gitService
-
 	public GitRepository() {
 		
 	}
@@ -58,12 +54,8 @@ class GitRepository implements IExecutableYamlHandler {
 		def project = projectManagementService.getProject('', projectName)
 		def repository = codeManagementService.ensureRepo('', project, repoName)
 		try {
-			File readme = new File(repo, 'README.md')
-			def fo = readme.newDataOutputStream()
-			fo << "##${repoName}"
-			fo.close()
 			def policies = policyManagementService.clearBranchPolicies('', project, repository.id, 'refs/heads/master')
-			gitService.pushChanges(repoName)
+			codeManagementService.ensureFile('', project, repository, '/README.md', "##${repoName}")
 			policyManagementService.restoreBranchPolicies('', project, repository.id, 'refs/heads/master', policies)
 		} catch (e) {
 			log.error("Failed file push::  ${e.message}")
