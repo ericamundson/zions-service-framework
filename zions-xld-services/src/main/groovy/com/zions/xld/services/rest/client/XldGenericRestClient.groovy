@@ -27,31 +27,19 @@ class XldGenericRestClient extends AGenericRestClient {
 	public XldGenericRestClient(
 		@Value('${xld.url:}') String url, 
 		@Value('${xl.user:}') String user, 
-		@Value('${xl.password:}') String password) {
+		@Value('${xl.password:}') String password,
+		@Value('${xld.use.proxy:false}') boolean useProxy) {
 		this.xldUrl = url
 		this.user = user
 		this.password = password
 		delegate = new ARESTClient(xldUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
-		setProxy()
+		if (useProxy) {
+			setProxy()
+		}
 		setCredentials(user, password);
 
-	}
-	def setProxy() {
-		String proxyHost = System.getProperty("proxy.Host")
-		if (proxyHost != null) {
-			String proxyPort = System.getProperty("proxy.Port")
-			String proxyUser = System.getProperty("proxy.User")
-			String proxyPassword = System.getProperty("proxy.Password")
-			
-			delegate.client.getCredentialsProvider().setCredentials(
-				new AuthScope(proxyHost, Integer.parseInt(proxyPort)),
-				new UsernamePasswordCredentials(proxyUser, proxyPassword)
-			)
-			delegate.setProxy(proxyHost, Integer.parseInt(proxyPort), 'http')
-			
-		}
 	}
 	
 	void setCredentials(String user, String token) {

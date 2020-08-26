@@ -54,17 +54,17 @@ class XlrToADOEventsMicroService implements MessageReceiverTrait {
 	 * @see com.zions.vsts.services.ws.client.AbstractWebSocketMicroService#processADOData(java.lang.Object)
 	 */
 	public def processADOData(def xlrData) {
-		log.info("Entering XlrToADOEventsMicroService:: processADOData")
+	    log.debug("Entering XlrToADOEventsMicroService:: processADOData")
 		XlrReleaseSubscription releaseSub = null
 		try {
 			releaseSub = xlrReleaseSubscriptionRepository.findByReleaseId(xlrData.releaseId)
-		} catch (e) { e.printStackTrace()}
+		} catch (e) { }
 		if (!releaseSub) return
 		def release = releaseQueryService.getRelease(xlrData.releaseId)
 		String extKey = "XLR_${releaseSub.adoProject}_${releaseSub.pipelineId}"
-		if (releaseSub.isReleasePipeline) {
-			extKey = "${extKey}_release"
-		}
+//		if (releaseSub.isReleasePipeline) {
+//			extKey = "${extKey}_release"
+//		}
 		XlrEvent e = new XlrEvent(xlrData)
 		xlrEventRepository.save(e)
 		String title = "${release.title}"
@@ -80,7 +80,24 @@ class XlrToADOEventsMicroService implements MessageReceiverTrait {
 		List<XlrEvent> events = xlrEventRepository.findByReleaseId(xlrData.releaseId)
 		extData.events = events
 		extensionDataManagementService.ensureExtensionData(extData)
+		tagBuild(releaseSub.pipelineId, releaseSub.adoProject, e.message)
 		return null;
+	}
+	
+	void tagBuild(String buildId, String projectName, String message) {
+		if (!message) return
+		def build = buildManagementService.getExecution('', projectName, buildId)
+		String[] tags = buildManagementService.getBuildTags(build, 'XL Release -') 
+		if (tags) {
+			tags.each { String tag ->
+				buildManagementService.deleteTag(build, tag)
+			}
+		}
+		message = message.replace(':', '')
+		String eMessage = URLEncoder.encode("XL Release - ${message.trim()}", 'utf-8').replace('+', '%20')
+		//log.info("Update Tag:  ${eMessage}")
+		buildManagementService.tagBuild(build, eMessage)
+		
 	}
 	
 	String getReleaseUIID(String releaseId) {

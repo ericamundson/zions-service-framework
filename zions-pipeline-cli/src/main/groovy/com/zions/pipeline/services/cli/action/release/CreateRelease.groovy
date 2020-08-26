@@ -44,7 +44,8 @@ class CreateRelease implements CliAction {
 	
 	@Autowired
 	ReleaseItemService releaseItemService
-	@Autowired
+	
+	@Autowired(required=false)
 	XlrReleaseSubscriptionRepository xlrReleaseSubscriptionRepository
 
 	public def execute(ApplicationArguments data) {
