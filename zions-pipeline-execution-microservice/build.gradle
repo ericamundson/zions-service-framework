@@ -1,6 +1,6 @@
 bootJar {
 	enabled = true
-	mainClassName = 'com.zions.pipeline.service.PipelineExecutionApplication'
+	mainClassName = 'com.zions.pipeline.services.PipelineExecutionApplication'
 	archiveName = 'zions-pipeline-execution-microservice.jar'
 	//version =  "${version}"
 }
