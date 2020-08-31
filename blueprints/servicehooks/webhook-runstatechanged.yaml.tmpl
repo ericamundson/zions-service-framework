@@ -1,0 +1,13 @@
+executables:
+- type: webHookSubscriptions
+  context: eto-dev
+  projects: ReleaseEngineering
+  eventTypes: ms.vss-pipelines.run-state-changed-event
+  consumerUrl: https://releaseengineeringprovisioner-zionsbancorporation.msappproxy.net
+  consumerUserName: svc-cloud-vsbuildagent
+  consumerPassword: !value "ado_webhookPassword"
+  publisherInputs:
+    pipelineId: ""
+    runStateId: ""
+    runResultId: ""
+    projectId: null
