@@ -42,7 +42,7 @@ class SubscriptionService {
 			if (projectIdSub == cProjectId) {
 				retVal = sub
 				System.out.println("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType}")
-				log.info("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType}")
+				log.info("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType} in project ${project.name}")
 				return
 			}
 		}
@@ -50,7 +50,14 @@ class SubscriptionService {
 	}
 	
 	def updateSubscription( def project, def subscriptionData) {
-		
+		def results = genericRestClient.put(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/_apis/hooks/subscriptions",
+			body: subscriptionData,
+			query: ['api-version': '5.1']
+			)
+
 	}
 	
 	def createSubscription( def project, def subscriptionData) {

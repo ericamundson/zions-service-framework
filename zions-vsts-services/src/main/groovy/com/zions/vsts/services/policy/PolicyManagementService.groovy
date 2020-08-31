@@ -467,7 +467,7 @@ public class PolicyManagementService {
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${projectId}/_apis/git/policy/configurations",
 			query: query,
-			headers: [Accept: 'application/json;api-version=5.1']
+			headers: [Accept: 'application/json;api-version=5.0-preview.1']
 		)
 		def retVal = null	
 		results.'value'.each { policy ->
