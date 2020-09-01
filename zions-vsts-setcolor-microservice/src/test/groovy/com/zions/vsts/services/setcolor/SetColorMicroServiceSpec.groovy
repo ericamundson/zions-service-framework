@@ -74,10 +74,10 @@ class SetColorMicroServiceSpec extends Specification {
 		Priority | Severity | Color
 		1 | "1 - Critical" | "Red"
 		1 | "2 - High" | "Red"
-		1 | "3 - Medium" | "Red"
-		1 | "4 - Low" | "Red"
+		1 | "3 - Medium" | "Yellow"
+		1 | "4 - Low" | "Yellow"
 		2 | "1 - Critical" | "Red"
-		2 | "2 - High" | "Red"
+		2 | "2 - High" | "Yellow"
 		2 | "3 - Medium" | "Yellow"
 		2 | "4 - Low" | "Yellow"
 		3 | "1 - Critical" | "Yellow"
@@ -98,7 +98,7 @@ class SetColorMicroServiceSpec extends Specification {
 		workManagementService.updateWorkItem(_,_,_,_) >> { args ->
 			String data = "${args[3]}"
 			// Inject mapped color here to test full color map
-			assert(data.toString() == "[[op:test, path:/rev, value:1], [op:add, path:/fields/Custom.Color, value:Red]]")
+			assert(data.toString() == "[[op:test, path:/rev, value:1], [op:add, path:/fields/Custom.Color, value:Yellow]]")
 		}
 
 		and: "stub sharedAssetService.getAsset()"
