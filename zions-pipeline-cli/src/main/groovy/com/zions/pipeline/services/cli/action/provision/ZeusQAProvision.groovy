@@ -78,6 +78,24 @@ class ZeusQAProvision implements CliAction {
 				}
 			}
 		}
+		
+		File prAutoDir = new File("${testbedDir}/${prodVersion}PRAuto")
+		if (!prAutoDir.exists()) {
+			prAutoDir.mkdirs()
+		}
+		for (String affiliate in affiliates) {
+			new AntBuilder().copy( todir: "${testbedDir}/${prodVersion}PRAuto/${affiliate}", preservelastmodified: true, overwrite: true ) {
+				fileset( dir: "${testbedDir}/${prodVersion}Auto/${affiliate}" ) {
+					include(name: "*/**")
+					exclude(name: "**/Zaddat/0*.*")
+					exclude(name: "**/Zaddat/1*.*")
+					exclude(name: "**/Zaddat/*.b\$?")
+					exclude(name: "**/Zaddat/Session.*")
+					exclude(name: "**/Zaddat/ZadVer.*")
+					exclude(name: "**/ZConfig/Brchcnfg.upg")
+				}
+			}
+		}
 
 	}
 

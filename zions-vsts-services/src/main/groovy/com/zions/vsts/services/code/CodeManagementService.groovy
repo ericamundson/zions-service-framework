@@ -163,7 +163,10 @@ class CodeManagementService {
 		def pullRequests = getPullRequests(collection, project, repo, 'completed', branch)
 		def changes = []
 		def wiIds = []
-		Collections.addAll(wiIds, workItemIds)
+		//Collections.addAll(wiIds, workItemIds)
+		for (String wids in workItemIds) {
+			wiIds.add(wids.trim())
+		}
 		if (!pullRequests.'value') return changes[]
 		pullRequests.'value'.each { pr ->
 			def wiRefs = getWorkitemsForPullRequest(collection, project, repo, "${pr.pullRequestId}")

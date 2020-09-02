@@ -81,7 +81,23 @@ class XlrToADOEventsMicroService implements MessageReceiverTrait {
 		extData.events = events
 		extensionDataManagementService.ensureExtensionData(extData)
 		tagBuild(releaseSub.pipelineId, releaseSub.adoProject, e.message)
+		if (releaseSub.failPipeline && (e.activityType == 'RELEASE_FAILED' || e.activityType == 'RELEASE_COMPLETED')) {
+			pipelineStatus(releaseSub.pipelineId, releaseSub.adoProject, e.activityType)
+		}
 		return null;
+	}
+	
+	void pipelineStatus( String buildId, String projectName, String activityType) {
+		if (activityType == 'RELEASE_FAILED') {
+			def data = [result: 'partiallySucceeded']
+			buildManagementService.updateExecution('', projectName, buildId, data)
+		} else if (activityType == 'RELEASE_COMPLETED'){
+			def build = buildManagementService.getExecution('', projectName, buildId)
+			if ("${build.result}" == 'partiallySucceeded') {
+				def data = [result: 'succeeded']
+				buildManagementService.updateExecution('', projectName, buildId, data )
+			}
+		}
 	}
 	
 	void tagBuild(String buildId, String projectName, String message) {
