@@ -24,5 +24,7 @@ class XlrReleaseSubscription {
 	String adoProject
 	
 	boolean isReleasePipeline
+	
+	boolean failPipeline
 		
 }

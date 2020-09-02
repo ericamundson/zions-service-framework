@@ -39,6 +39,9 @@ class CreateRelease implements CliAction {
 	@Value('${xlr.release.title:none}')
 	String releaseTitle
 	
+	@Value('${xlr.fail.pipeline:false}')
+	boolean xlrFailPipeline
+	
 	@Autowired
 	ReleaseQueryService releaseQueryService
 	
@@ -70,7 +73,7 @@ class CreateRelease implements CliAction {
 			def xlrResult = releaseItemService.createRelease(templateId, xlrData)
 			String releaseId = releaseId(xlrResult)
 			String fReleaseId = "${xlrResult.id}"
-			XlrReleaseSubscription subscription = new XlrReleaseSubscription([releaseId: fReleaseId, pipelineId: adoPipelineId, adoProject: adoProject, isReleasePipeline: isReleasePipeline])
+			XlrReleaseSubscription subscription = new XlrReleaseSubscription([releaseId: fReleaseId, pipelineId: adoPipelineId, adoProject: adoProject, isReleasePipeline: isReleasePipeline, failPipeline: xlrFailPipeline])
 			xlrReleaseSubscriptionRepository.save(subscription)
 			xlrResult = releaseItemService.startPlannedRelease(releaseId)
 		}
