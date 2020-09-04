@@ -116,7 +116,7 @@ class RunXLBlueprints implements IExecutableYamlHandler {
 		}
 		try {
 			def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
-			gitService.pushChanges(repoName)
+			gitService.pushChanges(outrepo)
 			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
 		} catch (e) {
 			log.error("Failed push of blueprint changes:  ${e.message}")
