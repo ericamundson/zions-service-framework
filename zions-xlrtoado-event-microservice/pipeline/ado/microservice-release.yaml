@@ -40,7 +40,7 @@ stages:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
         workingDirectory: '$(Build.SourcesDirectory)'
         options: '--no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
-        tasks: 'clean zions-xlrtoado-event-microservice:build'
+        tasks: 'clean zions-xlrtoado-event-microservice:build zions-xlrtoado-event-microservice:dockerPushImage'
         publishJUnitResults: false
 
     - task: BatchScript@1
