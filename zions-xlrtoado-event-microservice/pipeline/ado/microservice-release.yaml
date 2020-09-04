@@ -37,7 +37,7 @@ stages:
     - task: Gradle@2
       displayName: 'gradlew clean build updateBatJarVersion'
       inputs:
-        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
+        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
         workingDirectory: '$(Build.SourcesDirectory)'
         options: '--no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
         tasks: 'clean zions-xlrtoado-event-microservice:build zions-xlrtoado-event-microservice:dockerPushImage'
