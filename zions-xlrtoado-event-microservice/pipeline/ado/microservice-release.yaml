@@ -35,7 +35,7 @@ stages:
         WriteTag: true
 
 
-    - script: |
+    - bash: |
         chmod 777 $(Build.SourcesDirectory)/gradlew
         $(Build.SourcesDirectory)/gradlew --no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices clean zions-xlrtoado-event-microservice:build zions-xlrtoado-event-microservice:dockerPushImage
       workingDirectory: $(Build.SourcesDirectory)
