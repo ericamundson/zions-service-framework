@@ -35,7 +35,7 @@ stages:
         WriteTag: true
 
     - script: |
-        gradle --no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices clean zions-xlrtoado-event-microservice:build zions-xlrtoado-event-microservice:dockerPushImage
+        gradlew --no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices clean zions-xlrtoado-event-microservice:build zions-xlrtoado-event-microservice:dockerPushImage
       displayName: 'gradlew clean build updateBatJarVersion'
 #       inputs:
 #         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
