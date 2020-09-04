@@ -34,14 +34,15 @@ stages:
         InitialVersionPrefix: 7.0.0
         WriteTag: true
 
-    - task: Gradle@2
+    - script: |
+        gradle --no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices clean zions-xlrtoado-event-microservice:build zions-xlrtoado-event-microservice:dockerPushImage
       displayName: 'gradlew clean build updateBatJarVersion'
-      inputs:
-        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
-        workingDirectory: '$(Build.SourcesDirectory)'
-        options: '--no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
-        tasks: 'clean zions-xlrtoado-event-microservice:build zions-xlrtoado-event-microservice:dockerPushImage'
-        publishJUnitResults: false
+#       inputs:
+#         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
+#         workingDirectory: '$(Build.SourcesDirectory)'
+#         options: '--no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
+#         tasks: 'clean zions-xlrtoado-event-microservice:build zions-xlrtoado-event-microservice:dockerPushImage'
+#         publishJUnitResults: false
 
 #     - task: BatchScript@1
 #       displayName: 'XLW - xl-deploy.yaml'
