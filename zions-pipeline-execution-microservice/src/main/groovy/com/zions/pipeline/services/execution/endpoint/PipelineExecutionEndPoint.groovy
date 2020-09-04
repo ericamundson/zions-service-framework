@@ -61,6 +61,7 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 			String branch = "${adoData.resource.targetRefName}"
 			String commitUrl = "${adoData.resource.lastMergeCommit.url}"
 			def commit = codeManagementService.getCommit(commitUrl)
+			if (!commit) return null;
 			def locations = getPipelineChangeLocations(commit)
 			if (locations.size() > 0) {
 				String repoUrl = "${adoData.resource.repository.remoteUrl}"

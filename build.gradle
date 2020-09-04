@@ -138,6 +138,16 @@ allprojects {
 		srcDir '../common/resources'
 		srcDir "${vaultResources}"
 	}
+	
+	docker {
+//		url = property 'dockerHostUrl'
+		registryCredentials {
+			url = property 'registryHostUrl'
+			username = property 'registryUserName'
+			password = property 'registryPassword'
+		}
+	}
+	
 		
 
 
