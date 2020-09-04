@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component
 import groovy.yaml.YamlSlurper
 import groovy.yaml.YamlBuilder
 import groovy.json.JsonBuilder
+import groovy.util.logging.Slf4j
+
 import org.yaml.snakeyaml.Yaml
 import java.util.regex.Pattern
 import java.util.regex.Matcher
@@ -13,6 +15,7 @@ import com.zions.pipeline.services.git.GitService
 import com.zions.pipeline.services.yaml.template.execution.IExecutableYamlHandler
 
 @Component
+@Slf4j
 class YamlExecutionService {
 	@Autowired
 	Map<String, IExecutableYamlHandler> yamlHandlerMap;
@@ -27,7 +30,14 @@ class YamlExecutionService {
 	String alwaysExecuteFolder
 
 	def runExecutableYaml(String repoUrl, String repoName, def scanLocations, String branch) {
-		File repo = gitService.loadChanges(repoUrl, repoName, branch)
+		File repo = null
+		try {
+			repo = gitService.loadChanges(repoUrl, repoName, branch)
+		} catch (e) {
+			log.error('Failed to update GIT repo.')
+			repo = null
+		}
+		if (!repo) return
 		def exeYaml = findExecutableYaml(repo, scanLocations)
 		for (def yaml in exeYaml) { 
 			if (yaml.executables) {
