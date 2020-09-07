@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import groovy.json.JsonBuilder
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 /**
  * Will activate parent work item when child is activated.
@@ -22,18 +24,20 @@ import groovy.json.JsonBuilder
 @Slf4j
 class ParentActivationMicroService implements MessageReceiverTrait {
 
+
+	
 	@Autowired
 	WorkManagementService workManagementService
+	
+	@Autowired
+    ProjectConfig projectConfig
+	
 	
 	@Value('${tfs.collection:}')
 	String collection
 
-	//@Value('${tfs.types:}')
-	@Value('${tfs.types}')
-	String[] types
-	
-	@Value('${tfs.cstatetrigger}')
-	String cstateTrigger
+	/*@Value('${tfs.cstatetrigger}')
+	String cstateTrigger*/
 	
 	@Value('${tfs.project.includes}')
 	String[] includeProjects
@@ -89,10 +93,25 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		def wiResource = adoData.resource
 		
 		//**Check for qualifying projects how to setup in runtime settings?
-		String project = "${wiResource.revision.fields.'System.TeamProject'}"
-		if (includeProjects && !includeProjects.contains(project))
-			return logResult('Project not included')
-		
+		String teamProject = "${wiResource.revision.fields.'System.TeamProject'}"
+
+		def config
+		def defaultConfig 
+		def projectConfigs = projectConfig.projects
+		projectConfigs.each { projectConfig ->
+			def name = projectConfig.name
+			
+			if (teamProject == name) {
+				config = projectConfig
+			    return 
+			}
+			if (name == 'default')	{
+				defaultConfig = projectConfig
+			}
+		}
+		if (!config)
+			config = defaultConfig			
+		//starting here reference the parameters in the config such as types
 		
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		
@@ -101,18 +120,23 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		//code to address null pointer exception
 		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('No valid changes made')
 	
-		if (!types.contains(wiType))return logResult('not a valid work item type')
+		String[] confTypes = config.types
+		if (!confTypes.contains(wiType))return logResult('not a valid work item type')
 		
-		if (!cstateTrigger.contains(childState)) return logResult('Not a target work item type')
-			
+		
+		String[] confStates = config.states
+		if (!confStates.contains(childState))return logResult('Not a target work item state')
+		//if (!cstateTrigger.contains(childState)) return logResult('Not a target work item type')
+		
 		//this is child id
 		String id = "${wiResource.revision.id}"
 										   
 		String parentId = "${wiResource.revision.fields.'System.Parent'}"
 		
 		//check to see if parent is assigned to child work item
+		//may have to use a for loop to iterate through parentId?
 		if (!parentId || parentId == 'null' || parentId == '') return logResult('parent not assigned')
-		def parentWI = workManagementService.getWorkItem(collection, project, parentId)
+		def parentWI = workManagementService.getWorkItem(collection, teamProject, parentId)
 		if (!parentWI) {
 			log.error("Error retrieving work item $parentId")
 			return 'Error Retrieving Parent'
@@ -130,7 +154,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		if (pState == 'New') {
 			log.debug("Updating parent of $wiType #$id")
 		
-			if (performParentActivation(project, rev, parentId, responseHandler)) {
+			if (performParentActivation(teamProject, rev, parentId, responseHandler)) {
 				return logResult('Update Succeeded')
 			}
 
@@ -146,7 +170,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 			
 		}
 	}
-	private def performParentActivation(String project, String rev, def parentId, def pState, Closure respHandler = null) {
+	private def performParentActivation(String teamProject, String rev, def parentId, def pState, Closure respHandler = null) {
 
 		def data = []
 		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
@@ -155,11 +179,11 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		def e = [op: 'add', path: '/fields/System.State', value: 'Active']
 		data.add(e)
 		this.retryFailed = false
-		this.attemptedProject = project
+		this.attemptedProject = teamProject
 		this.attemptedParentId = parentId
 		this.attemptedActivation = pState
 		
-		return workManagementService.updateWorkItem(collection, project, parentId, data, respHandler)
+		return workManagementService.updateWorkItem(collection, teamProject, parentId, data, respHandler)
 		
 	}
 	
@@ -169,7 +193,9 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 		return msg
 	}
 	
+
+}	
 		
-}
+
 																						 
   
