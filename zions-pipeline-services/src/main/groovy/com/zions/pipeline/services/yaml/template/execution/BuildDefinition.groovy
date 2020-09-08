@@ -8,6 +8,24 @@ import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 
+/**
+ * Accepts yaml in the form:
+ * <pre>
+ * - name: dev/test1-release
+ *   type: buildDefinition
+ *   context: eto-dev
+ *   project: ALMOpsTest
+ *   queue: 'On-Prem DR'
+ *   repository: ALMOpsTest
+ *   variables:
+ *   - name: Good_stuff7
+ *     value: old
+ *     allowOverride: true
+ * </pre>
+ * 
+ * @author z091182
+ *
+ */
 @Component
 class BuildDefinition implements IExecutableYamlHandler {
 	
@@ -20,13 +38,25 @@ class BuildDefinition implements IExecutableYamlHandler {
 
 	def handleYaml(def yaml, File containedRepo, def locations, String branch) {
 		
+		String bPath = yaml.name
+		String bFolder = null
+		String bName = null
+		if (bPath.indexOf('/') != -1) {
+			bFolder = bPath.substring(0, bPath.lastIndexOf('/'))
+			bName = bPath.substring(bPath.lastIndexOf('/')+1)
+		} else {
+			bName = bPath
+		}
 		def project = projectManagementService.getProject('', yaml.project)
-		def build = buildManagementService.getBuild('', project, yaml.name)
+		def build = buildManagementService.getBuild('', project, bName)
 		def queue = buildManagementService.getQueue('',project, yaml.queue)
 		if (!build) {
 			def trigger = [batchChanges: false, pollingJobId: null, pollingInterval: 0, pathFilters:[], branchFilters: ['+refs/heads/master'], defaultSettingsSourceType: 2, isSettingsSourceOptionSupported: true, settingsSourceType: 2, triggerType: 2]
 			def repo = codeManagementService.getRepo('', project, yaml.repository)
 			def bDef = [name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue, triggers:[trigger] ]
+			if (bFolder) {
+				bDef['path'] = bFolder
+			}
 			if (yaml.variables) {
 				bDef.variables = [:]
 				yaml.variables.each { var ->
@@ -53,6 +83,9 @@ class BuildDefinition implements IExecutableYamlHandler {
 			bDef.repository.type = 'TfsGit'
 			bDef.process.yamlFilename = yaml.buildyaml
 			bDef.queue = queue
+			if (bFolder) {
+				bDef['path'] = bFolder
+			}
 			if (yaml.variables) {
 				bDef.variables = [:]
 				yaml.variables.each { var ->
