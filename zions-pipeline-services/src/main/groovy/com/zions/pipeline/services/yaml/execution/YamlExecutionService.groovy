@@ -34,7 +34,7 @@ class YamlExecutionService {
 		try {
 			repo = gitService.loadChanges(repoUrl, repoName, branch)
 		} catch (e) {
-			log.error('Failed to update GIT repo.')
+			log.error('Failed to update GIT repo. Error: '+e.getMessage())
 			repo = null
 		}
 		if (!repo) return
