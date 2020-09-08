@@ -16,8 +16,6 @@ import com.zions.vsts.services.servicehooks.SubscriptionService
  *   projects: ReleaseEngineering
  *   eventTypes: git.push
  *   consumerUrl: https://releaseengineeringprovisioner-zionsbancorporation.msappproxy.net
- *   consumerUserName: svc-cloud-vsbuildagent
- *   consumerPassword: !value "webhookPassword"
  *   publisherInputs:
  *     repository: ""
  *     branch: ""
@@ -37,11 +35,21 @@ class WebHookSubscriptions implements IExecutableYamlHandler {
 	@Autowired
 	SubscriptionService subscriptionService
 
+	@Autowired
+	@Value('${webhook.user:}')
+	String consumerUserName
+
+	@Autowired
+	@Value('${webhook.password:}')
+	String consumerPassword
+
 	def handleYaml(def yaml, File containedRepo, def locations, String branch) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
+		// TODO: Collection of event types dosn't makes sense as each different event type will have a different set of publisherInputs
 		String[] eventTypes = yaml.eventTypes.split(',')
 		eventTypes.each { String eventType ->
-			def subscriptionData = [consumerId: 'webHooks', consumerActionId: 'httpRequest', eventType: eventType, publisherId: 'tfs', consumerInputs: [url: yaml.consumerUrl, basicAuthUsername: yaml.consumerUserName, basicAuthPassword: yaml.consumerPassword], publisherInputs:[], resourceVersion: '1.0', scope: 1]
+			//def subscriptionData = [consumerId: 'webHooks', consumerActionId: 'httpRequest', eventType: eventType, publisherId: 'tfs', consumerInputs: [url: yaml.consumerUrl, basicAuthUsername: yaml.consumerUserName, basicAuthPassword: yaml.consumerPassword], publisherInputs:[], resourceVersion: '1.0', scope: 1]
+			def subscriptionData = [consumerId: 'webHooks', consumerActionId: 'httpRequest', eventType: eventType, publisherId: 'tfs', consumerInputs: [url: yaml.consumerUrl, basicAuthUsername: consumerUserName, basicAuthPassword: consumerPassword], publisherInputs:[], resourceVersion: '1.0', scope: 1]
 			subscriptionData.publisherInputs = new JsonBuilder(yaml.publisherInputs).getContent()
 			//System.out.println("In handleYaml - subscriptionData:\n" + subscriptionData)
 			
