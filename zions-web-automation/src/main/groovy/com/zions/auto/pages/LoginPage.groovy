@@ -91,7 +91,9 @@ class LoginPage extends BasePage {
 			}
 
 			// Click Log in
-			waitMultiClick({By.id(LOGIN_BUTTON)}, 'LOGIN: Clicked Sign in',1)			
+			waitMultiClick({By.id(LOGIN_BUTTON)}, 'LOGIN: Clicked Sign in',1)	
+			wait.until(ExpectedConditions.titleIs('Microsoft Office Home'))
+			
 			return true
 		}
 		catch (e) {

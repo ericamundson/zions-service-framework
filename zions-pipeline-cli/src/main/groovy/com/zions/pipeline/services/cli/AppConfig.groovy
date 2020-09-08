@@ -24,7 +24,6 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 @Configuration
 @Profile("default")
 @ComponentScan(["com.zions.pipeline.services,com.zions.vsts.services,com.zions.xld.services,com.zions.xlr.services,com.zions.common.services.rest"])
-@EnableMongoRepositories(basePackages = "com.zions.xlr.services.events.db")
 public class AppConfig {
 	Map<String, CliAction> actions;
 	
@@ -71,27 +70,27 @@ public class AppConfig {
 		return new GenericRestClient(tfsUrl, tfsUser, tfsToken)
 	}
 	
-	@Value('${spring.data.mongodb.host:utmsdev0598}')
-	String dbHost
-
-	@Value('${spring.data.mongodb.database:xlrevents_dev}')
-	String database
-	
-	@Bean
-	public MongoClientOptions mongoOptions() {
-		return MongoClientOptions.builder().maxConnectionIdleTime(1000 * 60 * 8).socketTimeout(30000).build();
-	}
-
-	@Bean
-	MongoClient mongoClient() throws UnknownHostException {
-		MongoClient client = new MongoClient(dbHost, mongoOptions());
-		
-		return client
-	}
-	
-	public @Bean MongoTemplate mongoTemplate() throws Exception {
-		MongoTemplate template = new MongoTemplate(mongoClient(), database);
-		return template
-	}
+//	@Value('${spring.data.mongodb.host:utmsdev0598}')
+//	String dbHost
+//
+//	@Value('${spring.data.mongodb.database:xlrevents_dev}')
+//	String database
+//	
+//	@Bean
+//	public MongoClientOptions mongoOptions() {
+//		return MongoClientOptions.builder().maxConnectionIdleTime(1000 * 60 * 8).socketTimeout(30000).build();
+//	}
+//
+//	@Bean
+//	MongoClient mongoClient() throws UnknownHostException {
+//		MongoClient client = new MongoClient(dbHost, mongoOptions());
+//		
+//		return client
+//	}
+//	
+//	public @Bean MongoTemplate mongoTemplate() throws Exception {
+//		MongoTemplate template = new MongoTemplate(mongoClient(), database);
+//		return template
+//	}
 
 }

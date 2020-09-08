@@ -28,6 +28,12 @@ public class NotificationService {
 	@Value('${email.recipient.addresses:}')
 	private String[] recipientEmailAddresses
 	
+	@Value('${re.email.recipient.addresses:}')
+	private String[] reRecipientEmailAddresses
+	
+	@Value('${re.queues:}')
+	private String[] reQueues
+
 	@Value('${email.sender.address:}')
 	private String senderAddress
 
@@ -130,15 +136,30 @@ public class NotificationService {
 			if (senderAddress) {
 				helper.setFrom(senderAddress)
 			}
-			if (recipientEmailAddresses.length > 0) {
-				recipientEmailAddresses.each { String address ->
-					helper.addTo(address)
-				}
-			} else {
-				helper.setTo("${recipientEmailAddress}")
-			}
+//			if (recipientEmailAddresses.length > 0) {
+//				recipientEmailAddresses.each { String address ->
+//					helper.addTo(address)
+//				}
+//			} else {
+//				helper.setTo("${recipientEmailAddress}")
+//			}
 			Map<String, Object> headers = msg.getMessageProperties().getHeaders();
 			String queue = headers['x-origin-queue']
+			List reQueueList = reQueues.toList()
+			if (reQueueList.contains(queue)) {
+				if (reRecipientEmailAddresses.length > 0) {
+					reRecipientEmailAddresses.each { String address ->
+						helper.addTo(address)
+					}
+				}
+			} else {
+				if (recipientEmailAddresses.length > 0) {
+					recipientEmailAddresses.each { String address ->
+						helper.addTo(address)
+					}
+				}
+
+			}
 			String error = headers['x-error']
 			String trace = headers['x-trace']
 			String mBody = new String(msg.body)

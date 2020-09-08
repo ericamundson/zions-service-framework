@@ -1,8 +1,8 @@
 executables:
-- name: zions-vsts-parent-activation-microservice-release
+- name: zions-vsts-populate-child-microservice-release
   type: buildDefinition
   context: zionseto
   project: DTS
   queue: 'On-Prem Production'
   repository: zions-service-framework
-  buildyaml: zions-vsts-parent-activation-microservice/pipeline/ado/microservice-release.yaml
+  buildyaml: zions-vsts-populate-child-microservice/pipeline/ado/microservice-release.yaml

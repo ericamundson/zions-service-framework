@@ -2,7 +2,7 @@
 apiVersion: xl-release/v1
 kind: Release
 spec:
-  name: !format "zions-vsts-parent-activation-microservice %app_version%"
-  template: !format DTS/zions-vsts-parent-activation-microservice - Master
+  name: !format "zions-vsts-populate-child-microservice %app_version%"
+  template: !format DTS/zions-vsts-populate-child-microservice - Master
   variables:
     deploymentPackage.name: !value "app_version"

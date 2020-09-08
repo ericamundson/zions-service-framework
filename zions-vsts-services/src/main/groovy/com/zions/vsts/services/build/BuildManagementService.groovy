@@ -620,6 +620,7 @@ public class BuildManagementService {
 	}
 	
 	public def tagBuild(def build, String tag) {
+		
 		String url = "${build.url}/tags/${tag}"
 		def result = genericRestClient.put(
 			requestContentType: ContentType.JSON,
@@ -630,7 +631,8 @@ public class BuildManagementService {
 	}
 	
 	public def deleteTag(def build, String tag) {
-		String url = "${build.url}/tags/${tag}"
+		String etag = URLEncoder.encode(tag, 'utf-8').replace('+', '%20')
+		String url = "${build.url}/tags/${etag}"
 		def result = genericRestClient.delete(
 			//requestContentType: ContentType.JSON,
 			uri: url,
@@ -695,7 +697,20 @@ public class BuildManagementService {
 
 	}
 
-	
+	public def updateExecution(String collection, String project, String buildId, def data) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def query = ['api-version':'5.1']
+		String body = new JsonBuilder(data).toPrettyString()
+		def result = genericRestClient.patch(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}",
+				body: body,
+				query: query,
+				)
+		return result
+	}
+
 	public def getExecutionWorkItems(String collection, String project, String buildId) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
@@ -748,7 +763,27 @@ public class BuildManagementService {
 		return tags
 	}
 	
-	
+	public def getBuildTags(def build, String prefix = null) {
+		def tags = []
+		def query = ['api-version':'5.1']
+		String buildUrl = "${build.url}"
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${buildUrl}/tags",
+				query: query,
+				)
+				
+		if (result) {
+			result.'value'.each { tag ->
+				String stag = "${tag}"
+				if (!prefix || (prefix && stag.startsWith(prefix))) {
+					tags.add(stag)
+				}
+			}
+		}
+		return tags
+	}
+
 
 	public def getExecutionChanges(String collection, String project, String buildId, boolean includeSourceChange = false) {
 		def eproject = URLEncoder.encode(project, 'utf-8')

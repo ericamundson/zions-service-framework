@@ -11,3 +11,13 @@ dependencies {
 	compile project(':zions-xlr-services')
 	compile project(':zions-common')
 }
+
+docker {
+	springBootApplication {
+		baseImage = 'openjdk:8-alpine'
+		jvmArgs = ['-Xrs -Xmx256m']
+	}
+	
+
+}
+

@@ -1,5 +1,0 @@
-2020-06-09 14:01:35.238  INFO 10800 --- [main] c.z.v.services.policy.PolicyApplication  : Starting PolicyApplication on UTMSDEV0527 with PID 10800 (D:\git\zions-service-framework\zions-vsts-policy-microservice\bin\main started by z091182 in D:\git\zions-service-framework\zions-vsts-policy-microservice)
-2020-06-09 14:01:35.269 DEBUG 10800 --- [main] c.z.v.services.policy.PolicyApplication  : Running with Spring Boot v2.2.2.RELEASE, Spring v5.2.2.RELEASE
-2020-06-09 14:01:35.270  INFO 10800 --- [main] c.z.v.services.policy.PolicyApplication  : No active profile set, falling back to default profiles: default
-2020-06-09 14:01:46.784  WARN 10800 --- [main] .b.a.g.t.GroovyTemplateAutoConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Groovy configuration, or set spring.groovy.template.check-template-location=false)
-2020-06-09 14:01:47.561  INFO 10800 --- [main] c.z.v.services.policy.PolicyApplication  : Started PolicyApplication in 14.22 seconds (JVM running for 16.327)

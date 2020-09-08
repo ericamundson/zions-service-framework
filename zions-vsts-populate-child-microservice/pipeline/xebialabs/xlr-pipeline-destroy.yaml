@@ -4,7 +4,7 @@ spec:
 - name: _FOLDER_NAME_
   type: xlrelease.Folder
   children:
-  - name: zions-vsts-parent-activation-microservice-destroy
+  - name: zions-vsts-populate-child-microservice-destroy
     type: xlrelease.Release
     description: _DESCRIPTION_
     tags:

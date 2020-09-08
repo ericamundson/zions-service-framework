@@ -451,12 +451,12 @@ public class PolicyManagementService {
 
 	public def getBranchPolicies( def project, def repoId, def branchName ) {
 		log.debug("PolicyManagementService::getBranchPolicies -- Get policies for branch ${branchName}")
-		def query = ['repositoryId':"${repoId}", 'refName':"${branchName}" ]
+		def query = ['repositoryId':"${repoId}", 'refName':"${branchName}", 'api-version': '5.1-preview' ]
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${project.id}/_apis/git/policy/configurations",
-				query: query,
-				headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true']
+				query: query
+				//headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true']
 		)
 		return result
 	}
@@ -467,7 +467,7 @@ public class PolicyManagementService {
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${projectId}/_apis/git/policy/configurations",
 			query: query,
-			headers: [Accept: 'application/json;api-version=5.1']
+			headers: [Accept: 'application/json;api-version=5.0-preview.1']
 		)
 		def retVal = null	
 		results.'value'.each { policy ->
@@ -506,7 +506,7 @@ public class PolicyManagementService {
 	}
 	
 	public def clearBranchPolicies(def collection, def project, def repoId, def branchName) {
-		def policies = getBranchPolicies(collection, project, repoId, branchName)
+		def policies = getBranchPolicies(project, repoId, branchName)
 		if (!policies) return []
 		policies.value.each { policy ->
 			def result = genericRestClient.delete(
@@ -526,7 +526,7 @@ public class PolicyManagementService {
 			policyR.settings = policy.settings
 			def result = createPolicy(collection, project, policyR)
 		}
-		def rpolicies = getBranchPolicies(collection, project, repoId, branchName)
+		def rpolicies = getBranchPolicies( project, repoId, branchName)
 		
 		return rpolicies
 	}

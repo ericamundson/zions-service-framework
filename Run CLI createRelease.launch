@@ -10,7 +10,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.pipeline.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="createRelease --xlr.template.title=&quot;XLD Lock Test&quot; --xlr.release.title=&quot;XLD LockTest - Stuff&quot; --xlr.release.variable.settings=&quot;deploymentPackage.name=12346&quot; --xlr.url=http://localhost:5516"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="createRelease --xlr.template.title=&quot;XLD Lock Test&quot; --xlr.release.title=&quot;XLD LockTest - Stuff&quot; --xlr.release.variable.settings=&quot;deploymentPackage.name=12346&quot; --is.release.pipeline=false --xlr.fail.pipeline=true"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-pipeline-cli"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=dev"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=xlrdbdev"/>
 </launchConfiguration>

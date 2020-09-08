@@ -13,6 +13,8 @@ import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j;
 import groovyx.net.http.ContentType
 import groovyx.net.http.HttpResponseException
+import java.util.regex.Pattern
+import java.util.regex.Matcher
 
 @Component
 @Slf4j
@@ -38,7 +40,14 @@ class CodeManagementService {
 	public CodeManagementService() {
 		
 	}
-	
+	def getCommit(String url) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: url,
+			query: ['api-version': '5.1']
+			)
+	}
+
 	def getCommits(String url) {
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
@@ -156,7 +165,10 @@ class CodeManagementService {
 		def pullRequests = getPullRequests(collection, project, repo, 'completed', branch)
 		def changes = []
 		def wiIds = []
-		Collections.addAll(wiIds, workItemIds)
+		//Collections.addAll(wiIds, workItemIds)
+		for (String wids in workItemIds) {
+			wiIds.add(wids.trim())
+		}
 		if (!pullRequests.'value') return changes[]
 		pullRequests.'value'.each { pr ->
 			def wiRefs = getWorkitemsForPullRequest(collection, project, repo, "${pr.pullRequestId}")
@@ -280,6 +292,36 @@ class CodeManagementService {
 		}
 		if (result == null) return null
 		return result.content
+	}
+	
+	public def getFileList(def collection, String project, String repo, String regex, def branchName) {
+//		def query = ['api-version':'5.1','versionDescriptor.version':"${branchName}",'versionDescriptor.versionType':'branch']
+		def query = ['api-version':'5.1','recursionLevel': 'Full']
+		def result
+		def fileList = []
+		try {
+			result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/items",
+				query: query
+			)
+			if (result && result.value) {
+				result.value.each { item ->
+					Matcher m = "${item.path}" =~ ~regex
+					if (m.find()) {
+						fileList.add("${item.path}")
+					}
+
+				}
+			}
+		} catch (HttpResponseException hre) {
+			// check for Not Found
+			if (hre.getStatusCode() == 404) {
+				result = fileList
+			}
+		}
+		if (result == null) return fileList
+		return fileList
 	}
 
 	public def importRepo(String collection, String project, String repoName, String importUrl, String bbUser, String bbPassword) {

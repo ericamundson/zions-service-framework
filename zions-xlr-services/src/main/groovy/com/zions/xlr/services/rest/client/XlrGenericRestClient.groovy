@@ -22,18 +22,23 @@ class XlrGenericRestClient extends AGenericRestClient {
 	
 	
 	private String password
+	
+	
 
 	@Autowired
 	public XlrGenericRestClient(@Value('${xlr.url:}') String url, 
 		@Value('${xl.user:}') String user, 
-		@Value('${xl.password:}') String password) {
+		@Value('${xl.password:}') String password,
+		@Value('${xlr.use.proxy:false}') boolean useProxy) {
 		this.xlrUrl = url
 		this.user = user
 		this.password = password
 		delegate = new ARESTClient(xlrUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
-		//setProxy()
+		if (useProxy) {
+			setProxy()
+		}
 		setCredentials(user, password);
 
 	}

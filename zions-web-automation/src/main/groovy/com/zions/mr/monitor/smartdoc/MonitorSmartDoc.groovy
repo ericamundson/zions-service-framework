@@ -10,6 +10,7 @@ import com.zions.vsts.services.work.WorkManagementService
 import com.zions.webbot.cli.CliWebBot
 import com.zions.vsts.services.notification.NotificationService
 import com.zions.auto.base.CompletedSteps
+import com.zions.auto.base.Fiddler
 import com.zions.auto.pages.CollectionPage
 import com.zions.auto.pages.LoginPage
 import com.zions.auto.pages.MainHeader
@@ -53,6 +54,9 @@ class MonitorSmartDoc  implements CliWebBot {
 	MonitorStatus status
 	CompletedSteps steps
 	
+	@Autowired
+	Fiddler fiddler
+
 	@Autowired
 	WorkManagementService workManagementService
 
@@ -127,36 +131,48 @@ class MonitorSmartDoc  implements CliWebBot {
 
 		//******** Log into ADO ******
 		if (!loginPage.login()) {
-			reportError(driver, loginPage.error, LOGIN_FAILURE)
-			return
+			// try one more time
+			steps.add("ERROR: $LOGIN_FAILURE.  Making one more attempt")
+			if (!loginPage.login()) {
+				reportError(driver, loginPage.error, LOGIN_FAILURE)
+				return
+			}
 		}
 		
 		// ******** Check ADO availability ********
 		if (!collectionPage.go()) {
-			 steps.add('ADO VALIDATION: Failed.  Trying one more attempt')
-			 if (!loginPage.login()) {
-				 reportError(driver, loginPage.error, LOGIN_FAILURE)
+			// Try one more time
+			steps.add("ERROR: $ADO_FAILURE.  Making one more attempt")
+			if (!collectionPage.go()) {
+				 reportError(driver, collectionPage.error, ADO_FAILURE)
 				 return
-			 }
-			 else {
-				 if (!collectionPage.go()) {
-					 reportError(driver, collectionPage.error, ADO_FAILURE)
-					 return
-				 }
-			 }
+			}
 		 }
 
 		//********** Begin Modern Requirements Tests *******
-		// Test Smart Doc availability
-		if (smartDocsPage.go()) {
+		// Test Smart Docs landing page availability
+		if (!smartDocsPage.go()) {
+			steps.add("ERROR: $SMARTDOC_PAGE_FAILURE.  Making one more attempt")
+			fiddler.open()
+			fiddler.start()
+			if (!smartDocsPage.go()) {
+				fiddler.stop()
+				Thread.sleep(2000)
+				fiddler.dump()
+				Thread.sleep(2000)
+				reportError(driver, smartDocsPage.error, SMARTDOC_PAGE_FAILURE)
+				fiddler.close()
+				return
+			}
+			fiddler.close()
+		}
+		// Test loading of document contents
+		if (!smartDocsPage.loadSmartDoc()) {
+			steps.add("ERROR: $SMARTDOC_DOCUMENT_FAILURE.  Making one more attempt")
 			if (!smartDocsPage.loadSmartDoc()) {
 				reportError(driver, smartDocsPage.error, SMARTDOC_DOCUMENT_FAILURE)
 				return
 			}
-		}
-		else {
-			reportError(driver, smartDocsPage.error, SMARTDOC_PAGE_FAILURE)
-			return
 		}
 		
 		// Test Review Request dialog (must have license to do this)
@@ -200,6 +216,10 @@ class MonitorSmartDoc  implements CliWebBot {
 		}
 	}
 	private void reportError(WebDriver driver, Exception e, String newFailType) {
+		if (!e) {
+			log.errorEnabled("Null error for $newFailType")
+			return
+		}
 		log.error("$newFailType: ${e.message}")
 
 		// If active bug exists for same failure, just add failure comment.  Else, create new Bug.
@@ -241,26 +261,42 @@ class MonitorSmartDoc  implements CliWebBot {
 		String cachePath = cacheDir + fname
 		copyFile(path, cachePath)
 		byte[] fileContent = Files.readAllBytes(scrFile.toPath())
-		def attData = attachmentService.sendAttachment(fileContent, fname)
+		def scrAttData = attachmentService.sendAttachment(fileContent, fname)
+		
+		// Upload Fiddler archive
+		def fiddlerAttData
+		if (fiddler.hasDump) {
+			String path2 = fiddler.fiddlerDump
+			File dumpFile = new File(path2)
+			String fname2 = path2.substring(path2.lastIndexOf('\\')+1,path2.length())
+			byte[] fileContent2 = Files.readAllBytes(dumpFile.toPath())
+			fiddlerAttData = attachmentService.sendAttachment(fileContent2, fname2)
+		}
 		
 		// Create a bug in ADO
 		println("Creating Bug for: $newFailType")
 		def data = []
 		def title = "Smart Doc Monitoring $newFailType"
 		def desc = "<div>${e.message}" + "<p>" + "${e.cause}".replace('\n','<br>') + '</p></div>' 
-		def steps = "<div>" + this.steps.formatForHtml() + '</div>' 
+		def reproSteps = "<div>" + this.steps.formatForHtml() + '</div>' 
 		data.add([ op: 'add', path: '/id', value: -1])
 		data.add([op:'add', path:"/fields/System.Title", value: title])
 		data.add([op:'add', path:"/fields/System.Description", value: desc])
 		data.add([op:'add', path:"/fields/System.AreaPath", value: areapath])
 		data.add([op:'add', path:"/fields/System.AssignedTo", value: owner])
-		data.add([op:'add', path:"/fields/Microsoft.VSTS.TCM.ReproSteps", value: steps])
+		data.add([op:'add', path:"/fields/Microsoft.VSTS.TCM.ReproSteps", value: reproSteps])
 		data.add([op:'add', path:"/fields/System.Tags", value: FAILURE_TAG])
-		if (attData) {
-			def attUrl = attData.url
+		if (scrAttData) {
+			def attUrl = scrAttData.url
 			data.add([op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: attUrl, attributes:[comment: 'Selenium Screenshot']]])
 		} else {
-			log.error("Attachment upload failed: $path")
+			log.error("Screenshot attachment upload failed: $path")
+		}
+		if (fiddlerAttData) {
+			def attUrl = fiddlerAttData.url
+			data.add([op: 'add', path: '/relations/-', value: [rel: "AttachedFile", url: attUrl, attributes:[comment: 'Fiddler Archive']]])
+		} else if (fiddler.hasDump) {
+			log.error("Fiddler attachment upload failed: ${fiddler.fiddlerDump}")
 		}
 		def result = workManagementService.createWorkItem(collection, project, 'Bug', data)
 		
