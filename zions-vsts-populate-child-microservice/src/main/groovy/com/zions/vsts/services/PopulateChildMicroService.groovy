@@ -187,7 +187,7 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 			}
 			// Process work item changes in Azure DevOps
 			log.info("Processing work item changes...")
-			workManagementService.batchWIChanges(collection, project, changes, idMap)
+			workManagementService.batchWIChanges(collection, changes, idMap)
 			return logResult('Update Succeeded')
 		}
 		else {

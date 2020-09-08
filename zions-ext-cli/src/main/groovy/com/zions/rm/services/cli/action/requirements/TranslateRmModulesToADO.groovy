@@ -324,7 +324,7 @@ class TranslateRmModulesToADO implements CliAction {
 				if (changeList.size() > 0 && errCount == 0) {
 					// Process work item changes in Azure DevOps
 					log.info("${getCurTimestamp()} - Processing work item changes...")
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+					workManagementService.batchWIChanges(collection, changeList, idMap)
 					
 					// Create/update the SmartDoc
 					log.info("${getCurTimestamp()} - Creating SmartDoc: ${module.getTitle()}")
