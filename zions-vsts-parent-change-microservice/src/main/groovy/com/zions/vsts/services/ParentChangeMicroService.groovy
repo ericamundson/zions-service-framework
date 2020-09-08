@@ -179,7 +179,7 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 				}
 				// Process work item changes in Azure DevOps
 				log.debug("Processing work item changes...")
-				workManagementService.batchWIChanges(collection, project, changes, idMap)
+				workManagementService.batchWIChanges(collection, changes, idMap)
 				return logResult('Remove Update Succeeded')
 			}
 		
@@ -214,7 +214,7 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 				}
 				// Process work item changes in Azure DevOps
 				log.debug("Processing work item changes...")
-				workManagementService.batchWIChanges(collection, project, changes, idMap)
+				workManagementService.batchWIChanges(collection, changes, idMap)
 				return logResult('Add Update Succeeded')
 			}
 				
