@@ -39,6 +39,8 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 	@Value('${pipeline.folders:.pipeline,pipeline}')
 	String[] pipelineFolders
 
+	@Value('${always.execute.folder:executables}')
+	String alwaysExecuteFolder
 
 	public PipelineExecutionEndPoint() {
 		//init(websocketUrl, null, null)
@@ -62,7 +64,9 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 			String commitUrl = "${adoData.resource.lastMergeCommit.url}"
 			def commit = codeManagementService.getCommit(commitUrl)
 			if (!commit) return null;
-			def locations = getPipelineChangeLocations(commit)
+			String project = "${adoData.resource.repository.project.name}"
+			String repo = "${adoData.resource.repository.name}"
+			def locations = getPipelineChangeLocations(commit, project, repo, branch)
 			if (locations.size() > 0) {
 				String repoUrl = "${adoData.resource.repository.remoteUrl}"
 				String name = "${adoData.resource.repository.name}"
@@ -72,14 +76,25 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 		return null
 	}
 
-	def getPipelineChangeLocations(def commit) {
+	def getPipelineChangeLocations(def commit, String project, String repo, String branch) {
 		def locations = []
 		def changesUrl = "${commit._links.changes.href}"
 		def changes = codeManagementService.getChanges(changesUrl)
 		for (def change in changes.changes) {
 			String path = "${change.item.path}"
 			pipelineFolders.each { String pipelineFolder ->
-				if (path.contains("${pipelineFolder}") && path.endsWith('.yaml') && !locations.contains(path)) locations.add(path)
+				if (path.contains("${pipelineFolder}") && path.endsWith('.yaml') && !locations.contains(path)) {
+					locations.add(path)
+				}
+			}
+		}
+		for (String pipelineFolder in pipelineFolders) {
+			def regex = "(/${pipelineFolder}/${alwaysExecuteFolder})\\S*(.yaml)\$"
+			def fileList = codeManagementService.getFileList('', project, repo, regex, branch )
+			for (String loc in fileList) {
+				if (!locations.contains(loc)) {
+					locations.add(loc)
+				}
 			}
 		}
 		return locations
