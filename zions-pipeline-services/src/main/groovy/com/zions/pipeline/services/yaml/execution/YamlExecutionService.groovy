@@ -56,29 +56,33 @@ class YamlExecutionService {
 		def executableYaml = []
 		scanLocations.each { String loc ->
 			File file = new File(repoDir, loc)
-			def eyaml = new YamlSlurper().parseText(file.text)
+			String outStr = file.text
+			outStr = outStr.replaceAll(/(#)( |\S)*$/, '')
+			def eyaml = new YamlSlurper().parseText(outStr)
 			def executables = eyaml.executables
 			if (executables) {
 				executableYaml.add(eyaml)
 			}
 		}
-		List<String> pFolders = Arrays.asList(pipelineFolders)
-		repoDir.eachDirRecurse() { File d ->
-			String dname = d.name
-			if (pFolders.contains(dname)) {
-				File executables = new File(d, alwaysExecuteFolder)
-				if (executables.exists()) {
-					executables.eachFile() { File eFile ->
-						String name = eFile.name
-						if (name.endsWith('.yaml')) {
-							def eyaml = new YamlSlurper().parseText(eFile.text)
-							executableYaml.add(eFile)
-						}
-					}
-				}
-
-			}
-		}
+//		List<String> pFolders = Arrays.asList(pipelineFolders)
+//		repoDir.eachDirRecurse() { File d ->
+//			String dname = d.name
+//			if (pFolders.contains(dname)) {
+//				File executables = new File(d, alwaysExecuteFolder)
+//				if (executables.exists()) {
+//					executables.eachFile() { File eFile ->
+//						String name = eFile.name
+//						if (name.endsWith('.yaml')) {
+//							String outStr = eFile.text
+//							outStr = outStr.replaceAll(/(#)( |\S)*$/, '')
+//							def eyaml = new YamlSlurper().parseText(outStr)
+//							executableYaml.add(eFile)
+//						}
+//					}
+//				}
+//
+//			}
+//		}
 //		pipelineFolders.each { String pipelineFolder ->
 //			File pipelineDir = new File(repoDir, pipelineFolder)
 //			if (pipelineDir.exists()) {
