@@ -41,14 +41,19 @@ class ImportWorkItems implements CliAction {
 		
 		// Open input Excel doc
 		if (!excelManagementService.openExcelFile(inFilePath)) return
+				
+		clManager = new ChangeListManager(collection, workManagementService )
 		
 		def wiChanges
 		Sheet sheet = excelManagementService.getSheet0()
 		int idCol
-		int areaPathCol
+		int workItemTypeCol
+		int titleCol
+		int priorityCol
+		int sevCol
+		int colorCol
 		boolean error = false
 		boolean isFirstRow = true
-		def lastProject
         sheet.each { row -> 
 			if (isFirstRow) {
 				excelManagementService.setHeaders(row)
@@ -56,29 +61,37 @@ class ImportWorkItems implements CliAction {
 				// Check required columns
 				int numCols = excelManagementService.headers.size()
 				idCol = excelManagementService.getColumn('ID')
-				areaPathCol = excelManagementService.getColumn('Area Path')
+				workItemTypeCol = excelManagementService.getColumn('Work Item Type')
+				titleCol = excelManagementService.getColumn('Title')
+				priorityCol = excelManagementService.getColumn('Priority')
+				sevCol = excelManagementService.getColumn('Severity')
+				colorCol = excelManagementService.getColumn('Color')
 				if (idCol > numCols) {
 					log.error('Missing required column: "ID"')
 					error = true
 				}
-				else if (areaPathCol > numCols) {
-					log.error('Missing required column: "Area Path"')
+				else if (workItemTypeCol > numCols) {
+					log.error('Missing required column: "Work Item Type"')
 					error = true
 				}
-
-
+				else if (titleCol > numCols) {
+					log.error('Missing required column: "Title"')
+					error = true
+				}
+				else if (priorityCol < numCols || sevCol < numCols || colorCol < numCols) {
+					if (priorityCol > numCols || sevCol > numCols || colorCol > numCols) {
+						log.error('Missing required columns: "Priority", "Severity" and "Color" must be included as a set.  Color will be calculated.')
+						error = true
+					}
+				}
 				isFirstRow = false
 			}
 			else if (!error) {
 				// Get project from Area Path
 				def id = excelManagementService.getCellValue(row,idCol)
-				def tfsProject = getProjectFromAreaPath(excelManagementService.getCellValue(row,areaPathCol))
-				println("Work Itm ID: $id, Project: $tfsProject")
-				if (tfsProject != lastProject) {
-					if (clManager) clManager.flush()
-					clManager = new ChangeListManager(collection, tfsProject, workManagementService )
-					lastProject = tfsProject
-				}
+				def type = excelManagementService.getCellValue(row,workItemTypeCol)
+				def title = excelManagementService.getCellValue(row,titleCol)
+				println("Work Itm ID: $id, Work Item Type: $type, Title: $title")
 				processWorkItemChanges(id, map, row)
 			}
         }
@@ -100,14 +113,31 @@ class ImportWorkItems implements CliAction {
 
 		// Add fields
 		for (int i = 0; i < excelManagementService.headers.size();i++ ) {
-			def fieldName = row.cells[i]
+			def fieldName = excelManagementService.headers.find { it.value == i+1 }?.key
 			if (fieldName != 'ID') {
 				def adoFieldName = map[fieldName]
-				def idData = [ op: 'add', path: "/fields/$adoFieldName", value: "$fieldName"]
-				wiData.body.add(idData)
+				if (adoFieldName == 'null' || adoFieldName == null) {
+					log.info("No map for field $fieldName. Will not be included in update")
+				}
+				else {
+					def value
+					if (fieldName == 'Color') {
+						value = getColor(row)
+					}
+					else
+						value = row.getCell(i)
+					if (value) {
+						def idData = [ op: 'add', path: "/fields/$adoFieldName", value: "$value"]
+						wiData.body.add(idData)			
+					}	
+				}
 			}
 		}
 		return wiData
+	}
+	public getColor(Row row) {
+		
+		return null
 	}
 	public Object validate(ApplicationArguments args) throws Exception {
 		def required = ['tfs.url', 'tfs.collection', 'import.file']
@@ -122,7 +152,7 @@ class ImportWorkItems implements CliAction {
 	public getProjectFromAreaPath(String areaPath) {
 		int backSlashNdx = areaPath.indexOf('\\')
 		if (backSlashNdx > -1) 
-			return areaPath.substring(0,backSlashNdx-1)
+			return areaPath.substring(0,backSlashNdx)
 		else 
 			return areaPath
 		

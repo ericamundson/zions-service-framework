@@ -21,7 +21,7 @@ class ExcelManagementService {
 	Sheet sheet
 	Row row
 	int rownum
-	Map headers
+	Map headers = [:]
 	String outputFileName
 	
 	
@@ -29,9 +29,50 @@ class ExcelManagementService {
 		
 	}
 	
-	def OpenExcelFile(String fileName) {
+	boolean openExcelFile(String fileName) {
 		rownum = 0
+		File excel = new File(fileName)
+		if (!excel.exists())
+			log.error("Not found or not a file: " + fileName)
+		else {
+			workbook = WorkbookFactory.create(excel)
+			sheet = workbook.getSheetAt(0)
+		 }
 	}
+	public Sheet getSheet0() {
+		return workbook.getSheetAt(0)
+	}
+	public setHeaders(Row row) {
+		int i = 0
+		row.each { cell ->
+			headers.put(formatCellValue(cell), ++i)
+		}
+		return
+	}
+
+    public readExcel() throws Exception {
+        // Retrieving the number of sheets in the Workbook
+        log.info("Workbook has " + workbook.getNumberOfSheets() + " Sheets : ")
+
+        // Getting the Sheet at index zero
+        Sheet sheet = workbook.getSheetAt(0);
+
+        // Create a DataFormatter to format and get each cell's value as String
+        DataFormatter dataFormatter = new DataFormatter();
+
+
+        // 3. Or you can use Java 8 forEach loop with lambda
+        System.out.println("\n\nIterating over Rows and Columns using Java 8 forEach with lambda\n");
+        sheet.each { row -> 
+            row.each { cell -> 
+                printCellValue(cell);
+            }
+            System.out.println();
+        }
+
+        // Closing the workbook
+        workbook.close();
+    }
 	
 	/*
 	 * Creates excel file in specified location
@@ -95,7 +136,14 @@ class ExcelManagementService {
 		}
 		return col
 	}
-	
+	def getCellValue(Row row, int colNum) {
+		if (colNum > 0 && colNum <= headers.size())
+			return formatCellValue(row.getCell(colNum-1))
+		else {
+			log.error("Invalid column number passed to getCellValue: $colNum")
+			return "NA"
+		}
+	}
 	def InsertNewRow(def values) {
 		row = sheet.createRow(rownum++)
 		values.each {key, val ->
@@ -104,6 +152,34 @@ class ExcelManagementService {
 	}
 	
 	
-	
-	
+	public static void printCellValue(Cell cell) {
+		System.out.print(formatCellValue(cell));
+		System.out.print("\t");
+	}
+
+	public def formatCellValue(Cell cell) {
+		switch (cell.getCellTypeEnum()) {
+			case CellType.BOOLEAN:
+				return cell.getBooleanCellValue()
+			case CellType.STRING:
+				return cell.getRichStringCellValue().getString()
+			case CellType.NUMERIC:
+				if (DateUtil.isCellDateFormatted(cell)) {
+					return cell.getDateCellValue()
+				} else {
+					def num = cell.getNumericCellValue()
+					if (num % 1 == 0)
+						return num.toInteger()
+					else
+						return num
+				}
+			case CellType.FORMULA:
+				return cell.getCellFormula()
+			default:
+				return ''
+		}
+
+		System.out.print("\t");
+	}
+
 }
