@@ -14,6 +14,7 @@ import groovy.util.logging.Slf4j
 
 /**
  * Accepts yaml in the form:
+ * <pre>
  * executables:
  * - name: reponame
  *   type: runXLBlueprints
@@ -25,7 +26,7 @@ import groovy.util.logging.Slf4j
  *     answers:
  *       ans1: stuff
  *       ans2: stuff  
- * 
+ * </pre>
  * @author z091182
  *
  */

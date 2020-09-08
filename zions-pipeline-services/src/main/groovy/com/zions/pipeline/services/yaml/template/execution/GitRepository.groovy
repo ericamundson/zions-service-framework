@@ -14,14 +14,15 @@ import groovy.yaml.YamlBuilder
 
 /**
  * Accepts yaml in the form:
+ * <pre>
  * executables:
- * - name: reponame
+ * - name: reponame 
  *   type: gitRepository
  *   project: projectname
  *   branches:
  *   - name: feature/support
  *     baseName: master
- *     
+ *  </pre>   
  * @author z091182
  *
  */
