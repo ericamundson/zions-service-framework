@@ -9,8 +9,8 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="exportWIT --tfs.url=https://dev.azure.com/eto-dev    --tfs.project=&quot;BaNCS&quot; --export.dir=d:\new_core_wit_templates_prod --tfs.workitem.names=&quot;Bug&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="importWorkItems &#13;&#10;--tfs.url=https://dev.azure.com &#13;&#10;--tfs.collection=eto-dev &#13;&#10;--import.file=&quot;c:\dev\colors cross proj.xlsx&quot;&#13;&#10;--field.map=&quot;{\&quot;ID\&quot;: \&quot;System.ID\&quot;,\&quot;Area Path\&quot;: \&quot;System.AreaPath\&quot;,\&quot;Work Item Type\&quot;: \&quot;System.WorkItemType\&quot;,\&quot;Title\&quot;: \&quot;System.Title\&quot;,\&quot;Color\&quot;: \&quot;Custom.Color\&quot;}&quot;&#13;&#10; --logging.level.root=INFO&#13;&#10; --logging.file=&quot;c:\\adomigration_sand\\IMPORT.log&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=wit"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=work"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
 </launchConfiguration>

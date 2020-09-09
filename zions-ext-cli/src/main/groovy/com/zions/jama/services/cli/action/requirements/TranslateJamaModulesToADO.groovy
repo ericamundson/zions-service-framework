@@ -176,7 +176,7 @@ class TranslateJamaModulesToADO implements CliAction {
 				if (changeList.size() > 0) {
 					// Process work item changes in Azure DevOps
 					log.info("Updating ADO with work item changes...")
-					workManagementService.batchWIChanges(collection, tfsProject, changeList, idMap)
+					workManagementService.batchWIChanges(collection, changeList, idMap)
 					
 					
 					// Create/update the SmartDoc

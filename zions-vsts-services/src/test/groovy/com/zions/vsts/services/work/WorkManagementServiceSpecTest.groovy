@@ -66,7 +66,7 @@ class WorkManagementServiceSpecTest extends Specification {
 		1 * genericRestClient.rateLimitPost(_) >>  [:]
 		
 		when: 'call tested method'
-		underTest.batchWIChanges('stuff', 'aproject', ['stuff'], [:])
+		underTest.batchWIChanges('stuff', ['stuff'], [:])
 		
 		then: 'No failure'
 		true
@@ -77,7 +77,7 @@ class WorkManagementServiceSpecTest extends Specification {
 		1 * genericRestClient.rateLimitPost(_) >>  null
 		
 		when: 'Call method under test with null scenario'
-		underTest.batchWIChanges('stuff', 'aproject', ['some stuff'], [:])
+		underTest.batchWIChanges('stuff', ['some stuff'], [:])
 		
 		then: 'No failure'
 		true
@@ -88,7 +88,7 @@ class WorkManagementServiceSpecTest extends Specification {
 		1 * genericRestClient.rateLimitPost(_) >>  [value: [[body: "{\"id\":\"123\", \"somejson\": \"morejson\"}", code: 200]]]
 
 		when: 'Call method under test'
-		underTest.batchWIChanges('stuff', 'aproject', ['somestuff'], [0: '58879'])
+		underTest.batchWIChanges('stuff', ['somestuff'], [0: '58879'])
 		
 		then: 'No exceptions'
 		true
@@ -98,7 +98,7 @@ class WorkManagementServiceSpecTest extends Specification {
 		given: 'stub rest call post changes with bad return'
 		1 * genericRestClient.rateLimitPost(_) >>  [value: [[body: "{\"value\": {\"Message\": \"Bad juju\"}}", code: 300]]]
 		when: 'call batchWIChanges'
-		underTest.batchWIChanges('stuff', 'aproject', ['somestuff'], [0: '58879'])
+		underTest.batchWIChanges('stuff', ['somestuff'], [0: '58879'])
 		
 		then: 'No exception'
 		true
