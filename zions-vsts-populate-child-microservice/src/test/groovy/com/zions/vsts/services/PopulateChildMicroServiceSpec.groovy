@@ -115,11 +115,11 @@ class PopulateChildMicroServiceSpec extends Specification {
 		workManagementService.getChildren(_,_,_) >> childData
 		
 		and: "stub workManagementService.updateItem()"
-		workManagementService.batchWIChanges(_,_,_,_) >> { args ->
+		workManagementService.batchWIChanges(_,_,_) >> { args ->
 			
 				
 				def changes = args[2]
-				//workManagementService.batchWIChanges(collection, project, changes, idMap)
+				//workManagementService.batchWIChanges(collection, changes, idMap)
 				changes.each { change ->
 					
 					

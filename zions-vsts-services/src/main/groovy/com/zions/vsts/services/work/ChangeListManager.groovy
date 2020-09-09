@@ -15,11 +15,9 @@ class ChangeListManager {
 	def count = 0
 	WorkManagementService workManagementService
 	String collection
-	String project
-	ChangeListManager(String collection, String project, WorkManagementService workManagementService) {
+	ChangeListManager(String collection, WorkManagementService workManagementService) {
 		this.workManagementService = workManagementService
 		this.collection = collection
-		this.project = project
 	}
 
 	def add(String key, def item) {
@@ -34,7 +32,7 @@ class ChangeListManager {
 	def flush() {
 		if (count == 0) return;
 		log.info("Flushing ChangeListManager")
-		workManagementService.batchWIChanges(collection, project, changeList, idMap)
+		workManagementService.batchWIChanges(collection, changeList, idMap)
 		log.info("Flushed ChangeListManager")
 		changeList = []
 		idMap = [:]

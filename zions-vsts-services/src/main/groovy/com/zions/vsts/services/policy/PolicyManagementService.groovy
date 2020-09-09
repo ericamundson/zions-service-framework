@@ -473,12 +473,12 @@ public class PolicyManagementService {
 	}
 
 	def getBranchPolicy( def policyType, def projectId, def repoId, def branchName ) {
-		def query = ['repositoryId':"${repoId}", 'refName':"${branchName}" , 'policyType':"${policyType}", 'api-version': '5.1-preview' ]
+		def query = ['repositoryId':"${repoId}", 'refName':"${branchName}" , 'policyType':"${policyType}" ]
 		def results = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${projectId}/_apis/git/policy/configurations",
-			query: query
-			//headers: [Accept: 'application/json;api-version=5.1-preview']
+			query: query,
+			headers: [Accept: 'application/json;api-version=5.0-preview.1']
 		)
 		def retVal = null	
 		results.'value'.each { policy ->

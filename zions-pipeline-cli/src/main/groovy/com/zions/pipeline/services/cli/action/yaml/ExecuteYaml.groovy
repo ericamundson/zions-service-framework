@@ -59,7 +59,7 @@ class ExecuteYaml implements CliAction {
 					//String name = "${adoData.resource.repository.name}"
 					String repoUrl = data.getOptionValues('repoUrl')[0]
 					String name = data.getOptionValues('repoName')[0]
-					yamlExecutionService.runExecutableYaml(repoUrl, name, locations)
+					yamlExecutionService.runExecutableYaml(repoUrl, name, locations, 'refs/heads/master')
 				}
 			//}
 		}
