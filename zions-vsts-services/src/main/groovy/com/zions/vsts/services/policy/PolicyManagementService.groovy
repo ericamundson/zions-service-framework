@@ -73,7 +73,7 @@ public class PolicyManagementService {
 		ensurePolicies(collection, repoData, branchName)
 	}
 
-	public def ensurePolicies(def collection, def repoData, def branchName) {
+	public def ensurePolicies(def collection, def repoData, def branchName, def policyData) {
 		boolean enforceBuildValidation = true
 		boolean enforceMinimumApprovers = true
 		boolean enforceLinkedWorkItems = true
@@ -125,11 +125,19 @@ public class PolicyManagementService {
 		log.debug("PolicyManagementService::ensurePolicies -- Comment resolution policy enforced = "+enforceCommentResolution)
 		if (enforceBuildValidation) {
 			// first create the CI build validation policy
-			ensureBuildPolicy(collection, repoData, branchName, isInitBranch)
+			def buildData = null
+			if (policyData && policyData.buildData) {
+				buildData = policyData.buildData
+			}
+			ensureBuildPolicy(collection, repoData, branchName, isInitBranch, buildData)
 		}
 		// create other policies ...
 		if (enforceMinimumApprovers) {
-			ensureMinimumApproversPolicy(collection, repoData, branchName)
+			def approvalData = null
+			if (policyData && policyData.approvalData) {
+				approvalData = policyData.approvalData
+			}
+			ensureMinimumApproversPolicy(collection, repoData, branchName, approvalData)
 		}
 		if (enforceLinkedWorkItems) {
 			ensureLinkedWorkItemsPolicy(collection, repoData, branchName)
@@ -148,7 +156,7 @@ public class PolicyManagementService {
 	 *  
 	 *  @return Response
 	 */
-	public def ensureBuildPolicy(def collection, def repoData, def branchName, boolean isInitBranch) {
+	public def ensureBuildPolicy(def collection, def repoData, def branchName, boolean isInitBranch, def buildData = null) {
 		
 		// get the CI build
 		def projectData = repoData.project
@@ -166,7 +174,7 @@ public class PolicyManagementService {
 		}
 
 		// result is a JSON object
-		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, isDRBranch, ciBuildTemplate, relBuildTemplate, isInitBranch)
+		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, isDRBranch, ciBuildTemplate, relBuildTemplate, isInitBranch, buildData)
 		int ciBuildId = result.ciBuildId
 		if (ciBuildId == -1) {
 			log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was found or created. Unable to create the validation build policy!")
@@ -225,7 +233,7 @@ public class PolicyManagementService {
 		return result
 	}
 
-	public def ensureMinimumApproversPolicy(def collection, def repoData, def branchName) {
+	public def ensureMinimumApproversPolicy(def collection, def repoData, def branchName, def approvalData = null) {
 		def projectData = repoData.project
 		def numMinApprovers = DEFAULT_NUM_APPROVERS
 		if (this.branchProps != null) {
@@ -236,6 +244,9 @@ public class PolicyManagementService {
 				if (numMinApprovers < DEFAULT_NUM_APPROVERS) numMinApprovers = DEFAULT_NUM_APPROVERS
 				log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- Number of minimum approvers = ${numMinApprovers}")
 			}
+		}
+		if (approvalData && approvalData.minApprovers) {
+			numMinApprovers = approvalData.minApprovers
 		}
 		log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- ")
 		def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
