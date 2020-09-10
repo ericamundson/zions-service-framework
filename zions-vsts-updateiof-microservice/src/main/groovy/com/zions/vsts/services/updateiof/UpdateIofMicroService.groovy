@@ -70,7 +70,7 @@ class UpdateIofMicroService implements MessageReceiverTrait {
 		String IoEntType = getFieldValue('Custom.IOEntityType', eventType, wiResource)
 		
 		//define TransactionNumber
-		String TransactionNum = getFieldValue('Custom.TransactionNum', eventType, wiResource)
+		String TransNbr = getFieldValue('Custom.TransactionNum', eventType, wiResource)
 		
 		
 		//iterate through YAML configuration
@@ -97,9 +97,9 @@ class UpdateIofMicroService implements MessageReceiverTrait {
 		
 		String rev = getRootFieldValue('rev', eventType, wiResource)
 		
-		if (IoEntType != null && TransactionNum != 'null') {
+		if (IoEntType != null && TransNbr != 'null') {
 			// Get field mapping
-			String newColor = lookupColor(priority, severity)
+			String newField = lookupField(IoEntType, TransNbr)
 			if (color == 'null' || newColor != color) {
 				log.info("Updating color for $wiType #$id")
 				try {
@@ -142,7 +142,7 @@ class UpdateIofMicroService implements MessageReceiverTrait {
 		}
 		return "$value"
 	}
-	private def lookupColor(Integer priority, String severity) {
+	private def lookupField(String IoEntType, String TransNbr) {
 		def colorMap = sharedAssetService.getAsset(collection, colorMapUID)
 		def colorElement = colorMap.find{it.Priority==priority && it.Severity==severity}
 		return colorElement.Color

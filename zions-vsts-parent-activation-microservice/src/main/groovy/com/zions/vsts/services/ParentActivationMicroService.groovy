@@ -30,7 +30,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 	WorkManagementService workManagementService
 	
 	@Autowired
-    ProjectConfig projectConfig
+    ProjectProperties projectProperties
 	
 	//how to tell spec what types to use
 	//how do i reference project name?
@@ -101,7 +101,7 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 
 		def config
 		def defaultConfig 
-		def projectConfigs = projectConfig.projects
+		def projectConfigs = projectProperties.projects
 		projectConfigs.each { projectConfig ->
 			def name = projectConfig.name
 			

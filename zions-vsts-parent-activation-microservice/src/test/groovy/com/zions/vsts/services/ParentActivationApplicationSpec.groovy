@@ -44,7 +44,7 @@ class ParentActivationApplicationSpec extends Specification {
 @TestConfiguration
 @Profile("test")
 //@ComponentScan("com.zions.vsts.services.tfs.rest")
-@PropertySource("classpath:application.yaml")
+@PropertySource("classpath:test.yaml")
 class ParentActivationApplicationTestConfig {
 	@Bean
 	IGenericRestClient genericRestClient() {

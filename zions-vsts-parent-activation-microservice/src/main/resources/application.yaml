@@ -11,7 +11,7 @@ config:
             
     projects:
         -
-            name: 'ReleaseEngineering'
+            name: 'DTS'
             types:
               - "Feature"
               - "User Story"
@@ -21,12 +21,10 @@ config:
               - Closed
  
         -
-            name: 'BaNCS'
+            name: 'DigitalBanking'
             types: 
-              - Epic
-              - Feature
-              - User Story
-              - Task
+              - "User Story"
+              - "Task"
             states:
               - Active
               - Closed
@@ -46,7 +44,7 @@ http.client.ssl.trust-store: classpath:keystore/zionsws.p12
 http.client.ssl.trust-store-password: changeit
 tfs.project.includes: ALMOpsTest
 tfs.url:  "https://dev.azure.com"
-tfs.collection:  "eto-dev" 
+tfs.collection:  "zionseto" 
 spring.main.allow-bean-definition-overriding: "true"
 spring.rabbitmq.host: localhost
 spring.rabbitmq.port: "5672"

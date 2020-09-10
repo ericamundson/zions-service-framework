@@ -21,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import groovy.json.JsonSlurper
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
-import com.zions.vsts.services.ProjectConfig
 import spock.lang.Ignore
 
 //@SpringBootTest//(classes=[ParentActivationMicroserviceTestConfig])
@@ -137,8 +136,8 @@ class ParentActivationMicroserviceTestConfig {
 	String wiTypes*/
 	
 	@Bean
-	ProjectConfig projectConfig() {
-		return new ProjectConfig()
+	ProjectProperties projectProperties() {
+		return new ProjectProperties()
 	}
 	
 	@Bean

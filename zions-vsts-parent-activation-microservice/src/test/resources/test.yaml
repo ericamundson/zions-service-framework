@@ -11,9 +11,8 @@ config:
             
     projects:
         -
-            name: 'ReleaseEngineering'
+            name: 'DigitalBanking'
             types:
-              - "Feature"
               - "User Story"
               - "Task"
             states:
@@ -21,13 +20,12 @@ config:
               - Closed
  
         -
-            name: 'BaNCS'
+            name: 'DTS'
             types: 
-              - Epic
-              - Feature
-              - User Story
-              - Task
-            states:
+              - "Feature"
+              - "User Story"
+              - "Task"
+            states:            
               - Active
               - Closed
         -
