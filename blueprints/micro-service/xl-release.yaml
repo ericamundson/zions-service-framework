@@ -3,4 +3,4 @@ kind: Import
 metadata:
   imports:
   - xebialabs/xlr-pipeline-ci-cd.yaml
-  - xebialabs/xlr-release.yaml
+#  - xebialabs/xlr-release.yaml
