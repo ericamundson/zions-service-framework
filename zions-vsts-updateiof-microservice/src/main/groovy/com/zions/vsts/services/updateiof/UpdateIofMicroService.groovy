@@ -27,7 +27,7 @@ class UpdateIofMicroService implements MessageReceiverTrait {
 	WorkManagementService workManagementService
 	
 	@Autowired
-	ProjectConfig projectConfig
+	ProjectProperties projectConfig
 	
 	@Autowired
 	SharedAssetService sharedAssetService

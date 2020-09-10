@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @Component
 @ConfigurationProperties(prefix = "config")
 @EnableConfigurationProperties
-public class ProjectConfig
+public class ProjectProperties
 {
     List<Project> projects = new ArrayList<Project>();
 

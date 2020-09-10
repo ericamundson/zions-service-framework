@@ -42,7 +42,7 @@ class UpdateIofApplicationSpec extends Specification {
 @TestConfiguration
 @Profile("test")
 //@ComponentScan("com.zions.vsts.services.tfs.rest")
-@PropertySource("classpath:test.properties")
+@PropertySource("classpath:test.yaml")
 class UpdateIofApplicationSpecConfig {
 	@Bean
 	IGenericRestClient genericRestClient() {

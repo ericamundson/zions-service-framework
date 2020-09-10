@@ -1,13 +1,13 @@
 {
-    "id": 947832,
-    "rev": 8,
+    "id": 948219,
+    "rev": 136,
     "fields": {
         "System.AreaPath": "ALMOpsTest",
         "System.TeamProject": "ALMOpsTest",
         "System.IterationPath": "ALMOpsTest",
-        "System.WorkItemType": "Feature",
+        "System.WorkItemType": "Task",
         "System.State": "Active",
-        "System.Reason": "Implementation started",
+        "System.Reason": "Work started",
         "System.AssignedTo": {
             "displayName": "Michael Angelastro",
             "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
@@ -21,7 +21,7 @@
             "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
             "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
         },
-        "System.CreatedDate": "2020-05-19T20:25:11.457Z",
+        "System.CreatedDate": "2020-08-27T23:12:01.9Z",
         "System.CreatedBy": {
             "displayName": "Michael Angelastro",
             "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
@@ -35,26 +35,24 @@
             "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
             "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
         },
-        "System.ChangedDate": "2020-09-10T16:16:26.88Z",
+        "System.ChangedDate": "2020-09-10T16:16:33.56Z",
         "System.ChangedBy": {
-            "displayName": "SVC-CLOUD-ADOMAINT004",
-            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/7449c4e2-5d58-6657-a48d-755dc43b67bd",
+            "displayName": "SVC-CLOUD-ADOMAINT001",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/55af3abe-1185-6dcf-82ac-dcc70c59fe5b",
             "_links": {
                 "avatar": {
-                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NzQ0OWM0ZTItNWQ1OC03NjU3LWE0OGQtNzU1ZGM0M2I2N2Jk"
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTVhZjNhYmUtMTE4NS03ZGNmLTgyYWMtZGNjNzBjNTlmZTVi"
                 }
             },
-            "id": "7449c4e2-5d58-6657-a48d-755dc43b67bd",
-            "uniqueName": "SVC-CLOUD-ADOMAINT004@zionsbancorporation.onmicrosoft.com",
-            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NzQ0OWM0ZTItNWQ1OC03NjU3LWE0OGQtNzU1ZGM0M2I2N2Jk",
-            "descriptor": "aad.NzQ0OWM0ZTItNWQ1OC03NjU3LWE0OGQtNzU1ZGM0M2I2N2Jk"
+            "id": "55af3abe-1185-6dcf-82ac-dcc70c59fe5b",
+            "uniqueName": "SVC-CLOUD-ADOMAINT001@zionsbancorporation.onmicrosoft.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NTVhZjNhYmUtMTE4NS03ZGNmLTgyYWMtZGNjNzBjNTlmZTVi",
+            "descriptor": "aad.NTVhZjNhYmUtMTE4NS03ZGNmLTgyYWMtZGNjNzBjNTlmZTVi"
         },
         "System.CommentCount": 0,
-        "System.Title": "feature test 1",
-        "System.BoardColumn": "Active",
-        "System.BoardColumnDone": false,
-        "Microsoft.VSTS.Common.StateChangeDate": "2020-08-27T23:16:44.17Z",
-        "Microsoft.VSTS.Common.ActivatedDate": "2020-08-27T23:16:44.17Z",
+        "System.Title": "activate test",
+        "Microsoft.VSTS.Common.StateChangeDate": "2020-09-03T18:20:03.853Z",
+        "Microsoft.VSTS.Common.ActivatedDate": "2020-09-03T18:20:03.853Z",
         "Microsoft.VSTS.Common.ActivatedBy": {
             "displayName": "Michael Angelastro",
             "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
@@ -69,17 +67,13 @@
             "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
         },
         "Microsoft.VSTS.Common.Priority": 2,
-        "Microsoft.VSTS.Common.ValueArea": "Business",
-        "Custom.ExternalID": "67",
-        "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column": "Active",
-        "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column.Done": false,
         "Custom.OTLNumber": "6000",
-        "System.Parent": 947830
+        "System.Parent": 948205
     },
     "relations": [
         {
             "rel": "System.LinkTypes.Hierarchy-Reverse",
-            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947830",
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948205",
             "attributes": {
                 "isLocked": false,
                 "name": "Parent"
@@ -88,26 +82,26 @@
     ],
     "_links": {
         "self": {
-            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947832"
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948219"
         },
         "workItemUpdates": {
-            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947832/updates"
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948219/updates"
         },
         "workItemRevisions": {
-            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947832/revisions"
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948219/revisions"
         },
         "workItemComments": {
-            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947832/comments"
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948219/comments"
         },
         "html": {
-            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_workitems/edit/947832"
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_workitems/edit/948219"
         },
         "workItemType": {
-            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItemTypes/Feature"
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItemTypes/Task"
         },
         "fields": {
             "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/fields"
         }
     },
-    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947832"
+    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948219"
 }
