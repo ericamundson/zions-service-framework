@@ -8,6 +8,7 @@ import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovyx.net.http.ContentType
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -17,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration
 
 import spock.lang.Specification
 
+//@SpringBootTest
 @ContextConfiguration(classes=[ParentActivationApplicationTestConfig])
 class ParentActivationApplicationSpec extends Specification {
 	
@@ -42,7 +44,7 @@ class ParentActivationApplicationSpec extends Specification {
 @TestConfiguration
 @Profile("test")
 //@ComponentScan("com.zions.vsts.services.tfs.rest")
-@PropertySource("classpath:test.properties")
+@PropertySource("classpath:application.yaml")
 class ParentActivationApplicationTestConfig {
 	@Bean
 	IGenericRestClient genericRestClient() {

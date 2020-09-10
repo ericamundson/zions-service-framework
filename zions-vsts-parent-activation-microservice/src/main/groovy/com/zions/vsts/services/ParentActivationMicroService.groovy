@@ -32,7 +32,11 @@ class ParentActivationMicroService implements MessageReceiverTrait {
 	@Autowired
     ProjectConfig projectConfig
 	
-	
+	//how to tell spec what types to use
+	//how do i reference project name?
+	/*@Value('${projectConfig.projects.types}')
+	String[] confTypes*/
+		
 	@Value('${tfs.collection:}')
 	String collection
 
