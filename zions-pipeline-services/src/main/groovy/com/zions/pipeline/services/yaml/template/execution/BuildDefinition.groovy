@@ -16,8 +16,10 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
  *   context: eto-dev
  *   project: ALMOpsTest
  *   queue: 'On-Prem DR'
- *   repository: ALMOpsTest
- *   variables:
+ *   repository: 
+ *     name: ALMOpsTest
+ *     defaultBranch: refs/heads/master #Optional
+ *   variables: # Optional
  *   - name: Good_stuff7
  *     value: old
  *     allowOverride: true
@@ -52,8 +54,11 @@ class BuildDefinition implements IExecutableYamlHandler {
 		def queue = buildManagementService.getQueue('',project, yaml.queue)
 		if (!build) {
 			def trigger = [batchChanges: false, pollingJobId: null, pollingInterval: 0, pathFilters:[], branchFilters: ['+refs/heads/master'], defaultSettingsSourceType: 2, isSettingsSourceOptionSupported: true, settingsSourceType: 2, triggerType: 2]
-			def repo = codeManagementService.getRepo('', project, yaml.repository)
+			def repo = codeManagementService.getRepo('', project, yaml.repository.name)
 			def bDef = [name: bName, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue, triggers:[trigger] ]
+			if (yaml.repository.defaultBranch) {
+				bDef.repository.defaultBranch = yaml.repository.defaultBranch
+			}
 			if (bFolder) {
 				bDef['path'] = bFolder
 			}
@@ -77,12 +82,15 @@ class BuildDefinition implements IExecutableYamlHandler {
 			def query = ['api-version':'5.1']
 			buildManagementService.writeBuildDefinition('', project, bDef, query)
 		} else {
-			def repo = codeManagementService.getRepo('', project, yaml.repository)
+			def repo = codeManagementService.getRepo('', project, yaml.repository.name)
 			def bDef = build
 			bDef.repository = repo
 			bDef.repository.type = 'TfsGit'
 			bDef.process.yamlFilename = yaml.buildyaml
 			bDef.queue = queue
+			if (yaml.repository.defaultBranch) {
+				bDef.repository.defaultBranch = yaml.repository.defaultBranch
+			}
 			if (bFolder) {
 				bDef['path'] = bFolder
 			}
