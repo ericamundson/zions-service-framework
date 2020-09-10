@@ -21,7 +21,7 @@ class RunXLDeployApply implements IExecutableYamlHandler {
 	
 	def handleYaml(def yaml, File repo, def locations, String branch) {
 		if (!performExecute(yaml, locations)) return
-		String xlOutPath = "${yaml.path}"
+		//String xlOutPath = "${yaml.path}"
 		String xlDeployFile = "${repo.absolutePath}/${yaml.file}"
 		Boolean useProxy = yaml.useProxy
 		if (!useProxy) {
@@ -49,9 +49,9 @@ class RunXLDeployApply implements IExecutableYamlHandler {
 				env( key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080")
 			}
 			if (values.size() > 0) {
-				arg( line: "${option} ${repo.absolutePath}/xl apply -p ${xlOutPath} -f ${xlDeployFile} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}  --values ${valuesStr}")
+				arg( line: "${option} ${repo.absolutePath}/xl apply  -f ${xlDeployFile} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}  --values ${valuesStr}")
 			} else {
-				arg( line: "${option} ${repo.absolutePath}/xl apply -p ${xlOutPath} -f ${xlDeployFile} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}")
+				arg( line: "${option} ${repo.absolutePath}/xl apply  -f ${xlDeployFile} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}")
 				
 			}
 		}
