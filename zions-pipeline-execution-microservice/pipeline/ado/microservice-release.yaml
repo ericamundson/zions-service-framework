@@ -59,3 +59,11 @@ stages:
         workingFolder: $(Build.SourcesDirectory)\zions-pipeline-execution-microservice\pipeline
       continueOnError: true
       enabled: true
+      
+    - task: Zions.ado-ext-release-status-control.CreateReleaseTask.CreateReleaseTask@0
+      displayName: 'Create Release'
+      inputs:
+        templateTitle: 'zions-pipeline-execution-microservice - Master'
+        releaseTitle: 'zions-pipeline-execution-microservice - $(buildTag)'
+        releaseVariableSettings: 'deploymentPackage.name=$(buildTag)'
+        xlrProfile: xlrdb
