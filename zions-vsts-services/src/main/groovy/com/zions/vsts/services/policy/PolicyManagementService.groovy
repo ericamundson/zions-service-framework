@@ -73,7 +73,7 @@ public class PolicyManagementService {
 		ensurePolicies(collection, repoData, branchName)
 	}
 
-	public def ensurePolicies(def collection, def repoData, def branchName, def policyData) {
+	public def ensurePolicies(def collection, def repoData, def branchName, def policyData = null) {
 		boolean enforceBuildValidation = true
 		boolean enforceMinimumApprovers = true
 		boolean enforceLinkedWorkItems = true
