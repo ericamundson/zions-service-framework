@@ -127,7 +127,7 @@ public class BuildManagementService {
 		}
 	}
 	
-	public def ensureBuildsForBranch(def collection, def projectData, def repo, boolean isDRBranch, def ciTemplate, def releaseTemplate, boolean isInitBranch) {
+	public def ensureBuildsForBranch(def collection, def projectData, def repo, boolean isDRBranch, def ciTemplate, def releaseTemplate, boolean isInitBranch, def buildData = null) {
 		// if this is for a DR branch, call special operation
 		if (isDRBranch) {
 			return ensureDRBuilds(collection, projectData, repo)
@@ -143,6 +143,9 @@ public class BuildManagementService {
 		// check for YAML pipeline in use
 		boolean isYAMLPipeline = false
 		def pipelineFileName = "azure-pipelines.yml"
+		if (buildData && buildData.ciBuildFile) {
+			pipelineFileName = buildData.ciBuildFile
+		}
 		def branchName = "master"
 		if (isInitBranch) {
 			branchName = "adoinit"
@@ -154,7 +157,11 @@ public class BuildManagementService {
 		}
 		if (isYAMLPipeline) {
 			// look for default pipeline build def to use for build validation policy
-			def yamlBuild = getBuild(collection, projectData, "${repo.name} CI")
+			String ciBuildInt = "${repo.name} CI"
+			if (buildData && buildData.ciBuildName) {
+				ciBuildInt = buildData.ciBuildName
+			}
+			def yamlBuild = getBuild(collection, projectData, ciBuildInt)
 			if (yamlBuild != null) {
 				log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing YAML CI Build. Setting Id for return to ${yamlBuild.id}")
 				ciBldId = Integer.parseInt("${yamlBuild.id}")
@@ -165,7 +172,7 @@ public class BuildManagementService {
 				buildFolderCreated = true
 				buildFolderName = "${repo.name}"
 				log.debug("BuildManagementService::ensureBuildsForBranch -- Build folder created for ${repo.name}")
-				def ciBuild = createYAMLBuildDef(collection, projectData, repo, buildTemplate, "${repo.name}")
+				def ciBuild = createYAMLBuildDef(collection, projectData, repo, buildTemplate, "${repo.name}", ciBuildName)
 				if (ciBuild == null ) {
 					log.error("BuildManagementService::ensureBuildsForBranch -- YAML CI Build creation failed!")
 				} else {
@@ -521,10 +528,13 @@ public class BuildManagementService {
 		return writeBuildDefinition(collection, project, bDef)
 	}
 
-	def createYAMLBuildDef(def collection, def project, def repo, def bDef, def folder) {
+	def createYAMLBuildDef(def collection, def project, def repo, def bDef, def folder, String name = null) {
 		// set all the necessary properties and post the request
 		bDef.remove('authoredBy')
 		bDef.name = "${repo.name} CI"
+		if (name) {
+			bDef.name = name
+		}
 		bDef.id = -1
 		//bDef.draftOf = null
 		bDef.path = "${folder}"
@@ -697,7 +707,20 @@ public class BuildManagementService {
 
 	}
 
-	
+	public def updateExecution(String collection, String project, String buildId, def data) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def query = ['api-version':'5.1']
+		String body = new JsonBuilder(data).toPrettyString()
+		def result = genericRestClient.patch(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}",
+				body: body,
+				query: query,
+				)
+		return result
+	}
+
 	public def getExecutionWorkItems(String collection, String project, String buildId) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')

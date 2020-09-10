@@ -36,7 +36,7 @@ spring:
           timeout:  5000
           writetimeout:  5000
   rabbitmq:
-    host: utmvti0144
+    host: localhost
     port: 5672
 # email:
 #   recipient:

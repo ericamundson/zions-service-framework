@@ -1,0 +1,12 @@
+executables:
+- type: webHookSubscriptions
+  context: eto-dev
+  projects: ReleaseEngineering
+  eventTypes: git.pullrequest.created
+  consumerUrl: https://releaseengineeringprovisioner-zionsbancorporation.msappproxy.net
+  publisherInputs:
+    repository: ""
+    branch: ""
+    pullrequestCreatedBy: ""
+    pullrequestReviewersContains: ""
+    projectId: null 

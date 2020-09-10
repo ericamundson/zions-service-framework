@@ -82,6 +82,7 @@ class GitService {
 		}
 		File dotGit = new File(repo, '.git')
 		if (!dotGit.exists()) {
+			
 			Git.cloneRepository()
 				.setURI(nUrl)
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
@@ -91,6 +92,35 @@ class GitService {
 				.setRemote('origin')
 				.call();
 		} else {
+			File lockFile = new File(dotGit, 'index.lock')
+			int i = 0;
+			while (lockFile.exists()) {
+				File irepo = new File(repos, "${repoName}${i}")
+				File irepoDGit = new File(repos, "${repoName}${i}/.git")
+				lockFile = new File(repos, "${repoName}${i}/.git/index.lock")
+				if (!lockFile.exists()) {
+					if (!irepoDGit.exists()) {
+						irepo.mkdirs()
+						Git.cloneRepository()
+						.setURI(nUrl)
+						.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
+						.setDirectory(irepo)
+						.setBranchesToClone(Arrays.asList(branch))
+						.setBranch(branch)
+						.setRemote('origin')
+						.call();
+						return irepo
+					} else {
+						Git.open(irepo)
+						.pull()
+						.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
+						.setRemote("origin")
+						.setRemoteBranchName(aBranch)
+						.call()
+		
+					}
+				}
+			}
 			Git.open(repo)
 				.pull()
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
@@ -102,8 +132,8 @@ class GitService {
 		return repo
 	}
 	
-	def pushChanges(String repoName, String filePattern = '.', String comment = 'Update pipeline') {
-		File repo = new File(repos, "${repoName}")
+	
+	def pushChanges(File repo, String filePattern = '.', String comment = 'Update pipeline') {
 		Git.open(repo).add().addFilepattern(filePattern).call();
 		Git.open(repo).add().setUpdate(true).addFilepattern(filePattern).call();
 		Git.open(repo).commit().setMessage(comment).call();

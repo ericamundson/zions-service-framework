@@ -14,6 +14,7 @@ import groovy.util.logging.Slf4j
 
 /**
  * Accepts yaml in the form:
+ * <pre>
  * executables:
  * - name: reponame
  *   type: runXLBlueprints
@@ -25,7 +26,7 @@ import groovy.util.logging.Slf4j
  *     answers:
  *       ans1: stuff
  *       ans2: stuff  
- * 
+ * </pre>
  * @author z091182
  *
  */
@@ -107,14 +108,17 @@ class RunXLBlueprints implements IExecutableYamlHandler {
 					}
 					arg( line: "${option} ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s")
 				}
+//				def policies = policyManagementService.clearBranchPolicies('', projectData, bpRepoData.id, 'master')
+//				gitService.pushChanges(bpRepoName)
+//				policyManagementService.restoreBranchPolicies('', projectData, bpRepoData.id, 'master', policies)
 			} catch (e) {
 				log.error("Blueprint run failed:  ${e.message}")
 			}
 		}
 		try {
-			def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, branch)
-			gitService.pushChanges(repoName)
-			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, branch, policies)
+			def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
+			gitService.pushChanges(outrepo)
+			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
 		} catch (e) {
 			log.error("Failed push of blueprint changes:  ${e.message}")
 		}
