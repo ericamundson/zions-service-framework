@@ -32,7 +32,7 @@ import com.zions.vsts.services.rmq.mixins.MessageSenderFanoutTrait
 @Slf4j
 public class EventController implements MessageSenderFanoutTrait {
 	
-
+	ResponseEntity<String> okresult = new ResponseEntity<String>('All OK', HttpStatus.OK)
 
     /**
      * Parse event type from request body and publish to subscribed clients. 
@@ -54,8 +54,8 @@ public class EventController implements MessageSenderFanoutTrait {
 			String result = "Failed with event type: ${eventType}. Error:  ${e.message}"
 			return new ResponseEntity<String>(result, HttpStatus.EXPECTATION_FAILED)
 		}
-		String result = "Published ${eventType}"
-		return new ResponseEntity<String>(result, HttpStatus.OK)
+		// Removed 'new ResponseEntity<String>(result, HttpStatus.OK)' call everytime to reduce heap issue potential.
+		return okresult
 		//return ResponseEntity.ok(HttpStatus.OK)
 	}
 
