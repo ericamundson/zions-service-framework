@@ -4,5 +4,6 @@ executables:
   context: zionseto
   project: DTS
   queue: 'On-Prem Production'
-  repository: zions-service-framework
+  repository: 
+    name: zions-service-framework
   buildyaml: zions-vsts-setowner-microservice/pipeline/ado/microservice-release.yaml
