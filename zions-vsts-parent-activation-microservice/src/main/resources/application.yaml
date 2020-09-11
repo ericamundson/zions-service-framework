@@ -31,8 +31,7 @@ config:
         -
             name: 'default'
             types:
-              - "User Story"
-              - "Task"
+              - ""
             states:
               - Active
               - Closed
