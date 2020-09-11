@@ -1,12 +1,12 @@
 {
     "id": 948205,
-    "rev": 12,
+    "rev": 14,
     "fields": {
         "System.AreaPath": "ALMOpsTest",
         "System.TeamProject": "ALMOpsTest",
         "System.IterationPath": "ALMOpsTest",
         "System.WorkItemType": "User Story",
-        "System.State": "New",
+        "System.State": "Active",
         "System.Reason": "New",
         "System.CreatedDate": "2020-08-24T00:19:21.08Z",
         "System.CreatedBy": {
@@ -22,34 +22,42 @@
             "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
             "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
         },
-        "System.ChangedDate": "2020-08-24T19:23:13.197Z",
+        "System.ChangedDate": "2020-09-10T16:16:25.493Z",
         "System.ChangedBy": {
-            "displayName": "SVC-CLOUD-ADOMAINT003",
-            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b855abd7-fbb9-6aa3-9525-21c2ab485741",
+            "displayName": "SVC-CLOUD-ADOMAINT004",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/7449c4e2-5d58-6657-a48d-755dc43b67bd",
             "_links": {
                 "avatar": {
-                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.Yjg1NWFiZDctZmJiOS03YWEzLTk1MjUtMjFjMmFiNDg1NzQx"
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NzQ0OWM0ZTItNWQ1OC03NjU3LWE0OGQtNzU1ZGM0M2I2N2Jk"
                 }
             },
-            "id": "b855abd7-fbb9-6aa3-9525-21c2ab485741",
-            "uniqueName": "SVC-CLOUD-ADOMAINT003@zionsbancorporation.onmicrosoft.com",
-            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.Yjg1NWFiZDctZmJiOS03YWEzLTk1MjUtMjFjMmFiNDg1NzQx",
-            "descriptor": "aad.Yjg1NWFiZDctZmJiOS03YWEzLTk1MjUtMjFjMmFiNDg1NzQx"
+            "id": "7449c4e2-5d58-6657-a48d-755dc43b67bd",
+            "uniqueName": "SVC-CLOUD-ADOMAINT004@zionsbancorporation.onmicrosoft.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.NzQ0OWM0ZTItNWQ1OC03NjU3LWE0OGQtNzU1ZGM0M2I2N2Jk",
+            "descriptor": "aad.NzQ0OWM0ZTItNWQ1OC03NjU3LWE0OGQtNzU1ZGM0M2I2N2Jk"
         },
         "System.CommentCount": 0,
         "System.Title": "Scary Story 3",
-        "System.BoardColumn": "New",
+        "System.BoardColumn": "Active",
         "System.BoardColumnDone": false,
         "Microsoft.VSTS.Common.StateChangeDate": "2020-08-24T00:19:21.08Z",
         "Microsoft.VSTS.Common.Priority": 2,
         "Microsoft.VSTS.Common.ValueArea": "Business",
         "Custom.SubState": "New",
-        "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": "New",
+        "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": "Active",
         "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column.Done": false,
-        "Custom.OTLNumber": "58911",
+        "Custom.OTLNumber": "6000",
         "System.Parent": 948202
     },
     "relations": [
+        {
+            "rel": "System.LinkTypes.Hierarchy-Forward",
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948219",
+            "attributes": {
+                "isLocked": false,
+                "name": "Child"
+            }
+        },
         {
             "rel": "System.LinkTypes.Hierarchy-Reverse",
             "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948202",

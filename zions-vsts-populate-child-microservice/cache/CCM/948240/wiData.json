@@ -1,0 +1,93 @@
+{
+    "id": 948240,
+    "rev": 4,
+    "fields": {
+        "System.AreaPath": "ALMOpsTest",
+        "System.TeamProject": "ALMOpsTest",
+        "System.IterationPath": "ALMOpsTest",
+        "System.WorkItemType": "Feature",
+        "System.State": "Active",
+        "System.Reason": "New",
+        "System.CreatedDate": "2020-09-10T21:13:22.22Z",
+        "System.CreatedBy": {
+            "displayName": "Michael Angelastro",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                }
+            },
+            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
+            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
+            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+        },
+        "System.ChangedDate": "2020-09-10T21:40:22.747Z",
+        "System.ChangedBy": {
+            "displayName": "SVC-CLOUD-ADOMAINT002",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/03cfb1a2-e49e-6bdf-b176-8c2c478ad6b1",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MDNjZmIxYTItZTQ5ZS03YmRmLWIxNzYtOGMyYzQ3OGFkNmIx"
+                }
+            },
+            "id": "03cfb1a2-e49e-6bdf-b176-8c2c478ad6b1",
+            "uniqueName": "SVC-CLOUD-ADOMAINT002@zionsbancorporation.onmicrosoft.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MDNjZmIxYTItZTQ5ZS03YmRmLWIxNzYtOGMyYzQ3OGFkNmIx",
+            "descriptor": "aad.MDNjZmIxYTItZTQ5ZS03YmRmLWIxNzYtOGMyYzQ3OGFkNmIx"
+        },
+        "System.CommentCount": 0,
+        "System.Title": "Feature Films for Villains",
+        "System.BoardColumn": "Active",
+        "System.BoardColumnDone": false,
+        "Microsoft.VSTS.Common.StateChangeDate": "2020-09-10T21:13:22.22Z",
+        "Microsoft.VSTS.Common.Priority": 2,
+        "Microsoft.VSTS.Common.ValueArea": "Business",
+        "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column": "Active",
+        "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column.Done": false,
+        "Custom.OTLNumber": "6001",
+        "System.Parent": 947985
+    },
+    "relations": [
+        {
+            "rel": "System.LinkTypes.Hierarchy-Forward",
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948241",
+            "attributes": {
+                "isLocked": false,
+                "name": "Child"
+            }
+        },
+        {
+            "rel": "System.LinkTypes.Hierarchy-Reverse",
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947985",
+            "attributes": {
+                "isLocked": false,
+                "name": "Parent"
+            }
+        }
+    ],
+    "_links": {
+        "self": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948240"
+        },
+        "workItemUpdates": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948240/updates"
+        },
+        "workItemRevisions": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948240/revisions"
+        },
+        "workItemComments": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948240/comments"
+        },
+        "html": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_workitems/edit/948240"
+        },
+        "workItemType": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItemTypes/Feature"
+        },
+        "fields": {
+            "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/fields"
+        }
+    },
+    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/948240"
+}
