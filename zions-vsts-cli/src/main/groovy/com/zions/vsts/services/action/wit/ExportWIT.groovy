@@ -52,7 +52,7 @@ class ExportWIT implements CliAction {
 	
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'tfs.workitem.names','export.dir']
+		def required = ['tfs.project', 'tfs.workitem.names','export.dir']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
