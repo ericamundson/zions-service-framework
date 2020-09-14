@@ -1,13 +1,26 @@
 {
     "id": 947832,
-    "rev": 6,
+    "rev": 8,
     "fields": {
         "System.AreaPath": "ALMOpsTest",
         "System.TeamProject": "ALMOpsTest",
         "System.IterationPath": "ALMOpsTest",
         "System.WorkItemType": "Feature",
-        "System.State": "New",
-        "System.Reason": "New",
+        "System.State": "Active",
+        "System.Reason": "Implementation started",
+        "System.AssignedTo": {
+            "displayName": "Michael Angelastro",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                }
+            },
+            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
+            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
+            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+        },
         "System.CreatedDate": "2020-05-19T20:25:11.457Z",
         "System.CreatedBy": {
             "displayName": "Michael Angelastro",
@@ -22,7 +35,7 @@
             "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
             "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
         },
-        "System.ChangedDate": "2020-08-24T20:26:38.263Z",
+        "System.ChangedDate": "2020-09-10T16:16:26.88Z",
         "System.ChangedBy": {
             "displayName": "SVC-CLOUD-ADOMAINT004",
             "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/7449c4e2-5d58-6657-a48d-755dc43b67bd",
@@ -38,15 +51,29 @@
         },
         "System.CommentCount": 0,
         "System.Title": "feature test 1",
-        "System.BoardColumn": "New",
+        "System.BoardColumn": "Active",
         "System.BoardColumnDone": false,
-        "Microsoft.VSTS.Common.StateChangeDate": "2020-05-19T20:25:11.457Z",
+        "Microsoft.VSTS.Common.StateChangeDate": "2020-08-27T23:16:44.17Z",
+        "Microsoft.VSTS.Common.ActivatedDate": "2020-08-27T23:16:44.17Z",
+        "Microsoft.VSTS.Common.ActivatedBy": {
+            "displayName": "Michael Angelastro",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                }
+            },
+            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
+            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
+            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+        },
         "Microsoft.VSTS.Common.Priority": 2,
         "Microsoft.VSTS.Common.ValueArea": "Business",
         "Custom.ExternalID": "67",
-        "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column": "New",
+        "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column": "Active",
         "WEF_A65F5E5FB82343678651807606F5E9BB_Kanban.Column.Done": false,
-        "Custom.OTLNumber": "58911",
+        "Custom.OTLNumber": "6000",
         "System.Parent": 947830
     },
     "relations": [

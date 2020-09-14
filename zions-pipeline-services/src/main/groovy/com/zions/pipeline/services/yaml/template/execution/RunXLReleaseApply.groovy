@@ -26,7 +26,7 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 		if (yaml.useProxy) {
 			useProxy = yaml.useProxy
 		}
-		String xlOutPath = "${yaml.path}"
+		//String xlOutPath = "${yaml.path}"
 		String xlReleaseFile = "${repo.absolutePath}/${yaml.file}"
 		List<String> values = []
 		if (yaml.values) {
@@ -50,9 +50,9 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 				env( key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080")
 			}
 			if (values.size() > 0) {
-				arg( line: "${option} ${repo.absolutePath}/xl apply -p ${xlOutPath} -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}")
+				arg( line: "${option} ${repo.absolutePath}/xl apply -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}")
 			} else {
-				arg( line: "${option} ${repo.absolutePath}/xl apply -p ${xlOutPath} -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}")
+				arg( line: "${option} ${repo.absolutePath}/xl apply -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}")
 				
 			}
 		}

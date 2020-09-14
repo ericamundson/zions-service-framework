@@ -1,521 +1,100 @@
-2020-04-30 06:54:02.148  INFO 7108 --- [main] c.z.v.s.ParentActivationApplication      : Starting ParentActivationApplication on UTMSDEV0545 with PID 7108 (C:\git\zions-service-framework\zions-vsts-parent-activation-microservice\bin\main started by z070187 in C:\git\zions-service-framework\zions-vsts-parent-activation-microservice)
-2020-04-30 06:54:02.185 DEBUG 7108 --- [main] c.z.v.s.ParentActivationApplication      : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
-2020-04-30 06:54:02.186  INFO 7108 --- [main] c.z.v.s.ParentActivationApplication      : The following profiles are active: spock
-2020-04-30 06:54:16.456  INFO 7108 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2020-04-30 06:54:16.458  INFO 7108 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.28
-2020-04-30 06:54:16.479  INFO 7108 --- [localhost-startStop-1] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_171\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre1.8.0_171/bin/server;C:/Program Files/Java/jre1.8.0_171/bin;C:/Program Files/Java/jre1.8.0_171/lib/amd64;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Progra~1\Java\jdk1.8.0_171\bin;%GROOVY_HOME%\bin;C:\Gradle\gradle-5.2\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\nodejs\;C:\Program Files\EmEditor;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Users\z070187\AppData\Local\Microsoft\WindowsApps;;C:\Users\z070187\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\z070187\AppData\Roaming\npm;C:\Program Files\eclipse;;.]
-2020-04-30 06:54:17.051  INFO 7108 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2020-04-30 06:54:20.316  INFO 7108 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : New session established : 81a5f0a0-accc-6e0f-1bd7-a05f37dd480b
-2020-04-30 06:54:24.790  INFO 7108 --- [main] c.z.v.s.ParentActivationApplication      : Started ParentActivationApplication in 26.365 seconds (JVM running for 36.785)
-2020-04-30 06:54:47.129  INFO 7108 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:09:55.872  INFO 7108 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:10:32.498  INFO 7108 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:10:32.557 ERROR 7108 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : WS Exception
-
-groovy.lang.MissingMethodException: No signature of method: ch.qos.logback.classic.Logger.System.State() is applicable for argument types: (java.lang.String) values: [no parent assigned]
-	at org.codehaus.groovy.runtime.ScriptBytecodeAdapter.unwrap(ScriptBytecodeAdapter.java:58) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.PojoMetaClassSite.call(PojoMetaClassSite.java:49) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:48) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:113) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125) ~[groovy-all-2.4.13.jar:2.4.13]
-	at com.zions.vsts.services.ParentActivationMicroService.processADOData(ParentActivationMicroService.groovy:73) ~[main/:na]
-	at com.zions.vsts.services.ParentActivationMicroService$processADOData.callCurrent(Unknown Source) ~[na:na]
-	at com.zions.vsts.services.ws.client.AbstractWebSocketMicroService.handleFrame(AbstractWebSocketMicroService.groovy:186) ~[main/:na]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.invokeHandler(DefaultStompSession.java:462) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.handleMessage(DefaultStompSession.java:409) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.messaging.WebSocketStompClient$WebSocketTcpConnectionHandlerAdapter.handleMessage(WebSocketStompClient.java:344) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleMessageFrame(AbstractClientSockJsSession.java:294) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleFrame(AbstractClientSockJsSession.java:230) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.WebSocketTransport$ClientSockJsWebSocketHandler.handleTextMessage(WebSocketTransport.java:163) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.handler.AbstractWebSocketHandler.handleMessage(AbstractWebSocketHandler.java:43) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.handleTextMessage(StandardWebSocketHandlerAdapter.java:113) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.access$000(StandardWebSocketHandlerAdapter.java:42) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:84) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:81) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.apache.tomcat.websocket.WsFrameBase.sendMessageText(WsFrameBase.java:395) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processDataText(WsFrameBase.java:495) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processData(WsFrameBase.java:294) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processInputBuffer(WsFrameBase.java:133) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.processSocketRead(WsFrameClient.java:95) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.resumeProcessing(WsFrameClient.java:209) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.access$300(WsFrameClient.java:31) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.doResumeProcessing(WsFrameClient.java:186) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:163) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:148) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at sun.nio.ch.Invoker.invokeUnchecked(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.Invoker$2.run(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_171]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_171]
-
-2020-04-30 07:14:48.709  INFO 7108 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:14:48.724 ERROR 7108 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : WS Exception
-
-java.lang.NullPointerException: Cannot get property 'resource' on null object
-	at org.codehaus.groovy.runtime.NullObject.getProperty(NullObject.java:60) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.InvokerHelper.getProperty(InvokerHelper.java:174) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.NullCallSite.getProperty(NullCallSite.java:47) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:296) ~[groovy-all-2.4.13.jar:2.4.13]
-	at com.zions.vsts.services.ParentActivationMicroService.processADOData(ParentActivationMicroService.groovy:57) ~[main/:na]
-	at com.zions.vsts.services.ParentActivationMicroService$processADOData.callCurrent(Unknown Source) ~[na:na]
-	at com.zions.vsts.services.ws.client.AbstractWebSocketMicroService.handleFrame(AbstractWebSocketMicroService.groovy:186) ~[main/:na]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.invokeHandler(DefaultStompSession.java:462) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.handleMessage(DefaultStompSession.java:409) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.messaging.WebSocketStompClient$WebSocketTcpConnectionHandlerAdapter.handleMessage(WebSocketStompClient.java:344) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleMessageFrame(AbstractClientSockJsSession.java:294) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleFrame(AbstractClientSockJsSession.java:230) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.WebSocketTransport$ClientSockJsWebSocketHandler.handleTextMessage(WebSocketTransport.java:163) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.handler.AbstractWebSocketHandler.handleMessage(AbstractWebSocketHandler.java:43) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.handleTextMessage(StandardWebSocketHandlerAdapter.java:113) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.access$000(StandardWebSocketHandlerAdapter.java:42) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:84) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:81) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.apache.tomcat.websocket.WsFrameBase.sendMessageText(WsFrameBase.java:395) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processDataText(WsFrameBase.java:495) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processData(WsFrameBase.java:294) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processInputBuffer(WsFrameBase.java:133) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.processSocketRead(WsFrameClient.java:95) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.resumeProcessing(WsFrameClient.java:209) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.access$300(WsFrameClient.java:31) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.doResumeProcessing(WsFrameClient.java:186) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:163) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:148) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at sun.nio.ch.Invoker.invokeUnchecked(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.Invoker$2.run(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_171]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_171]
-
-2020-04-30 07:16:00.855  INFO 7108 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:16:00.859 ERROR 7108 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : WS Exception
-
-java.lang.NullPointerException: Cannot get property 'resource' on null object
-	at org.codehaus.groovy.runtime.NullObject.getProperty(NullObject.java:60) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.InvokerHelper.getProperty(InvokerHelper.java:174) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.NullCallSite.getProperty(NullCallSite.java:47) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:296) ~[groovy-all-2.4.13.jar:2.4.13]
-	at com.zions.vsts.services.ParentActivationMicroService.processADOData(ParentActivationMicroService.groovy:57) ~[main/:na]
-	at com.zions.vsts.services.ParentActivationMicroService$processADOData.callCurrent(Unknown Source) ~[na:na]
-	at com.zions.vsts.services.ws.client.AbstractWebSocketMicroService.handleFrame(AbstractWebSocketMicroService.groovy:186) ~[main/:na]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.invokeHandler(DefaultStompSession.java:462) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.handleMessage(DefaultStompSession.java:409) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.messaging.WebSocketStompClient$WebSocketTcpConnectionHandlerAdapter.handleMessage(WebSocketStompClient.java:344) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleMessageFrame(AbstractClientSockJsSession.java:294) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleFrame(AbstractClientSockJsSession.java:230) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.WebSocketTransport$ClientSockJsWebSocketHandler.handleTextMessage(WebSocketTransport.java:163) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.handler.AbstractWebSocketHandler.handleMessage(AbstractWebSocketHandler.java:43) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.handleTextMessage(StandardWebSocketHandlerAdapter.java:113) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.access$000(StandardWebSocketHandlerAdapter.java:42) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:84) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:81) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.apache.tomcat.websocket.WsFrameBase.sendMessageText(WsFrameBase.java:395) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processDataText(WsFrameBase.java:495) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processData(WsFrameBase.java:294) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processInputBuffer(WsFrameBase.java:133) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.processSocketRead(WsFrameClient.java:95) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.resumeProcessing(WsFrameClient.java:209) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.access$300(WsFrameClient.java:31) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.doResumeProcessing(WsFrameClient.java:186) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:163) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:148) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at sun.nio.ch.Invoker.invokeUnchecked(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.Invoker$2.run(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_171]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_171]
-
-2020-04-30 07:17:20.829  INFO 7108 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:17:20.832 ERROR 7108 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : WS Exception
-
-java.lang.NullPointerException: Cannot get property 'resource' on null object
-	at org.codehaus.groovy.runtime.NullObject.getProperty(NullObject.java:60) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.InvokerHelper.getProperty(InvokerHelper.java:174) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.NullCallSite.getProperty(NullCallSite.java:47) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:296) ~[groovy-all-2.4.13.jar:2.4.13]
-	at com.zions.vsts.services.ParentActivationMicroService.processADOData(ParentActivationMicroService.groovy:57) ~[main/:na]
-	at com.zions.vsts.services.ParentActivationMicroService$processADOData.callCurrent(Unknown Source) ~[na:na]
-	at com.zions.vsts.services.ws.client.AbstractWebSocketMicroService.handleFrame(AbstractWebSocketMicroService.groovy:186) ~[main/:na]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.invokeHandler(DefaultStompSession.java:462) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.handleMessage(DefaultStompSession.java:409) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.messaging.WebSocketStompClient$WebSocketTcpConnectionHandlerAdapter.handleMessage(WebSocketStompClient.java:344) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleMessageFrame(AbstractClientSockJsSession.java:294) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleFrame(AbstractClientSockJsSession.java:230) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.WebSocketTransport$ClientSockJsWebSocketHandler.handleTextMessage(WebSocketTransport.java:163) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.handler.AbstractWebSocketHandler.handleMessage(AbstractWebSocketHandler.java:43) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.handleTextMessage(StandardWebSocketHandlerAdapter.java:113) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.access$000(StandardWebSocketHandlerAdapter.java:42) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:84) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:81) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.apache.tomcat.websocket.WsFrameBase.sendMessageText(WsFrameBase.java:395) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processDataText(WsFrameBase.java:495) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processData(WsFrameBase.java:294) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processInputBuffer(WsFrameBase.java:133) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.processSocketRead(WsFrameClient.java:95) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.resumeProcessing(WsFrameClient.java:209) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.access$300(WsFrameClient.java:31) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.doResumeProcessing(WsFrameClient.java:186) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:163) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:148) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at sun.nio.ch.Invoker.invokeUnchecked(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.Invoker$2.run(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_171]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_171]
-
-2020-04-30 07:18:16.513  INFO 7108 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:18:16.516 ERROR 7108 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : WS Exception
-
-java.lang.NullPointerException: Cannot get property 'resource' on null object
-	at org.codehaus.groovy.runtime.NullObject.getProperty(NullObject.java:60) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.InvokerHelper.getProperty(InvokerHelper.java:174) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.NullCallSite.getProperty(NullCallSite.java:47) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:296) ~[groovy-all-2.4.13.jar:2.4.13]
-	at com.zions.vsts.services.ParentActivationMicroService.processADOData(ParentActivationMicroService.groovy:57) ~[main/:na]
-	at com.zions.vsts.services.ParentActivationMicroService$processADOData.callCurrent(Unknown Source) ~[na:na]
-	at com.zions.vsts.services.ws.client.AbstractWebSocketMicroService.handleFrame(AbstractWebSocketMicroService.groovy:186) ~[main/:na]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.invokeHandler(DefaultStompSession.java:462) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.handleMessage(DefaultStompSession.java:409) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.messaging.WebSocketStompClient$WebSocketTcpConnectionHandlerAdapter.handleMessage(WebSocketStompClient.java:344) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleMessageFrame(AbstractClientSockJsSession.java:294) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleFrame(AbstractClientSockJsSession.java:230) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.WebSocketTransport$ClientSockJsWebSocketHandler.handleTextMessage(WebSocketTransport.java:163) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.handler.AbstractWebSocketHandler.handleMessage(AbstractWebSocketHandler.java:43) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.handleTextMessage(StandardWebSocketHandlerAdapter.java:113) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.access$000(StandardWebSocketHandlerAdapter.java:42) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:84) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:81) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.apache.tomcat.websocket.WsFrameBase.sendMessageText(WsFrameBase.java:395) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processDataText(WsFrameBase.java:495) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processData(WsFrameBase.java:294) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processInputBuffer(WsFrameBase.java:133) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.processSocketRead(WsFrameClient.java:95) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.resumeProcessing(WsFrameClient.java:209) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.access$300(WsFrameClient.java:31) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.doResumeProcessing(WsFrameClient.java:186) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:163) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:148) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at sun.nio.ch.Invoker.invokeUnchecked(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.Invoker$2.run(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_171]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_171]
-
-2020-04-30 07:19:38.545  INFO 7108 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:19:38.548 ERROR 7108 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : WS Exception
-
-java.lang.NullPointerException: Cannot get property 'resource' on null object
-	at org.codehaus.groovy.runtime.NullObject.getProperty(NullObject.java:60) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.InvokerHelper.getProperty(InvokerHelper.java:174) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.NullCallSite.getProperty(NullCallSite.java:47) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:296) ~[groovy-all-2.4.13.jar:2.4.13]
-	at com.zions.vsts.services.ParentActivationMicroService.processADOData(ParentActivationMicroService.groovy:57) ~[main/:na]
-	at com.zions.vsts.services.ParentActivationMicroService$processADOData.callCurrent(Unknown Source) ~[na:na]
-	at com.zions.vsts.services.ws.client.AbstractWebSocketMicroService.handleFrame(AbstractWebSocketMicroService.groovy:186) ~[main/:na]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.invokeHandler(DefaultStompSession.java:462) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.handleMessage(DefaultStompSession.java:409) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.messaging.WebSocketStompClient$WebSocketTcpConnectionHandlerAdapter.handleMessage(WebSocketStompClient.java:344) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleMessageFrame(AbstractClientSockJsSession.java:294) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleFrame(AbstractClientSockJsSession.java:230) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.WebSocketTransport$ClientSockJsWebSocketHandler.handleTextMessage(WebSocketTransport.java:163) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.handler.AbstractWebSocketHandler.handleMessage(AbstractWebSocketHandler.java:43) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.handleTextMessage(StandardWebSocketHandlerAdapter.java:113) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.access$000(StandardWebSocketHandlerAdapter.java:42) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:84) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:81) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.apache.tomcat.websocket.WsFrameBase.sendMessageText(WsFrameBase.java:395) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processDataText(WsFrameBase.java:495) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processData(WsFrameBase.java:294) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processInputBuffer(WsFrameBase.java:133) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.processSocketRead(WsFrameClient.java:95) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.resumeProcessing(WsFrameClient.java:209) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.access$300(WsFrameClient.java:31) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.doResumeProcessing(WsFrameClient.java:186) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:163) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:148) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at sun.nio.ch.Invoker.invokeUnchecked(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.Invoker$2.run(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_171]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_171]
-
-2020-04-30 07:20:47.057  INFO 8576 --- [main] c.z.v.s.ParentActivationApplication      : Starting ParentActivationApplication on UTMSDEV0545 with PID 8576 (C:\git\zions-service-framework\zions-vsts-parent-activation-microservice\bin\main started by z070187 in C:\git\zions-service-framework\zions-vsts-parent-activation-microservice)
-2020-04-30 07:20:47.068 DEBUG 8576 --- [main] c.z.v.s.ParentActivationApplication      : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
-2020-04-30 07:20:47.068  INFO 8576 --- [main] c.z.v.s.ParentActivationApplication      : The following profiles are active: spock
-2020-04-30 07:20:56.526  INFO 8576 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2020-04-30 07:20:56.527  INFO 8576 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.28
-2020-04-30 07:20:56.546  INFO 8576 --- [localhost-startStop-1] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_171\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre1.8.0_171/bin/server;C:/Program Files/Java/jre1.8.0_171/bin;C:/Program Files/Java/jre1.8.0_171/lib/amd64;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Progra~1\Java\jdk1.8.0_171\bin;%GROOVY_HOME%\bin;C:\Gradle\gradle-5.2\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\nodejs\;C:\Program Files\EmEditor;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Users\z070187\AppData\Local\Microsoft\WindowsApps;;C:\Users\z070187\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\z070187\AppData\Roaming\npm;C:\Program Files\eclipse;;.]
-2020-04-30 07:20:57.401  INFO 8576 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2020-04-30 07:20:59.087  INFO 8576 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : New session established : a010785a-83cb-1b2f-2b90-125f5a2cea2c
-2020-04-30 07:21:02.712  INFO 8576 --- [main] c.z.v.s.ParentActivationApplication      : Started ParentActivationApplication in 18.028 seconds (JVM running for 26.768)
-2020-04-30 07:24:20.579  INFO 8576 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:25:46.554  INFO 8576 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:40:22.894  INFO 6680 --- [main] c.z.v.s.ParentActivationApplication      : Starting ParentActivationApplication on UTMSDEV0545 with PID 6680 (C:\git\zions-service-framework\zions-vsts-parent-activation-microservice\bin\main started by z070187 in C:\git\zions-service-framework\zions-vsts-parent-activation-microservice)
-2020-04-30 07:40:22.906 DEBUG 6680 --- [main] c.z.v.s.ParentActivationApplication      : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
-2020-04-30 07:40:22.906  INFO 6680 --- [main] c.z.v.s.ParentActivationApplication      : The following profiles are active: spock
-2020-04-30 07:40:36.745  INFO 6680 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2020-04-30 07:40:36.746  INFO 6680 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.28
-2020-04-30 07:40:36.772  INFO 6680 --- [localhost-startStop-1] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_171\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre1.8.0_171/bin/server;C:/Program Files/Java/jre1.8.0_171/bin;C:/Program Files/Java/jre1.8.0_171/lib/amd64;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Progra~1\Java\jdk1.8.0_171\bin;%GROOVY_HOME%\bin;C:\Gradle\gradle-5.2\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\nodejs\;C:\Program Files\EmEditor;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Users\z070187\AppData\Local\Microsoft\WindowsApps;;C:\Users\z070187\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\z070187\AppData\Roaming\npm;C:\Program Files\eclipse;;.]
-2020-04-30 07:40:37.605  INFO 6680 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2020-04-30 07:40:40.549  INFO 6680 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : New session established : 277d23ab-1c7e-e289-996f-9d0d8b277abb
-2020-04-30 07:40:43.816  INFO 6680 --- [main] c.z.v.s.ParentActivationApplication      : Started ParentActivationApplication in 24.656 seconds (JVM running for 35.69)
-2020-04-30 07:41:04.873  INFO 6680 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 07:41:04.884  INFO 6680 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent not assigned
-2020-04-30 07:58:54.315  INFO 4456 --- [main] c.z.v.s.ParentActivationApplication      : Starting ParentActivationApplication on UTMSDEV0545 with PID 4456 (C:\git\zions-service-framework\zions-vsts-parent-activation-microservice\bin\main started by z070187 in C:\git\zions-service-framework\zions-vsts-parent-activation-microservice)
-2020-04-30 07:58:54.326 DEBUG 4456 --- [main] c.z.v.s.ParentActivationApplication      : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
-2020-04-30 07:58:54.327  INFO 4456 --- [main] c.z.v.s.ParentActivationApplication      : The following profiles are active: spock
-2020-04-30 07:58:58.168  INFO 4456 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2020-04-30 07:58:58.169  INFO 4456 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.28
-2020-04-30 07:58:58.187  INFO 4456 --- [localhost-startStop-1] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_171\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre1.8.0_171/bin/server;C:/Program Files/Java/jre1.8.0_171/bin;C:/Program Files/Java/jre1.8.0_171/lib/amd64;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Progra~1\Java\jdk1.8.0_171\bin;%GROOVY_HOME%\bin;C:\Gradle\gradle-5.2\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\nodejs\;C:\Program Files\EmEditor;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Users\z070187\AppData\Local\Microsoft\WindowsApps;;C:\Users\z070187\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\z070187\AppData\Roaming\npm;C:\Program Files\eclipse;;.]
-2020-04-30 07:58:58.475  INFO 4456 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2020-04-30 07:58:59.932  INFO 4456 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : New session established : 30d709cb-c484-3d12-cbed-14a73cc23b07
-2020-04-30 07:59:04.508  INFO 4456 --- [main] c.z.v.s.ParentActivationApplication      : Started ParentActivationApplication in 11.369 seconds (JVM running for 13.613)
-2020-04-30 08:00:46.086  INFO 5924 --- [main] c.z.v.s.ParentActivationApplication      : Starting ParentActivationApplication on UTMSDEV0545 with PID 5924 (C:\git\zions-service-framework\zions-vsts-parent-activation-microservice\bin\main started by z070187 in C:\git\zions-service-framework\zions-vsts-parent-activation-microservice)
-2020-04-30 08:00:46.097 DEBUG 5924 --- [main] c.z.v.s.ParentActivationApplication      : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
-2020-04-30 08:00:46.098  INFO 5924 --- [main] c.z.v.s.ParentActivationApplication      : The following profiles are active: spock
-2020-04-30 08:00:51.169  INFO 5924 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2020-04-30 08:00:51.170  INFO 5924 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.28
-2020-04-30 08:00:51.187  INFO 5924 --- [localhost-startStop-1] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_171\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre1.8.0_171/bin/server;C:/Program Files/Java/jre1.8.0_171/bin;C:/Program Files/Java/jre1.8.0_171/lib/amd64;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Progra~1\Java\jdk1.8.0_171\bin;%GROOVY_HOME%\bin;C:\Gradle\gradle-5.2\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\nodejs\;C:\Program Files\EmEditor;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Users\z070187\AppData\Local\Microsoft\WindowsApps;;C:\Users\z070187\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\z070187\AppData\Roaming\npm;C:\Program Files\eclipse;;.]
-2020-04-30 08:00:51.449  INFO 5924 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2020-04-30 08:00:53.516  INFO 5924 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : New session established : dd86638a-3d61-6335-53c6-2a2317bd19cf
-2020-04-30 08:00:55.694  INFO 5924 --- [main] c.z.v.s.ParentActivationApplication      : Started ParentActivationApplication in 12.589 seconds (JVM running for 15.063)
-2020-04-30 08:01:41.318  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:01:47.287  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent is already active
-2020-04-30 08:06:09.753  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:06:09.767  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent not assigned
-2020-04-30 08:09:56.725  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:09:56.731  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : not a valid child state
-2020-04-30 08:10:14.870  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:10:14.875  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : not a valid child state
-2020-04-30 08:10:23.947  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:10:24.787  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Updating parent of Task #947720
-2020-04-30 08:10:26.757  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Updated succeeded
-2020-04-30 08:14:31.581  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:14:31.585  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent not assigned
-2020-04-30 08:14:32.115  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:14:32.118  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent not assigned
-2020-04-30 08:14:34.743  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:14:34.747  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : not a valid child state
-2020-04-30 08:17:47.843  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:17:47.845  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : not a valid child state
-2020-04-30 08:18:32.814  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:18:32.817  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : not a valid child state
-2020-04-30 08:23:09.282  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:23:09.314  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent not assigned
-2020-04-30 08:23:46.750  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:23:46.752  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : not a valid child state
-2020-04-30 08:33:08.461  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:33:08.470  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent not assigned
-2020-04-30 08:34:29.575  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:34:29.578  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : not a valid child state
-2020-04-30 08:36:28.625  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:36:28.628  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent not assigned
-2020-04-30 08:38:02.923  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:38:02.926  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : not a valid child state
-2020-04-30 08:39:04.250  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:39:04.253  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent not assigned
-2020-04-30 08:41:18.797  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:41:18.801  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : not a valid child state
-2020-04-30 08:58:09.603  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 08:58:11.263  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Updating parent of Task #947723
-2020-04-30 08:58:12.332  INFO 5924 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Updated succeeded
-2020-04-30 09:18:32.263  INFO 1260 --- [main] c.z.v.s.ParentActivationApplication      : Starting ParentActivationApplication on UTMSDEV0545 with PID 1260 (C:\git\zions-service-framework\zions-vsts-parent-activation-microservice\bin\main started by z070187 in C:\git\zions-service-framework\zions-vsts-parent-activation-microservice)
-2020-04-30 09:18:32.274 DEBUG 1260 --- [main] c.z.v.s.ParentActivationApplication      : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
-2020-04-30 09:18:32.274  INFO 1260 --- [main] c.z.v.s.ParentActivationApplication      : The following profiles are active: spock
-2020-04-30 09:18:46.472  INFO 1260 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2020-04-30 09:18:46.473  INFO 1260 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.28
-2020-04-30 09:18:46.491  INFO 1260 --- [localhost-startStop-1] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_171\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre1.8.0_171/bin/server;C:/Program Files/Java/jre1.8.0_171/bin;C:/Program Files/Java/jre1.8.0_171/lib/amd64;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Progra~1\Java\jdk1.8.0_171\bin;%GROOVY_HOME%\bin;C:\Gradle\gradle-5.2\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\nodejs\;C:\Program Files\EmEditor;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Users\z070187\AppData\Local\Microsoft\WindowsApps;;C:\Users\z070187\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\z070187\AppData\Roaming\npm;C:\Program Files\eclipse;;.]
-2020-04-30 09:18:47.013  INFO 1260 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2020-04-30 09:18:49.395  INFO 1260 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : New session established : 2b7e7e9d-9baa-ce2f-f35d-3ab1d829b485
-2020-04-30 09:18:52.671  INFO 1260 --- [main] c.z.v.s.ParentActivationApplication      : Started ParentActivationApplication in 25.401 seconds (JVM running for 38.961)
-2020-04-30 09:19:05.121  INFO 1260 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 09:19:05.275  INFO 1260 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : not a valid child state
-2020-04-30 09:20:52.711  INFO 1260 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 09:21:39.462  INFO 1260 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Updating parent of Task #947726
-2020-04-30 09:21:56.292  INFO 1260 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Updated succeeded
-2020-04-30 09:27:13.373  INFO 1260 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 09:27:13.436 ERROR 1260 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : WS Exception
-
-java.lang.NullPointerException: Cannot get property 'resource' on null object
-	at org.codehaus.groovy.runtime.NullObject.getProperty(NullObject.java:60) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.InvokerHelper.getProperty(InvokerHelper.java:174) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.NullCallSite.getProperty(NullCallSite.java:47) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:296) ~[groovy-all-2.4.13.jar:2.4.13]
-	at com.zions.vsts.services.ParentActivationMicroService.processADOData(ParentActivationMicroService.groovy:57) ~[main/:na]
-	at com.zions.vsts.services.ParentActivationMicroService$processADOData.callCurrent(Unknown Source) ~[na:na]
-	at com.zions.vsts.services.ws.client.AbstractWebSocketMicroService.handleFrame(AbstractWebSocketMicroService.groovy:186) ~[main/:na]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.invokeHandler(DefaultStompSession.java:462) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.handleMessage(DefaultStompSession.java:409) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.messaging.WebSocketStompClient$WebSocketTcpConnectionHandlerAdapter.handleMessage(WebSocketStompClient.java:344) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleMessageFrame(AbstractClientSockJsSession.java:294) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleFrame(AbstractClientSockJsSession.java:230) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.WebSocketTransport$ClientSockJsWebSocketHandler.handleTextMessage(WebSocketTransport.java:163) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.handler.AbstractWebSocketHandler.handleMessage(AbstractWebSocketHandler.java:43) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.handleTextMessage(StandardWebSocketHandlerAdapter.java:113) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.access$000(StandardWebSocketHandlerAdapter.java:42) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:84) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:81) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.apache.tomcat.websocket.WsFrameBase.sendMessageText(WsFrameBase.java:395) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processDataText(WsFrameBase.java:495) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processData(WsFrameBase.java:294) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processInputBuffer(WsFrameBase.java:133) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.processSocketRead(WsFrameClient.java:95) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.resumeProcessing(WsFrameClient.java:209) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.access$300(WsFrameClient.java:31) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.doResumeProcessing(WsFrameClient.java:186) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:163) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:148) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at sun.nio.ch.Invoker.invokeUnchecked(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.Invoker$2.run(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_171]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_171]
-
-2020-04-30 09:27:13.440  INFO 1260 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 09:27:13.442 ERROR 1260 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : WS Exception
-
-java.lang.NullPointerException: Cannot get property 'resource' on null object
-	at org.codehaus.groovy.runtime.NullObject.getProperty(NullObject.java:60) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.InvokerHelper.getProperty(InvokerHelper.java:174) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.NullCallSite.getProperty(NullCallSite.java:47) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:296) ~[groovy-all-2.4.13.jar:2.4.13]
-	at com.zions.vsts.services.ParentActivationMicroService.processADOData(ParentActivationMicroService.groovy:57) ~[main/:na]
-	at com.zions.vsts.services.ParentActivationMicroService$processADOData.callCurrent(Unknown Source) ~[na:na]
-	at com.zions.vsts.services.ws.client.AbstractWebSocketMicroService.handleFrame(AbstractWebSocketMicroService.groovy:186) ~[main/:na]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.invokeHandler(DefaultStompSession.java:462) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.handleMessage(DefaultStompSession.java:409) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.messaging.WebSocketStompClient$WebSocketTcpConnectionHandlerAdapter.handleMessage(WebSocketStompClient.java:344) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleMessageFrame(AbstractClientSockJsSession.java:294) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleFrame(AbstractClientSockJsSession.java:230) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.WebSocketTransport$ClientSockJsWebSocketHandler.handleTextMessage(WebSocketTransport.java:163) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.handler.AbstractWebSocketHandler.handleMessage(AbstractWebSocketHandler.java:43) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.handleTextMessage(StandardWebSocketHandlerAdapter.java:113) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.access$000(StandardWebSocketHandlerAdapter.java:42) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:84) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:81) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.apache.tomcat.websocket.WsFrameBase.sendMessageText(WsFrameBase.java:395) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processDataText(WsFrameBase.java:495) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processData(WsFrameBase.java:294) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processInputBuffer(WsFrameBase.java:133) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.processSocketRead(WsFrameClient.java:95) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.resumeProcessing(WsFrameClient.java:209) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.access$300(WsFrameClient.java:31) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.doResumeProcessing(WsFrameClient.java:186) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:163) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:148) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at sun.nio.ch.Invoker.invokeUnchecked(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.Invoker$2.run(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_171]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_171]
-
-2020-04-30 09:27:13.444  INFO 1260 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 09:27:13.446 ERROR 1260 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : WS Exception
-
-java.lang.NullPointerException: Cannot get property 'resource' on null object
-	at org.codehaus.groovy.runtime.NullObject.getProperty(NullObject.java:60) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.InvokerHelper.getProperty(InvokerHelper.java:174) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.NullCallSite.getProperty(NullCallSite.java:47) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:296) ~[groovy-all-2.4.13.jar:2.4.13]
-	at com.zions.vsts.services.ParentActivationMicroService.processADOData(ParentActivationMicroService.groovy:57) ~[main/:na]
-	at com.zions.vsts.services.ParentActivationMicroService$processADOData.callCurrent(Unknown Source) ~[na:na]
-	at com.zions.vsts.services.ws.client.AbstractWebSocketMicroService.handleFrame(AbstractWebSocketMicroService.groovy:186) ~[main/:na]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.invokeHandler(DefaultStompSession.java:462) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.handleMessage(DefaultStompSession.java:409) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.messaging.WebSocketStompClient$WebSocketTcpConnectionHandlerAdapter.handleMessage(WebSocketStompClient.java:344) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleMessageFrame(AbstractClientSockJsSession.java:294) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleFrame(AbstractClientSockJsSession.java:230) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.WebSocketTransport$ClientSockJsWebSocketHandler.handleTextMessage(WebSocketTransport.java:163) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.handler.AbstractWebSocketHandler.handleMessage(AbstractWebSocketHandler.java:43) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.handleTextMessage(StandardWebSocketHandlerAdapter.java:113) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.access$000(StandardWebSocketHandlerAdapter.java:42) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:84) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:81) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.apache.tomcat.websocket.WsFrameBase.sendMessageText(WsFrameBase.java:395) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processDataText(WsFrameBase.java:495) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processData(WsFrameBase.java:294) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processInputBuffer(WsFrameBase.java:133) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.processSocketRead(WsFrameClient.java:95) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.resumeProcessing(WsFrameClient.java:209) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.access$300(WsFrameClient.java:31) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.doResumeProcessing(WsFrameClient.java:186) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:163) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:148) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at sun.nio.ch.Invoker.invokeUnchecked(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.Invoker$2.run(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_171]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_171]
-
-2020-04-30 09:27:13.448  INFO 1260 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 09:27:13.450 ERROR 1260 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : WS Exception
-
-java.lang.NullPointerException: Cannot get property 'resource' on null object
-	at org.codehaus.groovy.runtime.NullObject.getProperty(NullObject.java:60) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.InvokerHelper.getProperty(InvokerHelper.java:174) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.NullCallSite.getProperty(NullCallSite.java:47) ~[groovy-all-2.4.13.jar:2.4.13]
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:296) ~[groovy-all-2.4.13.jar:2.4.13]
-	at com.zions.vsts.services.ParentActivationMicroService.processADOData(ParentActivationMicroService.groovy:57) ~[main/:na]
-	at com.zions.vsts.services.ParentActivationMicroService$processADOData.callCurrent(Unknown Source) ~[na:na]
-	at com.zions.vsts.services.ws.client.AbstractWebSocketMicroService.handleFrame(AbstractWebSocketMicroService.groovy:186) ~[main/:na]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.invokeHandler(DefaultStompSession.java:462) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.messaging.simp.stomp.DefaultStompSession.handleMessage(DefaultStompSession.java:409) ~[spring-messaging-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.messaging.WebSocketStompClient$WebSocketTcpConnectionHandlerAdapter.handleMessage(WebSocketStompClient.java:344) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleMessageFrame(AbstractClientSockJsSession.java:294) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.AbstractClientSockJsSession.handleFrame(AbstractClientSockJsSession.java:230) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.sockjs.client.WebSocketTransport$ClientSockJsWebSocketHandler.handleTextMessage(WebSocketTransport.java:163) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.handler.AbstractWebSocketHandler.handleMessage(AbstractWebSocketHandler.java:43) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.handleTextMessage(StandardWebSocketHandlerAdapter.java:113) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.access$000(StandardWebSocketHandlerAdapter.java:42) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:84) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter$3.onMessage(StandardWebSocketHandlerAdapter.java:81) [spring-websocket-5.0.4.RELEASE.jar:5.0.4.RELEASE]
-	at org.apache.tomcat.websocket.WsFrameBase.sendMessageText(WsFrameBase.java:395) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processDataText(WsFrameBase.java:495) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processData(WsFrameBase.java:294) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameBase.processInputBuffer(WsFrameBase.java:133) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.processSocketRead(WsFrameClient.java:95) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.resumeProcessing(WsFrameClient.java:209) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient.access$300(WsFrameClient.java:31) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.doResumeProcessing(WsFrameClient.java:186) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:163) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at org.apache.tomcat.websocket.WsFrameClient$WsFrameClientCompletionHandler.completed(WsFrameClient.java:148) [tomcat-embed-websocket-8.5.28.jar:8.5.28]
-	at sun.nio.ch.Invoker.invokeUnchecked(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.Invoker$2.run(Unknown Source) [na:1.8.0_171]
-	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_171]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_171]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_171]
-
-2020-04-30 09:28:53.978  INFO 6388 --- [main] c.z.v.s.ParentActivationApplication      : Starting ParentActivationApplication on UTMSDEV0545 with PID 6388 (C:\git\zions-service-framework\zions-vsts-parent-activation-microservice\bin\main started by z070187 in C:\git\zions-service-framework\zions-vsts-parent-activation-microservice)
-2020-04-30 09:28:53.989 DEBUG 6388 --- [main] c.z.v.s.ParentActivationApplication      : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
-2020-04-30 09:28:53.990  INFO 6388 --- [main] c.z.v.s.ParentActivationApplication      : The following profiles are active: spock
-2020-04-30 09:28:58.112  INFO 6388 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2020-04-30 09:28:58.113  INFO 6388 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.28
-2020-04-30 09:28:58.132  INFO 6388 --- [localhost-startStop-1] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_171\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre1.8.0_171/bin/server;C:/Program Files/Java/jre1.8.0_171/bin;C:/Program Files/Java/jre1.8.0_171/lib/amd64;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Progra~1\Java\jdk1.8.0_171\bin;%GROOVY_HOME%\bin;C:\Gradle\gradle-5.2\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\nodejs\;C:\Program Files\EmEditor;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Users\z070187\AppData\Local\Microsoft\WindowsApps;;C:\Users\z070187\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\z070187\AppData\Roaming\npm;C:\Program Files\eclipse;;.]
-2020-04-30 09:28:58.481  INFO 6388 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2020-04-30 09:28:59.889  INFO 6388 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : New session established : 314031be-1e1b-8a5f-6a79-a405586ff0b6
-2020-04-30 09:29:02.384  INFO 6388 --- [main] c.z.v.s.ParentActivationApplication      : Started ParentActivationApplication in 9.592 seconds (JVM running for 11.745)
-2020-04-30 09:29:31.007  INFO 6388 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 09:30:59.512  INFO 6388 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Updating parent of Task #947726
-2020-04-30 09:31:19.165  INFO 6388 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Updated succeeded
-2020-04-30 15:05:22.763  INFO 912 --- [main] c.z.v.s.ParentActivationApplication      : Starting ParentActivationApplication on UTMSDEV0545 with PID 912 (C:\git\zions-service-framework\zions-vsts-parent-activation-microservice\bin\main started by z070187 in C:\git\zions-service-framework\zions-vsts-parent-activation-microservice)
-2020-04-30 15:05:22.795 DEBUG 912 --- [main] c.z.v.s.ParentActivationApplication      : Running with Spring Boot v2.0.0.RELEASE, Spring v5.0.4.RELEASE
-2020-04-30 15:05:22.796  INFO 912 --- [main] c.z.v.s.ParentActivationApplication      : The following profiles are active: spock
-2020-04-30 15:05:34.426  INFO 912 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2020-04-30 15:05:34.427  INFO 912 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.28
-2020-04-30 15:05:34.446  INFO 912 --- [localhost-startStop-1] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_171\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre1.8.0_171/bin/server;C:/Program Files/Java/jre1.8.0_171/bin;C:/Program Files/Java/jre1.8.0_171/lib/amd64;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Progra~1\Java\jdk1.8.0_171\bin;%GROOVY_HOME%\bin;C:\Gradle\gradle-5.2\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\nodejs\;C:\Program Files\EmEditor;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Users\z070187\AppData\Local\Microsoft\WindowsApps;;C:\Users\z070187\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\z070187\AppData\Roaming\npm;C:\Program Files\eclipse;;.]
-2020-04-30 15:05:34.996  INFO 912 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2020-04-30 15:05:37.092  INFO 912 --- [WebSocketClient-AsyncIO-1] .z.v.s.w.c.AbstractWebSocketMicroService : New session established : fba5de83-d895-f486-95a9-e26f54e5bf54
-2020-04-30 15:05:40.327  INFO 912 --- [main] c.z.v.s.ParentActivationApplication      : Started ParentActivationApplication in 20.184 seconds (JVM running for 22.511)
-2020-04-30 15:07:11.298  INFO 912 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 15:07:24.520  INFO 912 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent not assigned
-2020-04-30 15:07:30.033  INFO 912 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
-2020-04-30 15:07:34.162  INFO 912 --- [WebSocketClient-AsyncIO-1] c.z.v.s.ParentActivationMicroService     : parent is already active
+2020-09-04 14:54:02.132  INFO 5832 --- [main] c.z.v.s.ParentActivationApplication      : No active profile set, falling back to default profiles: default
+2020-09-04 14:54:05.914  WARN 5832 --- [main] .b.a.g.t.GroovyTemplateAutoConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Groovy configuration, or set spring.groovy.template.check-template-location=false)
+2020-09-04 14:54:06.719  INFO 5832 --- [main] c.z.v.s.ParentActivationApplication      : Started ParentActivationApplication in 8.172 seconds (JVM running for 11.206)
+2020-09-04 14:54:31.479 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 14:54:41.672 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : GET https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/948226?api-version=5.0&%24expand=All
+2020-09-04 14:54:42.192 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@43264943
+2020-09-04 14:54:42.192 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 14:54:42.192 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 14:54:42.192 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : Updating parent of Task #948227
+2020-09-04 14:54:42.286 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : PATCH https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/948226?api-version=5.0&bypassRules=true
+2020-09-04 14:54:43.149 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@499961e
+2020-09-04 14:54:43.149 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 14:54:43.153 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 14:54:43.154 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : Update Succeeded
+2020-09-04 14:54:51.238 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 14:55:01.640 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : GET https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/948225?api-version=5.0&%24expand=All
+2020-09-04 14:55:02.537 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@1f4f86eb
+2020-09-04 14:55:02.537 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 14:55:02.537 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 14:55:02.537 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : Updating parent of Spike #948226
+2020-09-04 14:55:02.537 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : PATCH https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/948225?api-version=5.0&bypassRules=true
+2020-09-04 14:55:03.257 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@7724b3d8
+2020-09-04 14:55:03.272 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 14:55:03.273 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 14:55:03.274 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : Update Succeeded
+2020-09-04 14:55:11.178 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 14:55:14.960 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : GET https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/947984?api-version=5.0&%24expand=All
+2020-09-04 14:55:15.451 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@499670d2
+2020-09-04 14:55:15.451 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 14:55:15.451 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 14:55:15.451 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : Updating parent of Feature #948225
+2020-09-04 14:55:15.451 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : PATCH https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/947984?api-version=5.0&bypassRules=true
+2020-09-04 14:55:15.936 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@43264943
+2020-09-04 14:55:15.936 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 14:55:15.936 DEBUG 5832 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 14:55:15.936 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : Update Succeeded
+2020-09-04 14:55:23.085 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 14:55:23.092 DEBUG 5832 --- [container-1] c.z.v.s.ParentActivationMicroService     : not a valid work item type
+2020-09-04 15:14:00.845  INFO 6780 --- [main] c.z.v.s.ParentActivationApplication      : No active profile set, falling back to default profiles: default
+2020-09-04 15:14:04.626  WARN 6780 --- [main] .b.a.g.t.GroovyTemplateAutoConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Groovy configuration, or set spring.groovy.template.check-template-location=false)
+2020-09-04 15:14:05.440  INFO 6780 --- [main] c.z.v.s.ParentActivationApplication      : Started ParentActivationApplication in 8.319 seconds (JVM running for 11.215)
+2020-09-04 15:15:22.131 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 15:16:03.362 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : GET https://dev.azure.com/eto-dev/ReleaseEngineering/_apis/wit/workitems/948229?api-version=5.0&%24expand=All
+2020-09-04 15:16:03.736 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@6324ab2b
+2020-09-04 15:16:03.736 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 15:16:03.736 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 15:16:03.736 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Updating parent of Task #948230
+2020-09-04 15:16:03.830 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : PATCH https://dev.azure.com/eto-dev/ReleaseEngineering/_apis/wit/workitems/948229?api-version=5.0&bypassRules=true
+2020-09-04 15:16:04.283 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@505c511c
+2020-09-04 15:16:04.283 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 15:16:04.283 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 15:16:04.283 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Update Succeeded
+2020-09-04 15:16:11.479 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 15:16:17.034 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : GET https://dev.azure.com/eto-dev/ReleaseEngineering/_apis/wit/workitems/948228?api-version=5.0&%24expand=All
+2020-09-04 15:16:17.276 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@fe997c7
+2020-09-04 15:16:17.276 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 15:16:17.276 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 15:16:17.276 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Updating parent of User Story #948229
+2020-09-04 15:16:17.276 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : PATCH https://dev.azure.com/eto-dev/ReleaseEngineering/_apis/wit/workitems/948228?api-version=5.0&bypassRules=true
+2020-09-04 15:16:17.698 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@30125bdf
+2020-09-04 15:16:17.698 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 15:16:17.698 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 15:16:17.698 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Update Succeeded
+2020-09-04 15:16:24.760 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 15:16:24.777 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : not a valid work item type
+2020-09-04 15:17:06.945 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 15:17:17.781 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : GET https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/540108?api-version=5.0&%24expand=All
+2020-09-04 15:17:18.029 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@5400d370
+2020-09-04 15:17:18.029 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 15:17:18.045 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 15:17:18.045 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Updating parent of Task #948224
+2020-09-04 15:17:18.045 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : PATCH https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/540108?api-version=5.0&bypassRules=true
+2020-09-04 15:17:18.500 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@6324ab2b
+2020-09-04 15:17:18.500 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 15:17:18.500 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 15:17:18.500 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Update Succeeded
+2020-09-04 15:17:25.004 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 15:17:28.360 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : GET https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/540107?api-version=5.0&%24expand=All
+2020-09-04 15:17:28.599 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@505c511c
+2020-09-04 15:17:28.599 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 15:17:28.599 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 15:17:28.599 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Updating parent of User Story #540108
+2020-09-04 15:17:28.599 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : PATCH https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/540107?api-version=5.0&bypassRules=true
+2020-09-04 15:17:29.208 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@fe997c7
+2020-09-04 15:17:29.208 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 15:17:29.208 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 15:17:29.208 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Update Succeeded
+2020-09-04 15:17:39.564 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 15:17:41.616 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : GET https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/947983?api-version=5.0&%24expand=All
+2020-09-04 15:17:41.818 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@30125bdf
+2020-09-04 15:17:41.818 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 15:17:41.833 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 15:17:41.833 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Updating parent of Feature #540107
+2020-09-04 15:17:41.833 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : PATCH https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/947983?api-version=5.0&bypassRules=true
+2020-09-04 15:17:42.146 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Response code: 200; found handler: org.codehaus.groovy.runtime.MethodClosure@5400d370
+2020-09-04 15:17:42.146 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsing response as: application/json
+2020-09-04 15:17:42.146 DEBUG 6780 --- [container-1] c.z.common.services.rest.ARESTClient     : Parsed data to instance of: class org.apache.groovy.json.internal.LazyMap
+2020-09-04 15:17:42.146 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Update Succeeded
+2020-09-04 15:17:49.432 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : Entering ParentActivationMicroService:: processADOData
+2020-09-04 15:17:49.443 DEBUG 6780 --- [container-1] c.z.v.s.ParentActivationMicroService     : not a valid work item type

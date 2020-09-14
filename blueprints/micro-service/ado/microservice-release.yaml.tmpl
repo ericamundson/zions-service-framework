@@ -62,3 +62,10 @@ stages:
       continueOnError: true
       enabled: true
 
+    - task: Zions.ado-ext-release-status-control.CreateReleaseTask.CreateReleaseTask@0
+      displayName: 'Create Release'
+      inputs:
+        templateTitle: '{{$app}} - Master'
+        releaseTitle: '{{$app}} - $(buildTag)'
+        releaseVariableSettings: 'deploymentPackage.name=$(buildTag)'
+        xlrProfile: xlrdb
