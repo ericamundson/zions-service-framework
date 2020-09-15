@@ -58,10 +58,15 @@ class YamlExecutionService {
 			File file = new File(repoDir, loc)
 			String outStr = file.text
 			outStr = outStr.replaceAll(/(#)( |\S)*$/, '')
-			def eyaml = new YamlSlurper().parseText(outStr)
-			def executables = eyaml.executables
-			if (executables) {
-				executableYaml.add(eyaml)
+			def eyaml = null
+			try {
+				eyaml = new YamlSlurper().parseText(outStr)
+			} catch (e) {}
+			if (eyaml) {
+				def executables = eyaml.executables
+				if (executables) {
+					executableYaml.add(eyaml)
+				}
 			}
 		}
 //		List<String> pFolders = Arrays.asList(pipelineFolders)
