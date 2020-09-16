@@ -34,6 +34,7 @@ class ImportWIT implements CliAction {
 		def wits = []
 		exportDir.eachFile { file ->
 			if (file.name.endsWith('.json')) {
+				println("Importing $file")
 				def witChanges = new JsonSlurper().parse(file)
 				wits.add(witChanges)
 			}

@@ -520,7 +520,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		def controlData = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
 		
 		when: 'call addWITField'
-		def result = underTest.addWITField('', '', 'wrefName', '')
+		def result = underTest.addWITField('', '', 'wrefName', '', '')
 		
 		then: 'result != null'
 		result != null
