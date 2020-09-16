@@ -491,7 +491,7 @@ public class ProcessTemplateService {
 		}
 		def witField = getWITField(collection, project, wit, field)
 		if (witField == null || "${field.referenceName}" != "${witField.referenceName}") {
-			witField = addWITField(collection, project, wit.referenceName, field.referenceName)
+			witField = addWITField(collection, project, wit.referenceName, field.referenceName, field.type)
 		}
 		if (witField != null && updateLayout) {
 			def layout = ensureWitFieldLayout(collection, project, wit, field, witFieldChange)
@@ -833,7 +833,7 @@ public class ProcessTemplateService {
 			)
 		def actualWit = getWIT(collection, project, name)
 		defaultWitFields.value.each { field ->
-			addWITField(collection, project, actualWit.referenceName, field.referenceName)
+			addWITField(collection, project, actualWit.referenceName, field.referenceName, field.type)
 		}
 		actualWit = ensureLayout(collection, project, actualWit, defaultWit)
 //		def wStr = new JsonBuilder(actualWit).toPrettyString()
@@ -903,9 +903,15 @@ public class ProcessTemplateService {
 
 	}
 	
-	def addWITField(collection, project, witReferenceName, refName) {
+	def addWITField(collection, project, witReferenceName, refName, type) {
+		boolean req = false
+		def defVal = ''
+		if (type == 'boolean') {
+			req = true
+			defVal = 'false'
+		}
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
-		def witField = [defaultValue: '', referenceName: refName, type: null, readOnly: false, required: false,  allowedGroups: null]
+		def witField = [defaultValue: defVal, referenceName: refName, type: null, readOnly: false, required: req,  allowedGroups: null]
 		def body = new JsonBuilder(witField).toPrettyString()
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
