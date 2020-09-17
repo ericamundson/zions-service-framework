@@ -19,7 +19,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("work")
-@ComponentScan(["com.zions.vsts.services.work,com.zions.common.services.excel,com.zions.vsts.services.action.work,com.zions.vsts.services.admin"])
+@ComponentScan(["com.zions.vsts.services.work,com.zions.common.services.excel,com.zions.vsts.services.action.work,com.zions.vsts.services.admin,com.zions.vsts.services.asset"])
 public class WorkAppConfig {
     Map<String, CliAction> actions;
     

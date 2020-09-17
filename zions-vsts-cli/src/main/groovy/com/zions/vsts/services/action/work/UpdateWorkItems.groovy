@@ -10,6 +10,7 @@ import org.apache.poi.ss.util.*
 import com.zions.common.services.cli.action.CliAction
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.common.services.excel.ExcelManagementService
+import com.zions.vsts.services.asset.SharedAssetService
 import com.zions.vsts.services.work.ChangeListManager
 
 import groovy.json.JsonBuilder
@@ -19,21 +20,27 @@ import groovy.json.JsonSlurper
 
 @Component
 @Slf4j
-class ImportWorkItems implements CliAction {
-	def headers
+class UpdateWorkItems implements CliAction {
+	int idCol, workItemTypeCol, titleCol, priorityCol, sevCol, colorCol
 	@Autowired
 	WorkManagementService workManagementService
 	@Autowired
 	ExcelManagementService excelManagementService
+	@Autowired
+	SharedAssetService sharedAssetService
+
 	@Value('${field.map}')
 	String fieldMap
+	
+	@Value('${tfs.collection:}')
+	String collection	
+
+	@Value('${tfs.colorMapUID:}')
+	String colorMapUID	
+
 	ChangeListManager clManager
 
 	public def execute(ApplicationArguments data) {
-		String collection = ""
-		try {
-			collection = data.getOptionValues('tfs.collection')[0]
-		} catch (e) {}
 		def inFilePath = data.getOptionValues('import.file')[0]
 
 		JsonSlurper js = new JsonSlurper()
@@ -46,12 +53,6 @@ class ImportWorkItems implements CliAction {
 		
 		def wiChanges
 		Sheet sheet = excelManagementService.getSheet0()
-		int idCol
-		int workItemTypeCol
-		int titleCol
-		int priorityCol
-		int sevCol
-		int colorCol
 		boolean error = false
 		boolean isFirstRow = true
         sheet.each { row -> 
@@ -66,6 +67,7 @@ class ImportWorkItems implements CliAction {
 				priorityCol = excelManagementService.getColumn('Priority')
 				sevCol = excelManagementService.getColumn('Severity')
 				colorCol = excelManagementService.getColumn('Color')
+				// ID, Type and Title are required by ADO
 				if (idCol > numCols) {
 					log.error('Missing required column: "ID"')
 					error = true
@@ -78,6 +80,7 @@ class ImportWorkItems implements CliAction {
 					log.error('Missing required column: "Title"')
 					error = true
 				}
+				// If Priority, Severity or Color are provided, then all 3 are required
 				else if (priorityCol < numCols || sevCol < numCols || colorCol < numCols) {
 					if (priorityCol > numCols || sevCol > numCols || colorCol > numCols) {
 						log.error('Missing required columns: "Priority", "Severity" and "Color" must be included as a set.  Color will be calculated.')
@@ -87,7 +90,7 @@ class ImportWorkItems implements CliAction {
 				isFirstRow = false
 			}
 			else if (!error) {
-				// Get project from Area Path
+				// Display and process next work item  
 				def id = excelManagementService.getCellValue(row,idCol)
 				def type = excelManagementService.getCellValue(row,workItemTypeCol)
 				def title = excelManagementService.getCellValue(row,titleCol)
@@ -112,12 +115,12 @@ class ImportWorkItems implements CliAction {
 		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${id}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 
 		// Add fields
-		for (int i = 0; i < excelManagementService.headers.size();i++ ) {
+		for (int i = 0; i < excelManagementService.headers.size(); i++ ) {
 			def fieldName = excelManagementService.headers.find { it.value == i+1 }?.key
 			if (fieldName != 'ID') {
 				def adoFieldName = map[fieldName]
 				if (adoFieldName == 'null' || adoFieldName == null) {
-					log.info("No map for field $fieldName. Will not be included in update")
+					log.info("Warning: Field $fieldName has no map entry and will not be included in update")
 				}
 				else {
 					def value
@@ -125,7 +128,7 @@ class ImportWorkItems implements CliAction {
 						value = getColor(row)
 					}
 					else
-						value = row.getCell(i)
+						value = excelManagementService.getCellValue(row, i+1)
 					if (value) {
 						def idData = [ op: 'add', path: "/fields/$adoFieldName", value: "$value"]
 						wiData.body.add(idData)			
@@ -136,8 +139,11 @@ class ImportWorkItems implements CliAction {
 		return wiData
 	}
 	public getColor(Row row) {
-		
-		return null
+		def priority = excelManagementService.getCellValue(row,priorityCol)
+		def severity = excelManagementService.getCellValue(row,sevCol)
+		def colorMap = sharedAssetService.getAsset(collection, colorMapUID)
+		def colorElement = colorMap.find{it.Priority==priority && it.Severity==severity}
+		return colorElement.Color
 	}
 	public Object validate(ApplicationArguments args) throws Exception {
 		def required = ['tfs.url', 'tfs.collection', 'import.file']
