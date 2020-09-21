@@ -19,7 +19,7 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations, String branch) {
+	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
 		if (!performExecute(yaml, locations)) return
 		
 		boolean useProxy = false
@@ -27,7 +27,7 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 			useProxy = yaml.useProxy
 		}
 		//String xlOutPath = "${yaml.path}"
-		String xlReleaseFile = "${repo.absolutePath}/${yaml.file}"
+		String xlReleaseFile = "${repo.absolutePath}/${yaml.yamlFile}"
 		List<String> values = []
 		if (yaml.values) {
 			yaml.values.each { val ->
@@ -59,7 +59,7 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 	}
 	
 	boolean performExecute(def yaml, List<String> locations) {		
-		if (yaml.dependencies) return false
+		if (!yaml.dependencies) return true
 		for (String dep in yaml.dependencies) {
 			if (locations.contains(dep)) return true
 		}

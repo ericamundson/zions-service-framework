@@ -41,9 +41,8 @@ class BranchPolicy implements IExecutableYamlHandler {
 	@Autowired
 	CodeManagementService codeManagementService
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String pName) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
-		String pName = "${yaml.project}"
 		String ciBuildName = null
 		if (yaml.ciBuildName) {
 			ciBuildName = "${yaml.ciBuildName}"

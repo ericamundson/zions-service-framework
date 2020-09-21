@@ -63,27 +63,32 @@ class BlueprintTemplateInterpretorService {
 		return answers
 	}
 	
-	def outputPipeline(Map answers) {
+	def outputPipeline() {
 		//initialize pipeline dir
 		loadXLCli()
 		//write answers file.
-		def answersOut = new YamlBuilder()
-		answersOut.call(answers)
-		String answersStr = answersOut.toString()
+//		def answersOut = new YamlBuilder()
+//		answersOut.call(answers)
+//		String answersStr = answersOut.toString()
 		File pipelineDir = new File(outDir, pipelineFolder)
 		if (!pipelineDir.exists()) {
 			pipelineDir.mkdirs()
 		}
-		File answersFile = new File(pipelineDir, 'answers.yaml')
-		def os = answersFile.newDataOutputStream()
-		os << answersStr
+		File startupBat = new File(pipelineDir, 'startup.bat')
+		def os = startupBat.newDataOutputStream()
+		os << 'start cmd /C %*'
 		os.close()
+//		File answersFile = new File(pipelineDir, 'answers.yaml')
+//		def os = answersFile.newDataOutputStream()
+//		os << answersStr
+//		os.close()
 		String osname = System.getProperty('os.name')
 		
 		//Generate pipeline
 		if (osname.contains('Windows')) {
-			new AntBuilder().exec(dir: "${outDir}/${pipelineFolder}", executable: 'cmd', failonerror: true) {
-				arg( line: "/c ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/pipeline/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s")
+			new AntBuilder().exec(dir: "${outDir}/${pipelineFolder}", executable: "${outDir}/${pipelineFolder}/startup.bat", failonerror: true) {
+//				arg( line: "/c ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/pipeline/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s")
+				arg( line: "${outDir}/${pipelineFolder}/xl blueprint  -l ${blueprintDir} -b \"${blueprint}\" ")
 			}
 		} else {
 			new AntBuilder().exec(dir: "${outDir}/${pipelineFolder}", executable: '/bin/sh', failonerror: true) {
@@ -123,10 +128,15 @@ class BlueprintTemplateInterpretorService {
 		def filePattern = Pattern.compile("^.*[.]yaml\$")
 		outDir.eachDirRecurse() { File dir ->
 			dir.eachFileMatch(filePattern) { File file ->
-				def eyaml = new YamlSlurper().parseText(file.text)
-				def executables = eyaml.executables
-				if (executables) {
-					executableYaml.add(eyaml)
+				def eyaml = null
+				try {
+					eyaml = new YamlSlurper().parseText(file.text)
+				} catch (e) {}
+				if (eyaml) {
+					def executables = eyaml.executables
+					if (executables) {
+						executableYaml.add(eyaml)
+					}
 				}
 			}
 		}

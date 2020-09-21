@@ -1,0 +1,160 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "type": "runXLDeployApply",
+            "yamlFile": ".pipeline/xl-deploy.yaml",
+            "dependencies": [
+                "/.pipeline/xebialabs/xld-env.yaml",
+                "/.pipeline/xebialabs/xld-infra.yaml"
+            ],
+            "values": [
+                {
+                    "name": "test1",
+                    "value": "avalue1"
+                },
+                {
+                    "name": "test2",
+                    "value": "avalue2"
+                }
+            ]
+        }
+    ],
+    "required": [
+        "type",
+        "yamlFile"
+    ],
+    "properties": {
+        "type": {
+            "$id": "#/properties/type",
+            "type": "string",
+            "title": "The type schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "runXLDeployApply"
+            ]
+        },
+        "yamlFile": {
+            "$id": "#/properties/yamlFile",
+            "type": "string",
+            "title": "The yamlFile schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                ".pipeline/xl-deploy.yaml"
+            ]
+        },
+        "useProxy": {
+            "$id": "#/properties/useProxy",
+            "type": "boolean",
+            "title": "The useProxy schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "true"
+            ]
+        },
+        "dependencies": {
+            "$id": "#/properties/dependencies",
+            "type": "array",
+            "title": "The dependencies schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": [],
+            "examples": [
+                [
+                    "/.pipeline/xebialabs/xld-env.yaml",
+                    "/.pipeline/xebialabs/xld-infra.yaml"
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/dependencies/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/dependencies/items/anyOf/0",
+                        "type": "string",
+                        "title": "The first anyOf schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "/.pipeline/xebialabs/xld-env.yaml",
+                            "/.pipeline/xebialabs/xld-infra.yaml"
+                        ]
+                    }
+                ]
+            }
+        },
+        "values": {
+            "$id": "#/properties/values",
+            "type": "array",
+            "title": "The values schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": [],
+            "examples": [
+                [
+                    {
+                        "name": "test1",
+                        "value": "avalue1"
+                    },
+                    {
+                        "name": "test2",
+                        "value": "avalue2"
+                    }
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/values/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/values/items/anyOf/0",
+                        "type": "object",
+                        "title": "The first anyOf schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": {},
+                        "examples": [
+                            {
+                                "name": "test1",
+                                "value": "avalue1"
+                            }
+                        ],
+                        "required": [
+                            "name",
+                            "value"
+                        ],
+                        "properties": {
+                            "name": {
+                                "$id": "#/properties/values/items/anyOf/0/properties/name",
+                                "type": "string",
+                                "title": "The name schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "test1"
+                                ]
+                            },
+                            "value": {
+                                "$id": "#/properties/values/items/anyOf/0/properties/value",
+                                "type": "string",
+                                "title": "The value schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "avalue1"
+                                ]
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                ]
+            }
+        }
+    },
+    "additionalProperties": false
+}

@@ -22,9 +22,9 @@ class PipelineBuilder implements CliAction {
 	BlueprintTemplateInterpretorService blueprintTemplateInterpretorService
 
 	public def execute(ApplicationArguments data) {
-		def answers = blueprintTemplateInterpretorService.loadAnswers()
-		println "Answers:  ${answers}"
-		blueprintTemplateInterpretorService.outputPipeline(answers)
+		//def answers = blueprintTemplateInterpretorService.loadAnswers()
+		//println "Answers:  ${answers}"
+		blueprintTemplateInterpretorService.outputPipeline()
 		blueprintTemplateInterpretorService.runExecutableYaml()
 	}
 	

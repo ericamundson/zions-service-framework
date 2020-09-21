@@ -33,17 +33,17 @@ import groovy.util.logging.Slf4j
 @Component
 @Slf4j
 class RunXLBlueprints implements IExecutableYamlHandler {
-	
-	
+
+
 	@Value('${xl.user:}')
 	String xlUser
-	
+
 	@Value('${xl.password:}')
 	String xlPassword
-	
+
 	@Value('${pipeline.folder:.pipeline}')
 	String pipelineFolder
-	
+
 	@Autowired
 	GitService gitService
 	@Autowired
@@ -54,22 +54,21 @@ class RunXLBlueprints implements IExecutableYamlHandler {
 	PolicyManagementService policyManagementService
 
 	public RunXLBlueprints() {
-		
 	}
-	
-	def handleYaml(def yaml, File repo, def locations, String branch) {
+
+	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
 		boolean useProxy = false
 		if (yaml.useProxy) {
 			useProxy = yaml.useProxy
 		}
-		def repoName = yaml.name
-		def project = yaml.project
-		
+		def repoName = yaml.repoName
+		//def project = yaml.project
+
 		def projectData = projectManagementService.getProject('', project)
 		def repoData = codeManagementService.getRepo('', projectData, repoName)
-		
+
 		def outrepo = gitService.loadChanges(repoData.remoteUrl, repoName)
-		
+
 		File loadDir = new File(outrepo, "${pipelineFolder}")
 		if (!loadDir.exists()) {
 			loadDir.mkdirs()
@@ -86,55 +85,47 @@ class RunXLBlueprints implements IExecutableYamlHandler {
 			String bpProjectName = bp.project
 			String bpRepoName = bp.repoName
 			String blueprint = bp.name
-			try {
-				def bpProjectData = projectManagementService.getProject('', bpProjectName)
-				def bpRepoData = codeManagementService.getRepo('', bpProjectData, bpRepoName)
-				
-				def bpOutrepo = gitService.loadChanges(bpRepoData.remoteUrl, bpRepoName)
-				
-				YamlBuilder yb = new YamlBuilder()
-				
-				yb( bp.answers )
-				
-				String answers = yb.toString()
-				
-				File aF = new File("${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml")
-				def sAF = aF.newDataOutputStream()
-				sAF << answers
-				sAF.close()
-				new AntBuilder().exec(dir: "${outrepo.absolutePath}/${pipelineFolder}", executable: "${command}", failonerror: true) {
-					if (useProxy) {
-						env( key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080")
-					}
-					arg( line: "${option} ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s")
+			def bpProjectData = projectManagementService.getProject('', bpProjectName)
+			def bpRepoData = codeManagementService.getRepo('', bpProjectData, bpRepoName)
+
+			def bpOutrepo = gitService.loadChanges(bpRepoData.remoteUrl, bpRepoName)
+
+			YamlBuilder yb = new YamlBuilder()
+
+			yb( bp.answers )
+
+			String answers = yb.toString()
+
+			File aF = new File("${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml")
+			def sAF = aF.newDataOutputStream()
+			sAF << answers
+			sAF.close()
+			new AntBuilder().exec(dir: "${outrepo.absolutePath}/${pipelineFolder}", executable: "${command}", failonerror: true) {
+				if (useProxy) {
+					env( key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080")
 				}
-//				def policies = policyManagementService.clearBranchPolicies('', projectData, bpRepoData.id, 'master')
-//				gitService.pushChanges(bpRepoName)
-//				policyManagementService.restoreBranchPolicies('', projectData, bpRepoData.id, 'master', policies)
-			} catch (e) {
-				log.error("Blueprint run failed:  ${e.message}")
+				arg( line: "${option} ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s")
 			}
+			//				def policies = policyManagementService.clearBranchPolicies('', projectData, bpRepoData.id, 'master')
+			//				gitService.pushChanges(bpRepoName)
+			//				policyManagementService.restoreBranchPolicies('', projectData, bpRepoData.id, 'master', policies)
 		}
-		try {
-			def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
-			gitService.pushChanges(outrepo)
-			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
-		} catch (e) {
-			log.error("Failed push of blueprint changes:  ${e.message}")
-		}
+		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
+		gitService.pushChanges(outrepo)
+		policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
 	}
-	
-	boolean performExecute(def yaml, List<String> locations) {		
+
+	boolean performExecute(def yaml, List<String> locations) {
 		if (yaml.dependencies) return false
 		for (String dep in yaml.dependencies) {
 			if (locations.contains(dep)) return true
 		}
 		return false
 	}
-	
+
 	def loadXLCli(File loadDir) {
 		String osname = System.getProperty('os.name')
-			
+
 		if (osname.contains('Windows')) {
 			InputStream istream = this.getClass().getResourceAsStream('/xl/windows/xl.exe')
 			File of = new File(loadDir, 'xl.exe')
