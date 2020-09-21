@@ -3,7 +3,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+import groovy.util.logging.Slf4j
+
 @Component
+@Slf4j
 class RunXLDeployApply implements IExecutableYamlHandler {
 	
 	@Value('${xld.url:https://xldeploy.cs.zionsbank.com}')
@@ -44,7 +47,13 @@ class RunXLDeployApply implements IExecutableYamlHandler {
 			command = '/bin/sh'
 			option = '-c'
 		}
-		new AntBuilder().exec(dir: "${repo.absolutePath}", executable: "${command}", failonerror: true) {
+		AntBuilder ant = new AntBuilder()
+		ant.exec(outputproperty:"text",
+             errorproperty: "error",
+             resultproperty: "exitValue", 
+			 dir: "${repo.absolutePath}", 
+			 executable: "${command}", 
+			 failonerror: false) {
 			if (useProxy) {
 				env( key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080")
 			}
@@ -54,6 +63,20 @@ class RunXLDeployApply implements IExecutableYamlHandler {
 				arg( line: "${option} ${repo.absolutePath}/xl apply  -f ${xlDeployFile} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}")
 				
 			}
+		}
+		def result = new Expando(
+			text: ant.project.properties.text,
+			error: ant.project.properties.error,
+			exitValue: ant.project.properties.exitValue as Integer,
+			toString: { text }
+		)
+		
+		if (result.exitValue != 0) {
+			throw new Exception("""command failed with ${result.exitValue}
+error: ${result.error}
+text: ${result.text}""")
+		} else {
+			log.info(result.text)
 		}
 	}
 	

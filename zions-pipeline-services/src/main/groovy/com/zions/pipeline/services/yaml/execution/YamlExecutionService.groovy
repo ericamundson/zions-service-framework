@@ -46,6 +46,8 @@ class YamlExecutionService {
 	@Value('${always.execute.folder:executables}')
 	String alwaysExecuteFolder
 	
+	Map<String, String> schemaCache = [:]
+	
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
 	
 	JsonSchemaFactory factory = JsonSchemaFactory.builder(
@@ -149,8 +151,15 @@ class YamlExecutionService {
 	}
 	
 	def validateYaml(String yaml, String version, String type) {
-		String schema = loadSchema(version)
-		schema = schema.replace('\t', '  ')
+		String schema = null
+		if (schemaCache.containsKey(version)) {
+			schema = schemaCache[version]
+		} else {
+			schema = loadSchema(version)
+			schema = schema.replace('\t', '  ')
+			schemaCache[version] = schema
+		}
+		if (!schema) return []
 		Set invalidMessages = factory.getSchema(schema).validate(mapper.readTree(yaml))
 		Set outmessages = []
         if (!invalidMessages.empty) {
