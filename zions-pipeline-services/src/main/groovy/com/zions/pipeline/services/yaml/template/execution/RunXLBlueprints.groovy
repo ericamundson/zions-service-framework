@@ -100,11 +100,32 @@ class RunXLBlueprints implements IExecutableYamlHandler {
 			def sAF = aF.newDataOutputStream()
 			sAF << answers
 			sAF.close()
-			new AntBuilder().exec(dir: "${outrepo.absolutePath}/${pipelineFolder}", executable: "${command}", failonerror: true) {
+			AntBuilder ant = new AntBuilder()
+			ant.exec(outputproperty:"text",
+			errorproperty: "error",
+			resultproperty: "exitValue",
+			dir: "${outrepo.absolutePath}/${pipelineFolder}",
+			executable: "${command}",
+			failonerror: false) {
 				if (useProxy) {
 					env( key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080")
 				}
 				arg( line: "${option} ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s")
+			}
+			def result = new Expando(
+					text: ant.project.properties.text,
+					error: ant.project.properties.error,
+					exitValue: ant.project.properties.exitValue as Integer,
+					toString: {
+						text }
+					)
+
+			if (result.exitValue != 0) {
+				throw new Exception("""command failed with ${result.exitValue}
+error: ${result.error}
+text: ${result.text}""")
+			} else {
+				log.info(result.text)
 			}
 			//				def policies = policyManagementService.clearBranchPolicies('', projectData, bpRepoData.id, 'master')
 			//				gitService.pushChanges(bpRepoName)
