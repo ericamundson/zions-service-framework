@@ -18,6 +18,8 @@ import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
 
 import com.zions.pipeline.services.yaml.execution.YamlExecutionService
+import com.zions.pipeline.services.db.PullRequestCompletedRepository
+import com.zions.pipeline.services.db.PullRequestCompleted
 
 /**
  * ReST Controller for TFS Policy Management service. 
@@ -35,6 +37,9 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 
 	@Autowired
 	YamlExecutionService yamlExecutionService
+	
+	@Autowired
+	PullRequestCompletedRepository pullRequestCompletedRepository
 
 	@Value('${pipeline.folders:.pipeline,pipeline}')
 	String[] pipelineFolders
@@ -62,6 +67,13 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 		if (adoData.resource && adoData.resource.lastMergeCommit) {
 			String branch = "${adoData.resource.targetRefName}"
 			String commitUrl = "${adoData.resource.lastMergeCommit.url}"
+			String status = "${adoData.resource.status}".toLowerCase()
+			if (status != 'completed') return null
+			String pullRequestId = "${adoData.resource.pullRequestId}"
+			PullRequestCompleted prc = pullRequestCompletedRepository.findByPullRequestId(pullRequestId)
+			if (prc) return null
+			prc = new PullRequestCompleted([pullRequestId: pullRequestId, status: status])
+			pullRequestCompletedRepository.save(prc)
 			def commit = codeManagementService.getCommit(commitUrl)
 			if (!commit) return null;
 			String project = "${adoData.resource.repository.project.name}"
@@ -70,7 +82,7 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 			if (locations.size() > 0) {
 				String repoUrl = "${adoData.resource.repository.remoteUrl}"
 				String name = "${adoData.resource.repository.name}"
-				yamlExecutionService.runExecutableYaml(repoUrl,name,locations, branch)
+				yamlExecutionService.runExecutableYaml(repoUrl,name,locations, branch, project, pullRequestId)
 			}
 		}
 		return null
