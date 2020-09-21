@@ -43,7 +43,7 @@ class WebHookSubscriptions implements IExecutableYamlHandler {
 	@Value('${webhook.password:}')
 	String consumerPassword
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
 		// TODO: Collection of event types dosn't makes sense as each different event type will have a different set of publisherInputs
 		String[] eventTypes = yaml.eventTypes.split(',')

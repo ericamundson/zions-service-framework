@@ -29,8 +29,8 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 @Configuration
 @ComponentScan(["com.zions.pipeline.services", "com.zions.vsts.services"])
 @EnableMongoRepositories(basePackages = "com.zions.pipeline.services.db")
-//@Profile('dev')
-public class AppConfig implements MessageFanoutConfigTrait {
+@Profile('dev')
+public class AppConfigDev implements MessageFanoutConfigTrait {
 	@Bean
 	JavaMailSender sender() {
 		return new JavaMailSenderImpl()

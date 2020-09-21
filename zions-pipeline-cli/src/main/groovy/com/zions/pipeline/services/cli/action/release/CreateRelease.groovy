@@ -52,11 +52,11 @@ class CreateRelease implements CliAction {
 	XlrReleaseSubscriptionRepository xlrReleaseSubscriptionRepository
 
 	public def execute(ApplicationArguments data) {
-		def templates = releaseQueryService.getTemplates(templateTitle, 0)
-		if (templates && templates.size() == 1) {
-			String json = new JsonBuilder(templates).toPrettyString()
-			String templateId = releaseId(templates[0])
-			String folderId = folderId(templates[0])
+		def template = releaseQueryService.getTemplate(templateTitle, 0)
+		if (template) {
+			//String json = new JsonBuilder(templates).toPrettyString()
+			String templateId = releaseId(template)
+			String folderId = folderId(template)
 			log.info("ReleaseId:  ${templateId},  FolderId:  ${folderId}")
 			def xlrData = [releaseTitle: "${releaseTitle}", folderId: "${folderId}"]
 		

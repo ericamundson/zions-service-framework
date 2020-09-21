@@ -12,7 +12,16 @@ public class ReleaseQueryService {
 	@Autowired
 	XlrGenericRestClient xlrGenericRestClient
 	
-	def getTemplates(def title, int depth = 0) {
+	def getTemplates(String title, int depth = 0) {
+		String rFolder = null
+		String aTitle = null
+		if (title.indexOf('/') != -1) {
+			rFolder = title.substring(0, title.lastIndexOf('/'))
+			aTitle = title.substring(title.lastIndexOf('/')+1)
+		} else {
+			aTitle = title
+		}
+
 		def templates = []
 		int page = 0
 		int pageSize = 25
@@ -21,7 +30,7 @@ public class ReleaseQueryService {
 				//requestContentType: ContentType.JSON,
 				contentType: ContentType.JSON,
 				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/templates",
-				query: [title: title, depth: depth, page:page, resultsPerPage: pageSize]
+				query: [title: aTitle, depth: depth, page:page, resultsPerPage: pageSize]
 				
 			)
 			templates.addAll(result)
@@ -29,6 +38,65 @@ public class ReleaseQueryService {
 			page++
 		}
 		return templates
+
+	}
+
+	def getTemplate(String title, int depth = 0) {
+		String rFolder = null
+		String aTitle = null
+		if (title.indexOf('/') != -1) {
+			rFolder = title.substring(0, title.lastIndexOf('/'))
+		    aTitle = title.substring(title.lastIndexOf('/')+1)
+		} else {
+			aTitle = title
+		}
+
+		def templates = []
+		int page = 0
+		int pageSize = 25
+		while (true) {
+			def result = xlrGenericRestClient.get(
+				//requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/templates",
+				query: [title: aTitle, depth: depth, page:page, resultsPerPage: pageSize]
+				
+			)
+			templates.addAll(result)
+			if (result.size() < pageSize) break
+			page++
+		}
+		def template = getActualTemplate( templates, rFolder)
+		return template
+
+	}
+	
+	def getActualTemplate(def templates, String rFolder) {
+		if (rFolder == null && templates.size() > 0) {
+			return templates[0]
+		}
+		def folder = getFolder(rFolder)
+		if (folder != null&& templates.size() > 0) {
+			String fId = folder.id
+			for (def template in templates) {
+				String tId = template.id
+				
+				if (tId.contains(fId)) {
+					return template
+				}
+			}
+		}
+		return null
+	}
+	def getFolder(String path, int depth = 0) {
+		def result = xlrGenericRestClient.get(
+			//requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri:  "${xlrGenericRestClient.xlrUrl}/api/v1/folders/find",
+			query: [byPath: path, depth: depth]
+			
+		)
+		return result
 
 	}
 	

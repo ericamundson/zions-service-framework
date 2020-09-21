@@ -38,7 +38,7 @@ class BuildDefinition implements IExecutableYamlHandler {
 	@Autowired
 	ProjectManagementService projectManagementService
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName) {
 		
 		String bPath = yaml.name
 		String bFolder = null
@@ -49,17 +49,17 @@ class BuildDefinition implements IExecutableYamlHandler {
 		} else {
 			bName = bPath
 		}
-		def project = projectManagementService.getProject('', yaml.project)
+		def project = projectManagementService.getProject('', projectName)
 		def build = buildManagementService.getBuild('', project, bName)
 		def queue = buildManagementService.getQueue('',project, yaml.queue)
 		if (!build) {
 			def trigger = [batchChanges: false, pollingJobId: null, pollingInterval: 0, pathFilters:[], branchFilters: ['+refs/heads/master'], defaultSettingsSourceType: 2, isSettingsSourceOptionSupported: true, settingsSourceType: 2, triggerType: 2]
 			def repo = codeManagementService.getRepo('', project, yaml.repository.name)
-			def bDef = [name: bName, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue, triggers:[trigger] ]
+			def bDef = [name: bName, project: projectName, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue, triggers:[trigger] ]
 			if (yaml.repository.defaultBranch) {
 				String branchName = yaml.repository.defaultBranch
 				branchName = branchName.substring('refs/heads/'.length())
-				codeManagementService.ensureBranch('', yaml.project, yaml.repository.name, 'master', branchName)
+				codeManagementService.ensureBranch('', projectName, yaml.repository.name, 'master', branchName)
 				bDef.repository.defaultBranch = yaml.repository.defaultBranch
 			}
 			if (bFolder) {
@@ -94,7 +94,7 @@ class BuildDefinition implements IExecutableYamlHandler {
 			if (yaml.repository.defaultBranch) {
 				String branchName = yaml.repository.defaultBranch
 				branchName = branchName.substring('refs/heads/'.length())
-				codeManagementService.ensureBranch('', yaml.project, yaml.repository.name, 'master', branchName)
+				codeManagementService.ensureBranch('', projectName, yaml.repository.name, 'master', branchName)
 				bDef.repository.defaultBranch = yaml.repository.defaultBranch
 			}
 			if (bFolder) {

@@ -667,11 +667,11 @@ public class BuildManagementService {
 		String repoId = "${build.repository.id}"
 		String defId = "${build.definition.id}"
 		def query = ['api-version':'5.1','branchName': bName, definitions: defId ]
-		if (isProdBranch) {
-			query.tagFilters = 'PR'
-		} else if (buildTagFilter != 'none') {
-			query.tagFilters = buildTagFilter
-		}
+//		if (isProdBranch) {
+//			query.tagFilters = 'PR'
+//		} else if (buildTagFilter != 'none') {
+//			query.tagFilters = buildTagFilter
+//		}
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds",

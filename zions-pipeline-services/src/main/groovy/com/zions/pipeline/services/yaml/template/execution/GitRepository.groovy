@@ -42,8 +42,8 @@ class GitRepository implements IExecutableYamlHandler {
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations, String inBranch) {
-		String projectName = yaml.project
+	def handleYaml(def yaml, File repo, def locations, String inBranch, String projectName) {
+//		String projectName = yaml.project
 		String repoName = yaml.name
 //		def answers = yaml.answers
 //		String answersStr = "${repoName}"

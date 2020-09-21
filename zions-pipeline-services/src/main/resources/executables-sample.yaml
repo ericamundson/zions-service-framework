@@ -1,0 +1,73 @@
+executables: # setup AnotherRepo6 testing
+# Create repo 
+- name: AnotherRepo
+  type: gitRepository
+
+# newer build def OK
+- name: dev4.com/AnotherRepo-release
+  type: buildDefinition
+  queue: 'On-Prem RE Test'
+  repository: 
+    name: AnotherRepo
+    defaultBranch: refs/heads/dev/init
+  variables:
+  - name: Good_stuff7
+    value: old
+    allowOverride: true
+  buildyaml: .pipeline/ado/build-release.yaml
+  
+- name: dev4.com/AnotherRepo-ci
+  type: buildDefinition
+  project: ALMOpsTest
+  queue: 'On-Prem DR'
+  repository: 
+    name: AnotherRepo
+  variables:
+  - name: Good_stuff7
+    value: old
+    allowOverride: true
+  buildyaml: .pipeline/ado/build-release.yaml
+  
+# Ensure correct branch policy ok
+- type: branchPolicy
+  branchName: refs/heads/master  
+  repository: AnotherRepo
+  policyData:
+    buildData:
+      ciBuildFile: .pipeline/ado/build-release.yaml
+      ciBuildName: AnotherRepo-ci
+    approvalData:
+      minApprovers: 2
+
+- type: runXLDeployApply
+  yamlFile: .pipeline/xl-deploy.yaml
+  dependencies:
+  - /.pipeline/xebialabs/xld-env.yaml
+  - /.pipeline/xebialabs/xld-infra.yaml
+  values:
+  - name: test1
+    value: avalue1
+  - name: test2
+    value: avalue2
+    
+- type: runXLReleaseApply
+  yamlFile:  .pipeline/xl-release.yaml
+  dependencies:
+  - /.pipeline/xebialabs/xld-ci-cd.yaml
+  values:
+  - name: test1
+    value: avalue1
+  - name: test2
+    value: avalue2
+    
+- type: runXLBlueprints
+  repoName: TestRepo
+  project: ALMOpsTest
+  blueprints:
+  - name: test-bp
+    repoName: ALMOpsTest
+    answers:
+      AppName: "TestRepo" 
+      IsWindows: true
+      BuildIncludes: "./"
+  

@@ -13,6 +13,14 @@ import java.util.regex.Matcher
 
 import com.zions.pipeline.services.git.GitService
 import com.zions.pipeline.services.yaml.template.execution.IExecutableYamlHandler
+import com.zions.vsts.services.admin.project.ProjectManagementService
+import com.zions.vsts.services.code.CodeManagementService
+import com.zions.vsts.services.pullrequest.PullRequestManagementService
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.networknt.schema.JsonSchemaFactory
+import com.networknt.schema.SpecVersion
+
 
 @Component
 @Slf4j
@@ -23,13 +31,31 @@ class YamlExecutionService {
 	@Autowired
 	GitService gitService
 	
+	@Autowired
+	CodeManagementService codeManagementService
+	
+	@Autowired
+	ProjectManagementService projectManagementService
+	
+	@Autowired
+	PullRequestManagementService pullRequestManagementService
+	
 	@Value('${pipeline.folders:.pipeline,pipeline}')
 	String[] pipelineFolders
 
 	@Value('${always.execute.folder:executables}')
 	String alwaysExecuteFolder
+	
+	ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
+	
+	JsonSchemaFactory factory = JsonSchemaFactory.builder(
+		JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
+	)
+	.objectMapper(mapper)
+	.build()
+	
 
-	def runExecutableYaml(String repoUrl, String repoName, def scanLocations, String branch) {
+	def runExecutableYaml(String repoUrl, String repoName, def scanLocations, String branch, String project, String pullRequestId) {
 		File repo = null
 		try {
 			repo = gitService.loadChanges(repoUrl, repoName, branch)
@@ -38,21 +64,36 @@ class YamlExecutionService {
 			repo = null
 		}
 		if (!repo) return
-		def exeYaml = findExecutableYaml(repo, scanLocations)
-		for (def yaml in exeYaml) { 
-			if (yaml.executables) {
-				for (def exe in yaml.executables) {
+		def projectData = projectManagementService.getProject('', project)
+		def repoData = codeManagementService.getRepo('', projectData, repoName)
+		def exeYaml = findExecutableYaml(repo, scanLocations, projectData, repoData, pullRequestId)
+		for (def yamldata in exeYaml) { 
+			if (yamldata.yaml.executables) {
+				Set issues = []
+				for (def exe in yamldata.yaml.executables) {
 									
 					IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 					if (yamlHandler) {
-						yamlHandler.handleYaml(exe, repo, scanLocations, branch)
+						try {
+							yamlHandler.handleYaml(exe, repo, scanLocations, branch, project)
+						} catch (e) {
+							StringWriter sw = new StringWriter()
+							PrintWriter pw = new PrintWriter(sw)
+							e.printStackTrace(pw);
+							String issue = sw
+							issues.add("${exe.type} error: ${issue}")
+						}
 					}
+				}
+				if (!issues.empty) {
+					def feedback = [location: yamldata.location, messages: issues]
+					sendFeedback(projectData, repoData, pullRequestId, feedback)
 				}
 			}
 		}
 	}
 	
-	private def findExecutableYaml(File repoDir, def scanLocations) {
+	private def findExecutableYaml(File repoDir, def scanLocations, def projectData, def repoData, String pullRequestId) {
 		def executableYaml = []
 		scanLocations.each { String loc ->
 			File file = new File(repoDir, loc)
@@ -65,45 +106,65 @@ class YamlExecutionService {
 			if (eyaml) {
 				def executables = eyaml.executables
 				if (executables) {
-					executableYaml.add(eyaml)
+					boolean valid = true
+					Set oinvalidMessages = []
+					for (def executable in executables) {
+						String type = executable.type
+						String version = "${type}_v1"
+						if (type.indexOf('/') != -1) {
+							String v = type.substring(type.indexOf('/')+1)
+							if (v == 'v1') {
+								executable.type = type.substring(0, type.indexOf('/'))
+							} else {
+								executable.type = type.replace('/', '_')
+							}
+							version = "${type}_${v}"
+						}
+						YamlBuilder yb = new YamlBuilder()
+						
+						yb( executable )
+						
+						String yaml = yb.toString()
+		
+						Set invalidMessages = validateYaml(yaml, version, executable.type)
+						oinvalidMessages.addAll(invalidMessages)
+						
+					}
+					if (oinvalidMessages.empty) {
+						executableYaml.add([location: loc, yaml: eyaml])
+					} else {
+						def feedback = [location: loc, messages: oinvalidMessages]
+						sendFeedback(projectData, repoData, pullRequestId, feedback)
+					}
 				}
 			}
 		}
-//		List<String> pFolders = Arrays.asList(pipelineFolders)
-//		repoDir.eachDirRecurse() { File d ->
-//			String dname = d.name
-//			if (pFolders.contains(dname)) {
-//				File executables = new File(d, alwaysExecuteFolder)
-//				if (executables.exists()) {
-//					executables.eachFile() { File eFile ->
-//						String name = eFile.name
-//						if (name.endsWith('.yaml')) {
-//							String outStr = eFile.text
-//							outStr = outStr.replaceAll(/(#)( |\S)*$/, '')
-//							def eyaml = new YamlSlurper().parseText(outStr)
-//							executableYaml.add(eFile)
-//						}
-//					}
-//				}
-//
-//			}
-//		}
-//		pipelineFolders.each { String pipelineFolder ->
-//			File pipelineDir = new File(repoDir, pipelineFolder)
-//			if (pipelineDir.exists()) {
-//				File executables = new File(pipelineDir, alwaysExecuteFolder)
-//				if (executables.exists()) {
-//					executables.eachFile() { File eFile ->
-//						String name = eFile.name
-//						if (name.endsWith('.yaml')) {
-//							def eyaml = new YamlSlurper().parseText(eFile.text)
-//							executableYaml.add(eFile)
-//						}
-//					}
-//				}
-//			}
-//		}
+		
 		return executableYaml
 
+	}
+	
+	def sendFeedback(def projectData, def repoData, String pullRequestId, def feedback) {
+		pullRequestManagementService.createdCommentThread('', projectData, repoData, pullRequestId, feedback)
+	}
+	
+	def validateYaml(String yaml, String version, String type) {
+		String schema = loadSchema(version)
+		schema = schema.replace('\t', '  ')
+		Set invalidMessages = factory.getSchema(schema).validate(mapper.readTree(yaml))
+		Set outmessages = []
+        if (!invalidMessages.empty) {
+			for (String imessage in invalidMessages) {
+				outmessages.add("${type}: ${imessage}")
+				log.error("${type}: ${imessage}")
+			}
+		}
+		return outmessages    
+	}
+
+	String loadSchema(String version) {
+		URL url = this.getClass().getResource("/${version}.json")
+		File schemaFile = new File(url.file)
+		return schemaFile.text
 	}
 }
