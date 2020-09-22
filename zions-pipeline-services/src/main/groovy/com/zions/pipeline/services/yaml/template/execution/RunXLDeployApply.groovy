@@ -2,12 +2,15 @@ package com.zions.pipeline.services.yaml.template.execution
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-
+import org.springframework.core.env.Environment
 import groovy.util.logging.Slf4j
 
 @Component
 @Slf4j
 class RunXLDeployApply implements IExecutableYamlHandler {
+	
+	@Autowired
+	Environment env
 	
 	@Value('${xld.url:https://xldeploy.cs.zionsbank.com}')
 	String xldUrl
@@ -33,7 +36,13 @@ class RunXLDeployApply implements IExecutableYamlHandler {
 		List<String> values = []
 		if (yaml.values) {
 			yaml.values.each { val ->
-				String valOut = "${val.name}=${val.'value'}"
+				String value = "${val.value}"
+				if (value.startsWith('${')) {
+					String name = value.substring('${'.length())
+					name = name.substring(0, name.length() - 1)
+					value = env.getProperty(name)
+				}
+				String valOut = "${val.name}=${value}"
 				values.add(valOut)
 			}
 		}
