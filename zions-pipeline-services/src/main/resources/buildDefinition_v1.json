@@ -42,6 +42,26 @@
                 "dev4.com/AnotherRepo-release"
             ]
         },
+        "project": {
+            "$id": "#/properties/project",
+            "type": "string",
+            "title": "The project schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "ALMOpsTest"
+            ]
+        },
+        "context": {
+            "$id": "#/properties/context",
+            "type": "string",
+            "title": "The context schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "ALMOpsTest"
+            ]
+        },
         "type": {
             "$id": "#/properties/type",
             "type": "string",
