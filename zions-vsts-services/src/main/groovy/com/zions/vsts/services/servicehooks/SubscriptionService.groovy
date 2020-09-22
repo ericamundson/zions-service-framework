@@ -15,7 +15,6 @@ class SubscriptionService {
 	IGenericRestClient genericRestClient
 	
 	def ensureSubscription(def projectInfo, def subscriptionData) {
-		//def projectInfo = projectManagementService.getProject('', project)
 		System.out.println("projectInfo.id = "+projectInfo.id)
 		//System.out.println("projectId from publisherInputs = "+subscriptionData.publisherInputs.projectId)
 		subscriptionData.publisherInputs.projectId = projectInfo.id
@@ -42,7 +41,7 @@ class SubscriptionService {
 			if (projectIdSub == cProjectId) {
 				if ("${sub.status}" != "disabledByUser") {
 					def inputs = subscriptionData.publisherInputs
-					Iterator<?> keys = inputs.keys()
+					Iterator<?> keys = inputs.keySet().iterator()
 					while( keys.hasNext() ) {
 						def key = keys.next()
 						if ("${key}" == "projectId") continue

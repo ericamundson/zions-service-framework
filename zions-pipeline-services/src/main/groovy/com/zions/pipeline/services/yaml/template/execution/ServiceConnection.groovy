@@ -46,10 +46,9 @@ class ServiceConnection implements IExecutableYamlHandler {
 	@Value('${webhook.password:}')
 	String endpointPassword
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
-		// TODO: Collection of event types dosn't makes sense as each different event type will have a different set of publisherInputs
-		String endpointType = yaml.eventType
+		String endpointType = yaml.endpointType
 		def epAuthScheme = [ scheme: "UsernamePassword", parameters: [username: endpointUserName, password: endpointPassword] ]
 		def epData = [ acceptUntrustedCerts: false ]
 		def endpointData = [ administratorsGroup: null, authorization: epAuthScheme, createdBy: null, data: epData, description: yaml.endpointDescription, groupScopeId: null,	name: yaml.endpointName, operationStatus: null, readersGroup: null, serviceEndpointProjectReferences: [],type: yaml.endpointType, url: yaml.endpointUrl, isShared: false, owner: "library" ]
