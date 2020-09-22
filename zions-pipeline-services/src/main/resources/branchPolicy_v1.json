@@ -38,6 +38,26 @@
                 "branchPolicy"
             ]
         },
+        "project": {
+            "$id": "#/properties/project",
+            "type": "string",
+            "title": "The project schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "ALMOpsTest"
+            ]
+        },
+        "context": {
+            "$id": "#/properties/context",
+            "type": "string",
+            "title": "The context schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "ALMOpsTest"
+            ]
+        },
         "branchName": {
             "$id": "#/properties/branchName",
             "type": "string",
