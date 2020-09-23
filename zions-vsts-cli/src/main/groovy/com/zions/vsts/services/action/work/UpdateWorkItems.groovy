@@ -21,7 +21,7 @@ import groovy.json.JsonSlurper
 @Component
 @Slf4j
 class UpdateWorkItems implements CliAction {
-	int idCol, workItemTypeCol, titleCol, priorityCol, sevCol, colorCol
+	int idCol, workItemTypeCol, titleCol, priorityCol, sevCol, colorCol, numCols
 	@Autowired
 	WorkManagementService workManagementService
 	@Autowired
@@ -60,7 +60,7 @@ class UpdateWorkItems implements CliAction {
 				excelManagementService.setHeaders(row)
 				
 				// Check required columns
-				int numCols = excelManagementService.headers.size()
+				numCols = excelManagementService.headers.size()
 				idCol = excelManagementService.getColumn('ID')
 				workItemTypeCol = excelManagementService.getColumn('Work Item Type')
 				titleCol = excelManagementService.getColumn('Title')
@@ -90,6 +90,11 @@ class UpdateWorkItems implements CliAction {
 				isFirstRow = false
 			}
 			else if (!error) {
+				// Check for null cell (end of file)
+				if (!row.getCell(0)) {
+					error = true
+					return
+				}
 				// Display and process next work item  
 				def id = excelManagementService.getCellValue(row,idCol)
 				def type = excelManagementService.getCellValue(row,workItemTypeCol)
@@ -115,7 +120,7 @@ class UpdateWorkItems implements CliAction {
 		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${id}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 
 		// Add fields
-		for (int i = 0; i < excelManagementService.headers.size(); i++ ) {
+		for (int i = 0; i < numCols; i++ ) {
 			def fieldName = excelManagementService.headers.find { it.value == i+1 }?.key
 			if (fieldName != 'ID') {
 				def adoFieldName = map[fieldName]
