@@ -39,11 +39,11 @@ class ServiceConnection implements IExecutableYamlHandler {
 	EndpointManagementService endpointManagementService
 
 	@Autowired
-	@Value('${webhook.user:}')
+	@Value('${xl.user:}')
 	String endpointUserName
 
 	@Autowired
-	@Value('${webhook.password:}')
+	@Value('${xl.password:}')
 	String endpointPassword
 
 	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName) {
@@ -53,9 +53,6 @@ class ServiceConnection implements IExecutableYamlHandler {
 		def epData = [ acceptUntrustedCerts: false ]
 		def endpointData = [ administratorsGroup: null, authorization: epAuthScheme, createdBy: null, data: epData, description: yaml.endpointDescription, groupScopeId: null,	name: yaml.endpointName, operationStatus: null, readersGroup: null, serviceEndpointProjectReferences: [],type: yaml.endpointType, url: yaml.endpointUrl, isShared: false, owner: "library" ]
  
-		endpointData.publisherInputs = new JsonBuilder(yaml.publisherInputs).getContent()
-		//System.out.println("In handleYaml - endpointData:\n" + endpointData)
-
 		def epProjectReferences = []
 		String projects = "${yaml.projects}"
 		if ( projects == 'all') {
