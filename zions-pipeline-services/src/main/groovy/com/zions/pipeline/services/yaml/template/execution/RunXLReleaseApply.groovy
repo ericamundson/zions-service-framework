@@ -1,11 +1,17 @@
 package com.zions.pipeline.services.yaml.template.execution
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
+import groovy.util.logging.Slf4j
+
 @Component
+@Slf4j
 class RunXLReleaseApply implements IExecutableYamlHandler {
-	
+	@Autowired
+	Environment env
+
 	@Value('${xlr.url:https://xlrelease.cs.zionsbank.com}')
 	String xlrUrl
 	
@@ -31,7 +37,13 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 		List<String> values = []
 		if (yaml.values) {
 			yaml.values.each { val ->
-				String valOut = "${val.name}=${val.'value'}"
+				String value = "${val.value}"
+				if (value.startsWith('${env.property.')) {
+					String name = value.substring('${env.property.'.length()-1)
+					name = name.substring(0, name.length() - 2)
+					value = env.getProperty(name)
+				}
+				String valOut = "${val.name}=${value}"
 				values.add(valOut)
 			}
 		}
@@ -45,7 +57,13 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 			command = '/bin/sh'
 			option = '-c'
 		}
-		new AntBuilder().exec(dir: "${repo.absolutePath}", executable: "${command}", failonerror: true) {
+		AntBuilder ant = new AntBuilder()
+		ant.exec(outputproperty:"text",
+             errorproperty: "error",
+             resultproperty: "exitValue", 
+			 dir: "${repo.absolutePath}", 
+			 executable: "${command}", 
+			 failonerror: false) {
 			if (useProxy) {
 				env( key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080")
 			}
@@ -56,6 +74,21 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 				
 			}
 		}
+		def result = new Expando(
+			text: ant.project.properties.text,
+			error: ant.project.properties.error,
+			exitValue: ant.project.properties.exitValue as Integer,
+			toString: { text }
+		)
+		
+		if (result.exitValue != 0) {
+			throw new Exception("""command failed with ${result.exitValue}
+error: ${result.error}
+text: ${result.text}""")
+		} else {
+			log.info(result.text)
+		}
+		
 	}
 	
 	boolean performExecute(def yaml, List<String> locations) {		

@@ -9,7 +9,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="updateWorkItems &#13;&#10;--tfs.url=https://dev.azure.com &#13;&#10;--tfs.collection=ZionsETO&#13;&#10;--import.file=&quot;c:\Missing Colors.xlsx&quot;&#13;&#10;--logging.file=&quot;c:\\adomigration_sand\\IMPORT.log&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="updateWorkItems &#13;&#10;--tfs.url=https://dev.azure.com &#13;&#10;--tfs.collection=ZionsETO&#13;&#10;--import.file=&quot;c:\RCE\Remaining.xlsx&quot;&#13;&#10;--logging.level.root=INFO&#13;&#10;--logging.level.com.zions=INFO&#13;&#10;--logging.file=&quot;c:\\RCE\\IMPORT.log&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=work"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
