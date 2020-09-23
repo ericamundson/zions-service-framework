@@ -138,7 +138,10 @@ class ExcelManagementService {
 	}
 	def getCellValue(Row row, int colNum) {
 		if (colNum > 0 && colNum <= headers.size())
-			return formatCellValue(row.getCell(colNum-1))
+			if (!row.getCell(colNum-1))
+				return ''
+			else
+				return formatCellValue(row.getCell(colNum-1))
 		else {
 			log.error("Invalid column number passed to getCellValue: $colNum")
 			return "NA"
