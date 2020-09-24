@@ -10,7 +10,26 @@ import groovy.util.logging.Slf4j
 
 @Component
 @Slf4j
-class RunXLReleaseApply implements IExecutableYamlHandler {
+/**
+ * Yaml should be in this form:
+ * 
+ * type: runXLReleaseApply
+ * yamlFile: .pipeline/xl-deploy.yaml
+ * vault:  # Optional yaml object to setup token replacement from Vault
+ *   engine: secret
+ *   path: WebCMS # a path into Vault secret store that can be project specific.  
+ * values: # Optional for setting up XL CLI values.
+ * - name: test1
+ *   value: ${xl.password}  # xl.password token to be replaced by Vault
+ * - name: test2
+ *   value: avalue2
+ *   
+ *   This implementation will also search for secrets.xlvals file and perform token replace of secrets 
+ *   from Vault values.
+ *   
+ * @author z091182
+ *
+ */class RunXLReleaseApply implements IExecutableYamlHandler {
 	@Autowired
 	Environment env
 	
