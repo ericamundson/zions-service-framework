@@ -21,10 +21,13 @@ import com.zions.vsts.services.endpoint.EndpointManagementService
  *   grantAllPerm: true
  *	 authorization:
  *	   scheme: UsernamePassword
- *	   parameters:
- *	     username: svc-xld-user
- *		 password: password
+ *	   username: ${svc-xld.user}
+ *	   password: ${svc-xld.password}
  *
+ *   vault:
+ *     engine: secret
+ *     path:  zions-service-framework/svc-connection
+
  * @author z091556
  *
  */
@@ -38,18 +41,10 @@ class ServiceConnection implements IExecutableYamlHandler {
 	@Autowired
 	EndpointManagementService endpointManagementService
 
-	@Autowired
-	@Value('${xl.user:}')
-	String endpointUserName
-
-	@Autowired
-	@Value('${xl.password:}')
-	String endpointPassword
-
 	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
 		String endpointType = yaml.endpointType
-		def epAuthScheme = [ scheme: "UsernamePassword", parameters: [username: endpointUserName, password: endpointPassword] ]
+		def epAuthScheme = [ scheme: "UsernamePassword", parameters: [username: yaml.authorization.username, password: yaml.authorization.password] ]
 		def epData = [ acceptUntrustedCerts: false ]
 		def endpointData = [ administratorsGroup: null, authorization: epAuthScheme, createdBy: null, data: epData, description: yaml.endpointDescription, groupScopeId: null,	name: yaml.endpointName, operationStatus: null, readersGroup: null, serviceEndpointProjectReferences: [],type: yaml.endpointType, url: yaml.endpointUrl, isShared: false, owner: "library" ]
  
