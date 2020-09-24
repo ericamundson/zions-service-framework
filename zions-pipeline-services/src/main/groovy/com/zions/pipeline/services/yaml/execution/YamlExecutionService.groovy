@@ -164,10 +164,14 @@ class YamlExecutionService {
 			schema = schemaCache[version]
 		} else {
 			schema = loadSchema(version)
-			schema = schema.replace('\t', '  ')
+			if (schema) {
+				schema = schema.replace('\t', '  ')
+			}
 			schemaCache[version] = schema
 		}
-		if (!schema) return []
+		if (!schema) {
+			return ["${type}: No schema defined to validate yaml!"]
+		}
 		Set invalidMessages = factory.getSchema(schema).validate(mapper.readTree(yaml))
 		Set outmessages = []
         if (!invalidMessages.empty) {
@@ -182,6 +186,7 @@ class YamlExecutionService {
 	String loadSchema(String version) {
 		URL url = this.getClass().getResource("/${version}.json")
 		File schemaFile = new File(url.file)
+		if (!schemaFile.exists()) return null
 		return schemaFile.text
 	}
 }
