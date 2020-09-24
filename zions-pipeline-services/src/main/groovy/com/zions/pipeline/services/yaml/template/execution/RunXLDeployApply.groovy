@@ -6,6 +6,26 @@ import org.springframework.core.env.Environment
 import groovy.util.logging.Slf4j
 import com.zions.common.services.vault.VaultService
 
+/**
+ * Yaml should be in this form:
+ * 
+ * type: runXLDeployApply
+ * yamlFile: .pipeline/xl-deploy.yaml
+ * vault:  # Optional yaml object to setup token replacement from vault
+ *   engine: secret
+ *   path: WebCMS # a path into Vault secret store that can be project specific.  
+ * values: # Optional for setting up XL CLI values.
+ * - name: test1
+ *   value: ${xl.password}  # xl.password token to be replaced by Vault
+ * - name: test2
+ *   value: avalue2
+ *   
+ *   This implementation will also search for secrets.xlvals file and perform token replace of secrets 
+ *   from Vault values.
+ *   
+ * @author z091182
+ *
+ */
 @Component
 @Slf4j
 class RunXLDeployApply implements IExecutableYamlHandler {

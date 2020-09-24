@@ -100,7 +100,7 @@ class YamlExecutionService {
 				}
 			}
 		}
-		gitService.close(repo)
+		//gitService.close(repo)
 	}
 	
 	private def findExecutableYaml(File repoDir, def scanLocations, def projectData, def repoData, String pullRequestId) {
@@ -184,9 +184,9 @@ class YamlExecutionService {
 	}
 
 	String loadSchema(String version) {
-		URL url = this.getClass().getResource("/${version}.json")
-		File schemaFile = new File(url.file)
-		if (!schemaFile.exists()) return null
-		return schemaFile.text
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("/${version}.json")
+		
+		if (!is) return null
+		return is.text
 	}
 }
