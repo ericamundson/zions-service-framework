@@ -59,15 +59,22 @@ class YamlExecutionService {
 
 	def runExecutableYaml(String repoUrl, String repoName, def scanLocations, String branch, String project, String pullRequestId) {
 		File repo = null
+		def projectData = projectManagementService.getProject('', project)
+		def repoData = codeManagementService.getRepo('', projectData, repoName)
 		try {
 			repo = gitService.loadChanges(repoUrl, repoName, branch)
 		} catch (e) {
+			StringWriter sw = new StringWriter()
+			PrintWriter pw = new PrintWriter(sw)
+			e.printStackTrace(pw);
+			String issue = sw
+			Set issues = [[message: issue]]
 			log.error('Failed to update GIT repo. Error: '+e.getMessage())
+			def feedback = [ messages: issues]
+			sendFeedback(projectData, repoData, pullRequestId, feedback)
 			repo = null
 		}
 		if (!repo) return
-		def projectData = projectManagementService.getProject('', project)
-		def repoData = codeManagementService.getRepo('', projectData, repoName)
 		def exeYaml = findExecutableYaml(repo, scanLocations, projectData, repoData, pullRequestId)
 		for (def yamldata in exeYaml) { 
 			if (yamldata.yaml.executables) {
@@ -93,6 +100,7 @@ class YamlExecutionService {
 				}
 			}
 		}
+		gitService.close(repo)
 	}
 	
 	private def findExecutableYaml(File repoDir, def scanLocations, def projectData, def repoData, String pullRequestId) {

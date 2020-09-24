@@ -3,6 +3,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.api.ResetCommand.ResetType
+import org.eclipse.jgit.api.PullResult
+//import org.eclipse.jgit.api.CloneResult
 import java.net.ProxySelector
 import java.net.Proxy
 import java.net.Proxy.Type
@@ -83,7 +86,7 @@ class GitService {
 		File dotGit = new File(repo, '.git')
 		if (!dotGit.exists()) {
 			
-			Git.cloneRepository()
+			Git git = Git.cloneRepository()
 				.setURI(nUrl)
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
 				.setDirectory(repo)
@@ -91,6 +94,7 @@ class GitService {
 				.setBranch(branch)
 				.setRemote('origin')
 				.call();
+			git.close()
 		} else {
 			File lockFile = new File(dotGit, 'index.lock')
 			int i = 0;
@@ -101,7 +105,7 @@ class GitService {
 				if (!lockFile.exists()) {
 					if (!irepoDGit.exists()) {
 						irepo.mkdirs()
-						Git.cloneRepository()
+						Git git = Git.cloneRepository()
 						.setURI(nUrl)
 						.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
 						.setDirectory(irepo)
@@ -109,37 +113,51 @@ class GitService {
 						.setBranch(branch)
 						.setRemote('origin')
 						.call();
+						git.close()
 						return irepo
 					} else {
-						Git.open(irepo)
-						.pull()
+						Git git = Git.open(irepo)
+						git.reset()
+						.setMode(ResetType.HARD)
+						.call()
+						git.pull()
 						.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
 						.setRemote("origin")
 						.setRemoteBranchName(aBranch)
 						.call()
-		
+						git.close()
 					}
 				}
 			}
-			Git.open(repo)
-				.pull()
-				.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
-				.setRemote("origin")
-				.setRemoteBranchName(aBranch)
-				.call()
+			Git git = Git.open(repo)
+			git.reset()
+			.setMode(ResetType.HARD)
+			.call()
+			git.pull()
+			.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
+			.setRemote("origin")
+			.setRemoteBranchName(aBranch)
+			.call()
+			git.close()
 		}
 			
 		return repo
 	}
 	
+	def close(File repo) {
+		Git.open(repo).close()
+	}
+	
 	
 	def pushChanges(File repo, String filePattern = '.', String comment = 'Update pipeline') {
-		Git.open(repo).add().addFilepattern(filePattern).call();
-		Git.open(repo).add().setUpdate(true).addFilepattern(filePattern).call();
-		Git.open(repo).commit().setMessage(comment).call();
-		Git.open(repo)
-			.push()
-			.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
-			.call()
+		Git git = Git.open(repo)
+		git.add().addFilepattern(filePattern).call();
+		git.add().setUpdate(true).addFilepattern(filePattern).call();
+		git.commit().setMessage(comment).call();
+		
+		git.push()
+		  .setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
+		  .call()
+		git.close()
 	}
 }

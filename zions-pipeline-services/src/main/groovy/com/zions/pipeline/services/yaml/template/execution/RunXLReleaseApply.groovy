@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
+import com.zions.common.services.vault.VaultService
+
 import groovy.util.logging.Slf4j
 
 @Component
@@ -11,6 +13,9 @@ import groovy.util.logging.Slf4j
 class RunXLReleaseApply implements IExecutableYamlHandler {
 	@Autowired
 	Environment env
+	
+	@Autowired
+	VaultService vaultService
 
 	@Value('${xlr.url:https://xlrelease.cs.zionsbank.com}')
 	String xlrUrl
@@ -32,24 +37,34 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 		if (yaml.useProxy) {
 			useProxy = yaml.useProxy
 		}
+		def vaultSecrets = null
+		if (yaml.vault) {
+			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.path)
+		}
 		//String xlOutPath = "${yaml.path}"
 		String xlReleaseFile = "${repo.absolutePath}/${yaml.yamlFile}"
+		String wdir = xlReleaseFile.substring(0, xlReleaseFile.lastIndexOf('/'))
 		List<String> values = []
 		if (yaml.values) {
 			yaml.values.each { val ->
 				String value = "${val.value}"
-				if (value.startsWith('${env.property.')) {
-					String name = value.substring('${env.property.'.length()-1)
-					name = name.substring(0, name.length() - 2)
-					value = env.getProperty(name)
+				if (value.startsWith('${') && vaultSecrets) {
+					String name = value.substring('${'.length())
+					name = name.substring(0, name.length() - 1)
+					def oval = vaultSecrets[name]
+					if (oval) {
+						value = oval
+					}
 				}
 				String valOut = "${val.name}=${value}"
 				values.add(valOut)
 			}
 		}
 		String valuesStr = values.join(',')
+		processSecrets(wdir, vaultSecrets)
 		
-		loadXLCli(repo)
+		File wdirF = new File(wdir)
+		loadXLCli(wdirF)
 		String os = System.getProperty('os.name')
 		String command = 'cmd'
 		String option = '/c'
@@ -61,16 +76,16 @@ class RunXLReleaseApply implements IExecutableYamlHandler {
 		ant.exec(outputproperty:"text",
              errorproperty: "error",
              resultproperty: "exitValue", 
-			 dir: "${repo.absolutePath}", 
+			 dir: "${wdirF.absolutePath}", 
 			 executable: "${command}", 
 			 failonerror: false) {
 			if (useProxy) {
 				env( key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080")
 			}
 			if (values.size() > 0) {
-				arg( line: "${option} ${repo.absolutePath}/xl apply -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}")
+				arg( line: "${option} ${wdirF.absolutePath}/xl apply -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}")
 			} else {
-				arg( line: "${option} ${repo.absolutePath}/xl apply -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}")
+				arg( line: "${option} ${wdirF.absolutePath}/xl apply -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}")
 				
 			}
 		}
@@ -90,7 +105,32 @@ text: ${result.text}""")
 		}
 		
 	}
-	
+	def processSecrets(String wdir, vaultSecrets) {
+		File wdirF = new File(wdir)
+		File secretsFile = new File(wdirF, '/xebialabs/secrets.xlvals')
+		if (secretsFile.exists() && vaultSecrets) {
+			Properties props = new Properties()
+			def is = secretsFile.newDataInputStream()
+			props.load(is)
+			is.close()
+			for (String name in props.stringPropertyNames()) {
+				def val = props.getProperty(name)
+				String value = "${val}"
+				if (value.startsWith('${')) {
+					String aname = value.substring('${'.length())
+					aname = aname.substring(0, aname.length() - 1)
+					value = vaultSecrets[aname]
+					if (value) {
+						props.setProperty(name, value)
+					}
+				}
+			}
+			def w = secretsFile.newWriter()
+			props.store(w, 'updated secrets')
+			w.close()
+		}
+	}
+
 	boolean performExecute(def yaml, List<String> locations) {		
 		if (!yaml.dependencies) return true
 		for (String dep in yaml.dependencies) {
