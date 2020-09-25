@@ -52,6 +52,12 @@ public class PolicyManagementService {
 	private static final String ENFORCE_MERGE_STRATEGY = "enforce-merge-strategy"
 	private static final String NUM_MIN_APPROVERS = "num-min-reviewers"
 	private static final int DEFAULT_NUM_APPROVERS = 1
+	// AOD policy types
+	private static final String BUILD_VALIDATION_POLICY_TYPE = "0609b952-1397-4640-95ec-e00a01b2c241"
+	private static final String MIN_APPROVERS_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd"
+	private static final String LINKED_WI_POLICY_TYPE = "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e"
+	private static final String COMMENT_RES_POLICY_TYPE = "c6a1889d-b943-4856-b76f-9e46bb6b0df2"
+	private static final String MERGE_STRATEGY_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab"
 	
 	public PolicyManagementService() {
 	}
@@ -182,12 +188,16 @@ public class PolicyManagementService {
 		}
 		def pipelineName = isDRBranch ? "${repoData.name} DR validation" : "${repoData.name} validation"
 		def policy = [id: -2, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-		    type: [id: "0609b952-1397-4640-95ec-e00a01b2c241"],
+		    type: [id: BUILD_VALIDATION_POLICY_TYPE],
 		    settings:[buildDefinitionId: ciBuildId, displayName: pipelineName, manualQueueOnly: false, queueOnSourceUpdateOnly:true, validDuration: 720,
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
-		def res = createPolicy(collection, projectData, policy)
+		// check for existing build validation policy
+		def res = getBranchPolicy(BUILD_VALIDATION_POLICY_TYPE, projectData.id, repoData.id, branchName)
+		if (!res) {
+			res = createPolicy(collection, projectData, policy)
+		}
 		log.debug("PolicyManagementService::ensureBuildPolicy -- result = "+res)
 		
 		int relBuildId = result.releaseBuildId
@@ -219,6 +229,7 @@ public class PolicyManagementService {
 			// send notification of new builds created
 			notificationService.sendBuildCreatedNotification("${repoData.name}", result.ciBuildName, result.releaseBuildName, relDefName)
 		}
+		return res
 	}
 	
 	private def createPolicy(def collection, def projectData, def policy) {
@@ -250,7 +261,7 @@ public class PolicyManagementService {
 		}
 		log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- ")
 		def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-		    type: [id: "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd"],
+		    type: [id: MIN_APPROVERS_POLICY_TYPE],
 		    settings:[minimumApproverCount: numMinApprovers, creatorVoteCounts: false, allowDownvotes: false, resetOnSourcePush: true,
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
@@ -263,12 +274,12 @@ public class PolicyManagementService {
 		def projectData = repoData.project
 		log.debug("PolicyManagementService::ensureLinkedWorkItemsPolicy -- ")
 		def policy = [id: -4, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-		    type: [id: "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e"],
+		    type: [id: LINKED_WI_POLICY_TYPE],
 		    settings:[
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
-		def policyRes = getBranchPolicy("40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e", projectData.id, repoData.id, branchName)
+		def policyRes = getBranchPolicy(LINKED_WI_POLICY_TYPE, projectData.id, repoData.id, branchName)
 		if (!policyRes) {
 			policyRes = createPolicy(collection, projectData, policy)
 		}
@@ -280,7 +291,7 @@ public class PolicyManagementService {
 		def projectData = repoData.project
 		log.debug("PolicyManagementService::ensureMergeStrategyPolicy -- ")
 		def policy = [id: -5, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-		    type: [id: "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab"],
+		    type: [id: MERGE_STRATEGY_POLICY_TYPE],
 		    settings:[allowNoFastForward: true,
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
@@ -293,7 +304,7 @@ public class PolicyManagementService {
 		def projectData = repoData.project
 		log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- ")
 		def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-		    type: [id: "c6a1889d-b943-4856-b76f-9e46bb6b0df2"],
+		    type: [id: COMMENT_RES_POLICY_TYPE"],
 		    settings:[
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
