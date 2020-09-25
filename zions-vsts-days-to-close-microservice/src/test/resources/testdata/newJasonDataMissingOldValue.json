@@ -1,0 +1,458 @@
+{
+    "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
+    "notificationId": 5067,
+    "id": "9de91c91-b18d-4eb2-92bb-f4be2bcf5c87",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": {
+        "text": "Bug #22275 (KB: Stop Payment - After Hours) transitioned to New by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22275)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=22275\">Bug #22275</a> (KB: Stop Payment - After Hours) transitioned to New by Michael Angelastro",
+        "markdown": "[Bug #22275](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22275) (KB: Stop Payment - After Hours) transitioned to New by Michael Angelastro"
+    },
+    "detailedMessage": {
+        "text": "Bug #22275 (KB: Stop Payment - After Hours) transitioned to New by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22275)\r\n\r\n- New State: New\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=22275\">Bug #22275</a> (KB: Stop Payment - After Hours) transitioned to New by Michael Angelastro<ul>\r\n<li>New State: New</li></ul>",
+        "markdown": "[Bug #22275](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22275) (KB: Stop Payment - After Hours) transitioned to New by Michael Angelastro\r\n\r\n* New State: New\r\n"
+    },
+    "resource": {
+        "id": 1,
+        "workItemId": 22275,
+        "rev": 12,
+        "revisedBy": {
+            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
+            "name": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+            "displayName": "Michael Angelastro",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                }
+            },
+            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
+            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+        },
+        "revisedDate": "9999-01-01T00:00:00Z",
+        "fields": {
+            "System.Id": {
+                "newValue": 22275
+            },
+            "System.AreaId": {
+                "newValue": 128
+            },
+            "System.AreaPath": {
+                "newValue": "ALMOpsTest"
+            },
+            "System.TeamProject": {
+                "newValue": "ALMOpsTest"
+            },
+            "System.NodeName": {
+                "newValue": "ALMOpsTest"
+            },
+            "System.AreaLevel1": {
+                "newValue": "ALMOpsTest"
+            },
+            "System.Rev": {
+                "newValue": 12
+            },
+            "System.AuthorizedDate": {
+                "newValue": "2020-09-24T21:34:54.243Z"
+            },
+            "System.RevisedDate": {
+                "newValue": "9999-01-01T00:00:00Z"
+            },
+            "System.IterationId": {
+                "newValue": 128
+            },
+            "System.IterationPath": {
+                "newValue": "ALMOpsTest"
+            },
+            "System.IterationLevel1": {
+                "newValue": "ALMOpsTest"
+            },
+            "System.WorkItemType": {
+                "newValue": "Bug"
+            },
+            "System.State": {
+                "newValue": "New"
+            },
+            "System.Reason": {
+                "newValue": "Not fixed"
+            },
+            "System.AssignedTo": {
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "System.CreatedDate": {
+                "newValue": "2016-08-30T23:24:37.92Z"
+            },
+            "System.CreatedBy": {
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "System.ChangedDate": {
+                "newValue": "2020-09-24T21:34:54.243Z"
+            },
+            "System.ChangedBy": {
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "System.AuthorizedAs": {
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "System.PersonId": {
+                "newValue": 88125542
+            },
+            "System.Watermark": {
+                "newValue": 331264
+            },
+            "System.IsDeleted": {
+                "newValue": false
+            },
+            "System.CommentCount": {
+                "newValue": 1
+            },
+            "System.Title": {
+                "newValue": "KB: Stop Payment - After Hours"
+            },
+            "System.BoardColumn": {
+                "newValue": "New"
+            },
+            "System.BoardColumnDone": {
+                "newValue": false
+            },
+            "Microsoft.VSTS.Scheduling.RemainingWork": {
+                "newValue": 0.0
+            },
+            "Microsoft.VSTS.Common.StateChangeDate": {
+                "newValue": "2020-09-24T21:34:54.243Z"
+            },
+            "Microsoft.VSTS.Common.ActivatedDate": {
+                
+            },
+            "Microsoft.VSTS.Common.ActivatedBy": {
+                
+            },
+            "Microsoft.VSTS.Common.ResolvedDate": {
+                
+            },
+            "Microsoft.VSTS.Common.ResolvedBy": {
+                
+            },
+            "Microsoft.VSTS.Common.ResolvedReason": {
+                
+            },
+            "Microsoft.VSTS.Common.ClosedDate": {
+                
+            },
+            "Microsoft.VSTS.Common.ClosedBy": {
+                
+            },
+            "Microsoft.VSTS.Common.Priority": {
+                "newValue": 3
+            },
+            "Microsoft.VSTS.Common.Severity": {
+                "newValue": "3 - Medium"
+            },
+            "Microsoft.VSTS.Common.ValueArea": {
+                "newValue": "Business"
+            },
+            "WEF_8036838721CC4DC0B35839429B90A6D8_System.ExtensionMarker": {
+                "newValue": false
+            },
+            "WEF_8036838721CC4DC0B35839429B90A6D8_Kanban.Column": {
+                "newValue": "Closed"
+            },
+            "WEF_8036838721CC4DC0B35839429B90A6D8_Kanban.Column.Done": {
+                "newValue": false
+            },
+            "Custom.ExternalID": {
+                "newValue": "RTC-21808"
+            },
+            "Custom.Classification": {
+                "newValue": "Bug"
+            },
+            "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_System.ExtensionMarker": {
+                "newValue": true
+            },
+            "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": {
+                "newValue": "New"
+            },
+            "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column.Done": {
+                "newValue": false
+            },
+            "Custom.Color": {
+                "newValue": "Green"
+            },
+            "Microsoft.VSTS.TCM.ReproSteps": {
+                "newValue": "Details: When placing a stop payment after hours (9:39 PM MT) a stop payment is placed successfully.<br>Steps to Reproduce:<br>1. Log into OLB during the hours when stop payments should not be allowed, for example, Zions after 9:30 PM MT<br>2. Click on the Services tab<br>3. Hover over the sub-nav Check Services, then click on 'Create Stop Payment'<br>4. Select an account and enter valid entries in the required fields<br>5. Preview and Submit the stop payment request.<br>Result: There is no difference to placing a stop payment during the regular hours.<br>Expected Result: Per requirement 2.2.5: Stop Payment not being added to the host thru S1 after hours<br>At a specific cutoff time for each bank when the host is unavailable, we would like a message to appear across the top of the page in a similar location as a banner would be that says the following:<br><br>&quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 7:00 AM - 9:30 PM MT. Please try your request again later.&quot;<br><br>And if clients ignore the message and click &quot;Create a New Stop Payment&quot; link anyway, they would receive this message:<br>&quot;Page Errors: Stop Payments are currently unavailable. You may place stop payments online between the hours of 7:00 AM - 9:30 PM MT. Please try your request again later.&quot;<br><br>And clients would not be directed to the page where they would enter stops, they would just stay on the &quot;Stop Payments&quot; page. This request will be a little tricky, because each bank does have its own host cutoff time, but they are all restored at the same time which is 7:00 AM Mountain. So here is the breakdown of all the cutoff times for all banks:<br><br>Zions Bank Add message: 9:30 PM MT Remove: 7:00 AM MT<br>Nevada State Bank: Add message: 11:30 PM MT Remove: 7:00 AM MT<br>Vectra Bank Colorado Add message: 10:15 PM MT Remove: 7:00 AM MT<br>National Bank of Arizona Add message: 10:30 PM MT Remove: 7:00 AM MT<br>Amegy Bank of Texas Add message: 10:30 PM MT Remove: 7:00 AM MT<br>California Bank and Trust Add message: 10:30 PM MT Remove: 7:00 AM MT<br><br>Also Nevada, Arizona, and Texas would like the message to read specific to their time zone. Here is how they would like the messages to read:<br>Zions Bank: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 7:00 AM - 9:30 PM MT. Please try your request again later.&quot;<br>Nevada State Bank: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 6:00 AM - 10:30 PM Pacific. Please try your request again later.&quot; <br>Vectra Bank Colorado: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 7:00 AM - 10:15 PM MT. Please try your request again later.&quot;<br>National Bank of Arizona: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 6:00 AM - 9:30 PM MST. Please try your request again later.&quot; <br>Amegy Bank of Texas: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 8:00 AM - 11:30 PM Central. Please try your request again later.&quot;<br>California Bank &amp; Trust: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 7:00 AM - 9:30 PM PCT. Please try your request again later.&quot;"
+            },
+            "System.Tags": {
+                "newValue": "previousstateopen; updateTest"
+            }
+        },
+        "relations": {
+            "added": [
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/71700ca0-d317-4d65-a381-14369e4c83a2",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037571,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48822_Stop PaymentsZFNB.gif",
+                        "name": "48822_Stop PaymentsZFNB.gif"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/756eb84b-a73c-45f0-9d01-670905c5f005",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037567,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48817_Stop PaymentsABT.gif",
+                        "name": "48817_Stop PaymentsABT.gif"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/eadcdc8a-b670-464d-9865-75eb927b416a",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037565,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48819_Stop PaymentsNBA.gif",
+                        "name": "48819_Stop PaymentsNBA.gif"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/25e1466d-53f4-45cb-96f2-0157a2f9448f",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037566,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48820_Stop PaymentsNSB.gif",
+                        "name": "48820_Stop PaymentsNSB.gif"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/70a7b0e8-fe31-4c6c-a8c5-1559f1f0cdcb",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037568,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 43555_Stop Payment Success.jpg",
+                        "name": "43555_Stop Payment Success.jpg"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/ba578991-f9f2-47a5-9ab0-6112dee73873",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037569,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48821_Stop PaymentsVEC.gif",
+                        "name": "48821_Stop PaymentsVEC.gif"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/66226b36-a7b2-4629-ab80-a9ed3286d41a",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037570,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48818_Stop PaymentsCBT.gif",
+                        "name": "48818_Stop PaymentsCBT.gif"
+                    }
+                }
+            ]
+        },
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22275/updates/1"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22275/updates"
+            },
+            "parent": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22275"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22275"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22275/updates/1",
+        "revision": {
+            "id": 22275,
+            "rev": 12,
+            "fields": {
+                "System.AreaPath": "ALMOpsTest",
+                "System.TeamProject": "ALMOpsTest",
+                "System.IterationPath": "ALMOpsTest",
+                "System.WorkItemType": "Bug",
+                "System.State": "New",
+                "System.Reason": "Not fixed",
+                "System.AssignedTo": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CreatedDate": "2016-08-30T23:24:37.92Z",
+                "System.CreatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.ChangedDate": "2020-09-24T21:34:54.243Z",
+                "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CommentCount": 1,
+                "System.Title": "KB: Stop Payment - After Hours",
+                "System.BoardColumn": "New",
+                "System.BoardColumnDone": false,
+                "Microsoft.VSTS.Scheduling.RemainingWork": 0.0,
+                "Microsoft.VSTS.Common.StateChangeDate": "2020-09-24T21:34:54.243Z",
+                "Microsoft.VSTS.Common.Priority": 3,
+                "Microsoft.VSTS.Common.Severity": "3 - Medium",
+                "Microsoft.VSTS.Common.ValueArea": "Business",
+                "WEF_8036838721CC4DC0B35839429B90A6D8_Kanban.Column": "Closed",
+                "WEF_8036838721CC4DC0B35839429B90A6D8_Kanban.Column.Done": false,
+                "Custom.ExternalID": "RTC-21808",
+                "Custom.Classification": "Bug",
+                "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": "New",
+                "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column.Done": false,
+                "Custom.Color": "Green",
+                "Microsoft.VSTS.TCM.ReproSteps": "Details: When placing a stop payment after hours (9:39 PM MT) a stop payment is placed successfully.<br>Steps to Reproduce:<br>1. Log into OLB during the hours when stop payments should not be allowed, for example, Zions after 9:30 PM MT<br>2. Click on the Services tab<br>3. Hover over the sub-nav Check Services, then click on 'Create Stop Payment'<br>4. Select an account and enter valid entries in the required fields<br>5. Preview and Submit the stop payment request.<br>Result: There is no difference to placing a stop payment during the regular hours.<br>Expected Result: Per requirement 2.2.5: Stop Payment not being added to the host thru S1 after hours<br>At a specific cutoff time for each bank when the host is unavailable, we would like a message to appear across the top of the page in a similar location as a banner would be that says the following:<br><br>&quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 7:00 AM - 9:30 PM MT. Please try your request again later.&quot;<br><br>And if clients ignore the message and click &quot;Create a New Stop Payment&quot; link anyway, they would receive this message:<br>&quot;Page Errors: Stop Payments are currently unavailable. You may place stop payments online between the hours of 7:00 AM - 9:30 PM MT. Please try your request again later.&quot;<br><br>And clients would not be directed to the page where they would enter stops, they would just stay on the &quot;Stop Payments&quot; page. This request will be a little tricky, because each bank does have its own host cutoff time, but they are all restored at the same time which is 7:00 AM Mountain. So here is the breakdown of all the cutoff times for all banks:<br><br>Zions Bank Add message: 9:30 PM MT Remove: 7:00 AM MT<br>Nevada State Bank: Add message: 11:30 PM MT Remove: 7:00 AM MT<br>Vectra Bank Colorado Add message: 10:15 PM MT Remove: 7:00 AM MT<br>National Bank of Arizona Add message: 10:30 PM MT Remove: 7:00 AM MT<br>Amegy Bank of Texas Add message: 10:30 PM MT Remove: 7:00 AM MT<br>California Bank and Trust Add message: 10:30 PM MT Remove: 7:00 AM MT<br><br>Also Nevada, Arizona, and Texas would like the message to read specific to their time zone. Here is how they would like the messages to read:<br>Zions Bank: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 7:00 AM - 9:30 PM MT. Please try your request again later.&quot;<br>Nevada State Bank: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 6:00 AM - 10:30 PM Pacific. Please try your request again later.&quot; <br>Vectra Bank Colorado: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 7:00 AM - 10:15 PM MT. Please try your request again later.&quot;<br>National Bank of Arizona: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 6:00 AM - 9:30 PM MST. Please try your request again later.&quot; <br>Amegy Bank of Texas: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 8:00 AM - 11:30 PM Central. Please try your request again later.&quot;<br>California Bank &amp; Trust: &quot;Stop Payments are currently unavailable. You may place stop payments online between the hours of 7:00 AM - 9:30 PM PCT. Please try your request again later.&quot;",
+                "System.Tags": "previousstateopen; updateTest"
+            },
+            "relations": [
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/71700ca0-d317-4d65-a381-14369e4c83a2",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037571,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48822_Stop PaymentsZFNB.gif",
+                        "name": "48822_Stop PaymentsZFNB.gif"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/756eb84b-a73c-45f0-9d01-670905c5f005",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037567,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48817_Stop PaymentsABT.gif",
+                        "name": "48817_Stop PaymentsABT.gif"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/eadcdc8a-b670-464d-9865-75eb927b416a",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037565,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48819_Stop PaymentsNBA.gif",
+                        "name": "48819_Stop PaymentsNBA.gif"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/25e1466d-53f4-45cb-96f2-0157a2f9448f",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037566,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48820_Stop PaymentsNSB.gif",
+                        "name": "48820_Stop PaymentsNSB.gif"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/70a7b0e8-fe31-4c6c-a8c5-1559f1f0cdcb",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037568,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 43555_Stop Payment Success.jpg",
+                        "name": "43555_Stop Payment Success.jpg"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/ba578991-f9f2-47a5-9ab0-6112dee73873",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037569,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48821_Stop PaymentsVEC.gif",
+                        "name": "48821_Stop PaymentsVEC.gif"
+                    }
+                },
+                {
+                    "rel": "AttachedFile",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/attachments/66226b36-a7b2-4629-ab80-a9ed3286d41a",
+                    "attributes": {
+                        "authorizedDate": "2020-08-25T18:26:01.457Z",
+                        "id": 8037570,
+                        "resourceCreatedDate": "2018-11-16T20:31:20.03Z",
+                        "resourceModifiedDate": "2018-11-16T20:31:20.03Z",
+                        "revisedDate": "9999-01-01T00:00:00Z",
+                        "comment": "Added attachment 48818_Stop PaymentsCBT.gif",
+                        "name": "48818_Stop PaymentsCBT.gif"
+                    }
+                }
+            ],
+            "_links": {
+                "self": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22275/revisions/12"
+                },
+                "workItemRevisions": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22275/revisions"
+                },
+                "parent": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22275"
+                }
+            },
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22275/revisions/12"
+        }
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1bec1897-29a0-44d0-80a8-670c5ae5ef4a",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "account": {
+            "id": "6e6d6b08-2e41-4c55-a624-0d1ec79969dd",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "project": {
+            "id": "030d62a4-ce8b-405e-a331-8678df1a6efe",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        }
+    },
+    "createdDate": "2020-09-24T21:35:01.4669915Z"
+}
