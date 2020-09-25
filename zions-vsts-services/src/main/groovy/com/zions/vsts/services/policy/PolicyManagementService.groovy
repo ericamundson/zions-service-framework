@@ -304,7 +304,7 @@ public class PolicyManagementService {
 		def projectData = repoData.project
 		log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- ")
 		def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-		    type: [id: COMMENT_RES_POLICY_TYPE"],
+		    type: [id: COMMENT_RES_POLICY_TYPE],
 		    settings:[
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
