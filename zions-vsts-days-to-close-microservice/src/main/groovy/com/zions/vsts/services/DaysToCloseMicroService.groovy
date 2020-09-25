@@ -99,8 +99,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		log.debug("Entering DaysToCloseMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
-		 /*String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)*/
+		 String json = new JsonBuilder(adoData).toPrettyString()
+		 println(json)
 		
 		def outData = adoData
 		def wiResource = adoData.resource
@@ -110,6 +110,10 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		if (includeProjects && !includeProjects.contains(project))
 			return logResult('Project not included')
+		
+		//get work item id and revision
+		String id = "${wiResource.revision.id}"
+		String rev = "${wiResource.rev}"
 		
 		//detect the work item type involved in the edit
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
@@ -125,8 +129,15 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		
 		//retrieve old/new state field values for comparison
 		String oldState = stateField.oldValue
+		if (!oldState || oldState == 'null') {
+			log.error("Error retrieving previous state for work item $id")
+			return 'Error Retrieving previous state'
+		}
 		String newState = stateField.newValue
-		
+		if (!newState || newState == 'null') {
+			log.error("Error retrieving new state for work item $id")
+			return 'Error Retrieving new state state'
+		}
 		//define days to close and initialize
 		def daystoClose = wiResource.revision.fields.'Custom.DaysToClose'
 			
@@ -134,9 +145,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		if (!daystoClose|| daystoClose == 'null' || daystoClose == '')
 			daystoClose = 0;
 			
-		//get work item id and revision
-		String id = "${wiResource.revision.id}"
-		String rev = "${wiResource.rev}"
+
 		
 		//Get Created Date
 		String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
@@ -148,10 +157,12 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
 		createDate = convCreateDate.format('dd-MMM-yyyy')
 		
+
 		//If Bug is opened reset the count
 		if (sourceState.contains(newState) && (destState.contains(oldState))) {
 			log.debug("Updating count of $wiType #$id")
 			
+					
 			//set daystoClose to 0
 			daystoClose = 0;
 			
