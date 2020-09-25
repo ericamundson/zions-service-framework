@@ -85,6 +85,7 @@ class SetColorMicroService implements MessageReceiverTrait {
 			return logResult('Color set to unassigned')
 		}
 	}
+	
 	private def getFieldValue(def field, def eventType, def wiResource) {
 		def value
 		if (eventType == 'workitem.created') {

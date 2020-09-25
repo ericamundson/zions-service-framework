@@ -1,4 +1,4 @@
-package com.zions.vsts.services.cli.action.servicehook;
+package com.zions.vsts.services.action.servicehook;
 
 import groovy.json.JsonBuilder
 import java.util.Map

@@ -7,6 +7,7 @@ import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.tfs.rest.GenericRestClient
+import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -19,7 +20,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("work")
-@ComponentScan(["com.zions.vsts.services.work,com.zions.common.services.excel,com.zions.vsts.services.action.work,com.zions.vsts.services.admin"])
+@ComponentScan(["com.zions.vsts.services.work,com.zions.common.services.excel,com.zions.vsts.services.action.work,com.zions.vsts.services.admin,com.zions.vsts.services.asset"])
 public class WorkAppConfig {
     Map<String, CliAction> actions;
     
@@ -60,7 +61,7 @@ public class WorkAppConfig {
     
     @Bean
     IGenericRestClient genericRestClient() {
-        return new GenericRestClient(tfsUrl, tfsUser, tfsToken)
+        return new MultiUserGenericRestClient()
     }
     
     @Bean

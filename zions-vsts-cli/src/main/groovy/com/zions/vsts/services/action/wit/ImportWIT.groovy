@@ -34,6 +34,7 @@ class ImportWIT implements CliAction {
 		def wits = []
 		exportDir.eachFile { file ->
 			if (file.name.endsWith('.json')) {
+				println("Importing $file")
 				def witChanges = new JsonSlurper().parse(file)
 				wits.add(witChanges)
 			}
@@ -52,7 +53,7 @@ class ImportWIT implements CliAction {
 
 	@Override
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'export.dir']
+		def required = ['tfs.project', 'export.dir']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")

@@ -9,7 +9,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="exportWIT &#13;&#10;--tfs.url=https://dev.azure.com/zionseto    &#13;&#10;--tfs.project=&quot;BaNCS&quot; &#13;&#10;--export.dir=d:\new_core_wit_templates_prod &#13;&#10;--tfs.workitem.names=&quot;all&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="importWIT --cache.dir=c:\ --tfs.url=https://dev.azure.com --tfs.project=&quot;ALMOpsTest&quot; --tfs.collection=eto-dev --export.dir=d:\wits_for_mr  --logging.level.root=INFO"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=wit"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>

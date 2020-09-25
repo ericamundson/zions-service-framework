@@ -28,11 +28,15 @@ class EnsureSubscription implements CliAction {
 		String consumerUrl = data.getOptionValues('consumerUrl')[0]
 		String consumerUserName = data.getOptionValues('consumerUserName')[0]
 		String consumerPassword = data.getOptionValues('consumerPassword')[0]
+		// TODO: This initially worked passing as '{areaPath: "", workItemType: "Bug", projectId: null}' and converting the string to JSON (line 37).
+		//  No longer works as it treats the JSON as a string downstream and causes an exception when trying to use dot reference on items in publisherInputs
 		String publisherInputsYaml = data.getOptionValues('publisherInputs')[0]
+		//def publisherInputsYaml = [areaPath: "", workItemType: "Bug", projectId: null]
+		//System.out.println("In execute - publisherInputsYaml :\n${publisherInputsYaml}" )
 		eventTypes.each { String eventType -> 
 			def subscriptionData = [consumerId: 'webHooks', consumerActionId: 'httpRequest', eventType: eventType, publisherId: 'tfs', consumerInputs: [url: consumerUrl, basicAuthUsername: consumerUserName, basicAuthPassword: consumerPassword], publisherInputs:[], resourceVersion: '1.0', scope: 1]
 			subscriptionData.publisherInputs = new JsonBuilder(publisherInputsYaml).getContent()
-			
+			//System.out.println("subscriptionData :\n${subscriptionData}" )
 			String projects = data.getOptionValues('projects')[0]
 			if ( projects == 'all') {
 				def allProjects = projectManagementService.getProjects('')
