@@ -12,7 +12,7 @@ spec:
     - name: Dev
       type: udm.Environment
       members:
-	  {{if eq .Platform "Windows"}}
+      {{if eq .Platform "Windows"}}
       - Infrastructure/DTS/microservice/Dev
       {{else if eq .Platform "Linux"}}
       - Infrastructure/DTS/microservice/Dev_Linux
