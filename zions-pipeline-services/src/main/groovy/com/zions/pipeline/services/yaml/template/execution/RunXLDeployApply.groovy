@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import org.springframework.core.env.Environment
 import groovy.util.logging.Slf4j
 import com.zions.common.services.vault.VaultService
+import com.zions.pipeline.services.mixins.CliRunnerTrait
 
 /**
  * Yaml should be in this form:
@@ -28,7 +29,7 @@ import com.zions.common.services.vault.VaultService
  */
 @Component
 @Slf4j
-class RunXLDeployApply implements IExecutableYamlHandler {
+class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait {
 	
 	@Autowired
 	Environment env
@@ -62,6 +63,8 @@ class RunXLDeployApply implements IExecutableYamlHandler {
 		def vaultSecrets = null
 		if (yaml.vault) {
 			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.path)
+		} else {
+			vaultSecrets = vaultService.getSecrets('secret', project)
 		}
 		
 		List<String> values = []
@@ -89,37 +92,18 @@ class RunXLDeployApply implements IExecutableYamlHandler {
 			command = '/bin/sh'
 			option = '-c'
 		}
-		AntBuilder ant = new AntBuilder()
-		ant.exec(outputproperty:"text",
-             errorproperty: "error",
-             resultproperty: "exitValue", 
-			 dir: "${wdirF.absolutePath}", 
-			 executable: "${command}", 
-			 failonerror: false) {
-			if (useProxy) {
-				env( key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080")
-			}
-			if (values.size() > 0) {
-				arg( line: "${option} ${wdirF.absolutePath}/xl apply  -f ${xlDeployFile} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}  --values ${valuesStr}")
-			} else {
-				arg( line: "${option} ${wdirF.absolutePath}/xl apply  -f ${xlDeployFile} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}")
-				
-			}
-		}
-		def result = new Expando(
-			text: ant.project.properties.text,
-			error: ant.project.properties.error,
-			exitValue: ant.project.properties.exitValue as Integer,
-			toString: { text }
-		)
-		
-		if (result.exitValue != 0) {
-			throw new Exception("""command failed with ${result.exitValue}
-error: ${result.error}
-text: ${result.text}""")
+		def arg = [:]
+		if (values.size() > 0) {
+			arg = [line: "${option} ${wdirF.absolutePath}/xl apply  -f ${xlDeployFile} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}  --values ${valuesStr}"]
 		} else {
-			log.info(result.text)
+			arg = [ line: "${option} ${wdirF.absolutePath}/xl apply  -f ${xlDeployFile} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}" ]
+			
 		}
+		def env = null
+		if (useProxy) {
+			env = [key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080"]
+		}
+		run(command, "${wdirF.absolutePath}", arg, env, log)
 	}
 	
 	def processSecrets(String wdir, vaultSecrets) {

@@ -9,8 +9,9 @@ trigger:
     include:
 
     - 'zions-pipeline-execution-microservice/*'
-    - 'zions-vsts-microservice/*'
-    - 'zions-pipeline-services/*'
+    - 'zions-pipeline-execution-microservice/*'
+    - 'zions-xlr-services/*'
+    - 'zions-xld-services/*'
     
 pool:
   name: On-Prem Production
@@ -59,7 +60,7 @@ stages:
         workingFolder: $(Build.SourcesDirectory)\zions-pipeline-execution-microservice\pipeline
       continueOnError: true
       enabled: true
-      
+
     - task: Zions.ado-ext-release-status-control.CreateReleaseTask.CreateReleaseTask@0
       displayName: 'Create Release'
       inputs:

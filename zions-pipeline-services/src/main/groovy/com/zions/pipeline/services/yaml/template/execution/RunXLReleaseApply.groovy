@@ -5,6 +5,7 @@ import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.vault.VaultService
+import com.zions.pipeline.services.mixins.CliRunnerTrait
 
 import groovy.util.logging.Slf4j
 
@@ -29,7 +30,7 @@ import groovy.util.logging.Slf4j
  *   
  * @author z091182
  *
- */class RunXLReleaseApply implements IExecutableYamlHandler {
+ */class RunXLReleaseApply implements IExecutableYamlHandler, CliRunnerTrait {
 	@Autowired
 	Environment env
 	
@@ -59,6 +60,8 @@ import groovy.util.logging.Slf4j
 		def vaultSecrets = null
 		if (yaml.vault) {
 			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.path)
+		} else {
+			vaultSecrets = vaultService.getSecrets('secret', project)
 		}
 		//String xlOutPath = "${yaml.path}"
 		String xlReleaseFile = "${repo.absolutePath}/${yaml.yamlFile}"
@@ -91,37 +94,18 @@ import groovy.util.logging.Slf4j
 			command = '/bin/sh'
 			option = '-c'
 		}
-		AntBuilder ant = new AntBuilder()
-		ant.exec(outputproperty:"text",
-             errorproperty: "error",
-             resultproperty: "exitValue", 
-			 dir: "${wdirF.absolutePath}", 
-			 executable: "${command}", 
-			 failonerror: false) {
-			if (useProxy) {
-				env( key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080")
-			}
-			if (values.size() > 0) {
-				arg( line: "${option} ${wdirF.absolutePath}/xl apply -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}")
-			} else {
-				arg( line: "${option} ${wdirF.absolutePath}/xl apply -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}")
-				
-			}
-		}
-		def result = new Expando(
-			text: ant.project.properties.text,
-			error: ant.project.properties.error,
-			exitValue: ant.project.properties.exitValue as Integer,
-			toString: { text }
-		)
-		
-		if (result.exitValue != 0) {
-			throw new Exception("""command failed with ${result.exitValue}
-error: ${result.error}
-text: ${result.text}""")
+		def arg = null
+		if (values.size() > 0) {
+			arg = [line: "${option} ${wdirF.absolutePath}/xl apply  -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}"]
 		} else {
-			log.info(result.text)
+			arg = [ line: "${option} ${wdirF.absolutePath}/xl apply  -f ${xlReleaseFile} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}" ]
+			
 		}
+		def env = null
+		if (useProxy) {
+			env = [key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080"]
+		}
+		run(command, "${wdirF.absolutePath}", arg, env, log)
 		
 	}
 	def processSecrets(String wdir, vaultSecrets) {

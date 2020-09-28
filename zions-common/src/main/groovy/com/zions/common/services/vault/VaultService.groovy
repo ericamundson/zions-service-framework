@@ -17,6 +17,7 @@ class VaultService {
 	@Value('${vault.unseal.elements:}')
 	String[] unsealElements
 	
+	
 	boolean isSealed() {
 		boolean iSealed = false
 		def result = vaultRestClient.get(
@@ -39,27 +40,61 @@ class VaultService {
 		}
 	}
 	
-	def getSecrets(String engine, String path) {
+	def getSecrets(String engine, String path, boolean rollup = true) {
 		String vtoken = env.getProperty('spring.cloud.vault.token')
-		String[] parts = path.split('/')
-		String opath = ""
-		Map out = [:]
-		for (String part in parts) {
-			opath += part
+		if (rollup) {
+			String[] parts = path.split('/')
+			String opath = ""
+			Map out = [:]
+			for (String part in parts) {
+				opath += part
+				def result = vaultRestClient.get(
+					//contentType: ContentType.JSON,
+					uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${opath}",
+					headers: ['X-Vault-Token': vtoken, Accept: 'application/json'],
+					)
+				if (result.data && result.data.data) {
+					def amap = result.data.data
+					amap.each { key, val ->
+						out[key] = val
+					}
+				}
+				opath += '/'
+			}
+			if (out.size() == 0) return null
+			return out
+		} else {
 			def result = vaultRestClient.get(
 				//contentType: ContentType.JSON,
-				uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${opath}",
+				uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${path}",
 				headers: ['X-Vault-Token': vtoken, Accept: 'application/json'],
 				)
-			if (result.data && result.data.data) {
-				def amap = result.data.data
-				amap.each { key, val ->
-					out[key] = val
-				}
+			if (result && result.data && result.data.data) {
+				return result.data.data
 			}
-			opath += '/'
+
 		}
-		return out
+		return null
+	}
+	
+	def ensureSecrets(String engine, String path, Map data) {
+		String vtoken = env.getProperty('spring.cloud.vault.token')
+		Map cData = getSecrets(engine, path, false)
+		Map oData = data
+		if (cData) {
+			oData = cData
+			data.each { key, val ->
+				oData[key] = val
+			}
+		} 
+		def body = [options: [cas: 0], data: oData]
+		def result = vaultRestClient.post(
+				requestContentType: ContentType.JSON,
+				uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${path}",
+				headers: ['X-Vault-Token': vtoken, Accept: 'application/json'],
+				body: body
+				)
+		return result
 	}
 	
 	void ensureUnsealed() {

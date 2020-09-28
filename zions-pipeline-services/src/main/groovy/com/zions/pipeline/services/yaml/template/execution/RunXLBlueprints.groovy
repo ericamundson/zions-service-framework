@@ -7,6 +7,7 @@ import com.zions.pipeline.services.git.GitService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.policy.PolicyManagementService
+import com.zions.pipeline.services.mixins.CliRunnerTrait
 
 import groovy.yaml.YamlBuilder
 
@@ -32,7 +33,7 @@ import groovy.util.logging.Slf4j
  */
 @Component
 @Slf4j
-class RunXLBlueprints implements IExecutableYamlHandler {
+class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait {
 
 
 	@Value('${xl.user:}')
@@ -100,36 +101,12 @@ class RunXLBlueprints implements IExecutableYamlHandler {
 			def sAF = aF.newDataOutputStream()
 			sAF << answers
 			sAF.close()
-			AntBuilder ant = new AntBuilder()
-			ant.exec(outputproperty:"text",
-			errorproperty: "error",
-			resultproperty: "exitValue",
-			dir: "${outrepo.absolutePath}/${pipelineFolder}",
-			executable: "${command}",
-			failonerror: false) {
-				if (useProxy) {
-					env( key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080")
-				}
-				arg( line: "${option} ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s")
+			def env = null
+			if (useProxy) {
+				env = [key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080"]
 			}
-			def result = new Expando(
-					text: ant.project.properties.text,
-					error: ant.project.properties.error,
-					exitValue: ant.project.properties.exitValue as Integer,
-					toString: {
-						text }
-					)
-
-			if (result.exitValue != 0) {
-				throw new Exception("""command failed with ${result.exitValue}
-error: ${result.error}
-text: ${result.text}""")
-			} else {
-				log.info(result.text)
-			}
-			//				def policies = policyManagementService.clearBranchPolicies('', projectData, bpRepoData.id, 'master')
-			//				gitService.pushChanges(bpRepoName)
-			//				policyManagementService.restoreBranchPolicies('', projectData, bpRepoData.id, 'master', policies)
+			def arg = [line: "${option} ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s"]
+			run(command, "${outrepo.absolutePath}/${pipelineFolder}", arg, env, log)
 		}
 		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
 		gitService.pushChanges(outrepo)

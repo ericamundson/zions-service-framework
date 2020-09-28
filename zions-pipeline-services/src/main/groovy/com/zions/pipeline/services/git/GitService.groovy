@@ -144,8 +144,13 @@ class GitService {
 		return repo
 	}
 	
-	def close(File repo) {
-		Git.open(repo).close()
+	def reset(File repo) {
+		Git git = Git.open(repo)
+		git.reset()
+		.setMode(ResetType.HARD)
+		.call()
+		git.close()
+		
 	}
 	
 	

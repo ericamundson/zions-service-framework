@@ -12,14 +12,22 @@ spec:
     - name: Dev
       type: udm.Environment
       members:
+	  {{if eq .Platform "Windows"}}
       - Infrastructure/DTS/microservice/Dev
+      {{else if eq .Platform "Linux"}}
+      - Infrastructure/DTS/microservice/Dev_Linux
+      {{end}}
       dictionaries:
       - Environments/DTS/{{$app}}/_Dictionaries/Dev_Dict
     {{end}}
     - name: Prod
       type: udm.Environment
       members:
+	  {{if eq .Platform "Windows"}}
       - Infrastructure/DTS/microservice/Prod
+      {{else if eq .Platform "Linux"}}
+      - Infrastructure/DTS/microservice/Prod_Linux
+      {{end}}
       dictionaries:
       - Environments/DTS/{{$app}}/_Dictionaries/Prod_Dict
     - directory: _Dictionaries
@@ -28,7 +36,7 @@ spec:
       - name: Dev_Dict
         type: udm.Dictionary
         entries:
-          {{if .IsWindows}}
+          {{if eq .Platform "Windows"}}
           deploy.path: d:\app\azure\services\{{$app}}
           {{else}}
           deploy.path: /app/azure/services/{{$app}}
@@ -43,7 +51,7 @@ spec:
       - name: Prod_Dict
         type: udm.Dictionary
         entries:
-          {{if .IsWindows}}
+          {{if eq .Platform "Windows"}}
           stage.path: d:\app\azure\_work\{{$app}}
           deploy.path: d:\app\azure\services\{{$app}}
           {{else}}

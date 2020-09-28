@@ -1,0 +1,176 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "type": "branchPolicy",
+            "branchName": "refs/heads/master",
+            "repository": "AnotherRepo",
+            "policyData": {
+                "buildData": {
+                    "ciBuildFile": ".pipeline/ado/build-release.yaml",
+                    "ciBuildName": "AnotherRepo-ci"
+                },
+                "approvalData": {
+                    "minApprovers": 2
+                }
+            }
+        }
+    ],
+    "required": [
+        "type",
+        "branchName",
+        "repository",
+        "policyData"
+    ],
+    "properties": {
+        "type": {
+            "$id": "#/properties/type",
+            "type": "string",
+            "title": "The type schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "branchPolicy"
+            ]
+        },
+        "project": {
+            "$id": "#/properties/project",
+            "type": "string",
+            "title": "The project schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "ALMOpsTest"
+            ]
+        },
+        "context": {
+            "$id": "#/properties/context",
+            "type": "string",
+            "title": "The context schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "ALMOpsTest"
+            ]
+        },
+        "branchName": {
+            "$id": "#/properties/branchName",
+            "type": "string",
+            "title": "The branchName schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "refs/heads/master"
+            ]
+        },
+        "repository": {
+            "$id": "#/properties/repository",
+            "type": "string",
+            "title": "The repository schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "AnotherRepo"
+            ]
+        },
+        "policyData": {
+            "$id": "#/properties/policyData",
+            "type": "object",
+            "title": "The policyData schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "buildData": {
+                        "ciBuildFile": ".pipeline/ado/build-release.yaml",
+                        "ciBuildName": "AnotherRepo-ci"
+                    },
+                    "approvalData": {
+                        "minApprovers": 2
+                    }
+                }
+            ],
+            "required": [
+                "buildData",
+                "approvalData"
+            ],
+            "properties": {
+                "buildData": {
+                    "$id": "#/properties/policyData/properties/buildData",
+                    "type": "object",
+                    "title": "The buildData schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": {},
+                    "examples": [
+                        {
+                            "ciBuildFile": ".pipeline/ado/build-release.yaml",
+                            "ciBuildName": "AnotherRepo-ci"
+                        }
+                    ],
+                    "required": [
+                        "ciBuildFile",
+                        "ciBuildName"
+                    ],
+                    "properties": {
+                        "ciBuildFile": {
+                            "$id": "#/properties/policyData/properties/buildData/properties/ciBuildFile",
+                            "type": "string",
+                            "title": "The ciBuildFile schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                ".pipeline/ado/build-release.yaml"
+                            ]
+                        },
+                        "ciBuildName": {
+                            "$id": "#/properties/policyData/properties/buildData/properties/ciBuildName",
+                            "type": "string",
+                            "title": "The ciBuildName schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                "AnotherRepo-ci"
+                            ]
+                        }
+                    },
+                    "additionalProperties": true
+                },
+                "approvalData": {
+                    "$id": "#/properties/policyData/properties/approvalData",
+                    "type": "object",
+                    "title": "The approvalData schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": {},
+                    "examples": [
+                        {
+                            "minApprovers": 2
+                        }
+                    ],
+                    "required": [
+                        "minApprovers"
+                    ],
+                    "properties": {
+                        "minApprovers": {
+                            "$id": "#/properties/policyData/properties/approvalData/properties/minApprovers",
+                            "type": "integer",
+                            "title": "The minApprovers schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": 0,
+                            "examples": [
+                                2
+                            ]
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}
