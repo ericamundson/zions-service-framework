@@ -17,6 +17,10 @@ dependencies {
 	
 }
 
+sourceSets.main.resources {
+	srcDir '../zions-pipeline-services/src/main/resources'
+}
+
 task jarCopy(type: Copy) {
 	from ("${buildDir}/libs") {
 		include( "zions-pipeline-cli.jar")

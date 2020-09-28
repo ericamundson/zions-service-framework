@@ -31,6 +31,8 @@ class ExecuteYaml implements CliAction {
 	YamlExecutionService yamlExecutionService
 	
 	String[] pipelineFolders = ['.pipeline','pipeline']
+	
+	
 
 	@Override
 	public def execute(ApplicationArguments data) {
@@ -59,7 +61,7 @@ class ExecuteYaml implements CliAction {
 					//String name = "${adoData.resource.repository.name}"
 					String repoUrl = data.getOptionValues('repoUrl')[0]
 					String name = data.getOptionValues('repoName')[0]
-					yamlExecutionService.runExecutableYaml(repoUrl, name, locations, 'refs/heads/master')
+					yamlExecutionService.runExecutableYaml(repoUrl, name, locations, 'refs/heads/master', 'DTS', null)
 				}
 			//}
 		}
@@ -102,7 +104,7 @@ class ExecuteYaml implements CliAction {
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
 					System.out.println("Calling handler for executable yaml of type: " + exe.type)
-					yamlHandler.handleYaml(exe, null, [])
+					yamlHandler.handleYaml(exe, null, [], null, null)
 				}
 			}
 		}

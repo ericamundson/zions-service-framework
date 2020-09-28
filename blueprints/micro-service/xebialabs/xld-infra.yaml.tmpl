@@ -8,7 +8,7 @@ spec:
   children:
   - directory: microservice
     children:
-    {{if .IsWindows}}
+    {{if eq .Platform "Windows"}}
     - name: Dev
       type: overthere.CifsHost
       address: UTMVTI0192
@@ -19,8 +19,8 @@ spec:
       address: UTMVPI0144
       username: svc-vsbuildagent@zbc.internal
       password: !value "svc_account_passwd"
-    {{else}}
-    - name: Dev
+    {{else if eq .Platform "Linux"}}
+    - name: Dev_Linux
       type: overthere.SshHost
       address: none
       jumpstation: Infrastructure/SshJumpstations/Test_01
@@ -31,7 +31,7 @@ spec:
       connectionType: SUDO
       username: shd-xldp
       privateKeyFile: /home/scmuser/.ssh/id_rsa
-    - name: Prod
+    - name: Prod_Linux
       type: overthere.SshHost
       address: utlxvpi00124
       jumpstation: Infrastructure/SshJumpstations/Prod_02
@@ -40,6 +40,6 @@ spec:
       stagingDirectoryPath: /app/deploy
       os: UNIX
       connectionType: SUDO
-      username: shd-xldp
+      username: scmuser
       privateKeyFile: /home/scmuser/.ssh/id_rsa
     {{end}}

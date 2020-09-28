@@ -1,0 +1,210 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "name": "dev4.com/AnotherRepo-release",
+            "type": "buildDefinition",
+            "queue": "On-Prem RE Test",
+            "repository": {
+                "name": "AnotherRepo",
+                "defaultBranch": "refs/heads/dev/init"
+            },
+            "variables": [
+                {
+                    "name": "Good_stuff7",
+                    "value": "old",
+                    "allowOverride": true
+                }
+            ],
+            "buildyaml": ".pipeline/ado/build-release.yaml"
+        }
+    ],
+    "required": [
+        "name",
+        "type",
+        "queue",
+        "repository",
+        "buildyaml"
+    ],
+    "properties": {
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "The name schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "dev4.com/AnotherRepo-release"
+            ]
+        },
+        "project": {
+            "$id": "#/properties/project",
+            "type": "string",
+            "title": "The project schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "ALMOpsTest"
+            ]
+        },
+        "context": {
+            "$id": "#/properties/context",
+            "type": "string",
+            "title": "The context schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "ALMOpsTest"
+            ]
+        },
+        "type": {
+            "$id": "#/properties/type",
+            "type": "string",
+            "title": "The type schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "buildDefinition"
+            ]
+        },
+        "queue": {
+            "$id": "#/properties/queue",
+            "type": "string",
+            "title": "The queue schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "On-Prem RE Test"
+            ]
+        },
+        "repository": {
+            "$id": "#/properties/repository",
+            "type": "object",
+            "title": "The repository schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "name": "AnotherRepo",
+                    "defaultBranch": "refs/heads/dev/init"
+                }
+            ],
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "$id": "#/properties/repository/properties/name",
+                    "type": "string",
+                    "title": "The name schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "AnotherRepo"
+                    ]
+                },
+                "defaultBranch": {
+                    "$id": "#/properties/repository/properties/defaultBranch",
+                    "type": "string",
+                    "title": "The defaultBranch schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "refs/heads/dev/init"
+                    ]
+                }
+            },
+            "additionalProperties": false
+        },
+        "variables": {
+            "$id": "#/properties/variables",
+            "type": "array",
+            "title": "The variables schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": [],
+            "examples": [
+                [
+                    {
+                        "name": "Good_stuff7",
+                        "value": "old",
+                        "allowOverride": true
+                    }
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/variables/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/variables/items/anyOf/0",
+                        "type": "object",
+                        "title": "The first anyOf schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": {},
+                        "examples": [
+                            {
+                                "name": "Good_stuff7",
+                                "value": "old",
+                                "allowOverride": true
+                            }
+                        ],
+                        "required": [
+                            "name",
+                            "value",
+                            "allowOverride"
+                        ],
+                        "properties": {
+                            "name": {
+                                "$id": "#/properties/variables/items/anyOf/0/properties/name",
+                                "type": "string",
+                                "title": "The name schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "Good_stuff7"
+                                ]
+                            },
+                            "value": {
+                                "$id": "#/properties/variables/items/anyOf/0/properties/value",
+                                "type": "string",
+                                "title": "The value schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "old"
+                                ]
+                            },
+                            "allowOverride": {
+                                "$id": "#/properties/variables/items/anyOf/0/properties/allowOverride",
+                                "type": "boolean",
+                                "title": "The allowOverride schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": false,
+                                "examples": [
+                                    true
+                                ]
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "buildyaml": {
+            "$id": "#/properties/buildyaml",
+            "type": "string",
+            "title": "The buildyaml schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                ".pipeline/ado/build-release.yaml"
+            ]
+        }
+    },
+    "additionalProperties": false
+}

@@ -7,17 +7,18 @@ import groovy.yaml.YamlSlurper
 import groovy.yaml.YamlBuilder
 import groovy.json.JsonBuilder
 import org.yaml.snakeyaml.Yaml
-
-import groovy.util.logging.Slf4j
 import java.util.regex.Pattern
 import java.util.regex.Matcher
+
+import com.zions.pipeline.services.mixins.FindExecutableYamlNoRepoTrait
+import groovy.util.logging.Slf4j
 
 import com.zions.pipeline.services.yaml.template.execution.IExecutableYamlHandler
 
 
 @Component
 @Slf4j
-class BlueprintTemplateInterpretorService {
+class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait {
 	
 	@Autowired
 	Map<String, IExecutableYamlHandler> yamlHandlerMap;
@@ -27,15 +28,21 @@ class BlueprintTemplateInterpretorService {
 	
 	@Value('${blueprint:}')
 	String blueprint
+		
+	@Value('${repo.dir:}')
+	File repoDir
 	
 	@Value('${out.dir:}')
 	File outDir
-	
+
 	@Value('${pipeline.folder:.pipeline}')
 	String pipelineFolder
 	
 	@Value('${in.placeholder.delimiters:[[,]]}')
 	String[] inDelimiters
+	
+	@Value('${ado.project:DTS}')
+	String adoProject
 	
 	def answers = [:]
 	
@@ -76,7 +83,7 @@ class BlueprintTemplateInterpretorService {
 		}
 		File startupBat = new File(pipelineDir, 'startup.bat')
 		def os = startupBat.newDataOutputStream()
-		os << 'start cmd /C %*'
+		os << 'start /W cmd /C %*'
 		os.close()
 //		File answersFile = new File(pipelineDir, 'answers.yaml')
 //		def os = answersFile.newDataOutputStream()
@@ -113,7 +120,7 @@ class BlueprintTemplateInterpretorService {
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
 					try {
-						yamlHandler.handleYaml(exe, null, [], 'refs/heads/master')
+						yamlHandler.handleYaml(exe, repoDir, [], 'refs/heads/master', adoProject)
 					} catch (e) {
 						log.error("Failed running executable yaml:  ${exe.type} :: ${e.message}")
 						e.printStackTrace()
@@ -123,26 +130,6 @@ class BlueprintTemplateInterpretorService {
 		}
 	}
 	
-	private def findExecutableYaml() {
-		def executableYaml = []
-		def filePattern = Pattern.compile("^.*[.]yaml\$")
-		outDir.eachDirRecurse() { File dir ->
-			dir.eachFileMatch(filePattern) { File file ->
-				def eyaml = null
-				try {
-					eyaml = new YamlSlurper().parseText(file.text)
-				} catch (e) {}
-				if (eyaml) {
-					def executables = eyaml.executables
-					if (executables) {
-						executableYaml.add(eyaml)
-					}
-				}
-			}
-		}
-		return executableYaml
-
-	}
 	
 	def loadXLCli() {
 		String osname = System.getProperty('os.name')

@@ -13,3 +13,7 @@ dependencies {
 	compile project(':zions-pipeline-services')
 	compile project(':zions-common')
 }
+
+sourceSets.main.resources {
+	srcDir '../zions-pipeline-services/src/main/resources'
+}

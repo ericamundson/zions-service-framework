@@ -15,13 +15,17 @@ spec:
     type: Input
     prompt: What is the name of the micro-service project?
     
-  - name: IsWindows
-    type: Confirm
-    prompt: Is this a Windows deploy (Y/N)?
+  - name: Platform
+    type: Select
+    options:
+      - Windows
+      - Linux
+      - Container   
+    prompt: What type of deploy?
     
   - name: RequiresCollection
     type: Confirm
-    prompt: Does this require tfs.collection property (Y/N)?
+    prompt: Does this require tfs.collection property?
             
   - name: BuildIncludes
     type: Input
@@ -42,25 +46,25 @@ spec:
   - path: xl-release.yaml
   - path: xebialabs/USAGE.md.tmpl
   - path: service/service.xml.tmpl
-    writeIf: !expr "IsWindows == true"
+    writeIf: !expr "Platform == 'Windows'"
   - path: service/service.exe
-    writeIf: !expr "IsWindows == true"
+    writeIf: !expr "Platform == 'Windows'"
   - path: service/queue.exe
-    writeIf: !expr "IsWindows == true"
+    writeIf: !expr "Platform == 'Windows'"
   - path: service/service.exe.config
-    writeIf: !expr "IsWindows == true"
+    writeIf: !expr "Platform == 'Windows'"
   - path: service/queue.exe.config
-    writeIf: !expr "IsWindows == true"
+    writeIf: !expr "Platform == 'Windows'"
   - path: service/microservice.service.tmpl
-    writeIf: !expr "IsWindows == false"
+    writeIf: !expr "Platform == 'Linux'"
   - path: service/queue.service.tmpl
-    writeIf: !expr "IsWindows == false"
+    writeIf: !expr "Platform == 'Linux'"
   - path: executable/builddefinition.yaml.tmpl
   - path: ado/microservice-release.yaml.tmpl
   - path: xebialabs/xld-apps-windows.yaml.tmpl
-    writeIf: !expr "IsWindows == true"
+    writeIf: !expr "Platform == 'Windows'"
   - path: xebialabs/xld-apps-redhat.yaml.tmpl
-    writeIf: !expr "IsWindows == false"
+    writeIf: !expr "Platform == 'Linux'"
   - path: xebialabs/xld-infra.yaml.tmpl
   - path: xebialabs/xld-env.yaml.tmpl
   - path: xebialabs/xlr-pipeline-ci-cd.yaml.tmpl
