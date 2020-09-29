@@ -35,7 +35,7 @@ stages:
         InitialVersionPrefix: 7.0.0
         WriteTag: true
     - script: |
-        echo '##vso[task.setvariable variable=oBuildTag;isOutput=true]$(buildTag)'
+        echo ##vso[task.setvariable variable=oBuildTag;isOutput=true]$(buildTag)
       name: 'oTag'
 
     - task: Gradle@2
