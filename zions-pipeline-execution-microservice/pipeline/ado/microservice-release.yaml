@@ -29,6 +29,7 @@ stages:
     steps:
     - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
       displayName: 'Tag'
+      name: 'Tag'
       inputs:
         OutputVariable: buildTag
         InitialVersionPrefix: 7.0.0
@@ -36,13 +37,19 @@ stages:
 
     - task: Gradle@2
       displayName: 'gradlew clean build updateBatJarVersion'
+      name: 'gradleBuild'
       inputs:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
         workingDirectory: '$(Build.SourcesDirectory)'
         options: '--no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
         tasks: 'clean zions-pipeline-execution-microservice:build'
         publishJUnitResults: false
-
+- stage: Release
+  jobs:
+  - job: Release
+    variables:
+      buildTag: $[ stageDependencies.Stage.Stage.outputs['Tag.buildTag'] ]
+    steps:
     - task: BatchScript@1
       displayName: 'XLW - xl-deploy.yaml'
       inputs:
