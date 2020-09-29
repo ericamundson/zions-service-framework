@@ -44,12 +44,7 @@ stages:
         options: '--no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
         tasks: 'clean zions-pipeline-execution-microservice:build'
         publishJUnitResults: false
-- stage: Release
-  jobs:
-  - job: Release
-    variables:
-      buildTag: $[ stageDependencies.Stage.Stage.outputs['Tag.buildTag'] ]
-    steps:
+        
     - task: BatchScript@1
       displayName: 'XLW - xl-deploy.yaml'
       inputs:
@@ -58,6 +53,13 @@ stages:
         workingFolder: $(Build.SourcesDirectory)\zions-pipeline-execution-microservice\pipeline
       continueOnError: false
       enabled: true
+      
+- stage: Release
+  jobs:
+  - job: Release
+    variables:
+      buildTag: $[ stageDependencies.Stage.Stage.outputs['Tag.buildTag'] ]
+    steps:
       
     - task: BatchScript@1
       displayName: 'XLW - xl-release.yaml'
