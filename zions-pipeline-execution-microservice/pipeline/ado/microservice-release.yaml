@@ -70,14 +70,14 @@ stages:
 - stage: Release
   dependsOn: Build
   jobs:
-  - name: Release
+  - job: Release
     variables:
       releaseTag: $[ stageDependencies.Build.Build.outputs['oTag.oBuildTag'] ]
     steps:
     - task: Zions.ado-ext-release-status-control.CreateReleaseTask.CreateReleaseTask@0
       displayName: 'Create Release'
       inputs:
-        templateTitle: '{{$app}} - Master'
-        releaseTitle: '{{$app}} - $(releaseTag)'
+        templateTitle: 'zions-pipeline-execution-microservice - Master'
+        releaseTitle: 'zions-pipeline-execution-microservice - $(releaseTag)'
         releaseVariableSettings: 'deploymentPackage.name=$(releaseTag)'
         xlrProfile: xlrdb
