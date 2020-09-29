@@ -10,8 +10,9 @@ spec:
     
     - name: Prod
       type: udm.Environment
-      members:
+      members:  
       - Infrastructure/DTS/microservice/Prod
+      
       dictionaries:
       - Environments/DTS/zions-pipeline-execution-microservice/_Dictionaries/Prod_Dict
     - directory: _Dictionaries

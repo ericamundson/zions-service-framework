@@ -1,0 +1,67 @@
+{
+	"definitions": {},
+	"$schema": "http://json-schema.org/draft-07/schema#", 
+	"$id": "https://example.com/object1600979641.json", 
+	"title": "Root", 
+	"type": "object",
+	"required": [
+		"type",
+		"filePath"
+	],
+	"properties": {
+		"type": {
+			"$id": "#root/type", 
+			"title": "Type", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				"sanitizeProperties"
+			],
+			"pattern": "^.*$"
+		},
+		"filePath": {
+			"$id": "#root/filePath", 
+			"title": "Filepath", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				".pipeline/xebialabs/secrets.xlvals"
+			],
+			"pattern": "^.*$"
+		},
+		"vault": {
+			"$id": "#root/vault", 
+			"title": "Vault", 
+			"type": "object",
+			"required": [
+				"engine",
+				"path"
+			],
+			"properties": {
+				"engine": {
+					"$id": "#root/vault/engine", 
+					"title": "Engine", 
+					"type": "string",
+					"default": "",
+					"examples": [
+						"secret"
+					],
+					"pattern": "^.*$"
+				},
+				"path": {
+					"$id": "#root/vault/path", 
+					"title": "Path", 
+					"type": "string",
+					"default": "",
+					"examples": [
+						"WebCMS"
+					],
+					"pattern": "^.*$"
+				}
+			},
+			"additionalProperties": false
+		}
+
+	},
+	"additionalProperties": false
+}
