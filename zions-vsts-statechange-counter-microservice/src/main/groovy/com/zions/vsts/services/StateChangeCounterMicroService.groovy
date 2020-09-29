@@ -101,6 +101,11 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		//detect the work item type involved in the edit
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		
+		//this is bug id
+		String id = "${wiResource.revision.id}"
+		
+		//this is rev id
+		String rev = "${wiResource.rev}"
 		//If Bug execute counter code
 		if (!types.contains(wiType))return logResult('not a valid work item type')
 		
@@ -113,19 +118,22 @@ class StateChangeCounterMicroService implements MessageReceiverTrait {
 		
 		//restrieve old/new state field values for comparison	
 		String oldState = stateField.oldValue
+		if (!oldState || oldState == 'null') {
+			log.error("Error retrieving previous state for work item $id")
+			return 'Error Retrieving previous state'
+		}
 		String newState = stateField.newValue
-		
+		if (!newState || newState == 'null') {
+			log.error("Error retrieving new state for work item $id")
+			return 'Error Retrieving new state state'
+		}
 		
 		def statechangeCount = wiResource.revision.fields.'Custom.ReOpenCounter'
 		
 		if (!statechangeCount || statechangeCount == 'null' || statechangeCount == '')
 			statechangeCount = 0;
 			
-		//this is bug id
-		String id = "${wiResource.revision.id}"
-		
-		//this is rev id
-		String rev = "${wiResource.rev}"
+
 		
 		if (sourceState.contains(oldState) && (destState.contains(newState))) {
 			log.debug("Updating count of $wiType #$id")
