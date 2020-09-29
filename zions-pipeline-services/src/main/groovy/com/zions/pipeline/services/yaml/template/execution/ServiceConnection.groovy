@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
-
+import com.zions.common.services.vault.VaultService
+import com.zions.pipeline.services.mixins.ReadSecretsTrait
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
 
@@ -19,21 +20,25 @@ import com.zions.vsts.services.endpoint.EndpointManagementService
  *   endpointName: XL Deploy - Prod
  *   endpointDescription: XL Deploy for production environment
  *   grantAllPerm: true
- *	 authorization:
- *	   scheme: UsernamePassword
- *	   username: ${svc-xld.user}
- *	   password: ${svc-xld.password}
- *
  *   vault:
  *     engine: secret
- *     path:  zions-service-framework/svc-connection
-
+ *     path: zions-service-framework/dev
+ *	 authorization:
+ *	   scheme: UsernamePassword
+ *	   parameters:
+ *       #Vault key
+ *	     username: ${xl.user}
+ *       #Vault key      
+ *		 password: ${xl.password}
+ *
  * @author z091556
  *
  */
 @Component
-class ServiceConnection implements IExecutableYamlHandler {
-	
+class ServiceConnection implements IExecutableYamlHandler, ReadSecretsTrait {
+	@Autowired
+	VaultService vaultService
+
 
 	@Autowired
 	ProjectManagementService projectManagementService
@@ -41,21 +46,35 @@ class ServiceConnection implements IExecutableYamlHandler {
 	@Autowired
 	EndpointManagementService endpointManagementService
 
+	@Value('${endpoint.user:}')
+	String endpointUserName
+
+	@Value('${endpoint.password:}')
+	String endpointPassword
+
 	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
+		def vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.path)
+		if (yaml.authorization && yaml.authorization.parameters && yaml.authorization.parameters.username && yaml.authorization.parameters.password) {
+			endpointUserName = getSecret(vaultSecrets, yaml.authorization.parameters.username)
+			endpointPassword = getSecret(vaultSecrets, yaml.authorization.parameters.password)
+		}
 		String endpointType = yaml.endpointType
-		def epAuthScheme = [ scheme: "UsernamePassword", parameters: [username: yaml.authorization.username, password: yaml.authorization.password] ]
+		def epAuthScheme = [ scheme: "UsernamePassword", parameters: [username: endpointUserName, password: endpointPassword] ]
 		def epData = [ acceptUntrustedCerts: false ]
 		def endpointData = [ administratorsGroup: null, authorization: epAuthScheme, createdBy: null, data: epData, description: yaml.endpointDescription, groupScopeId: null,	name: yaml.endpointName, operationStatus: null, readersGroup: null, serviceEndpointProjectReferences: [],type: yaml.endpointType, url: yaml.endpointUrl, isShared: false, owner: "library" ]
  
+		//endpointData.publisherInputs = new JsonBuilder(yaml.publisherInputs).getContent()
+		//System.out.println("In handleYaml - endpointData:\n" + endpointData)
+
 		def epProjectReferences = []
 		String projects = "${yaml.projects}"
 		if ( projects == 'all') {
 			def allProjects = projectManagementService.getProjects('')
 			allProjects.'value'.each { project ->
-				epProjectReferences = [	[ description: yaml.endpointDescription, name: yaml.endpointDescription, projectReference: [ id: project.id, name: project.name ] ] ]
+				epProjectReferences = [	[ description: yaml.endpointDescription, name: yaml.endpointName, projectReference: [ id: project.id, name: project.name ] ] ]
 				endpointData.serviceEndpointProjectReferences = epProjectReferences
-				endpointManagementService.ensureServiceEndpoint(project, endpointData, yaml.grantAllPerm)
+				endpointManagementService.ensureServiceEndpoint(project.id, endpointData, yaml.grantAllPerm)
 			}
 		} else {
 			String[] projectList = projects.split(',')
@@ -63,9 +82,9 @@ class ServiceConnection implements IExecutableYamlHandler {
 				//System.out.println("In handleYaml - Calling projectManagementService.getProject for: " + pName)
 				def project = projectManagementService.getProject('', pName)
 				if (project) {
-					epProjectReferences = [	[ description: yaml.endpointDescription, name: yaml.endpointDescription, projectReference: [ id: project.id, name: project.name ] ] ]
+					epProjectReferences = [	[ description: yaml.endpointDescription, name: yaml.endpointName, projectReference: [ id: project.id, name: project.name ] ] ]
 					endpointData.serviceEndpointProjectReferences = epProjectReferences
-					endpointManagementService.ensureServiceEndpoint(project, endpointData, yaml.grantAllPerm)
+					endpointManagementService.ensureServiceEndpoint(pName, endpointData, yaml.grantAllPerm)
 				}
 			}
 		}

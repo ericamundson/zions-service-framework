@@ -18,22 +18,24 @@ public class EndpointManagementService {
 		
 	}
 	
-	public def ensureServiceEndpoint(String projectId, def data, boolean grantAllPermission) {
+	public def ensureServiceEndpoint(String projectId, def endpointData, boolean grantAllPermission) {
 		def query = ['api-version':'6.0-preview.4', excludeUrls:true]
-		def endpoint = getServiceEndpoint('', projectId, data.name)
+		def endpoint = getServiceEndpoint('', projectId, endpointData.name)
 		if (endpoint == null) {
 			endpoint = createServiceEndpoint(endpointData)  
 		}
 		
 		if (grantAllPermission) {
 			def permissions = [ resource: [id: "${endpoint.id}", type:'endpoint', name: ''], pipelines: [], allPipelines: [authorized: true, authorizedBy: null, authorizedOn: null] ]
-			def permsQuery = ['api-version':'6.0-preview.4', excludeUrls:true]
+			def permsQuery = ['api-version':'5.1-preview.1', excludeUrls:true]
+			String body = new JsonBuilder(permissions).toPrettyString()
 			def result = genericRestClient.patch(
 				contentType: ContentType.JSON,
-				requestContentType: 'application/json',
-				uri: "${genericRestClient.getTfsUrl()}/_apis/pipelines/pipelinePermissions/endpoint/${endpoint.id}",
-				body: permissions,
-				query: permsQuery
+				//requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${projectId}/_apis/pipelines/pipelinePermissions/endpoint/${endpoint.id}",
+				body: body,
+				headers: [accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true;enumsAsNumbers=true;msDateFormat=true;noArrayWrap=true', 'content-type': 'application/json']
+				//query: permsQuery
 				)
 		}
 		return endpoint
@@ -43,7 +45,6 @@ public class EndpointManagementService {
 		def query = ['api-version': '6.0-preview.4', endpointNames:name]
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
-			requestContentType: 'application/json',
 			uri: "${genericRestClient.getTfsUrl()}/${projectId}/_apis/serviceendpoint/endpoints",
 			query: query
 			)

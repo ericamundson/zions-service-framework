@@ -62,7 +62,7 @@ stages:
   jobs:
   - job: Release
     variables:
-      releaseTag: $[ stageDependencies.Build.Build.outputs['oTag.oBuildTag'] ]
+      releaseTag: $[ stageDependencies.Build.Build.outputs['buildTag'] ]
     steps:
       
     - task: BatchScript@1

@@ -1,0 +1,185 @@
+{
+	"definitions": {},
+	"$schema": "http://json-schema.org/draft-07/schema#", 
+	"$id": "https://example.com/object1601382249.json", 
+	"title": "Root", 
+	"type": "object",
+	"required": [
+		"type",
+		"projects",
+		"endpointType",
+		"endpointUrl",
+		"endpointName",
+		"endpointDescription",
+		"grantAllPerm",
+		"vault",
+		"authorization"
+	],
+	"properties": {
+		"type": {
+			"$id": "#root/type", 
+			"title": "Type", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				"serviceConnection"
+			],
+			"pattern": "^.*$"
+		},
+		"context": {
+			"$id": "#root/context", 
+			"title": "Context", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				"ZionsETO"
+			],
+			"pattern": "^.*$"
+		},
+		"projects": {
+			"$id": "#root/projects", 
+			"title": "Projects", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				"ReleaseEngineering"
+			],
+			"pattern": "^.*$"
+		},
+		"endpointType": {
+			"$id": "#root/endpointType", 
+			"title": "Endpointtype", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				"xldserver"
+			],
+			"pattern": "^.*$"
+		},
+		"endpointUrl": {
+			"$id": "#root/endpointUrl", 
+			"title": "Endpointurl", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				"https://xldeploy.cs.zionsbank.com"
+			],
+			"pattern": "^.*$"
+		},
+		"endpointName": {
+			"$id": "#root/endpointName", 
+			"title": "Endpointname", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				"XL Deploy - Prod"
+			],
+			"pattern": "^.*$"
+		},
+		"endpointDescription": {
+			"$id": "#root/endpointDescription", 
+			"title": "Endpointdescription", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				"XL Deploy for production environment"
+			],
+			"pattern": "^.*$"
+		},
+		"grantAllPerm": {
+			"$id": "#root/grantAllPerm", 
+			"title": "Grantallperm", 
+			"type": "boolean",
+			"examples": [
+				true
+			],
+			"default": true
+		},
+		"vault": {
+			"$id": "#root/vault", 
+			"title": "Vault", 
+			"type": "object",
+			"required": [
+				"engine",
+				"path"
+			],
+			"properties": {
+				"engine": {
+					"$id": "#root/vault/engine", 
+					"title": "Engine", 
+					"type": "string",
+					"default": "",
+					"examples": [
+						"secret"
+					],
+					"pattern": "^.*$"
+				},
+				"path": {
+					"$id": "#root/vault/path", 
+					"title": "Path", 
+					"type": "string",
+					"default": "",
+					"examples": [
+						"zions-service-framework"
+					],
+					"pattern": "^.*$"
+				}
+			}
+		}
+,
+		"authorization": {
+			"$id": "#root/authorization", 
+			"title": "Authorization", 
+			"type": "object",
+			"required": [
+				"scheme",
+				"parameters"
+			],
+			"properties": {
+				"scheme": {
+					"$id": "#root/authorization/scheme", 
+					"title": "Scheme", 
+					"type": "string",
+					"default": "",
+					"examples": [
+						"UsernamePassword"
+					],
+					"pattern": "^.*$"
+				},
+				"parameters": {
+					"$id": "#root/authorization/parameters", 
+					"title": "Parameters", 
+					"type": "object",
+					"required": [
+						"username",
+						"password"
+					],
+					"properties": {
+						"username": {
+							"$id": "#root/authorization/parameters/username", 
+							"title": "Username", 
+							"type": "string",
+							"default": "",
+							"examples": [
+								"${xl.user}"
+							],
+							"pattern": "^.*$"
+						},
+						"password": {
+							"$id": "#root/authorization/parameters/password", 
+							"title": "Password", 
+							"type": "string",
+							"default": "",
+							"examples": [
+								"${xl.password}"
+							],
+							"pattern": "^.*$"
+						}
+					}
+				}
+
+			}
+		}
+
+	}
+}
