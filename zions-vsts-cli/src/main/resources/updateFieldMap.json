@@ -1,0 +1,15 @@
+{
+"ID": {"AdoId": "System.ID"},
+"Area Path": {"AdoId": "System.AreaPath"},
+"Work Item Type": {"AdoId": "System.WorkItemType"},
+"Title": {"AdoId": "System.Title"},
+"Reason": {"AdoId": "System.Reason"},
+"Priority": {"AdoId": "Microsoft.VSTS.Common.Priority"},
+"Severity": {"AdoId": "Microsoft.VSTS.Common.Severity"},
+"Color": {"AdoId": "Custom.Color", "CalcHandler": "colorCalcHandler"},
+"State": {"AdoId": "System.State"},
+"RCE Level 1": {"AdoId": "Custom.RCELevel1"},
+"RCE Level 2": {"AdoId": "Custom.RCELevel2"},
+"Vendor Related": {"AdoId": "Custom.VendorRelated"},
+"RootCauseComment": {"AdoId": "Custom.RootCauseComment"}
+}
