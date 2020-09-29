@@ -66,7 +66,7 @@ stages:
       displayName: 'XLW - xl-release.yaml'
       inputs:
         filename: '$(Build.SourcesDirectory)\zions-pipeline-execution-microservice\pipeline\xl.exe'
-        arguments: 'apply -f xl-release.yaml --xl-release-url $(xlr_cli_url) --xl-release-username $(xld_cli_user) --xl-release-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd),xlr_scriptUserPassword=$(xlr_scriptUserPassword),release_name="zions-pipeline-execution-microservice-$(buildTag)"'
+        arguments: 'apply -f xl-release.yaml --xl-release-url $(xlr_cli_url) --xl-release-username $(xld_cli_user) --xl-release-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd),xlr_scriptUserPassword=$(xlr_scriptUserPassword),release_name="zions-pipeline-execution-microservice-$(releaseTag)"'
         workingFolder: $(Build.SourcesDirectory)\zions-pipeline-execution-microservice\pipeline
       continueOnError: true
       enabled: true
@@ -75,6 +75,6 @@ stages:
       displayName: 'Create Release'
       inputs:
         templateTitle: 'zions-pipeline-execution-microservice - Master'
-        releaseTitle: 'zions-pipeline-execution-microservice - $(buildTag)'
-        releaseVariableSettings: 'deploymentPackage.name=$(buildTag)'
+        releaseTitle: 'zions-pipeline-execution-microservice - $(releaseTag)'
+        releaseVariableSettings: 'deploymentPackage.name=$(releaseTag)'
         xlrProfile: xlrdb
