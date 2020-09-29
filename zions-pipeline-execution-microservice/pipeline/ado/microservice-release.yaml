@@ -55,10 +55,11 @@ stages:
       enabled: true
       
 - stage: Release
+  dependsOn: Build
   jobs:
   - job: Release
     variables:
-      buildTag: $[ stageDependencies.Build.Build.outputs['Tag.buildTag'] ]
+      releaseTag: $[ stageDependencies.Build.Build.outputs['Tag.buildTag'] ]
     steps:
       
     - task: BatchScript@1
