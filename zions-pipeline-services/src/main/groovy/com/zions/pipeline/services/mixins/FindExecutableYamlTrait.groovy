@@ -30,6 +30,7 @@ trait FindExecutableYamlTrait {
 		def executableYaml = []
 		scanLocations.each { String loc ->
 			File file = new File(repoDir, loc)
+			if (!file.exists() ) return
 			String outStr = file.text
 			outStr = outStr.replaceAll(/(#)( |\S)*$/, '')
 			def eyaml = null
