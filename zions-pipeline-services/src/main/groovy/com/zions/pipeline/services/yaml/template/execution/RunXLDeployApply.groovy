@@ -136,7 +136,7 @@ class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait {
 	}
 	
 	boolean performExecute(def yaml, List<String> locations) {		
-		if (!yaml.dependencies) return true
+		if (!yaml.dependencies || locations.size() == 0) return true
 		for (String dep in yaml.dependencies) {
 			if (locations.contains(dep)) return true
 		}

@@ -61,7 +61,7 @@ spec:
   - path: service/queue.service.tmpl
     writeIf: !expr "Platform == 'Linux'"
   - path: executable/builddefinition.yaml.tmpl
-  - path: executable/xlexecute.yaml.tmpl
+  - path: executables/xlexecute.yaml.tmpl
   - path: ado/microservice-release.yaml.tmpl
   - path: xebialabs/xld-apps-windows.yaml.tmpl
     writeIf: !expr "Platform == 'Windows'"

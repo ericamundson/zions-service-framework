@@ -2,6 +2,9 @@
 executables:
 - type: runXLDeployApply
   yamlFile: {{$app}}/pipeline/xl-deploy.yaml
+  dependencies:
+  - /{{$app}}/pipeline/xld-env.yaml
+  - /{{$app}}/pipeline/xld-infra.yaml
   vault:
     engine: secret
     path: zions-service-framework
@@ -15,6 +18,8 @@ executables:
     
 - type: runXLReleaseApply
   yamlFile:  {{$app}}/pipeline/xl-release.yaml
+  dependencies:
+  - /{{$app}}/pipeline/xlr-pipeline-ci-cd.yaml
   vault:
     engine: secret
     path: zions-service-framework
