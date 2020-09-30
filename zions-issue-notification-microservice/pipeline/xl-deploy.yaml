@@ -4,5 +4,3 @@ metadata:
   imports:
   - xebialabs/xld-infra.yaml
   - xebialabs/xld-env.yaml
-  
-  - xebialabs/xld-apps-windows.yaml
