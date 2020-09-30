@@ -1,0 +1,28 @@
+executables:
+- type: runXLDeployApply
+  yamlFile: zions-issue-notification-microservice/pipeline/xl-deploy.yaml
+  vault:
+    engine: secret
+    path: zions-service-framework
+  values:
+  - name: xld_cli_user
+    value: ${xl.user}
+  - name: xld_cli_passwd
+    value: ${xl.password)
+  - name: svc_account_passwd
+    value: ${svc_account_passwd}
+    
+- type: runXLReleaseApply
+  yamlFile:  zions-issue-notification-microservice/pipeline/xl-release.yaml
+  vault:
+    engine: secret
+    path: zions-service-framework
+  values:
+  - name: xld_cli_user
+    value: ${xl.user}
+  - name: xld_cli_passwd
+    value: ${xl.password)
+  - name: svc_account_passwd
+    value: ${svc_account_passwd}
+  - name: xlr_scriptUserPassword
+    value: ${xlr_scriptUserPassword}

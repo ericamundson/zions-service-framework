@@ -4,6 +4,6 @@ executables:
   context: zionseto
   project: DTS
   queue: 'On-Prem Production'
-  repository: 
+  repository:
     name: zions-service-framework
   buildyaml: zions-issue-notification-microservice/pipeline/ado/microservice-release.yaml

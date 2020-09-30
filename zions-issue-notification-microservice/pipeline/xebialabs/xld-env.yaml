@@ -11,7 +11,9 @@ spec:
     - name: Prod
       type: udm.Environment
       members:
+      
       - Infrastructure/DTS/microservice/Prod
+      
       dictionaries:
       - Environments/DTS/zions-issue-notification-microservice/_Dictionaries/Prod_Dict
     - directory: _Dictionaries
