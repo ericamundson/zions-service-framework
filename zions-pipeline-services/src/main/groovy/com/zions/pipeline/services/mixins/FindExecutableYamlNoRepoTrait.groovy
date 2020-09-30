@@ -19,6 +19,9 @@ trait FindExecutableYamlNoRepoTrait {
 	@Value('${out.dir:}')
 	File outDir
 	
+	@Value('${pipeline.folder:.pipeline}')
+	String pipelineFolder
+	
 	Map<String, String> schemaCache = [:]
 	
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
@@ -32,7 +35,9 @@ trait FindExecutableYamlNoRepoTrait {
 	def findExecutableYaml() {
 		def executableYaml = []
 		def filePattern = Pattern.compile("^.*[.]yaml\$")
-		outDir.eachDirRecurse() { File dir ->
+		File pipelineDir = new File(outDir, pipelineFolder)
+		if (!pipelineDir.exists()) return
+		pipelineDir.eachDirRecurse() { File dir ->
 			dir.eachFileMatch(filePattern) { File file ->
 				def eyaml = null
 				try {
@@ -66,7 +71,7 @@ trait FindExecutableYamlNoRepoTrait {
 							
 						}
 						if (oinvalidMessages.empty) {
-							executableYaml.add(yaml: eyaml)
+							executableYaml.add(eyaml)
 						} else {
 							def feedback = [messages: oinvalidMessages]
 							sendFeedback(feedback)

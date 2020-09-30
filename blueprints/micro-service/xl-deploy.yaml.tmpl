@@ -5,8 +5,3 @@ metadata:
   imports:
   - xebialabs/xld-infra.yaml
   - xebialabs/xld-env.yaml
-  {{if eq .Platform "Windows"}}
-  - xebialabs/xld-apps-windows.yaml
-  {{else if eq .Platform "Linux"}}
-  - xebialabs/xld-apps-redhat.yaml
-  {{end}}
