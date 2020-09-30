@@ -10,7 +10,8 @@ spec:
     
     - name: Prod
       type: udm.Environment
-      members:  
+      members:
+      
       - Infrastructure/DTS/microservice/Prod
       
       dictionaries:
