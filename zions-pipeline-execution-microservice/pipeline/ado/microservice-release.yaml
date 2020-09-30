@@ -10,8 +10,8 @@ trigger:
 
     - 'zions-pipeline-execution-microservice/*'
     - 'zions-pipeline-services/*'
-    - 'zions-xlr-services/*'
     - 'zions-xld-services/*'
+    - 'zions-xlr-services/*'
     
 pool:
   name: On-Prem Production
