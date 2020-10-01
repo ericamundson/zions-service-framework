@@ -21,74 +21,44 @@ class CopyTestPlans implements CliAction {
 	@Value('${tfs.testplanid}')
 	String[] testplanIds
 
-	@Value('${tfs.testplanDestName}')
-	String testplanDestName
+	@Value('${tfs.destPlanName}')
+	String destPlanName
 	
-	@Value('${tfs.testplanDestProject}')
-	String testplanDestProject
+	@Value('${tfs.destProjectName}')
+	String destProjectName
 	
-	@Value('${tfs.testplanSrcProject}')
-	String testplanSrcProject
+	@Value('${tfs.srcProjectName}')
+	String srcProjectName
 	
-	//use for both Area Path/Iteration path
-	@Value('${tfs.testplanPath}')
-	String testplanPath
-	
+	@Value('${tfs.collection:}')
+	String collection
 
+	
+	
 	//@Value('${tfs.types:}')
 
 	
 	public CopyTestPlans() {
 	}
 
-	 	public def execute(ApplicationArguments data) {
-        //call method on test management service called "CopyTestPlan
-	    // pass source test plan id, source project, destination project, test plan name, and test area/iteration
-	    //Implement all in the testmanagement service - in the copyTestPlan
-			 
-        ///* Write code call cloneTestPlan from TestManagementService
-			 //@value for collection @value for all input parameters
-			 //add autowire for testmanagement service
-			 //make sure getting all params to test management service
-			 //make sure body is building properly with all values
-			 //consider using one value for testplanName - just give it test plan id/ name of the destination project.
-			 //add testplanId.each then pass it to the testplan clone method
-		
-		def testplanClone = "https://dev.azure.com/zionseto/${testplanSrcProject}/_apis/test/Plans/${testplanId}/cloneoperation?api-version=5.0-preview.2"
-		def copyTestPlan = [method:'POST', uri: "/_apis/test/Plans/${testplanId}/cloneoperation?api-version=5.0-preview.2&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-		/*
-		 * BODY SHOULD LOOK LIKE THIS
-				 * {
-		  "destinationTestPlan": {
-		    "name": "SOPP int. – Duplicate Payments",
-		    "Project": {
-		      "Name": "Sandbox"
-		    }
-		  },
-		  "options": {
-		    "copyAncestorHierarchy": true,
-		    "copyAllSuites": true,
-		    "overrideParameters": {
-		      "System.AreaPath": "Sandbox",
-		      "System.IterationPath": "Sandbox"
-		    }
-		  },
-		  "suiteIds": [
-		    2
-		  ]
+	 public def execute(ApplicationArguments data) {
+        //call method on test management service called "cloneTestPlan
+        //values defined in runtime arguments for delivery to cloneTestPlan in the TestManagementService
+		if (testplanIds) {
+			testplanIds.each { Id ->
+				//use testplan management service to get test plan name
+				def plan = testManagementService.getPlan(collection, srcProjectName, Id)
+				if (plan) { 
+					def clonePlan = testManagementService.cloneTestPlan(collection, plan.name, Id, srcProjectName, destProjectName)
+				}
+			}	
 		}
-
-		 */
-		
-		
-		def idData = [ op: 'add', path: "/fields/$adoFieldName", value: "$value"]
-		copyTestPlan.body.add(idData)
-		
-
-	}
+	
+	  }
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'out.file']
+		//def required = ['tfs.url', 'tfs.user', 'tfs.token', 'tfs.project', 'out.file']
+		def required = ['tfs.url', 'tfs.srcProjectName', 'tfs.destPlanName', 'tfs.collection', 'tfs.testplanIds', 'tfs.destProjectName']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
