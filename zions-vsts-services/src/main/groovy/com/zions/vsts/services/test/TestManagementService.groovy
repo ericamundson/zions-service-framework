@@ -487,14 +487,17 @@ public class TestManagementService {
 		return resultTestCaseMap
 	}
 	
-	public def cloneTestPlan(collection, destplanName, testplanId, srcprojectname, destprojectname, areapath, itpath) {
+	public def cloneTestPlan(collection, destPlanName, testplanIds, srcProjectName, destProjectName) {
 	//call getTestPlan to get source the test plan
 		//executionResult.uri replace with clone
-		def eproject = URLEncoder.encode(srcprojectname, 'utf-8')
+		def eproject = URLEncoder.encode(srcProjectName, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testplanId}/cloneoperation?api-version=5.0-preview.2"
+		def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testplanIds}/cloneoperation?api-version=5.0-preview.2"
 		//replace with string that we're building
-		def body = [stream: octet, attachmentType: 'GeneralAttachment', comment: binary.comment, fileName: binary.filename]
+		//def body = [stream: octet, attachmentType: 'GeneralAttachment', comment: binary.comment, fileName: binary.filename]
+		
+		def body = [{destinationTestPlan: { name: destPlanName, Project: { Name: destProjectName }}}, {options: { copyAncestorHierarchy: true, copyAllSuites: true, overrideParameters: { System.AreaPath: destProjectName, System.IterationPath: destProjectName }}}, {suiteIds: [ 2 ]}]
+			
 		String sbody = new JsonBuilder(body).toPrettyString()
 		//put stop here json builder to prettystring look at what sbody looks like as formatted json
 		//should have same format as body in successful talend execution
@@ -508,6 +511,8 @@ public class TestManagementService {
 			)
 		return result
 	}
+	
+	
 	
 	
 	public def ensureTestRunForTestCaseAndPlan(String collection, String project, def planData, def testcaseData, def testCasePointsMap = null) {
