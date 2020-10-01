@@ -7,6 +7,7 @@
 "Priority": {"AdoId": "Microsoft.VSTS.Common.Priority"},
 "Severity": {"AdoId": "Microsoft.VSTS.Common.Severity"},
 "Color": {"AdoId": "Custom.Color", "CalcHandler": "colorCalcHandler"},
+"OTLNumber": {"AdoId": "Custom.OTLNumber", "CalcHandler": "propagatedValueHandler"},
 "State": {"AdoId": "System.State"},
 "RCE Level 1": {"AdoId": "Custom.RCELevel1"},
 "RCE Level 2": {"AdoId": "Custom.RCELevel2"},

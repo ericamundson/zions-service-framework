@@ -41,8 +41,8 @@ public class ColorCalcHandler implements IFieldHandler {
 	String colorMapUID
 
 	public Object execute(Object data) {
-		def priority = data['Priority']
-		def severity = data['Severity']
+		def priority = data.fields['Priority']
+		def severity = data.fields['Severity']
 		def colorMap = sharedAssetService.getAsset(collection, colorMapUID)
 		def colorElement = colorMap.find{it.Priority==priority && it.Severity==severity}
 		return colorElement.Color

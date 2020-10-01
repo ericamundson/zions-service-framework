@@ -131,15 +131,15 @@ class UpdateWorkItems implements CliAction {
 				}
 				else {
 					def value
-					if (handler) { // use calculation handler to get value
-						value = fieldCalcManager.execute(rowMap, handler)
-					}
+					if (handler)  // use calculation handler to get value
+						value = fieldCalcManager.execute([ targetField: adoFieldName, fields: rowMap ], handler)
 					else
 						value = mapEntry.value
-					if (value) {
-						def idData = [ op: 'add', path: "/fields/$adoFieldName", value: "$value"]
-						wiData.body.add(idData)			
+					if (!value) {
+						value = ''
 					}	
+					def idData = [ op: 'add', path: "/fields/$adoFieldName", value: "$value"]
+					wiData.body.add(idData)			
 				}
 			}
 		}
@@ -156,13 +156,6 @@ class UpdateWorkItems implements CliAction {
 		return true
 	}
 	
-	public getProjectFromAreaPath(String areaPath) {
-		int backSlashNdx = areaPath.indexOf('\\')
-		if (backSlashNdx > -1) 
-			return areaPath.substring(0,backSlashNdx)
-		else 
-			return areaPath
-		
-	}
+
 
 }
