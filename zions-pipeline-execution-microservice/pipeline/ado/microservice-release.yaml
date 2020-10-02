@@ -59,14 +59,18 @@ stages:
 - stage: Release
   dependsOn: Build
   jobs:
-  - job: Release
+  - deployment: testqa
+    environment: TESTQA
     variables:
       releaseTag: $[ stageDependencies.Build.Build.outputs['oTag.oBuildTag'] ]
-    steps:
-    - task: Zions.ado-ext-release-status-control.CreateReleaseTask.CreateReleaseTask@0
-      displayName: 'Create Release'
-      inputs:
-        templateTitle: 'zions-pipeline-execution-microservice - Master'
-        releaseTitle: 'zions-pipeline-execution-microservice - $(releaseTag)'
-        releaseVariableSettings: 'deploymentPackage.name=$(releaseTag)'
-        xlrProfile: xlrdb
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: Zions.ado-ext-release-status-control.CreateReleaseTask.CreateReleaseTask@0
+            displayName: 'Create Release'
+            inputs:
+              templateTitle: 'zions-pipeline-execution-microservice - Master'
+              releaseTitle: 'zions-pipeline-execution-microservice - $(releaseTag)'
+              releaseVariableSettings: 'deploymentPackage.name=$(releaseTag)'
+              xlrProfile: xlrdb

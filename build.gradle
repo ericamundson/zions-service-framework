@@ -1,3 +1,5 @@
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 buildscript {
 	ext { springBootVersion = '2.2.2.RELEASE'
 		springCloudVersion = 'Greenwich.SR2'
@@ -23,6 +25,7 @@ buildscript {
 		classpath 'net.sourceforge.plantuml:plantuml:8059'
 		classpath 'org.ajoberstar:gradle-git-publish:2.0.0'
 		classpath 'com.bmuschko:gradle-docker-plugin:4.10.0'
+		classpath 'gradle.plugin.io.errorlab.gradle.vault:vault:0.1.0'
 	}
 }
 
@@ -68,6 +71,9 @@ allprojects {
 		}
 		
 		check.dependsOn jacocoTestReport
+	} else {
+		apply plugin: 'io.errorlab.gradle.vault'
+		
 	}
 
 
@@ -95,6 +101,12 @@ allprojects {
 		dependsOn 'copyDesigns'
 
 
+	}
+	
+	if ("${buildType}" != 'ci') {
+		def secrets = project.vault.get('secret/data/zions-service-framework')
+		def jsonText = new JsonBuilder(secrets).toPrettyString()
+		def secretData = new JsonSlurper().parseText(jsonText)
 	}
 	
 	gitPublish {
