@@ -38,7 +38,6 @@ allprojects {
 	apply plugin: 'org.ajoberstar.git-publish'
 	apply plugin: 'com.bmuschko.docker-remote-api'
 	apply plugin: 'com.bmuschko.docker-spring-boot-application'
-	apply plugin: 'io.errorlab.gradle.vault'
 	if ("${buildType}" == 'ci') {
 		apply plugin: 'jacoco'
 		//apply plugin: 'codenarc'
@@ -72,6 +71,9 @@ allprojects {
 		}
 		
 		check.dependsOn jacocoTestReport
+	} else {
+		apply plugin: 'io.errorlab.gradle.vault'
+		
 	}
 
 
@@ -101,9 +103,11 @@ allprojects {
 
 	}
 	
-	def secrets = project.vault.get('secret/data/zions-service-framework')
-	def jsonText = new JsonBuilder(secrets).toPrettyString()
-	def secretData = new JsonSlurper().parseText(jsonText)
+	if ("${buildType}" != 'ci') {
+		def secrets = project.vault.get('secret/data/zions-service-framework')
+		def jsonText = new JsonBuilder(secrets).toPrettyString()
+		def secretData = new JsonSlurper().parseText(jsonText)
+	}
 	
 	gitPublish {
 		// where to publish to (repo must exist)
