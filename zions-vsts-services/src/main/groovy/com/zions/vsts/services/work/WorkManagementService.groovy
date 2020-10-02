@@ -643,6 +643,22 @@ class WorkManagementService {
 		return result
 
 	}
+	
+	def getWorkItemUpdates(String collection, String project, String id) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		//def query = [query: aquery]
+		//String body = new JsonBuilder(query).toPrettyString()
+		def result = genericRestClient.get(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}/updates",
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '6.0', "\$expand": 'All']
+				)
+		return result
+
+	}
 
 	def getChildren(String collection, String project, String id) {
 		def pwi = getWorkItem(collection, project, id)
