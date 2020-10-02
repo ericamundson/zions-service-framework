@@ -59,8 +59,8 @@ stages:
 - stage: Release
   dependsOn: Build
   jobs:
-  - deployment: testqa
-    environment: TESTQA
+  - deployment: prod
+    environment: Windows Production
     variables:
       releaseTag: $[ stageDependencies.Build.Build.outputs['oTag.oBuildTag'] ]
     strategy:
