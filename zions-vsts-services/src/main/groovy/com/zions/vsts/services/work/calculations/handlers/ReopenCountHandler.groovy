@@ -31,12 +31,9 @@ import org.springframework.stereotype.Component
  */
 @Component
 @Slf4j
-public class PropagatedValueHandler extends BaseCalcHandler {
+public class ReopenCountHandler extends BaseCalcHandler {
 	@Autowired
 	WorkManagementService workManagementService
-	
-	@Value('${tfs.collection:}')
-	String collection
 	
 	public String execute(String targetField, def fields) {
 		def id = fields['ID']
@@ -48,11 +45,17 @@ public class PropagatedValueHandler extends BaseCalcHandler {
 			throw new Exception("Area Path is required by handler: ${this.getClass().getName()}")
 		def project = getProjectFromAreaPath(areaPath)
 		//Get work item
-		def wi = workManagementService.getWorkItem(collection, project, id)
-		def wiParent = workManagementService.getParent(collection, project, wi)
-		if (wiParent)
-			return wiParent.fields[targetField]
-		else
-			return null
+		def history = workManagementService.getWorkItemUpdates(collection, project, id)
+		int reopenCount = 0
+		if (history) {
+			def changeList = history.value
+			changeList.each { change ->
+				def stateChange = change.fields['System.State']
+				if (stateChange) {
+					if (stateChange.oldValue == 'Closed') reopenCount++
+				}
+			}
+		}
+		return reopenCount
 	}
 }

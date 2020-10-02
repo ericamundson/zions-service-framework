@@ -30,20 +30,25 @@ import org.springframework.stereotype.Component
  */
 @Component
 @Slf4j
-public class ColorCalcHandler extends BaseCalcHandler {
-	@Autowired
-	SharedAssetService sharedAssetService
+abstract class BaseCalcHandler implements IFieldHandler {	
+	@Value('${tfs.collection:}')
+	String collection
 
-	@Value('${tfs.colorMapUID:}')
-	String colorMapUID
 
-	public String execute(String targetField, def fields) {
-		def priority = fields['Priority']
-		def severity = fields['Severity']
-		def colorMap = sharedAssetService.getAsset(collection, colorMapUID)
-		def colorElement = colorMap.find{it.Priority==priority && it.Severity==severity}
-		return colorElement.Color
+	public Object execute(Object data) {
+		return execute(data.targetField, data.fields)
 	}
 	
+	abstract String execute(String targetField, def fields)
+	
+	public String getProjectFromAreaPath(String areaPath) {
+		int backSlashNdx = areaPath.indexOf('\\')
+		if (backSlashNdx > -1)
+			return areaPath.substring(0,backSlashNdx)
+		else
+			return areaPath
+		
+	}
+
 
 }

@@ -124,6 +124,10 @@ class UpdateWorkItems implements CliAction {
 		rowMap.each { mapEntry ->
 			def fieldName = mapEntry.key
 			if (fieldName != 'ID') {
+				if (!map[fieldName]) {
+					println("WARNING: No map entry for <$fieldName>.  This field will not be updated.")
+					return
+				}
 				def adoFieldName = map[fieldName].AdoId
 				def handler = map[fieldName].CalcHandler
 				if (adoFieldName == 'null' || adoFieldName == null) {

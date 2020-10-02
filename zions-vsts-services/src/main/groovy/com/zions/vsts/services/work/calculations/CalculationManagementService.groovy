@@ -1,5 +1,6 @@
 package com.zions.vsts.services.work.calculations
 
+import com.zions.vsts.services.work.calculations.handlers.BaseCalcHandler
 import com.zions.vsts.services.work.calculations.handlers.ColorCalcHandler
 import com.zions.common.services.work.handler.IFieldHandler
 import com.zions.vsts.services.work.WorkManagementService
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component
 class CalculationManagementService {
 	
 	@Autowired(required=false)
-	Map<String, IFieldHandler> fieldMap;
+	Map<String, BaseCalcHandler> fieldMap;
 
 	public CalculationManagementService() {
 		
