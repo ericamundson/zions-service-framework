@@ -424,7 +424,8 @@ public class TestManagementService {
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			//verify API call for testplan ID
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/plans/${Id.toString}",
+			//should work//https://dev.azure.com/eto-dev/ALMOpsTest/_apis/test/plans/458154
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/plans/${Id}",
 			query: ['api-version':'5.0']
 			)
 		
@@ -508,7 +509,7 @@ public class TestManagementService {
 		def eproject = URLEncoder.encode(srcProjectName, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testplanId}/cloneoperation?api-version=5.0-preview.2"
-		def body = [['destinationTestPlan': [ 'name': destPlanName, 'Project': [ 'Name': destProjectName ]]], ['options': [ 'copyAncestorHierarchy': true, 'copyAllSuites': true, 'overrideParameters': [ 'System.AreaPath': destProjectName, 'System.IterationPath': destProjectName ]]], ['suiteIds': [ 2 ]]]	
+		def body = ['destinationTestPlan': [ 'name': destPlanName, 'Project': [ 'Name': destProjectName ]], 'options': [ 'copyAncestorHierarchy': true, 'copyAllSuites': true, 'overrideParameters': [ 'System.AreaPath': destProjectName, 'System.IterationPath': destProjectName ]], 'suiteIds': [ 2 ]]
 		String sbody = new JsonBuilder(body).toPrettyString()
 		//put stop here json builder to prettystring look at what sbody looks like as formatted json
 		//should have same format as body in successful talend execution

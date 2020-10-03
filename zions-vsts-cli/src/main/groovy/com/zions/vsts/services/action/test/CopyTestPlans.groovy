@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
-
+import com.zions.vsts.services.work.WorkManagementService
+import com.zions.common.services.excel.ExcelManagementService
 import com.zions.common.services.cli.action.CliAction
+import groovy.util.logging.Slf4j
 import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 
@@ -13,13 +15,14 @@ import groovy.json.JsonBuilder
 import groovy.xml.MarkupBuilder
 
 @Component
+@Slf4j
 class CopyTestPlans implements CliAction {
 	@Autowired
 	TestManagementService testManagementService;
 	
 	//@Value('${tfs.types:}')
-	@Value('${tfs.testplanid}')
-	String[] testplanIds
+	@Value('${tfs.testplanIds}')
+	Integer[] testplanIds
 
 	@Value('${tfs.destPlanName}')
 	String destPlanName
@@ -50,6 +53,7 @@ class CopyTestPlans implements CliAction {
 				def plan = testManagementService.getPlan(collection, srcProjectName, Id)
 				if (plan) { 
 					def clonePlan = testManagementService.cloneTestPlan(collection, plan.name, Id, srcProjectName, destProjectName)
+					return logResult('Update Succeeded')
 				}
 			}	
 		}
@@ -67,6 +71,9 @@ class CopyTestPlans implements CliAction {
 		return true
 	}
 	
-
+	private def logResult(def msg) {
+		log.info(msg)
+		return msg
+	}
 
 }

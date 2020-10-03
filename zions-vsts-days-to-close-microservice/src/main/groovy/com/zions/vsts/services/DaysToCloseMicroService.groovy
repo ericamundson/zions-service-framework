@@ -39,8 +39,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	@Value('${tfs.types}')
 	String[] types
 
-	@Value('${tfs.sourcestate}')
-	String sourceState
+	@Value('${tfs.sourcestates}')
+	String[] sourceStates
 	
 	@Value('${tfs.deststate}')
 	String destState
@@ -68,13 +68,11 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				daystoClose = 0;
 	
 			
-			if (performIncrementCounter(this.attemptedProject, rev, this.attemptedId, daystoClose)) {
+			if (performCounter(this.attemptedProject, rev, this.attemptedId, daystoClose)) {
 				return logResult('Work item successfully counted after 412 retry')
 			}
 			
-			if (performResetCounter(this.attemptedProject, rev, this.attemptedId, daystoClose)) {
-				return logResult('Work item successfully reset 412 retry')
-			}
+
 			else {
 				this.retryFailed = true
 				log.error('Failed update after 412 retry')
@@ -144,9 +142,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			//if daystoClose is null initialize to 0
 		if (!daystoClose|| daystoClose == 'null' || daystoClose == '')
 			daystoClose = 0;
-			
-
-		
+				
 		//Get Created Date
 		String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
 		if (!createDate) {
@@ -156,83 +152,67 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		//Format the Created Date
 		Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
 		createDate = convCreateDate.format('dd-MMM-yyyy')
-		
 
-		//If Bug is opened reset the count
-		if (sourceState.contains(newState) && (destState.contains(oldState))) {
-			log.debug("Updating count of $wiType #$id")
-			
-					
-			//set daystoClose to 0
+		//determine whether to set daystoClose to 0 or calculate the value
+		//this if statement resets count to 0
+		if (sourceStates.contains(newState) && (destState.contains(oldState))) {
 			daystoClose = 0;
-			
-			if (performResetCounter(project, rev, id, daystoClose, responseHandler)) {
-				return logResult('Counter reset')
-				
-			}
-			else if (this.retryFailed) {
-				log.error('Error resetting Days To Close')
-				return 'Error resetting Days To Close'
-			}
-			
 		}
-		
-		else {
-		
-			if (sourceState.contains(oldState) && (destState.contains(newState))) {
-				log.debug("Updating count of $wiType #$id")
-				
-				//Get and format closedDate
-				def closedDate = wiResource.fields.'Microsoft.VSTS.Common.ClosedDate'
-				if (!closedDate) {
-					log.error("Error retrieving closed date for work item $id")
-					return 'Error Retrieving Closed Date'
-				}
-				String newClosedDate = closedDate.newValue
-				Date convClosedDate = Date.parse("yyyy-MM-dd", newClosedDate);
-				newClosedDate = convClosedDate.format('dd-MMM-yyyy')
-				
-				//Determine number of days between created and closed dates
-				def duration = groovy.time.TimeCategory.minus(
-					new Date(newClosedDate),
-					new Date(createDate)
-				  );
-				  
-				def values = duration.days
+		if (sourceStates.contains(oldState) && (destState.contains(newState))) {
+			//Get and format closedDate
+			def closedDate = wiResource.fields.'Microsoft.VSTS.Common.ClosedDate'
+			if (!closedDate) {
+				log.error("Error retrieving closed date for work item $id")
+				return 'Error Retrieving Closed Date'
+			}
+			String newClosedDate = closedDate.newValue
+			Date convClosedDate = Date.parse("yyyy-MM-dd", newClosedDate);
+			newClosedDate = convClosedDate.format('dd-MMM-yyyy')
+			
+			//Determine number of days between created and closed dates
+			def duration = groovy.time.TimeCategory.minus(
+				new Date(newClosedDate),
+				new Date(createDate)
+			  );
+			  
+			def values = duration.days
+			daystoClose = values
+			//set half day values to 0.5
+			if (createDate == newClosedDate) {
+				float sameDayClosure
+				sameDayClosure = 0.5
+				values = sameDayClosure
 				daystoClose = values
-				//set half day values to 0.5
-				if (createDate == newClosedDate) {
-					float sameDayClosure
-					sameDayClosure = 0.5
-					values = sameDayClosure
-					daystoClose = values
-					
-				}
 				
-	
-				//update the daystoClose field
-				if (performIncrementCounter(project, rev, id, daystoClose, responseHandler)) {
-					return logResult('Update Succeeded')
-				}
-				
-				else if (this.retryFailed) {
-					log.error('Error updating Days To Close')
-					return 'Error updating Days To Close'
-				}
-						 
+			}
+			
+			//update the daystoClose field
+			if (performCounter(project, rev, id, daystoClose, responseHandler)) {
+				return logResult('Update Succeeded')
+			}
+			
+			else if (this.retryFailed) {
+				log.error('Error updating Days To Close')
+				return 'Error updating Days To Close'
 			}
 			
 			else {
 				
 				return logResult('state change not applicable')
 			}
+					 
 		}
 			
-	}
+	}	//log.debug("Updating count of $wiType #$id")
+			
+					
 		
+			//change to performCounterupdate out of If Else Block
+			//outside you then call your update to pass 0 value or calculate value
 
-	//Set number of days between created and closed dates
-	private def performIncrementCounter(String project, String rev, def id, def daystoClose, Closure respHandler = null) {
+
+	//Set number of days between created and closed dates or reset the count.
+	private def performCounter(String project, String rev, def id, def daystoClose, Closure respHandler = null) {
 
 			def data = []
 			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
@@ -247,21 +227,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
 	}
 			
-		//will reset the counter
-	private def performResetCounter(String project, String rev, def id, def daystoClose, Closure respHandler = null) {
-	
-		def data = []
-		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
-		data.add(t)
-		
-		def e = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
-		data.add(e)
-		this.retryFailed = false
-		this.attemptedProject = project
-		this.attemptedId = id
-		
-		return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
-	}
+
 				
 		
 	private def logResult(def msg) {
