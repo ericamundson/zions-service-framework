@@ -43,6 +43,7 @@ spec:
 
   files:
   - path: xl-deploy.yaml.tmpl
+  - path: xl-apps.yaml.tmpl
   - path: xl-release.yaml
   - path: xebialabs/USAGE.md.tmpl
   - path: service/service.xml.tmpl
@@ -60,6 +61,7 @@ spec:
   - path: service/queue.service.tmpl
     writeIf: !expr "Platform == 'Linux'"
   - path: executable/builddefinition.yaml.tmpl
+  - path: executables/xlexecute.yaml.tmpl
   - path: ado/microservice-release.yaml.tmpl
   - path: xebialabs/xld-apps-windows.yaml.tmpl
     writeIf: !expr "Platform == 'Windows'"

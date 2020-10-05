@@ -45,6 +45,9 @@ class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait {
 	
 	@Value('${xl.password:}')
 	String xlPassword
+	
+	@Value('${xld.use.proxy:false}')
+	boolean xldUseProxy
 
 	public RunXLDeployApply() {
 		
@@ -55,9 +58,9 @@ class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait {
 		//String xlOutPath = "${yaml.path}"
 		String xlDeployFile = "${repo.absolutePath}/${yaml.yamlFile}"
 		String wdir = xlDeployFile.substring(0, xlDeployFile.lastIndexOf('/'))
-		Boolean useProxy = yaml.useProxy
-		if (!useProxy) {
-			useProxy = false
+		Boolean useProxy = xldUseProxy
+		if (yaml.useProxy) {
+			useProxy = yaml.useProxy
 		}
 		
 		def vaultSecrets = null
@@ -133,7 +136,7 @@ class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait {
 	}
 	
 	boolean performExecute(def yaml, List<String> locations) {		
-		if (!yaml.dependencies) return true
+		if (!yaml.dependencies || locations.size() == 0) return true
 		for (String dep in yaml.dependencies) {
 			if (locations.contains(dep)) return true
 		}

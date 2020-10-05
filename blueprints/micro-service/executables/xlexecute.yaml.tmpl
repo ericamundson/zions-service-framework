@@ -1,0 +1,34 @@
+{{$app := .AppName }}
+executables:
+- type: runXLDeployApply
+  yamlFile: {{$app}}/pipeline/xl-deploy.yaml
+  dependencies:
+  - /{{$app}}/pipeline/xld-env.yaml
+  - /{{$app}}/pipeline/xld-infra.yaml
+  vault:
+    engine: secret
+    path: zions-service-framework
+  values:
+  - name: xld_cli_user
+    value: ${xl.user}
+  - name: xld_cli_passwd
+    value: ${xl.password)
+  - name: svc_account_passwd
+    value: ${svc_account_passwd}
+    
+- type: runXLReleaseApply
+  yamlFile:  {{$app}}/pipeline/xl-release.yaml
+  dependencies:
+  - /{{$app}}/pipeline/xlr-pipeline-ci-cd.yaml
+  vault:
+    engine: secret
+    path: zions-service-framework
+  values:
+  - name: xld_cli_user
+    value: ${xl.user}
+  - name: xld_cli_passwd
+    value: ${xl.password)
+  - name: svc_account_passwd
+    value: ${svc_account_passwd}
+  - name: xlr_scriptUserPassword
+    value: ${xlr_scriptUserPassword}

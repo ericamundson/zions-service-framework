@@ -153,8 +153,13 @@ class ExcelManagementService {
 			InsertIntoCurrentRow(val, key)
 		}
 	}
-	
-	
+	def getRowMap(Row row) {
+		def rowMap = [:]
+		headers.each { header ->
+			rowMap.put(header.key, getCellValue(row, header.value))
+		}
+		return rowMap
+	}
 	public static void printCellValue(Cell cell) {
 		System.out.print(formatCellValue(cell));
 		System.out.print("\t");

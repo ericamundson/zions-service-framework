@@ -45,6 +45,9 @@ import groovy.util.logging.Slf4j
 	
 	@Value('${xl.password:}')
 	String xlPassword
+	
+	@Value('${xlr.use.proxy:false}')
+	boolean xlrUseProxy
 
 	public RunXLReleaseApply() {
 		
@@ -53,7 +56,7 @@ import groovy.util.logging.Slf4j
 	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
 		if (!performExecute(yaml, locations)) return
 		
-		boolean useProxy = false
+		boolean useProxy = xlrUseProxy
 		if (yaml.useProxy) {
 			useProxy = yaml.useProxy
 		}
@@ -135,7 +138,7 @@ import groovy.util.logging.Slf4j
 	}
 
 	boolean performExecute(def yaml, List<String> locations) {		
-		if (!yaml.dependencies) return true
+		if (!yaml.dependencies || locations.size() == 0) return true
 		for (String dep in yaml.dependencies) {
 			if (locations.contains(dep)) return true
 		}

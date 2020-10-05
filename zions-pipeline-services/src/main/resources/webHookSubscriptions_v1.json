@@ -78,6 +78,66 @@
                 "https://releaseengineeringprovisioner-zionsbancorporation.msappproxy.net"
             ]
         },
+        "consumerUserName": {
+            "$id": "#/properties/consumerUserName",
+            "type": "string",
+            "title": "The consumerUserName schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "https://releaseengineeringprovisioner-zionsbancorporation.msappproxy.net"
+            ]
+        },
+        "consumerPassword": {
+            "$id": "#/properties/consumerPassword",
+            "type": "string",
+            "title": "The consumerPassword schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "https://releaseengineeringprovisioner-zionsbancorporation.msappproxy.net"
+            ]
+        },
+        "vault": {
+            "$id": "#/properties/vault",
+            "type": "object",
+            "title": "The vault schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "engine": "secret",
+                    "path": "zions-service-framework"
+                }
+            ],
+            "required": [
+                "engine",
+                "path"
+            ],
+            "properties": {
+                "engine": {
+                    "$id": "#/properties/repository/properties/engine",
+                    "type": "string",
+                    "title": "The engine schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "secret"
+                    ]
+                },
+                "path": {
+                    "$id": "#/properties/repository/properties/path",
+                    "type": "string",
+                    "title": "The path schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "zions-service-framework"
+                    ]
+                }
+            },
+            "additionalProperties": false
+        },
         "publisherInputs": {
             "$id": "#/properties/publisherInputs",
             "type": "object",

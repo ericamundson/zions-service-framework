@@ -23,7 +23,7 @@ spec:
     - name: Prod
       type: udm.Environment
       members:
-	  {{if eq .Platform "Windows"}}
+      {{if eq .Platform "Windows"}}
       - Infrastructure/DTS/microservice/Prod
       {{else if eq .Platform "Linux"}}
       - Infrastructure/DTS/microservice/Prod_Linux
