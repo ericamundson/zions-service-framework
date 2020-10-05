@@ -9,6 +9,7 @@
 "Color": {"AdoId": "Custom.Color", "CalcHandler": "colorCalcHandler"},
 "OTLNumber": {"AdoId": "Custom.OTLNumber", "CalcHandler": "propagatedValueHandler"},
 "ReOpenCounter": {"AdoId": "Custom.ReOpenCounter", "CalcHandler": "reopenCountHandler"},
+"DaysToClose": {"AdoId": "Custom.DaysToClose", "CalcHandler": "daysToCloseHandler"},
 "State": {"AdoId": "System.State"},
 "RCE Level 1": {"AdoId": "Custom.RCELevel1"},
 "RCE Level 2": {"AdoId": "Custom.RCELevel2"},
