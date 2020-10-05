@@ -40,7 +40,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	String[] types
 
 	@Value('${tfs.sourcestates}')
-	String[] sourceStates
+	String sourceStates
 	
 	@Value('${tfs.deststate}')
 	String destState
@@ -68,11 +68,10 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				daystoClose = 0;
 	
 			
-			if (performCounter(this.attemptedProject, rev, this.attemptedId, daystoClose)) {
+			if (performIncrementCounter(this.attemptedProject, rev, this.attemptedId, daystoClose)) {
 				return logResult('Work item successfully counted after 412 retry')
 			}
 			
-
 			else {
 				this.retryFailed = true
 				log.error('Failed update after 412 retry')
@@ -94,11 +93,11 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.debug("Entering DaysToCloseMicroService:: processADOData")
+		log.info("Entering DaysToCloseMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
-		 String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)
+		 /*String json = new JsonBuilder(adoData).toPrettyString()
+		 println(json)*/
 		
 		def outData = adoData
 		def wiResource = adoData.resource
@@ -106,8 +105,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		
 		//**Check for qualifying projects
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
-		if (includeProjects && !includeProjects.contains(project))
-			return logResult('Project not included')
+		/*if (includeProjects && !includeProjects.contains(project))
+			return logResult('Project not included')*/
 		
 		//get work item id and revision
 		String id = "${wiResource.revision.id}"
@@ -139,10 +138,12 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		//define days to close and initialize
 		def daystoClose = wiResource.revision.fields.'Custom.DaysToClose'
 			
-			//if daystoClose is null initialize to 0
+		//if daystoClose is null initialize to 0
 		if (!daystoClose|| daystoClose == 'null' || daystoClose == '')
 			daystoClose = 0;
-				
+			
+
+		
 		//Get Created Date
 		String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
 		if (!createDate) {
@@ -152,15 +153,24 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		//Format the Created Date
 		Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
 		createDate = convCreateDate.format('dd-MMM-yyyy')
+		
 
-		//determine whether to set daystoClose to 0 or calculate the value
-		//this if statement resets count to 0
+		//If Bug is opened reset the count
 		if (sourceStates.contains(newState) && (destState.contains(oldState))) {
 			daystoClose = 0;
+			log.info("Updating count of $wiType #$id")
+			//update the daystoClose field
+			if (performIncrementCounter(project, rev, id, daystoClose, responseHandler)) {
+				return logResult('Update Succeeded')
 		}
-		if (sourceStates.contains(oldState) && (destState.contains(newState))) {
+		
+		} else {
+		
+			 
+			log.info("Updating count of $wiType #$id")
+			
 			//Get and format closedDate
-			def closedDate = wiResource.fields.'Microsoft.VSTS.Common.ClosedDate'
+			String closedDate = wiResource.fields.'Microsoft.VSTS.Common.ClosedDate'
 			if (!closedDate) {
 				log.error("Error retrieving closed date for work item $id")
 				return 'Error Retrieving Closed Date'
@@ -183,55 +193,45 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				sameDayClosure = 0.5
 				values = sameDayClosure
 				daystoClose = values
-				
-			}
-			
-			//update the daystoClose field
-			if (performCounter(project, rev, id, daystoClose, responseHandler)) {
-				return logResult('Update Succeeded')
-			}
-			
-			else if (this.retryFailed) {
-				log.error('Error updating Days To Close')
-				return 'Error updating Days To Close'
-			}
-			
-			else {
-				
-				return logResult('state change not applicable')
-			}
-					 
-		}
-			
-	}	//log.debug("Updating count of $wiType #$id")
-			
 					
-		
-			//change to performCounterupdate out of If Else Block
-			//outside you then call your update to pass 0 value or calculate value
-
-
-	//Set number of days between created and closed dates or reset the count.
-	private def performCounter(String project, String rev, def id, def daystoClose, Closure respHandler = null) {
-
-			def data = []
-			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
-			data.add(t)
-			
-			def e = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
-			data.add(e)
-			this.retryFailed = false
-			this.attemptedProject = project
-			this.attemptedId = id
-			
-			return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
-	}
-			
-
-				
-		
-	private def logResult(def msg) {
-		log.debug(msg)
-		return msg
+			}
+				//update the daystoClose field
+		if (performIncrementCounter(project, rev, id, daystoClose, responseHandler)) {
+			return logResult('Update Succeeded')
+		}
 	}
 }
+				
+
+		//Set number of days between created and closed dates
+		private def performIncrementCounter(String project, String rev, def id, def daystoClose, Closure respHandler = null) {
+	
+				def data = []
+				def t = [op: 'test', path: '/rev', value: rev.toInteger()]
+				data.add(t)
+				
+				def e = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
+				data.add(e)
+				this.retryFailed = false
+				this.attemptedProject = project
+				this.attemptedId = id
+				
+				return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
+		}
+		
+		
+				
+	
+					
+			
+		private def logResult(def msg) {
+			log.info(msg)
+			return msg
+		}
+		
+	}
+			
+	
+		
+
+
