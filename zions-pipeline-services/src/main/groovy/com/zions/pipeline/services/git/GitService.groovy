@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand.ResetType
 import org.eclipse.jgit.api.PullResult
+import org.eclipse.jgit.api.PullCommand
+import org.eclipse.jgit.lib.StoredConfig
 //import org.eclipse.jgit.api.CloneResult
 import java.net.ProxySelector
 import java.net.Proxy
@@ -75,8 +77,9 @@ class GitService {
 	File loadChanges(String url,String repoName, String branch = 'refs/heads/master') {
 		String aBranch = branch.substring( 'refs/heads/'.length())
 		String nUrl = url
-		if (nUrl.contains('https://dev')) {
-			nUrl = nUrl.replace('https://dev', "https://${tfsToken}@dev")
+		if (nUrl.contains('dev.')) {
+			String subStr = nUrl.substring(0, nUrl.indexOf('.'))
+			nUrl = nUrl.replace(subStr, "https://${tfsToken}@dev")
 			
 		}
 		File repo = new File(repos, "${repoName}")
@@ -120,8 +123,12 @@ class GitService {
 						git.reset()
 						.setMode(ResetType.HARD)
 						.call()
-						git.pull()
-						.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
+						StoredConfig config = git.getRepository().getConfig();
+						config.setString("remote", "origin", "url", nUrl);
+						config.save();
+						PullCommand pc = git.pull()
+						pc.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))			
+						.configure(pc)
 						.setRemote("origin")
 						.setRemoteBranchName(aBranch)
 						.call()
@@ -133,8 +140,12 @@ class GitService {
 			git.reset()
 			.setMode(ResetType.HARD)
 			.call()
-			git.pull()
-			.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
+			StoredConfig config = git.getRepository().getConfig();
+			config.setString("remote", "origin", "url", nUrl);
+			config.save();
+						
+			PullCommand pc = git.pull()
+			pc.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))			
 			.setRemote("origin")
 			.setRemoteBranchName(aBranch)
 			.call()

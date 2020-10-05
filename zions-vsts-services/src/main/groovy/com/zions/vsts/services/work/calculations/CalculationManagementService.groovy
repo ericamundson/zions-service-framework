@@ -39,6 +39,16 @@ class CalculationManagementService {
 
 	}
 
+	def calcDaysToClose(Date closedDate, Date createdDate) {
+		def duration = groovy.time.TimeCategory.minus(closedDate,createdDate)
+		// Return half day for same day closure
+		String strClosedDate = closedDate.format('dd-MMM-yyyy')
+		String strCreatedDate = createdDate.format('dd-MMM-yyyy')
+		if (strClosedDate == strCreatedDate) 
+			return 0.5
+		else
+			return duration.days + new BigDecimal(duration.hours / 24).round()
+	}
 
 }
 
