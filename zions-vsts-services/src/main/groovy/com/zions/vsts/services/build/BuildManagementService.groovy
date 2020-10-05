@@ -74,15 +74,23 @@ public class BuildManagementService {
 		efolder = efolder.replace('+', '%20')
 		log.debug("BuildManagementService::createBuildFolder -- Folder name = ${efolder}")
 		
-		def folderObj = [description: '', path: "\\${folder}"]
-		
-		def body = new JsonBuilder(folderObj).toPrettyString()
-		def result = genericRestClient.put(
-			requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}//_apis/build/folders/${efolder}",
-			body: body,
-			headers: [Accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
+		def query = ['api-version':'5.0-preview.1','excludeUrls':true]
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_apis/build/folders/${efolder}",
+			query: query
+		)
+		if (result == null) {
+			def folderObj = [description: '', path: "\\${folder}"]
+			
+			def body = new JsonBuilder(folderObj).toPrettyString()
+			result = genericRestClient.put(
+				requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_apis/build/folders/${efolder}",
+				body: body,
+				headers: [Accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
 			)
+		}
 		return result
 	}
 
@@ -172,7 +180,7 @@ public class BuildManagementService {
 				buildFolderCreated = true
 				buildFolderName = "${repo.name}"
 				log.debug("BuildManagementService::ensureBuildsForBranch -- Build folder created for ${repo.name}")
-				def ciBuild = createYAMLBuildDef(collection, projectData, repo, buildTemplate, "${repo.name}", ciBuildName)
+				def ciBuild = createYAMLBuildDef(collection, projectData, repo, buildTemplate, "${repo.name}", ciBuildInt)
 				if (ciBuild == null ) {
 					log.error("BuildManagementService::ensureBuildsForBranch -- YAML CI Build creation failed!")
 				} else {
@@ -358,7 +366,9 @@ public class BuildManagementService {
 
 	def getYAMLTemplate() {
 		def bDef = null
+		log.debug("BuildManagementService::getYAMLTemplate -- Calling getResource with name template-yaml ...")
 		bDef = getResource("YAML", "CI", "template-yaml")
+		log.debug("BuildManagementService::getYAMLTemplate -- Returning template " + bDef)
 		return bDef
 	}
 
@@ -529,6 +539,7 @@ public class BuildManagementService {
 	}
 
 	def createYAMLBuildDef(def collection, def project, def repo, def bDef, def folder, String name = null) {
+		log.debug("BuildManagementService::createYAMLBuildDef for project ${project.name} / repo ${repo.name} with name "+name)
 		// set all the necessary properties and post the request
 		bDef.remove('authoredBy')
 		bDef.name = "${repo.name} CI"
@@ -551,14 +562,16 @@ public class BuildManagementService {
 		bDef.repository.defaultBranch = "${repo.defaultBranch}"
 		//bDef.retentionSettings = getRetentionSettings(collection)
 		// using a resource (json) file as the template, ensure the correct agent queue 
+		log.debug("BuildManagementService::createYAMLBuildDef - Getting queue name ...")
 		def queueData = getQueue(collection, project, "${this.queue}")
-		log.debug("BuildManagementService::createBuildDefinition - Queue = ${queueData}")
+		log.debug("BuildManagementService::createYAMLBuildDef - Queue = ${queueData}")
 		if (queueData != null) {
 			bDef.queue = queueData
 			bDef.process.phases.each { phase ->
 				phase.target.queue = queueData
 			}
 		}
+		log.debug("BuildManagementService::createYAMLBuildDef - Writing YAML build def ...")
 		return writeBuildDefinition(collection, project, bDef)
 	}
 
@@ -1230,6 +1243,7 @@ public class BuildManagementService {
 		def template = null
 		def filename = "${buildType}-${phase}" 
 		if (resourceName != null) {
+			log.debug("BuildManagementService::getResource -- Resource name provided: " + resourceName)
 			filename = resourceName
 		}
 		try {
