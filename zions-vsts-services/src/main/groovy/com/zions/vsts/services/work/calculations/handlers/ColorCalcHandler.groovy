@@ -39,7 +39,16 @@ public class ColorCalcHandler extends BaseCalcHandler {
 
 	public String execute(String targetField, def fields) {
 		def priority = fields['Priority']
+		if (priority == null) // missing column
+			throw new Exception("Priority is required by handler: ${this.getClass().getName()}")
+		else if (priority == '') // no value
+			return '' // no color
 		def severity = fields['Severity']
+		if (severity == null) // missing column
+			throw new Exception("Severity is required by handler: ${this.getClass().getName()}")
+		else if (severity == '') // no value
+			return '' // no color
+	
 		def colorMap = sharedAssetService.getAsset(collection, colorMapUID)
 		def colorElement = colorMap.find{it.Priority==priority && it.Severity==severity}
 		return colorElement.Color
