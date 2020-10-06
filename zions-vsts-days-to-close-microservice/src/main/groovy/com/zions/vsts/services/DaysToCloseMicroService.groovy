@@ -2,6 +2,7 @@ package com.zions.vsts.services
 
 															  
 import com.zions.vsts.services.work.WorkManagementService
+import com.zions.vsts.services.work.calculations.CalculationManagementService
 import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
 import com.zions.vsts.services.ws.client.AbstractWebSocketMicroService
 import groovy.util.logging.Slf4j
@@ -16,9 +17,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import groovy.json.JsonBuilder
 
-
-
-
 /**
  * Will count number of days taken to close bugs
   *
@@ -32,6 +30,9 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 
 	@Autowired
 	WorkManagementService workManagementService
+	
+	@Autowired
+	CalculationManagementService calcManagementService
 	
 	@Value('${tfs.collection:}')
 	String collection
@@ -105,8 +106,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		
 		//**Check for qualifying projects
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
-		/*if (includeProjects && !includeProjects.contains(project))
-			return logResult('Project not included')*/
+		if (includeProjects && !includeProjects.contains(project))
+			return logResult('Project not included')
 		
 		//get work item id and revision
 		String id = "${wiResource.revision.id}"
@@ -141,69 +142,40 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		//if daystoClose is null initialize to 0
 		if (!daystoClose|| daystoClose == 'null' || daystoClose == '')
 			daystoClose = 0;
-			
-
-		
-		//Get Created Date
-		String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
-		if (!createDate) {
-			log.error("Error retrieving create date for work item $id")
-			return 'Error Retrieving Create Date'
-		}
-		//Format the Created Date
-		Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
-		createDate = convCreateDate.format('dd-MMM-yyyy')
-		
-
+	
 		//If Bug is opened reset the count
 		if (sourceStates.contains(newState) && (destState.contains(oldState))) {
 			daystoClose = 0;
-			log.info("Updating count of $wiType #$id")
-			//update the daystoClose field
-			if (performIncrementCounter(project, rev, id, daystoClose, responseHandler)) {
-				return logResult('Update Succeeded')
-		}
-		
+			
 		} else {
 		
-			 
-			log.info("Updating count of $wiType #$id")
+			//Get Created Date
+			String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
+			if (!createDate) {
+				log.error("Error retrieving create date for work item $id")
+				return 'Error Retrieving Create Date'
+			}
+			//Format the Created Date
+			Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
 			
 			//Get and format closedDate
-			String closedDate = wiResource.fields.'Microsoft.VSTS.Common.ClosedDate'
+			def closedDate = wiResource.fields.'Microsoft.VSTS.Common.ClosedDate'
 			if (!closedDate) {
 				log.error("Error retrieving closed date for work item $id")
 				return 'Error Retrieving Closed Date'
 			}
 			String newClosedDate = closedDate.newValue
 			Date convClosedDate = Date.parse("yyyy-MM-dd", newClosedDate);
-			newClosedDate = convClosedDate.format('dd-MMM-yyyy')
-			
-			//Determine number of days between created and closed dates
-			def duration = groovy.time.TimeCategory.minus(
-				new Date(newClosedDate),
-				new Date(createDate)
-			  );
-			  
-			def values = duration.days
-			daystoClose = values
-			//set half day values to 0.5
-			if (createDate == newClosedDate) {
-				float sameDayClosure
-				sameDayClosure = 0.5
-				values = sameDayClosure
-				daystoClose = values
-					
-			}
-				//update the daystoClose field
+
+			daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
+		}
+		
+		log.info("Updating count of $wiType #$id")
 		if (performIncrementCounter(project, rev, id, daystoClose, responseHandler)) {
 			return logResult('Update Succeeded')
 		}
 	}
-}
-				
 
-		//Set number of days between created and closed dates
 		private def performIncrementCounter(String project, String rev, def id, def daystoClose, Closure respHandler = null) {
 	
 				def data = []
@@ -219,11 +191,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
 		}
 		
-		
-				
-	
-					
-			
+
 		private def logResult(def msg) {
 			log.info(msg)
 			return msg
