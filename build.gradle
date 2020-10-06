@@ -73,7 +73,26 @@ allprojects {
 		check.dependsOn jacocoTestReport
 	} else {
 		apply plugin: 'io.errorlab.gradle.vault'
-		
+		String os = System.getProperty('os.name')
+		if (os.contains('Windows')) {
+			Properties props = new Properties()
+			props.load(new FileInputStream("c:/Vault/resources/bootstrap.properties"))
+			props.each { prop ->
+			  project.ext.set(prop.key, prop.value)
+			}
+		} else {
+			Properties props = new Properties()
+			props.load(new FileInputStream("/app/Vault/resources/bootstrap.properties"))
+			props.each { prop ->
+			  project.ext.set(prop.key, prop.value)
+			}
+
+		}
+		println "${project.'vault.url'}"
+		vault {
+			addr = "${project.'vault.url'}"
+			token = "${project.'spring.cloud.vault.token'}"
+		}
 	}
 
 
@@ -109,7 +128,7 @@ allprojects {
 		def jsonText = new JsonBuilder(secrets).toPrettyString()
 		def vaultData = new JsonSlurper().parseText(jsonText)
 		secretData = vaultData
-		ext.set('secretData', vaultData) 
+		project.ext.set('secretData', vaultData) 
 	}
 	
 	gitPublish {
