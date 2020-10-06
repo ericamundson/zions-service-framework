@@ -88,7 +88,6 @@ allprojects {
 			}
 
 		}
-		println "${project.'vault.url'}"
 		vault {
 			addr = "${project.'vault.url'}"
 			token = "${project.'spring.cloud.vault.token'}"
@@ -174,10 +173,11 @@ allprojects {
 	}
 	
 	if (secretData) {
+		//println "${property 'registryHostUrl'}"
 		docker {
 	//		url = property 'dockerHostUrl'
 			registryCredentials {
-				url = property 'registryHostUrl'
+				url = "${property 'registryHostUrl'}"
 				username = "${secretData.data.data['nexus.docker.user']}"
 				password = "${secretData.data.data['nexus.docker.password']}"
 			}
