@@ -73,7 +73,25 @@ allprojects {
 		check.dependsOn jacocoTestReport
 	} else {
 		apply plugin: 'io.errorlab.gradle.vault'
-		
+		String os = System.getProperty('os.name')
+		if (os.contains('Windows')) {
+			Properties props = new Properties()
+			props.load(new FileInputStream("c:/Vault/resources/bootstrap.properties"))
+			props.each { prop ->
+			  project.ext.set(prop.key, prop.value)
+			}
+		} else {
+			Properties props = new Properties()
+			props.load(new FileInputStream("/app/Vault/resources/bootstrap.properties"))
+			props.each { prop ->
+			  project.ext.set(prop.key, prop.value)
+			}
+
+		}
+		vault {
+			addr = "${project.'vault.url'}"
+			token = "${project.'spring.cloud.vault.token'}"
+		}
 	}
 
 
@@ -103,10 +121,13 @@ allprojects {
 
 	}
 	
+	def secretData = null
 	if ("${buildType}" != 'ci') {
 		def secrets = project.vault.get('secret/data/zions-service-framework')
 		def jsonText = new JsonBuilder(secrets).toPrettyString()
-		def secretData = new JsonSlurper().parseText(jsonText)
+		def vaultData = new JsonSlurper().parseText(jsonText)
+		secretData = vaultData
+		project.ext.set('secretData', vaultData) 
 	}
 	
 	gitPublish {
@@ -151,12 +172,15 @@ allprojects {
 		srcDir "${vaultResources}"
 	}
 	
-	docker {
-//		url = property 'dockerHostUrl'
-		registryCredentials {
-			url = property 'registryHostUrl'
-			username = property 'registryUserName'
-			password = property 'registryPassword'
+	if (secretData) {
+		//println "${property 'registryHostUrl'}"
+		docker {
+	//		url = property 'dockerHostUrl'
+			registryCredentials {
+				url = "${property 'registryHostUrl'}"
+				username = "${secretData.data.data['nexus.docker.user']}"
+				password = "${secretData.data.data['nexus.docker.password']}"
+			}
 		}
 	}
 	
