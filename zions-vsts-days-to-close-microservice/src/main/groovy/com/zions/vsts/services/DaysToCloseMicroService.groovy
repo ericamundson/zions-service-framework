@@ -94,11 +94,11 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	 */
 	@Override
 	public Object processADOData(Object adoData) {
-		log.info("Entering DaysToCloseMicroService:: processADOData")
+		log.debug("Entering DaysToCloseMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
-		 String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)
+		 /*String json = new JsonBuilder(adoData).toPrettyString()
+		 println(json)*/
 		
 		def outData = adoData
 		def wiResource = adoData.resource
@@ -170,7 +170,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
 		}
 		
-		log.info("Updating count of $wiType #$id")
+		log.debug("Updating count of $wiType #$id")
 		if (performIncrementCounter(project, rev, id, daystoClose, responseHandler)) {
 			return logResult('Update Succeeded')
 		}
@@ -193,7 +193,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		
 
 		private def logResult(def msg) {
-			log.info(msg)
+			log.debug(msg)
 			return msg
 		}
 		
