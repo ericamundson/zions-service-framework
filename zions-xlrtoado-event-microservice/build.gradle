@@ -13,6 +13,13 @@ dependencies {
 }
 
 docker {
+	if (project.hasProperty('secretData')) {
+		registryCredentials {
+			url = "${property 'registryHostUrl'}"
+			username = "${project.secretData.data.data['nexus.docker.user']}"
+			password = "${project.secretData.data.data['nexus.docker.password']}"
+		}
+	}
 	springBootApplication {
 		baseImage = 'openjdk:8-alpine'
 		jvmArgs = ['-Xrs -Xmx256m']
