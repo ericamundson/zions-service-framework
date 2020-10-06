@@ -36,9 +36,11 @@ public class DaysToCloseHandler extends BaseCalcHandler {
 	
 	public String execute(String targetField, def fields) {
 		def closedDate = fields['Closed Date']
-		// throw error if no Closed Date
-		if (!closedDate)
+		// throw error if no Closed Date column
+		if (closedDate == null) // missing column
 			throw new Exception("Closed Date is required by handler: ${this.getClass().getName()}")
+		else if (closedDate == '') // no value (which is ok)
+			closedDate = null  // Work Items that are still open will not have a closed date.  must be set to null
 		def createdDate = fields['Created Date']
 		// throw error if no Created Date
 		if (!createdDate)
