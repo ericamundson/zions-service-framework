@@ -6,6 +6,7 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.work.WorkManagementService
+import com.zions.vsts.services.work.calculations.CalculationManagementService
 
 import groovyx.net.http.ContentType
 import org.junit.Test
@@ -29,6 +30,9 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	
 	@Autowired
 	WorkManagementService workManagementService;
+	
+	@Autowired
+	CalculationManagementService calcManagementService
 	
 	def "handle null state values"() {
 		given: "A mock ADO event payload exists for resetting reopen event"
@@ -143,6 +147,13 @@ class DaysToCloseMicroserviceTestConfig {
 		//return mockFactory.Mock(WorkManagementService)
 		return mockFactory.Stub(WorkManagementService)
 	}
+	
+	@Bean
+	CalculationManagementService calcManagementService() {
+		//return mockFactory.Mock(WorkManagementService)
+		return mockFactory.Stub(CalculationManagementService)
+	}
+	
 	@Bean
 	IGenericRestClient genericRestClient() {
 		//return new GenericRestClient('http://localhost:8080/ws', '', '')
