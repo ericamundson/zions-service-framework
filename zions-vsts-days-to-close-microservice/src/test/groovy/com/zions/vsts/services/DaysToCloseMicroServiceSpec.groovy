@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 import groovy.json.JsonSlurper
-
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -34,6 +34,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	@Autowired
 	CalculationManagementService calcManagementService
 	
+	
 	def "handle null state values"() {
 		given: "A mock ADO event payload exists for resetting reopen event"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/newJasonDataMissingOldValue.json').text)
@@ -47,6 +48,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	
 	}
 	
+	
 	def "Not a valid type for days to close microservice"() {
 		given: "A mock ADO event payload exists for invalid child state"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/invalidType.json').text)
@@ -57,6 +59,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 		then: "No Updates should be made"
 		resp == 'not a valid work item type'
 	}
+	
 	
 	def "no applicable changes made"() {
 		given: "A mock ADO event payload exists for resetting reopen event"
@@ -87,19 +90,17 @@ class DaysToCloseMicroServiceSpec extends Specification {
 			workManagementService.updateWorkItem(_,_,_,_) >> {
 			String data = "${args[3]}"
 			
-			  assert(data.toString() == '[[op:test, path:/rev, value:6], [op:add, path:/fields/Custom.DaysToClose, value:0]]')
+			  assert(data.toString() == '[[op:test, path:/rev, value:8], [op:add, path:/fields/Custom.DaysToClose, value:0]]')
 		}
 		
 		when: "ADO sends notification for work item change who's type is in configured target list"
 		def resp = underTest.processADOData(adoMap)
 
 		then: "Update should be made"
-		resp == 'Counter reset'
+		resp == 'Update Succeeded'
 	}
+		
 	
-
-	
-
 	def "valid event for calculating days to close"() {
 		given: "A mock ADO event payload where work item has no parent"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/validDaysToClose.json').text)

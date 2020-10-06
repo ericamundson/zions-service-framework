@@ -97,8 +97,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		log.info("Entering DaysToCloseMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
-		 /*String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)*/
+		 String json = new JsonBuilder(adoData).toPrettyString()
+		 println(json)
 		
 		def outData = adoData
 		def wiResource = adoData.resource
