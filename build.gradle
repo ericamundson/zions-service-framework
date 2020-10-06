@@ -103,10 +103,13 @@ allprojects {
 
 	}
 	
+	def secretData = null
 	if ("${buildType}" != 'ci') {
 		def secrets = project.vault.get('secret/data/zions-service-framework')
 		def jsonText = new JsonBuilder(secrets).toPrettyString()
-		def secretData = new JsonSlurper().parseText(jsonText)
+		def vaultData = new JsonSlurper().parseText(jsonText)
+		secretData = vaultData
+		ext.set('secretData', vaultData) 
 	}
 	
 	gitPublish {
@@ -151,12 +154,14 @@ allprojects {
 		srcDir "${vaultResources}"
 	}
 	
-	docker {
-//		url = property 'dockerHostUrl'
-		registryCredentials {
-			url = property 'registryHostUrl'
-			username = property 'registryUserName'
-			password = property 'registryPassword'
+	if (secretData) {
+		docker {
+	//		url = property 'dockerHostUrl'
+			registryCredentials {
+				url = property 'registryHostUrl'
+				username = "${secretData.data.data['nexus.docker.user']}"
+				password = "${secretData.data.data['nexus.docker.password']}"
+			}
 		}
 	}
 	
