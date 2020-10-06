@@ -13,7 +13,7 @@ dependencies {
 }
 
 docker {
-	if (project.secretData) {
+	if (project.hasProperty('secretData')) {
 		registryCredentials {
 			url = "${property 'registryHostUrl'}"
 			username = "${project.secretData.data.data['nexus.docker.user']}"
