@@ -178,17 +178,17 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 
 		private def performIncrementCounter(String project, String rev, def id, def daystoClose, Closure respHandler = null) {
 	
-				def data = []
-				def t = [op: 'test', path: '/rev', value: rev.toInteger()]
-				data.add(t)
-				
-				def e = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
-				data.add(e)
-				this.retryFailed = false
-				this.attemptedProject = project
-				this.attemptedId = id
-				
-				return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
+			def data = []
+			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
+			data.add(t)
+			
+			def e = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
+			data.add(e)
+			this.retryFailed = false
+			this.attemptedProject = project
+			this.attemptedId = id
+			
+			return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
 		}
 		
 
@@ -197,7 +197,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			return msg
 		}
 		
-	}
+}
 			
 	
 		

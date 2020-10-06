@@ -101,7 +101,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	}
 		
 	
-	def "valid event for calculating days to close"() {
+	def "valid event for calculating days to close rounding down 6 days and 4 hours"() {
 		given: "A mock ADO event payload where work item has no parent"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/validDaysToClose.json').text)
 		//override work item and get work item details and return json file with valid bug count values
@@ -126,6 +126,60 @@ class DaysToCloseMicroServiceSpec extends Specification {
 		then: "Update should be made"
 		resp == 'Update Succeeded'
 	}
+	
+	def "valid event for calculating days to close rounding up 1497 days and 15 hours"() {
+		given: "A mock ADO event payload where work item has no parent"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/validDaysToCloseRoundUp.json').text)
+		//override work item and get work item details and return json file with valid bug count values
+		and: "stub workManagementService.getWorkItem()"
+		workManagementService.getWorkItem(_,_,_) >> {
+		
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/validDaysToCloseRoundUp.json').text)
+		}
+		
+		//override update work item with test data values
+		and: "stub workManagementService.updateItem()"
+		
+			workManagementService.updateWorkItem(_,_,_,_) >> {
+			String data = "${args[3]}"
+			
+			  assert(data.toString() == '[[op:test, path:/rev, value:7], [op:add, path:/fields/Custom.DaysToClose, value:1498]]')
+		}
+		
+		when: "ADO sends notification for work item change who's type is in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "Update should be made"
+		resp == 'Update Succeeded'
+	}
+	
+	
+	def "valid event for calculating same day closures of 0.5"() {
+		given: "A mock ADO event payload where work item has no parent"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/sameDayClosure.json').text)
+		//override work item and get work item details and return json file with valid bug count values
+		and: "stub workManagementService.getWorkItem()"
+		workManagementService.getWorkItem(_,_,_) >> {
+		
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/sameDayClosure.json').text)
+		}
+		
+		//override update work item with test data values
+		and: "stub workManagementService.updateItem()"
+		
+			workManagementService.updateWorkItem(_,_,_,_) >> {
+			String data = "${args[3]}"
+			
+			  assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/Custom.DaysToClose, value:0.5]]')
+		}
+		
+		when: "ADO sends notification for work item change who's type is in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "Update should be made"
+		resp == 'Update Succeeded'
+	}
+		
 	
 }
 
