@@ -139,7 +139,7 @@ class UpdateWorkItems implements CliAction {
 						value = fieldCalcManager.execute([ targetField: adoFieldName, fields: rowMap ], handler)
 					else
 						value = mapEntry.value
-					if (!value) {
+					if (!value || value == 'null') {
 						value = ''
 					}	
 					def idData = [ op: 'add', path: "/fields/$adoFieldName", value: "$value"]
