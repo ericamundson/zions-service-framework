@@ -35,19 +35,6 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	CalculationManagementService calcManagementService
 	
 	
-	def "handle null state values"() {
-		given: "A mock ADO event payload exists for resetting reopen event"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/newJasonDataMissingOldValue.json').text)
-
-		when: "ADO sends notification for work item change who's type is not in configured target list"
-		def resp = underTest.processADOData(adoMap)
-
-		then: "No Updates should be made"
-		resp == 'Error Retrieving previous state'
-
-	
-	}
-	
 	
 	def "Not a valid type for days to close microservice"() {
 		given: "A mock ADO event payload exists for invalid child state"
