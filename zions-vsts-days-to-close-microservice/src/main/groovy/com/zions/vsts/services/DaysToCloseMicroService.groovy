@@ -53,6 +53,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	boolean retryFailed
 	def attemptedProject
 	def attemptedId
+	Date attemptedCreateDate
 	
 	Closure responseHandler = { resp ->
 		
@@ -60,14 +61,17 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			
 			// Get fresh copy of parent work item
 			def bugWI = workManagementService.getWorkItem(collection, attemptedProject, attemptedId)
+			def closedDate = bugWI.fields.'Microsoft.VSTS.Common.ClosedDate'
+			Date convClosedDate
 			
-			//ado event structure different from work item structure - bugWI.fields represents work item structure
-			def daystoClose = bugWI.fields.'Custom.DaysToClose'
+			if (!closedDate) {
+				convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
+			}
+			
+			def daystoClose = calcManagementService.calcDaysToClose(convClosedDate, attemptedCreateDate)
+
 			String rev = "${bugWI.rev}"
 			
-			if (!daystoClose|| daystoClose == 'null' || daystoClose == '')
-				daystoClose = 0;
-	
 			
 			if (performIncrementCounter(this.attemptedProject, rev, this.attemptedId, daystoClose)) {
 				return logResult('Work item successfully counted after 412 retry')
@@ -123,7 +127,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('no changes made to state')
 		
 		def stateField = wiResource.fields.'System.State'
-		if (!stateField || stateField == 'null' || stateField == '') return logResult('not a state change')
+		
 		
 		//retrieve old/new state field values for comparison
 		String oldState = stateField.oldValue
@@ -138,37 +142,28 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		}
 		//define days to close and initialize
 		def daystoClose = wiResource.revision.fields.'Custom.DaysToClose'
-			
-		//if daystoClose is null initialize to 0
-		if (!daystoClose|| daystoClose == 'null' || daystoClose == '')
-			daystoClose = 0;
-	
-		//If Bug is opened reset the count
-		if (sourceStates.contains(newState) && (destState.contains(oldState))) {
-			daystoClose = 0;
-			
-		} else {
-		
-			//Get Created Date
-			String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
-			if (!createDate) {
-				log.error("Error retrieving create date for work item $id")
-				return 'Error Retrieving Create Date'
-			}
-			//Format the Created Date
-			Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
-			
-			//Get and format closedDate
-			def closedDate = wiResource.fields.'Microsoft.VSTS.Common.ClosedDate'
-			if (!closedDate) {
-				log.error("Error retrieving closed date for work item $id")
-				return 'Error Retrieving Closed Date'
-			}
-			String newClosedDate = closedDate.newValue
-			Date convClosedDate = Date.parse("yyyy-MM-dd", newClosedDate);
 
-			daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
+		//If Bug is opened reset the count
+		//Get Created Date
+		String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
+		if (!createDate) {
+			log.error("Error retrieving create date for work item $id")
+			return 'Error Retrieving Create Date'
 		}
+		//Format the Created Date
+		Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
+		this.attemptedCreateDate = convCreateDate
+		//Get and format closedDate
+		
+		def closedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ClosedDate'
+		Date convClosedDate 
+		
+		if (!closedDate) {
+			convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
+		}
+		
+		daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
+	
 		
 		log.debug("Updating count of $wiType #$id")
 		if (performIncrementCounter(project, rev, id, daystoClose, responseHandler)) {
@@ -187,6 +182,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			this.retryFailed = false
 			this.attemptedProject = project
 			this.attemptedId = id
+			
 			
 			return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
 		}
