@@ -24,7 +24,7 @@ buildscript {
 		classpath 'com.zions.gradle:gplantumlPlugin:0.1.1'
 		classpath 'net.sourceforge.plantuml:plantuml:8059'
 		classpath 'org.ajoberstar:gradle-git-publish:2.0.0'
-		classpath 'com.bmuschko:gradle-docker-plugin:4.10.0'
+		classpath 'com.bmuschko:gradle-docker-plugin:6.6.1'
 		classpath 'gradle.plugin.io.errorlab.gradle.vault:vault:0.1.0'
 	}
 }
@@ -73,24 +73,27 @@ allprojects {
 		check.dependsOn jacocoTestReport
 	} else {
 		apply plugin: 'io.errorlab.gradle.vault'
-		String os = System.getProperty('os.name')
-		if (os.contains('Windows')) {
-			Properties props = new Properties()
-			props.load(new FileInputStream("c:/Vault/resources/bootstrap.properties"))
-			props.each { prop ->
-			  project.ext.set(prop.key, prop.value)
-			}
-		} else {
-			Properties props = new Properties()
-			props.load(new FileInputStream("/app/Vault/resources/bootstrap.properties"))
-			props.each { prop ->
-			  project.ext.set(prop.key, prop.value)
-			}
-
+		Properties props = new Properties()
+		props.load(new FileInputStream("${vaultResources}/bootstrap.properties"))
+		props.each { prop ->
+		  project.ext.set(prop.key, prop.value)
 		}
+
 		vault {
 			addr = "${project.'vault.url'}"
 			token = "${project.'spring.cloud.vault.token'}"
+		}
+		def secrets = project.vault.get('secret/data/zions-service-framework')
+		def jsonText = new JsonBuilder(secrets).toPrettyString()
+		def vaultData = new JsonSlurper().parseText(jsonText)
+		project.ext.set('secretData', vaultData) 
+		docker {
+	//		url = property 'dockerHostUrl'
+			registryCredentials {
+				url = "${property 'registryHostUrl'}"
+				username = "${project.secretData.data.data['nexus.docker.user']}"
+				password = "${project.secretData.data.data['nexus.docker.password']}"
+			}
 		}
 	}
 
@@ -121,14 +124,6 @@ allprojects {
 
 	}
 	
-	def secretData = null
-	if ("${buildType}" != 'ci') {
-		def secrets = project.vault.get('secret/data/zions-service-framework')
-		def jsonText = new JsonBuilder(secrets).toPrettyString()
-		def vaultData = new JsonSlurper().parseText(jsonText)
-		secretData = vaultData
-		project.ext.set('secretData', vaultData) 
-	}
 	
 	gitPublish {
 		// where to publish to (repo must exist)
@@ -172,23 +167,10 @@ allprojects {
 		srcDir "${vaultResources}"
 	}
 	
-	if (secretData) {
-		//println "${property 'registryHostUrl'}"
-		docker {
-	//		url = property 'dockerHostUrl'
-			registryCredentials {
-				url = "${property 'registryHostUrl'}"
-				username = "${secretData.data.data['nexus.docker.user']}"
-				password = "${secretData.data.data['nexus.docker.password']}"
-			}
-		}
-	}
 	
 		
-
-
 	bootJar { enabled = false }
-	group = 'com.zionsbancorp.scm'
+	group = 'dts'
 	//version = '1.0.0-SNAPSHOT'
 	sourceCompatibility = 1.8
 	targetCompatibility = 1.8
