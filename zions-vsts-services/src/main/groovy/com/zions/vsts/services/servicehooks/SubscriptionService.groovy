@@ -20,10 +20,10 @@ class SubscriptionService {
 		subscriptionData.publisherInputs.projectId = projectInfo.id
 		def sub = getSubscription(projectInfo, subscriptionData)
 		if (sub) {
-			//sub = updateSubscription(projectInfo, subscriptionData)
-			return sub
+			sub.consumerInputs = subscriptionData.consumerInputs
+			return updateSubscription(sub)
 		}
-		return createSubscription(projectInfo, subscriptionData)
+		return createSubscription(subscriptionData)
 	}
 	
 	def getSubscription( def project, def subscriptionData) {
@@ -62,25 +62,25 @@ class SubscriptionService {
 		return retVal
 	}
 	
-	def updateSubscription( def project, def subscriptionData) {
+	def updateSubscription( def subscriptionData) {
 		def results = genericRestClient.put(
 			contentType: ContentType.JSON,
 			requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/_apis/hooks/subscriptions",
 			body: subscriptionData,
 			query: ['api-version': '5.1']
-			)
-
+		)
+		return results
 	}
 	
-	def createSubscription( def project, def subscriptionData) {
+	def createSubscription( def subscriptionData) {
 		def results = genericRestClient.post(
 			contentType: ContentType.JSON,
 			requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/_apis/hooks/subscriptions",
 			body: subscriptionData,
 			query: ['api-version': '5.1']
-			)
-
+		)
+		return results
 	}
 }
