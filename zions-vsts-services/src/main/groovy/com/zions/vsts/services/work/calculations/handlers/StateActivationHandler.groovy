@@ -40,7 +40,7 @@ public class StateActivationHandler extends BaseCalcHandler {
 	
 	public String execute(String targetField, def fields) {
 		def state = fields['State']
-		if (state == 'Active') return state
+		if (state != 'New') return state  // Only activating if work item state is "New"
 		
 		def id = fields['ID']
 		if (id instanceof Integer)
@@ -52,13 +52,13 @@ public class StateActivationHandler extends BaseCalcHandler {
 		def project = getProjectFromAreaPath(areaPath)
 		//Get work item children
 		def wiChildren = workManagementService.getChildren(collection, project, id)
-		boolean childOpen = false
+		boolean childActive = false
 		if (wiChildren) {
 			wiChildren.each { child ->
-				if (child.fields['System.State'] != 'Closed' ) childOpen = true
+				if (child.fields['System.State'] != 'Active' ) childActive = true
 			}
 		}
-		if (childOpen)
+		if (childActive)
 			return 'Active'
 		else
 			return state
