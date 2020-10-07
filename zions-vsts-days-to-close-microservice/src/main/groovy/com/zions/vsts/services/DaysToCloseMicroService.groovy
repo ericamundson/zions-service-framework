@@ -120,8 +120,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		//NPE check
 		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('no changes made to state')
 		
-		//def stateField = wiResource.fields.'System.State'
-
+		
 		//Get Created Date
 		String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
 		if (!createDate) {
