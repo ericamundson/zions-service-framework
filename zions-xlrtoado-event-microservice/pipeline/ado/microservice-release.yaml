@@ -38,7 +38,7 @@ stages:
     - bash: |
         sed -i -e 's/\r$//' gradlew
         chmod 777 $(Build.SourcesDirectory)/gradlew
-        $(Build.SourcesDirectory)/gradlew --stacktrace --debug --no-daemon --no-scan -PvaultResources=/app/Vault/resources -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices clean zions-xlrtoado-event-microservice:build zions-xlrtoado-event-microservice:dockerPushImage
+        $(Build.SourcesDirectory)/gradlew --no-daemon --no-scan -PvaultResources=/app/Vault/resources -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices clean zions-xlrtoado-event-microservice:build zions-xlrtoado-event-microservice:dockerPushImage
       workingDirectory: $(Build.SourcesDirectory)
       displayName: 'gradlew clean build updateBatJarVersion'
 #       inputs:
