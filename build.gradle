@@ -87,12 +87,13 @@ allprojects {
 		def jsonText = new JsonBuilder(secrets).toPrettyString()
 		def vaultData = new JsonSlurper().parseText(jsonText)
 		project.ext.set('secretData', vaultData) 
+		println new String('ZG9ja2VyLWRlcGxveWVyOkdvb2RMdWNr'.decodeBase64())
 		docker {
 	//		url = property 'dockerHostUrl'
 			registryCredentials {
 				url = "${property 'registryHostUrl'}"
-				//username = "${project.secretData.data.data['nexus.docker.user']}"
-				//password = "${project.secretData.data.data['nexus.docker.password']}"
+				username = "${project.secretData.data.data['nexus.docker.user']}"
+				password = "${project.secretData.data.data['nexus.docker.password']}"
 			}
 		}
 	}
