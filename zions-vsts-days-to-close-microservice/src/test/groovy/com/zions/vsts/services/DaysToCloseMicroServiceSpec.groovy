@@ -6,6 +6,7 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.vsts.services.work.WorkManagementService
+import com.zions.vsts.services.work.calculations.CalculationManagementService
 
 import groovyx.net.http.ContentType
 import org.junit.Test
@@ -18,7 +19,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 import groovy.json.JsonSlurper
-
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -30,18 +31,10 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	@Autowired
 	WorkManagementService workManagementService;
 	
-	def "handle null state values"() {
-		given: "A mock ADO event payload exists for resetting reopen event"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/newJasonDataMissingOldValue.json').text)
-
-		when: "ADO sends notification for work item change who's type is not in configured target list"
-		def resp = underTest.processADOData(adoMap)
-
-		then: "No Updates should be made"
-		resp == 'Error Retrieving previous state'
-
+	@Autowired
+	CalculationManagementService calcManagementService
 	
-	}
+	
 	
 	def "Not a valid type for days to close microservice"() {
 		given: "A mock ADO event payload exists for invalid child state"
@@ -53,6 +46,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 		then: "No Updates should be made"
 		resp == 'not a valid work item type'
 	}
+	
 	
 	def "no applicable changes made"() {
 		given: "A mock ADO event payload exists for resetting reopen event"
@@ -83,20 +77,18 @@ class DaysToCloseMicroServiceSpec extends Specification {
 			workManagementService.updateWorkItem(_,_,_,_) >> {
 			String data = "${args[3]}"
 			
-			  assert(data.toString() == '[[op:test, path:/rev, value:6], [op:add, path:/fields/Custom.DaysToClose, value:0]]')
+			  assert(data.toString() == '[[op:test, path:/rev, value:8], [op:add, path:/fields/Custom.DaysToClose, value:0]]')
 		}
 		
 		when: "ADO sends notification for work item change who's type is in configured target list"
 		def resp = underTest.processADOData(adoMap)
 
 		then: "Update should be made"
-		resp == 'Counter reset'
+		resp == 'Update Succeeded'
 	}
+		
 	
-
-	
-
-	def "valid event for calculating days to close"() {
+	def "valid event for calculating days to close rounding down 6 days and 4 hours"() {
 		given: "A mock ADO event payload where work item has no parent"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/validDaysToClose.json').text)
 		//override work item and get work item details and return json file with valid bug count values
@@ -122,6 +114,60 @@ class DaysToCloseMicroServiceSpec extends Specification {
 		resp == 'Update Succeeded'
 	}
 	
+	def "valid event for calculating days to close rounding up 1497 days and 15 hours"() {
+		given: "A mock ADO event payload where work item has no parent"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/validDaysToCloseRoundUp.json').text)
+		//override work item and get work item details and return json file with valid bug count values
+		and: "stub workManagementService.getWorkItem()"
+		workManagementService.getWorkItem(_,_,_) >> {
+		
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/validDaysToCloseRoundUp.json').text)
+		}
+		
+		//override update work item with test data values
+		and: "stub workManagementService.updateItem()"
+		
+			workManagementService.updateWorkItem(_,_,_,_) >> {
+			String data = "${args[3]}"
+			
+			  assert(data.toString() == '[[op:test, path:/rev, value:7], [op:add, path:/fields/Custom.DaysToClose, value:1498]]')
+		}
+		
+		when: "ADO sends notification for work item change who's type is in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "Update should be made"
+		resp == 'Update Succeeded'
+	}
+	
+	
+	def "valid event for calculating same day closures of 0.5"() {
+		given: "A mock ADO event payload where work item has no parent"
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/sameDayClosure.json').text)
+		//override work item and get work item details and return json file with valid bug count values
+		and: "stub workManagementService.getWorkItem()"
+		workManagementService.getWorkItem(_,_,_) >> {
+		
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/sameDayClosure.json').text)
+		}
+		
+		//override update work item with test data values
+		and: "stub workManagementService.updateItem()"
+		
+			workManagementService.updateWorkItem(_,_,_,_) >> {
+			String data = "${args[3]}"
+			
+			  assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/Custom.DaysToClose, value:0.5]]')
+		}
+		
+		when: "ADO sends notification for work item change who's type is in configured target list"
+		def resp = underTest.processADOData(adoMap)
+
+		then: "Update should be made"
+		resp == 'Update Succeeded'
+	}
+		
+	
 }
 
 @TestConfiguration
@@ -143,6 +189,13 @@ class DaysToCloseMicroserviceTestConfig {
 		//return mockFactory.Mock(WorkManagementService)
 		return mockFactory.Stub(WorkManagementService)
 	}
+	
+	@Bean
+	CalculationManagementService calcManagementService() {
+		//return mockFactory.Mock(WorkManagementService)
+		return mockFactory.Stub(CalculationManagementService)
+	}
+	
 	@Bean
 	IGenericRestClient genericRestClient() {
 		//return new GenericRestClient('http://localhost:8080/ws', '', '')
