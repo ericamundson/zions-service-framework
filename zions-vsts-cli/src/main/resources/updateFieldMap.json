@@ -12,6 +12,7 @@
 "DaysToClose": {"AdoId": "Custom.DaysToClose", "CalcHandler": "daysToCloseHandler"},
 "Assigned To": {"AdoId": "System.AssignedTo", "CalcHandler": "assignedToHandler"},
 "State": {"AdoId": "System.State", "CalcHandler": "stateActivationHandler"},
+"Closed By": {"AdoId": "Microsoft.VSTS.Common.ClosedBy"},
 "RCE Level 1": {"AdoId": "Custom.RCELevel1"},
 "RCE Level 2": {"AdoId": "Custom.RCELevel2"},
 "Vendor Related": {"AdoId": "Custom.VendorRelated"},
