@@ -28,6 +28,17 @@ config:
             states:
               - Active
               - Closed
+              
+        -
+            name: 'Sandbox'
+            types:
+              - "Feature"
+              - "User Story"
+              - "Task"
+            states:
+              - Active
+              - Closed
+                 
         -
             name: 'default'
             types:
@@ -35,6 +46,7 @@ config:
             states:
               - Active
               - Closed
+              
 doc.resource.locations: file:///C:/Resources/
 server.port: "9094"
 websocket.url: ws://localhost/ws
