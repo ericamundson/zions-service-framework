@@ -58,7 +58,9 @@ class BuildDefinition implements IExecutableYamlHandler {
 			def bDef = [name: bName, project: projectName, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue, triggers:[trigger] ]
 			if (yaml.repository.defaultBranch) {
 				String branchName = yaml.repository.defaultBranch
-				branchName = branchName.substring('refs/heads/'.length())
+				if (branchName.startsWith('refs/heads/')) {
+					branchName = branchName.substring('refs/heads/'.length())
+				}
 				codeManagementService.ensureBranch('', projectName, yaml.repository.name, 'master', branchName)
 				bDef.repository.defaultBranch = yaml.repository.defaultBranch
 			}
@@ -93,7 +95,9 @@ class BuildDefinition implements IExecutableYamlHandler {
 			bDef.queue = queue
 			if (yaml.repository.defaultBranch) {
 				String branchName = yaml.repository.defaultBranch
-				branchName = branchName.substring('refs/heads/'.length())
+				if (branchName.startsWith('refs/heads/')) {
+					branchName = branchName.substring('refs/heads/'.length())
+				}
 				codeManagementService.ensureBranch('', projectName, yaml.repository.name, 'master', branchName)
 				bDef.repository.defaultBranch = yaml.repository.defaultBranch
 			}
