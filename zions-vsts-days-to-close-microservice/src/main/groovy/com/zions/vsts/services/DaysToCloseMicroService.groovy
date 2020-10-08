@@ -58,7 +58,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			def closedDate = bugWI.fields.'Microsoft.VSTS.Common.ClosedDate'
 			Date convClosedDate
 			
-			if (!closedDate) {
+			if (closedDate) {
 				convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
 			}
 			
