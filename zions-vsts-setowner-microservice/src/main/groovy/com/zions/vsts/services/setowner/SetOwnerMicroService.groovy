@@ -83,52 +83,28 @@ class SetOwnerMicroService implements MessageReceiverTrait {
 		if (owner && owner != 'null') return logResult('Work item already assigned')
 		if (status != 'Closed' || !wiResource.fields || !wiResource.fields.'System.State') return logResult('Work item not being closed')
 		String rev = "${wiResource.revision.rev}"
-		String parentId = "${wiResource.revision.fields.'System.Parent'}"
 		def revisedBy = wiResource.revisedBy
 		String revisedUsername = "${revisedBy.uniqueName}"
-		if (revisedUsername.toLowerCase().indexOf('svc-') == -1) { // This was not closed by a service account
-			// Set ownership to user that closed this work item
+		String derivedOwner = workManagementService.deriveOwner(collection, project, revisedUsername, id)
+		if (derivedOwner) {
 			log.info("Updating owner of $wiType #$id")
-			if (setOwner(project, id, rev, revisedBy, responseHandler)) {
-				return logResult('Work item successfully assigned to modifier')
+			if (setOwner(project, id, rev, derivedOwner, responseHandler)) {
+				return logResult('Work item successfully assigned')
 			}
 			else if (this.retryFailed) {
 				log.error('Error updating System.AssigedTo')
-				return 'Error assigning to modifier'
+				return 'Error assigning owner'
 			}
 		}
-		else if (parentId && parentId != 'null') {
-			// Set ownership to parent's owner
-			def parentWI = workManagementService.getWorkItem(collection, project, parentId)
-			if (!parentWI) {
-				log.error("Error retrieving work item $parentId")
-				return 'Error Retrieving Parent'
-			}
-//			Uncomment code below to capture parent playload for test
-//			String json = new JsonBuilder(parentWI).toPrettyString()
-//			println(json)
-			def parentOwner = parentWI.fields.'System.AssignedTo'
-			if (parentOwner == 'null' || parentOwner == null) return logResult('Parent is unassigned')
-			
-			log.info("Updating owner of $wiType #$id")
-			if (setOwner(project, id, rev, parentOwner, responseHandler)) {
-				return logResult('Work item successfully assigned to parent')
-			}
-			else if (this.retryFailed) {
-				log.error('Error updating System.AssigedTo')
-				return 'Error assigning to parent owner'
-			}
-		}
-		else {
-			return logResult('No parent')
-		}
+		else
+			return logResult("Can't derive owner")
 	}
 
-	private def setOwner(def project, def id, String rev, def owner, Closure respHandler = null) {
+	private def setOwner(def project, def id, String rev, String owner, Closure respHandler = null) {
 		def data = []
 		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 		data.add(t)
-		def e = [op: 'add', path: '/fields/System.AssignedTo', value: owner.uniqueName]
+		def e = [op: 'add', path: '/fields/System.AssignedTo', value: owner]
 		data.add(e)
 		this.retryFailed = false
 		this.attemptedProject = project

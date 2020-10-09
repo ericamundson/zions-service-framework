@@ -35,6 +35,12 @@ public class ReopenCountHandler extends BaseCalcHandler {
 	@Autowired
 	WorkManagementService workManagementService
 	
+	@Value('${tfs.sourcestates:}')
+	String sourceStates
+	
+	@Value('${tfs.deststates:}')
+	String destStates
+
 	public String execute(String targetField, def fields) {
 		def id = fields['ID']
 		if (id instanceof Integer)
@@ -43,6 +49,8 @@ public class ReopenCountHandler extends BaseCalcHandler {
 		// throw error if no Area Path
 		if (!areaPath)
 			throw new Exception("Area Path is required by handler: ${this.getClass().getName()}")
+		if (!sourceStates || !destStates)
+			throw new Exception("Both tfs.sourcestates and tfs.deststates parameters are required by handler: ${this.getClass().getName()}")
 		def project = getProjectFromAreaPath(areaPath)
 		//Get work item
 		def history = workManagementService.getWorkItemUpdates(collection, project, id)
@@ -50,9 +58,12 @@ public class ReopenCountHandler extends BaseCalcHandler {
 		if (history) {
 			def changeList = history.value
 			changeList.each { change ->
-				def stateChange = change.fields['System.State']
-				if (stateChange) {
-					if (stateChange.oldValue == 'Closed') reopenCount++
+				if (change.fields) {
+					def stateChange = change.fields['System.State']
+					if (stateChange && stateChange.oldValue) {
+						if (sourceStates.contains(stateChange.oldValue) && destStates.contains(stateChange.newValue)) 
+							reopenCount++
+					}
 				}
 			}
 		}

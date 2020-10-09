@@ -47,17 +47,16 @@ public class AssignedToHandler extends BaseCalcHandler {
 		def id = fields['ID']
 		if (id instanceof Integer)
 			id = id.toString()
+		String closedBy = fields['Closed By']
+		// throw error if no closed By
+		if (!closedBy)
+			throw new Exception("Closed By is required by handler: ${this.getClass().getName()}")
 		def areaPath = fields['Area Path']
 		// throw error if no Area Path
 		if (!areaPath)
 			throw new Exception("Area Path is required by handler: ${this.getClass().getName()}")
 		def project = getProjectFromAreaPath(areaPath)
-		//Get work item
-		def wi = workManagementService.getWorkItem(collection, project, id)
-		def wiParent = workManagementService.getParent(collection, project, wi)
-		if (wiParent)
-			return wiParent.fields['System.AssignedTo'].uniqueName
-		else
-			return null
+		
+		return workManagementService.deriveOwner(collection, project, closedBy, id)
 	}
 }

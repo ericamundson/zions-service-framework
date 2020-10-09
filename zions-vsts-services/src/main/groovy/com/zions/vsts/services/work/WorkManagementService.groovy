@@ -663,6 +663,7 @@ class WorkManagementService {
 	def getChildren(String collection, String project, String id) {
 		def pwi = getWorkItem(collection, project, id)
 		def childIds = []
+		if (!pwi.relations) return childIds // no children
 		pwi.relations.each { relation ->
 			String rel = "${relation.rel}"
 			String url = "${relation.url}"
@@ -745,7 +746,20 @@ class WorkManagementService {
 		return result
 
 	}
-	
+	def deriveOwner(String collection, String project, String closedBy, String id) {
+		if (closedBy && closedBy != 'null' && closedBy != '' && closedBy.toLowerCase().indexOf('svc-') == -1)
+			return closedBy
+		else {
+			//Get work item
+			def wi = getWorkItem(collection, project, id)
+			def wiParent = getParent(collection, project, wi)
+			if (wiParent)
+				return wiParent.fields['System.AssignedTo'].uniqueName
+			else
+				return null
+		}
+	}
+
 	def deleteTestItem(String collection, String project, def wi) {
 		String changedBy = "${wi.fields.'System.ChangedBy'.displayName}".toLowerCase()
 		if (!changedBy.startsWith('svc-cloud-vs')) return null
