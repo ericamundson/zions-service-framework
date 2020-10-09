@@ -663,6 +663,7 @@ class WorkManagementService {
 	def getChildren(String collection, String project, String id) {
 		def pwi = getWorkItem(collection, project, id)
 		def childIds = []
+		if (!pwi.relations) return childIds // no children
 		pwi.relations.each { relation ->
 			String rel = "${relation.rel}"
 			String url = "${relation.url}"
