@@ -50,10 +50,14 @@ public class ReopenCountHandler extends BaseCalcHandler {
 		if (history) {
 			def changeList = history.value
 			changeList.each { change ->
-				def stateChange = change.fields['System.State']
-				if (stateChange) {
-					if (stateChange.oldValue == 'Closed') reopenCount++
+				if (change.fields) {
+					def stateChange = change.fields['System.State']
+					if (stateChange) {
+						if (stateChange.oldValue == 'Closed') reopenCount++
+					}
 				}
+					
+				
 			}
 		}
 		return reopenCount
