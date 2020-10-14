@@ -1,0 +1,171 @@
+{
+    "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
+    "notificationId": 249,
+    "id": "ab608eb7-0c84-4de3-bc8a-79825dc0990c",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": {
+        "text": "Task #947691 (Test Case Task) transitioned to Active by Robert Huet\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947691)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=947691\">Task #947691</a> (Test Case Task) transitioned to Active by Robert Huet",
+        "markdown": "[Task #947691](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947691) (Test Case Task) transitioned to Active by Robert Huet"
+    },
+    "detailedMessage": {
+        "text": "Task #947691 (Test Case Task) transitioned to Active by Robert Huet\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947691)\r\n\r\n- New State: Active\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=947691\">Task #947691</a> (Test Case Task) transitioned to Active by Robert Huet<ul>\r\n<li>New State: Active</li></ul>",
+        "markdown": "[Task #947691](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947691) (Test Case Task) transitioned to Active by Robert Huet\r\n\r\n* New State: Active\r\n"
+    },
+    "resource": {
+        "id": 4,
+        "workItemId": 947691,
+        "rev": 4,
+        "revisedBy": {
+            "id": "2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "name": "Robert Huet <robert.huet@zionsbancorp.com>",
+            "displayName": "Robert Huet",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/2bede35d-8e3c-6a84-b1b9-00d898cee9c1",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+                }
+            },
+            "uniqueName": "robert.huet@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4",
+            "descriptor": "aad.MWViMGM0ODktNzEzZi03MmUwLWJhN2QtZmFhNzNhNjRmY2M4"
+        },
+        "revisedDate": "2020-04-24T21:41:33.7Z",
+        "fields": {
+            "System.Rev": {
+                "oldValue": 3,
+                "newValue": 4
+            },
+            "System.AuthorizedDate": {
+                "oldValue": "2020-04-24T16:09:04.487Z",
+                "newValue": "2020-04-24T21:41:32.833Z"
+            },
+            "System.RevisedDate": {
+                "oldValue": "2020-04-24T21:41:32.833Z",
+                "newValue": "2020-04-24T21:41:33.7Z"
+            },
+            "System.State": {
+                "oldValue": "Closed",
+                "newValue": "Active"
+            },
+            "System.Reason": {
+                "oldValue": "Completed",
+                "newValue": "Reactivated"
+            },
+            "System.ChangedDate": {
+                "oldValue": "2020-04-24T16:09:04.487Z",
+                "newValue": "2020-04-24T21:41:32.833Z"
+            },
+            "System.ChangedBy": {
+                "oldValue": "svc-cloud-vsmigration002 <svc-cloud-vsmigration002@zionsbancorporation.onmicrosoft.com>",
+                "newValue": "Robert Huet <robert.huet@zionsbancorp.com>"
+            },
+            "System.AuthorizedAs": {
+                "oldValue": "svc-cloud-vsmigration002 <svc-cloud-vsmigration002@zionsbancorporation.onmicrosoft.com>",
+                "newValue": "Robert Huet <robert.huet@zionsbancorp.com>"
+            },
+            "System.PersonId": {
+                "oldValue": 99056322,
+                "newValue": 89581202
+            },
+            "System.Watermark": {
+                "oldValue": 327302,
+                "newValue": 327303
+            },
+            "Microsoft.VSTS.Common.ClosedDate": {
+                "oldValue": "2020-04-24T16:02:05.337Z"
+            },
+            "Microsoft.VSTS.Common.ClosedBy": {
+                "oldValue": "Robert Huet <robert.huet@zionsbancorp.com>"
+            },
+            "Microsoft.VSTS.Common.StateChangeDate": {
+                "oldValue": "2020-04-24T16:02:05.337Z",
+                "newValue": "2020-04-24T21:41:32.833Z"
+            },
+            "Microsoft.VSTS.Common.ActivatedDate": {
+                "newValue": "2020-04-24T21:41:32.833Z"
+            },
+            "Microsoft.VSTS.Common.ActivatedBy": {
+                "newValue": "Robert Huet <robert.huet@zionsbancorp.com>"
+            }
+        },
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947691/updates/4"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947691/updates"
+            },
+            "parent": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947691"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=947691"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947691/updates/4",
+        "revision": {
+            "id": 947691,
+            "rev": 4,
+            "fields": {
+                "System.WorkItemType": "Task",
+                "System.State": "Active",
+                "System.Reason": "Reactivated",
+                "System.CreatedDate": "2020-04-24T16:02:04.267Z",
+                "System.CreatedBy": "Robert Huet <robert.huet@zionsbancorp.com>",
+                "System.ChangedDate": "2020-04-24T21:41:32.833Z",
+                "System.ChangedBy": "Robert Huet <robert.huet@zionsbancorp.com>",
+                "System.CommentCount": 0,
+                "System.TeamProject": "ALMOpsTest",
+                "System.AreaPath": "ALMOpsTest\\DevTeam",
+                "System.IterationPath": "ALMOpsTest",
+                "System.Title": "Test Case Task",
+                "Microsoft.VSTS.Common.Priority": 2,
+                "Microsoft.VSTS.Common.StateChangeDate": "2020-04-24T21:41:32.833Z",
+                "Microsoft.VSTS.Common.ActivatedDate": "2020-04-24T21:41:32.833Z",
+                "Microsoft.VSTS.Common.ActivatedBy": "Robert Huet <robert.huet@zionsbancorp.com>",
+                "System.Parent": 947394
+            },
+            "relations": [
+                {
+                    "rel": "System.LinkTypes.Hierarchy-Reverse",
+                    "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947394",
+                    "attributes": {
+                        "isLocked": false,
+                        "name": "Parent"
+                    }
+                }
+            ],
+            "_links": {
+                "self": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947691/revisions/4"
+                },
+                "workItemRevisions": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947691/revisions"
+                },
+                "parent": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947691"
+                }
+            },
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/947691/revisions/4"
+        }
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1bec1897-29a0-44d0-80a8-670c5ae5ef4a",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "account": {
+            "id": "6e6d6b08-2e41-4c55-a624-0d1ec79969dd",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "project": {
+            "id": "030d62a4-ce8b-405e-a331-8678df1a6efe",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        }
+    },
+    "createdDate": "2020-04-24T21:41:41.197509Z"
+}
