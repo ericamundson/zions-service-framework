@@ -19,6 +19,7 @@ if ("${context}" == 'all') {
 	include ':zions-vsts-gateway'
 	include ':zions-queuing-microservice'
 	include ':zions-queue-pubsub-microservice'
+	include ':zions-queue-pubsub-wit-microservice'
 	include ':zions-pipeline-event-pubsub-microservice'
 	include ':zions-vsts-populate-child-microservice'
 	include ':zions-pipeline-execution-microservice'
