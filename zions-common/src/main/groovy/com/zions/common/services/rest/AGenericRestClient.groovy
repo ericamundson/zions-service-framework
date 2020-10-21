@@ -143,8 +143,14 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			delegate.parser."${contentType}" = currentParser
 			
 		}
-		if (resp.data == null) {
-			//log.warn("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
+		try {
+			// if get ReST call to ADO tesults in a 'xxxNotFoundException', resp.data will be null and 
+			// the following will cause a NullPointerException to be thrown causing execution to fail
+			if (resp.data == null) {
+				//log.warn("GenericRestClient::get -- Failed. Status: "+resp.getStatusLine());
+			}
+		} catch (NullPointerException npe) {
+			return null
 		}
 		int status = resp.status
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
