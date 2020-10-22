@@ -42,11 +42,10 @@ public class PropagatedValueHandler extends BaseCalcHandler {
 		def id = fields['ID']
 		if (id instanceof Integer)
 			id = id.toString()
-		def areaPath = fields['Area Path']
-		// throw error if no Area Path
-		if (!areaPath)
-			throw new Exception("Area Path is required by handler: ${this.getClass().getName()}")
-		def project = getProjectFromAreaPath(areaPath)
+		def project = fields['Team Project']
+		// throw error if no Team Project
+		if (!project)
+			throw new Exception("Team Project is required by handler: ${this.getClass().getName()}")
 		//Get work item
 		def wi = workManagementService.getWorkItem(collection, project, id)
 		def wiParent = workManagementService.getParent(collection, project, wi)
