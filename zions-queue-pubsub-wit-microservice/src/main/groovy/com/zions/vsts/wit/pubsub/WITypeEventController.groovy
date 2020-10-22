@@ -42,7 +42,7 @@ public class WITypeEventController implements MessageSenderFanoutTrait,MessageRe
             //detect the work item type involved in the edit
 		 	if (!eventData.resource.revision.fields) return
             String wiType = "${eventData.resource.revision.fields.'System.WorkItemType'}"
-			wiType = wiType.replace(' ','_')
+			wiType = wiType.replace(' ','')
 			boolean isStateChange = (	eventData.resource.fields && 
 										eventData.resource.fields.'System.State' && 
 										eventData.resource.fields.'System.State'.oldValue)
