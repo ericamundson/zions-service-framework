@@ -108,7 +108,7 @@ class CodeManagementService {
 
 	}
 	public def getRepos(String collection, def project) {
-		def query = ['api-version':'4.1']
+		def query = ['api-version':'5.1']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories",
@@ -121,7 +121,7 @@ class CodeManagementService {
 	public def getRepos(String collection, def project, def team) {
 		def teamData = memberManagementService.getTeam(collection, project, team)
 		def repos = []
-		def query = ['api-version':'4.1']
+		def query = ['api-version':'5.1']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories",
@@ -216,11 +216,21 @@ class CodeManagementService {
 
 	}
 	
+	public def getBranchesForReport(def collection, def project, def repo) {
+		def query = [filter:'heads/','api-version':'5.1']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/refs",
+			query: query,
+		)
+		return result
+	}
+
 	public def getBranches(String collection, String project, String repo) {
 		def query = ['api-version':'5.1', 'baseVersionDescriptor.versionType': 'branch']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/stats/branches",
+			uri: "${genericRestClient.getTfsUrl()}/${project}/_apis/git/repositories/${repo}/stats/branches",
 			query: query
 		)
 		return result
