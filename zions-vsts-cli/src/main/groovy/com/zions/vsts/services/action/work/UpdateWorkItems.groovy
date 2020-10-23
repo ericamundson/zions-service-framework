@@ -131,10 +131,10 @@ class UpdateWorkItems implements CliAction {
 	
 	public getChanges(def includes, def id, Row row) {
 		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${id}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+		def rowMap = excelManagementService.getRowMap(row)
 
 		// Add fields
 		if (includes['fields'] != null) {
-			def rowMap = excelManagementService.getRowMap(row)
 			rowMap.each { mapEntry ->
 				def fieldName = mapEntry.key
 				if (fieldName != 'ID') {
@@ -163,14 +163,29 @@ class UpdateWorkItems implements CliAction {
 			}
 		}
 		if (includes['links'] != null) {
-			def project = fields['Team Project']
+			def project = rowMap['Team Project']
 			// throw error if no Team Project
 			if (!project)
 				throw new Exception("Team Project is required to process link updates")
 			// Get work item
-			def wi = workManagementService.getWorkItem(collection,project,id)
+			def wi = workManagementService.getWorkItem(collection,project,id.toString())
 			// Iterate through wi links and update any types that are in the map
-			
+			if (wi.relations) {
+				def count = wi.relations.size()
+				for (int i = 0; i < count; i++) {
+					def linkName = "${wi.relations[i].attributes.name}"
+					if (linkMap[linkName]) {
+						String targetRel = linkMap[linkName]
+						def url = "${wi.relations[i].url}"
+						def idData = [op: 'remove', path: "/relations/$i"]
+						wiData.body.add(idData)
+						if (targetRel.toLowerCase() != 'delete') {
+							idData = [op: 'add', path: '/relations/-', value: [rel: targetRel, url: url, attributes:[comment: "Replaces $linkName link"]]]
+							wiData.body.add(idData)
+						}
+					}
+				}
+			}
 		} 
 		
 		return wiData
