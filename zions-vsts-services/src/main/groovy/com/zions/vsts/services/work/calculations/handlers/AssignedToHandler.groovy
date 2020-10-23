@@ -51,11 +51,10 @@ public class AssignedToHandler extends BaseCalcHandler {
 		// throw error if no closed By
 		if (!closedBy)
 			throw new Exception("Closed By is required by handler: ${this.getClass().getName()}")
-		def areaPath = fields['Area Path']
-		// throw error if no Area Path
-		if (!areaPath)
-			throw new Exception("Area Path is required by handler: ${this.getClass().getName()}")
-		def project = getProjectFromAreaPath(areaPath)
+		def project = fields['Team Project']
+		// throw error if no Team Project
+		if (!project)
+			throw new Exception("Team Project is required by handler: ${this.getClass().getName()}")
 		
 		return workManagementService.deriveOwner(collection, project, closedBy, id)
 	}

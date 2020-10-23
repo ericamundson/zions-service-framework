@@ -45,13 +45,14 @@ public class ReopenCountHandler extends BaseCalcHandler {
 		def id = fields['ID']
 		if (id instanceof Integer)
 			id = id.toString()
-		def areaPath = fields['Area Path']
-		// throw error if no Area Path
-		if (!areaPath)
-			throw new Exception("Area Path is required by handler: ${this.getClass().getName()}")
+		def project = fields['Team Project']
+		// throw error if no Team Project
+		if (!project)
+			throw new Exception("Team Project is required by handler: ${this.getClass().getName()}")
+		// throw error if missing sourcestates and deststates parms
 		if (!sourceStates || !destStates)
 			throw new Exception("Both tfs.sourcestates and tfs.deststates parameters are required by handler: ${this.getClass().getName()}")
-		def project = getProjectFromAreaPath(areaPath)
+
 		//Get work item
 		def history = workManagementService.getWorkItemUpdates(collection, project, id)
 		int reopenCount = 0
