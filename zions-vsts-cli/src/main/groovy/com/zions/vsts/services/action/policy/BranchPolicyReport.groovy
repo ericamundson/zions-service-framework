@@ -117,77 +117,81 @@ class BranchPolicyReport implements CliAction {
 			//System.out.println("  Repository: ${repo.repoName}")
 			//log.debug("  Repository: ${repo.repoName}:")
 			rptFile.text += "<p><b>Repository:</b> <span style=\"background-color:lightblue;\">${repo.repoName}</span></p>"
-			repo.branches.each { branch ->
-				//System.out.println("    Branch: ${branch.branchName}:")
-				def orgName = "ZionsETO"
-				if ("${repo.repoURL}".contains("/eto-dev/")) {
-					orgName = "eto-dev"
-				}
-				rptFile.text += "<p>   &nbsp;&nbsp;<b>Branch:</b> <a href=\"https://dev.azure.com/${orgName}/${projectName}/_settings/repositories?_a=policiesMid&repo=${repo.repoId}&refs=refs/heads/${branch.branchName}\"> ${branch.branchName}</a><br /><ul>"
-				//rptFile.text += "   <div class=\"branchPolicies\">"
-				def policyInfo = branch.policyInfo
-				//System.out.println("      Has Build Policy: ${policyInfo.hasBuildPolicy}")
-				rptFile.text += "<li><b>Has Build Policy:</b>"
-				if (policyInfo.hasBuildPolicy) {
-					rptFile.text += "<span style=\"color:green;\"> Yes</span></li>"
-				} else {
-					rptFile.text += "<span style=\"color:red;\"> No</span></li>"
-				}
+			if (repo.branches.isEmpty()) {
+				rptFile.text += "<p>   &nbsp;&nbsp;<span style=\"background-color:red;\">Repository has no branches or unable to access due to permissions.</span></p>"
+			} else {
+				repo.branches.each { branch ->
+					//System.out.println("    Branch: ${branch.branchName}:")
+					def orgName = "ZionsETO"
+					if ("${repo.repoURL}".contains("/eto-dev/")) {
+						orgName = "eto-dev"
+					}
+					rptFile.text += "<p>   &nbsp;&nbsp;<b>Branch:</b> <a href=\"https://dev.azure.com/${orgName}/${projectName}/_settings/repositories?_a=policiesMid&repo=${repo.repoId}&refs=refs/heads/${branch.branchName}\"> ${branch.branchName}</a><br /><ul>"
+					//rptFile.text += "   <div class=\"branchPolicies\">"
+					def policyInfo = branch.policyInfo
+					//System.out.println("      Has Build Policy: ${policyInfo.hasBuildPolicy}")
+					rptFile.text += "<li><b>Has Build Policy:</b>"
+					if (policyInfo.hasBuildPolicy) {
+						rptFile.text += "<span style=\"color:green;\"> Yes</span></li>"
+					} else {
+						rptFile.text += "<span style=\"color:red;\"> No</span></li>"
+					}
 
-				if (policyInfo.hasBuildPolicy) {
-					//System.out.println("        Validation Build : ${policyInfo.ciBuildName}")
-					rptFile.text += "<ul><li><b>Validation Build:</b> ${policyInfo.ciBuildName}</ul></li>"
-				}
-				//System.out.println("      Has Minimum Reviewers Policy: ${policyInfo.hasMinimumReviewersPolicy}")
-				rptFile.text += "<li><b>Has Minimum Reviewers Policy:</b>"
-				if (policyInfo.hasMinimumReviewersPolicy) {
-					rptFile.text += "<span style=\"color:green;\"> Yes</span></li><ul>"
-					//System.out.println("        Minimum # of Reviewers: ${policyInfo.minimumNumReviewers}")
-					//System.out.println("        Can Approve Own Changes: ${policyInfo.creatorCanApprove}")
-					//System.out.println("        Reset Approvals On Change: ${policyInfo.resetIfChanged}")
-					rptFile.text += "<li><b>Minimum # of Reviewers:</b> ${policyInfo.minimumNumReviewers}</li>"
-					rptFile.text += "<li><b>Can Approve Own Changes:</b> ${policyInfo.creatorCanApprove}</li>"
-					rptFile.text += "<li><b>Reset Approvals On Change:</b> ${policyInfo.resetIfChanged}</li></ul>"
-				} else {
-					rptFile.text += "<span style=\"color:red;\"> No</span></li>"
-				}
-				//System.out.println("      Has Merge Strategy Policy: ${policyInfo.hasMergeStrategyPolicy}")
-				//System.out.println("      Has Linked Work Items Policy: ${policyInfo.hasLinkedWorkItemsPolicy}")
-				//System.out.println("      Has Comment Resolution Policy: ${policyInfo.hasCommentResolutionPolicy}")
-				rptFile.text += "<li><b>Has Merge Strategy Policy:</b>"
-				if (policyInfo.hasMergeStrategyPolicy) {
-					rptFile.text += "<span style=\"color:green;\"> Yes</span><br />"
-					rptFile.text += "&nbsp;&nbsp;&nbsp; <b>Types of merges allowed:</b><ul>"
-					// check for and print allowed merge types
-					if (policyInfo.allowNoFastForward) {
-						rptFile.text += "<li> Basic merge (no fast-forward)</li>"
+					if (policyInfo.hasBuildPolicy) {
+						//System.out.println("        Validation Build : ${policyInfo.ciBuildName}")
+						rptFile.text += "<ul><li><b>Validation Build:</b> ${policyInfo.ciBuildName}</ul></li>"
 					}
-					if (policyInfo.allowSquash) {
-						rptFile.text += "<li> Squash merge</li>"
+					//System.out.println("      Has Minimum Reviewers Policy: ${policyInfo.hasMinimumReviewersPolicy}")
+					rptFile.text += "<li><b>Has Minimum Reviewers Policy:</b>"
+					if (policyInfo.hasMinimumReviewersPolicy) {
+						rptFile.text += "<span style=\"color:green;\"> Yes</span></li><ul>"
+						//System.out.println("        Minimum # of Reviewers: ${policyInfo.minimumNumReviewers}")
+						//System.out.println("        Can Approve Own Changes: ${policyInfo.creatorCanApprove}")
+						//System.out.println("        Reset Approvals On Change: ${policyInfo.resetIfChanged}")
+						rptFile.text += "<li><b>Minimum # of Reviewers:</b> ${policyInfo.minimumNumReviewers}</li>"
+						rptFile.text += "<li><b>Can Approve Own Changes:</b> ${policyInfo.creatorCanApprove}</li>"
+						rptFile.text += "<li><b>Reset Approvals On Change:</b> ${policyInfo.resetIfChanged}</li></ul>"
+					} else {
+						rptFile.text += "<span style=\"color:red;\"> No</span></li>"
 					}
-					if (policyInfo.allowRebase) {
-						rptFile.text += "<li> Rebase and fast-forward</li>"
+					//System.out.println("      Has Merge Strategy Policy: ${policyInfo.hasMergeStrategyPolicy}")
+					//System.out.println("      Has Linked Work Items Policy: ${policyInfo.hasLinkedWorkItemsPolicy}")
+					//System.out.println("      Has Comment Resolution Policy: ${policyInfo.hasCommentResolutionPolicy}")
+					rptFile.text += "<li><b>Has Merge Strategy Policy:</b>"
+					if (policyInfo.hasMergeStrategyPolicy) {
+						rptFile.text += "<span style=\"color:green;\"> Yes</span><br />"
+						rptFile.text += "&nbsp;&nbsp;&nbsp; <b>Types of merges allowed:</b><ul>"
+						// check for and print allowed merge types
+						if (policyInfo.allowNoFastForward) {
+							rptFile.text += "<li> Basic merge (no fast-forward)</li>"
+						}
+						if (policyInfo.allowSquash) {
+							rptFile.text += "<li> Squash merge</li>"
+						}
+						if (policyInfo.allowRebase) {
+							rptFile.text += "<li> Rebase and fast-forward</li>"
+						}
+						if (policyInfo.allowRebaseMerge) {
+							rptFile.text += "<li> Rebase with merge commit</li>"
+						}
+						rptFile.text += "</ul></li>"
+					} else {
+						rptFile.text += "<span style=\"color:red;\"> No</span></li>"
 					}
-					if (policyInfo.allowRebaseMerge) {
-						rptFile.text += "<li> Rebase with merge commit</li>"
+					rptFile.text += "<li><b>Has Linked Work Items Policy:</b>"
+					if (policyInfo.hasLinkedWorkItemsPolicy) {
+						rptFile.text += "<span style=\"color:green;\"> Yes</span></li>"
+					} else {
+						rptFile.text += "<span style=\"color:red;\"> No</span></li>"
 					}
-					rptFile.text += "</ul></li>"
-				} else {
-					rptFile.text += "<span style=\"color:red;\"> No</span></li>"
+					rptFile.text += "<li><b>Has Comment Resolution Policy:</b>"
+					if (policyInfo.hasCommentResolutionPolicy) {
+						rptFile.text += "<span style=\"color:green;\"> Yes</span></li>"
+					} else {
+						rptFile.text += "<span style=\"color:red;\"> No</span></li>"
+					}
+					rptFile.text += "</ul></p>"
 				}
-				rptFile.text += "<li><b>Has Linked Work Items Policy:</b>"
-				if (policyInfo.hasLinkedWorkItemsPolicy) {
-					rptFile.text += "<span style=\"color:green;\"> Yes</span></li>"
-				} else {
-					rptFile.text += "<span style=\"color:red;\"> No</span></li>"
-				}
-				rptFile.text += "<li><b>Has Comment Resolution Policy:</b>"
-				if (policyInfo.hasCommentResolutionPolicy) {
-					rptFile.text += "<span style=\"color:green;\"> Yes</span></li>"
-				} else {
-					rptFile.text += "<span style=\"color:red;\"> No</span></li>"
-				}
-				rptFile.text += "</ul></p>"
 			}
 		}
 		rptFile.text += '''

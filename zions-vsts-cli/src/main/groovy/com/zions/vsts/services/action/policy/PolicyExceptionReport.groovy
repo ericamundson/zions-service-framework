@@ -117,57 +117,62 @@ class PolicyExceptionReport implements CliAction {
 			//System.out.println("  Repository: ${repo.repoName}")
 			//log.debug("  Repository: ${repo.repoName}:")
 			def firstBranch = true
-			repo.branches.each { branch ->
-				//System.out.println("    Branch: ${branch.branchName}:")
-				def orgName = "ZionsETO"
-				if ("${repo.repoURL}".contains("/eto-dev/")) {
-					orgName = "eto-dev"
-				}
-				def policyInfo = branch.policyInfo
-				if (hasPolicyException(policyInfo)) {
-					if (firstBranch) {
-						rptFile.text += "<p><b>Repository:</b> <span style=\"background-color:lightblue;\">${repo.repoName}</span></p>"
-						firstBranch = false
+			if (repo.branches.isEmpty()) {
+				rptFile.text += "<p><b>Repository:</b> <span style=\"background-color:lightblue;\">${repo.repoName}</span></p>"
+				rptFile.text += "<p>   &nbsp;&nbsp;<span style=\"background-color:red;\">Repository has no branches or unable to access due to permissions.</span></p>"
+			} else {
+				repo.branches.each {	 branch ->
+					//System.out.println("    Branch: ${branch.branchName}:")
+					def orgName = "ZionsETO"
+					if ("${repo.repoURL}".contains("/eto-dev/")) {
+						orgName = "eto-dev"
 					}
-					rptFile.text += "<p>   &nbsp;&nbsp;<b>Branch:</b> <a href=\"https://dev.azure.com/${orgName}/${projectName}/_settings/repositories?_a=policiesMid&repo=${repo.repoId}&refs=refs/heads/${branch.branchName}\"> ${branch.branchName}</a><br /><ul>"
-					//rptFile.text += "   <div class=\"branchPolicies\">"
-					if (!policyInfo.hasBuildPolicy) {
-						rptFile.text += "<li><span style=\"color:red;\">Build Policy not enforced</span></li>"
+					def policyInfo = branch.policyInfo
+					if (hasPolicyException(policyInfo)) {
+						if (firstBranch) {
+							rptFile.text += "<p><b>Repository:</b> <span style=\"background-color:lightblue;\">${repo.repoName}</span></p>"
+							firstBranch = false
+						}
+						rptFile.text += "<p>   &nbsp;&nbsp;<b>Branch:</b> <a href=\"https://dev.azure.com/${orgName}/${projectName}/_settings/repositories?_a=policiesMid&repo=${repo.repoId}&refs=refs/heads/${branch.branchName}\"> ${branch.branchName}</a><br /><ul>"
+						//rptFile.text += "   <div class=\"branchPolicies\">"
+						if (!policyInfo.hasBuildPolicy) {
+							rptFile.text += "<li><span style=\"color:red;\">Build Policy not enforced</span></li>"
+						}
+						if (!policyInfo.hasMinimumReviewersPolicy) {
+							rptFile.text += "<li><span style=\"color:red;\">Minimum Reviewers Policy not enforced</span></li>"
+						} else {
+							if ("${policyInfo.minimumNumReviewers}".toInteger() < 1) {
+								rptFile.text += "<li><span style=\"color:red;\">Minimum Reviewers Policy has invalid # of reviewers. Minimum should be 1</span>"
+							}
+							if (policyInfo.creatorCanApprove) {
+								rptFile.text += "<li><span style=\"color:red;\">Creator should not be able to approve their own Pull Request</span>"
+							}
+							if (!policyInfo.resetIfChanged) {
+								rptFile.text += "<li><span style=\"color:red;\">Reset Approvals On Change should be set to True</span>"
+							}
+						}
+						if (!policyInfo.hasMergeStrategyPolicy) {
+							rptFile.text += "<li><span style=\"color:red;\">Merge Strategy Policy not enforced</span></li>"
+						} else {
+							// check for and allowed merge types
+							if (!policyInfo.allowNoFastForward) {
+								rptFile.text += "<li><span style=\"color:red;\"> Basic (no fast-forward) merge strategy should be allowed</span></li>"
+							}
+							if (policyInfo.allowRebase) {
+								rptFile.text += "<li><span style=\"color:red;\"> Rebase and Fast-forward merge strategy is allowed.</span></li>"
+							}
+							if (policyInfo.allowRebaseMerge) {
+								rptFile.text += "<li><span style=\"color:red;\"> Rebase with Merge Commit merge strategy is allowed.</span></li>"
+							}
+						}
+						if (!policyInfo.hasLinkedWorkItemsPolicy) {
+							rptFile.text += "<li><span style=\"color:red;\">Linked Work Items Policy not enforced</span></li>"
+						}
+						if (!policyInfo.hasCommentResolutionPolicy) {
+							rptFile.text += "<li><span style=\"color:red;\">Comment Resolution Policy not enforced</span></li>"
+						}
+						rptFile.text += "</ul></p>"
 					}
-					if (!policyInfo.hasMinimumReviewersPolicy) {
-						rptFile.text += "<li><span style=\"color:red;\">Minimum Reviewers Policy not enforced</span></li>"
-					} else {
-						if ("${policyInfo.minimumNumReviewers}".toInteger() < 1) {
-							rptFile.text += "<li><span style=\"color:red;\">Minimum Reviewers Policy has invalid # of reviewers. Minimum should be 1</span>"
-						}
-						if (policyInfo.creatorCanApprove) {
-							rptFile.text += "<li><span style=\"color:red;\">Creator should not be able to approve their own Pull Request</span>"
-						}
-						if (!policyInfo.resetIfChanged) {
-							rptFile.text += "<li><span style=\"color:red;\">Reset Approvals On Change should be set to True</span>"
-						}
-					}
-					if (!policyInfo.hasMergeStrategyPolicy) {
-						rptFile.text += "<li><span style=\"color:red;\">Merge Strategy Policy not enforced</span></li>"
-					} else {
-						// check for and allowed merge types
-						if (!policyInfo.allowNoFastForward) {
-							rptFile.text += "<li><span style=\"color:red;\"> Basic (no fast-forward) merge strategy should be allowed</span></li>"
-						}
-						if (policyInfo.allowRebase) {
-							rptFile.text += "<li><span style=\"color:red;\"> Rebase and Fast-forward merge strategy is allowed.</span></li>"
-						}
-						if (policyInfo.allowRebaseMerge) {
-							rptFile.text += "<li><span style=\"color:red;\"> Rebase with Merge Commit merge strategy is allowed.</span></li>"
-						}
-					}
-					if (!policyInfo.hasLinkedWorkItemsPolicy) {
-						rptFile.text += "<li><span style=\"color:red;\">Linked Work Items Policy not enforced</span></li>"
-					}
-					if (!policyInfo.hasCommentResolutionPolicy) {
-						rptFile.text += "<li><span style=\"color:red;\">Comment Resolution Policy not enforced</span></li>"
-					}
-					rptFile.text += "</ul></p>"
 				}
 			}
 		}

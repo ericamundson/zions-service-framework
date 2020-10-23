@@ -65,6 +65,7 @@ if ("${context}" == 'microservices')	{
 	include ':zions-content-microservice'
 	include ':zions-queuing-microservice'
 	include ':zions-queue-pubsub-microservice'
+	include ':zions-queue-pubsub-wit-microservice'
 	include ':zions-vsts-rollup-microservice'
 	include ':zions-vsts-parent-activation-microservice'
 	include ':zions-vsts-setowner-microservice'

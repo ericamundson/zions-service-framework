@@ -4,7 +4,7 @@
       <description>This service runs zions-vsts-parent-change-microservice.</description>
       <executable>java</executable>
       
-      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-parent-change-microservice.jar" --queue.name=WorkItem-parentchange-queue --ado.topics=workitem.updated --tfs.collection={{tfs.collection}} --tfs.url=https://dev.azure.com --logging.file="{{deploy.path}}/zions-vsts-parent-change-microservice.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-parent-change-microservice.jar" --queue.name=WorkItem-parentchange-queue --ado.topics=Component,"Sub Component",Epic,Feature,"User Story" --tfs.collection={{tfs.collection}} --tfs.url=https://dev.azure.com --logging.file="{{deploy.path}}/zions-vsts-parent-change-microservice.log" </arguments>
  	  
       <logmode>rotate</logmode>
       <logpath>{{deploy.path}}\wrapper-logs\zions-vsts-parent-change-microservice</logpath>

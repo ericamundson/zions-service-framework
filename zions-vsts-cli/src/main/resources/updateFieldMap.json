@@ -1,6 +1,8 @@
 {
 "ID": {"AdoId": "System.ID"},
+"Team Project": {"AdoId": "System.TeamProject"},
 "Area Path": {"AdoId": "System.AreaPath"},
+"Iteration Path": {"AdoId": "System.IterationPath"},
 "Work Item Type": {"AdoId": "System.WorkItemType"},
 "Title": {"AdoId": "System.Title"},
 "Reason": {"AdoId": "System.Reason"},
