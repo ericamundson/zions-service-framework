@@ -38,7 +38,7 @@ import groovy.json.JsonBuilder
  * </ul>
  * 
  * <p><b>Design:</b></p>
- * <img src="SetupTFSWorkitemIterations.png"/>
+ * <img src="SetupTFSWorkitemIterations.svg"/>
  * 
  * @author z091182
  * 

@@ -11,11 +11,11 @@ import groovy.util.logging.Slf4j
 /**
  * Handle restart on processing to ADO.
  * <p><b>Class Design:</b></p>
- * <img src="RestartManagmentService.png"/>
+ * <img src="RestartManagmentService.svg"/>
  * 
  * @author z091182
  *
- *@startuml RestartManagmentService.png
+ *@startuml RestartManagmentService.svg
  *class RestartManagementService {
  *+ def processPhases(Closure closure)
  *}
@@ -82,9 +82,9 @@ class RestartManagementService implements IRestartManagementService {
 	 * Handle processing phases
 	 * 
 	 * <p><b>Flow:</b></p>
-	 * <img src="RestartManagementService_processPhases_sequence_diagram.png"/>
+	 * <img src="RestartManagementService_processPhases_sequence_diagram.svg"/>
 	 * 
-	 * @startuml RestartManagementService_processPhases_sequence_diagram.png
+	 * @startuml RestartManagementService_processPhases_sequence_diagram.svg
 	 * participant "RestartManagementService:this" as this
 	 * participant "Closure:closure" as closure
 	 * participant "CheckpointManagementService:checkpointManagementService" as checkpointManagementService

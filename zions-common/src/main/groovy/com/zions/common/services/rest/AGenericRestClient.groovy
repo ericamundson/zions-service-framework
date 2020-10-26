@@ -14,7 +14,7 @@ import groovyx.net.http.RESTClient
  * Main implementation for all ReST interaction within framework.
  * 
  * <p><b>Design:</b></p>
- * <img src="AGenericRestClient.png"/>
+ * <img src="AGenericRestClient.svg"/>
  * 
  * @author z091182
  *

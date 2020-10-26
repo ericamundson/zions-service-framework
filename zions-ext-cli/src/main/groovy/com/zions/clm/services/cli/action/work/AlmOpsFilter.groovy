@@ -8,7 +8,7 @@ import com.zions.common.services.query.IFilter
  * Work item filter related to ALMOps conversion
  * 
  * <p><b>Design:</b></p>
- * <img src="AlmOpsFilter.png"/>
+ * <img src="AlmOpsFilter.svg"/>
  * 
  * @author z091182
  *

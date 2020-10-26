@@ -13,7 +13,7 @@ import groovyx.net.http.ContentType
  * Handles sending files to ADO to be used as attachments.
  * 
  * <p><b>Design:</b></p>
- * <img src="FileManagementService.png"/>
+ * <img src="FileManagementService.svg"/>
  * 
  * @author z091182
  *

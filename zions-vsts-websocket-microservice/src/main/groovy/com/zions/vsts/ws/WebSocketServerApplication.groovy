@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
  * 
  * @author z091182
  * 
- * @startuml ms-component-diagram.png
+ * @startuml ms-component-diagram.svg
  * cloud AzureDevOps as "Azure DevOps" {
  * 	  component WebHook as "Web Hook"
  * }

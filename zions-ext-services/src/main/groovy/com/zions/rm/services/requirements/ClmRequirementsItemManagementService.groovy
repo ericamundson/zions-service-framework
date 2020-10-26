@@ -21,7 +21,7 @@ import groovyx.net.http.ContentType
  * Handles all of the behavior to pull RM data for setting up output data to be sent to ADO to create/update work items.
  * 
  * Design<p/>
- * <img src="ClmRequirementsItemManagementService.png"/>
+ * <img src="ClmRequirementsItemManagementService.svg"/>
  * 
  * @author z091182
  * 

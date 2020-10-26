@@ -2,7 +2,5 @@
 /bin/
 /build/
 /testbin/
-/gitPublish/
-/batch_out/
 .classpath
 .project

@@ -5,7 +5,17 @@ bootJar {
 	//version =  "${version}"
 }
 
+confluence {
+	pages {
+		page {
+			parentTitle  'DS: COE'
+			title "DS: COE: Pipeline Builder CLI"
+			srcFile  file('src/markdown/coe-cli.md')
+			labels = ['coe-cli']
+		}
 
+	}
+}
 dependencies {
 	compile project(':zions-pipeline-services')
 	compile project(':zions-vsts-services')

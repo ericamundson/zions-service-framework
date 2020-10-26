@@ -57,13 +57,13 @@ import groovy.util.logging.Slf4j
  * 
  * 
  * <p><b>Design:</b></p>
- * <img src="TranslateRTCWorkToVSTSWork.png"/>
+ * <img src="TranslateRTCWorkToVSTSWork.svg"/>
  * <p><b>Flow:</b></p>
- * <img src="TranslateRTCWorkToVSTSWork_sequence_diagram.png"/>
+ * <img src="TranslateRTCWorkToVSTSWork_sequence_diagram.svg"/>
  * 
  * @author z091182
  *
- * @startuml TranslateRTCWorkToVSTSWork.png
+ * @startuml TranslateRTCWorkToVSTSWork.svg
  * annotation Autowired
  * annotation Component
  * class TranslateRTCWorkToVSTSWork [[java:com.zions.clm.services.cli.action.work.TranslateRTCWorkToVSTSWork]] {
@@ -93,7 +93,7 @@ import groovy.util.logging.Slf4j
  * TranslateRTCWorkToVSTSWork --> com.zions.clm.services.ccm.workitem.attachments.AttachmentsManagementService: @Autowired attachmentsManagementService
  * @enduml
  * 
- * @startuml TranslateRTCWorkToVSTSWork_sequence_diagram.png
+ * @startuml TranslateRTCWorkToVSTSWork_sequence_diagram.svg
  * 
  * participant CliApplication
  * CliApplication -> TranslateRTCWorkToVSTSWork: validate(ApplicationArguments args)
@@ -175,11 +175,11 @@ class TranslateRTCWorkToVSTSWork implements CliAction {
 	 * 
 	 * 
 	 * <p><b>Flow:</b></p>
-	 * <img src="TranslateRTCWorkToVSTSWork_execute_flow.png"/>
+	 * <img src="TranslateRTCWorkToVSTSWork_execute_flow.svg"/>
 	 *  
 	 * @see com.zions.common.services.cli.action.CliAction#execute(org.springframework.boot.ApplicationArguments)
 	 * 
-	 * @startuml TranslateRTCWorkToVSTSWork_execute_flow.png
+	 * @startuml TranslateRTCWorkToVSTSWork_execute_flow.svg
 	 * participant CLI 
 	 * CLI -> TranslateRTCWorkToVSTSWork: execute(applicationArguments)
 	 * @enduml

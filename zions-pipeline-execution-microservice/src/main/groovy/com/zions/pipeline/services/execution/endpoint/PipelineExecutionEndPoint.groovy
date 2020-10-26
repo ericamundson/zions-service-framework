@@ -22,8 +22,8 @@ import com.zions.pipeline.services.db.PullRequestCompletedRepository
 import com.zions.pipeline.services.db.PullRequestCompleted
 
 /**
- * ReST Controller for TFS Policy Management service. 
- * @author James McNabb
+ * ReST Controller for pipeline yaml service. 
+ * @author z091182
  * 
  */
 @Slf4j

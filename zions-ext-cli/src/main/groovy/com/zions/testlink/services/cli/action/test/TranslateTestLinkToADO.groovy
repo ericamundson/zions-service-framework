@@ -52,12 +52,12 @@ import groovy.xml.XmlUtil
  * </ul>
  * 
  * <p><b>Design:</b></p>
- * <img src="TranslateTestLinkToADO_class_diagram.png"/>
+ * <img src="TranslateTestLinkToADO_class_diagram.svg"/>
  * <p><b>Flow:</b></p>
- * <img src="TranslateTestLinkToADO_sequence_diagram.png"/>
+ * <img src="TranslateTestLinkToADO_sequence_diagram.svg"/>
  * @author z091182
  * 
- * @startuml TranslateTestLinkToADO_class_diagram.png
+ * @startuml TranslateTestLinkToADO_class_diagram.svg
  * 
  * annotation Autowired
  * annotation Component
@@ -99,7 +99,7 @@ import groovy.xml.XmlUtil
  * TranslateTestLinkToADO --> com.zions.common.services.restart.IRestartManagementService: @Autowired restartManagementService
  * @enduml
  * 
- * @startuml TranslateTestLinkToADO_sequence_diagram.png
+ * @startuml TranslateTestLinkToADO_sequence_diagram.svg
  * participant CliApplication
  * CliApplication -> TranslateTestLinkToADO: validate(ApplicationArguments args)
  * CliApplication -> TranslateTestLinkToADO: execute(ApplicationArguments args)
