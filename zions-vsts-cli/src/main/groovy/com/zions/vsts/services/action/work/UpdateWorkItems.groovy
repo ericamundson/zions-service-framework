@@ -36,10 +36,10 @@ class UpdateWorkItems implements CliAction {
 	@Autowired
 	CalculationManagementService fieldCalcManager
 
-	@Value('${field.map}')
+	@Value('${field.map:}')
 	String fieldMapFilename
 	
-	@Value('${link.map}')
+	@Value('${link.map:}')
 	String linkMapFilename
 
 	@Value('${tfs.collection:}')
@@ -50,8 +50,8 @@ class UpdateWorkItems implements CliAction {
 
 	ChangeListManager clManager
 	
-	def fieldMap
-	def linkMap
+	def fieldMap = [:]
+	def linkMap = [:]
 
 	public def execute(ApplicationArguments data) {
 		def includes = [:]
@@ -64,8 +64,8 @@ class UpdateWorkItems implements CliAction {
 		} catch (e) {}
 
 		def inFilePath = data.getOptionValues('import.file')[0]
-		fieldMap = getMap(fieldMapFilename)
-		linkMap = getMap(linkMapFilename)
+		if (fieldMapFilename) fieldMap = getMap(fieldMapFilename)
+		if (linkMapFilename) linkMap = getMap(linkMapFilename)
 		
 		// Open input Excel doc
 		if (!excelManagementService.openExcelFile(inFilePath)) return
