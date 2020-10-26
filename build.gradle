@@ -98,18 +98,18 @@ allprojects {
 				password = "${project.secretData.data.data['nexus.docker.password']}"
 			}
 		}
-	}
-	String confluenceauth = "${project.secretData.data.data['confluence.user']}:${project.secretData.data.data['confluence.password']}".bytes.encodeBase64()
-
-	confluence {
-		authentication "${confluenceauth}"
-		//restApiUrl 'http://utmvpw0054:8090/rest/api/'
-		restApiUrl 'https://zionsconfluence.cs.zionsbank.com/rest/api/'
-		spaceKey 'SCM'
-		sslTrustAll true
-		//pageVariables = ['project.name': project.name]
-		parseTimeout 2000L
+		String confluenceauth = "${project.secretData.data.data['confluence.user']}:${project.secretData.data.data['confluence.password']}".bytes.encodeBase64()
 	
+		confluence {
+			authentication "${confluenceauth}"
+			//restApiUrl 'http://utmvpw0054:8090/rest/api/'
+			restApiUrl 'https://zionsconfluence.cs.zionsbank.com/rest/api/'
+			spaceKey 'SCM'
+			sslTrustAll true
+			//pageVariables = ['project.name': project.name]
+			parseTimeout 2000L
+		
+		}
 	}
 
 	// Start generatation of framework documentation
