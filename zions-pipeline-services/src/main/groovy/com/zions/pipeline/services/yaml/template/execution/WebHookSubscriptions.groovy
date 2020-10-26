@@ -17,7 +17,7 @@ import com.zions.pipeline.services.mixins.ReadSecretsTrait
  *   eventTypes: git.push
  *   consumerUrl: https://releaseengineeringprovisioner-zionsbancorporation.msappproxy.net
  *   #optional Vault key
- *   consumerName: ${webhook.user}
+ *   consumerUserName: ${webhook.user}
  *   #optional Vault key
  *   consumerPassword: ${webook.password}
  *   publisherInputs:

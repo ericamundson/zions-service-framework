@@ -330,62 +330,69 @@ public class PolicyManagementService {
 			repoObj.repoURL = "${repo.url}"
 			def branchColl = []
 			repoObj.branches = branchColl
-			def branches = codeManagementService.getBranches(collection, project, repo)
-			branches.value.each { branch ->
-				String branchName = "${branch.name}".toLowerCase()
-				if (branchName.startsWith("refs/heads/master") || 
-					branchName.startsWith("refs/heads/release") ||
-					branchName.startsWith("refs/heads/feature/ifb") ||
-					branchName.startsWith("refs/heads/ifb/"))
-				{
-					String bName = "${branch.name}".substring("refs/heads/".length())
-					def branchObj = [branchName: bName]
-					
-					def policyObj = [
-							hasBuildPolicy: false,
-							hasMinimumReviewersPolicy: false,
-							hasLinkedWorkItemsPolicy: false,
-							hasMergeStrategyPolicy: false,
-							hasCommentResolutionPolicy: false]
-					// check for policies on branch
-					log.debug("PolicyManagementService::getBranchPolicyReport -- Getting branch policies for branch " + bName + " ...")
-					def policies = getBranchPolicies(project, repo.id, branchName)
-					policies.value.each { policy ->
-						// check for build validation policy
-						if ("${policy.type.id}" == "0609b952-1397-4640-95ec-e00a01b2c241") {
-							policyObj.hasBuildPolicy = true
-							// get build def for CI build and 
-							def build = buildManagementService.getBuildById(collection, project, policy.settings.buildDefinitionId)
-							if (build == null) {
-								//
-							} else {
-								policyObj.ciBuildName = "${build.name}"
+			def branches = codeManagementService.getBranchesForReport(collection, project, repo)
+			//def branches = codeManagementService.getBranches(collection, "${project.id}", "${repo.id}")
+			if (branches == null) {
+				// error or do not permission
+				log.info("An error occurred or no permissions to get branches for ${repo.name}...")
+			} else {
+				branches.value.each { branch ->
+					String branchName = "${branch.name}".toLowerCase()
+					if (branchName.startsWith("refs/heads/master") || 
+						branchName.startsWith("refs/heads/release") ||
+						branchName.startsWith("refs/heads/feature/ifb") ||
+						branchName.startsWith("refs/heads/ifb/"))
+					{
+						String bName = "${branch.name}".substring("refs/heads/".length())
+						def branchObj = [branchName: bName]
+						
+						def policyObj = [
+								hasBuildPolicy: false,
+								hasMinimumReviewersPolicy: false,
+								hasLinkedWorkItemsPolicy: false,
+								hasMergeStrategyPolicy: false,
+								hasCommentResolutionPolicy: false]
+						// check for policies on branch
+						log.debug("PolicyManagementService::getBranchPolicyReport -- Getting branch policies for branch " + bName + " ...")
+						def policies = getBranchPolicies(project, repo.id, branchName)
+						policies.value.each { policy ->
+							// check for build validation policy
+							if ("${policy.type.id}" == "0609b952-1397-4640-95ec-e00a01b2c241") {
+								policyObj.hasBuildPolicy = true
+								// get build def for CI build and 
+								def build = buildManagementService.getBuildById(collection, project, policy.settings.buildDefinitionId)
+								if (build == null) {
+									log.error("Build definition (ID) " + policy.settings.buildDefinitionId + " for build validation policy NOT FOUND.")
+									policyObj.ciBuildName = "Build Def NOT FOUND"
+								} else {
+									policyObj.ciBuildName = "${build.name}"
+								}
+							} else
+							if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd") {
+								policyObj.hasMinimumReviewersPolicy = true
+								policyObj.minimumNumReviewers = policy.settings.minimumApproverCount
+								policyObj.creatorCanApprove = policy.settings.creatorVoteCounts
+								policyObj.allowDownvotes = policy.settings.allowDownvotes
+								policyObj.resetIfChanged = policy.settings.resetOnSourcePush
+							} else
+							if ("${policy.type.id}" == "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e") {
+								policyObj.hasLinkedWorkItemsPolicy = true
+							} else
+							if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab") {
+								policyObj.hasMergeStrategyPolicy = true
+								// what's the merge strategy -- NOT in settings ??
+								policyObj.allowNoFastForward = policy.settings.allowNoFastForward
+								policyObj.allowSquash = policy.settings.allowSquash
+								policyObj.allowRebase = policy.settings.allowRebase
+								policyObj.allowRebaseMerge = policy.settings.allowRebaseMerge
+							} else
+							if ("${policy.type.id}" == "c6a1889d-b943-4856-b76f-9e46bb6b0df2") {
+								policyObj.hasCommentResolutionPolicy = true
 							}
-						} else
-						if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd") {
-							policyObj.hasMinimumReviewersPolicy = true
-							policyObj.minimumNumReviewers = policy.settings.minimumApproverCount
-							policyObj.creatorCanApprove = policy.settings.creatorVoteCounts
-							policyObj.allowDownvotes = policy.settings.allowDownvotes
-							policyObj.resetIfChanged = policy.settings.resetOnSourcePush
-						} else
-						if ("${policy.type.id}" == "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e") {
-							policyObj.hasLinkedWorkItemsPolicy = true
-						} else
-						if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab") {
-							policyObj.hasMergeStrategyPolicy = true
-							// what's the merge strategy -- NOT in settings ??
-							policyObj.allowNoFastForward = policy.settings.allowNoFastForward
-							policyObj.allowSquash = policy.settings.allowSquash
-							policyObj.allowRebase = policy.settings.allowRebase
-							policyObj.allowRebaseMerge = policy.settings.allowRebaseMerge
-						} else
-						if ("${policy.type.id}" == "c6a1889d-b943-4856-b76f-9e46bb6b0df2") {
-							policyObj.hasCommentResolutionPolicy = true
 						}
+						branchObj.policyInfo = policyObj
+						branchColl.add(branchObj)
 					}
-					branchObj.policyInfo = policyObj
-					branchColl.add(branchObj)
 				}
 			}
 			repoColl.add(repoObj)
@@ -407,60 +414,66 @@ public class PolicyManagementService {
 			repoObj.repoURL = "${repo.url}"
 			def branchColl = []
 			repoObj.branches = branchColl
-			def branches = codeManagementService.getBranches(collection, project, repo)
-			branches.value.each { branch ->
-				String branchName = "${branch.name}".toLowerCase()
-				if (branchName.startsWith("refs/heads/master") || 
-					branchName.startsWith("refs/heads/release"))
-				{
-					String bName = "${branch.name}".substring("refs/heads/".length())
-					def branchObj = [branchName: bName]
-					
-					def policyObj = [
-							hasBuildPolicy: false,
-							hasMinimumReviewersPolicy: false,
-							hasLinkedWorkItemsPolicy: false,
-							hasMergeStrategyPolicy: false,
-							hasCommentResolutionPolicy: false]
-					// check for policies on branch
-					log.debug("PolicyManagementService::getPolicyExceptionReport -- Getting branch policies for branch " + bName + " ...")
-					def policies = getBranchPolicies(project, repo.id, branchName)
-					policies.value.each { policy ->
-						// check for build validation policy
-						if ("${policy.type.id}" == "0609b952-1397-4640-95ec-e00a01b2c241") {
-							policyObj.hasBuildPolicy = true
-							// get build def for CI build and 
-							def build = buildManagementService.getBuildById(collection, project, policy.settings.buildDefinitionId)
-							if (build == null) {
-								//
-							} else {
-								policyObj.ciBuildName = "${build.name}"
+			def branches = codeManagementService.getBranchesForReport(collection, project, repo)
+			//def branches = codeManagementService.getBranches(collection, "${project.id}", "${repo.id}")
+			if (branches == null) {
+				// error or do not permission
+				log.info("An error occurred or no permissions to get branches for ${repo.name}...")
+			} else {
+				branches.value.each { branch ->
+					String branchName = "${branch.name}".toLowerCase()
+					if (branchName.startsWith("refs/heads/master") || 
+						branchName.startsWith("refs/heads/release"))
+					{
+						String bName = "${branch.name}".substring("refs/heads/".length())
+						def branchObj = [branchName: bName]
+						
+						def policyObj = [
+								hasBuildPolicy: false,
+								hasMinimumReviewersPolicy: false,
+								hasLinkedWorkItemsPolicy: false,
+								hasMergeStrategyPolicy: false,
+								hasCommentResolutionPolicy: false]
+						// check for policies on branch
+						log.debug("PolicyManagementService::getPolicyExceptionReport -- Getting branch policies for branch " + bName + " ...")
+						def policies = getBranchPolicies(project, repo.id, branchName)
+						policies.value.each { policy ->
+							// check for build validation policy
+							if ("${policy.type.id}" == "0609b952-1397-4640-95ec-e00a01b2c241") {
+								policyObj.hasBuildPolicy = true
+								// get build def for CI build and 
+								def build = buildManagementService.getBuildById(collection, project, policy.settings.buildDefinitionId)
+								if (build == null) {
+									//
+								} else {
+									policyObj.ciBuildName = "${build.name}"
+								}
+							} else
+							if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd") {
+								policyObj.hasMinimumReviewersPolicy = true
+								policyObj.minimumNumReviewers = policy.settings.minimumApproverCount
+								policyObj.creatorCanApprove = policy.settings.creatorVoteCounts
+								policyObj.allowDownvotes = policy.settings.allowDownvotes
+								policyObj.resetIfChanged = policy.settings.resetOnSourcePush
+							} else
+							if ("${policy.type.id}" == "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e") {
+								policyObj.hasLinkedWorkItemsPolicy = true
+							} else
+							if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab") {
+								policyObj.hasMergeStrategyPolicy = true
+								// what's the merge strategy -- NOT in settings ??
+								policyObj.allowNoFastForward = policy.settings.allowNoFastForward
+								policyObj.allowSquash = policy.settings.allowSquash
+								policyObj.allowRebase = policy.settings.allowRebase
+								policyObj.allowRebaseMerge = policy.settings.allowRebaseMerge
+							} else
+							if ("${policy.type.id}" == "c6a1889d-b943-4856-b76f-9e46bb6b0df2") {
+								policyObj.hasCommentResolutionPolicy = true
 							}
-						} else
-						if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd") {
-							policyObj.hasMinimumReviewersPolicy = true
-							policyObj.minimumNumReviewers = policy.settings.minimumApproverCount
-							policyObj.creatorCanApprove = policy.settings.creatorVoteCounts
-							policyObj.allowDownvotes = policy.settings.allowDownvotes
-							policyObj.resetIfChanged = policy.settings.resetOnSourcePush
-						} else
-						if ("${policy.type.id}" == "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e") {
-							policyObj.hasLinkedWorkItemsPolicy = true
-						} else
-						if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab") {
-							policyObj.hasMergeStrategyPolicy = true
-							// what's the merge strategy -- NOT in settings ??
-							policyObj.allowNoFastForward = policy.settings.allowNoFastForward
-							policyObj.allowSquash = policy.settings.allowSquash
-							policyObj.allowRebase = policy.settings.allowRebase
-							policyObj.allowRebaseMerge = policy.settings.allowRebaseMerge
-						} else
-						if ("${policy.type.id}" == "c6a1889d-b943-4856-b76f-9e46bb6b0df2") {
-							policyObj.hasCommentResolutionPolicy = true
 						}
+						branchObj.policyInfo = policyObj
+						branchColl.add(branchObj)
 					}
-					branchObj.policyInfo = policyObj
-					branchColl.add(branchObj)
 				}
 			}
 			repoColl.add(repoObj)

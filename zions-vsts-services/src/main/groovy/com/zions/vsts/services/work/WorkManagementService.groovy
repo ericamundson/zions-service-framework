@@ -643,10 +643,27 @@ class WorkManagementService {
 		return result
 
 	}
+	
+	def getWorkItemUpdates(String collection, String project, String id) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		//def query = [query: aquery]
+		//String body = new JsonBuilder(query).toPrettyString()
+		def result = genericRestClient.get(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}/updates",
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '6.0', "\$expand": 'All']
+				)
+		return result
+
+	}
 
 	def getChildren(String collection, String project, String id) {
 		def pwi = getWorkItem(collection, project, id)
 		def childIds = []
+		if (!pwi.relations) return childIds // no children
 		pwi.relations.each { relation ->
 			String rel = "${relation.rel}"
 			String url = "${relation.url}"
@@ -729,7 +746,20 @@ class WorkManagementService {
 		return result
 
 	}
-	
+	def deriveOwner(String collection, String project, String closedBy, String id) {
+		if (closedBy && closedBy != 'null' && closedBy != '' && closedBy.toLowerCase().indexOf('svc-') == -1)
+			return closedBy
+		else {
+			//Get work item
+			def wi = getWorkItem(collection, project, id)
+			def wiParent = getParent(collection, project, wi)
+			if (wiParent)
+				return wiParent.fields['System.AssignedTo'].uniqueName
+			else
+				return null
+		}
+	}
+
 	def deleteTestItem(String collection, String project, def wi) {
 		String changedBy = "${wi.fields.'System.ChangedBy'.displayName}".toLowerCase()
 		if (!changedBy.startsWith('svc-cloud-vs')) return null

@@ -1,0 +1,9 @@
+executables:
+- name: zions-queue-pubsub-wit-microservice-release
+  type: buildDefinition
+  context: zionseto
+  project: DTS
+  queue: 'On-Prem Production'
+  repository:
+    name: zions-service-framework
+  buildyaml: zions-queue-pubsub-wit-microservice/pipeline/ado/microservice-release.yaml
