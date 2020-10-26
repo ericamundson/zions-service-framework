@@ -110,6 +110,7 @@ allprojects {
 			parseTimeout 2000L
 		
 		}
+		System.setProperty('org.ajoberstar.grgit.auth.username', "${project.secretData.data.data['doc.token']}")
 	}
 
 	// Start generatation of framework documentation
@@ -138,7 +139,6 @@ allprojects {
 
 
 	}
-	System.setProperty('org.ajoberstar.grgit.auth.username', "${project.secretData.data.data['doc.token']}")
 	gitPublish {
 		// where to publish to (repo must exist)
 		repoUri = "https://dev.azure.com/ZionsETO/DTS/_git/zions-service-framework-doc"
