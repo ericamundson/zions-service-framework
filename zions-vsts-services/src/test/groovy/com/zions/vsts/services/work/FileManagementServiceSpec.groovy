@@ -43,7 +43,7 @@ class FileManagementServiceSpec extends Specification {
 		1 * genericRestClient.rateLimitPost(_, _) >> [url: 'https://an.azure.location']
 		
 		when: 'call method under test ensureAttachments'
-		def wiUpdate = underTest.ensureAttachments('', '', 'aId', [[file: "stuff".bytes, fileName: 'stuff.txt', comment: "Added dumb.png"]])
+		def wiUpdate = underTest.ensureAttachments('', '', 'aId', [[file: "stuff".bytes, fileName: 'stuff.txt', comment: "Added dumb.svg"]])
 		
 		then: 'a valid work item change request must be returned.'
 		wiUpdate.body.size() > 1

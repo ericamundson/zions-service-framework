@@ -23,26 +23,21 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
 /**
  * WebSocket micro-service main class.
  * 
+ * <img src="ms-component-diagram.svg"/>
  * @author z091182
  * 
- * @startuml ms-component-diagram.png
+ * @startuml ms-component-diagram.svg
  * cloud AzureDevOps as "Azure DevOps" {
- * 	  component WebHook as "Web Hook"
- * }
- * cloud AzureCloud as "Azure Kubernetes Docker" {
- *    component ZionsWSMicroService as "[[https://dev.azure.com/ZionsETO/DTS/_git/zions-service-framework?path=%2Fzions-vsts-websocket-microservice&version=GBmaster zions-ado-websocket-microservice]] provides pub-sub of ADO events."
- *    WebHook --> ZionsWSMicroService: "Provides single endpoint for all ADO event registrations."
+ * 	  component ADOPipelineTask as "Pipeline Task"
  * }
  * 
- * cloud ZionsOrAzure as "Zions or Azure Kubernetes docker" {
- *   component WorkRollupMS as "[[https://dev.azure.com/ZionsETO/DTS/_git/zions-service-framework?path=%2Fzions-vsts-rollup-microservice&version=GBmaster ALMOps Work Rollup micro-service]]"
- *   component PolicyMS as "[[https://dev.azure.com/ZionsETO/DTS/_git/zions-service-framework?path=%2Fzions-vsts-policy-microservice&version=GBmaster Release Engineering GIT Policy micro-service]]"
+ * cloud ZionsOrAzure as "Rancher Kubernetes docker" {
+ *    component PipelineEventPubSubMicroService as "[[https://dev.azure.com/ZionsETO/DTS/_git/zions-service-framework?path=%2Fzions-pipeline-event-pubsub-microservice%2Fsrc%2Fmain%2Fgroovy%2Fcom%2Fzions%2Fvsts%2Fpubsub%2FEventController.groovy zions-pipeline-event-pubsub-microservice]] provides pub-sub of internal pipeline events."
+ *    ADOPipelineTask --> PipelineEventPubSubMicroService: "Provides single endpoint for all pipeline command action event registrations."
+ *   component CommandExecutionMicroService as "Command Execution Micro Service"
  *   
- *   WorkRollupMS --> ZionsWSMicroService: "Subscribe to work item change events to handle any work effort rollup."
- *   PolicyMS --> ZionsWSMicroService: "Subscribe to GIT change events that require policy enforcement."
+ *   CommandExecutionMicroService --> PipelineEventPubSubMicroService: "Subscribe to pipeline actions to execute ADO/XLD/XLR behaviors"
  *   
- *   WorkRollupMS --> AzureDevOps: "Communicate Feature level effort."
- *   PolicyMS --> AzureDevOps: "Communicate any GIT policy changes
  * }
  *
  * 

@@ -24,7 +24,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class MicroserviceAdmin implements CliAction, CliRunnerTrait {
 	@Value('${services.dir:}')
-	File servicesDir
+	String servicesDir
 	
 	@Value('${admin.action:restart}')
 	String adminAction
@@ -36,13 +36,14 @@ class MicroserviceAdmin implements CliAction, CliRunnerTrait {
 		List eList = Arrays.asList(adminExcludeList)
 		def filePattern = Pattern.compile('^\\S.*(.exe)$')
 		
-		if (servicesDir.exists()) {
+		File servicesDirFile = new File(servicesDir)
+		if (servicesDirFile.exists()) {
 			log.info("has services dir")
 			
 		} else {
 			log.info("has services dir doesn't exist")
 		}
-		servicesDir.eachDir() { File aserviceDir ->
+		servicesDirFile.eachDir() { File aserviceDir ->
 			aserviceDir.eachFileMatch(filePattern) { File exe ->
 				MicroserviceAdmin.log.info("Found exe:  ${exe.name}")
 				String eName = "${exe.name}"

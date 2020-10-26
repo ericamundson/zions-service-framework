@@ -62,12 +62,12 @@ import groovy.xml.XmlUtil
  * </ul>
  * 
  * <p><b>Design:</b></p>
- * <img src="TranslateRQMToMTM_class_diagram.png"/>
+ * <img src="TranslateRQMToMTM_class_diagram.svg"/>
  * <p><b>Flow:</b></p>
- * <img src="TranslateRQMToMTM_sequence_diagram.png"/>
+ * <img src="TranslateRQMToMTM_sequence_diagram.svg"/>
  * @author z091182
  * 
- * @startuml TranslateRQMToMTM_class_diagram.png
+ * @startuml TranslateRQMToMTM_class_diagram.svg
  * 
  * annotation Autowired
  * annotation Component
@@ -110,7 +110,7 @@ import groovy.xml.XmlUtil
  * TranslateRQMToMTM --> com.zions.common.services.restart.IRestartManagementService: @Autowired restartManagementService
  * @enduml
  * 
- * @startuml TranslateRQMToMTM_sequence_diagram.png
+ * @startuml TranslateRQMToMTM_sequence_diagram.svg
  * participant CliApplication
  * CliApplication -> TranslateRQMToMTM: validate(ApplicationArguments args)
  * CliApplication -> TranslateRQMToMTM: execute(ApplicationArguments args)

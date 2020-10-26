@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
  * Manage caching attachments and returning data elements required to associate attachment to ADO element.
  * 
  * <p><b>Design:</b></p>
- * <img src="ClmTestAttachmentManagementService.png"/>
+ * <img src="ClmTestAttachmentManagementService.svg"/>
  * 
  * @author z091182
  *

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
  * Load rm mapping file
  * 
  * Design<p/>
- * <img src="RequirementsMappingManagementService.png"/>
+ * <img src="RequirementsMappingManagementService.svg"/>
  * 
  * @author z091182
  * 

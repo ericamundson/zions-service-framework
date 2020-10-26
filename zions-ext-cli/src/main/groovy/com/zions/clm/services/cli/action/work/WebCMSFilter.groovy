@@ -8,7 +8,7 @@ import com.zions.common.services.query.IFilter
  * Work item filter for AEM team.
  * 
  * <p><b>Design:</b></p>
- * <img src="WebCMSFilter.png"/>
+ * <img src="WebCMSFilter.svg"/>
  * 
  * @author z091182
  *

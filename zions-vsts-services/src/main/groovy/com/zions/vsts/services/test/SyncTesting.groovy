@@ -20,10 +20,10 @@ import org.apache.commons.lang.StringEscapeUtils
  * Create spock report with test plan and associated test case.
  * 
  * <p><b>Design:</b></p>
- * <img src="SyncTesting_class_diagram.png"/>
+ * <img src="SyncTesting_class_diagram.svg"/>
  * @author z091182
  * 
- * @startuml SyncTesting_class_diagram.png
+ * @startuml SyncTesting_class_diagram.svg
  * annotation Autowired
  * annotation Component
  * class SyncTesting {
@@ -98,9 +98,9 @@ class SyncTesting implements CliAction {
 	/**
 	 * 
 	 * <p><b>Flow:</b></p>
-	 * <img src="execute_sequence_diagram.png"/>
+	 * <img src="execute_sequence_diagram.svg"/>
 	 * 
-	 * @startuml execute_sequence_diagram.png
+	 * @startuml execute_sequence_diagram.svg
 	 * participant "SyncTesting:this" as this
 	 * participant "WorkManagementService:workManagementService" as wms
 	 * participant "File:reportSearchPath" as searchPath
@@ -150,12 +150,12 @@ class SyncTesting implements CliAction {
 
 	/**
 	 * <p><b>Flow:</b></p>
-	 * <img src="buildAndExecute_sequence_diagram.png"/>
+	 * <img src="buildAndExecute_sequence_diagram.svg"/>
 	 * 
 	 * @param allTestCase
 	 * @return
 	 * 
-	 * @startuml buildAndExecute_sequence_diagram.png
+	 * @startuml buildAndExecute_sequence_diagram.svg
 	 * participant "SyncTesting:this" as this
 	 * participant "TestManagementService:testManagementService" as testManagementService
 	 * participant "ICacheManagementService:cacheManagementService" as cacheManagementService

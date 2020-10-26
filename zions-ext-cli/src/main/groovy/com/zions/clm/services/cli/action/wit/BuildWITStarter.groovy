@@ -25,7 +25,7 @@ import groovy.xml.MarkupBuilder
  * </ul>
  * 
  * <p><b>Design:</b></p>
- * <img src="BuildWITStarter.png"/>
+ * <img src="BuildWITStarter.svg"/>
  * 
  * @author z091182
  * 

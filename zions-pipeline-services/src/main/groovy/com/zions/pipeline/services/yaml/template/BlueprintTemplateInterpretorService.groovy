@@ -16,6 +16,13 @@ import groovy.util.logging.Slf4j
 import com.zions.pipeline.services.yaml.template.execution.IExecutableYamlHandler
 
 
+/**
+ * Performs the following behaviors:
+ * o Runs a XL Blueprint to a specificed out.dir location
+ * o Executes any executable yaml generated to out.dir location.
+ * @author z091182
+ *
+ */
 @Component
 @Slf4j
 class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait {

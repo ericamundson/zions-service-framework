@@ -1,6 +1,6 @@
 {
     "contentType": "application/json",
-    "uri": "https://dev.azure.com/eto-dev/ALMOpsTest/_apis/wit/workitems/947613",
+    "uri": "https://dev.azure.com/eto-dev/Sandbox/_apis/wit/workitems/1462494",
     "body": [
         {
             "op": "test",
