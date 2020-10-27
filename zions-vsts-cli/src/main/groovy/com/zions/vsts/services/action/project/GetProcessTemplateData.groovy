@@ -6,15 +6,20 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.cli.action.CliAction
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
+import com.zions.vsts.services.work.templates.ProcessTemplateService
 
 /**
- * List out project and team data.
+ * List out process template data
  * 
- * @author Astro
+ * @author Matt
  *
  */
 @Component
-class ListProjectsAndTeams implements CliAction {
+class GetProcessTemplateData implements CliAction {
+	
+	
+	@Autowired
+	ProcessTemplateService processTemplateService
 	
 	@Autowired
 	ProjectManagementService projectManagementService
@@ -25,10 +30,14 @@ class ListProjectsAndTeams implements CliAction {
 	@Value('${tfs.collection:}')
 	String collection
 	
+	@Value('${tfs.url:}')
+	String url
+	
+	
 	@Value('${export.dir:}')
 	String directory
 	
-	public ListProjectsAndTeams() {
+	public GetProcessTemplateData() {
 	}
 
 	
@@ -38,24 +47,32 @@ class ListProjectsAndTeams implements CliAction {
 	
 		def projects = projectManagementService.getProjects(collection)
 		
-		//getProjects(collection, project, noUrl)
+		
+		//first get work item types
+		//def getWITField(collection, project, wit, field)
+		//def getFields(def collection, def project)
 		
 		projects.'value'.each { project -> 
-//			// TODO: Do some code to write project stuff
+//			
 			String pName = "${project.name}"
 			String id = "${project.id}"
 			println "project: ${pName}"
 			println "projectID: ${id}"
-			def teams = projectManagementService.getTeams(collection, pName)
+		
+		//def getProjectMembersMap(collection, project)
+		def getMemberships = memberManagementService.getProjectMembersMap(collection, pName)
+		/*getMemberships.each { member ->
 			
-			teams.value.each { team ->
-				println "     team:  ${team.name}"
-			}
-//			// TODO: Loop to write some team stuff.
-		}
+				def identity = member.identity
+				String uid = "${identity.uniqueName}"
+				println uid
+		}*/
+		return null
+	}
+	
+		
 		def users = memberManagementService.getUsers(collection)
-		
-		
+				
 		users.each { user -> 
 			println user.displayName
 			println user.mailAddress
