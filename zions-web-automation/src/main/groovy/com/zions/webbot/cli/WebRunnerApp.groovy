@@ -33,7 +33,7 @@ import com.zions.auto.base.CompletedSteps
  * Application main for all command-line web automation clients (CliWebBot).  Without mongodb integration.
  * 
  * <p><b>Design:</b></p>
- * <img src="CliApplication.png"/>
+ * <img src="CliApplication.svg"/>
  * 
  * @author z097331
  *

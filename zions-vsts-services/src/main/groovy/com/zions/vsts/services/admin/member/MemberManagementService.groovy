@@ -12,7 +12,7 @@ import groovyx.net.http.ContentType
  * Provides behaviors to manage users on a VSTS project.  Adding users to projects and teams.
  * 
  * <p/>Design
- * <img src="MemberManagementService.png"/>
+ * <img src="MemberManagementService.svg"/>
  * 
  * @author z091182
  * 

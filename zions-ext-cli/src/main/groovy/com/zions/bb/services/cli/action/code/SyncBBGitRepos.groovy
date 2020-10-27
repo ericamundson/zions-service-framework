@@ -35,7 +35,7 @@ import groovy.json.JsonSlurper
  * </ul>
  * 
  * <p><b>Design:</b></p>
- * <img src="SyncBBGitRepos.png"/>
+ * <img src="SyncBBGitRepos.svg"/>
  * 
  * @author z091182
  * 

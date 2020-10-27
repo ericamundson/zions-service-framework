@@ -60,14 +60,18 @@ stages:
 - stage: Release
   dependsOn: Build
   jobs:
-  - job: Release
+  - deployment: prod
+    environment: {{.Platform}}_Production
     variables:
       releaseTag: $[ stageDependencies.Build.Build.outputs['oTag.oBuildTag'] ]
-    steps:
-    - task: Zions.ado-ext-release-status-control.CreateReleaseTask.CreateReleaseTask@0
-      displayName: 'Create Release'
-      inputs:
-        templateTitle: '{{$app}} - Master'
-        releaseTitle: '{{$app}} - $(releaseTag)'
-        releaseVariableSettings: 'deploymentPackage.name=$(releaseTag)'
-        xlrProfile: xlrdb
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: Zions.ado-ext-release-status-control.CreateReleaseTask.CreateReleaseTask@0
+            displayName: 'Create Release'
+            inputs:
+              templateTitle: '{{$app}} - Master'
+              releaseTitle: '{{$app}} - $(releaseTag)'
+              releaseVariableSettings: 'deploymentPackage.name=$(releaseTag)'
+              xlrProfile: xlrdb

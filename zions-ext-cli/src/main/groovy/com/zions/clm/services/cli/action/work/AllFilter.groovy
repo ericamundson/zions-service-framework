@@ -8,7 +8,7 @@ import com.zions.common.services.query.IFilter
  * Let all work items through.
  * 
  * <p><b>Design:</b></p>
- * <img src="AllFilter.png"/>
+ * <img src="AllFilter.svg"/>
  * 
  * @author z091182
  * 

@@ -26,7 +26,7 @@ import groovy.json.JsonBuilder
  * </ul>
  * 
  * <p><b>Design:</b></p>
- * <img src="ExtractQmMetadata.png"/>
+ * <img src="ExtractQmMetadata.svg"/>
  * 
  * @author z091182
  * 

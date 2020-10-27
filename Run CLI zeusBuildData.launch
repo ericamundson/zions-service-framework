@@ -10,7 +10,6 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.pipeline.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="zeusBuildData --tfs.url=https://dev.azure.com/zionseto --tfs.project=Zeus --build.id=83354 --out.dir=build/ --change.request={{change.request}} --in.repo.dir=&quot;d:\git\Zeus&quot; --out.repo.dir=build/repo --release.date={{release.date}} --rollup=true --final.release.environment=&quot;Environments/Zeus/Releases1912/BL/None&quot; --build.tag.filter=none --wi.list=1395859,1416401,1422495,1424282,1424284,1424302,1426057,1428231,1437427,1439903"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="zeusBuildData --tfs.url=https://dev.azure.com/zionseto --tfs.project=Zeus --build.id=94953 --out.dir=build/ --change.request={{change.request}} --in.repo.dir=&quot;d:\git\Zeus&quot; --out.repo.dir=build/repo --release.date={{release.date}} --rollup=false --final.release.environment=&quot;Environments/Zeus/Releases1912/BL/None&quot; --build.tag.filter=none"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-pipeline-cli"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=default"/>
 </launchConfiguration>

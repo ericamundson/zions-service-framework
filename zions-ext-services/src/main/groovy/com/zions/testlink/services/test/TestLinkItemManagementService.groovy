@@ -17,7 +17,7 @@ import groovyx.net.http.ContentType
  * plan data.
  * 
  * <p>Design</p>
- * <img src="TestLinkItemManagementService.png"/>
+ * <img src="TestLinkItemManagementService.svg"/>
  * 
  * @author z091182
  * 

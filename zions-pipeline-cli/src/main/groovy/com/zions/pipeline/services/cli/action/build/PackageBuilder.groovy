@@ -32,7 +32,7 @@ import java.util.regex.Pattern
 /**
  * @author z091182
  *
- *@startuml ZeusDesign.png
+ *@startuml ZeusDesign.svg
  *
  *cloud DTS as "ADO DTS Project" {
  *	storage serviceframework as "zions-service-framework GIT repo" {

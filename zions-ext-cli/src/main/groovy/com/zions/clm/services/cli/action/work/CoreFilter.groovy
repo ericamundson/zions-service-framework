@@ -8,7 +8,7 @@ import com.zions.common.services.query.IFilter
  * Work item filter for Online Banking team.
  * 
  * <p><b>Design:</b></p>
- * <img src="ObFilter.png"/>
+ * <img src="ObFilter.svg"/>
  * 
  * @author z091182
  *

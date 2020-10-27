@@ -26,7 +26,7 @@ import groovy.json.JsonBuilder
  * </ul>
  * 
  * <p><b>Design:</b></p>
- * <img src="ExtractCcmWIMetadata.png"/>
+ * <img src="ExtractCcmWIMetadata.svg"/>
  * 
  * @author z091182
  * 

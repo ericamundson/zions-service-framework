@@ -24,7 +24,7 @@ import com.zions.common.services.cacheaspect.CacheInterceptor
  * Class responsible for processing RQM test planning data to generate Azure Devops test data.
  * 
  * <p>Design</p>
- * <img src="ClmTestItemManagementService.png"/>
+ * <img src="ClmTestItemManagementService.svg"/>
  * 
  * @author z091182
  * 

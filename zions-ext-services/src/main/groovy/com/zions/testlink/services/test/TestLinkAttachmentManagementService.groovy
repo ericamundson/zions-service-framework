@@ -14,7 +14,7 @@ import br.eti.kinoshita.testlinkjavaapi.TestLinkAPIException
  * Manage caching attachments and returning data elements required to associate attachment to ADO element.
  * 
  * <p>Design</p>
- * <img src="TestLinkAttachmentManagementService.png"/>
+ * <img src="TestLinkAttachmentManagementService.svg"/>
  * 
  * @author z091182
  *

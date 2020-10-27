@@ -17,7 +17,7 @@ import groovyx.net.http.ContentType
  * Handles all ADO Test Manager specific requests.
  * 
  * <p><b>Design:</b></p>
- * <img src="TestManagementService.png"/>
+ * <img src="TestManagementService.svg"/>
  * 
  * @author z091182
  * 
@@ -253,7 +253,7 @@ public class TestManagementService {
 	 * Send a single plan item changesp
 	 * 
 	 * <p><b>Flow</b></p>
-	 * <img src="TestManagmentService_sendPlanChanges.png"/>
+	 * <img src="TestManagmentService_sendPlanChanges.svg"/>
 	 * 
 	 * @param collection - ADO organization
 	 * @param tfsProject - ADO project
@@ -261,7 +261,7 @@ public class TestManagementService {
 	 * @param id - cache item ID
 	 * @return ADO request result.
 	 * 
-	 * @startuml TestManagmentService_sendPlanChanges.png
+	 * @startuml TestManagmentService_sendPlanChanges.svg
 	 * participant "TranslateRQMToMTM:caller" as caller
 	 * participant "TestManagementService:this" as this
 	 * participant "Map:change" as change

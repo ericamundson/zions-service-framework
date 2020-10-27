@@ -30,7 +30,7 @@ import org.apache.commons.io.IOUtils
  * Handles queries into DNG to navigate object structure of DNG.
  * 
  * Design<p/>
- * <img src="ClmRequirementsManagementService.png"/>
+ * <img src="ClmRequirementsManagementService.svg"/>
  * 
  * @author z091182
  * 

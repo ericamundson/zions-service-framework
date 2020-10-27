@@ -9,7 +9,7 @@ import groovy.xml.XmlUtil
  * Filter work items for Mobile Banking.
  * 
  * <p><b>Design:</b></p>
- * <img src="MbFilter.png"/>
+ * <img src="MbFilter.svg"/>
  * 
  * @author z091182
  *

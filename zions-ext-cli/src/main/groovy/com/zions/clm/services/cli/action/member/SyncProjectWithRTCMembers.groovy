@@ -33,7 +33,7 @@ import groovy.json.JsonSlurper
  * </ul>
  * 
  * <p><b>Design:</b></p>
- * <img src="SyncProjectWithRTCMembers.png"/>
+ * <img src="SyncProjectWithRTCMembers.svg"/>
  * 
  * @author z091182
  * 

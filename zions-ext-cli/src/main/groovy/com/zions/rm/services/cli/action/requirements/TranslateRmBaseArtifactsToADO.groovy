@@ -60,13 +60,13 @@ import com.zions.rm.services.requirements.RequirementQueryData
  * </ul>
  * 
  * <p><b>Class design:</b></p>
- * <img src="TranslateRRMToADO_class_diagram.png"/>
+ * <img src="TranslateRRMToADO_class_diagram.svg"/>
  * <p><b>Behavior:</b></p>
- * <img src="TranslateRRMToADO_sequence_diagram.png"/>
+ * <img src="TranslateRRMToADO_sequence_diagram.svg"/>
  * 
  * @author z091182
  * 
- * @startuml TranslateRRMToADO_class_diagram.png
+ * @startuml TranslateRRMToADO_class_diagram.svg
  * 
  * annotation Autowired
  * annotation Component
@@ -98,7 +98,7 @@ import com.zions.rm.services.requirements.RequirementQueryData
  * TranslateRRMToADO --> WorkManagementService: @Autowired workManagementService
  * @enduml
  * 
- * @startuml TranslateRRMToADO_sequence_diagram.png
+ * @startuml TranslateRRMToADO_sequence_diagram.svg
  * participant CLI
  * CLI -> TranslateRRMToADO: validate arguments
  * CLI -> TranslateRRMToADO: execute

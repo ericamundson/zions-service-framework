@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Bean;
  * Application main for all command-line actions.  Without mongodb integration.
  * 
  * <p><b>Design:</b></p>
- * <img src="CliApplication.png"/>
+ * <img src="CliApplication.svg"/>
  * 
  * @author z091182
  *

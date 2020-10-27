@@ -37,8 +37,11 @@ class UpdateWorkItems implements CliAction {
 	CalculationManagementService fieldCalcManager
 
 	@Value('${field.map}')
-	String fieldMap
+	String fieldMapFilename
 	
+	@Value('${link.map}')
+	String linkMapFilename
+
 	@Value('${tfs.collection:}')
 	String collection	
 
@@ -46,15 +49,23 @@ class UpdateWorkItems implements CliAction {
 	String colorMapUID	
 
 	ChangeListManager clManager
+	
+	def fieldMap
+	def linkMap
 
 	public def execute(ApplicationArguments data) {
+		def includes = [:]
+		try {
+			String includeList = data.getOptionValues('include.update')[0]
+			def includeItems = includeList.split(',')
+			includeItems.each { item ->
+				includes[item] = item
+			}
+		} catch (e) {}
+
 		def inFilePath = data.getOptionValues('import.file')[0]
-		File resource = new ClassPathResource(fieldMap).getFile()
-		if (!resource) {
-			println("ERROR: Could not find mapping resource file $fieldMap")
-			return
-		}
-		def map = new JsonSlurper().parseText(resource.text)
+		fieldMap = getMap(fieldMapFilename)
+		linkMap = getMap(linkMapFilename)
 		
 		// Open input Excel doc
 		if (!excelManagementService.openExcelFile(inFilePath)) return
@@ -100,7 +111,7 @@ class UpdateWorkItems implements CliAction {
 				def type = excelManagementService.getCellValue(row,workItemTypeCol)
 				def title = excelManagementService.getCellValue(row,titleCol)
 				println("Work Itm ID: $id, Work Item Type: $type, Title: $title")
-				processWorkItemChanges(id, map, row)
+				processWorkItemChanges(includes, id, row)
 			}
         }
 		if (clManager) clManager.flush()
@@ -109,49 +120,79 @@ class UpdateWorkItems implements CliAction {
 			
 		return null;
 	}
-	public processWorkItemChanges(def id, def map, Row row) {
-		def wiChange = getChange(id, map, row)
+	public processWorkItemChanges(def includes, def id, Row row) {
+		def wiChange = getChanges(includes, id, row)
+		
 		if (wiChange) {
 			clManager.add("${id}", wiChange)
 			//log.debug("adding changes for requirement ${id}")
 		}
 	}
-	public getChange(def id, def map, Row row) {
+	
+	public getChanges(def includes, def id, Row row) {
 		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${id}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+		def rowMap = excelManagementService.getRowMap(row)
 
 		// Add fields
-		def rowMap = excelManagementService.getRowMap(row)
-		rowMap.each { mapEntry ->
-			def fieldName = mapEntry.key
-			if (fieldName != 'ID') {
-				if (!map[fieldName]) {
-					println("WARNING: No map entry for <$fieldName>.  This field will not be updated.")
-					return
-				}
-				def adoFieldName = map[fieldName].AdoId
-				def handler = map[fieldName].CalcHandler
-				if (adoFieldName == 'null' || adoFieldName == null) {
-					log.info("Warning: Field $fieldName has no map entry and will not be included in update")
-				}
-				else {
-					def value
-					if (handler)  // use calculation handler to get value
-						value = fieldCalcManager.execute([ targetField: adoFieldName, fields: rowMap ], handler)
-					else
-						value = mapEntry.value
-					if (!value || value == 'null') {
-						value = ''
-					}	
-					def idData = [ op: 'add', path: "/fields/$adoFieldName", value: "$value"]
-					wiData.body.add(idData)			
+		if (includes['fields'] != null) {
+			rowMap.each { mapEntry ->
+				def fieldName = mapEntry.key
+				if (fieldName != 'ID') {
+					if (!fieldMap[fieldName]) {
+						println("WARNING: No map entry for <$fieldName>.  This field will not be updated.")
+						return
+					}
+					def adoFieldName = fieldMap[fieldName].AdoId
+					def handler = fieldMap[fieldName].CalcHandler
+					if (adoFieldName == 'null' || adoFieldName == null) {
+						log.info("Warning: Field $fieldName has no map entry and will not be included in update")
+					}
+					else {
+						def value
+						if (handler)  // use calculation handler to get value
+							value = fieldCalcManager.execute([ targetField: adoFieldName, fields: rowMap ], handler)
+						else
+							value = mapEntry.value
+						if (!value || value == 'null') {
+							value = ''
+						}	
+						def idData = [ op: 'add', path: "/fields/$adoFieldName", value: "$value"]
+						wiData.body.add(idData)			
+					}
 				}
 			}
 		}
+		if (includes['links'] != null) {
+			def project = rowMap['Team Project']
+			// throw error if no Team Project
+			if (!project)
+				throw new Exception("Team Project is required to process link updates")
+			// Get work item
+			def wi = workManagementService.getWorkItem(collection,project,id.toString())
+			// Iterate through wi links and update any types that are in the map
+			if (wi.relations) {
+				def count = wi.relations.size()
+				for (int i = 0; i < count; i++) {
+					def linkName = "${wi.relations[i].attributes.name}"
+					if (linkMap[linkName]) {
+						String targetRel = linkMap[linkName]
+						def url = "${wi.relations[i].url}"
+						def idData = [op: 'remove', path: "/relations/$i"]
+						wiData.body.add(idData)
+						if (targetRel.toLowerCase() != 'delete') {
+							idData = [op: 'add', path: '/relations/-', value: [rel: targetRel, url: url, attributes:[comment: "Replaces $linkName link"]]]
+							wiData.body.add(idData)
+						}
+					}
+				}
+			}
+		} 
+		
 		return wiData
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['tfs.url', 'tfs.collection', 'import.file']
+		def required = ['tfs.url', 'tfs.collection', 'import.file','include.update']
 		required.each { name ->
 			if (!args.containsOption(name)) {
 				throw new Exception("Missing required argument:  ${name}")
@@ -160,6 +201,14 @@ class UpdateWorkItems implements CliAction {
 		return true
 	}
 	
+	public def getMap(String mapFilename) {
+		File resource = new ClassPathResource(mapFilename).getFile()
+		if (!resource) {
+			println("ERROR: Could not find mapping resource file $mapFilename")
+			return
+		}
+		return new JsonSlurper().parseText(resource.text)
 
+	}
 
 }
