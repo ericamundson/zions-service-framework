@@ -52,6 +52,9 @@ public class PolicyManagementService {
 	private static final String ENFORCE_MERGE_STRATEGY = "enforce-merge-strategy"
 	private static final String NUM_MIN_APPROVERS = "num-min-reviewers"
 	private static final int DEFAULT_NUM_APPROVERS = 1
+	private static final String CI_BUILD_TEMPLATE = "build-template-ci"
+	private static final String RELEASE_BUILD_TEMPLATE = "build-template-release"
+	private static final String CI_BUILD_YAML_FILE = "build-yaml-file"
 	// AOD policy types
 	private static final String BUILD_VALIDATION_POLICY_TYPE = "0609b952-1397-4640-95ec-e00a01b2c241"
 	private static final String MIN_APPROVERS_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd"
@@ -170,15 +173,23 @@ public class PolicyManagementService {
 		boolean isDRBranch = ("${branchName}".toLowerCase().startsWith("refs/heads/dr/"))
 		def ciBuildTemplate = null
 		def relBuildTemplate = null
+		def yamlFile = null
 		if (!isDRBranch) {
 			if (this.branchProps != null) {
-				ciBuildTemplate = this.branchProps.getProperty("build-template-ci")
-				relBuildTemplate = this.branchProps.getProperty("build-template-release")
+				ciBuildTemplate = this.branchProps.getProperty(CI_BUILD_TEMPLATE)
+				relBuildTemplate = this.branchProps.getProperty(RELEASE_BUILD_TEMPLATE)
 				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified CI build template = ${ciBuildTemplate}")
 				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release build template = ${relBuildTemplate}")
+				yamlFile = this.branchProps.getProperty(CI_BUILD_YAML_FILE)
 			}
 		}
-
+		// check for specified yaml file name
+		if (buildData == null) {
+			if (yamlFile) {
+				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified YAML build file = ${yamlFile}")
+				buildData = [ciBuildFile: "${yamlFile}"]
+			}
+		}
 		// result is a JSON object
 		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, isDRBranch, ciBuildTemplate, relBuildTemplate, isInitBranch, buildData)
 		int ciBuildId = result.ciBuildId
@@ -194,11 +205,11 @@ public class PolicyManagementService {
 			]
 		]
 		// check for existing build validation policy
-		def res = getBranchPolicy(BUILD_VALIDATION_POLICY_TYPE, projectData.id, repoData.id, branchName)
-		if (!res) {
-			res = createPolicy(collection, projectData, policy)
+		def policyRes = getBranchPolicy(BUILD_VALIDATION_POLICY_TYPE, projectData.id, repoData.id, branchName)
+		if (!policyRes) {
+			policyRes = createPolicy(collection, projectData, policy)
 		}
-		log.debug("PolicyManagementService::ensureBuildPolicy -- result = "+res)
+		log.debug("PolicyManagementService::ensureBuildPolicy -- result = "+policyRes)
 		
 		int relBuildId = result.releaseBuildId
 		// create release definition for release build
@@ -229,7 +240,7 @@ public class PolicyManagementService {
 			// send notification of new builds created
 			notificationService.sendBuildCreatedNotification("${repoData.name}", result.ciBuildName, result.releaseBuildName, relDefName)
 		}
-		return res
+		return policyRes
 	}
 	
 	private def createPolicy(def collection, def projectData, def policy) {
@@ -266,8 +277,15 @@ public class PolicyManagementService {
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
-		def res = createPolicy(collection, projectData, policy)
-		log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- result = "+res)
+		def policyRes = getBranchPolicy(MIN_APPROVERS_POLICY_TYPE, projectData.id, repoData.id, branchName)
+		if (!policyRes) {
+			policyRes = createPolicy(collection, projectData, policy)
+		} else {
+			// update for minimum approvers??
+		}
+		log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- result = "+policyRes)
+
+		return policyRes
 	}
 	
 	public def ensureLinkedWorkItemsPolicy(def collection, def repoData, def branchName) {
@@ -284,6 +302,7 @@ public class PolicyManagementService {
 			policyRes = createPolicy(collection, projectData, policy)
 		}
 		log.debug("PolicyManagementService::ensureLinkedWorkItemsPolicy -- result = "+policyRes)
+
 		return policyRes
 	}
 	
@@ -296,8 +315,13 @@ public class PolicyManagementService {
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
-		def res = createPolicy(collection, projectData, policy)
-		log.debug("PolicyManagementService::ensureMergeStrategyPolicy -- result = "+res)
+		def policyRes = getBranchPolicy(MERGE_STRATEGY_POLICY_TYPE, projectData.id, repoData.id, branchName)
+		if (!policyRes) {
+			policyRes = createPolicy(collection, projectData, policy)
+		}
+		log.debug("PolicyManagementService::ensureMergeStrategyPolicy -- result = "+policyRes)
+
+		return policyRes
 	}
 	
 	public def ensureCommentResolutionPolicy(def collection, def repoData, def branchName) {
@@ -309,14 +333,21 @@ public class PolicyManagementService {
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
-		def res = createPolicy(collection, projectData, policy)
-		log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- result = "+res)
+		def policyRes = getBranchPolicy(COMMENT_RES_POLICY_TYPE, projectData.id, repoData.id, branchName)
+		if (!policyRes) {
+			policyRes = createPolicy(collection, projectData, policy)
+		}
+		log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- result = "+policyRes)
+
+		return policyRes
 	}
 
 	public def ensureGitAttributesFile(def collection, def repoData) {
 		log.debug("PolicyManagementService::ensureGitAttributesFile -- ")
 		def res = codeManagementService.ensureGitAttributes(collection, repoData.project, repoData)
 		log.debug("PolicyManagementService::ensureGitAttributesFile -- result = "+res)
+		
+		retunr res
 	}
 
 	public def getBranchPolicyReport(def collection, def project) {

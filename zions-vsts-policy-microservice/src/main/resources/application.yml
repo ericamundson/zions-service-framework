@@ -62,6 +62,7 @@ tfs:
       name: generic
     properties:
       file: dts-re-build.properties
+    yamlFilenames: azure-pipelines.yml,azure-pipelines.yaml
   release:
     use:
       template: false
