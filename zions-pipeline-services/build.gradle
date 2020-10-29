@@ -9,7 +9,23 @@ configurations {
 	runtime.exclude module: 'zions-common-data'
 }
 
+confluence {
+	pages {
+		page {
+			parentTitle  'DS: COE'
+			title "DS: COE: Pipeline Builder CLI"
+			srcFile  file('src/markdown/coe-cli.md')
+			labels = ['coe-cli']
+		}
+		page {
+			parentTitle  'DS: COE'
+			title "DS: COE: Backend Processing"
+			srcFile  file('src/markdown/coe-backend.md')
+			labels = ['coe-backend', 'coe-development']
+		}
 
+	}
+}
 dependencies {
 	compile project(':zions-vsts-services')
 	compile project(':zions-xld-services')

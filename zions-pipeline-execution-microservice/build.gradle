@@ -14,17 +14,7 @@ dependencies {
 	compile project(':zions-common')
 }
 
-confluence {
-	pages {
-		page {
-			parentTitle  'DS: COE'
-			title "DS: COE: Pipeline Development"
-			srcFile  file('src/markdown/coe-backend.md')
-			labels = ['coe-backend', 'coe-development']
-		}
 
-	}
-}
 sourceSets.main.resources {
 	srcDir '../zions-pipeline-services/src/main/resources'
 }
