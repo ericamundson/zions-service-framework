@@ -38,7 +38,7 @@ public class BuildManagementService {
 	private String queue
 
 	@Autowired
-	@Value('${tfs.build.yamlFilenames}')
+	@Value('${tfs.build.yamlFilenames:}')
 	private String yamlFilenamesStr
 
 	@Autowired
