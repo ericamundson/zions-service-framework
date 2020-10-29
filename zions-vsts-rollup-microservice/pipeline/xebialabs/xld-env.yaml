@@ -5,7 +5,7 @@ spec:
 - name: Environments/DTS
   type: core.Directory
   children:
-  - directory: zions-vsts-setcolor-microservice
+  - directory: zions-vsts-rollup-microservice
     children:
     
     - name: Prod
@@ -15,7 +15,7 @@ spec:
       - Infrastructure/DTS/microservice/Prod
       
       dictionaries:
-      - Environments/DTS/zions-vsts-setcolor-microservice/_Dictionaries/Prod_Dict
+      - Environments/DTS/zions-vsts-rollup-microservice/_Dictionaries/Prod_Dict
     - directory: _Dictionaries
       children:
       
@@ -23,8 +23,8 @@ spec:
         type: udm.Dictionary
         entries:
           
-          stage.path: d:\app\azure\_work\zions-vsts-setcolor-microservice
-          deploy.path: d:\app\azure\services\zions-vsts-setcolor-microservice
+          stage.path: d:\app\azure\_work\zions-vsts-rollup-microservice
+          deploy.path: d:\app\azure\services\zions-vsts-rollup-microservice
           
           ws.url: <no value>
           
