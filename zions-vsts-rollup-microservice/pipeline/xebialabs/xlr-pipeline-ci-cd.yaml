@@ -4,7 +4,7 @@ spec:
 - name: DTS
   type: xlrelease.Folder
   children:
-  - name: zions-vsts-rollup-microservice - Master
+  - name: zions-vsts-setcolor-microservice - Master
     type: xlrelease.Release
     scriptUsername: svc-release
     scriptUserPassword: !value "xlr_scriptUserPassword"
@@ -26,25 +26,25 @@ spec:
         - name: PROD
           type: xlrelease.SequentialGroup
           tasks:
-          - name: Deploy zions-vsts-rollup-microservice for zionseto use.
+          - name: Deploy zions-vsts-setcolor-microservice for zionseto use.
             type: xldeploy.Deploy
             server: XL Deploy Server
             deploymentApplication: 
             deploymentVersion:
-            deploymentPackage: Applications/DTS/zions-vsts-rollup-microservice/${deploymentPackage.name}
-            deploymentEnvironment: Environments/DTS/zions-vsts-rollup-microservice/Prod
+            deploymentPackage: Applications/DTS/zions-vsts-setcolor-microservice/${deploymentPackage.name}
+            deploymentEnvironment: Environments/DTS/zions-vsts-setcolor-microservice/Prod
             rollbackOnFailure: false
             cancelOnError: false
             failOnPause: false
-          - name: Prod - zions-vsts-rollup-microservice deployment ready for testing
+          - name: Prod - zions-vsts-setcolor-microservice deployment ready for testing
             type: xlrelease.NotificationTask
             addresses:
             - Eric.Amundson2@zionsbancorp.com
             - DL-ALMOps@zionsbancorp.com
-            subject: 'zions-vsts-rollup-microservice: ${deploymentPackage.name} ready for zionseto use.'
+            subject: 'zions-vsts-setcolor-microservice: ${deploymentPackage.name} ready for zionseto use.'
             body: |-
               # Prod ready for testing
-              A new version of zions-vsts-rollup-microservice has been deployed:
+              A new version of zions-vsts-setcolor-microservice has been deployed:
 
               ## ${deploymentPackage.name}
 
@@ -61,4 +61,4 @@ spec:
       type: xlrelease.TimelineTile
     - name: Release health
       type: xlrelease.ReleaseHealthTile
-    parentTemplate: zions-vsts-rollup-microservice - Master
+    parentTemplate: zions-vsts-setcolor-microservice - Master

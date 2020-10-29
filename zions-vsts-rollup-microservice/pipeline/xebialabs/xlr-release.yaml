@@ -2,7 +2,7 @@
 apiVersion: xl-release/v1
 kind: Release
 spec:
-  name: !format "zions-vsts-rollup-microservice %app_version%"
-  template: !format DTS/zions-vsts-rollup-microservice - Master
+  name: !format "zions-vsts-setcolor-microservice %app_version%"
+  template: !format DTS/zions-vsts-setcolor-microservice - Master
   variables:
     deploymentPackage.name: !value "app_version"

@@ -40,15 +40,15 @@ stages:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
         workingDirectory: '$(Build.SourcesDirectory)'
         options: '--no-daemon --no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=microservices'
-        tasks: 'clean zions-vsts-rollup-microservice:build'
+        tasks: 'clean zions-vsts-setcolor-microservice:build'
         publishJUnitResults: false
 
     - task: BatchScript@1
       displayName: 'XLW - xl-apps.yaml'
       inputs:
-        filename: '$(Build.SourcesDirectory)\zions-vsts-rollup-microservice\pipeline\xl.exe'
+        filename: '$(Build.SourcesDirectory)\zions-vsts-setcolor-microservice\pipeline\xl.exe'
         arguments: 'apply -f xl-apps.yaml --xl-deploy-url $(xld_cli_url) --xl-deploy-username $(xld_cli_user) --xl-deploy-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd)'
-        workingFolder: $(Build.SourcesDirectory)\zions-vsts-rollup-microservice\pipeline
+        workingFolder: $(Build.SourcesDirectory)\zions-vsts-setcolor-microservice\pipeline
       continueOnError: false
       enabled: true
       
@@ -67,7 +67,7 @@ stages:
           - task: Zions.ado-ext-release-status-control.CreateReleaseTask.CreateReleaseTask@0
             displayName: 'Create Release'
             inputs:
-              templateTitle: 'zions-vsts-rollup-microservice - Master'
-              releaseTitle: 'zions-vsts-rollup-microservice - $(releaseTag)'
+              templateTitle: 'zions-vsts-setcolor-microservice - Master'
+              releaseTitle: 'zions-vsts-setcolor-microservice - $(releaseTag)'
               releaseVariableSettings: 'deploymentPackage.name=$(releaseTag)'
               xlrProfile: xlrdb

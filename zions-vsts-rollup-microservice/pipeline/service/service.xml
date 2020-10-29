@@ -1,11 +1,11 @@
 <service>
-      <id>zions-vsts-rollup-microservice</id>
-      <name>zions-vsts-rollup-microservice</name>
-      <description>This service runs zions-vsts-rollup-microservice.</description>
+      <id>zions-vsts-setcolor-microservice</id>
+      <name>zions-vsts-setcolor-microservice</name>
+      <description>This service runs zions-vsts-setcolor-microservice.</description>
       <executable>java</executable>
       
-      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-rollup-microservice.jar" --queue.name=WorkItem-rollup-queue  --ado.topics=workitem.updated,workitem.created --tfs.url={{tfs.url}} --logging.file="{{deploy.path}}/zions-vsts-rollup-microservice.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-setcolor-microservice.jar" --queue.name=WorkItem-rollup-queue  --ado.topics=workitem.updated --tfs.url={{tfs.url}} --logging.file="{{deploy.path}}/zions-vsts-setcolor-microservice.log" </arguments>
 	  
       <logmode>rotate</logmode>
-      <logpath>{{deploy.path}}\wrapper-logs\zions-vsts-rollup-microservice</logpath>
+      <logpath>{{deploy.path}}\wrapper-logs\zions-vsts-setcolor-microservice</logpath>
 </service>

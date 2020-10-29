@@ -1,9 +1,9 @@
 executables:
 - type: runXLDeployApply
-  yamlFile: zions-vsts-rollup-microservice/pipeline/xl-deploy.yaml
+  yamlFile: zions-vsts-setcolor-microservice/pipeline/xl-deploy.yaml
   dependencies:
-  - /zions-vsts-rollup-microservice/pipeline/xld-env.yaml
-  - /zions-vsts-rollup-microservice/pipeline/xld-infra.yaml
+  - /zions-vsts-setcolor-microservice/pipeline/xld-env.yaml
+  - /zions-vsts-setcolor-microservice/pipeline/xld-infra.yaml
   vault:
     engine: secret
     path: zions-service-framework
@@ -16,9 +16,9 @@ executables:
     value: ${svc_account_passwd}
     
 - type: runXLReleaseApply
-  yamlFile:  zions-vsts-rollup-microservice/pipeline/xl-release.yaml
+  yamlFile:  zions-vsts-setcolor-microservice/pipeline/xl-release.yaml
   dependencies:
-  - /zions-vsts-rollup-microservice/pipeline/xlr-pipeline-ci-cd.yaml
+  - /zions-vsts-setcolor-microservice/pipeline/xlr-pipeline-ci-cd.yaml
   vault:
     engine: secret
     path: zions-service-framework
