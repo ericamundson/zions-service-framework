@@ -38,6 +38,10 @@ public class BuildManagementService {
 	private String queue
 
 	@Autowired
+	@Value('${tfs.build.yamlFilenames}')
+	private String yamlFilenamesStr
+
+	@Autowired
 	private IGenericRestClient genericRestClient;
 
 	@Autowired
@@ -150,18 +154,21 @@ public class BuildManagementService {
 		def relBldName = ""
 		// check for YAML pipeline in use
 		boolean isYAMLPipeline = false
-		def pipelineFileName = "azure-pipelines.yml"
+		def pipelineFileName = null
 		if (buildData && buildData.ciBuildFile) {
-			pipelineFileName = buildData.ciBuildFile
+			log.debug("BuildManagementService::ensureBuildsForBranch -- Setting YAML CI Build filename to ${buildData.ciBuildFile}")
+			pipelineFileName = "${buildData.ciBuildFile}"
 		}
 		def branchName = "master"
 		if (isInitBranch) {
 			branchName = "adoinit"
 		}
-		def azurePipelinesFile = codeManagementService.getFileContent(collection, repo.project, repo, pipelineFileName, branchName)
-		if (azurePipelinesFile != null) {
-			// indicate the repo/branch is using a YAML pipeline
-			isYAMLPipeline = true
+		if (pipelineFileName == null) {
+			pipelineFileName = getYamlBuildFilename(collection, repo, branchName)
+			if (pipelineFileName) {
+				// indicate the repo/branch is using a YAML pipeline
+				isYAMLPipeline = true
+			}
 		}
 		if (isYAMLPipeline) {
 			// look for default pipeline build def to use for build validation policy
@@ -180,7 +187,7 @@ public class BuildManagementService {
 				buildFolderCreated = true
 				buildFolderName = "${repo.name}"
 				log.debug("BuildManagementService::ensureBuildsForBranch -- Build folder created for ${repo.name}")
-				def ciBuild = createYAMLBuildDef(collection, projectData, repo, buildTemplate, "${repo.name}", ciBuildInt)
+				def ciBuild = createYAMLBuildDef(collection, projectData, repo, buildTemplate, "${repo.name}", ciBuildInt, pipelineFileName)
 				if (ciBuild == null ) {
 					log.error("BuildManagementService::ensureBuildsForBranch -- YAML CI Build creation failed!")
 				} else {
@@ -538,13 +545,16 @@ public class BuildManagementService {
 		return writeBuildDefinition(collection, project, bDef)
 	}
 
-	def createYAMLBuildDef(def collection, def project, def repo, def bDef, def folder, String name = null) {
+	def createYAMLBuildDef(def collection, def project, def repo, def bDef, def folder, String name = null, def yamlFile = null) {
 		log.debug("BuildManagementService::createYAMLBuildDef for project ${project.name} / repo ${repo.name} with name "+name)
 		// set all the necessary properties and post the request
 		bDef.remove('authoredBy')
 		bDef.name = "${repo.name} CI"
 		if (name) {
 			bDef.name = name
+		}
+		if (yamlFile) {
+			bDef.process.yamlFilename = "/${yamlFile}"
 		}
 		bDef.id = -1
 		//bDef.draftOf = null
@@ -1254,6 +1264,20 @@ public class BuildManagementService {
 			log.debug("BuildManagementService::getResource -- Exception caught reading resource with name ${filename}.json not found. Returning NULL ...")
 		}
 		return template
+	}
+
+	public def getYamlBuildFilename( def collection, def repo, def branchName ) {
+		def yamlFilename = null
+		String[] yamlFilenames = yamlFilenamesStr.split(',')
+		for(String fileName in yamlFilenames) {
+			def aFile = codeManagementService.getFileContent(collection, repo.project, repo, fileName, branchName)
+			if (aFile != null) {
+				log.debug("BuildManagementService::getYamlBuildFilename -- YAML file found: " + fileName)
+				yamlFilename = fileName
+				break;
+			}
+		}
+		return yamlFilename
 	}
 
 	private def getLatestTag(def collection, def project, def repo) {
