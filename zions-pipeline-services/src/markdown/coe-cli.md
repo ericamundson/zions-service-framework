@@ -56,14 +56,22 @@ When a **DevOps Engineer** executes the **Pipeline Builder CLI** the following a
 - **out.dir** - file system location to generate blueprint output.
 - **pipeline.folder** - folder within **out.dir*to place generated pipeline implementation.
 
-### Component: [Blueprint Template Interpretor Service](https://dev.azure.com/zionseto/DTS/_git/zions-service-framework?path=%2Fzions-pipeline-services%2Fsrc%2Fmain%2Fgroovy%2Fcom%2Fzions%2Fpipeline%2Fservices%2Fyaml%2Ftemplate%2FBlueprintTemplateInterpretorService.groovy)
+### Component: [Blueprint Template Interpretor Service](https://dev.azure.com/zionseto/DTS/_git/zions-service-framework?path=%2Fzions-pipeline-services%2Fsrc%2Fmain%2Fgroovy%2Fcom%2Fzions%2Fpipeline%2Fservices%2Fyaml%2Ftemplate%2FBlueprintTemplateInterpretorService.groovy&version=GBmaster&line=1&lineEnd=2&lineStartColumn=1&lineEndColumn=1&lineStyle=plain)
 
 This component performs the following behaviors:
 
 - Runs a XL Blueprint to a specificed **out.dir** location.
 - Executes any executable yaml generated to **out.dir** location.
 
-### Component: [BranchPolicy](https://dev.azure.com/zionseto/DTS/_git/zions-service-framework?path=%2Fzions-pipeline-services%2Fsrc%2Fmain%2Fgroovy%2Fcom%2Fzions%2Fpipeline%2Fservices%2Fyaml%2Ftemplate%2Fexecution%2FBranchPolicy.groovy)
+**TODO: This component will need to be updated to remote execute yaml handlers.  Current 
+impl will not perform all required behaviors for each yaml handler.  It will need to 
+use backend services to handle all executable yaml snippets properly. Note!  No thoughts 
+on a solution yet.**
+
+## Yaml Components (package: com.zions.pipeline.services.yaml.template.execution)
+
+
+###  Component: [BranchPolicy](https://dev.azure.com/zionseto/DTS/_git/zions-service-framework?path=%2Fzions-pipeline-services%2Fsrc%2Fmain%2Fgroovy%2Fcom%2Fzions%2Fpipeline%2Fservices%2Fyaml%2Ftemplate%2Fexecution%2FBranchPolicy.groovy)
 
 This component provides ability to interpret a yaml snippet of the form: 
 
@@ -125,8 +133,8 @@ will also have a variable that can be used in build call `Good_stuff7`.
 - **name** - the name/location of build definition.
 - **queue** - the ADO queue.
 - **repository** - yaml element to specify GIT repository related data.
-	- **name** - GIT repository name.
-	- **defaultBranch** - the default branch that will trigger build.
+    - **name** - GIT repository name.
+    - **defaultBranch** - the default branch that will trigger build.
 - **variables** - free form yaml to specifiy any variables to be used in build that may be override at build creation.
 
 ### Component: [GitRepository](https://dev.azure.com/zionseto/DTS/_git/zions-service-framework?path=%2Fzions-pipeline-services%2Fsrc%2Fmain%2Fgroovy%2Fcom%2Fzions%2Fpipeline%2Fservices%2Fyaml%2Ftemplate%2Fexecution%2FGitRepository.groovy)
@@ -149,9 +157,9 @@ This yaml will create/update a repo with ADO project by the name of `reponame`. 
 - **project** - the ADO project with organization. Optional
 - **name** - the name of GIT repository.
 - **branches** - yaml element to specify required set of branch for repository.
-	- **branch** - name of branch to ensure.
-	- **baseName** - name of base branch to create branch from.
-	
+    - **branch** - name of branch to ensure.
+    - **baseName** - name of base branch to create branch from.
+    
 ### Component: [WorkItem](https://dev.azure.com/zionseto/DTS/_git/zions-service-framework?path=%2Fzions-pipeline-services%2Fsrc%2Fmain%2Fgroovy%2Fcom%2Fzions%2Fpipeline%2Fservices%2Fyaml%2Ftemplate%2Fexecution%2FWorkItem.groovy)
 
 This component provides ability to interpret a yaml snippet of the form: 

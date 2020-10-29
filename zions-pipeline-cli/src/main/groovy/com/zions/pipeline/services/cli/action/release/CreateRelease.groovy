@@ -71,11 +71,16 @@ class CreateRelease implements CliAction {
 				}
 			}
 			def xlrResult = releaseItemService.createRelease(templateId, xlrData)
-			String releaseId = releaseId(xlrResult)
-			String fReleaseId = "${xlrResult.id}"
-			XlrReleaseSubscription subscription = new XlrReleaseSubscription([releaseId: fReleaseId, pipelineId: adoPipelineId, adoProject: adoProject, isReleasePipeline: isReleasePipeline, failPipeline: xlrFailPipeline])
-			xlrReleaseSubscriptionRepository.save(subscription)
-			xlrResult = releaseItemService.startPlannedRelease(releaseId)
+			if (xlrResult) {
+				String releaseId = releaseId(xlrResult)
+				String fReleaseId = "${xlrResult.id}"
+				XlrReleaseSubscription subscription = new XlrReleaseSubscription([releaseId: fReleaseId, pipelineId: adoPipelineId, adoProject: adoProject, isReleasePipeline: isReleasePipeline, failPipeline: xlrFailPipeline])
+				xlrReleaseSubscriptionRepository.save(subscription)
+				xlrResult = releaseItemService.startPlannedRelease(releaseId)
+			} else {
+				//log.error("Failed to create XL Release plan!")
+				throw new Exception("Failed to create XL Release plan::  releaseTitle: ${releaseTitle}, ReleaseId:  ${templateId},  FolderId:  ${folderId}")
+			}
 		}
 	}
 	
