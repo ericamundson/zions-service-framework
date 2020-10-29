@@ -176,4 +176,11 @@ class GitService {
 		  .call()
 		git.close()
 	}
+	
+	String getBranchName(File repo) {
+		Git git = Git.open(repo)
+		org.eclipse.jgit.lib.Repository r = git.getRepository()
+		
+		return r.fullBranch
+	}
 }
