@@ -42,8 +42,7 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 	@Value('${tfs.cfield}')
 	String wiCfields
 	
-	@Value('${tfs.project.includes}')
-	String[] includeProjects
+
 
 	// Handle HTTP 412 retry when work item revision has changed
 	boolean retryFailed
