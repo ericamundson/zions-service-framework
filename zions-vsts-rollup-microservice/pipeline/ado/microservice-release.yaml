@@ -8,7 +8,7 @@ trigger:
   paths:
     include:
 
-    - 'ok/*'
+    - 'zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/calculations/*'
     
 pool:
   name: On-Prem Production
