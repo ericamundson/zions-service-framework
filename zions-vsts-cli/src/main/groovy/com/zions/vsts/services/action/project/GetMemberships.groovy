@@ -6,15 +6,20 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.cli.action.CliAction
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
+import com.zions.vsts.services.work.templates.ProcessTemplateService
 
 /**
- * List out project and team data.
- * 
- * @author Astro
+ * List out process template data
+ *
+ * @author Matt
  *
  */
 @Component
-class ListProjectsAndTeams implements CliAction {
+class GetMemberships implements CliAction {
+	
+	
+	@Autowired
+	ProcessTemplateService processTemplateService
 	
 	@Autowired
 	ProjectManagementService projectManagementService
@@ -25,10 +30,15 @@ class ListProjectsAndTeams implements CliAction {
 	@Value('${tfs.collection:}')
 	String collection
 	
+	@Value('${tfs.url:}')
+	String url
+	
+	
+	
 	@Value('${export.dir:}')
 	String directory
 	
-	public ListProjectsAndTeams() {
+	public GetMemberships() {
 	}
 
 	
@@ -38,29 +48,45 @@ class ListProjectsAndTeams implements CliAction {
 	
 		def projects = projectManagementService.getProjects(collection)
 		
-		//getProjects(collection, project, noUrl)
 		
-		projects.'value'.each { project -> 
-//			// TODO: Do some code to write project stuff
-			String pName = "${project.name}"
-			String id = "${project.id}"
-			println "project: ${pName}"
-			println "projectID: ${id}"
-			def teams = projectManagementService.getTeams(collection, pName)
+		//first get work item types
+		//def getWITField(collection, project, wit, field)
+		//def getFields(def collection, def project)
+		
+		projects.'value'.each { project ->
+//
+		String pName = "${project.name}"
+		String id = "${project.id}"
+		//println "project: ${pName}"
+		//println "projectID: ${id}"
+
 			
-			teams.value.each { team ->
-				println "     team:  ${team.name}"
+		
+		//def getProjectMembersMap(collection, project)
+		def getMemberships = memberManagementService.getProjectMembersMap(collection, pName)
+		getMemberships.each { member ->
+				
+				//print member email address
+				//println member.key
+				//print member display name
+				//println member.value.displayName
+				
+				//get User info
+				def users = memberManagementService.getUsers(collection)
+				users.each { user ->
+					if (user.directoryAlias == 'z070187') {
+					println(user.displayName)
+				}
+					
+										
 			}
-//			// TODO: Loop to write some team stuff.
-		}
-		def users = memberManagementService.getUsers(collection)
-		
-		
-		users.each { user -> 
-			println user.displayName
-			println user.mailAddress
+
 		}
 		return null
+	}
+	
+	
+
 	}
 
 	@Override
