@@ -80,12 +80,19 @@ class PipelineBuilder implements CliAction {
 	
 	@Autowired
 	BlueprintTemplateInterpretorService blueprintTemplateInterpretorService
+	
+	@Value('${run.remote:false}')
+	Boolean runRemote
 
 	public def execute(ApplicationArguments data) {
 		//def answers = blueprintTemplateInterpretorService.loadAnswers()
 		//println "Answers:  ${answers}"
 		blueprintTemplateInterpretorService.outputPipeline()
-		blueprintTemplateInterpretorService.runExecutableYaml()
+		if (!runRemote) {
+			blueprintTemplateInterpretorService.runExecutableYaml()
+		} else {
+			blueprintTemplateInterpretorService.runPullRequestOnChanges()
+		}
 	}
 	
 	

@@ -279,7 +279,43 @@ class CodeManagementService {
 		}
 		return null
 	}
+	
+	public def createPullRequest(String collection, String project, String repo, def pullRequestData) {
+		def query = ['api-version': '5.0']
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			body: pullRequestData,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/pullrequests",
+			query: query
+		)
+		return result
 
+	}
+
+	public def updatePullRequest(String collection, String project, String repo, String pullRequestId, def updateData) {
+		def query = ['api-version': '5.0']
+		String body = new JsonBuilder(updateData).toPrettyString()
+		def result = genericRestClient.patch(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			body: body,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/pullrequests/${pullRequestId}",
+			query: query
+		)
+		return result
+
+	}
+	
+	public def getPullRequest(String collection, String project, String repo, String pullRequestId) {
+		def query = ['api-version': '5.0']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/pullrequests/${pullRequestId}",
+			query: query
+		)
+		return result
+	}
 
 	public def getFileContent(def collection, def project, def repo, def filename, def branchName) {
 		log.debug("CodeManagementService::getFileContent -- collection: ${collection}, project: ${project.name}, repo: ${repo.name}, filename: ${filename}, branchName: ${branchName}")

@@ -80,7 +80,23 @@ public class MemberManagementService {
 		}
 		return users
 	}
-	
+	public def getIdentity(String collection, String email) {
+		def identities = []
+		String url = "${genericRestClient.getTfsUrl()}".replace('//dev.', '//vssps.dev.')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${url}/${collection}/_apis/identities",
+			query: ['api-version': '6.0', 'searchFilter': 'General', filterValue: "${email}", queryMembership: 'None'],
+			withHeader: true
+			)
+		if (result && result.data) {
+			result.data.value.each { identitiy ->
+				identities.add(identitiy)
+			}
+		}		
+		return identities
+	}
+
 	/**
 	 * Adds members/user to team.
 	 * 

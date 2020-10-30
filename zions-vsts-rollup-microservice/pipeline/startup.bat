@@ -1,0 +1,1 @@
+start /W cmd /C %*

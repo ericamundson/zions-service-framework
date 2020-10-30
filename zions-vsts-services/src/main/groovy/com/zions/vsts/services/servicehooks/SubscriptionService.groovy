@@ -34,7 +34,7 @@ class SubscriptionService {
 			query: query
 			)
 		def retVal = null
-		results.'value'.each { sub ->
+		for (def sub in results.'value') {
 			String projectIdSub = "${sub.publisherInputs.projectId}"
 			String cProjectId = "${project.id}"
 			// TODO: only checking project. probably need to verify other publisher inputs, ie. changedFields, workItemType, etc.
@@ -42,6 +42,7 @@ class SubscriptionService {
 				if ("${sub.status}" != "disabledByUser") {
 					def inputs = subscriptionData.publisherInputs
 					Iterator<?> keys = inputs.keySet().iterator()
+					boolean found = true
 					while( keys.hasNext() ) {
 						def key = keys.next()
 						if ("${key}" == "projectId") continue
@@ -50,12 +51,16 @@ class SubscriptionService {
 						def subValue = sub.publisherInputs.get(key)
 						System.out.println("Input value: ${inputValue} ... subscription value: ${subValue}")
 						if ( sub.publisherInputs.get(key) != inputs.get(key) ) {
-							return null
+							found = false
+							break;
+							//return null
 						}
 					}
-					retVal = sub
-					System.out.println("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType}")
-					log.info("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType} in project ${project.name}")
+					if (found) {
+						System.out.println("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType}")
+						log.info("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType} in project ${project.name}")
+						return sub
+					}
 				}
 			}
 		}
