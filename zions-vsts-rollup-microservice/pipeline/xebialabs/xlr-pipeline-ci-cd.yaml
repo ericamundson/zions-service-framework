@@ -21,7 +21,8 @@ spec:
       tasks:
       - name: Deploy to environments
         type: xlrelease.ParallelGroup
-        tasks:        
+        tasks:
+        
         - name: PROD
           type: xlrelease.SequentialGroup
           tasks:

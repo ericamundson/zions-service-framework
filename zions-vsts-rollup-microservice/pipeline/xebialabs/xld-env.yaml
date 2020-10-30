@@ -10,8 +10,10 @@ spec:
     
     - name: Prod
       type: udm.Environment
-      members:      
-      - Infrastructure/DTS/microservice/Prod      
+      members:
+      
+      - Infrastructure/DTS/microservice/Prod
+      
       dictionaries:
       - Environments/DTS/zions-vsts-rollup-microservice/_Dictionaries/Prod_Dict
     - directory: _Dictionaries
