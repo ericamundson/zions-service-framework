@@ -10,12 +10,12 @@ import com.zions.vsts.services.work.templates.ProcessTemplateService
 
 /**
  * List out process template data
- * 
+ *
  * @author Matt
  *
  */
 @Component
-class GetProcessTemplateData implements CliAction {
+class GetMemberships implements CliAction {
 	
 	
 	@Autowired
@@ -34,10 +34,11 @@ class GetProcessTemplateData implements CliAction {
 	String url
 	
 	
+	
 	@Value('${export.dir:}')
 	String directory
 	
-	public GetProcessTemplateData() {
+	public GetMemberships() {
 	}
 
 	
@@ -52,32 +53,40 @@ class GetProcessTemplateData implements CliAction {
 		//def getWITField(collection, project, wit, field)
 		//def getFields(def collection, def project)
 		
-		projects.'value'.each { project -> 
-//			
-			String pName = "${project.name}"
-			String id = "${project.id}"
-			println "project: ${pName}"
-			println "projectID: ${id}"
+		projects.'value'.each { project ->
+//
+		String pName = "${project.name}"
+		String id = "${project.id}"
+		//println "project: ${pName}"
+		//println "projectID: ${id}"
+
+			
 		
 		//def getProjectMembersMap(collection, project)
 		def getMemberships = memberManagementService.getProjectMembersMap(collection, pName)
-		/*getMemberships.each { member ->
-			
-				def identity = member.identity
-				String uid = "${identity.uniqueName}"
-				println uid
-		}*/
+		getMemberships.each { member ->
+				
+				//print member email address
+				//println member.key
+				//print member display name
+				//println member.value.displayName
+				
+				//get User info
+				def users = memberManagementService.getUsers(collection)
+				users.each { user ->
+					if (user.directoryAlias == 'z070187') {
+					println(user.displayName)
+				}
+					
+										
+			}
+
+		}
 		return null
 	}
 	
-		
-		def users = memberManagementService.getUsers(collection)
-				
-		users.each { user -> 
-			println user.displayName
-			println user.mailAddress
-		}
-		return null
+	
+
 	}
 
 	@Override

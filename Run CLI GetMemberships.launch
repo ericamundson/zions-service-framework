@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-vsts-cli/src/main/groovy/com/zions/vsts/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="getMemberships&#13;&#10;--tfs.url=https://dev.azure.com&#13;&#10;--tfs.srcProjectName=LegacyTools&#13;&#10;--tfs.destPlanName=Sandbox&#13;&#10;--tfs.collection=zionseto&#13;&#10;--tfs.testplanIds=1033959,1033933&#13;&#10;--tfs.destProjectName=&quot;Sandbox&quot;&#13;&#10;--tfs.user=&quot;Michael.Angelastro@zionsbancorp.com&quot;&#13;&#10;--tfs.token=&quot;ml7fwu4hmczrcx66ag3tlvvyne5g5lgbq53wwaguarsv2fty2fha&quot;&#13;&#10;--export.dir=&quot;c:\bin&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=project -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User= -Dproxy.Password="/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>

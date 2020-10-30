@@ -102,8 +102,8 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 		def outData = adoData
 		def wiResource = adoData.resource
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
-		if (includeProjects && !includeProjects.contains(project))
-			return logResult('Project not included')
+		//if (includeProjects && !includeProjects.contains(project))
+			//return logResult('Project not included')
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		if (!types.contains(wiType))return logResult('not a valid work item type')
 		def parentValues = []

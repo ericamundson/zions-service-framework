@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
-
+import com.zions.vsts.services.work.templates.ProcessTemplateService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.test.TestManagementService
