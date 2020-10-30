@@ -186,12 +186,12 @@ class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTr
 			def id = [id: prd.createdBy.id]
 			def opts = [deleteSourceBranch: true, mergeCommitMessage: 'Update pipeline merge', mergeStrategy: 'rebase', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
 			def updateData = [completionOptions: opts, status: 'completed', lastMergeSourceCommit: prd.lastMergeSourceCommit]
-			codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
+			//codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
 			while (true) {
 				try {
 					System.sleep(5000)
 				} catch (e) {}
-				prd = codeManagementService.getPullRequest('', projectData.id, repoData.id, prId)
+				prd = codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
 				String status = "${prd.status}"
 				if (status != 'active') break
 			}
