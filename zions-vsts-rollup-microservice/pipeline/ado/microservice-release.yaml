@@ -8,7 +8,7 @@ trigger:
   paths:
     include:
 
-    - 'y/*'
+    - 'z/*'
     
 pool:
   name: On-Prem Production
