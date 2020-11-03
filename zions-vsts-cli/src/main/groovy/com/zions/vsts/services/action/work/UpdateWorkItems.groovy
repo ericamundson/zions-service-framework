@@ -47,6 +47,9 @@ class UpdateWorkItems implements CliAction {
 
 	@Value('${tfs.colorMapUID:}')
 	String colorMapUID	
+	
+	@Value('${skip.nocalcvalue:false}')
+	boolean skipNocalcValue
 
 	ChangeListManager clManager
 	
@@ -130,6 +133,7 @@ class UpdateWorkItems implements CliAction {
 	}
 	
 	public getChanges(def includes, def id, Row row) {
+		boolean skip = false
 		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${id}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 		def rowMap = excelManagementService.getRowMap(row)
 
@@ -149,8 +153,13 @@ class UpdateWorkItems implements CliAction {
 					}
 					else {
 						def value
-						if (handler)  // use calculation handler to get value
+						if (handler)  { // use calculation handler to get value
 							value = fieldCalcManager.execute([ targetField: adoFieldName, fields: rowMap ], handler)
+							if (skipNocalcValue && (!value || value == '')) {
+								println("  <<No value from $handler: skipping update>>")
+								skip = true
+							}
+						}
 						else
 							value = mapEntry.value
 						if (!value || value == 'null') {
@@ -187,8 +196,10 @@ class UpdateWorkItems implements CliAction {
 				}
 			}
 		} 
-		
-		return wiData
+		if (skip)
+			return null
+		else
+			return wiData
 	}
 
 	public Object validate(ApplicationArguments args) throws Exception {
