@@ -121,6 +121,7 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		//this is the work item id
 		String id = "${wiResource.revision.id}"
+		if (!id) return logResult('no child found it may have been deleted.')
 		
 		//code to address null pointer exception
 		if (!wiResource.fields) return logResult('No valid changes made')

@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
+import com.zions.vsts.services.account.AccountManagementService
 import com.zions.vsts.services.work.templates.ProcessTemplateService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
@@ -24,7 +25,7 @@ import com.zions.vsts.services.test.TestManagementService
 
 @Configuration
 @Profile("project")
-@ComponentScan(["com.zions.vsts.services.action.project,com.zions.vsts.services.asset,com.zions.vsts.services.work,com.zions.vsts.services.action.test,com.zions.vsts.services.admin,com.zions.vsts.services.test"])
+@ComponentScan(["com.zions.vsts.services.action.project,com.zions.vsts.services.asset,com.zions.vsts.services.work,com.zions.vsts.services.action.test,com.zions.vsts.services.admin,com.zions.vsts.services.test,com.zions.vsts.services.account"])
 
 public class ProjectAppConfig {
     Map<String, CliAction> actions;
@@ -41,6 +42,13 @@ public class ProjectAppConfig {
 	ProcessTemplateService processTemplateService() {
 		return new ProcessTemplateService();
 	}
+	
+	
+	@Bean
+	AccountManagementService accountManagementService() {
+		return new AccountManagementService();
+	}
+	
 	
 	
 	@Bean
