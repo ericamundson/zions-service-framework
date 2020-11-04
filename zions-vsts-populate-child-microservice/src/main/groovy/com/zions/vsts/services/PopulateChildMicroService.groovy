@@ -135,11 +135,10 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		try {
 
 			result = workManagementService.getChildren(collection, project, id)
-			
-						
+									
 		} catch (e) {
-			//child may have been deleted
-			log.error("Exception occurred: ${e.message}")
+			
+			log.error("Exception has occurred: ${e.message}")
 		}
 		
 		//handle nullpoint here.

@@ -662,6 +662,7 @@ class WorkManagementService {
 
 	def getChildren(String collection, String project, String id) {
 		def pwi = getWorkItem(collection, project, id)
+		//handle deleted children records
 		if (!pwi) {
 			throw new Exception("$id could not be retrieved.  It may have been deleted")
 			return
