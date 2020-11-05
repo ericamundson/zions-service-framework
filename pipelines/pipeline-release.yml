@@ -118,6 +118,7 @@ stages:
         buildType: specific
         project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
         pipeline: 1327
+        buildId: $(Build.BuildId)
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
@@ -140,6 +141,7 @@ stages:
         buildType: specific
         project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
         pipeline: 1327
+        buildId: $(Build.BuildId)
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
@@ -162,6 +164,7 @@ stages:
         buildType: specific
         project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
         pipeline: 1327
+        buildId: $(Build.BuildId)
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
@@ -184,6 +187,7 @@ stages:
         buildType: specific
         project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
         pipeline: 1327
+        buildId: $(Build.BuildId)
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
@@ -206,6 +210,7 @@ stages:
         buildType: specific
         project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
         pipeline: 1327
+        buildId: $(Build.BuildId)
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
