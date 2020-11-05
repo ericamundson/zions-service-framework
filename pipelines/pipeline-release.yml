@@ -106,7 +106,7 @@ stages:
 
 - stage: Release
   jobs:
-  - job: Release - UTMVPI0144
+  - job: Release_UTMVPI0144
     pool:
       name: On-Prem Production
       demands:
@@ -127,7 +127,7 @@ stages:
         SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
         Contents: 'zions-pipeline-cli.jar'
         TargetFolder: 'd:/app/azure/pipeline_tools'
-  - job: Release - UTMVPI0156
+  - job: Release_UTMVPI0156
     pool:
       name: On-Prem Production
       demands:
@@ -148,7 +148,7 @@ stages:
         SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
         Contents: 'zions-pipeline-cli.jar'
         TargetFolder: 'd:/app/azure/pipeline_tools'
-  - job: Release - UTMVPI0157
+  - job: Release_UTMVPI0157
     pool:
       name: On-Prem Production
       demands:
@@ -169,7 +169,7 @@ stages:
         SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
         Contents: 'zions-pipeline-cli.jar'
         TargetFolder: 'd:/app/azure/pipeline_tools'
-  - job: Release - utlxa1846
+  - job: Release_utlxa1846
     pool:
       name: On-Prem Production
       demands:
@@ -190,7 +190,7 @@ stages:
         SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
         Contents: 'zions-pipeline-cli.jar'
         TargetFolder: '/app/azure/pipeline_tools'
-  - job: Release - utlxa1001
+  - job: Release_utlxa1001
     pool:
       name: On-Prem Production
       demands:
