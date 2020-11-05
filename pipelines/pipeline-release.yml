@@ -127,6 +127,7 @@ stages:
         SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
         Contents: 'zions-pipeline-cli.jar'
         TargetFolder: 'd:/app/azure/pipeline_tools'
+        OverWrite: true
   - job: Release_UTMVPI0156
     pool:
       name: On-Prem Production
@@ -148,6 +149,7 @@ stages:
         SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
         Contents: 'zions-pipeline-cli.jar'
         TargetFolder: 'd:/app/azure/pipeline_tools'
+        OverWrite: true
   - job: Release_UTMVPI0157
     pool:
       name: On-Prem Production
@@ -169,6 +171,7 @@ stages:
         SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
         Contents: 'zions-pipeline-cli.jar'
         TargetFolder: 'd:/app/azure/pipeline_tools'
+        OverWrite: true
   - job: Release_utlxa1846
     pool:
       name: On-Prem Production
@@ -190,6 +193,7 @@ stages:
         SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
         Contents: 'zions-pipeline-cli.jar'
         TargetFolder: '/app/azure/pipeline_tools'
+        OverWrite: true
   - job: Release_utlxa1001
     pool:
       name: On-Prem Production
@@ -211,4 +215,4 @@ stages:
         SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
         Contents: 'zions-pipeline-cli.jar'
         TargetFolder: '/app/azure/pipeline_tools'
-      
+        OverWrite: true
