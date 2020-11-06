@@ -4,10 +4,10 @@ variables:
     
   
  
-#Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named â€˜buildTagâ€™. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named â€˜Tagâ€™. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named â€˜buildTagâ€™. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named â€˜Tagâ€™. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 stages:
 
 - stage: Release
@@ -35,7 +35,7 @@ stages:
     - script: |
         copy /Y /B $(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools
       displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
-      name: 'copy jar'
+      name: copy_jar
   - job: Release_UTMVPI0156
     pool:
       name: On-Prem Production
@@ -54,7 +54,7 @@ stages:
     - script: |
         copy /Y /B $(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools
       displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
-      name: 'copy jar'
+      name: copy_jar
   - job: Release_UTMVPI0157
     pool:
       name: On-Prem Production
@@ -73,7 +73,7 @@ stages:
     - script: |
         copy /Y /B $(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools
       displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
-      name: 'copy jar'
+      name: copy_jar
   - job: Release_utlxa1846
     pool:
       name: On-Prem Production
