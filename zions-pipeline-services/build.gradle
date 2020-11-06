@@ -23,6 +23,12 @@ confluence {
 			srcFile  file('src/markdown/coe-backend.md')
 			labels = ['coe-backend', 'coe-development']
 		}
+		page {
+			parentTitle  'DS: COE'
+			title "DS: COE: Charter"
+			srcFile  file('src/markdown/coe-charter.md')
+			labels = ['coe-charter', 'coe-process']
+		}
 
 	}
 }
