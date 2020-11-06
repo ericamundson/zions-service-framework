@@ -39,7 +39,6 @@ stages:
       inputs:
         OutputVariable: buildTag
         InitialVersionPrefix: 7.0.0
-        WriteTag: false
 
     - task: Gradle@2
       displayName: 'gradlew clean build updateBatJarVersion'
@@ -59,12 +58,6 @@ stages:
         TargetFolder: '$(build.artifactstagingdirectory)'
         CleanTargetFolder: true
         OverWrite: true
-
-    - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
-      displayName: Tagging
-      inputs:
-        OutputVariable: Tag
-        InitialVersionPrefix: 7.0.0
 
     - task: PublishTestResults@2
       displayName: 'Publish Test Results **/TEST-*.xml'
