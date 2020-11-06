@@ -1,0 +1,120 @@
+variables:
+- group: 'XebiaLabs CLI (Prod)'
+
+    
+  
+ 
+#Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+stages:
+
+- stage: Release
+  jobs:
+  - job: Release_UTMVPI0144
+    pool:
+      name: On-Prem Production
+      demands:
+      - agent.computername -equals UTMVPI0144
+    steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: 'Download Build Artifacts'
+      inputs:
+        buildType: specific
+        project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
+        pipeline: 1327
+        artifactName: 'pipeline-drop'
+        itemPattern: |
+          **/zions-pipeline-cli*.jar
+#     - task: WindowsMachineFileCopy@2
+#       displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
+#       inputs:
+#         SourcePath: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar'
+#         TargetFolder: 'd:/app/azure/pipeline_tools'
+    - script: |
+        copy /Y /B $(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools
+      displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
+      name: 'copy jar'
+  - job: Release_UTMVPI0156
+    pool:
+      name: On-Prem Production
+      demands:
+      - agent.computername -equals UTMVPI0156
+    steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: 'Download Build Artifacts'
+      inputs:
+        buildType: specific
+        project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
+        pipeline: 1327
+        artifactName: 'pipeline-drop'
+        itemPattern: |
+          **/zions-pipeline-cli*.jar
+    - script: |
+        copy /Y /B $(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools
+      displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
+      name: 'copy jar'
+  - job: Release_UTMVPI0157
+    pool:
+      name: On-Prem Production
+      demands:
+      - agent.computername -equals UTMVPI0157
+    steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: 'Download Build Artifacts'
+      inputs:
+        buildType: specific
+        project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
+        pipeline: 1327
+        artifactName: 'pipeline-drop'
+        itemPattern: |
+          **/zions-pipeline-cli*.jar
+    - script: |
+        copy /Y /B $(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools
+      displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
+      name: 'copy jar'
+  - job: Release_utlxa1846
+    pool:
+      name: On-Prem Production
+      demands:
+      - agent.computername -equals utlxa1846
+    steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: 'Download Build Artifacts'
+      inputs:
+        buildType: specific
+        project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
+        pipeline: 1327
+        artifactName: 'pipeline-drop'
+        itemPattern: |
+          **/zions-pipeline-cli*.jar
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
+      inputs:
+        SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
+        Contents: 'zions-pipeline-cli.jar'
+        TargetFolder: '/app/azure/pipeline_tools'
+        OverWrite: true
+  - job: Release_utlxa1001
+    pool:
+      name: On-Prem Production
+      demands:
+      - agent.computername -equals utlxa1001
+    steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: 'Download Build Artifacts'
+      inputs:
+        buildType: specific
+        project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
+        pipeline: 1327
+        artifactName: 'pipeline-drop'
+        itemPattern: |
+          **/zions-pipeline-cli*.jar
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
+      inputs:
+        SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
+        Contents: 'zions-pipeline-cli.jar'
+        TargetFolder: '/app/azure/pipeline_tools'
+        OverWrite: true
