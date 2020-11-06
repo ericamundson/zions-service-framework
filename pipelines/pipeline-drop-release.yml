@@ -27,15 +27,12 @@ stages:
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
+        downloadPath: 'd:/app/azure/pipeline_tools'
 #     - task: WindowsMachineFileCopy@2
 #       displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
 #       inputs:
 #         SourcePath: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar'
 #         TargetFolder: 'd:/app/azure/pipeline_tools'
-    - script: |
-        copy /Y /B $(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools
-      displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
-      name: 'copy jar'
   - job: Release_UTMVPI0156
     pool:
       name: On-Prem Production
@@ -51,10 +48,7 @@ stages:
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
-    - script: |
-        copy /Y /B $(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools
-      displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
-      name: 'copy jar'
+        downloadPath: 'd:/app/azure/pipeline_tools'
   - job: Release_UTMVPI0157
     pool:
       name: On-Prem Production
@@ -70,10 +64,7 @@ stages:
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
-    - script: |
-        copy /Y /B $(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools
-      displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
-      name: 'copy jar'
+        downloadPath: 'd:/app/azure/pipeline_tools'
   - job: Release_utlxa1846
     pool:
       name: On-Prem Production
@@ -89,13 +80,14 @@ stages:
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
-      inputs:
-        SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
-        Contents: 'zions-pipeline-cli.jar'
-        TargetFolder: '/app/azure/pipeline_tools'
-        OverWrite: true
+        downloadPath: 'd:/app/azure/pipeline_tools'
+#     - task: CopyFiles@2
+#       displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
+#       inputs:
+#         SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
+#         Contents: 'zions-pipeline-cli.jar'
+#         TargetFolder: '/app/azure/pipeline_tools'
+#         OverWrite: true
   - job: Release_utlxa1001
     pool:
       name: On-Prem Production
@@ -111,10 +103,4 @@ stages:
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
-      inputs:
-        SourceFolder: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs'
-        Contents: 'zions-pipeline-cli.jar'
-        TargetFolder: '/app/azure/pipeline_tools'
-        OverWrite: true
+        downloadPath: 'd:/app/azure/pipeline_tools'
