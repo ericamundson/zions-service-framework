@@ -80,7 +80,7 @@ stages:
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
-        downloadPath: 'd:/app/azure/pipeline_tools'
+        downloadPath: '/app/azure/pipeline_tools'
 #     - task: CopyFiles@2
 #       displayName: 'Copy Files to: d:/app/azure/pipeline_tools'
 #       inputs:
@@ -103,4 +103,4 @@ stages:
         artifactName: 'pipeline-drop'
         itemPattern: |
           **/zions-pipeline-cli*.jar
-        downloadPath: 'd:/app/azure/pipeline_tools'
+        downloadPath: '/app/azure/pipeline_tools'
