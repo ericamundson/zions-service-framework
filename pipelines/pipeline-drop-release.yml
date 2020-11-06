@@ -28,9 +28,9 @@ stages:
         itemPattern: |
           **/zions-pipeline-cli*.jar
     - task: BatchScript@1
-      displayName: 'Run script $(Build.SourcesDirectory)/pipelines/copy.bat'
+      displayName: 'Run script $(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
       inputs:
-        filename: '$(Build.SourcesDirectory)/pipelines/copy.bat'
+        filename: '$(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
         arguments: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools'
   - job: Release_UTMVPI0156
     pool:
@@ -48,9 +48,9 @@ stages:
         itemPattern: |
           **/zions-pipeline-cli*.jar
     - task: BatchScript@1
-      displayName: 'Run script $(Build.SourcesDirectory)/pipelines/copy.bat'
+      displayName: 'Run script $(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
       inputs:
-        filename: '$(Build.SourcesDirectory)/pipelines/copy.bat'
+        filename: '$(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
         arguments: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools'
   - job: Release_UTMVPI0157
     pool:
@@ -68,9 +68,9 @@ stages:
         itemPattern: |
           **/zions-pipeline-cli*.jar
     - task: BatchScript@1
-      displayName: 'Run script $(Build.SourcesDirectory)/pipelines/copy.bat'
+      displayName: 'Run script $(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
       inputs:
-        filename: '$(Build.SourcesDirectory)/pipelines/copy.bat'
+        filename: '$(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
         arguments: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools'
   - job: Release_utlxa1846
     pool:
