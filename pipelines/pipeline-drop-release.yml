@@ -1,6 +1,13 @@
 variables:
 - group: 'XebiaLabs CLI (Prod)'
 
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - 'none/*'
     
   
  
@@ -30,8 +37,8 @@ stages:
     - task: BatchScript@1
       displayName: 'Run script $(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
       inputs:
-        filename: '$(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
-        arguments: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools'
+        filename: '$(Build.SourcesDirectory)\pipelines\pipeline_cp.bat'
+        arguments: '$(System.ArtifactsDirectory)\pipeline-drop\zions-pipeline-cli\build\libs\zions-pipeline-cli.jar d:\app\azure\pipeline_tools'
   - job: Release_UTMVPI0156
     pool:
       name: On-Prem Production
@@ -50,8 +57,8 @@ stages:
     - task: BatchScript@1
       displayName: 'Run script $(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
       inputs:
-        filename: '$(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
-        arguments: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools'
+        filename: '$(Build.SourcesDirectory)\pipelines\pipeline_cp.bat'
+        arguments: '$(System.ArtifactsDirectory)\pipeline-drop\zions-pipeline-cli\build\libs\zions-pipeline-cli.jar d:\app\azure\pipeline_tools'
   - job: Release_UTMVPI0157
     pool:
       name: On-Prem Production
@@ -70,8 +77,8 @@ stages:
     - task: BatchScript@1
       displayName: 'Run script $(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
       inputs:
-        filename: '$(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
-        arguments: '$(System.ArtifactsDirectory)/pipeline-drop/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar d:/app/azure/pipeline_tools'
+        filename: '$(Build.SourcesDirectory)\pipelines\pipeline_cp.bat'
+        arguments: '$(System.ArtifactsDirectory)\pipeline-drop\zions-pipeline-cli\build\libs\zions-pipeline-cli.jar d:\app\azure\pipeline_tools'
   - job: Release_utlxa1846
     pool:
       name: On-Prem Production
