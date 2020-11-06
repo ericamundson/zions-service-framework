@@ -97,8 +97,8 @@ RMQQ -> PEEP: onMessage(adoEvent)
 
 When a pull request event is sent from ADO it contains data on commits. On pull requests 
 this commit data will be used to determine changes made on repository.  If any pipeline 
-executeble yaml is to be executed then it will be executed.  Even executable yaml in `executables` 
-folder will only be executed if there are changes in `pipeline` folder.
+executeble yaml is to be executed then it will be executed.  All executable yaml in `executables` 
+folder will be executed on all pull requests.
 
 ![CodeManagementService sequence](CodeManagementService_sequence.svg)
 
@@ -177,16 +177,16 @@ IExecutableYamlHandler -do-> ey : Executable yaml file in GIT repository.
 @enduml
 
 @startuml YamlExecutionService_sequence.svg
-participant PEEP as "PipelineExecutionEndPoint:pipelineExecutionEndPoint"
+participant PEEP as "pipelineExecutionEndPoint"
 participant YES as "<b>YamlExecutionService:yamlExecutionService</b>"
-participant PMS as "ProjectManagementService:projectManagementService"
+participant PMS as "projectManagementService"
 PEEP -> YES: runExecutableYaml(repoUrl,name,locations, branch, project, pullRequestId)
 YES -> PMS: getProject(name): projectData
 
-participant CMS as "CodeManagementService:codeManagementService"
+participant CMS as "codeManagementService"
 YES -> CMS: getRepo(name): repoData
 
-participant GS as "GitService:gitService"
+participant GS as "gitService"
 YES -> GS: loadChanges(repoUrl, repoName, branch)
 
 activate YES

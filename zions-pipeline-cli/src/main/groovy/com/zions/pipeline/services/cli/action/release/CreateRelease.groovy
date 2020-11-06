@@ -81,6 +81,8 @@ class CreateRelease implements CliAction {
 				//log.error("Failed to create XL Release plan!")
 				throw new Exception("Failed to create XL Release plan::  releaseTitle: ${releaseTitle}, ReleaseId:  ${templateId},  FolderId:  ${folderId}")
 			}
+		} else {
+			throw new Exception("Template doesn't exist:  ${templateTitle}")
 		}
 	}
 	
