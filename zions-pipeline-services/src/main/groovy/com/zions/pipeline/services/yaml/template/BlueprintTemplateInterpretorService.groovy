@@ -11,6 +11,8 @@ import java.util.regex.Pattern
 import java.util.regex.Matcher
 
 import com.zions.pipeline.services.mixins.FindExecutableYamlNoRepoTrait
+import com.zions.pipeline.services.mixins.XLCliTrait
+
 import groovy.util.logging.Slf4j
 
 import com.zions.pipeline.services.yaml.template.execution.IExecutableYamlHandler
@@ -30,7 +32,7 @@ import com.zions.vsts.services.admin.member.MemberManagementService
  */
 @Component
 @Slf4j
-class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait {
+class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait, XLCliTrait {
 	
 	@Autowired
 	Map<String, IExecutableYamlHandler> yamlHandlerMap;
@@ -106,7 +108,6 @@ class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTr
 	
 	def outputPipeline() {
 		//initialize pipeline dir
-		loadXLCli()
 		//write answers file.
 //		def answersOut = new YamlBuilder()
 //		answersOut.call(answers)
@@ -115,6 +116,7 @@ class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTr
 		if (!pipelineDir.exists()) {
 			pipelineDir.mkdirs()
 		}
+		loadXLCli(pipelineDir)
 		File startupBat = new File(pipelineDir, 'startup.bat')
 		def os = startupBat.newDataOutputStream()
 		os << 'start /W cmd /C %*'
@@ -210,30 +212,4 @@ class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTr
 		return null
 	}
 		
-	def loadXLCli() {
-		String osname = System.getProperty('os.name')
-			
-		if (osname.contains('Windows')) {
-			InputStream istream = this.getClass().getResourceAsStream('/xl/windows/xl.exe')
-			File pipelineDir = new File(outDir, pipelineFolder)
-			if (!pipelineDir.exists()) {
-				pipelineDir.mkdirs()
-			}
-			File of = new File(pipelineDir, 'xl.exe')
-			def aos = of.newDataOutputStream()
-			aos << istream
-			aos.close()
-		} else {
-			InputStream istream = this.getClass().getResourceAsStream('/xl/linux/xl')
-			File pipelineDir = new File(outDir, pipelineFolder)
-			if (!pipelineDir.exists()) {
-				pipelineDir.mkdirs()
-			}
-			File of = new File(pipelineDir, 'xl')
-			def aos = of.newDataOutputStream()
-			aos << istream
-			aos.close()
-
-		}
-	}
 }
