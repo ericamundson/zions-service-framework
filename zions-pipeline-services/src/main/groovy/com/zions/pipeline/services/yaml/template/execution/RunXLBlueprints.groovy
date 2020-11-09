@@ -8,6 +8,7 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.policy.PolicyManagementService
 import com.zions.pipeline.services.mixins.CliRunnerTrait
+import com.zions.pipeline.services.mixins.XLCliTrait
 
 import groovy.yaml.YamlBuilder
 
@@ -33,7 +34,7 @@ import groovy.util.logging.Slf4j
  */
 @Component
 @Slf4j
-class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait {
+class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTrait {
 
 
 	@Value('${xl.user:}')
@@ -121,22 +122,4 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait {
 		return false
 	}
 
-	def loadXLCli(File loadDir) {
-		String osname = System.getProperty('os.name')
-
-		if (osname.contains('Windows')) {
-			InputStream istream = this.getClass().getResourceAsStream('/xl/windows/xl.exe')
-			File of = new File(loadDir, 'xl.exe')
-			def aos = of.newDataOutputStream()
-			aos << istream
-			aos.close()
-		} else {
-			InputStream istream = this.getClass().getResourceAsStream('/xl/linux/xl')
-			File of = new File(loadDir, 'xl')
-			def aos = of.newDataOutputStream()
-			aos << istream
-			aos.close()
-
-		}
-	}
 }
