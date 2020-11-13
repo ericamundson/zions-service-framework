@@ -179,25 +179,28 @@ stop
 
 # Gaps
 
-- **5** Usability 
+- **5** [Usability](https://dev.azure.com/zionseto/DTS/_workitems/edit/970959) 
     - Central UI to manage and execute blueprints
-    - **2** Ensure XL CLI is wrapped and handling of blueprint locations is automated/wrapped.
-- **3** Training
-    - No training material
-    - **1** **Not enough actual usage collateral for samples/examples.**
-- **4** Testing
+    - **2** Ensure XL CLI is wrapped and handling of blueprint locations is automated/wrapped. **Eric**
+- **3** [Training](https://dev.azure.com/zionseto/DTS/_workitems/edit/972901)
+    - No training material  ??
+    - Team coaching on extending ADO, XLs and adding micro-services.  **Eric** & **James**
+    - **1** **Not enough actual usage collateral for samples/examples.**  **James** & **Ashwin**
+- **4** [Testing](https://dev.azure.com/zionseto/DTS/_workitems/edit/970967) 
     - No defined test methodology
-    - No defined test architecture
-    - No stub method
-- **1** Provisioning - **not far off, but needs a little more attention and recipe to use.**
+    - No defined test architecture  **Eric**
+    - No stub method  **James**
+- **1** [Provisioning](https://dev.azure.com/zionseto/DTS/_workitems/edit/970404) - **not far off, but needs a little more attention and recipe to use.**  **James**
     - Service Connections
         - All projects
         - Need strategy        
     - Service Hooks
     - Change Requests - In Scope??
         - Firewall
-- **2** Property Libraries - **Vault host needs to be setup to be more production ready.**
+- **2** [Secrets Management](https://dev.azure.com/zionseto/DTS/_workitems/edit/1510636) - **Vault host needs to be setup to be more production ready.**  **Brian**
     - We should be able to lookup against multiple paths 
     for executions.
+- **5** [Audit & Traceability](https://dev.azure.com/zionseto/DTS/_workitems/edit/970959)  ???
+    - Enable feedback to ADO Release work item on status of a release.  **Ashwin**
 
 # Timeline
