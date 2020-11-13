@@ -1,200 +1,109 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://example.com/example.json",
-    "type": "object",
-    "title": "The root schema",
-    "description": "The root schema comprises the entire JSON document.",
-    "default": {},
-    "examples": [
-        {
-            "type": "runXLDeployApply",
-            "yamlFile": ".pipeline/xl-deploy.yaml",
-            "dependencies": [
-                "/.pipeline/xebialabs/xld-env.yaml",
-                "/.pipeline/xebialabs/xld-infra.yaml"
-            ],
-            "values": [
-                {
-                    "name": "test1",
-                    "value": "avalue1"
-                },
-                {
-                    "name": "test2",
-                    "value": "avalue2"
-                }
-            ]
-        }
-    ],
-    "required": [
-        "type",
-        "yamlFile"
-    ],
-    "properties": {
-        "type": {
-            "$id": "#/properties/type",
-            "type": "string",
-            "title": "The type schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": "",
-            "examples": [
-                "runXLDeployApply"
-            ]
-        },
-        "yamlFile": {
-            "$id": "#/properties/yamlFile",
-            "type": "string",
-            "title": "The yamlFile schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": "",
-            "examples": [
-                ".pipeline/xl-deploy.yaml"
-            ]
-        },
-        "useProxy": {
-            "$id": "#/properties/useProxy",
-            "type": "boolean",
-            "title": "The useProxy schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": "",
-            "examples": [
-                "true"
-            ]
-        },
-        "dependencies": {
-            "$id": "#/properties/dependencies",
-            "type": "array",
-            "title": "The dependencies schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": [],
-            "examples": [
-                [
-                    "/.pipeline/xebialabs/xld-env.yaml",
-                    "/.pipeline/xebialabs/xld-infra.yaml"
-                ]
-            ],
-            "additionalItems": true,
-            "items": {
-                "$id": "#/properties/dependencies/items",
-                "anyOf": [
-                    {
-                        "$id": "#/properties/dependencies/items/anyOf/0",
-                        "type": "string",
-                        "title": "The first anyOf schema",
-                        "description": "An explanation about the purpose of this instance.",
-                        "default": "",
-                        "examples": [
-                            "/.pipeline/xebialabs/xld-env.yaml",
-                            "/.pipeline/xebialabs/xld-infra.yaml"
-                        ]
-                    }
-                ]
-            }
-        },
-        "vault": {
-            "$id": "#/properties/vault",
-            "type": "object",
-            "title": "The vault schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": {},
-            "examples": [
-                {
-                    "engine": "secret",
-                    "path": "zions-service-framework"
-                }
-            ],
-            "required": [
-                "engine",
-                "path"
-            ],
-            "properties": {
-                "engine": {
-                    "$id": "#/properties/repository/properties/engine",
-                    "type": "string",
-                    "title": "The engine schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": "",
-                    "examples": [
-                        "secret"
-                    ]
-                },
-                "path": {
-                    "$id": "#/properties/repository/properties/path",
-                    "type": "string",
-                    "title": "The path schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": "",
-                    "examples": [
-                        "zions-service-framework"
-                    ]
-                }
-            },
-            "additionalProperties": false
-        },
-        "values": {
-            "$id": "#/properties/values",
-            "type": "array",
-            "title": "The values schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": [],
-            "examples": [
-                [
-                    {
-                        "name": "test1",
-                        "value": "avalue1"
-                    },
-                    {
-                        "name": "test2",
-                        "value": "avalue2"
-                    }
-                ]
-            ],
-            "additionalItems": true,
-            "items": {
-                "$id": "#/properties/values/items",
-                "anyOf": [
-                    {
-                        "$id": "#/properties/values/items/anyOf/0",
-                        "type": "object",
-                        "title": "The first anyOf schema",
-                        "description": "An explanation about the purpose of this instance.",
-                        "default": {},
-                        "examples": [
-                            {
-                                "name": "test1",
-                                "value": "avalue1"
-                            }
-                        ],
-                        "required": [
-                            "name",
-                            "value"
-                        ],
-                        "properties": {
-                            "name": {
-                                "$id": "#/properties/values/items/anyOf/0/properties/name",
-                                "type": "string",
-                                "title": "The name schema",
-                                "description": "An explanation about the purpose of this instance.",
-                                "default": "",
-                                "examples": [
-                                    "test1"
-                                ]
-                            },
-                            "value": {
-                                "$id": "#/properties/values/items/anyOf/0/properties/value",
-                                "type": "string",
-                                "title": "The value schema",
-                                "description": "An explanation about the purpose of this instance.",
-                                "default": "",
-                                "examples": [
-                                    "avalue1"
-                                ]
-                            }
-                        },
-                        "additionalProperties": false
-                    }
-                ]
-            }
-        }
-    },
-    "additionalProperties": false
+	"definitions": {},
+	"$schema": "http://json-schema.org/draft-07/schema#", 
+	"$id": "https://example.com/object1604951643.json", 
+	"title": "Root", 
+	"type": "object",
+	"required": [
+		"type",
+		"yamlFile"
+	],
+	"properties": {
+		"type": {
+			"$id": "#root/type", 
+			"title": "Type", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				"runXLDeployApply"
+			],
+			"pattern": "^.*$"
+		},
+		"yamlFile": {
+			"$id": "#root/yamlFile", 
+			"title": "Yamlfile", 
+			"type": "string",
+			"default": "",
+			"examples": [
+				".pipeline/xl-deploy.yaml"
+			],
+			"pattern": "^.*$"
+		},
+		"vault": {
+			"$id": "#root/vault", 
+			"title": "Vault", 
+			"type": "object",
+			"required": [
+				"engine",
+				"paths"
+			],
+			"properties": {
+				"engine": {
+					"$id": "#root/vault/engine", 
+					"title": "Engine", 
+					"type": "string",
+					"default": "",
+					"examples": [
+						"secrets"
+					],
+					"pattern": "^.*$"
+				},
+				"paths": {
+					"$id": "#root/vault/paths", 
+					"title": "Paths", 
+					"type": "array",
+					"default": [],
+					"items":{
+						"$id": "#root/vault/paths/items", 
+						"title": "Items", 
+						"type": "string",
+						"default": "",
+						"examples": [
+							"zions-service-framework"
+						],
+						"pattern": "^.*$"
+					}
+				}
+			}
+		}
+,
+		"values": {
+			"$id": "#root/values", 
+			"title": "Values", 
+			"type": "array",
+			"default": [],
+			"items":{
+				"$id": "#root/values/items", 
+				"title": "Items", 
+				"type": "object",
+				"required": [
+					"name",
+					"value"
+				],
+				"properties": {
+					"name": {
+						"$id": "#root/values/items/name", 
+						"title": "Name", 
+						"type": "string",
+						"default": "",
+						"examples": [
+							"test1"
+						],
+						"pattern": "^.*$"
+					},
+					"value": {
+						"$id": "#root/values/items/value", 
+						"title": "Value", 
+						"type": "string",
+						"default": "",
+						"examples": [
+							"avalue1"
+						],
+						"pattern": "^.*$"
+					}
+				}
+			}
+
+		}
+	}
 }

@@ -15,7 +15,8 @@ import com.zions.pipeline.services.mixins.XLCliTrait
  * yamlFile: .pipeline/xl-deploy.yaml
  * vault:  # Optional yaml object to setup token replacement from vault
  *   engine: secret
- *   path: WebCMS # a path into Vault secret store that can be project specific.  
+ *   paths: 
+ *   - WebCMS   
  * values: # Optional for setting up XL CLI values.
  * - name: test1
  *   value: ${xl.password}  # xl.password token to be replaced by Vault
@@ -66,9 +67,9 @@ class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait, XLCliT
 		
 		def vaultSecrets = null
 		if (yaml.vault) {
-			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.path)
+			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.paths as String[])
 		} else {
-			vaultSecrets = vaultService.getSecrets('secret', project)
+			vaultSecrets = vaultService.getSecrets('secret', [project] as String[])
 		}
 		
 		List<String> values = []

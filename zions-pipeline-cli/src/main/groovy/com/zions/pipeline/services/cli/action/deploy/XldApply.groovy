@@ -9,13 +9,18 @@ import com.zions.pipeline.services.mixins.XLCliTrait
 import org.springframework.stereotype.Component
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.vault.VaultService
 
 @Component
 @Slf4j
 class XldApply implements CliAction, XLCliTrait, CliRunnerTrait {
+	
+	@Autowired
+	VaultService vaultService
 	
 	@Value('${xl.file:.pipeline/xl-apps.yaml}')
 	String xlFileName
@@ -38,6 +43,10 @@ class XldApply implements CliAction, XLCliTrait, CliRunnerTrait {
 	@Value('${xl.values:}')
 	String[] xlValues
 	
+	@Value('${vault.paths:zions-service-framework}')
+	String[] vaultPaths
+	
+	
 	public def execute(ApplicationArguments data) {
 		loadXLCli(buildSourcesDirectory)
 		String os = System.getProperty('os.name')
@@ -52,14 +61,34 @@ class XldApply implements CliAction, XLCliTrait, CliRunnerTrait {
 			env = [key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080"]
 		}
 		def arg = [:]
-		if (xlValues.size() > 0) {
-			String valuesStr = xlValues.join(',')
+		String[] sValues = convertSecrets()
+		if (sValues.length > 0) {
+			String valuesStr = sValues.join(',')
 			arg = [line: "${option} ${buildSourcesDirectory.absolutePath}/xl apply  -f ${buildSourcesDirectory.absolutePath}/${xlFileName} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}  --values ${valuesStr}"]
 		} else {
 			arg = [ line: "${option} ${buildSourcesDirectory.absolutePath}/xl apply -f ${buildSourcesDirectory.absolutePath}/${xlFileName} --xl-deploy-url ${xldUrl} --xl-deploy-username ${xlUser} --xl-deploy-password ${xlPassword}" ]
 			
 		}
 		run(command, "${buildSourcesDirectory.absolutePath}", arg, env, log)
+	}
+	
+	String[] convertSecrets() {
+		Map vaultSecrets = vaultService.getSecrets('secret', vaultPaths)
+		def values = []
+		for (String item in xlValues) {
+			String[] keyVal = item.split('=')
+			String key = keyVal[0].trim()
+			String value = keyVal[1].trim()
+			if (value.startsWith('${') && vaultSecrets) {
+				String name = value.substring('${'.length())
+				name = name.substring(0, name.length() - 1)
+				value = vaultSecrets[name]
+			}
+			String valOut = "${key}=${value}"
+			values.add(valOut)
+
+		}
+		return values as String[]
 	}
 	
 	public def validate(ApplicationArguments args) throws Exception {
