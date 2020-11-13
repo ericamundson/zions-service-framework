@@ -63,9 +63,9 @@ import groovy.util.logging.Slf4j
 		}
 		def vaultSecrets = null
 		if (yaml.vault) {
-			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.path)
+			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.paths as String[])
 		} else {
-			vaultSecrets = vaultService.getSecrets('secret', project)
+			vaultSecrets = vaultService.getSecrets('secret', [project] as String[])
 		}
 		//String xlOutPath = "${yaml.path}"
 		String xlReleaseFile = "${repo.absolutePath}/${yaml.yamlFile}"

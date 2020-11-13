@@ -180,7 +180,7 @@ stop
 # Gaps
 
 - **5** [Usability](https://dev.azure.com/zionseto/DTS/_workitems/edit/970959) 
-    - Central UI to manage and execute blueprints
+    - [Central UI to manage and execute blueprints](https://dev.azure.com/zionseto/DTS/_workitems/edit/1511763)
     - **2** Ensure XL CLI is wrapped and handling of blueprint locations is automated/wrapped. **Eric**
 - **3** [Training](https://dev.azure.com/zionseto/DTS/_workitems/edit/972901)
     - No training material  ??

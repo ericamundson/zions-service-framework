@@ -77,6 +77,17 @@ class VaultService {
 		return null
 	}
 	
+	def getSecrets(String engine, String[] paths) {
+		Map out = [:]
+		for (String path in paths) {
+			def amap = getSecrets(engine, path)
+			amap.each { key, val ->
+				out[key] = val
+			}
+		}
+		return out
+	}
+	
 	def ensureSecrets(String engine, String path, Map data) {
 		String vtoken = env.getProperty('spring.cloud.vault.token')
 		Map cData = getSecrets(engine, path, false)

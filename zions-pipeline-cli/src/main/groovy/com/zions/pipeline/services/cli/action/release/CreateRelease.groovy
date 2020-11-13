@@ -8,6 +8,7 @@ import java.util.regex.Pattern
 import java.util.regex.Matcher
 
 import com.zions.common.services.cli.action.CliAction
+import com.zions.common.services.vault.VaultService
 import com.zions.xld.services.ci.CiService
 import static groovy.io.FileType.*
 import groovy.json.JsonBuilder
@@ -20,7 +21,13 @@ import com.zions.xlr.services.events.db.XlrReleaseSubscriptionRepository
 @Component
 @Slf4j
 class CreateRelease implements CliAction {
-		
+	
+	@Autowired
+	VaultService vaultService
+	
+	@Value('${vault.paths:zions-service-framework}')
+	String[] vaultPaths
+
 	@Value('${xlr.template.title:}')
 	String templateTitle
 	
@@ -59,10 +66,10 @@ class CreateRelease implements CliAction {
 			String folderId = folderId(template)
 			log.info("ReleaseId:  ${templateId},  FolderId:  ${folderId}")
 			def xlrData = [releaseTitle: "${releaseTitle}", folderId: "${folderId}"]
-		
-			if (releaseVariableSettings.size() > 0) {
+			String[] rVars = convertSecrets()
+			if (rVars.size() > 0) {
 				xlrData['variables'] = [:]
-				for (String setting in releaseVariableSettings) {
+				for (String setting in rVars) {
 					String[] nameval = setting.split('=')
 					if (nameval.length == 2) {
 						String name = '${' + nameval[0] + '}'
@@ -98,5 +105,25 @@ class CreateRelease implements CliAction {
 		String id = "${template.id}"
 		return id.substring(0, id.lastIndexOf('/'))
 	}
+	
+	String[] convertSecrets() {
+		Map vaultSecrets = vaultService.getSecrets('secret', vaultPaths)
+		def values = []
+		for (String item in releaseVariableSettings) {
+			String[] keyVal = item.split('=')
+			String key = keyVal[0].trim()
+			String value = keyVal[1].trim()
+			if (value.startsWith('${') && vaultSecrets) {
+				String name = value.substring('${'.length())
+				name = name.substring(0, name.length() - 1)
+				value = vaultSecrets[name]
+			}
+			String valOut = "${key}=${value}"
+			values.add(valOut)
+
+		}
+		return values as String[]
+	}
+
 }
 
