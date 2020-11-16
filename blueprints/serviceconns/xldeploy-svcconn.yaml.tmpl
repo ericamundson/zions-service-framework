@@ -1,0 +1,19 @@
+executables:
+- type: serviceConnection
+  context: ZionsETO
+  projects: {{.Projects}}
+  endpointType: xldserver
+  endpointUrl: https://xldeploy.cs.zionsbank.com
+  endpointName: {{.ConnName}}
+  endpointDescription: XL Deploy for {{.TargetEnv}} environment
+  grantAllPerm: true
+  vault:
+    engine: secret
+    path: zions-service-framework/dev
+  authorization:
+    scheme: UsernamePassword
+    parameters:
+      #Vault key
+      username: ${xl.user}
+      #Vault key      
+      password: ${xl.password}
