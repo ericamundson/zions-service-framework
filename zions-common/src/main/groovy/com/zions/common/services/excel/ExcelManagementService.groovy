@@ -160,6 +160,18 @@ class ExcelManagementService {
 		}
 		return rowMap
 	}
+	def getMissingColumns(List requiredColumns) {
+		String missingCols
+		requiredColumns.each { col ->
+			if (!headers.containsKey(col)) {
+				if (missingCols)
+					missingCols += ",$col"
+				else
+					missingCols = col
+			}
+		}
+		return missingCols
+	}
 	public static void printCellValue(Cell cell) {
 		System.out.print(formatCellValue(cell));
 		System.out.print("\t");
