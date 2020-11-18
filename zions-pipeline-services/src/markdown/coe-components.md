@@ -19,7 +19,8 @@ This component provides ability to interpret a yaml snippet of the form:
        minApprovers: 1
 ```
 
-With this yaml this component will ensure the `master` branch within GIR repo, `arepo`, will use CI build with ADO pipeline yaml file **.pipeline/ado/build-ci.yaml*and have at least 1 approver.
+With this yaml this component will ensure the `master` branch within GIR repo, `arepo`, will use CI build with ADO pipeline yaml file **.pipeline/ado/build-ci.yaml** 
+and have at least 1 approver.
 
 * **type** - is the yaml handler to use.
 * **context** - the ADO organization. Optional
@@ -27,11 +28,11 @@ With this yaml this component will ensure the `master` branch within GIR repo, `
 * **repoName** - the GIT repository with ADO project.
 * **branchNames** - the command delimited list of branch names to apply policy.
 * **policyData** - yaml element that contains the policy to apply.
-  - **buildData** - yaml element that specifies Continuous Integration validation build policy.
-    * **ciBuildName** - the name of CI validation build.
-    * **ciBuildFile** - the GIT repository file location with ADO pipeline yaml.
-  - **approvalData** - the yaml element that will specify approver data.
-    * **minApprovers** - the number of approvers.
+    - **buildData** - yaml element that specifies Continuous Integration validation build policy.
+        * **ciBuildName** - the name of CI validation build.
+        * **ciBuildFile** - the GIT repository file location with ADO pipeline yaml.
+    - **approvalData** - the yaml element that will specify approver data.
+        * **minApprovers** - the number of approvers.
 
 
 ### Component: [BuildDefinition](https://dev.azure.com/zionseto/DTS/_git/zions-service-framework?path=%2Fzions-pipeline-services%2Fsrc%2Fmain%2Fgroovy%2Fcom%2Fzions%2Fpipeline%2Fservices%2Fyaml%2Ftemplate%2Fexecution%2FBuildDefinition.groovy)
