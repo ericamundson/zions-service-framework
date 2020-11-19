@@ -65,7 +65,6 @@ stages:
           xld_cli_user=$[xl.user]
           xld_cli_passwd=$[xl.password]
           svc_account_passwd=$[svc_account_passwd]
-        xldProfile: xlrdb      
       
 - stage: Release
   dependsOn: Build
