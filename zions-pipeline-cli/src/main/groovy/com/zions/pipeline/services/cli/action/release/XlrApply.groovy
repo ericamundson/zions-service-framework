@@ -83,8 +83,8 @@ class XlrApply implements CliAction, XLCliTrait, CliRunnerTrait {
 			String[] keyVal = item.split('=')
 			String key = keyVal[0].trim()
 			String value = keyVal[1].trim()
-			if (value.startsWith('${') && vaultSecrets) {
-				String name = value.substring('${'.length())
+			if (value.startsWith('$[') && vaultSecrets) {
+				String name = value.substring('$['.length())
 				name = name.substring(0, name.length() - 1)
 				value = vaultSecrets[name]
 			}

@@ -10,7 +10,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.pipeline.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="xldApply --xl.values=&quot;app_version=2911&quot; --xl.file=&quot;.pipeline\xl-apps.yaml&quot; --build.sourcesdirectory=&quot;d:\repos\TestRepo&quot; --vault.paths=&quot;zions-service-framework&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="xldApply --xl.values=&quot;app_version=7.0.0.01028,xld_cli_user=$[xl.user],xld_cli_passwd=$[xl.password],svc_account_passwd=$[svc_account_passwd]&quot; --xl.file=&quot;zions-pipeline-execution-microservice\pipeline\xl-apps.yaml&quot; --build.sourcesdirectory=&quot;D:\git\zions-service-framework&quot; --vault.paths=&quot;zions-service-framework&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-pipeline-cli"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=xlrdbdev"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=xlrdb"/>
 </launchConfiguration>
