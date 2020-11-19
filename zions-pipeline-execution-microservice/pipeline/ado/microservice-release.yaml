@@ -81,4 +81,4 @@ stages:
               templateTitle: 'zions-pipeline-execution-microservice - Master'
               releaseTitle: 'zions-pipeline-execution-microservice - $(releaseTag)'
               releaseVariableSettings: 'deploymentPackage.name=$(releaseTag)'
-              xlrProfile: xlrdb
+              
