@@ -61,7 +61,7 @@ class XldApply implements CliAction, XLCliTrait, CliRunnerTrait {
 		}
 		def env = null
 		if (xldUseProxy) {
-			env = [key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080"]
+			env = [key:"https_proxy", value:"http://172.18.4.115:8080"]
 		}
 		def arg = [:]
 		String[] sValues = convertSecrets()
