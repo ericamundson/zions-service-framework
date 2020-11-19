@@ -9,9 +9,8 @@ trigger:
     include:
 
     - 'zions-pipeline-execution-microservice/*'
+    - 'zions-vsts-microservice/*'
     - 'zions-pipeline-services/*'
-    - 'zions-xld-services/*'
-    - 'zions-xlr-services/*'
     
 pool:
   name: On-Prem Production
@@ -46,21 +45,31 @@ stages:
         tasks: 'clean zions-pipeline-execution-microservice:build'
         publishJUnitResults: false
 
-    - task: BatchScript@1
-      displayName: 'XLW - xl-apps.yaml'
-      inputs:
-        filename: '$(Build.SourcesDirectory)\zions-pipeline-execution-microservice\pipeline\xl.exe'
-        arguments: 'apply -f xl-apps.yaml --xl-deploy-url $(xld_cli_url) --xl-deploy-username $(xld_cli_user) --xl-deploy-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd)'
-        workingFolder: $(Build.SourcesDirectory)\zions-pipeline-execution-microservice\pipeline
-      continueOnError: false
-      enabled: true
+#     - task: BatchScript@1
+#       displayName: 'XLW - xl-apps.yaml'
+#       inputs:
+#         filename: '$(Build.SourcesDirectory)\zions-pipeline-execution-microservice\pipeline\xl.exe'
+#         arguments: 'apply -f xl-apps.yaml --xl-deploy-url $(xld_cli_url) --xl-deploy-username $(xld_cli_user) --xl-deploy-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd)'
+#         workingFolder: $(Build.SourcesDirectory)\zions-pipeline-execution-microservice\pipeline
+#       continueOnError: false
+#       enabled: true
       
+    - task: Zions.ado-ext-release-status-control.XldApplyTask.XldApplyTask@0
+      displayName: 'XLD Apply'
+      inputs:
+        xldFile: zions-pipeline-execution-microservice\pipeline\xl-apps.yaml
+        xlValues: |
+          app_version=$(buildTag)
+          xld_cli_user=${xl.user}
+          xld_cli_passwd=${xl.password}
+          svc_account_passwd=${svc_account_passwd}
+        xldProfile: xlrdb      
       
 - stage: Release
   dependsOn: Build
   jobs:
   - deployment: prod
-    environment: Windows Production
+    environment: Windows_Production
     variables:
       releaseTag: $[ stageDependencies.Build.Build.outputs['oTag.oBuildTag'] ]
     strategy:
