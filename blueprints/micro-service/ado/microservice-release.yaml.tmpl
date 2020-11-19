@@ -47,15 +47,25 @@ stages:
         tasks: 'clean {{$app}}:build'
         publishJUnitResults: false
 
-    - task: BatchScript@1
-      displayName: 'XLW - xl-apps.yaml'
-      inputs:
-        filename: '$(Build.SourcesDirectory)\{{$app}}\pipeline\xl.exe'
-        arguments: 'apply -f xl-apps.yaml --xl-deploy-url $(xld_cli_url) --xl-deploy-username $(xld_cli_user) --xl-deploy-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd)'
-        workingFolder: $(Build.SourcesDirectory)\{{$app}}\pipeline
-      continueOnError: false
-      enabled: true
+#     - task: BatchScript@1
+#       displayName: 'XLW - xl-apps.yaml'
+#       inputs:
+#         filename: '$(Build.SourcesDirectory)\{{$app}}\pipeline\xl.exe'
+#         arguments: 'apply -f xl-apps.yaml --xl-deploy-url $(xld_cli_url) --xl-deploy-username $(xld_cli_user) --xl-deploy-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd)'
+#         workingFolder: $(Build.SourcesDirectory)\{{$app}}\pipeline
+#       continueOnError: false
+#       enabled: true
       
+    - task: Zions.ado-ext-release-status-control.XldApplyTask.XldApplyTask@0
+      displayName: 'XLD Apply'
+      inputs:
+        xldFile: {{$app}}\pipeline\xl-apps.yaml
+        xlValues: |
+          app_version=$(buildTag)
+          xld_cli_user=${xl.user}
+          xld_cli_passwd=${xl.password}
+          svc_account_passwd=${svc_account_passwd}
+        xldProfile: xlrdb      
       
 - stage: Release
   dependsOn: Build

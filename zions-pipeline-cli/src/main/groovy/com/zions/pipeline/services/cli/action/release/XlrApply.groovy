@@ -48,7 +48,10 @@ class XlrApply implements CliAction, XLCliTrait, CliRunnerTrait {
 	
 	
 	public def execute(ApplicationArguments data) {
-		loadXLCli(buildSourcesDirectory)
+		File xlFile = new File("${buildSourcesDirectory.absolutePath}/${xlFileName}")
+		if (!xlFile.exists()) return
+		File xlFileParent = new File(xlFile.parent)
+		loadXLCli(xlFileParent)
 		String os = System.getProperty('os.name')
 		String command = 'cmd'
 		String option = '/c'
@@ -64,12 +67,13 @@ class XlrApply implements CliAction, XLCliTrait, CliRunnerTrait {
 		String[] sValues = convertSecrets()
 		if (sValues.length > 0) {
 			String valuesStr = sValues.join(',')
-			arg = [line: "${option} ${buildSourcesDirectory.absolutePath}/xl apply  -f ${buildSourcesDirectory.absolutePath}/${xlFileName} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}"]
+			arg = [line: "${option} ${xlFileParent.absolutePath}/xl apply  -f ${buildSourcesDirectory.absolutePath}/${xlFileName} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}"]
 		} else {
-			arg = [ line: "${option} ${buildSourcesDirectory.absolutePath}/xl apply -f ${buildSourcesDirectory.absolutePath}/${xlFileName} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}" ]
+			arg = [ line: "${option} ${xlFileParent.absolutePath}/xl apply -f ${buildSourcesDirectory.absolutePath}/${xlFileName} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}" ]
 			
 		}
-		run(command, "${buildSourcesDirectory.absolutePath}", arg, env, log)
+		log.info( "CLI: ${arg.line}")
+		run(command, "${xlFileParent.absolutePath}", arg, env, log)
 	}
 	
 	String[] convertSecrets() {
