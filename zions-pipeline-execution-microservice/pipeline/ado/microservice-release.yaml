@@ -60,9 +60,9 @@ stages:
         xldFile: zions-pipeline-execution-microservice\pipeline\xl-apps.yaml
         xlValues: |
           app_version=$(buildTag)
-          xld_cli_user=${xl.user}
-          xld_cli_passwd=${xl.password}
-          svc_account_passwd=${svc_account_passwd}
+          xld_cli_user=$[xl.user]
+          xld_cli_passwd=$[xl.password]
+          svc_account_passwd=$[svc_account_passwd]
         xldProfile: xlrdb      
       
 - stage: Release
