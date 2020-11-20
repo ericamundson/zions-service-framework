@@ -4,7 +4,7 @@
       <description>This service runs zions-pipeline-execution-microservice.</description>
       <executable>java</executable>
       
-      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-pipeline-execution-microservice.jar" --queue.name=GIT-pipelineexecution-queue  --ado.topics=git.push --tfs.url={{tfs.url}} --logging.file="{{deploy.path}}/zions-pipeline-execution-microservice.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-pipeline-execution-microservice.jar" --queue.name=GIT-pipelineexecution-queue  --ado.topics=git.pullrequest.merged --tfs.url={{tfs.url}} --logging.file="{{deploy.path}}/zions-pipeline-execution-microservice.log" </arguments>
 	  
       <logmode>rotate</logmode>
       <logpath>{{deploy.path}}\wrapper-logs\zions-pipeline-execution-microservice</logpath>
