@@ -21,6 +21,9 @@ import java.time.format.DateTimeFormatter
 @Component
 @Slf4j
 class SmartDocManagementService {
+	@Value('${mr.url:}') 
+	String mrUrl
+	
 	ServerAltCreds serverAltCreds
 	class WorkItemDetails {
 		WorkItemDetails(String details, Integer i) {
@@ -106,12 +109,43 @@ class SmartDocManagementService {
 			"""
 			println(body)
 			return doPost(body, action)
-		}
-		
+	}
+	
+	def ensureSmartDoc(String action, SmartDoc sd, def tfsUrl, def collection, def tfsCollectionGUID, def project) {
+		def date = new Date()
+		String body;
+		String domain = ""
+		String userPassword = ""
+		def index = 0
+		def altCreds = serverAltCreds.getNextCreds()
+		body = """
+			{
+			"userId": "${altCreds.user}",
+			"userPassword":"${altCreds.pswd}",
+			"serverUrl":"$tfsUrl/$collection",
+			"domain":"$domain",
+			"projectUri":"{${project.id}}",
+			"projectName":"${project.name}",
+			"rootFolder":"${project.name}",
+			"isDefaultTeam": true,
+			"teamGuid":"${project.defaultTeam.id}",
+			"collectionName":"$collection",
+			"collectionId":"$tfsCollectionGUID",
+			"docName": "${sd.name}",
+			"templateName": "${sd.template}",
+			"folder": "${sd.folder}",
+			"autoRootCreation": false,
+			"workItemDetails": ${sd.getWorkItemDetails(action)}
+			}
+			"""
+			println(body)
+			return doPost(body, action)
+	}
+	
 	private def doPost(def body, String action) {
 		def result = mrGenericRestClient.rateLimitPost(
 			contentType: ContentType.JSON,
-			uri: "${mrGenericRestClient.getMrUrl()}/Services/ExternalService.svc/api/smartdocs/" + action.toLowerCase(),
+			uri: "$mrUrl/Services/ExternalService.svc/api/smartdocs/" + action.toLowerCase(),
 			body: body,
 			headers: [accept: 'application/json']
 			

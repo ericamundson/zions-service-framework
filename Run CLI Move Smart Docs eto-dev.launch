@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-vsts-cli/src/main/groovy/com/zions/vsts/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="moveSmartDocs&#13;&#10;--tfs.url=https://dev.azure.com &#13;&#10;--mr.url=https://modernrequirements.ca:8026&#13;&#10;--tfs.collection=eto-dev&#13;&#10;--tfs.collection.guid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&#13;&#10;--import.file=&quot;c:\Move Smart Docs - test.xlsx&quot;&#13;&#10;--mr.repo=modern-requirements-synch&#13;&#10;--mr.branch=mr&#13;&#10;--logging.level.root=INFO&#13;&#10;--logging.level.com.zions=INFO&#13;&#10;--logging.file=&quot;c:\\RCE\\IMPORT.log&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=mr"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>
