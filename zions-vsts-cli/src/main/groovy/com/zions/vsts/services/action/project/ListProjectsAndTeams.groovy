@@ -1,5 +1,6 @@
 package com.zions.vsts.services.action.project;
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 import com.zions.common.services.cli.action.CliAction
@@ -9,7 +10,7 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 /**
  * List out project and team data.
  * 
- * @author Matt
+ * @author Astro
  *
  */
 @Component
@@ -20,24 +21,44 @@ class ListProjectsAndTeams implements CliAction {
 	
 	@Autowired
 	MemberManagementService memberManagementService
+	
+	@Value('${tfs.collection:}')
+	String collection
+	
+	@Value('${export.dir:}')
+	String directory
+	
+	public ListProjectsAndTeams() {
+	}
+
+	
 
 	@Override
 	public Object execute(ApplicationArguments args) {
-//		def projects = projectManagementService.getProjects('')
-//		projects.'value'.each { project -> 
+	
+		def projects = projectManagementService.getProjects(collection)
+		
+		//getProjects(collection, project, noUrl)
+		
+		projects.'value'.each { project -> 
 //			// TODO: Do some code to write project stuff
-//			String pName = "${project.name}"
-//			println "project: ${pName}"
-//			def teams = projectManagementService.getTeams('', pName)
-//			teams.value.each { team ->
-//				println "     team:  ${team.name}"
-//			}
+			String pName = "${project.name}"
+			String id = "${project.id}"
+			println "project: ${pName}"
+			println "projectID: ${id}"
+			def teams = projectManagementService.getTeams(collection, pName)
+			
+			teams.value.each { team ->
+				println "     team:  ${team.name}"
+			}
 //			// TODO: Loop to write some team stuff.
-//		}
-		def users = memberManagementService.getUsers('')
+		}
+		def users = memberManagementService.getUsers(collection)
+		
 		
 		users.each { user -> 
 			println user.displayName
+			println user.mailAddress
 		}
 		return null
 	}

@@ -8,15 +8,10 @@ trigger:
   paths:
     include:
     - 'zions-pipeline-cli/*'
-    - 'zions-vsts-services/*'
-    - 'zions-common/src/main/groovy/com/zions/common/services/rest/*'
+    - 'zions-pipeline-services/*'
     - 'zions-xlr-services/*'
     - 'zions-xld-services/*'
     
-pool:
-  name: Default
-  demands:
-  - agent.name -equals bagent
   
  
 #Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
@@ -27,6 +22,10 @@ stages:
 - stage: Build
   jobs:
   - job: Build
+    pool:
+      name: On-Prem Production
+      demands:
+      - agent.computername -equals UTMVPI0144
 #    workspace:
 #      clean: none
 
@@ -40,7 +39,6 @@ stages:
       inputs:
         OutputVariable: buildTag
         InitialVersionPrefix: 7.0.0
-        WriteTag: false
 
     - task: Gradle@2
       displayName: 'gradlew clean build updateBatJarVersion'
@@ -60,12 +58,6 @@ stages:
         TargetFolder: '$(build.artifactstagingdirectory)'
         CleanTargetFolder: true
         OverWrite: true
-
-    - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
-      displayName: Tagging
-      inputs:
-        OutputVariable: Tag
-        InitialVersionPrefix: 7.0.0
 
     - task: PublishTestResults@2
       displayName: 'Publish Test Results **/TEST-*.xml'
@@ -104,3 +96,4 @@ stages:
         versionNumber: '$(Tag)'
       enabled: false
       continueOnError: true
+      

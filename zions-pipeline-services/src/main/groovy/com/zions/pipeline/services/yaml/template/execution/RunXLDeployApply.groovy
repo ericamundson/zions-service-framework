@@ -6,6 +6,7 @@ import org.springframework.core.env.Environment
 import groovy.util.logging.Slf4j
 import com.zions.common.services.vault.VaultService
 import com.zions.pipeline.services.mixins.CliRunnerTrait
+import com.zions.pipeline.services.mixins.XLCliTrait
 
 /**
  * Yaml should be in this form:
@@ -14,7 +15,8 @@ import com.zions.pipeline.services.mixins.CliRunnerTrait
  * yamlFile: .pipeline/xl-deploy.yaml
  * vault:  # Optional yaml object to setup token replacement from vault
  *   engine: secret
- *   path: WebCMS # a path into Vault secret store that can be project specific.  
+ *   paths: 
+ *   - WebCMS   
  * values: # Optional for setting up XL CLI values.
  * - name: test1
  *   value: ${xl.password}  # xl.password token to be replaced by Vault
@@ -29,7 +31,7 @@ import com.zions.pipeline.services.mixins.CliRunnerTrait
  */
 @Component
 @Slf4j
-class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait {
+class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait, XLCliTrait {
 	
 	@Autowired
 	Environment env
@@ -65,9 +67,9 @@ class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait {
 		
 		def vaultSecrets = null
 		if (yaml.vault) {
-			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.path)
+			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.paths as String[])
 		} else {
-			vaultSecrets = vaultService.getSecrets('secret', project)
+			vaultSecrets = vaultService.getSecrets('secret', [project] as String[])
 		}
 		
 		List<String> values = []
@@ -143,22 +145,4 @@ class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait {
 		return false
 	}
 	
-	def loadXLCli(File loadDir) {
-		String osname = System.getProperty('os.name')
-			
-		if (osname.contains('Windows')) {
-			InputStream istream = this.getClass().getResourceAsStream('/xl/windows/xl.exe')
-			File of = new File(loadDir, 'xl.exe')
-			def aos = of.newDataOutputStream()
-			aos << istream
-			aos.close()
-		} else {
-			InputStream istream = this.getClass().getResourceAsStream('/xl/linux/xl')
-			File of = new File(loadDir, 'xl')
-			def aos = of.newDataOutputStream()
-			aos << istream
-			aos.close()
-
-		}
-	}
 }

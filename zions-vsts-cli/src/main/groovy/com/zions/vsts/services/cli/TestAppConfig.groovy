@@ -20,7 +20,7 @@ import com.zions.vsts.services.test.TestManagementService
 
 @Configuration
 @Profile("test")
-@ComponentScan(["com.zions.vsts.services.work,com.zions.vsts.services.action.test,com.zions.vsts.services.admin,com.zions.vsts.services.test"])
+@ComponentScan(["com.zions.vsts.services.asset,com.zions.vsts.services.work,com.zions.vsts.services.action.test,com.zions.vsts.services.admin,com.zions.vsts.services.test"])
 
 public class TestAppConfig {
     Map<String, CliAction> actions;

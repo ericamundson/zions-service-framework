@@ -74,7 +74,11 @@ class GitService {
 		});
 	}
 	
-	File loadChanges(String url,String repoName, String branch = 'refs/heads/master') {
+	File loadChanges(String url,String repoName = null, String branch = 'refs/heads/master') {
+		if (!repoName) {
+			int nIndex = url.lastIndexOf('/')
+			repoName = url.substring(nIndex)
+		}
 		String aBranch = branch.substring( 'refs/heads/'.length())
 		String nUrl = url
 		if (nUrl.contains('dev.')) {
@@ -155,6 +159,25 @@ class GitService {
 		return repo
 	}
 	
+	def checkout(File repo, String branchName, boolean create = false) {
+		Git git = Git.open(repo)
+		git.checkout()
+		.setCreateBranch(create)
+		.setName(branchName)
+		.call()
+		git.close()
+	}
+	
+	def deleteBranch(File repo, String branchName) {
+		Git git = Git.open(repo)
+		String[] branches = [branchName]
+		git.branchDelete()
+		.setBranchNames(branches)
+		.setForce(true)
+		.call()
+		git.close()
+	}
+
 	def reset(File repo) {
 		Git git = Git.open(repo)
 		git.reset()
@@ -175,5 +198,12 @@ class GitService {
 		  .setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
 		  .call()
 		git.close()
+	}
+	
+	String getBranchName(File repo) {
+		Git git = Git.open(repo)
+		org.eclipse.jgit.lib.Repository r = git.getRepository()
+		
+		return r.fullBranch
 	}
 }

@@ -2,8 +2,8 @@ executables:
 - type: runXLDeployApply
   yamlFile: zions-pipeline-execution-microservice/pipeline/xl-deploy.yaml
   dependencies:
-  - /zions-pipeline-execution-microservice/pipeline/xld-env.yaml
-  - /zions-pipeline-execution-microservice/pipeline/xld-infra.yaml
+  - /zions-pipeline-execution-microservice/pipeline/xebialabs/xld-env.yaml
+  - /zions-pipeline-execution-microservice/pipeline/xebialabs/xld-infra.yaml
   vault:
     engine: secret
     path: zions-service-framework
@@ -18,7 +18,7 @@ executables:
 - type: runXLReleaseApply
   yamlFile:  zions-pipeline-execution-microservice/pipeline/xl-release.yaml
   dependencies:
-  - /zions-pipeline-execution-microservice/pipeline/xlr-pipeline-ci-cd.yaml
+  - /zions-pipeline-execution-microservice/pipeline/xebialabs/xlr-pipeline-ci-cd.yaml
   vault:
     engine: secret
     path: zions-service-framework

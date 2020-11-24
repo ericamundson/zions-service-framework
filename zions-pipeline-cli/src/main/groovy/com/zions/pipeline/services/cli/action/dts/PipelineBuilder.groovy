@@ -38,8 +38,8 @@ import groovy.util.logging.Slf4j
  *   package dts as "com.zions.pipeline.services.cli.action.dts" {
  *     component PipelineBuilder as "PipelineBuilder"
  *   }
- *   RE --> PipelineBuilder: executes
  * }
+ * RE --> PipelineBuilder: executes
  * 
  * artifact zions-pipeline-services.jar {
  *    package template as "com.zions.pipeline.services.yaml.template" {
@@ -61,11 +61,11 @@ import groovy.util.logging.Slf4j
  *      BuildDefinition -[dotted]-> IExecutableYamlHandler: implements
  *      GitRepository -[dotted]-> IExecutableYamlHandler: implements
  *      RunXLBlueprints -[dotted]-> IExecutableYamlHandler: implements
- *      RunXLDeployApply -[dotted]-> IExecutableYamlHandler: implements
- *      RunXLReleaseApply -[dotted]-> IExecutableYamlHandler: implements
- *      SanitizeProperties -[dotted]-> IExecutableYamlHandler: implements
- *      WebHookSubscriptions -[dotted]-> IExecutableYamlHandler: implements
- *      WorkItem -[dotted]-> IExecutableYamlHandler: implements
+ *      RunXLDeployApply -[dotted]up-> IExecutableYamlHandler: implements
+ *      RunXLReleaseApply -[dotted]up-> IExecutableYamlHandler: implements
+ *      SanitizeProperties -[dotted]up-> IExecutableYamlHandler: implements
+ *      WebHookSubscriptions -[dotted]up-> IExecutableYamlHandler: implements
+ *      WorkItem -[dotted]do-> IExecutableYamlHandler: implements
  *    }
  *    PipelineBuilder --> BlueprintInterpretorService: Execute blueprint and run executable yaml
  * }
@@ -80,12 +80,19 @@ class PipelineBuilder implements CliAction {
 	
 	@Autowired
 	BlueprintTemplateInterpretorService blueprintTemplateInterpretorService
+	
+	@Value('${run.remote:false}')
+	Boolean runRemote
 
 	public def execute(ApplicationArguments data) {
 		//def answers = blueprintTemplateInterpretorService.loadAnswers()
 		//println "Answers:  ${answers}"
 		blueprintTemplateInterpretorService.outputPipeline()
-		blueprintTemplateInterpretorService.runExecutableYaml()
+		if (!runRemote) {
+			blueprintTemplateInterpretorService.runExecutableYaml()
+		} else {
+			blueprintTemplateInterpretorService.runPullRequestOnChanges()
+		}
 	}
 	
 	

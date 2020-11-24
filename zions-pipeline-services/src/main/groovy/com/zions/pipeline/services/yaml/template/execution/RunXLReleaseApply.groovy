@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 
 import com.zions.common.services.vault.VaultService
 import com.zions.pipeline.services.mixins.CliRunnerTrait
+import com.zions.pipeline.services.mixins.XLCliTrait
 
 import groovy.util.logging.Slf4j
 
@@ -30,7 +31,7 @@ import groovy.util.logging.Slf4j
  *   
  * @author z091182
  *
- */class RunXLReleaseApply implements IExecutableYamlHandler, CliRunnerTrait {
+ */class RunXLReleaseApply implements IExecutableYamlHandler, CliRunnerTrait, XLCliTrait {
 	@Autowired
 	Environment env
 	
@@ -62,9 +63,9 @@ import groovy.util.logging.Slf4j
 		}
 		def vaultSecrets = null
 		if (yaml.vault) {
-			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.path)
+			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.paths as String[])
 		} else {
-			vaultSecrets = vaultService.getSecrets('secret', project)
+			vaultSecrets = vaultService.getSecrets('secret', [project] as String[])
 		}
 		//String xlOutPath = "${yaml.path}"
 		String xlReleaseFile = "${repo.absolutePath}/${yaml.yamlFile}"
@@ -145,22 +146,4 @@ import groovy.util.logging.Slf4j
 		return false
 	}
 	
-	def loadXLCli(File loadDir) {
-		String osname = System.getProperty('os.name')
-			
-		if (osname.contains('Windows')) {
-			InputStream istream = this.getClass().getResourceAsStream('/xl/windows/xl.exe')
-			File of = new File(loadDir, 'xl.exe')
-			def aos = of.newDataOutputStream()
-			aos << istream
-			aos.close()
-		} else {
-			InputStream istream = this.getClass().getResourceAsStream('/xl/linux/xl')
-			File of = new File(loadDir, 'xl')
-			def aos = of.newDataOutputStream()
-			aos << istream
-			aos.close()
-
-		}
-	}
 }
