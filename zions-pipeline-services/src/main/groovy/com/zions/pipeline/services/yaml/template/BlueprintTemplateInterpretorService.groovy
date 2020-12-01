@@ -10,6 +10,7 @@ import org.yaml.snakeyaml.Yaml
 import java.util.regex.Pattern
 import java.util.regex.Matcher
 
+import com.zions.pipeline.services.mixins.CliRunnerTrait
 import com.zions.pipeline.services.mixins.FindExecutableYamlNoRepoTrait
 import com.zions.pipeline.services.mixins.XLCliTrait
 
@@ -32,7 +33,7 @@ import com.zions.vsts.services.admin.member.MemberManagementService
  */
 @Component
 @Slf4j
-class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait, XLCliTrait {
+class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait, XLCliTrait, CliRunnerTrait {
 	
 	@Autowired
 	Map<String, IExecutableYamlHandler> yamlHandlerMap;
@@ -129,17 +130,10 @@ class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTr
 		
 		//Generate pipeline
 		if (osname.contains('Windows')) {
-			new AntBuilder().exec(dir: "${outDir}/${pipelineFolder}", executable: "${outDir}/${pipelineFolder}/startup.bat", failonerror: true) {
-//				arg( line: "/c ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/pipeline/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s")
-				arg( line: "${outDir}/${pipelineFolder}/xl blueprint  -l ${blueprintDir} -b \"${blueprint}\" ")
-			}
+			run("${outDir}/${pipelineFolder}/startup.bat", "${outDir}/${pipelineFolder}", [line: "${outDir}/${pipelineFolder}/xl blueprint  -l ${blueprintDir} -b \"${blueprint}\" "], null, log)
 		} else {
-			new AntBuilder().exec(dir: "${outDir}/${pipelineFolder}", executable: '/bin/sh', failonerror: true) {
-				arg( line: "-c ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/pipeline/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s")
-			}
-
+			run('/bin/sh', "${outDir}/${pipelineFolder}", [line: "-c ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/pipeline/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s"], null, log)
 		}
-		
 		//fix placeholders.
 //		new AntBuilder().replace(dir: "${outDir}/${pipelineFolder}") {
 //			replacefilter( token: "${inDelimiters[0]}", value: '{{')

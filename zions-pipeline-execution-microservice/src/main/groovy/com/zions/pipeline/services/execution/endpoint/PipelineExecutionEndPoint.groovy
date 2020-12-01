@@ -44,8 +44,11 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 	@Value('${pipeline.folders:.pipeline,pipeline}')
 	String[] pipelineFolders
 
-	@Value('${always.execute.folder:executables}')
+	@Value('${always.execute.folder:alwaysexecute}')
 	String alwaysExecuteFolder
+	
+	@Value('${executables.folder:executables}')
+	String executablesFolder
 
 	public PipelineExecutionEndPoint() {
 		//init(websocketUrl, null, null)
@@ -101,7 +104,7 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 			}
 		}
 		for (String pipelineFolder in pipelineFolders) {
-			def regex = "(/${pipelineFolder}/${alwaysExecuteFolder})\\S*(.yaml)\$"
+			def regex = "(/${pipelineFolder}/${executablesFolder}/${alwaysExecuteFolder})\\S*(.yaml)\$"
 			def fileList = codeManagementService.getFileList('', project, repo, regex, branch )
 			for (String loc in fileList) {
 				if (!locations.contains(loc)) {

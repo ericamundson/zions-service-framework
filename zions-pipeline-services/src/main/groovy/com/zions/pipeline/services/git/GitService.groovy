@@ -160,6 +160,9 @@ class GitService {
 	}
 	
 	def checkout(File repo, String branchName, boolean create = false) {
+		if (branchName.startsWith('refs/heads/')) {
+			branchName = branchName.substring( 'refs/heads/'.length())
+		}
 		Git git = Git.open(repo)
 		git.checkout()
 		.setCreateBranch(create)
@@ -169,6 +172,9 @@ class GitService {
 	}
 	
 	def deleteBranch(File repo, String branchName) {
+		if (branchName.startsWith('refs/heads/')) {
+			branchName = branchName.substring( 'refs/heads/'.length())
+		}
 		Git git = Git.open(repo)
 		String[] branches = [branchName]
 		git.branchDelete()
