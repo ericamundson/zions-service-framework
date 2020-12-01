@@ -59,6 +59,16 @@
                 "ALMOpsTest"
             ]
         },
+         "outDir": {
+            "$id": "#/properties/outDir",
+            "type": "string",
+            "title": "The project schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "subdir"
+            ]
+        },
         "blueprints": {
             "$id": "#/properties/blueprints",
             "type": "array",

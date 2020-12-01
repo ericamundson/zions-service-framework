@@ -85,11 +85,7 @@ trait FindExecutableYamlNoRepoTrait {
 	}	
 	def sendFeedback(def feedback) {
 		String err = errorMessage(feedback)
-		if (log) {
-			log.error(err)
-		} else {
-			System.err.println err
-		}
+		System.err.println err
 	}
 	String errorMessage(def commentData) {
 		String out = ""

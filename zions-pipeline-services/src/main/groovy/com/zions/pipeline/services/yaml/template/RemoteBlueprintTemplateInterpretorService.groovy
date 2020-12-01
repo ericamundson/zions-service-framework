@@ -12,6 +12,7 @@ import java.util.regex.Matcher
 
 import com.zions.pipeline.services.mixins.FindExecutableYamlNoRepoTrait
 import com.zions.pipeline.services.mixins.XLCliTrait
+import com.zions.pipeline.services.mixins.CliRunnerTrait
 
 import groovy.util.logging.Slf4j
 
@@ -32,7 +33,7 @@ import com.zions.vsts.services.admin.member.MemberManagementService
  */
 @Component
 @Slf4j
-class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait, XLCliTrait {
+class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait, XLCliTrait, CliRunnerTrait {
 	
 	@Autowired
 	Map<String, IExecutableYamlHandler> yamlHandlerMap;
@@ -67,6 +68,10 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 	@Value('${ado.workitemid:}')
 	String adoWorkitemId
 	
+	@Value('${input.answers:}')
+	String inputAnswers
+	
+	
 	File repoDir
 	File outDir
 	
@@ -95,7 +100,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		if (blueprintFolderName && blueprintFolderName.length() > 0) {
 			blueprintDir = new File(blueprintDir, blueprintFolderName)
 		}
-		repoDir = gitService.loadChanges(outRepoUrl)
+		repoDir = gitService.loadChanges(outRepoUrl, null, repoTargetBranch)
 		gitService.checkout(repoDir, "blueprint/${new Date().time}", true)
 		
 		outDir = repoDir
@@ -116,23 +121,30 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		def os = startupBat.newDataOutputStream()
 		os << 'start /W cmd /C %*'
 		os.close()
-//		File answersFile = new File(pipelineDir, 'answers.yaml')
-//		def os = answersFile.newDataOutputStream()
-//		os << answersStr
-//		os.close()
-		String osname = System.getProperty('os.name')
+		String oss = System.getProperty('os.name')
+		String command = 'cmd'
+		String option = '/c'
+		if (!oss.contains('Windows')) {
+			command = '/bin/sh'
+			option = '-c'
+		}
 		
 		//Generate pipeline
-		if (osname.contains('Windows')) {
-			new AntBuilder().exec(dir: "${outDir}/${pipelineFolder}", executable: "${outDir}/${pipelineFolder}/startup.bat", failonerror: true) {
-//				arg( line: "/c ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/pipeline/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s")
-				arg( line: "${outDir}/${pipelineFolder}/xl blueprint  -l ${blueprintDir} -b \"${blueprint}\" ")
-			}
-		} else {
-			new AntBuilder().exec(dir: "${outDir}/${pipelineFolder}", executable: '/bin/sh', failonerror: true) {
-				arg( line: "-c ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/pipeline/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s")
-			}
+		if (inputAnswers && inputAnswers.length() > 0) {
+			YamlBuilder yb = new YamlBuilder()
 
+			yb( inputAnswers )
+
+			String answers = yb.toString()
+
+			File aF = new File(outDir, "${pipelineFolder}/answers.yaml")
+			def sAF = aF.newDataOutputStream()
+			sAF << answers
+			sAF.close()
+			run(command, "${outDir}/${pipelineFolder}", [line: "${option} ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/${pipelineFolder}/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s"], null, log)
+		} else {
+			run("${outDir}/${pipelineFolder}/startup.bat", "${outDir}/${pipelineFolder}", [line: "${outDir}/${pipelineFolder}/xl blueprint  -l ${blueprintDir} -b \"${blueprint}\" "], null, log)
+			
 		}
 		
 		//fix placeholders.
@@ -144,6 +156,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 	}
 	
 	def runExecutableYaml() {
+		String branchName = gitService.getBranchName(repoDir)
 		def exeYaml = findExecutableYaml()
 		for (def yaml in exeYaml) { 
 			for (def exe in yaml.executables) {
@@ -151,7 +164,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
 					try {
-						yamlHandler.handleYaml(exe, repoDir, [], 'refs/heads/master', adoProject)
+						yamlHandler.handleYaml(exe, repoDir, [], branchName, adoProject)
 					} catch (e) {
 						log.error("Failed running executable yaml:  ${exe.type} :: ${e.message}")
 						e.printStackTrace()
@@ -177,7 +190,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, repoTargetBranch)
 		try {
 			String branchName = gitService.getBranchName(repoDir)
-			gitService.checkout(repoDir, 'master')
+			gitService.checkout(repoDir, repoTargetBranch)
 			gitService.deleteBranch(repoDir, branchName)
 			def pullRequestData = [sourceRefName: branchName, targetRefName: repoTargetBranch, title: "Update pipeline", description: "Making changes to pipeline implementation"]
 			def prd = codeManagementService.createPullRequest('', projectData.id, repoData.id, pullRequestData)

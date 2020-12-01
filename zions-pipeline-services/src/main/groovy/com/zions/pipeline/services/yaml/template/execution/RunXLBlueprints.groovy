@@ -70,8 +70,13 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 		def repoData = codeManagementService.getRepo('', projectData, repoName)
 
 		def outrepo = gitService.loadChanges(repoData.remoteUrl, repoName)
+		
 
 		File loadDir = new File(outrepo, "${pipelineFolder}")
+		if (yaml.outDir) {
+			String outDir = "${yaml.outDir}"
+			loadDir = new File(outrepo, "${outDir}/${pipelineFolder}")
+		}
 		if (!loadDir.exists()) {
 			loadDir.mkdirs()
 		}

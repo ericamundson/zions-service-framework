@@ -81,17 +81,17 @@ class RemotePipelineBuilder implements CliAction {
 	@Autowired
 	RemoteBlueprintTemplateInterpretorService remoteBlueprintTemplateInterpretorService
 	
-	@Value('${run.remote:true}')
-	Boolean runRemote
+	@Value('${run.via.microservice:true}')
+	Boolean runViaMicroservice
 
 	public def execute(ApplicationArguments data) {
 		//def answers = blueprintTemplateInterpretorService.loadAnswers()
 		//println "Answers:  ${answers}"
 		remoteBlueprintTemplateInterpretorService.outputPipeline()
-		if (!runRemote) {
-			remoteBlueprintTemplateInterpretorService.runExecutableYaml()
-		} else {
+		if (runViaMicroservice) {
 			remoteBlueprintTemplateInterpretorService.runPullRequestOnChanges()
+		} else {
+			remoteBlueprintTemplateInterpretorService.runExecutableYaml()
 		}
 	}
 	
