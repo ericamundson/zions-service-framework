@@ -883,7 +883,7 @@ class WorkManagementService {
 
 	}
 	
-	public createWorkItem(collection, project, type, data, Closure responseHandler = null) {
+	public def createWorkItem(collection, project, type, data, Closure responseHandler = null) {
 		def etype = URLEncoder.encode("$type", 'utf-8').replace('+', '%20')
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def body = new JsonBuilder(data).toPrettyString()
@@ -895,6 +895,7 @@ class WorkManagementService {
 					query: ['api-version': '5.0', bypassRules:true],
 					headers: ['Content-Type': 'application/json-patch+json']]
 					)
+		return result
 	}
 	public addWorkItemComment(collection, project, id, data) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')

@@ -26,5 +26,7 @@ class XlrReleaseSubscription {
 	boolean isReleasePipeline
 	
 	boolean failPipeline
+	
+	int workItemId
 		
 }

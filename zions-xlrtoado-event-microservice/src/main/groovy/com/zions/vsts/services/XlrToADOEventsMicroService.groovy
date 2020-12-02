@@ -17,6 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+import groovy.xml.MarkupBuilder
+import com.zions.vsts.services.work.WorkManagementService
+
+
 /**
  * Handles sending XLR Release events to an ADO Build.
  * 
@@ -43,6 +47,9 @@ class XlrToADOEventsMicroService implements MessageReceiverTrait {
 	
 	@Autowired
 	XlrReleaseSubscriptionRepository xlrReleaseSubscriptionRepository
+
+	@Autowired
+	WorkManagementService workManagementService
 
 	public XlrToADOEventsMicroService() {
 		
@@ -81,10 +88,37 @@ class XlrToADOEventsMicroService implements MessageReceiverTrait {
 		extData.events = events
 		extensionDataManagementService.ensureExtensionData(extData)
 		tagBuild(releaseSub.pipelineId, releaseSub.adoProject, e.message)
+		updateWorkitem(releaseSub.workItemId, releaseSub.adoProject, events)
 		if (releaseSub.failPipeline && (e.activityType == 'RELEASE_FAILED' || e.activityType == 'RELEASE_COMPLETED')) {
 			pipelineStatus(releaseSub.pipelineId, releaseSub.adoProject, e.activityType)
 		}
 		return null;
+	}
+	
+	def updateWorkitem(Integer wiId, String projectName, List<XlrEvent> events) {
+		if (!wiId) return
+		def writer = new StringWriter()
+		MarkupBuilder bHtml = new MarkupBuilder(writer)
+		bHtml.table(style:'font-family: arial, sans-serif;border-collapse: collapse;width: 100%;') {
+			tr {
+				th 'Activity Type'
+				th 'Message'
+				th 'User Name'
+				th "Timestamp"
+			}
+			for (XlrEvent event in events) {
+				tr {
+					td "${event.activityType}"
+					td "${event.message}"
+					td "${event.username}"
+					td "${event.eventTime}"
+				}
+			}
+		}
+		String html = writer.toString()
+		def data = [[op: 'add', path: '/fields/System.Description', value: html]]
+		def wi = workManagementService.updateWorkItem('', projectName, wiId, data)
+		return wi
 	}
 	
 	void pipelineStatus( String buildId, String projectName, String activityType) {
