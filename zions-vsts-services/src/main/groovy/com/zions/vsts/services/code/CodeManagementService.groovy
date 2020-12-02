@@ -107,6 +107,21 @@ class CodeManagementService {
 		return result
 
 	}
+	
+	public def getRepoWithProjectName(String collection, String project, String repoName) {
+		def query = ['api-version':'4.1']
+		def repoNameE = URLEncoder.encode(repoName, 'UTF-8')
+		repoNameE= repoNameE.replace('+', '%20')
+		String projectName = URLEncoder.encode(project, 'UTF-8').replace('+', '%20')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectName}/_apis/git/repositories/${repoNameE}",
+			query: query,
+			)
+		return result
+
+	}
+
 	public def getRepos(String collection, def project) {
 		def query = ['api-version':'5.1']
 		def result = genericRestClient.get(
