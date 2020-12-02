@@ -441,20 +441,7 @@ public class ProcessTemplateService {
 
 	}
 	
-//	def ensureWITChanges(def collection , def project, def changes, boolean updateLayout = false) {
-//		changes.each { witChange ->
-//			def witName = witChange.ensureType
-//			def wit = ensureWit(collection, project, witName)
-//			wit = getWIT(collection, project, witName)
-//			
-//			witChange.ensureFields.each { witFieldChange ->
-//				ensureWitField(collection, project, wit, witFieldChange, updateLayout)
-//			}
-//		}
-//		
-//	}
-
-	
+	// Create/update WIT using WIT definition (changes)
 	def ensureWITChanges(def collection , def project, def changes, boolean updateLayout = false, boolean clearWIT = false) {
 		changes.each { witChange -> 
 			def witName = witChange.ensureType
@@ -476,14 +463,21 @@ public class ProcessTemplateService {
 			return
 		}
 		def field = queryForField(collection, project, witFieldChange.refName)
-		if (field == null) {
+		if (field == null) {  // New field
 			def pickList = null
 			if (witFieldChange.suggestedValues.size() > 0) {
 				pickList = createPickList(collection, project, witFieldChange)
 			}
 			field = createField(collection, project, witFieldChange, pickList)
 		} 
-		else {
+		else { // Field already exists
+			// Make sure field type matches
+			if (!checkTypeMatch(witFieldChange,field)) {
+				log.error("Field type does not match existing field:  refname: ${witFieldChange.refName}, name: ${witFieldChange.name}")
+				return null
+			}
+			
+			// if there is a picklist, make sure it is up to date
 			def pickList = null
 			if (witFieldChange.suggestedValues.size() > 0 && field.picklistId) {
 				pickList = updatePickList(collection, project, witFieldChange, field.picklistId)
@@ -503,6 +497,16 @@ public class ProcessTemplateService {
 			def layout = ensureWitFieldLayout(collection, project, wit, field, witFieldChange)
 		}
 		
+	}
+	
+	// Make sure import field type matches existing field type in target org
+	def checkTypeMatch(def witFieldChange, def field) {
+		if (witFieldChange.type == field.type)
+			return true
+		else if (witFieldChange.type == 'identity' && field.isIdentity == true)
+			return true
+		else
+			return false
 	}
 	
 	def ensureWitFieldLayout(collection, project, wit, field, witFieldChange) {
@@ -526,6 +530,8 @@ public class ProcessTemplateService {
 		} else if ("${witFieldChange.type}" != 'html') {
 			if (externalGroup == null) {
 				externalGroup = createWITGroup(collection, project, wit, changePage, witFieldChange.group, witFieldChange.section)
+				// Refresh WIT layout to include new group
+				wit = getWorkItemType(collection, project, wit.referenceName, 'layout')
 			}
 			def control = externalGroup.controls.find { control ->
 				"${control.id}" == "${witFieldChange.refName}"
@@ -535,7 +541,7 @@ public class ProcessTemplateService {
 				ensureExternalControl(collection, project, wit, externalGroup, witFieldChange, genericRestClient.&post)
 			}
 			else {
-				boolean updateRequired = (control == null || "${control.label}" != "${witFieldChange.label}")
+				boolean updateRequired = ("${control.label}" != "${witFieldChange.label}")  // more conditions to be added
 				if (updateRequired) {
 					ensureExternalControl(collection, project, wit, externalGroup, witFieldChange, genericRestClient.&patch)
 				}
