@@ -13,14 +13,24 @@ import java.net.Proxy
 import java.net.Proxy.Type
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 
+import com.zions.vsts.services.code.CodeManagementService
+
 @Component
 class GitService {
 	
 	@Value('${tfs.token:}')
 	String tfsToken
 	
-	@Value('${repo.location:}')
+	@Value('${win.repo.location:}')
+	String winRepoLocation
+	
+	@Value('${unix.repo.location:}')
+	String unixRepoLocation
+
 	File repos
+	
+	@Autowired
+	CodeManagementService codeManagementService
 	
 	
 	public GitService() {
@@ -74,10 +84,34 @@ class GitService {
 		});
 	}
 	
-	File loadChanges(String url,String repoName = null, String branch = 'refs/heads/master') {
+	String getProjectName(String url) {
+		String name = url.substring(url.indexOf('/')+1)
+		name = name.substring(name.indexOf('/')+1)
+		name = name.substring(name.indexOf('/')+1)
+		name = name.substring(name.indexOf('/')+1)
+		name = name.substring(0, name.indexOf('/'))
+		return name
+	}
+	
+	File loadChanges(String url,String repoName = null, String branch = null) {
+		if (!repos) {
+			String osname = System.getProperty('os.name')
+			
+			if (osname.contains('Windows')) {
+				repos = new File(winRepoLocation)
+			} else {
+				repos = new File(unixRepoLocation)
+			}
+
+		}
 		if (!repoName) {
-			int nIndex = url.lastIndexOf('/')
+			int nIndex = url.lastIndexOf('/')+1
 			repoName = url.substring(nIndex)
+		}
+		if (!branch) {
+			String projectName = getProjectName(url)
+			def adoRepo = codeManagementService.getRepoWithProjectName('', projectName, repoName)
+			branch = adoRepo.defaultBranch
 		}
 		String aBranch = branch.substring( 'refs/heads/'.length())
 		String nUrl = url

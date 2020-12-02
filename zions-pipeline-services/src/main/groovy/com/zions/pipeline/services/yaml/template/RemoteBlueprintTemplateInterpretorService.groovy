@@ -62,14 +62,14 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 	@Value('${ado.project:DTS}')
 	String adoProject
 	
-	@Value('${repo.target.branch:refs/heads/master}')
+	@Value('${repo.target.branch:}')
 	String repoTargetBranch
 
 	@Value('${ado.workitemid:}')
 	String adoWorkitemId
 	
 	@Value('${input.answers:}')
-	String inputAnswers
+	String[] inputAnswers
 	
 	
 	File repoDir
@@ -99,6 +99,9 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		File blueprintDir = gitService.loadChanges(blueprintRepoUrl)
 		if (blueprintFolderName && blueprintFolderName.length() > 0) {
 			blueprintDir = new File(blueprintDir, blueprintFolderName)
+		}
+		if (repoTargetBranch == null || repoTargetBranch.length() == 0) {
+			repoTargetBranch = null
 		}
 		repoDir = gitService.loadChanges(outRepoUrl, null, repoTargetBranch)
 		gitService.checkout(repoDir, "blueprint/${new Date().time}", true)
@@ -131,9 +134,10 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		
 		//Generate pipeline
 		if (inputAnswers && inputAnswers.length() > 0) {
+			String inputAns = inputAnswers.join('\n')
 			YamlBuilder yb = new YamlBuilder()
 
-			yb( inputAnswers )
+			yb( inputAns )
 
 			String answers = yb.toString()
 

@@ -10,7 +10,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.pipeline.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="remotePipelineBuilder --blueprint.repo.url=&quot;https://dev.azure.com/zionseto/DTS/_git/zions-blueprints&quot;&#13;&#10;--blueprint.folder.name=dts&#13;&#10;--out.repo.url=https://dev.azure.com/zionseto/DTS/_git/zions-service-framework &#13;&#10;--out.dir.name=&quot;${string_prompt: Project Name}&quot;&#13;&#10;--blueprint=micro-service &#13;&#10;--pipeline.folder=pipeline&#13;&#10;--run.remote=true"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="remotePipelineBuilder --blueprint.repo.url=&quot;https://dev.azure.com/zionseto/DTS/_git/zions-blueprints&quot;&#13;&#10;--blueprint.folder.name=dts&#13;&#10;--out.repo.url=https://dev.azure.com/zionseto/DTS/_git/zions-service-framework &#13;&#10;--out.dir.name=&quot;${string_prompt: Project Name}&quot;&#13;&#10;--blueprint=micro-service &#13;&#10;--pipeline.folder=pipeline&#13;&#10;--run.remote=true&#13;&#10;--repo.target.branch=refs/heads/master"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-pipeline-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=default"/>
 </launchConfiguration>

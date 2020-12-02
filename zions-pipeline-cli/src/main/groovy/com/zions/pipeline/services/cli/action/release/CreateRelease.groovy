@@ -17,6 +17,7 @@ import com.zions.xlr.services.query.ReleaseQueryService
 import com.zions.xlr.services.items.ReleaseItemService
 import com.zions.xlr.services.events.db.XlrReleaseSubscription
 import com.zions.xlr.services.events.db.XlrReleaseSubscriptionRepository
+import com.zions.vsts.services.work.WorkManagementService
 
 @Component
 @Slf4j
@@ -55,6 +56,9 @@ class CreateRelease implements CliAction {
 	@Autowired
 	ReleaseItemService releaseItemService
 	
+	@Autowired
+	WorkManagementService workManagementService
+	
 	@Autowired(required=false)
 	XlrReleaseSubscriptionRepository xlrReleaseSubscriptionRepository
 
@@ -81,7 +85,9 @@ class CreateRelease implements CliAction {
 			if (xlrResult) {
 				String releaseId = releaseId(xlrResult)
 				String fReleaseId = "${xlrResult.id}"
-				XlrReleaseSubscription subscription = new XlrReleaseSubscription([releaseId: fReleaseId, pipelineId: adoPipelineId, adoProject: adoProject, isReleasePipeline: isReleasePipeline, failPipeline: xlrFailPipeline])
+				def wi = createWorkitem(adoProject, releaseTitle, adoPipelineId)
+				int wiId = wi.id
+				XlrReleaseSubscription subscription = new XlrReleaseSubscription([releaseId: fReleaseId, pipelineId: adoPipelineId, adoProject: adoProject, isReleasePipeline: isReleasePipeline, failPipeline: xlrFailPipeline, workItemId: wiId])
 				xlrReleaseSubscriptionRepository.save(subscription)
 				xlrResult = releaseItemService.startPlannedRelease(releaseId)
 			} else {
@@ -96,6 +102,12 @@ class CreateRelease implements CliAction {
 	public Object validate(ApplicationArguments args) throws Exception {
 	}
 	
+	def createWorkitem(String project, String releaseTitle, String buildId) {
+		def relLink = [op: 'add', path: '/relations/-', value: [rel: 'ArtifactLink', url: "vstfs:///Build/Build/${buildId}", attributes:[name: 'Build']]]
+		def data = [[op: 'add', path: '/fields/System.Title', value: releaseTitle],relLink]
+		def wi = workManagementService.createWorkItem('', project, 'Release', data)
+		return wi
+	}
 	String releaseId(def template) {
 		String id = "${template.id}"
 		return id.substring(id.lastIndexOf('/')+1)
