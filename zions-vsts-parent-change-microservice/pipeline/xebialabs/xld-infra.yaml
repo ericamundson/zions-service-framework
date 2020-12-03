@@ -10,7 +10,7 @@ spec:
     
     - name: Dev
       type: overthere.CifsHost
-      address: UTMVTI0192
+      address: UTMSDEV0566
       username: svc-vsbuildagent@zbc.internal
       password: !value "svc_account_passwd"
     - name: Prod
