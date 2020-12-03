@@ -7,25 +7,32 @@ spec:
   children:
   - directory: zions-xlrtoado-event-microservice
     children:
-    
+    - name: Dev
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Dev
+      dictionaries:
+      - Environments/DTS/zions-xlrtoado-event-microservice/_Dictionaries/Dev_Dict
     - name: Prod
       type: udm.Environment
       members:
-      
       - Infrastructure/DTS/microservice/Prod
-      
       dictionaries:
       - Environments/DTS/zions-xlrtoado-event-microservice/_Dictionaries/Prod_Dict
     - directory: _Dictionaries
       children:
-      
+      - name: Dev_Dict
+        type: udm.Dictionary
+        entries:
+          deploy.path: d:\app\azure\services\zions-xlrtoado-event-microservice
+          ws.url: <no value>
+          tfs.url: https://dev.azure.com/eto-dev          
+          spring.profile: test
       - name: Prod_Dict
         type: udm.Dictionary
         entries:
-          
           stage.path: d:\app\azure\_work\zions-xlrtoado-event-microservice
           deploy.path: d:\app\azure\services\zions-xlrtoado-event-microservice
-          
           ws.url: <no value>
-          
-          tfs.url: https://dev.azure.com/zionseto
+          tfs.url: https://dev.azure.com/zionseto          
+          spring.profile: default
