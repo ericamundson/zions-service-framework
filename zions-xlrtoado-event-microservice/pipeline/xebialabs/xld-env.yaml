@@ -24,6 +24,7 @@ spec:
       - name: Dev_Dict
         type: udm.Dictionary
         entries:
+          stage.path: d:\app\azure\_work\zions-xlrtoado-event-microservice
           deploy.path: d:\app\azure\services\zions-xlrtoado-event-microservice
           ws.url: <no value>
           tfs.url: https://dev.azure.com/eto-dev          
