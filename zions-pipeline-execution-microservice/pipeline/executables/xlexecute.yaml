@@ -6,7 +6,8 @@ executables:
   - /zions-pipeline-execution-microservice/pipeline/xebialabs/xld-infra.yaml
   vault:
     engine: secret
-    path: zions-service-framework
+    paths: 
+    - zions-service-framework
   values:
   - name: xld_cli_user
     value: ${xl.user}
@@ -21,7 +22,8 @@ executables:
   - /zions-pipeline-execution-microservice/pipeline/xebialabs/xlr-pipeline-ci-cd.yaml
   vault:
     engine: secret
-    path: zions-service-framework
+    paths: 
+    - zions-service-framework
   values:
   - name: xld_cli_user
     value: ${xl.user}

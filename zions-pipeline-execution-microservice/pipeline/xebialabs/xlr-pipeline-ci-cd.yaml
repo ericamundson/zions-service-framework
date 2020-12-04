@@ -23,6 +23,33 @@ spec:
         type: xlrelease.ParallelGroup
         tasks:
         
+        - name: DEV
+          type: xlrelease.SequentialGroup
+          tasks:
+          - name: Deploy zions-pipeline-execution-microservice for eto-dev testing.
+            type: xldeploy.Deploy
+            server: XL Deploy Server
+            deploymentApplication: 
+            deploymentVersion:
+            deploymentPackage: Applications/DTS/zions-pipeline-execution-microservice/${deploymentPackage.name}
+            deploymentEnvironment: Environments/DTS/zions-pipeline-execution-microservice/Dev
+            rollbackOnFailure: false
+            cancelOnError: false
+            failOnPause: false
+          - name: DEV - zions-pipeline-execution-microservice deployment ready for testing
+            type: xlrelease.NotificationTask
+            addresses:
+            - Eric.Amundson2@zionsbancorp.com
+            - DL-ALMOps@zionsbancorp.com
+            subject: 'zions-pipeline-execution-microservice: ${deploymentPackage.name} ready for testing'
+            body: |-
+              # Dev ready for testing
+              A new version of zions-pipeline-execution-microservice has been deployed:
+
+              ## ${deploymentPackage.name}
+
+              Please validate all new changes.
+        
         - name: PROD
           type: xlrelease.SequentialGroup
           tasks:
