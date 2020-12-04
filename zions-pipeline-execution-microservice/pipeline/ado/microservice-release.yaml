@@ -8,7 +8,6 @@ trigger:
   paths:
     include:
 
-    - 'zions-pipeline-cli/*'
     - 'zions-pipeline-execution-microservice/*'
     - 'zions-pipeline-services/*'
     
