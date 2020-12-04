@@ -11,21 +11,28 @@ metadata:
 
 spec:
   parameters:
-  - name: ConnName
-    type: Input
-    prompt: Enter a name for the service connection.
-    
   - name: ConnectTo
     type: Select
     options:
       - XL Deploy
       - Nexus IQ
-      - Other   
-    prompt: Select the service for which to create the connection.
+      - Generic   
+    prompt: Select the service for which to create the connection - 
+    
+  - name: ConnName
+    type: Input
+    prompt: Enter the name for the service connection
+    description: "Unique name to identify the connection"    
+    promptIf: !expr "ConnectTo == 'Generic'"
+    
+  - name: URL
+    type: Input
+    prompt: Enter the URL for the service connection (ex. 'https//whatever.com') 
+    promptIf: !expr "ConnectTo == 'Generic'"
     
   - name: Projects
     type: Input
-    prompt: Enter comma delimited list of ADO projects (or 'all').
+    prompt: Enter comma delimited list of ADO projects (or 'all')
     
   - name: TargetEnv
     type: Select
@@ -33,13 +40,13 @@ spec:
       - Production
       - Test   
     default: Production
-    prompt: Select the environment for the connection.
-    
-
+    prompt: Select the environment for the connection - 
 
   files:
-  - path: serviceconns/xldeploy-svcconn.yaml.tmpl
+  - path: xldeploy-svcconn.yaml.tmpl
     writeIf: !expr "ConnectTo == 'XL Deploy'"
-  - path: serviceconns/nexusiq-svcconn.yaml.tmpl
+  - path: nexusiq-svcconn.yaml.tmpl
     writeIf: !expr "ConnectTo == 'Nexus IQ'"
-  - renameTo: ado-svcconn.yaml
+  - path: generic-svcconn.yaml.tmpl
+    writeIf: !expr "ConnectTo == 'Generic'"
+

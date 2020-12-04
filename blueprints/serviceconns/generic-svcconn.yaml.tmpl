@@ -1,0 +1,17 @@
+executables:
+- type: serviceConnection
+  context: ZionsETO
+  projects: {{.Projects}}
+  endpointType: Generic
+  endpointUrl: {{.URL}}
+  endpointName: {{.ConnName}}
+  endpointDescription: {{.ConnName}} for {{.TargetEnv}} environment
+  grantAllPerm: true
+  vault:
+    engine: secret
+    path: zions-service-framework/dev
+  authorization:
+    scheme: UsernamePassword
+    parameters:
+      username: {{.Username}}
+      password: {{.Password}}
