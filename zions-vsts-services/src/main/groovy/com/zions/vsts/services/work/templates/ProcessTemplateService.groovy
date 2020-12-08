@@ -672,14 +672,12 @@ public class ProcessTemplateService {
 			)
 		return result
 	}
-	
 	def createField(collection, project, witFieldChange, pickList) {
-		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
 		def pickId = null
-		def wiData = [id: "${witFieldChange.refName}", name: "${witFieldChange.name}", type: "${witFieldChange.type}", description: "${witFieldChange.helpText}", pickList: null, isPicklist: false]
+		def wiData = [id: "${witFieldChange.refName}", name: "${witFieldChange.name}", type: "${witFieldChange.type}", description: "${witFieldChange.helpText}", pickList: null]
 		if (pickList != null) {
 			wiData.pickList = pickList
-			wiData.isPicklist = true
 		}
 		def body = new JsonBuilder(wiData).toPrettyString()
 		//		File s = new File('defaultwit.json')
@@ -688,10 +686,10 @@ public class ProcessTemplateService {
 		//		w.close()
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/fields",
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processdefinitions/${processTemplateId}/fields",
 			body: body,
 			headers: [accept: 'application/json'],
-			query: ['api-version': '6.0']
+			query: ['api-version': '5.0-preview.1']
 			
 			)
 		return result
