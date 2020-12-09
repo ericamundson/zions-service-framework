@@ -96,6 +96,10 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			def bpRepoData = codeManagementService.getRepo('', bpProjectData, bpRepoName)
 
 			def bpOutrepo = gitService.loadChanges(bpRepoData.remoteUrl, bpRepoName)
+			File bpFolder = bpOutrepo
+			if (yaml.blueprintFolder) {
+				bpFolder = new File(bpOutrepo, yaml.blueprintFolder)
+			}
 
 			YamlBuilder yb = new YamlBuilder()
 
@@ -103,7 +107,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 
 			String answers = yb.toString()
 
-			File aF = new File("${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml")
+			File aF = new File("${loadDir.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml")
 			def sAF = aF.newDataOutputStream()
 			sAF << answers
 			sAF.close()
@@ -111,7 +115,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			if (useProxy) {
 				env = [key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080"]
 			}
-			def arg = [line: "${option} ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s"]
+			def arg = [line: "${option} ${loadDir.absolutePath}/${pipelineFolder}/xl blueprint -a \"${loadDir.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpFolder.absolutePath} -b \"${blueprint}\" -s"]
 			run(command, "${outrepo.absolutePath}/${pipelineFolder}", arg, env, log)
 		}
 		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')

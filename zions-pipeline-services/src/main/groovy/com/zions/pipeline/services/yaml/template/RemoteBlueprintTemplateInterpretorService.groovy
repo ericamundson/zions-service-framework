@@ -133,7 +133,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		}
 		
 		//Generate pipeline
-		if (inputAnswers && inputAnswers.length() > 0) {
+		if (inputAnswers && inputAnswers.size() > 0) {
 			String inputAns = inputAnswers.join('\n')
 			YamlBuilder yb = new YamlBuilder()
 

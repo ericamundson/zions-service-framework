@@ -52,6 +52,9 @@ class GitRepository implements IExecutableYamlHandler {
 //			yb(answers)
 //			answersStr = yb.toString()
 //		}
+		if (yaml.project) {
+			projectName = yaml.project
+		}
 		def project = projectManagementService.getProject('', projectName)
 		def repository = codeManagementService.ensureRepo('', project, repoName)
 		try {

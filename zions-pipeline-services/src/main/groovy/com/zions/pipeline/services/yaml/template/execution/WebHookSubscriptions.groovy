@@ -55,7 +55,7 @@ class WebHookSubscriptions implements IExecutableYamlHandler, ReadSecretsTrait {
 		String[] eventTypes = yaml.eventTypes.split(',')
 		def vaultSecrets = null
 		if (yaml.vault) {
-			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.path)
+			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.paths)
 			if (yaml.consumerUserName && yaml.consumerPassword) {
 				consumerUserName = getSecret(vaultSecrets, yaml.consumerUserName)
 				consumerPassword = getSecret(vaultSecrets, yaml.consumerPassword)
