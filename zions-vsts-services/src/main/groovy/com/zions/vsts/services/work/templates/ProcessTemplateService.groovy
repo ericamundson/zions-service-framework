@@ -478,6 +478,9 @@ public class ProcessTemplateService {
 				pickList = createPickList(collection, project, witFieldChange)
 			}
 			field = createField(collection, project, witFieldChange, pickList)
+			// Bug??? API does not return the field referenceName in the response
+			// So have to fetch field to get full field content
+			field = queryForField(collection, project, witFieldChange.refName)
 		} 
 		else { // Field already exists, need to update it
 			// Make sure field type matches
@@ -529,6 +532,8 @@ public class ProcessTemplateService {
 		}
 		if (changePage == null) {
 			changePage = createWITPage(collection, project, wit, "${witFieldChange.page}")
+			// Refresh WIT layout to include new page
+			wit.layout.pages.add(changePage)
 		}
 		
 		//	Check if new group needs to be created		
@@ -697,6 +702,8 @@ public class ProcessTemplateService {
 			query: ['api-version': '5.0-preview.1']
 			
 			)
+		if (result) 
+			
 		return result
 	}
 	def updateField(collection, project, witFieldChange, pickList, field) {
@@ -864,10 +871,12 @@ public class ProcessTemplateService {
 			
 			)
 		def actualWit = getWIT(collection, project, name)
+		
+		// Add fields from default WIT since there are certain fields needed by our back-end processes
 		defaultWitFields.value.each { field ->
 			addWITField(collection, project, actualWit.referenceName, field.referenceName, field.type)
 		}
-		actualWit = ensureLayout(collection, project, actualWit, defaultWit)
+		ensureLayout(collection, project, actualWit, defaultWit)
 //		def wStr = new JsonBuilder(actualWit).toPrettyString()
 //		File s = new File('actualwit.json')
 //		def w = s.newDataOutputStream()
@@ -943,7 +952,7 @@ public class ProcessTemplateService {
 			defVal = 'false'
 		}
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
-		def witField = [defaultValue: defVal, referenceName: refName, type: null, readOnly: false, required: req,  allowedGroups: null]
+		def witField = [defaultValue: defVal, referenceName: refName, type: type, readOnly: false, required: req,  allowedGroups: null]
 		def body = new JsonBuilder(witField).toPrettyString()
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
