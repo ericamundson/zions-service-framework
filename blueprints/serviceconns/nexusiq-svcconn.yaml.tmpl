@@ -1,0 +1,19 @@
+executables:
+- type: serviceConnection
+  context: ZionsETO
+  projects: {{.Projects}}
+  endpointType: NexusIqServiceConnection
+  endpointUrl: https://nexus.cs.zionsbank.com/iqserver
+  endpointName: {{.ConnName}}
+  endpointDescription: Nexus IQ for {{.TargetEnv}} environment
+  grantAllPerm: true
+  vault:
+    engine: secret
+    path: zions-service-framework/dev
+  authorization:
+    scheme: UsernamePassword
+    parameters:
+      #Vault key
+      username: ${nexusiq.user}
+      #Vault key      
+      password: ${nexusiq.password}
