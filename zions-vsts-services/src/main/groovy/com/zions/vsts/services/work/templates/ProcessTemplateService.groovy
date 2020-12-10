@@ -161,12 +161,11 @@ public class ProcessTemplateService {
 	}
 	
 	def getFields(def collection, def project) {
-		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/fields",
-			headers: ['Content-Type': 'application/json', accept: 'application/json'],
-			query: ['api-version': '6.0']
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/wit/fields",
+			headers: ['Content-Type': 'application/json', accept: 'application/json;api-version=5.0-preview.2;excludeUrls=true']
+			//query: ['api-version': '5.0-preview.2']
 			)
 		return result
 	}
@@ -224,7 +223,7 @@ public class ProcessTemplateService {
 		return changes
 		
 	}
-	
+	// Extracts all WIT controls
 	def translateWitChanges(collection, project, String wiName) {
 		def wit = getWIT(collection, project, wiName)
 		def fields = getWorkitemTemplateFields(collection, project, wiName)
@@ -240,7 +239,7 @@ public class ProcessTemplateService {
 			if (fieldDetails) {
 				type = getFieldType(fieldDetails)
 			}
-			def cField = [name: "${field.name}", label: null, refName:"${field.referenceName}", type: type, helpText: "${field.description}", page: null, section: null, group: null,suggestedValues:[]]
+			def cField = [name: "${field.name}", label: "${fieldDetails.label}", refName:"${field.referenceName}", type: type, helpText: "${fieldDetails.description}", page: null, section: null, group: null,suggestedValues:[]]
 			field.allowedValues.each { value ->
 				cField.suggestedValues.add(value) 
 			}
@@ -259,23 +258,26 @@ public class ProcessTemplateService {
 							cfield.group = "${group.label}"
 							cfield.label = "${control.label}"
 						} else {
-							def cField = [name: "${control.label}", label: null, refName:"${control.id}", type: '', helpText: 'custom control', page: page.label, section: section.id, group: group.label, control: control]
+							cfield = [name: "${control.label}", label: null, refName:"${control.id}", type: '', helpText: 'custom control', page: page.label, section: section.id, group: group.label, control: control]
 							if (control.contribution && control.contribution.contributionId) {
-								fieldMap["${control.id}"] = cField
+								fieldMap["${control.id}"] = cfield
 								println control.id
 							}
 						}
 						// Output controls/fields that are in groups to preserve order
-						if (cfield) witChanges.ensureFields.add(cfield)
+						if (cfield && 
+							cfield.page != "History" && 
+							cfield.page != "Links" && 
+							cfield.page != "Attachments" &&
+							cfield.name != "") 
+							witChanges.ensureFields.add(cfield)
 					}
 				}
 			}
 		}
-		// Output any controls/fields that are not in a group
-		fieldMap.each { key, cfield -> 
-			if (cfield.group != null)
-				witChanges.ensureFields.add(cfield)
-		}
+		// Output State (only System field not on the layout that we care about)
+		witChanges.ensureFields.add(fieldMap['System.State'])
+		
 		return witChanges
 	}
 	def getFieldType(field) {
@@ -477,7 +479,7 @@ public class ProcessTemplateService {
 			}
 			field = createField(collection, project, witFieldChange, pickList)
 		} 
-		else { // Field already exists
+		else { // Field already exists, need to update it
 			// Make sure field type matches
 			if (!checkTypeMatch(witFieldChange,field)) {
 				log.error("Field type does not match existing field:  refname: ${witFieldChange.refName}, name: ${witFieldChange.name}")
@@ -489,9 +491,12 @@ public class ProcessTemplateService {
 			if (witFieldChange.suggestedValues.size() > 0 && field.picklistId) {
 				pickList = updatePickList(collection, project, witFieldChange, field.picklistId)
 			}
-			//field = updateField(collection, project, witFieldChange, pickList, field)
+			if ("${field.referenceName}".substring(0,6) == "Custom.")
+				field = updateField(collection, project, witFieldChange, pickList, field)
 
 		}
+		
+		// Make sure the field has been added to this WIT, and update the field layout on the WIT editor form
 		if (field == null) {
 			log.error("Unable to create field:  refname: ${witFieldChange.refName}, name: ${witFieldChange.name}")
 			return null
@@ -697,7 +702,7 @@ public class ProcessTemplateService {
 	def updateField(collection, project, witFieldChange, pickList, field) {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
 		def pickId = null
-		def wiData = [id: "${witFieldChange.refName}", name: "${witFieldChange.name}", type: "${witFieldChange.type}", description: "${witFieldChange.helpText}", pickList: null]
+		def wiData = [id: "${field.referenceName}", name: "${field.name}", type: "${field.type}", description: "${witFieldChange.helpText}", pickList: null]
 		if (pickList != null) {
 			wiData.pickList = pickList
 		}
