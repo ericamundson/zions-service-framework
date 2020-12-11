@@ -17,8 +17,8 @@ trait XLCliTrait extends CliRunnerTrait {
 			aos << istream
 			aos.close()
 			
-			String command = '/bin/sh'
-			String option = '-c'
+			String command = '/usr/bin/sudo'
+			String option = '-u scmuser'
 			def args = [ line: "${option} chmod 777 xl" ]
 			run(command, "${loadDir.absolutePath}", args)
 		}
