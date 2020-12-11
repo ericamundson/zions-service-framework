@@ -536,36 +536,75 @@ public class ProcessTemplateService {
 			wit.layout.pages.add(changePage)
 		}
 		
-		//	Check if new group needs to be created		
-		def externalGroup = changePage.sections.find { section ->
-				"${section.id}" == "${witFieldChange.section}"
-			}.groups.find { group ->
-				"${group.label}" == "${witFieldChange.group}"
-			}
-		if ("${witFieldChange.type}" == 'html' && externalGroup == null) {
-			this.addGroupWithControl(collection, project, wit, changePage, field, "${witFieldChange.section}")
-		} else if ("${witFieldChange.type}" != 'html') {
-			if (externalGroup == null) {
-				externalGroup = createWITGroup(collection, project, wit, changePage, witFieldChange.group, witFieldChange.section)
-				// Refresh WIT layout to include new group
-				def changeSection = changePage.sections.find { section ->
-									"${section.id}" == "${witFieldChange.section}" }
-				changeSection.groups.add(externalGroup)
-			}
-			def control = externalGroup.controls.find { control ->
-				"${control.id}" == "${witFieldChange.refName}"
-			}
-			// Add/update the control as needed
-			if (control == null) {
-				ensureExternalControl(collection, project, wit, externalGroup, witFieldChange, genericRestClient.&post)
-			}
-			else {
-				boolean updateRequired = ("${control.label}" != "${witFieldChange.label}")  // more conditions to be added
-				if (updateRequired) {
-					ensureExternalControl(collection, project, wit, externalGroup, witFieldChange, genericRestClient.&patch)
+		//	Check if new group needs to be created or moved
+		def foundGroup = findGroup(changePage, witFieldChange)
+		def group
+		if (foundGroup == null) {  // group does not exist
+			if ("${witFieldChange.type}" == 'html')
+				group = addGroupWithControl(collection, project, wit, changePage, field, "${witFieldChange.section}")
+			else
+				group = createWITGroup(collection, project, wit, changePage, witFieldChange.group, witFieldChange.section)
+			// Refresh WIT layout to include new group
+			def changeSection = changePage.sections.find { section ->
+								"${section.id}" == "${witFieldChange.section}" }
+			changeSection.groups.add(group)
+		}
+		else if ("${foundGroup.section.id}" != "${witFieldChange.section}") { // Group exists on different page
+			group = moveWITGroup(collection, project, wit, changePage, foundGroup.group, witFieldChange.section, foundGroup.section)
+			// Refresh WIT layout to reflect move to new section
+			def changeSection = changePage.sections.find { section ->
+								"${section.id}" == "${witFieldChange.section}" }
+			changeSection.groups.add(group)
+			int i = 0
+			int iRemove
+			foundGroup.section.groups.each { grp ->
+				if ("${grp.id}" == "${group.id}") {
+					iRemove = i
 				}
+				i++
+			}
+			foundGroup.section.groups.removeAt(iRemove)
+		}
+		else { // group exists on target page
+			group = foundGroup.group
+		}
+		def control = group.controls.find { control ->
+			"${control.id}" == "${witFieldChange.refName}"
+		}
+		// Add/update the control as needed
+		if (control == null) {
+			ensureExternalControl(collection, project, wit, group, witFieldChange, genericRestClient.&post)
+		}
+		else {
+			boolean updateRequired = ("${control.label}" != "${witFieldChange.label}")  // more conditions to be added
+			if (updateRequired) {
+				ensureExternalControl(collection, project, wit, group, witFieldChange, genericRestClient.&patch)
 			}
 		}
+	}
+	// Find the group in the page layout and return the Section that contains it
+	def findGroup(changePage, witFieldChange) {
+		def foundGroup, foundSection
+		changePage.sections.each { section ->
+			def result
+			if ("${witFieldChange.type}" == 'html') {
+				result = section.groups.find { group ->
+						group.controls.size() > 0 && "${group.controls[0].id}" == "${witFieldChange.refName}"}
+			}
+			else {
+				result = section.groups.find { group ->
+						"${group.label}" == "${witFieldChange.group}"}
+			}
+			if (result) {
+				foundGroup = result
+				foundSection = section
+			}
+		}
+
+		if (foundGroup) 
+			return [group: foundGroup, section: foundSection]
+		else
+			return null
 	}
 	
 	def ensureExternalControl(collection, project, wit, externalGroup, field, Closure operation)
@@ -634,6 +673,23 @@ public class ProcessTemplateService {
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes/${wit.referenceName}/layout/pages/${pageId}/sections/${section}/groups",
 			headers: [accept: 'application/json'],
 			query: ['api-version': '5.0-preview.1'],
+			body: body
+			)
+		return result
+
+	}
+	
+	def moveWITGroup(collection, project, wit, externalPage, group, section, oldSection) {
+		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
+		String pageId = URLEncoder.encode(externalPage.id, 'utf-8').replace('+', '%20')
+		def groupData = [id: group.id, label: group.label, order: 1, visible: true, contribution: null, controls: null, isContribution: false]
+		def body = new JsonBuilder(groupData).toPrettyString()
+
+		def result = genericRestClient.put(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes/${wit.referenceName}/layout/pages/${pageId}/sections/${section}/groups/${group.id}",
+			headers: [accept: 'application/json'],
+			query: ['removeFromSectionId': "${oldSection.id}",'api-version': '6.1-preview.1'],
 			body: body
 			)
 		return result
