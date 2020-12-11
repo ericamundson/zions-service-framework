@@ -59,6 +59,9 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 	}
 
 	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
+		if (yaml.project) {
+			project = yaml.project
+		}
 		boolean useProxy = false
 		if (yaml.useProxy) {
 			useProxy = yaml.useProxy
@@ -70,6 +73,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 		def repoData = codeManagementService.getRepo('', projectData, repoName)
 
 		def outrepo = gitService.loadChanges(repoData.remoteUrl, repoName)
+		gitService.checkout(outrepo, "blueprint/${new Date().time}", true)
 		
 
 		File loadDir = new File(outrepo, "${pipelineFolder}")
@@ -96,6 +100,11 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			def bpRepoData = codeManagementService.getRepo('', bpProjectData, bpRepoName)
 
 			def bpOutrepo = gitService.loadChanges(bpRepoData.remoteUrl, bpRepoName)
+			File bpFolder = bpOutrepo
+			if (bp.blueprintFolder) {
+				String bpFolderStr = bp.blueprintFolder
+				bpFolder = new File(bpOutrepo, bpFolderStr)
+			}
 
 			YamlBuilder yb = new YamlBuilder()
 
@@ -103,7 +112,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 
 			String answers = yb.toString()
 
-			File aF = new File("${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml")
+			File aF = new File("${loadDir.absolutePath}/${blueprint}-answers.yaml")
 			def sAF = aF.newDataOutputStream()
 			sAF << answers
 			sAF.close()
@@ -111,13 +120,53 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			if (useProxy) {
 				env = [key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080"]
 			}
-			def arg = [line: "${option} ${outrepo.absolutePath}/${pipelineFolder}/xl blueprint -a \"${outrepo.absolutePath}/${pipelineFolder}/${blueprint}-answers.yaml\" -l ${bpOutrepo.absolutePath} -b \"${blueprint}\" -s"]
-			run(command, "${outrepo.absolutePath}/${pipelineFolder}", arg, env, log)
+			def arg = [line: "${option} ${loadDir.absolutePath}/xl blueprint -a \"${loadDir.absolutePath}/${blueprint}-answers.yaml\" -l ${bpFolder.absolutePath} -b \"${blueprint}\" -s"]
+			run(command, "${loadDir.absolutePath}", arg, env, log)
 		}
-		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
-		gitService.pushChanges(outrepo)
-		policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
+//		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
+//		gitService.pushChanges(outrepo)
+//		policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
+		runPullRequestOnChanges(outrepo, loadDir, project, projectData, repoData)
 	}
+	
+	def runPullRequestOnChanges(File repoDir, File outDir, String adoProject, def projectData, def repoData) {
+		String repoPath = repoDir.absolutePath
+		String outDirPath = outDir.absolutePath
+		String fPattern = outDirPath.substring(repoPath.length()+1)
+		//fPattern = "$fPattern/${pipelineFolder}"
+		String repoTargetBranch = repoData.defaultBranch
+		gitService.pushChanges(repoDir, fPattern, "Adding pipeline changes")
+		
+		
+		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, repoTargetBranch)
+		try {
+			String branchName = gitService.getBranchName(repoDir)
+			gitService.checkout(repoDir, repoTargetBranch)
+			gitService.deleteBranch(repoDir, branchName)
+			def pullRequestData = [sourceRefName: branchName, targetRefName: repoTargetBranch, title: "Update pipeline", description: "Making changes to pipeline implementation"]
+			def prd = codeManagementService.createPullRequest('', projectData.id, repoData.id, pullRequestData)
+			String prId = "${prd.pullRequestId}"
+			def id = [id: prd.createdBy.id]
+			def opts = [deleteSourceBranch: true, mergeCommitMessage: 'Update pipeline merge', mergeStrategy: 'rebase', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
+			def updateData = [completionOptions: opts, status: 'completed', lastMergeSourceCommit: prd.lastMergeSourceCommit]
+			//codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
+			while (true) {
+				try {
+					System.sleep(5000)
+				} catch (e) {}
+				prd = codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
+				String status = "${prd.status}"
+				if (status != 'active') break
+			}
+		} catch (Exception e) {
+			log.error(e.message)
+			throw e
+		}
+		finally {
+			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, repoTargetBranch, policies)
+		}
+	}
+
 
 	boolean performExecute(def yaml, List<String> locations) {
 		if (yaml.dependencies) return false

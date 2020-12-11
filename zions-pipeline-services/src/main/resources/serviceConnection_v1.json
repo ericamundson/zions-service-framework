@@ -101,7 +101,7 @@
 			"type": "object",
 			"required": [
 				"engine",
-				"path"
+				"paths"
 			],
 			"properties": {
 				"engine": {
@@ -114,16 +114,22 @@
 					],
 					"pattern": "^.*$"
 				},
-				"path": {
-					"$id": "#root/vault/path", 
-					"title": "Path", 
-					"type": "string",
-					"default": "",
-					"examples": [
-						"zions-service-framework"
-					],
-					"pattern": "^.*$"
-				}
+        "paths": {
+          "$id": "#root/vault/paths", 
+          "title": "Paths", 
+          "type": "array",
+          "default": [],
+          "items":{
+            "$id": "#root/vault/paths/items", 
+            "title": "Items", 
+            "type": "string",
+            "default": "",
+            "examples": [
+              "zions-service-framework"
+            ],
+            "pattern": "^.*$"
+          }
+        }
 			}
 		}
 ,

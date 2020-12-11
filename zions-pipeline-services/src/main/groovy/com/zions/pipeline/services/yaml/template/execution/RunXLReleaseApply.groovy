@@ -56,7 +56,10 @@ import groovy.util.logging.Slf4j
 	
 	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
 		if (!performExecute(yaml, locations)) return
-		
+		if (yaml.project) {
+			project = yaml.project
+		}
+
 		boolean useProxy = xlrUseProxy
 		if (yaml.useProxy) {
 			useProxy = yaml.useProxy

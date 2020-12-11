@@ -146,6 +146,16 @@
                                     "ALMOpsTest"
                                 ]
                             },
+                            "blueprintFolder": {
+                                "$id": "#/properties/blueprints/items/anyOf/0/properties/blueprintFolder",
+                                "type": "string",
+                                "title": "The subFolder",
+                                "description": "sub folder to search",
+                                "default": "",
+                                "examples": [
+                                    "ALMOpsTest"
+                                ]
+                            },
                             "answers": {
                                 "$id": "#/properties/blueprints/items/anyOf/0/properties/answers",
                                 "type": "object",

@@ -96,7 +96,6 @@
                 }
             ],
             "required": [
-                "buildData",
                 "approvalData"
             ],
             "properties": {
@@ -164,7 +163,18 @@
                             "examples": [
                                 2
                             ]
+                        },
+                        "creatorVoteCounts": {
+                            "$id": "#/properties/policyData/properties/approvalData/properties/creatorVoteCounts",
+                            "type": "boolean",
+                            "title": "The creatorVoteCounts schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
                         }
+ 
                     },
                     "additionalProperties": false
                 }

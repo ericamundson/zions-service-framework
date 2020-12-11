@@ -112,7 +112,7 @@
             ],
             "required": [
                 "engine",
-                "path"
+                "paths"
             ],
             "properties": {
                 "engine": {
@@ -125,15 +125,21 @@
                         "secret"
                     ]
                 },
-                "path": {
-                    "$id": "#/properties/repository/properties/path",
+                "paths": {
+                  "$id": "#root/vault/paths", 
+                  "title": "Paths", 
+                  "type": "array",
+                  "default": [],
+                  "items":{
+                    "$id": "#root/vault/paths/items", 
+                    "title": "Items", 
                     "type": "string",
-                    "title": "The path schema",
-                    "description": "An explanation about the purpose of this instance.",
                     "default": "",
                     "examples": [
-                        "zions-service-framework"
-                    ]
+                      "zions-service-framework"
+                    ],
+                    "pattern": "^.*$"
+                  }
                 }
             },
             "additionalProperties": false

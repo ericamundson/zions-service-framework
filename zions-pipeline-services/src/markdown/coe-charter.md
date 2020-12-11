@@ -202,5 +202,6 @@ stop
     for executions.
 - **5** [Audit & Traceability](https://dev.azure.com/zionseto/DTS/_workitems/edit/970959)  ???
     - Enable feedback to ADO Release work item on status of a release.  **Ashwin**
+- **2** Project provisioning at detection of a ADO project being set to be a development project
 
 # Timeline

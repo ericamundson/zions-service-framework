@@ -127,23 +127,26 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		String oss = System.getProperty('os.name')
 		String command = 'cmd'
 		String option = '/c'
+		String sep = '\r\n'
 		if (!oss.contains('Windows')) {
 			command = '/bin/sh'
 			option = '-c'
+			sep = '\n'
 		}
 		
 		//Generate pipeline
-		if (inputAnswers && inputAnswers.length() > 0) {
-			String inputAns = inputAnswers.join('\n')
-			YamlBuilder yb = new YamlBuilder()
-
-			yb( inputAns )
-
-			String answers = yb.toString()
+		if (inputAnswers && inputAnswers.size() > 0) {
+			String inputAns = inputAnswers.join("${sep}")
+			inputAns = "---${sep}" + inputAns
+//			YamlBuilder yb = new YamlBuilder()
+//
+//			yb( inputAns )
+//
+//			String answers = yb.toString()
 
 			File aF = new File(outDir, "${pipelineFolder}/answers.yaml")
 			def sAF = aF.newDataOutputStream()
-			sAF << answers
+			sAF << inputAns
 			sAF.close()
 			run(command, "${outDir}/${pipelineFolder}", [line: "${option} ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/${pipelineFolder}/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s"], null, log)
 		} else {
