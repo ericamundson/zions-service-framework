@@ -19,7 +19,7 @@ trait XLCliTrait extends CliRunnerTrait {
 			
 			String command = '/bin/sh'
 			String option = '-c'
-			def arg = [ line: "${option} chmod 777 xl" ]
+			def args = [ line: "${option} chmod 777 xl" ]
 			run(command, "${loadDir.absolutePath}", args)
 		}
 	}
