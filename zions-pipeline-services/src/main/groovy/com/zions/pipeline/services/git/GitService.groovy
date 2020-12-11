@@ -108,19 +108,24 @@ class GitService {
 			int nIndex = url.lastIndexOf('/')+1
 			repoName = url.substring(nIndex)
 		}
+		String projectName = getProjectName(url)
+		
 		if (!branch) {
-			String projectName = getProjectName(url)
 			def adoRepo = codeManagementService.getRepoWithProjectName('', projectName, repoName)
 			branch = adoRepo.defaultBranch
 		}
-		String aBranch = branch.substring( 'refs/heads/'.length())
+		String aBranch = branch
+		if (aBranch.startsWith('refs/heads/')) {
+			aBranch = aBranch.substring( 'refs/heads/'.length())
+		}
 		String nUrl = url
 		if (nUrl.contains('dev.')) {
 			String subStr = nUrl.substring(0, nUrl.indexOf('.'))
 			nUrl = nUrl.replace(subStr, "https://${tfsToken}@dev")
 			
 		}
-		File repo = new File(repos, "${repoName}")
+		File projectDir = new File(repos, "${projectName}")
+		File repo = new File(projectDir, "${repoName}")
 		if (!repo.exists()) {
 			repo.mkdirs()
 		}

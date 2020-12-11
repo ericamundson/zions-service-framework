@@ -57,6 +57,10 @@ class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait, XLCliT
 	
 	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
 		if (!performExecute(yaml, locations)) return
+		if (yaml.project) {
+			project = yaml.project
+		}
+
 		//String xlOutPath = "${yaml.path}"
 		String xlDeployFile = "${repo.absolutePath}/${yaml.yamlFile}"
 		String wdir = xlDeployFile.substring(0, xlDeployFile.lastIndexOf('/'))

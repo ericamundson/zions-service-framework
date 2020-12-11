@@ -39,7 +39,10 @@ class BuildDefinition implements IExecutableYamlHandler {
 	ProjectManagementService projectManagementService
 
 	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName) {
-		
+		if (yaml.project) {
+			projectName = yaml.project
+		}
+
 		String bPath = yaml.name
 		String bFolder = null
 		String bName = null

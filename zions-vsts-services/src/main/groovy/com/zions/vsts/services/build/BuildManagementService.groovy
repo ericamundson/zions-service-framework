@@ -158,6 +158,7 @@ public class BuildManagementService {
 		if (buildData && buildData.ciBuildFile) {
 			log.debug("BuildManagementService::ensureBuildsForBranch -- Setting YAML CI Build filename to ${buildData.ciBuildFile}")
 			pipelineFileName = "${buildData.ciBuildFile}"
+			isYAMLPipeline = true
 		}
 		def branchName = "master"
 		if (isInitBranch) {

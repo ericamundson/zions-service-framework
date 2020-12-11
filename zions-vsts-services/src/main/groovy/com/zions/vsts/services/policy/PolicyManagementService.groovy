@@ -270,10 +270,14 @@ public class PolicyManagementService {
 		if (approvalData && approvalData.minApprovers) {
 			numMinApprovers = approvalData.minApprovers
 		}
+		boolean creatorVoteCounts = false
+		if (approvalData && approvalData.creatorVoteCounts) {
+			creatorVoteCounts = approvalData.creatorVoteCounts
+		}
 		log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- ")
 		def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
 		    type: [id: MIN_APPROVERS_POLICY_TYPE],
-		    settings:[minimumApproverCount: numMinApprovers, creatorVoteCounts: false, allowDownvotes: false, resetOnSourcePush: true,
+		    settings:[minimumApproverCount: numMinApprovers, creatorVoteCounts: creatorVoteCounts, allowDownvotes: false, resetOnSourcePush: true,
 				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 			]
 		]
