@@ -1,6 +1,6 @@
 package com.zions.pipeline.services.mixins
 
-trait XLCliTrait {
+trait XLCliTrait extends CliRunnerTrait {
 	def loadXLCli(File loadDir) {
 		String osname = System.getProperty('os.name')
 			
@@ -16,7 +16,11 @@ trait XLCliTrait {
 			def aos = of.newDataOutputStream()
 			aos << istream
 			aos.close()
-
+			
+			String command = '/bin/sh'
+			String option = '-c'
+			def arg = [ line: "${option} chmod 777 xl" ]
+			run(command, "${loadDir.absolutePath}", args)
 		}
 	}
 }
