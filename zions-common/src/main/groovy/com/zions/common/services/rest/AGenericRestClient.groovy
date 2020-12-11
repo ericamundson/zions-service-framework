@@ -76,11 +76,12 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			String proxyPort = System.getProperty("proxy.Port")
 			String proxyUser = System.getProperty("proxy.User")
 			String proxyPassword = System.getProperty("proxy.Password")
-			
-			delegate.client.getCredentialsProvider().setCredentials(
-				new AuthScope(proxyHost, Integer.parseInt(proxyPort)),
-				new UsernamePasswordCredentials(proxyUser, proxyPassword)
-			)
+			if (proxyUser != null) {
+				delegate.client.getCredentialsProvider().setCredentials(
+					new AuthScope(proxyHost, Integer.parseInt(proxyPort)),
+					new UsernamePasswordCredentials(proxyUser, proxyPassword)
+				)
+			}
 			delegate.setProxy(proxyHost, Integer.parseInt(proxyPort), 'http')
 			
 		}
