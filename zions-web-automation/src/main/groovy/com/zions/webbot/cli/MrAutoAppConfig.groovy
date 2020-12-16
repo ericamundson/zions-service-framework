@@ -30,7 +30,7 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
 @Configuration
 @Profile("mrauto")
-@ComponentScan(["com.zions.mr","com.zions.auto","com.zions.vsts.services.work","com.zions.vsts.services.admin","com.zions.common.services.logging","com.zions.vsts.services.notification"])
+@ComponentScan(["com.zions.mr","com.zions.auto","com.zions.vsts.services.asset","com.zions.vsts.services.work","com.zions.vsts.services.admin","com.zions.common.services.logging","com.zions.vsts.services.notification"])
 public class MrAutoAppConfig {
 	@Bean
 	ICacheManagementService cacheManagementService() {
