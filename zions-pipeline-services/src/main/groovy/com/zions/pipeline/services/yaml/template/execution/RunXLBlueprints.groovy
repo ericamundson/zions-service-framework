@@ -132,7 +132,11 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 	def runPullRequestOnChanges(File repoDir, File outDir, String adoProject, def projectData, def repoData) {
 		String repoPath = repoDir.absolutePath
 		String outDirPath = outDir.absolutePath
-		String fPattern = outDirPath.substring(repoPath.length()+1)
+		String fPattern = "${pipelineFolder}"
+		if (repoPath != outDirPath) {
+			fPattern = outDirPath.substring(repoPath.length()+1)
+			fPattern = "$fPattern/${pipelineFolder}"
+		}
 		//fPattern = "$fPattern/${pipelineFolder}"
 		String repoTargetBranch = repoData.defaultBranch
 		gitService.pushChanges(repoDir, fPattern, "Adding pipeline changes")
