@@ -181,6 +181,16 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		}
 	}
 	
+	String getProjectName(String url) {
+		String name = url.substring(url.indexOf('/')+1)
+		name = name.substring(name.indexOf('/')+1)
+		name = name.substring(name.indexOf('/')+1)
+		name = name.substring(name.indexOf('/')+1)
+		name = name.substring(0, name.indexOf('/'))
+		return name
+	}
+
+	
 	def runPullRequestOnChanges() {
 		String repoPath = repoDir.absolutePath
 		String outDirPath = outDir.absolutePath
@@ -189,8 +199,12 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			fPattern = outDirPath.substring(repoPath.length()+1)
 			fPattern = "$fPattern/${pipelineFolder}"
 		}
-		def projectData = projectManagementService.getProject('', adoProject)
-		def repoData = codeManagementService.getRepo('', projectData, repoDir.name)
+		String projectName = getProjectName(outRepoUrl)
+		
+		def projectData = projectManagementService.getProject('', projectName)
+		int nIndex = outRepoUrl.lastIndexOf('/')+1
+		String repoName = outRepoUrl.substring(nIndex)
+		def repoData = codeManagementService.getRepo('', projectData, repoName)
 		if (adoWorkitemId && adoWorkitemId.length() > 0) {
 			gitService.pushChanges(repoDir, fPattern, "Adding pipline changes \n#${adoWorkitemId}")
 		} else {
