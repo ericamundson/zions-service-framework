@@ -11,7 +11,8 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.pipeline.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="remotePipelineBuilder --blueprint.repo.url=&quot;https://dev.azure.com/eto-dev/DTS/_git/zions-blueprints&quot; --blueprint=&quot;project-devops&quot; --blueprint.folder.name=&quot;provisioning&quot; --out.repo.url=&quot;https://dev.azure.com/eto-dev/DTS/_git/project_devops&quot; --repo.target.branch=refs/heads/master --out.dir.name=&quot;ALMOpsTest&quot; --input.answers=&quot;ProjectName: ALMOpsTest,ConsumerUrl: https://releaseengineeringprovisioner-zionsbancorporation.msappproxy.net,XldUrl: https://xldeploy.testqa.zionsbank.com,NexusUrl: https://nexus.testqa.zionsbank.com&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="sendAdoBlueprintData --blueprint.repo.urls=&quot;https://dev.azure.com/eto-dev/DTS/_git/zions-blueprints&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-pipeline-cli"/>
+<booleanAttribute key="org.eclipse.jdt.launching.STOP_IN_MAIN" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=xlrdbtest"/>
 </launchConfiguration>

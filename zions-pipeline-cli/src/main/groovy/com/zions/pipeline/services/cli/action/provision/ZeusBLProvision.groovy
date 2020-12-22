@@ -43,9 +43,9 @@ class ZeusBLProvision implements CliAction {
 		new AntBuilder().exec(dir: "${blDir}", executable: 'cmd', failonerror: true) {
 			arg( line: "/c nsh create_affiliate_components.nsh -t ${name}")
 		}
-		new AntBuilder().exec(dir: "${blDir}", executable: 'cmd', failonerror: true) {
-			arg( line: "/c nsh create_build_job.nsh -t \"Create ZeusUI3 ${name}\"")
-		}
+//		new AntBuilder().exec(dir: "${blDir}", executable: 'cmd', failonerror: true) {
+//			arg( line: "/c nsh create_build_job.nsh \"Create ZeusUI3 ${name}\"")
+//		}
 //		new AntBuilder().exec(dir: "${blDir}", executable: 'cmd', failonerror: true) {
 //			arg( line: "/c nsh discover_template_job.nsh -j ${name}")
 //		}

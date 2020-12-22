@@ -184,8 +184,11 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 	def runPullRequestOnChanges() {
 		String repoPath = repoDir.absolutePath
 		String outDirPath = outDir.absolutePath
-		String fPattern = outDirPath.substring(repoPath.length()+1)
-		fPattern = "$fPattern/${pipelineFolder}"
+		String fPattern = "${pipelineFolder}"
+		if (repoPath != outDirPath) {
+			fPattern = outDirPath.substring(repoPath.length()+1)
+			fPattern = "$fPattern/${pipelineFolder}"
+		}
 		def projectData = projectManagementService.getProject('', adoProject)
 		def repoData = codeManagementService.getRepo('', projectData, repoDir.name)
 		if (adoWorkitemId && adoWorkitemId.length() > 0) {
