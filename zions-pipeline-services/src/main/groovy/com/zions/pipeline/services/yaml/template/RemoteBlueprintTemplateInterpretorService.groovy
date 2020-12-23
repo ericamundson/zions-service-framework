@@ -69,7 +69,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 	String adoWorkitemId
 	
 	@Value('${input.answers:}')
-	String[] inputAnswers
+	String inputAnswers
 	
 	
 	File repoDir
@@ -136,7 +136,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		
 		//Generate pipeline
 		if (inputAnswers && inputAnswers.size() > 0) {
-			String inputAns = inputAnswers.join("${sep}")
+			String inputAns = inputAnswers.replace('&&',"${sep}")
 			inputAns = "---${sep}" + inputAns
 //			YamlBuilder yb = new YamlBuilder()
 //
@@ -181,6 +181,16 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		}
 	}
 	
+	String getProjectName(String url) {
+		String name = url.substring(url.indexOf('/')+1)
+		name = name.substring(name.indexOf('/')+1)
+		name = name.substring(name.indexOf('/')+1)
+		name = name.substring(name.indexOf('/')+1)
+		name = name.substring(0, name.indexOf('/'))
+		return name
+	}
+
+	
 	def runPullRequestOnChanges() {
 		String repoPath = repoDir.absolutePath
 		String outDirPath = outDir.absolutePath
@@ -188,9 +198,14 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		if (repoPath != outDirPath) {
 			fPattern = outDirPath.substring(repoPath.length()+1)
 			fPattern = "$fPattern/${pipelineFolder}"
+			fPattern = fPattern.replace('\\', '/')
 		}
-		def projectData = projectManagementService.getProject('', adoProject)
-		def repoData = codeManagementService.getRepo('', projectData, repoDir.name)
+		String projectName = getProjectName(outRepoUrl)
+		log.info("fPattern:  ${fPattern}")
+		def projectData = projectManagementService.getProject('', projectName)
+		int nIndex = outRepoUrl.lastIndexOf('/')+1
+		String repoName = outRepoUrl.substring(nIndex)
+		def repoData = codeManagementService.getRepo('', projectData, repoName)
 		if (adoWorkitemId && adoWorkitemId.length() > 0) {
 			gitService.pushChanges(repoDir, fPattern, "Adding pipline changes \n#${adoWorkitemId}")
 		} else {

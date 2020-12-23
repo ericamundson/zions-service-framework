@@ -112,15 +112,22 @@ class SendAdoBlueprintData implements CliAction {
 						File parentFile = file.parentFile
 						String parentName = parentFile.name
 						
-						Blueprint blueprint = new Blueprint([name: parentName, repoUrl: repoUrl])
+						Blueprint blueprint = new Blueprint([name: parentName, repoUrl: repoUrl, outDir: []])
 						String bText = file.text
 						def byaml = new YamlSlurper().parseText(bText)
 						Map answers = [:]
 						def confirms = [:]
+						def outDirYaml = null
+						File outDirYamlFile = new File(parentFile, 'outDir.yaml')
+						if (outDirYamlFile.exists()) {
+							outDirYaml = new YamlSlurper().parseText(outDirYamlFile.text)
+							blueprint.outDir = outDirYaml.outdir
+						}
 						for (def parm in byaml.spec.parameters) {
 							Parameter question = new Parameter(name: parm.name, type: parm.type, adefault: parm.default, description: parm.description, label: parm.label, options: parm.options, prompt: parm.prompt, promptIf: parm.promptIf)
 							blueprint.parameters.add(question)
 						}
+						
 						Folder folder = new Folder([name: parentName])
 						if (!parentMap[parentName]) {
 						    folder = new Folder([name: parentName])
