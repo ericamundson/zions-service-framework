@@ -7,5 +7,6 @@ class Blueprint {
 	String path
 	String name
 	String repoUrl
+	String[] outDir
 	List<Parameter> parameters = []
 }

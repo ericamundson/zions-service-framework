@@ -69,7 +69,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 	String adoWorkitemId
 	
 	@Value('${input.answers:}')
-	String[] inputAnswers
+	String inputAnswers
 	
 	
 	File repoDir
@@ -136,7 +136,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		
 		//Generate pipeline
 		if (inputAnswers && inputAnswers.size() > 0) {
-			String inputAns = inputAnswers.join("${sep}")
+			String inputAns = inputAnswers.replace('&&',"${sep}")
 			inputAns = "---${sep}" + inputAns
 //			YamlBuilder yb = new YamlBuilder()
 //
@@ -198,9 +198,10 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		if (repoPath != outDirPath) {
 			fPattern = outDirPath.substring(repoPath.length()+1)
 			fPattern = "$fPattern/${pipelineFolder}"
+			fPattern = fPattern.replace('\\', '/')
 		}
 		String projectName = getProjectName(outRepoUrl)
-		
+		log.info("fPattern:  ${fPattern}")
 		def projectData = projectManagementService.getProject('', projectName)
 		int nIndex = outRepoUrl.lastIndexOf('/')+1
 		String repoName = outRepoUrl.substring(nIndex)
