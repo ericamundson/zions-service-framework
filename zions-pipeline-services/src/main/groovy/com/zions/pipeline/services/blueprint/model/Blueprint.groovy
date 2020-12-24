@@ -8,5 +8,6 @@ class Blueprint {
 	String name
 	String repoUrl
 	String[] outDir
+	String outRepoName
 	List<Parameter> parameters = []
 }
