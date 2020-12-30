@@ -182,12 +182,12 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 	}
 	
 	String getProjectName(String url) {
-		String name = url.substring(url.indexOf('/')+1)
-		name = name.substring(name.indexOf('/')+1)
-		name = name.substring(name.indexOf('/')+1)
-		name = name.substring(name.indexOf('/')+1)
-		name = name.substring(0, name.indexOf('/'))
-		return name
+		String[] uSplit = url.split('/')
+		String outStr = null
+		try {
+			outStr = uSplit[4]
+		} catch (e) {}
+		return outStr
 	}
 
 	

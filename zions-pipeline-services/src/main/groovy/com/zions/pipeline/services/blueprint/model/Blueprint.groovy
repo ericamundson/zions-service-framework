@@ -9,5 +9,6 @@ class Blueprint {
 	String repoUrl
 	String[] outDir
 	String outRepoName
+	def permissions 
 	List<Parameter> parameters = []
 }

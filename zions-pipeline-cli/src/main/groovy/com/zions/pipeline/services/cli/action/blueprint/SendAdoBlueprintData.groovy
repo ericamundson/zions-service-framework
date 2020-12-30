@@ -128,8 +128,13 @@ class SendAdoBlueprintData implements CliAction {
 							def outRepoYaml = new YamlSlurper().parseText(outRepoYamlFile.text)
 							blueprint.outRepoName = outRepoYaml.outRepo.name
 						}
+						File permissionsFile = new File(parentFile, 'permissions.yaml')
+						if (permissionsFile.exists()) {
+							def perissionsYaml = new YamlSlurper().parseText(permissionsFile.text)
+							blueprint.permissions = perissionsYaml.permissions
+						}
 						for (def parm in byaml.spec.parameters) {
-							Parameter question = new Parameter(name: parm.name, type: parm.type, adefault: parm.default, description: parm.description, label: parm.label, options: parm.options, prompt: parm.prompt, promptIf: parm.promptIf)
+							Parameter question = new Parameter(name: parm.name, type: parm.type, adefault: parm.default, description: parm.description, label: parm.label, options: parm.options, prompt: parm.prompt, promptIf: parm.promptIf, validate: parm.validate)
 							blueprint.parameters.add(question)
 						}
 						
