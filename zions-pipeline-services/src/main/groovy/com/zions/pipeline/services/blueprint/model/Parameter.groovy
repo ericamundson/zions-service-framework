@@ -11,4 +11,5 @@ class Parameter {
 	List<String> options
 	String label
 	String promptIf
+	String validate
 }
