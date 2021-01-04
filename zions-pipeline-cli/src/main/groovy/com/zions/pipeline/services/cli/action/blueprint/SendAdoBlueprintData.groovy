@@ -94,7 +94,7 @@ class SendAdoBlueprintData implements CliAction {
 
 	public def execute(ApplicationArguments data) {
 		String extKey = 'blueprint_execute_data'
-		List<Folder> respositories = []
+		List<Folder> repositories = []
 		Map<String, Folder> parentMap = [:]
 		Set<String> repoNames = []
 		for (String repoUrl in blueprintRepoUrls) {
@@ -104,7 +104,7 @@ class SendAdoBlueprintData implements CliAction {
 			repoNames.add(repoName)
 			Folder arepo = new Folder([name: repoName])
 			parentMap[repoName] = arepo
-			respositories.add(arepo)
+			repositories.add(arepo)
 			repo.eachDirRecurse() { File dir ->
 				//if (dir.name == '.git') return
 				dir.eachFile { File file ->
@@ -114,6 +114,7 @@ class SendAdoBlueprintData implements CliAction {
 						
 						Blueprint blueprint = new Blueprint([name: parentName, repoUrl: repoUrl, outDir: []])
 						String bText = file.text
+						bText = bText.replaceAll('!expr', '-expr')
 						def byaml = new YamlSlurper().parseText(bText)
 						Map answers = [:]
 						def confirms = [:]
@@ -134,8 +135,16 @@ class SendAdoBlueprintData implements CliAction {
 							blueprint.permissions = perissionsYaml.permissions
 						}
 						for (def parm in byaml.spec.parameters) {
-							Parameter question = new Parameter(name: parm.name, type: parm.type, adefault: parm.default, description: parm.description, label: parm.label, options: parm.options, prompt: parm.prompt, promptIf: parm.promptIf, validate: parm.validate)
-							blueprint.parameters.add(question)
+							if (!parm.value) {
+//								if (parm.promptIf) {
+//									String test = parm.promptIf
+//									test = test.substring(test.indexOf('-expr')+5)
+//									test = test.trim()
+//									String[] testParts = test.split('"')
+//								}
+								Parameter question = new Parameter(name: parm.name, type: parm.type, adefault: parm.default, description: parm.description, label: parm.label, options: parm.options, prompt: parm.prompt, promptIf: parm.promptIf, validate: parm.validate)
+								blueprint.parameters.add(question)
+							}
 						}
 						
 						Folder folder = new Folder([name: parentName])
@@ -167,12 +176,12 @@ class SendAdoBlueprintData implements CliAction {
 			}
 		}
 		
-		respositories = addBPPaths(respositories, parentMap, repoNames)
+		repositories = addBPPaths(repositories, parentMap, repoNames)
 		
-		def extData = [id: extKey, repositories: respositories]
+		def extData = [id: extKey, repositories: repositories]
 		
 		String json = new JsonBuilder(extData).toPrettyString()
-		println json
+		log.info(json)
 		extensionDataManagementService.ensureExtensionData(extData)
 		
 	}
