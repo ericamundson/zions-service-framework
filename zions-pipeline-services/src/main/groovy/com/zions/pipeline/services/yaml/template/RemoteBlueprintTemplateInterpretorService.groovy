@@ -97,9 +97,9 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 	def outputPipeline() {
 		
 		File blueprintDir = gitService.loadChanges(blueprintRepoUrl)
-		if (blueprintFolderName && blueprintFolderName.length() > 0) {
-			blueprintDir = new File(blueprintDir, blueprintFolderName)
-		}
+//		if (blueprintFolderName && blueprintFolderName.length() > 0) {
+//			blueprintDir = new File(blueprintDir, blueprintFolderName)
+//		}
 		if (repoTargetBranch == null || repoTargetBranch.length() == 0) {
 			repoTargetBranch = null
 		}
@@ -120,6 +120,8 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			pipelineDir.mkdirs()
 		}
 		loadXLCli(pipelineDir)
+		buildConfigYaml(pipelineDir, blueprintDir)
+		
 		File startupBat = new File(pipelineDir, 'startup.bat')
 		def os = startupBat.newDataOutputStream()
 		os << 'start /W cmd /C %*'
@@ -148,7 +150,12 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			def sAF = aF.newDataOutputStream()
 			sAF << inputAns
 			sAF.close()
-			run(command, "${outDir}/${pipelineFolder}", [line: "${option} ${outDir}/${pipelineFolder}/xl blueprint -a ${outDir}/${pipelineFolder}/answers.yaml -l ${blueprintDir} -b \"${blueprint}\" -s"], null, log)
+			def args = [line: "${option} xl blueprint --config \"./.xebialabs/config.yaml\" -a ./answers.yaml -b \"${blueprintFolderName}/${blueprint}\" -s"]
+			if (oss.contains('Windows')) {
+				args.line = args.line.replace('/','\\')
+			}
+			println args.line
+			run(command, "${outDir}/${pipelineFolder}", args, null, log)
 		} else {
 			run("${outDir}/${pipelineFolder}/startup.bat", "${outDir}/${pipelineFolder}", [line: "${outDir}/${pipelineFolder}/xl blueprint  -l ${blueprintDir} -b \"${blueprint}\" "], null, log)
 			
