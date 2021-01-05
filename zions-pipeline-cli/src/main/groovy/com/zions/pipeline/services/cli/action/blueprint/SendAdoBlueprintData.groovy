@@ -81,14 +81,14 @@ import groovy.util.logging.Slf4j
 @Component
 @Slf4j
 class SendAdoBlueprintData implements CliAction {
-	
+
 	@Autowired
 	GitService gitService
-	
+
 	@Autowired
 	ExtensionDataManagementService extensionDataManagementService
 
-	
+
 	@Value('${blueprint.repo.urls:}')
 	String[] blueprintRepoUrls
 
@@ -99,93 +99,201 @@ class SendAdoBlueprintData implements CliAction {
 		Set<String> repoNames = []
 		for (String repoUrl in blueprintRepoUrls) {
 			File repo = gitService.loadChanges(repoUrl)
-			int nIndex = repoUrl.lastIndexOf('/')+1
-			String repoName = repoUrl.substring(nIndex)
-			repoNames.add(repoName)
-			Folder arepo = new Folder([name: repoName])
-			parentMap[repoName] = arepo
-			repositories.add(arepo)
-			repo.eachDirRecurse() { File dir ->
-				//if (dir.name == '.git') return
-				dir.eachFile { File file ->
-					if (file.name == 'blueprint.yaml') {
-						File parentFile = file.parentFile
-						String parentName = parentFile.name
-						
-						Blueprint blueprint = new Blueprint([name: parentName, repoUrl: repoUrl, outDir: []])
-						String bText = file.text
-						bText = bText.replaceAll('!expr', '-expr')
-						def byaml = new YamlSlurper().parseText(bText)
-						Map answers = [:]
-						def confirms = [:]
-						def outDirYaml = null
-						File outDirYamlFile = new File(parentFile, 'outDir.yaml')
-						if (outDirYamlFile.exists()) {
-							outDirYaml = new YamlSlurper().parseText(outDirYamlFile.text)
-							blueprint.outDir = outDirYaml.outdir
-						}
-						File outRepoYamlFile = new File(parentFile, 'outRepo.yaml')
-						if (outRepoYamlFile.exists()) {
-							def outRepoYaml = new YamlSlurper().parseText(outRepoYamlFile.text)
-							blueprint.outRepoName = outRepoYaml.outRepo.name
-						}
-						File permissionsFile = new File(parentFile, 'permissions.yaml')
-						if (permissionsFile.exists()) {
-							def perissionsYaml = new YamlSlurper().parseText(permissionsFile.text)
-							blueprint.permissions = perissionsYaml.permissions
-						}
-						for (def parm in byaml.spec.parameters) {
-							if (!parm.value) {
-//								if (parm.promptIf) {
-//									String test = parm.promptIf
-//									test = test.substring(test.indexOf('-expr')+5)
-//									test = test.trim()
-//									String[] testParts = test.split('"')
-//								}
-								Parameter question = new Parameter(name: parm.name, type: parm.type, adefault: parm.default, description: parm.description, label: parm.label, options: parm.options, prompt: parm.prompt, promptIf: parm.promptIf, validate: parm.validate)
-								blueprint.parameters.add(question)
+			if (repo && repo.exists()) {
+				int nIndex = repoUrl.lastIndexOf('/')+1
+				String repoName = repoUrl.substring(nIndex)
+				repoNames.add(repoName)
+				Folder arepo = new Folder([name: repoName])
+				parentMap[repo.absolutePath] = arepo
+				repositories.add(arepo)
+				repo.eachDirRecurse() { File dir ->
+					//if (dir.name == '.git') return
+					dir.eachFile { File file ->
+						if (file.name == 'blueprint.yaml') {
+							File parentFile = file.parentFile
+							String parentName = parentFile.name
+							String parentPath = parentFile.absolutePath
+							String opath = parentPath.substring(repo.absolutePath.length()+1)
+							//println "opath: ${opath}, parentName: ${parentName}"
+							if (opath != parentName) {
+								opath = opath.substring(0, opath.length() - parentName.length()-1)
+								opath = opath.replace('\\', '/')
 							}
-						}
-						
-						Folder folder = new Folder([name: parentName])
-						if (!parentMap[parentName]) {
-						    folder = new Folder([name: parentName])
-							parentMap[parentName] = folder
-						} else {
-							folder = parentMap[parentName]
-						}
-						folder.blueprints.add(blueprint)
-						while (folder.name != repoName) {
-							parentFile = parentFile.parentFile
-							parentName = parentFile.name
-							Folder parent = null
-							if (!parentMap[parentName]) {
-							    parent = new Folder([name: parentName])
-								parentMap[parentName] = parent
+							Blueprint blueprint = new Blueprint([name: parentName, repoUrl: repoUrl, outDir: [], path:opath])
+							String bText = file.text
+							bText = fixYamlForParse(bText)
+							def byaml = new YamlSlurper().parseText(bText)
+							blueprint.description = byaml.metadata.description
+							Map answers = [:]
+							def confirms = [:]
+							def outDirYaml = null
+							File outDirYamlFile = new File(parentFile, 'outDir.yaml')
+							if (outDirYamlFile.exists()) {
+								outDirYaml = new YamlSlurper().parseText(outDirYamlFile.text)
+								blueprint.outDir = outDirYaml.outdir
+							}
+							File outRepoYamlFile = new File(parentFile, 'outRepo.yaml')
+							if (outRepoYamlFile.exists()) {
+								def outRepoYaml = new YamlSlurper().parseText(outRepoYamlFile.text)
+								blueprint.outRepoName = outRepoYaml.outRepo.name
+							}
+							File permissionsFile = new File(parentFile, 'permissions.yaml')
+
+							if (permissionsFile.exists()) {
+								def perissionsYaml = new YamlSlurper().parseText(permissionsFile.text)
+								blueprint.permissions = perissionsYaml.permissions
+							}
+							handleInclude('includeBefore', blueprint.parameters, byaml, repo)
+							for (def parm in byaml.spec.parameters) {
+								if (!parm.value) {
+									//								if (parm.promptIf) {
+									//									String test = parm.promptIf
+									//									test = test.substring(test.indexOf('-expr')+5)
+									//									test = test.trim()
+									//									String[] testParts = test.split('"')
+									//								}
+									Parameter question = new Parameter(name: parm.name, type: parm.type, adefault: parm.default, description: parm.description, label: parm.label, options: fixExprForUse(parm.options), prompt: parm.prompt, promptIf: parm.promptIf, validate: fixExprForUse(parm.validate))
+									blueprint.parameters.add(question)
+								}
+							}
+
+							handleInclude('includeAfter',blueprint.parameters, byaml, repo)
+
+
+							Folder folder = new Folder([name: parentName])
+							if (!parentMap[parentPath]) {
+								folder = new Folder([name: parentName])
+								parentMap[parentPath] = folder
 							} else {
-								parent = parentMap[parentName]
+								folder = parentMap[parentPath]
 							}
-							if (!parent.folders.contains(folder)) {
-								parent.folders.add(folder)
+							folder.blueprints.add(blueprint)
+							while (folder.name != repoName) {
+								parentFile = parentFile.parentFile
+								parentName = parentFile.name
+								parentPath = parentFile.absolutePath
+								Folder parent = null
+								if (!parentMap[parentPath]) {
+									parent = new Folder([name: parentName])
+									parentMap[parentPath] = parent
+								} else {
+									parent = parentMap[parentPath]
+								}
+								if (!parent.folders.contains(folder)) {
+									parent.folders.add(folder)
+								}
+								folder.parentName = parent.name
+								folder = parent
 							}
-							folder.parentName = parent.name
-							folder = parent
 						}
 					}
 				}
 			}
 		}
-		
-		repositories = addBPPaths(repositories, parentMap, repoNames)
-		
+
+		//repositories = addBPPaths(repositories, parentMap, repoNames)
+
 		def extData = [id: extKey, repositories: repositories]
-		
+
 		String json = new JsonBuilder(extData).toPrettyString()
+
+		//String[] parts = "\"a bunch of stuff\"".split('"')
 		log.info(json)
 		extensionDataManagementService.ensureExtensionData(extData)
-		
+
+	}
+
+
+	def handleInclude(String iType, def parms, def byaml, File repo) {
+		if (!byaml.spec[iType]) return;
+		for (def frag in byaml.spec[iType]) {
+			File fragFile = new File(repo, "${frag.blueprint}/blueprint.yaml")
+			if (fragFile.exists()) {
+				String bText = fragFile.text
+				bText = fixYamlForParse(bText)
+				def fyaml = new YamlSlurper().parseText(bText)
+				def poverides = frag.parameterOverrides
+				Set overrides = []
+				if (poverides) {
+					for (def override in poverides) {
+						overrides.add(override.name)
+					}
+				}
+				def pPromptIf = frag.includeIf
+				if (pPromptIf && pPromptIf.indexOf('-expr') == -1) {
+					pPromptIf = "-expr \"${pPromptIf}\""
+				}
+				for (def parm in fyaml.spec.parameters) {
+					if (!parm.value && !overrides.contains(parm.name)) {
+						String promptIf = parm.promptIf
+						if (pPromptIf) {
+							promptIf = buildPromptIf(promptIf, pPromptIf)
+						}
+						if (promptIf) {
+							promptIf = fixExprForUse(promptIf)
+						}
+						Parameter question = new Parameter(name: parm.name, type: parm.type, adefault: parm.default, description: parm.description, label: parm.label, options: fixExprForUse(parm.options), prompt: parm.prompt, promptIf: promptIf, validate: fixExprForUse(parm.validate))
+						parms.add(question)
+					}
+				}
+
+			}
+		}
+
 	}
 	
+	String fixYamlForParse(String ins) {
+		ins = ins.replaceAll('!expr', '-expr')
+		
+		def items = (ins =~ /-expr\s+["].+["]/).findAll()
+		
+		for (String item in items) {
+			String citem = item.replace(':', '%3A')
+			ins = ins.replace(item, citem)
+		}
+		return ins
+	}
+	
+	def fixExprForUse(def ins) {
+		if (!ins) return
+		if (ins instanceof String) {
+			ins = ins.replaceAll('%3A', ':')
+			
+			return ins
+		} else if (ins instanceof String[]) {
+			for (String i in ins) {
+				i = i.replaceAll('%3A', ':')
+			}
+			return ins
+		} else if (ins instanceof Object[] && ins.size() > 0 && ins[0].hasProperty('value')) {
+			for (def i in ins) {
+				i.value = i.value.replaceAll('%3A', ':')
+			}
+			return ins
+		}
+		//ins = ins.replaceAll('%3A', ':')
+		return ins
+	}
+
+	String buildPromptIf(String promptIf, String pPromptIf) {
+		String outPromptIf = ''
+		if (promptIf) {
+			String cexpr = getExpr(promptIf)
+			String pexpr = getExpr(pPromptIf)
+			return "-expr \"(${pexpr}) && (${cexpr})\""
+		} else {
+			return pPromptIf
+		}
+		return ''
+	}
+
+	String getExpr(String expr) {
+		expr = expr.substring(expr.indexOf('-expr') + 5)
+		expr = expr.trim()
+		expr = expr.replace('"', '')
+		return expr
+	}
+
 	def addBPPaths( List<Folder> respositories, Map<String, Folder> parentMap, Set<String> repoNames) {
 		parentMap.each { String name, Folder folder ->
 			if (folder.blueprints.size() > 0) {
@@ -195,7 +303,7 @@ class SendAdoBlueprintData implements CliAction {
 					Folder parent = parentMap[parentName]
 					parentName = parent.parentName
 					if (repoNames.contains(parentName)) break
-					path = "${parentName}/${path}"
+						path = "${parentName}/${path}"
 				}
 				for (Blueprint bp in folder.blueprints) {
 					bp.path = path
@@ -204,7 +312,7 @@ class SendAdoBlueprintData implements CliAction {
 		}
 		return respositories
 	}
-	
+
 	def cleanUp(Folder folder, Folder parent) {
 		if (parent && folder.folders.size() == 0 && folder.blueprints.size() == 0) {
 			parent.folders.remove(folder)
@@ -213,8 +321,8 @@ class SendAdoBlueprintData implements CliAction {
 			cleanUp(child, folder)
 		}
 	}
-	
+
 	public Object validate(ApplicationArguments args) throws Exception {
-		
+
 	}
 }
