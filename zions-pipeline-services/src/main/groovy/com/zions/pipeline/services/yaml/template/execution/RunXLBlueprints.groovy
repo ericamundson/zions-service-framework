@@ -124,6 +124,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			def arg = [line: "${option} ${loadDir.absolutePath}/xl blueprint --config \"${loadDir.absolutePath}/.xebialabs/config.yaml\" -a \"${loadDir.absolutePath}/${blueprint}-answers.yaml\" -b \"${bp.blueprintFolder}/${blueprint}\" -s"]
 			if (os.contains('Windows')) {
 				arg.line = arg.line.replace('/','\\')
+				arg.line = arg.line.replace('\\c', '/c')
 			}
 			run(command, "${loadDir.absolutePath}", arg, env, log)
 		}
