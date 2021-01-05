@@ -100,6 +100,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			def bpRepoData = codeManagementService.getRepo('', bpProjectData, bpRepoName)
 
 			def bpOutrepo = gitService.loadChanges(bpRepoData.remoteUrl, bpRepoName)
+			buildConfigYaml(loadDir, bpOutrepo)
 			File bpFolder = bpOutrepo
 			if (bp.blueprintFolder) {
 				String bpFolderStr = bp.blueprintFolder
@@ -120,7 +121,10 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			if (useProxy) {
 				env = [key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080"]
 			}
-			def arg = [line: "${option} ${loadDir.absolutePath}/xl blueprint -a \"${loadDir.absolutePath}/${blueprint}-answers.yaml\" -l ${bpFolder.absolutePath} -b \"${blueprint}\" -s"]
+			def arg = [line: "${option} ${loadDir.absolutePath}/xl blueprint --config \"${loadDir.absolutePath}/.xebialabs/config.yaml\" -a \"${loadDir.absolutePath}/${blueprint}-answers.yaml\" -b \"${bp.blueprintFolder}/${blueprint}\" -s"]
+			if (os.contains('Windows')) {
+				arg.line = arg.line.replace('/','\\')
+			}
 			run(command, "${loadDir.absolutePath}", arg, env, log)
 		}
 //		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
