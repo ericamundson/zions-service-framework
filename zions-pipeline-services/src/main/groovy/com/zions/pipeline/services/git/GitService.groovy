@@ -232,7 +232,15 @@ class GitService {
 		
 	}
 	
+	def open(File repo) {
+		Git git = Git.open(repo)
+		return git
+	}
 	
+	def close(Git git) {
+		git.close();
+	}
+
 	def pushChanges(File repo, String filePattern = '.', String comment = 'Update pipeline') {
 		Git git = Git.open(repo)
 		git.add().addFilepattern(filePattern).call();

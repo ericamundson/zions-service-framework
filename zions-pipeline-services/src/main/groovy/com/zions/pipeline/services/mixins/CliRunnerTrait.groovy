@@ -2,6 +2,9 @@ package com.zions.pipeline.services.mixins
 import org.slf4j.Logger
 trait CliRunnerTrait {
 	def run(String command, String dir, def iarg, def ienv = null, Logger log = null) {
+		if (log && iarg.line) {
+			log.info( "cmd: ${command} args: ${iarg.line}")
+		}
 		AntBuilder ant = new AntBuilder()
 		ant.exec(outputproperty:"text",
 			 errorproperty: "error",

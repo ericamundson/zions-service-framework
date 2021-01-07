@@ -13,6 +13,8 @@ import com.zions.pipeline.services.mixins.XLCliTrait
 import groovy.yaml.YamlBuilder
 
 import groovy.util.logging.Slf4j
+import org.eclipse.jgit.api.Git
+
 
 /**
  * Accepts yaml in the form:
@@ -46,6 +48,9 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 	@Value('${pipeline.folder:.pipeline}')
 	String pipelineFolder
 
+	@Value('${blueprint.config.context:Test}')
+	String configContext
+
 	@Autowired
 	GitService gitService
 	@Autowired
@@ -74,7 +79,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 
 		def outrepo = gitService.loadChanges(repoData.remoteUrl, repoName)
 		gitService.checkout(outrepo, "blueprint/${new Date().time}", true)
-		
+
 
 		File loadDir = new File(outrepo, "${pipelineFolder}")
 		if (yaml.outDir) {
@@ -100,53 +105,65 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			def bpRepoData = codeManagementService.getRepo('', bpProjectData, bpRepoName)
 
 			def bpOutrepo = gitService.loadChanges(bpRepoData.remoteUrl, bpRepoName)
-			buildConfigYaml(loadDir, bpOutrepo)
-			File bpFolder = bpOutrepo
-			if (bp.blueprintFolder) {
-				String bpFolderStr = bp.blueprintFolder
-				bpFolder = new File(bpOutrepo, bpFolderStr)
+			Git git = null
+			try {
+				git = gitService.open(bpOutrepo)
+
+				fixBlueprint(bpOutrepo, "${bp.blueprintFolder}/${blueprint}")
+				buildConfigYaml(loadDir, bpOutrepo)
+				File bpFolder = bpOutrepo
+				if (bp.blueprintFolder) {
+					String bpFolderStr = bp.blueprintFolder
+					bpFolder = new File(bpOutrepo, bpFolderStr)
+				}
+
+				YamlBuilder yb = new YamlBuilder()
+
+				yb( bp.answers )
+
+				String answers = yb.toString()
+
+				File aF = new File("${loadDir.absolutePath}/${blueprint}-answers.yaml")
+				def sAF = aF.newDataOutputStream()
+				sAF << answers
+				sAF.close()
+				def env = null
+				if (useProxy) {
+					env = [key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080"]
+				}
+				def arg = [line: "${option} ${loadDir.absolutePath}/xl blueprint --config \"${loadDir.absolutePath}/.xebialabs/config.yaml\" -a \"${loadDir.absolutePath}/${blueprint}-answers.yaml\" -b \"${bp.blueprintFolder}/${blueprint}\" -s"]
+				if (os.contains('Windows') && configContext == 'Dev') {
+					arg.line = arg.line.replace('/','\\')
+					arg.line = arg.line.replace('\\c', '/c')
+				}
+				run(command, "${loadDir.absolutePath}", arg, env, log)
+			} catch (e) {
+				throw e
+			} finally {
+				if (git) {
+					gitService.close(git)
+				}
 			}
-
-			YamlBuilder yb = new YamlBuilder()
-
-			yb( bp.answers )
-
-			String answers = yb.toString()
-
-			File aF = new File("${loadDir.absolutePath}/${blueprint}-answers.yaml")
-			def sAF = aF.newDataOutputStream()
-			sAF << answers
-			sAF.close()
-			def env = null
-			if (useProxy) {
-				env = [key:"https_proxy", value:"https://${xlUser}:${xlPassword}@172.18.4.115:8080"]
-			}
-			def arg = [line: "${option} ${loadDir.absolutePath}/xl blueprint --config \"${loadDir.absolutePath}/.xebialabs/config.yaml\" -a \"${loadDir.absolutePath}/${blueprint}-answers.yaml\" -b \"${bp.blueprintFolder}/${blueprint}\" -s"]
-			if (os.contains('Windows')) {
-				arg.line = arg.line.replace('/','\\')
-				arg.line = arg.line.replace('\\c', '/c')
-			}
-			run(command, "${loadDir.absolutePath}", arg, env, log)
 		}
-//		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
-//		gitService.pushChanges(outrepo)
-//		policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
+		//		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
+		//		gitService.pushChanges(outrepo)
+		//		policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
 		runPullRequestOnChanges(outrepo, loadDir, project, projectData, repoData)
 	}
-	
+
 	def runPullRequestOnChanges(File repoDir, File outDir, String adoProject, def projectData, def repoData) {
 		String repoPath = repoDir.absolutePath
 		String outDirPath = outDir.absolutePath
 		String fPattern = "${pipelineFolder}"
 		if (repoPath != outDirPath) {
 			fPattern = outDirPath.substring(repoPath.length()+1)
-			fPattern = "$fPattern/${pipelineFolder}"
+			//fPattern = "$fPattern/${pipelineFolder}"
 		}
 		//fPattern = "$fPattern/${pipelineFolder}"
 		String repoTargetBranch = repoData.defaultBranch
 		gitService.pushChanges(repoDir, fPattern, "Adding pipeline changes")
-		
-		
+
+
 		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, repoTargetBranch)
 		try {
 			String branchName = gitService.getBranchName(repoDir)

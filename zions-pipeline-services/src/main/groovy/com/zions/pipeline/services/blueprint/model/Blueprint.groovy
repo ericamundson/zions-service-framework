@@ -4,6 +4,7 @@ import groovy.transform.Canonical
 
 @Canonical
 class Blueprint {
+	String title
 	String description
 	String path
 	String name

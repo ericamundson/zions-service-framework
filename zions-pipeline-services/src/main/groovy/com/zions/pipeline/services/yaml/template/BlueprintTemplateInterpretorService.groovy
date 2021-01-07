@@ -118,6 +118,7 @@ class BlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTr
 			pipelineDir.mkdirs()
 		}
 		loadXLCli(pipelineDir)
+		fixBlueprint(blueprintDir, blueprint)
 		File startupBat = new File(pipelineDir, 'startup.bat')
 		def os = startupBat.newDataOutputStream()
 		os << 'start /W cmd /C %*'
