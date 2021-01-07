@@ -8,8 +8,7 @@ trait XLCliTrait extends CliRunnerTrait {
 	
 	@Value('${blueprint.config.context:Test}')
 	String configContext
-	
-	
+		
 	def loadXLCli(File loadDir) {
 		String osname = System.getProperty('os.name')
 			
