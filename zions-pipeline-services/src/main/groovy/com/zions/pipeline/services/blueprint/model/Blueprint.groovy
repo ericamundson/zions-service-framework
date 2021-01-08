@@ -11,6 +11,7 @@ class Blueprint {
 	String repoUrl
 	String[] outDir
 	String outRepoName
-	def permissions 
+	def permissions
+	String selectedProjectParm
 	List<Parameter> parameters = []
 }

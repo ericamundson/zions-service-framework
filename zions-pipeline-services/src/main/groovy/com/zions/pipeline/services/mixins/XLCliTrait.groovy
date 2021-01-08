@@ -53,7 +53,7 @@ trait XLCliTrait extends CliRunnerTrait {
 					} else if (configContext == 'Test') {
 						name 'Test'
 						type 'http'
-						url "http://localhost:8090/repository/zions-blueprints"
+						url "http://nexus.testqa.zionsbank.com/repository/zions-blueprints"
 					} else if (configContext == "Prod") {
 						name 'Prod'
 						type 'http'

@@ -140,6 +140,9 @@ class SendAdoBlueprintData implements CliAction {
 								if (selfserveYaml.permissions) {
 									blueprint.permissions = selfserveYaml.permissions
 								}
+								if (selfserveYaml.selectedProjectParm) {
+									blueprint.selectedProjectParm = selfserveYaml.selectedProjectParm.bpname
+								}
 							}
 							
 							handleInclude('includeBefore', blueprint.parameters, byaml, repo)

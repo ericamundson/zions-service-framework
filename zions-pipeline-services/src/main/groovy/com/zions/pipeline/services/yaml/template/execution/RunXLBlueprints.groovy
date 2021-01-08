@@ -79,7 +79,8 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 
 		def outrepo = gitService.loadChanges(repoData.remoteUrl, repoName)
 		gitService.checkout(outrepo, "blueprint/${new Date().time}", true)
-
+		updateIgnore(outrepo)
+		
 
 		File loadDir = new File(outrepo, "${pipelineFolder}")
 		if (yaml.outDir) {
@@ -104,18 +105,21 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			def bpProjectData = projectManagementService.getProject('', bpProjectName)
 			def bpRepoData = codeManagementService.getRepo('', bpProjectData, bpRepoName)
 
-			def bpOutrepo = gitService.loadChanges(bpRepoData.remoteUrl, bpRepoName)
 			Git git = null
 			try {
-				git = gitService.open(bpOutrepo)
-
-				fixBlueprint(bpOutrepo, "${bp.blueprintFolder}/${blueprint}")
+				def bpOutrepo = null
+				if (configContext == 'Dev') {
+					bpOutrepo = gitService.loadChanges(bpRepoData.remoteUrl, bpRepoName)
+					git = gitService.open(bpOutrepo)
+					fixBlueprint(bpOutrepo, "${bp.blueprintFolder}/${blueprint}")
+				}
+				
 				buildConfigYaml(loadDir, bpOutrepo)
 				File bpFolder = bpOutrepo
-				if (bp.blueprintFolder) {
-					String bpFolderStr = bp.blueprintFolder
-					bpFolder = new File(bpOutrepo, bpFolderStr)
-				}
+//				if (bp.blueprintFolder) {
+//					String bpFolderStr = bp.blueprintFolder
+//					bpFolder = new File(bpOutrepo, bpFolderStr)
+//				}
 
 				YamlBuilder yb = new YamlBuilder()
 

@@ -99,16 +99,19 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 
 	def outputPipeline() {
 
-		File blueprintDir = gitService.loadChanges(blueprintRepoUrl)
 		//		if (blueprintFolderName && blueprintFolderName.length() > 0) {
 		//			blueprintDir = new File(blueprintDir, blueprintFolderName)
 
 		//		}
 		Git git = null
 		try {
-
-			git = gitService.open(blueprintDir)
-			fixBlueprint(blueprintDir, "${blueprintFolderName}/${blueprint}")
+			File blueprintDir = null
+			if (configContext == 'Dev') {
+				blueprintDir = gitService.loadChanges(blueprintRepoUrl)
+				
+				git = gitService.open(blueprintDir)
+				fixBlueprint(blueprintDir, "${blueprintFolderName}/${blueprint}")
+			}
 			if (repoTargetBranch == null || repoTargetBranch.length() == 0) {
 				repoTargetBranch = null
 			}
@@ -133,10 +136,10 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			loadXLCli(pipelineDir)
 			buildConfigYaml(pipelineDir, blueprintDir)
 
-			File startupBat = new File(pipelineDir, 'startup.bat')
-			def os = startupBat.newDataOutputStream()
-			os << 'start /W cmd /C %*'
-			os.close()
+//			File startupBat = new File(pipelineDir, 'startup.bat')
+//			def os = startupBat.newDataOutputStream()
+//			os << 'start /W cmd /C %*'
+//			os.close()
 			String oss = System.getProperty('os.name')
 			String command = 'cmd'
 			String option = '/c'
@@ -226,7 +229,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			fPattern = fPattern.replace('\\', '/')
 		}
 		String projectName = getProjectName(outRepoUrl)
-		log.info("fPattern:  ${fPattern}")
+		log.info("fPattern:  ${fPattern}, repoDir: ${repoDir.absolutePath}")
 		def projectData = projectManagementService.getProject('', projectName)
 		int nIndex = outRepoUrl.lastIndexOf('/')+1
 		String repoName = outRepoUrl.substring(nIndex)
