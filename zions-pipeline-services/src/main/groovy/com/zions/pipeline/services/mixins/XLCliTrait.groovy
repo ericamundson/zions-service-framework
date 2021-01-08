@@ -1,8 +1,14 @@
 package com.zions.pipeline.services.mixins
 
+import org.springframework.beans.factory.annotation.Value
+
 import groovy.yaml.YamlBuilder
 
 trait XLCliTrait extends CliRunnerTrait {
+	
+	@Value('${blueprint.config.context:Test}')
+	String configContext
+		
 	def loadXLCli(File loadDir) {
 		String osname = System.getProperty('os.name')
 			
@@ -36,13 +42,23 @@ trait XLCliTrait extends CliRunnerTrait {
 		def config = new YamlBuilder()
 		config {
 			blueprint {
-				currentrepository 'Zions'
-				repositories(['Zions']) { repo ->
-					name repo.toString()
-					type 'local'
-					path "${bpRepo.absolutePath}"
-					ignoredirs '.git,.vscode'
-					ignorefiles '.DS_Store,.gitignore'
+				currentrepository "${configContext}"
+				repositories(["${configContext}"]) { repo ->
+					if (configContext == 'Dev') {
+						name 'Dev'
+						type 'local'
+						path "${bpRepo.absolutePath}"
+						ignoredirs '.git,.vscode'
+						ignorefiles '.DS_Store,.gitignore'
+					} else if (configContext == 'Test') {
+						name 'Test'
+						type 'http'
+						url "http://nexus.testqa.zionsbank.com/repository/zions-blueprints"
+					} else if (configContext == "Prod") {
+						name 'Prod'
+						type 'http'
+						url "https://nexus.cs.zionsbank.com/repository/zions-blueprints"
+					}
 				}
 			}
 		}
@@ -53,6 +69,8 @@ trait XLCliTrait extends CliRunnerTrait {
 		cStr = cStr.replace('ignoredirs', 'ignore-dirs')
 		cStr = cStr.replace('ignorefiles', 'ignore-files')
 		//File aF = new File(outDir, "${pipelineFolder}/answers.yaml")
+		println cStr
+		println configYaml.absolutePath
 		def sAF = configYaml.newDataOutputStream()
 		sAF << cStr
 		sAF.close()
@@ -73,11 +91,58 @@ trait XLCliTrait extends CliRunnerTrait {
 					String parentPath = parentFile.absolutePath
 					String opath = parentPath.substring(bpRepo.absolutePath.length()+1)
 					//println "opath: ${opath}, parentName: ${parentName}"
-					jyF << "${opath},\n"
+					jyF << "\"${opath}\",\n"
 				}
 			}
 		}
 		jyF << "]\n"
 		jyF.close()
+	}
+	
+	def updateIgnore(File repo) {
+		File ignore = new File(repo, '.gitignore')
+		Set ignoreItems = []
+		if (ignore.exists()) {
+			ignore.eachLine { line ->
+				ignoreItems.add(line)
+			}
+			
+		}
+		ignore.withWriter { BufferedWriter writer ->
+			if (!ignoreItems.contains('xl.exe')) {
+				writer.writeLine 'xl.exe'
+			}
+			if (!ignoreItems.contains('xl')) {
+				writer.writeLine 'xl'
+			}
+			if (!ignoreItems.contains('.xebialabs')) {
+				writer.writeLine '.xebialabs'
+			}
+			if (!ignoreItems.contains('startup.bat')) {
+				writer.writeLine 'startup.bat'
+			}
+		}
+		
+	}
+	
+	def fixBlueprint(File bpRepo, String folderName) {
+		String oss = System.getProperty('os.name')
+		if (oss.contains('Windows')) {
+			folderName = folderName.replace('/','\\')
+			File bpFile = new File(bpRepo, "${folderName}\\blueprint.yaml")
+			if (bpFile.exists()) {
+				String bpText = bpFile.text
+				def items = (bpText =~ /[-]\s+blueprint:\s+\S+/).findAll()
+				
+				for (String item in items) {
+					String citem = item.replace('/', '\\')
+					bpText = bpText.replace(item, citem)
+				}
+
+				def wos = bpFile.newDataOutputStream()
+				wos << bpText
+				wos.close()
+			}
+		}
 	}
 }

@@ -124,25 +124,27 @@ class SendAdoBlueprintData implements CliAction {
 							bText = fixYamlForParse(bText)
 							def byaml = new YamlSlurper().parseText(bText)
 							blueprint.description = byaml.metadata.description
+							blueprint.title = byaml.metadata.name
 							Map answers = [:]
 							def confirms = [:]
-							def outDirYaml = null
-							File outDirYamlFile = new File(parentFile, 'outDir.yaml')
-							if (outDirYamlFile.exists()) {
-								outDirYaml = new YamlSlurper().parseText(outDirYamlFile.text)
-								blueprint.outDir = outDirYaml.outdir
+							def selfserveYaml = null
+							File selfserveYamlFile = new File(parentFile, 'selfserve.yaml')
+							if (selfserveYamlFile.exists()) {
+								selfserveYaml = new YamlSlurper().parseText(selfserveYamlFile.text)
+								if (selfserveYaml.outdir) {
+									blueprint.outDir = selfserveYaml.outdir
+								}
+								if (selfserveYaml.outRepo) {
+									blueprint.outRepoName = selfserveYaml.outRepo.name
+								}
+								if (selfserveYaml.permissions) {
+									blueprint.permissions = selfserveYaml.permissions
+								}
+								if (selfserveYaml.selectedProjectParm) {
+									blueprint.selectedProjectParm = selfserveYaml.selectedProjectParm.bpname
+								}
 							}
-							File outRepoYamlFile = new File(parentFile, 'outRepo.yaml')
-							if (outRepoYamlFile.exists()) {
-								def outRepoYaml = new YamlSlurper().parseText(outRepoYamlFile.text)
-								blueprint.outRepoName = outRepoYaml.outRepo.name
-							}
-							File permissionsFile = new File(parentFile, 'permissions.yaml')
-
-							if (permissionsFile.exists()) {
-								def perissionsYaml = new YamlSlurper().parseText(permissionsFile.text)
-								blueprint.permissions = perissionsYaml.permissions
-							}
+							
 							handleInclude('includeBefore', blueprint.parameters, byaml, repo)
 							for (def parm in byaml.spec.parameters) {
 								if (!parm.value) {
@@ -160,9 +162,9 @@ class SendAdoBlueprintData implements CliAction {
 							handleInclude('includeAfter',blueprint.parameters, byaml, repo)
 
 
-							Folder folder = new Folder([name: parentName])
+							Folder folder = new Folder([name: parentName, title: parentName])
 							if (!parentMap[parentPath]) {
-								folder = new Folder([name: parentName])
+								folder = new Folder([name: parentName, title: parentName])
 								parentMap[parentPath] = folder
 							} else {
 								folder = parentMap[parentPath]
@@ -174,7 +176,7 @@ class SendAdoBlueprintData implements CliAction {
 								parentPath = parentFile.absolutePath
 								Folder parent = null
 								if (!parentMap[parentPath]) {
-									parent = new Folder([name: parentName])
+									parent = new Folder([name: parentName, title: parentName])
 									parentMap[parentPath] = parent
 								} else {
 									parent = parentMap[parentPath]

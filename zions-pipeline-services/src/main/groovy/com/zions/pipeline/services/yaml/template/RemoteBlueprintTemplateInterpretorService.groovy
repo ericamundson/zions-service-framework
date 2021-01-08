@@ -22,6 +22,7 @@ import com.zions.vsts.services.policy.PolicyManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
+import org.eclipse.jgit.api.Git
 
 
 /**
@@ -34,148 +35,167 @@ import com.zions.vsts.services.admin.member.MemberManagementService
 @Component
 @Slf4j
 class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait, XLCliTrait, CliRunnerTrait {
-	
+
 	@Autowired
 	Map<String, IExecutableYamlHandler> yamlHandlerMap;
-	
+
 	@Value('${blueprint.repo.url:}')
 	String blueprintRepoUrl
-		
+
 	@Value('${blueprint:}')
 	String blueprint
-	
+
 	@Value('${blueprint.folder.name:}')
 	String blueprintFolderName
-		
+
 	@Value('${out.repo.url:}')
 	String outRepoUrl
-	
+
 	@Value('${out.dir.name:}')
 	String outDirName
 
 	@Value('${pipeline.folder:.pipeline}')
 	String pipelineFolder
-	
+
 	@Value('${in.placeholder.delimiters:[[,]]}')
 	String[] inDelimiters
-	
+
 	@Value('${ado.project:DTS}')
 	String adoProject
-	
+
 	@Value('${repo.target.branch:}')
 	String repoTargetBranch
 
 	@Value('${ado.workitemid:}')
 	String adoWorkitemId
-	
+
 	@Value('${input.answers:}')
 	String inputAnswers
-	
-	
+
+
 	File repoDir
 	File outDir
-	
+
 	def answers = [:]
-	
+
 	@Autowired
 	GitService gitService
-	
+
 	@Autowired
 	PolicyManagementService policyManagementService
-	
+
 	@Autowired
 	CodeManagementService codeManagementService
-	
+
 	@Autowired
 	ProjectManagementService projectManagementService
-	
+
 	@Autowired
 	MemberManagementService memberManagementService
 
-	
-	
-	def outputPipeline() {
-		
-		File blueprintDir = gitService.loadChanges(blueprintRepoUrl)
-//		if (blueprintFolderName && blueprintFolderName.length() > 0) {
-//			blueprintDir = new File(blueprintDir, blueprintFolderName)
-//		}
-		if (repoTargetBranch == null || repoTargetBranch.length() == 0) {
-			repoTargetBranch = null
-		}
-		repoDir = gitService.loadChanges(outRepoUrl, null, repoTargetBranch)
-		gitService.checkout(repoDir, "blueprint/${new Date().time}", true)
-		
-		outDir = repoDir
-		if (outDirName && outDirName.length() > 0) {
-			outDir = new File(outDir, outDirName)
-		}
-		//initialize pipeline dir
-		//write answers file.
-//		def answersOut = new YamlBuilder()
-//		answersOut.call(answers)
-//		String answersStr = answersOut.toString()
-		File pipelineDir = new File(outDir, pipelineFolder)
-		if (!pipelineDir.exists()) {
-			pipelineDir.mkdirs()
-		}
-		loadXLCli(pipelineDir)
-		buildConfigYaml(pipelineDir, blueprintDir)
-		
-		File startupBat = new File(pipelineDir, 'startup.bat')
-		def os = startupBat.newDataOutputStream()
-		os << 'start /W cmd /C %*'
-		os.close()
-		String oss = System.getProperty('os.name')
-		String command = 'cmd'
-		String option = '/c'
-		String sep = '\r\n'
-		if (!oss.contains('Windows')) {
-			command = '/bin/sh'
-			option = '-c'
-			sep = '\n'
-		}
-		
-		//Generate pipeline
-		if (inputAnswers && inputAnswers.size() > 0) {
-			String inputAns = inputAnswers.replace('&&',"${sep}")
-			inputAns = "---${sep}" + inputAns
-//			YamlBuilder yb = new YamlBuilder()
-//
-//			yb( inputAns )
-//
-//			String answers = yb.toString()
+	@Value('${blueprint.config.context:Test}')
+	String configContext
 
-			File aF = new File(outDir, "${pipelineFolder}/answers.yaml")
-			def sAF = aF.newDataOutputStream()
-			sAF << inputAns
-			sAF.close()
-			def args = [line: "${option} xl blueprint --config \"./.xebialabs/config.yaml\" -a ./answers.yaml -b \"${blueprintFolderName}/${blueprint}\" -s"]
-			if (oss.contains('Windows')) {
-				args.line = args.line.replace('/','\\')
-				args.line = args.line.replace('\\c', '/c')
+
+	def outputPipeline() {
+
+		//		if (blueprintFolderName && blueprintFolderName.length() > 0) {
+		//			blueprintDir = new File(blueprintDir, blueprintFolderName)
+
+		//		}
+		Git git = null
+		try {
+			File blueprintDir = null
+			if (configContext == 'Dev') {
+				blueprintDir = gitService.loadChanges(blueprintRepoUrl)
+				
+				git = gitService.open(blueprintDir)
+				fixBlueprint(blueprintDir, "${blueprintFolderName}/${blueprint}")
 			}
-			println args.line
-			run(command, "${outDir}/${pipelineFolder}", args, null, log)
-		} else {
-			run("${outDir}/${pipelineFolder}/startup.bat", "${outDir}/${pipelineFolder}", [line: "${outDir}/${pipelineFolder}/xl blueprint  -l ${blueprintDir} -b \"${blueprint}\" "], null, log)
-			
+			if (repoTargetBranch == null || repoTargetBranch.length() == 0) {
+				repoTargetBranch = null
+			}
+			repoDir = gitService.loadChanges(outRepoUrl, null, repoTargetBranch)
+			gitService.checkout(repoDir, "blueprint/${new Date().time}", true)
+			updateIgnore(repoDir)
+
+
+			outDir = repoDir
+			if (outDirName && outDirName.length() > 0) {
+				outDir = new File(outDir, outDirName)
+			}
+			//initialize pipeline dir
+			//write answers file.
+			//		def answersOut = new YamlBuilder()
+			//		answersOut.call(answers)
+			//		String answersStr = answersOut.toString()
+			File pipelineDir = new File(outDir, pipelineFolder)
+			if (!pipelineDir.exists()) {
+				pipelineDir.mkdirs()
+			}
+			loadXLCli(pipelineDir)
+			buildConfigYaml(pipelineDir, blueprintDir)
+
+//			File startupBat = new File(pipelineDir, 'startup.bat')
+//			def os = startupBat.newDataOutputStream()
+//			os << 'start /W cmd /C %*'
+//			os.close()
+			String oss = System.getProperty('os.name')
+			String command = 'cmd'
+			String option = '/c'
+			String sep = '\r\n'
+			if (!oss.contains('Windows')) {
+				command = '/bin/sh'
+				option = '-c'
+				sep = '\n'
+			}
+
+			//Generate pipeline
+			if (inputAnswers && inputAnswers.size() > 0) {
+				String inputAns = inputAnswers.replace('&&',"${sep}")
+				inputAns = "---${sep}" + inputAns
+				//			YamlBuilder yb = new YamlBuilder()
+				//
+				//			yb( inputAns )
+				//
+				//			String answers = yb.toString()
+
+				File aF = new File(outDir, "${pipelineFolder}/answers.yaml")
+				def sAF = aF.newDataOutputStream()
+				sAF << inputAns
+				sAF.close()
+				def args = [line: "${option} xl blueprint --config \"./.xebialabs/config.yaml\" -a ./answers.yaml -b \"${blueprintFolderName}/${blueprint}\" -s"]
+				if (oss.contains('Windows') && configContext == 'Dev') {
+					args.line = args.line.replace('/','\\')
+					args.line = args.line.replace('\\c', '/c')
+				}
+				run(command, "${outDir}/${pipelineFolder}", args, null, log)
+			} else {
+				run("${outDir}/${pipelineFolder}/startup.bat", "${outDir}/${pipelineFolder}", [line: "${outDir}/${pipelineFolder}/xl blueprint  -l ${blueprintDir} -b \"${blueprint}\" "], null, log)
+
+			}
+		} catch (e) {
+			throw e
+		} finally {
+			if (git) {
+				gitService.close(git)
+			}
 		}
-		
+
 		//fix placeholders.
-//		new AntBuilder().replace(dir: "${outDir}/${pipelineFolder}") {
-//			replacefilter( token: "${inDelimiters[0]}", value: '{{')
-//			replacefilter( token: "${inDelimiters[1]}", value: '}}')
-//		}
+		//		new AntBuilder().replace(dir: "${outDir}/${pipelineFolder}") {
+		//			replacefilter( token: "${inDelimiters[0]}", value: '{{')
+		//			replacefilter( token: "${inDelimiters[1]}", value: '}}')
+		//		}
 
 	}
-	
+
 	def runExecutableYaml() {
 		String branchName = gitService.getBranchName(repoDir)
 		def exeYaml = findExecutableYaml()
-		for (def yaml in exeYaml) { 
+		for (def yaml in exeYaml) {
 			for (def exe in yaml.executables) {
-								
+
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
 					try {
@@ -188,7 +208,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			}
 		}
 	}
-	
+
 	String getProjectName(String url) {
 		String[] uSplit = url.split('/')
 		String outStr = null
@@ -198,7 +218,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		return outStr
 	}
 
-	
+
 	def runPullRequestOnChanges() {
 		String repoPath = repoDir.absolutePath
 		String outDirPath = outDir.absolutePath
@@ -209,7 +229,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			fPattern = fPattern.replace('\\', '/')
 		}
 		String projectName = getProjectName(outRepoUrl)
-		log.info("fPattern:  ${fPattern}")
+		log.info("fPattern:  ${fPattern}, repoDir: ${repoDir.absolutePath}")
 		def projectData = projectManagementService.getProject('', projectName)
 		int nIndex = outRepoUrl.lastIndexOf('/')+1
 		String repoName = outRepoUrl.substring(nIndex)
@@ -219,7 +239,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		} else {
 			gitService.pushChanges(repoDir, fPattern, "Adding pipeline changes")
 		}
-		
+
 		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, repoTargetBranch)
 		try {
 			String branchName = gitService.getBranchName(repoDir)
@@ -243,16 +263,16 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		} catch (Exception e) {
 			log.error(e.message)
 			throw e
-		} 
+		}
 		finally {
 			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, repoTargetBranch, policies)
 		}
 	}
-	
+
 	def getIdentity(String uniqueName) {
 		def identities = memberManagementService.getIdentity('', uniqueName)
 		if (identities.size() > 0) return identities[0]
 		return null
 	}
-		
+
 }

@@ -1,0 +1,99 @@
+variables:
+- group: 'XebiaLabs CLI (Prod)'
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - 'zions-pipeline-cli/*'
+    - 'zions-pipeline-services/*'
+    - 'zions-xlr-services/*'
+    - 'zions-xld-services/*'
+    
+  
+ 
+#Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    pool:
+      name: On-Prem Production
+      demands:
+      - agent.computername -equals utmsdev0566
+#    workspace:
+#      clean: none
+
+    steps:
+    - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+      displayName: 'Replace tokens in **/*.properties'
+      inputs:
+        targetFiles: '**/*.properties'
+    - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
+      displayName: 'Tag Pending'
+      inputs:
+        OutputVariable: buildTag
+        InitialVersionPrefix: 7.0.0
+
+    - task: Gradle@2
+      displayName: 'gradlew clean build updateBatJarVersion'
+      inputs:
+        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
+        workingDirectory: '$(Build.SourcesDirectory)'
+        options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=pipeline'
+        tasks: 'clean build updateBatJarVersion'
+        publishJUnitResults: false
+
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: |
+         **/build/libs/*.jar
+        TargetFolder: '$(build.artifactstagingdirectory)'
+        CleanTargetFolder: true
+        OverWrite: true
+
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results **/TEST-*.xml'
+      enabled: false
+
+#     - task: BatchScript@1
+#       displayName: 'Run Publish Tests'
+#       inputs:
+#         filename: '$(Build.SourcesDirectory)\zions-pipeline-cli\java.bat'
+#         arguments: '-Dspring.profiles.active=spock -jar $(System.ArtifactsDirectory)/zions-pipeline-cli/build/libs/zions-pipeline-cli.jar syncTesting --tfs.url=https://dev.azure.com/zionseto --report.search.dir=$(Build.SourcesDirectory) --tfs.project=DTS --ado.area.path=DTS\ReleaseEngineering --ado.iteration.path=DTS --cache.location=$(Build.SourcesDirectory)/spockcache --main.tag=pipeline --plan.name=pipeline-release-$(Tag)'
+#       continueOnError: true
+#       enabled: true
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: pipeline-drop'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
+        ArtifactName: 'pipeline-drop'
+
+    - task: Gradle@2
+      displayName: 'gradlew gitPublishPush'
+      inputs:
+        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
+        workingDirectory: '$(Build.SourcesDirectory)'
+        options: '--no-scan -Pversion=$(buildTag) -Pqueue=Hosted -PpublishLocation=$(system.defaultworkingdirectory)/gitPublish -DGRAPHVIZ_DOT=$(system.defaultworkingdirectory)/graphviz/bin/dot.exe'
+        tasks: gitPublishPush
+        publishJUnitResults: false
+      enabled: false
+
+    - task: xebialabs.tfs2015-xl-deploy-plugin.C36FC88A-B479-461F-8067-8C3254AF356C.XLDeploy@7
+      displayName: 'Publish to XL Deploy'
+      inputs:
+        manifestPath: 'dar/deployit-manifest.xml'
+        connectedServiceName: 'XL Deploy - Production'
+        version: true
+        versionNumber: '$(Tag)'
+      enabled: false
+      continueOnError: true
+      

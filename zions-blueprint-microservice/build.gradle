@@ -1,0 +1,13 @@
+bootJar {
+	enabled = true
+	mainClassName = 'com.zions.content.services.ContentApplication'
+	archiveName = 'zions-blueprint-microservice.jar'
+	//version =  "${version}"
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+	compile project(':zions-common')
+	compile project(':zions-pipeline-services')
+}
