@@ -164,7 +164,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 				def sAF = aF.newDataOutputStream()
 				sAF << inputAns
 				sAF.close()
-				def args = [line: "${option} \"${outDir}/${pipelineFolder}/xl\" blueprint --config \"${outDir}/${pipelineFolder}/.xebialabs/config.yaml\" -a ${outDir}/${pipelineFolder}/answers.yaml -b \"${blueprintFolderName}/${blueprint}\" -s"]
+				def args = [line: "${option} ${outDir}/${pipelineFolder}/xl blueprint --config ${outDir}/${pipelineFolder}/.xebialabs/config.yaml -a ${outDir}/${pipelineFolder}/answers.yaml -b ${blueprintFolderName}/${blueprint} -s"]
 				if (oss.contains('Windows') && configContext == 'Dev') {
 					args.line = args.line.replace('/','\\')
 					args.line = args.line.replace('\\c', '/c')
