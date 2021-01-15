@@ -17,6 +17,7 @@ trait CliRunnerTrait {
 			}
 			arg( iarg )
 		}
+		
 		def result = new Expando(
 			text: ant.project.properties.text,
 			error: ant.project.properties.error,
