@@ -1,7 +1,0 @@
----
-AppName: "zions-pipeline-execution-microservice"
-Platfor: Windows
-RequiresCollection: false
-BuildIncludes: "zions-pipeline-execution-microservice/*,zions-pipeline-cli/*,zions-pipeline-services/*"
-Queuename: "GIT-pipelineexecution-queue"
-WSTopics: "git.push"
