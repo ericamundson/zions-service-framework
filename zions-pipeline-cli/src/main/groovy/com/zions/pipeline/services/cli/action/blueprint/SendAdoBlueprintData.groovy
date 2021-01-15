@@ -93,6 +93,7 @@ class SendAdoBlueprintData implements CliAction {
 	String[] blueprintRepoUrls
 
 	public def execute(ApplicationArguments data) {
+		log.info('In action')
 		String extKey = 'blueprint_execute_data'
 		List<Folder> repositories = []
 		Map<String, Folder> parentMap = [:]
