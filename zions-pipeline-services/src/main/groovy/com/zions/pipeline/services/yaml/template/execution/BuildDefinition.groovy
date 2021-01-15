@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
+import com.zions.common.services.vault.VaultService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 
 /**
@@ -30,7 +31,9 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
  */
 @Component
 class BuildDefinition implements IExecutableYamlHandler {
-	
+	@Autowired
+	VaultService vaultService
+
 	@Autowired
 	BuildManagementService buildManagementService
 	@Autowired
@@ -51,6 +54,24 @@ class BuildDefinition implements IExecutableYamlHandler {
 			bName = bPath.substring(bPath.lastIndexOf('/')+1)
 		} else {
 			bName = bPath
+		}
+		def vaultSecrets = null
+		if (yaml.vault) {
+			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.paths as String[])
+		} else {
+			vaultSecrets = vaultService.getSecrets('secret', [projectName] as String[])
+		}
+		if (yaml.variables) {
+			yaml.variables.each { var ->
+				String value = "${var.value}"
+				if (value.startsWith('${') && vaultSecrets) {
+					String name = value.substring('${'.length())
+					name = name.substring(0, name.length() - 1)
+					value = vaultSecrets[name]
+				}
+				var.'value' = value
+				
+			}
 		}
 		def project = projectManagementService.getProject('', projectName)
 		def build = buildManagementService.getBuild('', project, bName)
