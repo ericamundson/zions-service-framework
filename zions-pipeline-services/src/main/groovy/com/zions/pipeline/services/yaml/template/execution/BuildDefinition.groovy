@@ -58,8 +58,6 @@ class BuildDefinition implements IExecutableYamlHandler {
 		def vaultSecrets = null
 		if (yaml.vault) {
 			vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.paths as String[])
-		} else {
-			vaultSecrets = vaultService.getSecrets('secret', [projectName] as String[])
 		}
 		if (yaml.variables) {
 			yaml.variables.each { var ->
