@@ -81,8 +81,6 @@ allprojects {
 		props.each { prop ->
 		  project.ext.set(prop.key, prop.value)
 		}
-		println "${project.'vault.url'}"
-		println "${project.'spring.cloud.vault.token'}"
 		vault {
 			addr = "${project.'vault.url'}"
 			token = "${project.'spring.cloud.vault.token'}"
