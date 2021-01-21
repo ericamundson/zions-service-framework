@@ -17,6 +17,7 @@ class VaultRestClient extends AGenericRestClient {
 		delegate = new ARESTClient(vaultUrl)
 		delegate.ignoreSSLIssues()
 		delegate.handler.failure = { it }
+		setProxy()
 	}
 	
 	public void setCredentials(String user, String token) {}

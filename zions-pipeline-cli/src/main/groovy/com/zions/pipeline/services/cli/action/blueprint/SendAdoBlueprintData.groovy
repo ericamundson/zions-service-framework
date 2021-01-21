@@ -143,6 +143,13 @@ class SendAdoBlueprintData implements CliAction {
 								}
 								if (selfserveYaml.selectedProjectParm) {
 									blueprint.selectedProjectParm = selfserveYaml.selectedProjectParm.bpname
+									blueprint.dontUseForExecution = false
+									if (selfserveYaml.selectedProjectParm.dontUseForExecution) {
+										blueprint.dontUseForExecution = selfserveYaml.selectedProjectParm.dontUseForExecution
+									}
+								}
+								if (selfserveYaml.documentation) {
+									blueprint.documentationUrl = selfserveYaml.documentation.url
 								}
 							}
 							
