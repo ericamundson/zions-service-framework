@@ -13,5 +13,7 @@ class Blueprint {
 	String outRepoName
 	def permissions
 	String selectedProjectParm
+	boolean dontUseForExecution
 	List<Parameter> parameters = []
+	String documentationUrl
 }
