@@ -17,6 +17,8 @@ class VaultService {
 	@Value('${vault.unseal.elements:}')
 	String[] unsealElements
 	
+	@Value('${spring.cloud.vault.token:}')
+	String vaultToken
 	
 	boolean isSealed() {
 		boolean iSealed = false
@@ -51,7 +53,7 @@ class VaultService {
 				def result = vaultRestClient.get(
 					//contentType: ContentType.JSON,
 					uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${opath}",
-					headers: ['X-Vault-Token': vtoken, Accept: 'application/json'],
+					headers: ['X-Vault-Token': vaultToken, Accept: 'application/json'],
 					)
 				if (result.data && result.data.data) {
 					def amap = result.data.data
@@ -67,7 +69,7 @@ class VaultService {
 			def result = vaultRestClient.get(
 				//contentType: ContentType.JSON,
 				uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${path}",
-				headers: ['X-Vault-Token': vtoken, Accept: 'application/json'],
+				headers: ['X-Vault-Token': vaultToken, Accept: 'application/json'],
 				)
 			if (result && result.data && result.data.data) {
 				return result.data.data
@@ -102,7 +104,7 @@ class VaultService {
 		def result = vaultRestClient.post(
 				requestContentType: ContentType.JSON,
 				uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${path}",
-				headers: ['X-Vault-Token': vtoken, Accept: 'application/json'],
+				headers: ['X-Vault-Token': vaultToken, Accept: 'application/json'],
 				body: body
 				)
 		return result
