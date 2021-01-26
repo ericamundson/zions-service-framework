@@ -1,0 +1,36 @@
+{
+"id": "outputMap",
+"value":[
+{
+"Input1": "Low",
+"Input2": "",
+"Output": "Low"
+},
+{
+"Input1": "Medium",
+"Input2": "Monthly",
+"Output": "Medium"
+},
+{
+"Input1": "Medium",
+"Input2": "Infrequent",
+"Output": "Medium"
+},
+{
+"Input1": "High",
+"Input2": "Infrequent",
+"Output": "Medium"
+},
+{
+"Input1": "Medium",
+"Input2": "Daily",
+"Output": "High"
+},
+{
+"Input1": "High",
+"Input2": "Daily",
+"Output": "High"
+}
+],
+"__etag": 113738
+}
