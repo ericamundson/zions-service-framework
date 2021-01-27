@@ -1,6 +1,6 @@
 config:
     inputFields:
-        - 'Custom.Complexity'
+        - 'Custom.WorkaroundComplexity'
         - 'Custom.Frequency'
     outputField: 'Custom.Impact'
     mapname: 'impactMap.json'

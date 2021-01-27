@@ -1,6 +1,4 @@
-{
-"id": "outputMap",
-"value":[
+[
 {
 "Input1": "Low",
 "Input2": "",
@@ -31,6 +29,4 @@
 "Input2": "Daily",
 "Output": "High"
 }
-],
-"__etag": 113738
-}
+]

@@ -74,7 +74,6 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		//Make sure work item is Workaround
 		if (wiType != 'Workaround') return logResult('Not a Workaround work item')
 
-			
 		if (projectProperties.inputFields.size() != 2)
 		{
 			log.error("Must have two input field values")
@@ -85,15 +84,18 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		String geninput1 =  projectProperties.inputFields[0]
 		String geninput2 = projectProperties.inputFields[1]
 		String genoutput = projectProperties.outputField
+		String input1value = "${wiResource.revision.fields[geninput1]}"
+		String input2value = "${wiResource.revision.fields[geninput2]}"
 				
-				
-		if (geninput1 != null && geninput2 != 'null') {
-			// Get field map
-			String newOutput = lookupOutput(geninput1, geninput2)
+		if (input1value != null && input2value != 'null') {
+			// Get field map values for both inputs
+			
+			
+			String newOutput = lookupOutput(input1value, input2value)
 			if (genoutput == 'null' || newOutput != genoutput) {
 				log.info("Mapping for $wiType #$id")
 				try {
-					updateOutput(project, id, rev, newOutput)
+					updateOutput(project, id, rev, genoutput, newOutput)
 					return logResult('Output value updated')
 				}
 				catch (e){
@@ -105,28 +107,31 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		}
 		else if (genoutput != 'null'){
 			// Need to set map
-			updateOutput(project, id, rev, '')
+			updateOutput(project, id, rev, '', '')
 			return logResult('Output set to unassigned')
 		}
 	}
 	
-
-	private def lookupOutput(String geninput1, String geninput2) {
-				
+	
+	
+	private def lookupOutput(String val1, String val2) {
+	
 		def outputMap = new JsonSlurper().parseText(this.getClass().getResource('/mapping/impactmap.json').text)
-		def outputElement = outputMap.find{it.Input1==geninput1 && it.Input2==geninput2}
-		//def colorElement = colorMap.find{it.Priority==priority && it.Severity==severity}
-				
+		
+		def outputElement = outputMap.find{
+			it.Input1==val1 && it.Input2==val2
+			}
+						
 		return outputElement.Output
 		//return colorElement.Color
 	}
-	private def updateOutput(def project, def id, String rev, String genoutput) {
+	private def updateOutput(def project, def id, String rev, String genoutput, String newOutput) {
 		def data = []
 		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 		data.add(t)
 		//def e = [op: 'add', path: '/fields/Custom.Impact', value: output]
 		//findout what to pass in output field
-		def e = [op: 'add', path: "/fields/${genoutput}", value: genoutput]
+		def e = [op: 'add', path: "/fields/${genoutput}", value: newOutput]
 		data.add(e)
 		workManagementService.updateWorkItem(collection, project, id, data)
 	}
