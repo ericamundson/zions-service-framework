@@ -253,7 +253,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			def prd = codeManagementService.createPullRequest('', projectData.id, repoData.id, pullRequestData)
 			String prId = "${prd.pullRequestId}"
 			def id = [id: prd.createdBy.id]
-			def opts = [deleteSourceBranch: true, mergeCommitMessage: 'Update pipeline merge', mergeStrategy: 'rebase', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
+			def opts = [deleteSourceBranch: true, mergeCommitMessage: 'Update pipeline merge', mergeStrategy: 'noFastForward', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
 			def updateData = [completionOptions: opts, status: 'completed', lastMergeSourceCommit: prd.lastMergeSourceCommit]
 			//codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
 			while (true) {
