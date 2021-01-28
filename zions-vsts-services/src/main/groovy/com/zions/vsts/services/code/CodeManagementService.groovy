@@ -265,7 +265,38 @@ class CodeManagementService {
 		
 		return branch
 	}
-
+	
+	public def getBranchRef(String collection, String project, String repo, String name) {
+		def query = ['api-version':'5.1']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/refs",
+			query: query
+		)
+		def ref = result.'value'.find { b ->
+			String bName = "${b.name}"
+			bName == name
+		}
+		
+		return ref
+	}
+	
+	public def deleteBranch(String collection, String project, String repo, String name) {
+		def ref = getBranchRef(collection, project, repo, name)
+		if (ref) {
+			def data = [[name: name, newObjectId: '0000000000000000000000000000000000000000', oldObjectId: ref.objectId]]
+			String body = new JsonBuilder(data).toPrettyString()
+			def result = genericRestClient.post(
+				contentType: ContentType.JSON,
+				//requestContentType: ContentType.JSON,
+				body: body,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/refs",
+				query: ['api-version': '5.1']
+			)
+			return result
+		}
+		return null
+	}
 	public def ensureBranch(String collection, String project, String repo, String baseName, String name) {
 		def nBranch = getBranch(collection, project, repo, name)
 		if (nBranch) {
@@ -309,7 +340,7 @@ class CodeManagementService {
 	}
 
 	public def updatePullRequest(String collection, String project, String repo, String pullRequestId, def updateData) {
-		def query = ['api-version': '5.0']
+		def query = ['api-version': '5.1']
 		String body = new JsonBuilder(updateData).toPrettyString()
 		def result = genericRestClient.patch(
 			contentType: ContentType.JSON,
