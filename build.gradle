@@ -85,31 +85,31 @@ allprojects {
 			addr = "${project.'vault.url'}"
 			token = "${project.'spring.cloud.vault.token'}"
 		}
-//		def secrets = project.vault.get('secret/data/zions-service-framework')
-//		def jsonText = new JsonBuilder(secrets).toPrettyString()
-//		def vaultData = new JsonSlurper().parseText(jsonText)
-//		project.ext.set('secretData', vaultData) 
-//		docker {
-//	//		url = property 'dockerHostUrl'
-//			registryCredentials {
-//				url = "${property 'registryHostUrl'}"
-//				username = "${project.secretData.data.data['nexus.docker.user']}"
-//				password = "${project.secretData.data.data['nexus.docker.password']}"
-//			}
-//		}
-//		String confluenceauth = "${project.secretData.data.data['confluence.user']}:${project.secretData.data.data['confluence.password']}".bytes.encodeBase64()
-//	
-//		confluence {
-//			authentication "${confluenceauth}"
-//			//restApiUrl 'http://utmvpw0054:8090/rest/api/'
-//			restApiUrl 'https://zionsconfluence.cs.zionsbank.com/rest/api/'
-//			spaceKey 'SCM'
-//			sslTrustAll true
-//			//pageVariables = ['project.name': project.name]
-//			parseTimeout 2000L
-//		
-//		}
-//		System.setProperty('org.ajoberstar.grgit.auth.username', "${project.secretData.data.data['doc.token']}")
+		def secrets = project.vault.get('secret/data/zions-service-framework')
+		def jsonText = new JsonBuilder(secrets).toPrettyString()
+		def vaultData = new JsonSlurper().parseText(jsonText)
+		project.ext.set('secretData', vaultData) 
+		docker {
+	//		url = property 'dockerHostUrl'
+			registryCredentials {
+				url = "${property 'registryHostUrl'}"
+				username = "${project.secretData.data.data['nexus.docker.user']}"
+				password = "${project.secretData.data.data['nexus.docker.password']}"
+			}
+		}
+		String confluenceauth = "${project.secretData.data.data['confluence.user']}:${project.secretData.data.data['confluence.password']}".bytes.encodeBase64()
+	
+		confluence {
+			authentication "${confluenceauth}"
+			//restApiUrl 'http://utmvpw0054:8090/rest/api/'
+			restApiUrl 'https://zionsconfluence.cs.zionsbank.com/rest/api/'
+			spaceKey 'SCM'
+			sslTrustAll true
+			//pageVariables = ['project.name': project.name]
+			parseTimeout 2000L
+		
+		}
+		System.setProperty('org.ajoberstar.grgit.auth.username', "${project.secretData.data.data['doc.token']}")
 	}
 
 	// Start generatation of framework documentation
