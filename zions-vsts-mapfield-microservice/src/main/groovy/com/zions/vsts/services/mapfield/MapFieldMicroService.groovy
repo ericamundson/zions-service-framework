@@ -126,15 +126,20 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		//return colorElement.Color
 	}
 	private def updateOutput(def project, def id, String rev, String genoutput, String newOutput) {
-		def data = []
-		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
-		data.add(t)
-		//def e = [op: 'add', path: '/fields/Custom.Impact', value: output]
-		//findout what to pass in output field
-		def e = [op: 'add', path: "/fields/${genoutput}", value: newOutput]
-		data.add(e)
-		workManagementService.updateWorkItem(collection, project, id, data)
-	}
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${id}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
+		wiData.body.add([op: 'test', path: '/rev', value: rev.toInteger()])
+		wiData.body.add([ op: 'add', path: "/fields/${genoutput}", value: "${newOutput}"])
+		return wiData
+		return workManagementService.updateWorkItem(collection, project, id, wiData)
+		//This is working
+		//def e = [op: 'add', path: '/fields/Custom.Impact', value: newOutput]
+		
+		//This isn't working path: "/fields/${genoutput}"
+		//def e = [op: 'add', path: "/fields/${genoutput}", value: newOutput]
+		//wiData.body.add([ op: 'add', path: "/fields/${wiPfields[i]}", value: "${parentValues[i]}"])
+
+		}
 	
 	private def logResult(def msg) {
 		log.debug("Result: $msg")
