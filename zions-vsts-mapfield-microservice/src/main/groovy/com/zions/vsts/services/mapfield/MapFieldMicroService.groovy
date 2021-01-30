@@ -123,7 +123,7 @@ class MapFieldMicroService implements MessageReceiverTrait {
 			}
 						
 		return outputElement.Output
-		//return colorElement.Color
+		
 	}
 	private def updateOutput(def project, def id, String rev, String genoutput, String newOutput) {
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
