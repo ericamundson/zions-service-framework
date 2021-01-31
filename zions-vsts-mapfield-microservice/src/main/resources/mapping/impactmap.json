@@ -1,8 +1,18 @@
 [
 {
 "Input1": "Low",
-"Input2": "",
+"Input2": "Infrequent",
 "Output": "Low"
+},
+{
+"Input1": "Low",
+"Input2": "Monthly",
+"Output": "Low"
+},
+{
+"Input1": "Low",
+"Input2": "Daily",
+"Output": "Medium"
 },
 {
 "Input1": "Medium",
@@ -14,11 +24,7 @@
 "Input2": "Infrequent",
 "Output": "Medium"
 },
-{
-"Input1": "High",
-"Input2": "Infrequent",
-"Output": "Medium"
-},
+
 {
 "Input1": "Medium",
 "Input2": "Daily",
@@ -26,7 +32,17 @@
 },
 {
 "Input1": "High",
+"Input2": "Infrequent",
+"Output": "Medium"
+},
+{
+"Input1": "High",
 "Input2": "Daily",
 "Output": "High"
+},
+{
+"Input1": "High",
+"Input2": "Monthly",
+"Output": "Medium"
 }
 ]

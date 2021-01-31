@@ -19,13 +19,13 @@ import groovy.json.JsonSlurper
 If Complexity = “Low”, then Impact=“Low”
 If (a) Complexity=“Medium” AND (b) Frequency = “Monthly” or “Infrequent”, then Impact = “Medium”
 If (a) Complexity= “High” AND (b) Frequency=“Infrequent”, then Impact=“Medium”
-If (a) Complexity =“Medium” AND (b) Frequency = “Daily” , then Impact = “High” 
+If (a) Complexity =“Medium” AND (b) Frequency = “Daily” , then Impact = “High”
 If (a) Complexity =“High” AND (b) Frequency =“Daily” or “Monthly”, then Impact=“High”
- * 
+ *
  * 1.	Input Fields (2+).
    ex:  Custom.Frequency, Custom.WorkaroundComplexity
    2.	Output Field
-    ex: Custom.Impact
+	ex: Custom.Impact
 
  * @author z070187
  *
@@ -43,17 +43,17 @@ class MapFieldMicroService implements MessageReceiverTrait {
 	SharedAssetService sharedAssetService
 
 	@Value('${tfs.collection:}')
-	String collection	
+	String collection
 
 	@Value('${tfs.outputMapUID:}')
-	String outputMapUID	
+	String outputMapUID
 
 	@Autowired
 	public MapFieldMicroService() {
 	}
 	/**
 	 * Perform assignment operation
-	 * 
+	 *
 	 * @see com.zions.vsts.services.ws.client.AbstractWebSocketMicroService#processADOData(java.lang.Object)
 	 */
 	@Override
@@ -73,7 +73,6 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		//Make sure work item is Workaround
 		if (wiType != 'Workaround') return logResult('Not a Workaround work item')
-
 		if (projectProperties.inputFields.size() != 2)
 		{
 			log.error("Must have two input field values")
@@ -86,12 +85,21 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		String genoutput = projectProperties.outputField
 		String input1value = "${wiResource.revision.fields[geninput1]}"
 		String input2value = "${wiResource.revision.fields[geninput2]}"
+		String newOutput
+		
+		if (!input1value || input1value == 'null' || input1value == '' || input1value == []|| 
+			!input2value || input2value == 'null' || input2value == '' || input2value == []) {
+			
+				return logResult('input value not present')
 				
+			}
+		
 		if (input1value != null && input2value != 'null') {
 			// Get field map values for both inputs
 			
 			
-			String newOutput = lookupOutput(input1value, input2value)
+			newOutput = lookupOutput(input1value, input2value)
+			
 			if (genoutput == 'null' || newOutput != genoutput) {
 				log.info("Mapping for $wiType #$id")
 				try {
@@ -107,7 +115,7 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		}
 		else if (genoutput != 'null'){
 			// Need to set map
-			updateOutput(project, id, rev, '', '')
+			updateOutput(project, id, rev, genoutput, newOutput)
 			return logResult('Output set to unassigned')
 		}
 	}
@@ -123,21 +131,16 @@ class MapFieldMicroService implements MessageReceiverTrait {
 			}
 						
 		return outputElement.Output
-		
+		//return colorElement.Color
 	}
 	private def updateOutput(def project, def id, String rev, String genoutput, String newOutput) {
-		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${id}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-		wiData.body.add([op: 'test', path: '/rev', value: rev.toInteger()])
-		wiData.body.add([ op: 'add', path: "/fields/${genoutput}", value: "${newOutput}"])
-		return wiData
-		return workManagementService.updateWorkItem(collection, project, id, wiData)
-		//This is working
-		//def e = [op: 'add', path: '/fields/Custom.Impact', value: newOutput]
-		
-		//This isn't working path: "/fields/${genoutput}"
+		def data = []
+		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
+		data.add(t)
+		def e = [op: 'add', path: '/fields/Custom.Impact', value: newOutput]
 		//def e = [op: 'add', path: "/fields/${genoutput}", value: newOutput]
-		//wiData.body.add([ op: 'add', path: "/fields/${wiPfields[i]}", value: "${parentValues[i]}"])
+		data.add(e)
+		workManagementService.updateWorkItem(collection, project, id, data)
 
 		}
 	
