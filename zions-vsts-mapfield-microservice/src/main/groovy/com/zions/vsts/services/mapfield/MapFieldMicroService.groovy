@@ -64,15 +64,18 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		def outData = adoData
 		def eventType = adoData.eventType
 		def wiResource = adoData.resource
-		//String id = getRootFieldValue('id', eventType, wiResource)
+	
 		String id = "${wiResource.revision.id}"
 		String rev = "${wiResource.revision.rev}"
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		log.debug("Entering MapFieldMicroService:: processADOData <$eventType> #$id")
 				
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
+		
 		//Make sure work item is Workaround
 		if (wiType != 'Workaround') return logResult('Not a Workaround work item')
+		
+		//Check properties file
 		if (projectProperties.inputFields.size() != 2)
 		{
 			log.error("Must have two input field values")
@@ -87,20 +90,22 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		String input2value = "${wiResource.revision.fields[geninput2]}"
 		String newOutput
 		
+		//Check for input field changes - exit if no qualifying changes were made.
 		if (!input1value || input1value == 'null' || input1value == '' || input1value == []|| 
 			!input2value || input2value == 'null' || input2value == '' || input2value == []) {
 			
-				return logResult('input value not present')
+				return logResult('input values not present')
 				
 			}
 		
+		//If input field changes are not NULL then get the mapping and update the record.
 		if (input1value != null && input2value != 'null') {
+			
 			// Get field map values for both inputs
-			
-			
 			newOutput = lookupOutput(input1value, input2value)
-			
-			if (genoutput == 'null' || newOutput != genoutput) {
+			//if (genoutput == 'null' || newOutput != genoutput) {
+			if (newOutput != 'null' || newOutput != '') {
+					
 				log.info("Mapping for $wiType #$id")
 				try {
 					updateOutput(project, id, rev, genoutput, newOutput)
@@ -113,15 +118,10 @@ class MapFieldMicroService implements MessageReceiverTrait {
 			}
 			else return logResult('No updates needed')
 		}
-		else if (genoutput != 'null'){
-			// Need to set map
-			updateOutput(project, id, rev, genoutput, newOutput)
-			return logResult('Output set to unassigned')
-		}
+		
 	}
 	
-	
-	
+		
 	private def lookupOutput(String val1, String val2) {
 	
 		def outputMap = new JsonSlurper().parseText(this.getClass().getResource('/mapping/impactmap.json').text)
