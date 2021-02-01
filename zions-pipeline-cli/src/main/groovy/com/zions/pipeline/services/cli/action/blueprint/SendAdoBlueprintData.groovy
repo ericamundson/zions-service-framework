@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 
 import com.zions.common.services.cli.action.CliAction
 import com.zions.pipeline.services.git.GitService
+import com.zions.pipeline.services.mixins.YamlTrait
 import com.zions.vsts.services.extdata.ExtensionDataManagementService
 
 import groovy.yaml.YamlSlurper
@@ -80,7 +81,7 @@ import groovy.util.logging.Slf4j
  */
 @Component
 @Slf4j
-class SendAdoBlueprintData implements CliAction {
+class SendAdoBlueprintData implements CliAction, YamlTrait {
 
 	@Autowired
 	GitService gitService
@@ -131,6 +132,12 @@ class SendAdoBlueprintData implements CliAction {
 							def selfserveYaml = null
 							File selfserveYamlFile = new File(parentFile, 'selfserve.yaml')
 							if (selfserveYamlFile.exists()) {
+								Set invalidMessages = validateYaml(selfserveYamlFile.text, 'selfserve_v1', 'selfserve')
+								if (!invalidMessages.empty) {
+									String message = invalidMessages.join(',')
+									throw new Exception("Selfserve yaml error: ${message};  Blueprint: ${parentName}")
+								}
+								
 								selfserveYaml = new YamlSlurper().parseText(selfserveYamlFile.text)
 								if (selfserveYaml.outdir) {
 									blueprint.outDir = selfserveYaml.outdir

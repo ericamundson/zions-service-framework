@@ -2,29 +2,16 @@ package com.zions.pipeline.services.mixins
 
 import org.springframework.beans.factory.annotation.Autowired
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.networknt.schema.JsonSchemaFactory
 import com.zions.vsts.services.pullrequest.PullRequestManagementService
 import groovy.yaml.YamlSlurper
 import groovy.yaml.YamlBuilder
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
-import com.networknt.schema.SpecVersion
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 
-trait FindExecutableYamlTrait {
+trait FindExecutableYamlTrait extends YamlTrait {
 	@Autowired(required=false)
 	PullRequestManagementService pullRequestManagementService
 	
-	Map<String, String> schemaCache = [:]
-	
-	ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
-	
-	JsonSchemaFactory factory = JsonSchemaFactory.builder(
-		JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
-	)
-	.objectMapper(mapper)
-	.build()
 
 	def findExecutableYaml(File repoDir, def scanLocations, def projectData, def repoData, String pullRequestId = null) {
 		def executableYaml = []
@@ -78,16 +65,12 @@ trait FindExecutableYamlTrait {
 
 	}
 	
-	def sendFeedback(def projectData, def repoData, def feedback, String pullRequestId = null) {
+	def sendFeedback(def projectData, def repoData, def feedback, String pullRequestId = null ) {
 		if (pullRequestId) {
 			pullRequestManagementService.createdCommentThread('', projectData, repoData, pullRequestId, feedback)
 		} else {
 			String err = errorMessage(feedback)
-			if (log) {
-				log.error(err)
-			} else {
-				System.err.println err
-			}
+			System.err.println err
 		}
 	}
 	String errorMessage(def commentData) {
@@ -106,43 +89,6 @@ trait FindExecutableYamlTrait {
 		return out
 	}
 
-	def validateYaml(String yaml, String version, String type) {
-		String schema = null
-		if (schemaCache.containsKey(version)) {
-			schema = schemaCache[version]
-		} else {
-			schema = loadSchema(version)
-			if (schema) {
-				schema = schema.replace('\t', '  ')
-			}
-			schemaCache[version] = schema
-		}
-		if (!schema) {
-			return ["${type}: No schema defined to validate yaml!"]
-		}
-		Set invalidMessages = factory.getSchema(schema).validate(mapper.readTree(yaml))
-		Set outmessages = []
-		if (!invalidMessages.empty) {
-			for (String imessage in invalidMessages) {
-				outmessages.add("${type}: ${imessage}")
-				//log.error("${type}: ${imessage}")
-			}
-		}
-		return outmessages
-	}
-	
-	String loadSchema(String version) {
-		InputStream is = this.getClass().getResourceAsStream("/${version}.json")
-		
-		if (!is) {
-			URL url = this.getClass().getResource("/${version}.json")
-			if (url) {
-				File f = new File(url.toURI())
-				return f.text
-			}
-			return null
-		}
-		return is.text
-	}
+
 
 }
