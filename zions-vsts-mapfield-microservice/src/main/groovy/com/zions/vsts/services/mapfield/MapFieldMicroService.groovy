@@ -92,7 +92,7 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		//If input field changes are not NULL then lookup mapping and update the record.
 		String genoutputVal = "${wiResource.revision.fields[genoutput]}"
 		
-		if (input1value != null && input2value != 'null') {
+		if (input1value != 'null' && input2value != 'null') {
 			// Get field map values for both inputs
 			newOutput = lookupOutput(input1value, input2value)
 			//Compare current field value and new field value
@@ -109,7 +109,7 @@ class MapFieldMicroService implements MessageReceiverTrait {
 			}
 			else return logResult('No updates needed')
 		}
-		else if (genoutputVal != 'null'){
+		else if (genoutputVal != 'null' || input1value == 'null' || input2value == 'null'){
 		// Need to set output to unassigned
 		updateOutput(project, id, rev, genoutput, '')
 		return logResult('Output set to unassigned')
