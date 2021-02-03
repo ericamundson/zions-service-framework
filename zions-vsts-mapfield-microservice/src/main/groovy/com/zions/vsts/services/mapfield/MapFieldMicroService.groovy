@@ -89,9 +89,10 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		String input2value = "${wiResource.revision.fields[geninput2]}"
 		String newOutput
 
-		//If input field changes are not NULL then lookup mapping and update the record.
+		//Get current output value from screen
 		String genoutputVal = "${wiResource.revision.fields[genoutput]}"
 		
+		//If input field changes are not NULL then lookup mapping and update the record.
 		if (input1value != 'null' && input2value != 'null') {
 			// Get field map values for both inputs
 			newOutput = lookupOutput(input1value, input2value)
