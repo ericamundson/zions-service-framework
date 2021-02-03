@@ -88,6 +88,7 @@ class MapFieldMicroService implements MessageReceiverTrait {
 		String input1value = "${wiResource.revision.fields[geninput1]}"
 		String input2value = "${wiResource.revision.fields[geninput2]}"
 		String newOutput
+		
 
 		//Get current output value from screen
 		String genoutputVal = "${wiResource.revision.fields[genoutput]}"
@@ -125,14 +126,17 @@ class MapFieldMicroService implements MessageReceiverTrait {
 			}
 						
 		return outputElement.Output
-		//return colorElement.Color
+		
 	}
 	private def updateOutput(def project, def id, String rev, String genoutput, String newOutput) {
+			
+		String writePath = ("/fields/$genoutput")
 		def data = []
 		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 		data.add(t)
-		def e = [op: 'add', path: '/fields/Custom.Impact', value: newOutput]
-		//def e = [op: 'add', path: "/fields/${genoutput}", value: newOutput]
+		//def e = [op: 'add', path: '/fields/Custom.Impact', value: newOutput]
+		def e = [op: 'add', path: writePath, value: newOutput]
+		
 		data.add(e)
 		workManagementService.updateWorkItem(collection, project, id, data)
 
