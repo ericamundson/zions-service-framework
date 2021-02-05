@@ -21,8 +21,8 @@ buildscript {
 	}
 	dependencies {
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-		classpath 'com.zions.gradle:gplantumlPlugin:0.1.6'
-		classpath 'net.sourceforge.plantuml:plantuml:8059'
+//		classpath 'com.zions.gradle:gplantumlPlugin:0.1.6'
+//		classpath 'net.sourceforge.plantuml:plantuml:8059'
 		classpath 'org.ajoberstar:gradle-git-publish:2.0.0'
 		classpath 'com.bmuschko:gradle-docker-plugin:6.6.1'
 		classpath 'gradle.plugin.io.errorlab.gradle.vault:vault:0.1.0'
@@ -35,8 +35,8 @@ allprojects {
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
 	apply plugin: 'groovy'
-	apply plugin: 'gplantuml'
-	apply plugin: 'mdplantuml'
+//	apply plugin: 'gplantuml'
+//	apply plugin: 'mdplantuml'
 	apply plugin: 'org.ajoberstar.git-publish'
 	apply plugin: 'com.bmuschko.docker-remote-api'
 	apply plugin: 'com.bmuschko.docker-spring-boot-application'
@@ -253,6 +253,20 @@ allprojects {
 	dependencyManagement {
 		imports {
 			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		}
+	}
+	task mdplantuml {
+		doLast {
+			ant.exec(executable: 'cmd', dir: './', failonerror: true ) {
+				arg( line: "/c \"java -jar ../libs/plantuml.1.2021.0.jar src/**/*.md -tsvg\"")
+			}
+		}
+	}
+	task gplantuml {
+		doLast {
+			ant.exec(executable: 'cmd', dir: './', failonerror: true ) {
+				arg( line: "/c \"java -jar ../libs/plantuml.1.2021.0.jar src/**/*.groovy -tsvg\"")
+			}
 		}
 	}
 	test { //String activeProfile =  System.properties['spring.profiles.active']

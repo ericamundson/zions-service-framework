@@ -52,7 +52,7 @@ actor AD as "Application Developer"
 component ADOBPECLI as "COE Blueprint Execution CLI"
 component BPMS as "Executable Yaml Micro-service"
 cloud ADO {
-    component ADOBPEUI as "ADO COE Blueprint Execution UI:  <b>Not implemented</b>"
+    component ADOBPEUI as "ADO COE Blueprint Execution UI"
     component ADOP as "ADO Pipeline"
     storage GITBP as "ADO Blueprint GIT Repository"
     storage GITPROJECT as "ADO Project GIT Repository"
@@ -95,8 +95,7 @@ actor DE as "Devops Engineer"
 component ADOBPECLI as "COE Blueprint Execution CLI"
 component BPMS as "Executable Yaml Micro-service"
 cloud ADO {
-    component ADOBPMUI as "ADO COE Blueprint Management UI: <b>Not implemented</b>"
-    component ADOBPEUI as "ADO COE Blueprint Execution UI:  <b>Not implemented</b>"
+    component ADOBPEUI as "ADO COE Blueprint Execution UI"
     component ADOP as "ADO Pipeline"
     storage GITBP as "ADO Blueprint GIT Repository"
     storage GITPROJECT as "ADO Project GIT Repository"
@@ -105,7 +104,6 @@ cloud ADO {
 component XLR as "XL Release"
 component XLD as "XL Deploy"
 
-DE -do-> ADOBPMUI:  Manage blueprint permissions and project specific filters.
 DE -do-> GITBP: Modifies Blueprints to customize pipeline/deploy/release automation to project needs
 DE -do-> ADOBPECLI: Executes blueprint to validate output
 DE -do-> ADOBPEUI: Executes blueprint to validate output
