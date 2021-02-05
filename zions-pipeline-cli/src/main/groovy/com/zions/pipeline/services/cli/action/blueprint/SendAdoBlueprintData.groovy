@@ -20,59 +20,43 @@ import com.zions.pipeline.services.blueprint.model.*
 import groovy.util.logging.Slf4j
 
 /**
- * Command line action to execute blueprint and run executable yaml.
+ * Command line action to push blueprint data to ADO UI extension.
  * 
  * <p><b>Command-line arguments:</b></p>
  * <ul>
- * 	<li>pipelineBuilder - The action's Spring bean name.</li>
+ * 	<li>sendAdoBlueprintData - The action's Spring bean name.</li>
  * <ul>
  * <p><b>The following's command-line format: --name=value</b></p>
  * <ul>
- *  <li>blueprint.dir - Local directory location for XL blueprints</li>
- *  <li>blueprint - name of blueprint</li>
- *  <li>repo.dir - GIT repository directory</li>
- *  <li>out.dir - XL blueprint output directory</li>
- *  <li>ado.project - ADO project name</li>
- *  </ul>
+ *  <li>blueprint.repo.urls - Blueprint repo urls</li>
  * </ul>
+ * </ul>
+ * <p><b>Design:</b></p>
+ * <img src="SendAdoBlueprintData_components.svg"/>
  * 
  * @author z091182
- * @startuml PipelineBuilder_components.svg
+ * @startuml SendAdoBlueprintData_components.svg
  * actor RE as "Release Engineer"
  * artifact zions-pipeline-cli.jar {
- *   package dts as "com.zions.pipeline.services.cli.action.dts" {
- *     component PipelineBuilder as "PipelineBuilder"
+ *   package dts as "com.zions.pipeline.services.cli.action.blueprint" {
+ *     component SendAdoBlueprintData as "SendAdoBlueprintData"
  *   }
  * }
- * RE --> PipelineBuilder: executes
+ * RE --> SendAdoBlueprintData: executes
  * 
  * artifact zions-pipeline-services.jar {
- *    package template as "com.zions.pipeline.services.yaml.template" {
- *      component BlueprintInterpretorService
+ *    package execution as "com.zions.pipeline.services.blueprint.model" {
+ *      component Blueprint
+ *      component Folder
+ *      component Option
+ *      component Parameter
  *    }
- *    package execution as "com.zions.pipeline.services.yaml.template.execution" {
- *      interface IExecutableYamlHandler 
- *      component BranchPolicy
- *      component BuildDefinition
- *      component GitRepository
- *      component RunXLBlueprints
- *      component RunXLDeployApply
- *      component RunXLReleaseApply
- *      component SanitizeProperties
- *      component WebHookSubscriptions
- *      component WorkItem
- *      BlueprintInterpretorService --> IExecutableYamlHandler: calls
- *      BranchPolicy -[dotted]-> IExecutableYamlHandler: implements
- *      BuildDefinition -[dotted]-> IExecutableYamlHandler: implements
- *      GitRepository -[dotted]-> IExecutableYamlHandler: implements
- *      RunXLBlueprints -[dotted]-> IExecutableYamlHandler: implements
- *      RunXLDeployApply -[dotted]up-> IExecutableYamlHandler: implements
- *      RunXLReleaseApply -[dotted]up-> IExecutableYamlHandler: implements
- *      SanitizeProperties -[dotted]up-> IExecutableYamlHandler: implements
- *      WebHookSubscriptions -[dotted]up-> IExecutableYamlHandler: implements
- *      WorkItem -[dotted]do-> IExecutableYamlHandler: implements
- *    }
- *    PipelineBuilder --> BlueprintInterpretorService: Execute blueprint and run executable yaml
+ *    SendAdoBlueprintData --> Folder: Add folder
+ *    Folder --> Blueprint: has 1..N blueprints
+ *    Folder --> Folder: has 1..N child folders
+ *    Blueprint -> Parameter: has 1..N parameters
+ *    Parameter -> Option: has 1..N options
+ *    
  * }
  * 
  * 
