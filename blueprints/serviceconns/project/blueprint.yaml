@@ -1,0 +1,29 @@
+apiVersion: xl/v2
+kind: Blueprint
+
+metadata:
+  name: dts-service-connection
+  description: |
+    Blueprint for creating ADO service connections.
+  author: XebiaLabs
+  version: 2.0
+  instructions: none
+
+spec:
+  parameters:
+  - name: ConnectTo
+    type: Select
+    options:
+      - XL Deploy
+      - Nexus IQ
+      - Generic   
+    prompt: Select the service for which to create the connection.
+    
+  files:
+  - path: ../xldeploy-svcconn.yaml.tmpl
+    writeIf: !expr "ConnectTo == 'XL Deploy'"
+  - path: ../nexusiq-svcconn.yaml.tmpl
+    writeIf: !expr "ConnectTo == 'Nexus IQ'"
+  - path: ../generic-svcconn.yaml.tmpl
+    writeIf: !expr "ConnectTo == 'Generic'"
+

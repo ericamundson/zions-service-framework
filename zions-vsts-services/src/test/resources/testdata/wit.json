@@ -1,0 +1,565 @@
+{
+    "referenceName": "ZionsAgile.UserStory",
+    "name": "User Story",
+    "description": "Tracks an activity the user will be able to perform with the product",
+    "url": "https://dev.azure.com/ZionsETO/_apis/work/processes/54f74337-4f58-49b2-96c4-4057cf83538f/workItemTypes/ZionsAgile.UserStory",
+    "customization": "inherited",
+    "color": "009CCC",
+    "icon": "icon_book",
+    "isDisabled": false,
+    "inherits": "Microsoft.VSTS.WorkItemTypes.UserStory",
+    "layout": {
+        "pages": [
+            {
+                "id": "Agile.User Story.User Story",
+                "inherited": true,
+                "overridden": true,
+                "label": "Details",
+                "pageType": "custom",
+                "locked": false,
+                "visible": true,
+                "isContribution": false,
+                "sections": [
+                    {
+                        "id": "Section1",
+                        "groups": [
+                            {
+                                "id": "Agile.User Story.User Story.Description.WideGroup",
+                                "inherited": true,
+                                "label": "Description",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "id": "System.Description",
+                                        "inherited": true,
+                                        "label": "Description",
+                                        "controlType": "HtmlFieldControl",
+                                        "readOnly": false,
+                                        "watermark": "",
+                                        "metadata": "",
+                                        "visible": true,
+                                        "isContribution": false
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "Agile.User Story.User Story.Acceptance Criteria.WideGroup",
+                                "inherited": true,
+                                "label": "Acceptance Criteria",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "id": "Microsoft.VSTS.Common.AcceptanceCriteria",
+                                        "inherited": true,
+                                        "label": "Acceptance Criteria",
+                                        "controlType": "HtmlFieldControl",
+                                        "readOnly": false,
+                                        "watermark": "",
+                                        "metadata": "",
+                                        "visible": true,
+                                        "isContribution": false
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Section2",
+                        "groups": [
+                            {
+                                "id": "Agile.User Story.User Story.Planning",
+                                "inherited": true,
+                                "label": "Planning",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "id": "Custom.SubState",
+                                        "label": "Sub State",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "Microsoft.VSTS.Scheduling.StoryPoints",
+                                        "inherited": true,
+                                        "label": "Story Points",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "watermark": "",
+                                        "metadata": "",
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "Microsoft.VSTS.Common.Priority",
+                                        "inherited": true,
+                                        "label": "Priority",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "watermark": "",
+                                        "metadata": "",
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "Microsoft.VSTS.Common.BusinessValue",
+                                        "label": "Business Value",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "Microsoft.VSTS.Common.Risk",
+                                        "inherited": true,
+                                        "label": "Risk",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "watermark": "",
+                                        "metadata": "",
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "a0d1d2f2-5ce9-48e7-b689-22b9ede9ec63",
+                                        "label": "Child Tasks",
+                                        "readOnly": false,
+                                        "visible": true,
+                                        "contribution": {
+                                            "contributionId": "Zions.vsts-extensions-childtask-control-dev.multivalue-form-control",
+                                            "inputs": {
+                                                "FieldName": "Custom.ChildTask",
+                                                "ChildTypeFieldName": "Microsoft.VSTS.Common.Activity",
+                                                "ChildTypeName": "Task",
+                                                "CopiedFields": "System.Tags;System.Description;System.IterationPath;System.AreaPath;System.AssignedTo",
+                                                "Values": "Deployment;Design;Development;Documentation;Requirements;Testing",
+                                                "DisplayChildState": "true"
+                                            }
+                                        },
+                                        "isContribution": true
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "Agile.User Story.User Story.Classification",
+                                "inherited": true,
+                                "label": "Classification",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "id": "Custom.MilestoneType",
+                                        "label": "Milestone Type",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "Microsoft.VSTS.Common.ValueArea",
+                                        "inherited": true,
+                                        "label": "Value area",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "watermark": "",
+                                        "metadata": "",
+                                        "visible": true,
+                                        "isContribution": false
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "agile-extensions.personas.personas-work-item-form-group",
+                                "label": "Personas affected",
+                                "contribution": {
+                                    "contributionId": "agile-extensions.personas.personas-work-item-form-group"
+                                },
+                                "isContribution": true,
+                                "visible": true,
+                                "controls": [
+                                    
+                                ]
+                            },
+                            {
+                                "id": "boykoant.linked-wiki-pages.linked-wiki-pages",
+                                "label": "Linked wiki pages",
+                                "contribution": {
+                                    "contributionId": "boykoant.linked-wiki-pages.linked-wiki-pages"
+                                },
+                                "isContribution": true,
+                                "visible": true,
+                                "controls": [
+                                    
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Section3",
+                        "groups": [
+                            {
+                                "id": "Agile.User Story.User Story.Deployment",
+                                "inherited": true,
+                                "label": "Deployment",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "id": "Deployments",
+                                        "inherited": true,
+                                        "label": "",
+                                        "controlType": "DeploymentsControl",
+                                        "readOnly": false,
+                                        "watermark": "",
+                                        "metadata": "",
+                                        "visible": true,
+                                        "isContribution": false
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "Agile.User Story.User Story.Development",
+                                "inherited": true,
+                                "label": "Development",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "id": "Development",
+                                        "inherited": true,
+                                        "label": "",
+                                        "controlType": "LinksControl",
+                                        "readOnly": false,
+                                        "watermark": "",
+                                        "metadata": "<LinksControlOptions ViewMode=\"List\" ZeroDataExperience=\"Development\" ShowCallToAction=\"true\"><ListViewOptions GroupLinks=\"false\"></ListViewOptions><LinkFilters><ExternalLinkFilter Type=\"Build\" /><ExternalLinkFilter Type=\"Integrated in build\" /><ExternalLinkFilter Type=\"Pull Request\" /><ExternalLinkFilter Type=\"Branch\" /><ExternalLinkFilter Type=\"Fixed in Commit\" /><ExternalLinkFilter Type=\"Fixed in Changeset\" /><ExternalLinkFilter Type=\"Source Code File\" /><ExternalLinkFilter Type=\"Found in build\" /><ExternalLinkFilter Type=\"GitHub Pull Request\" /><ExternalLinkFilter Type=\"GitHub Commit\" /></LinkFilters></LinksControlOptions>",
+                                        "visible": true,
+                                        "isContribution": false
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "Agile.User Story.User Story.Related Work",
+                                "inherited": true,
+                                "label": "Related Work",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "id": "Related Work",
+                                        "inherited": true,
+                                        "label": "",
+                                        "controlType": "LinksControl",
+                                        "readOnly": false,
+                                        "watermark": "",
+                                        "metadata": "<LinksControlOptions ViewMode=\"List\"><LinkFilters><WorkItemLinkFilter Type=\"System.LinkTypes.Duplicate-Reverse\" /><WorkItemLinkFilter Type=\"System.LinkTypes.Hierarchy-Reverse\" /><WorkItemLinkFilter Type=\"Microsoft.VSTS.Common.TestedBy-Reverse\" /><WorkItemLinkFilter Type=\"Microsoft.VSTS.Common.TestedBy-Forward\" /><WorkItemLinkFilter Type=\"System.LinkTypes.Hierarchy-Forward\" /><WorkItemLinkFilter Type=\"System.LinkTypes.Duplicate-Forward\" /><WorkItemLinkFilter Type=\"System.LinkTypes.Dependency\" /><WorkItemLinkFilter Type=\"System.LinkTypes.Related\" /><ExternalLinkFilter Type=\"GitHub Issue\" /></LinkFilters><Columns><Column Name=\"System.State\" /><Column Name=\"System.ChangedDate\" /><Column Name=\"System.Links.Comment\" /></Columns></LinksControlOptions>",
+                                        "visible": true,
+                                        "isContribution": false
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "b3d26ea5-9df0-4ea9-aa77-24f9899f4953",
+                                "label": "Tracking",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "id": "System.CreatedBy",
+                                        "label": "Created By",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "System.CreatedDate",
+                                        "label": "Created Date",
+                                        "controlType": "DateTimeControl",
+                                        "readOnly": false,
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "Custom.OTLNumber",
+                                        "label": "OTL #",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "Custom.ExternalID",
+                                        "label": "ExternalID",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "Microsoft.VSTS.Scheduling.TargetDate",
+                                        "label": "Target Date",
+                                        "controlType": "DateTimeControl",
+                                        "readOnly": false,
+                                        "visible": true,
+                                        "isContribution": false
+                                    },
+                                    {
+                                        "id": "Custom.ReleaseDeliveredIn",
+                                        "label": "Release Delivered In",
+                                        "controlType": "FieldControl",
+                                        "readOnly": false,
+                                        "visible": true,
+                                        "isContribution": false
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Section4",
+                        "groups": [
+                            
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "Agile.User Story.System_History",
+                "inherited": true,
+                "label": "History",
+                "pageType": "history",
+                "locked": true,
+                "visible": true,
+                "isContribution": false,
+                "sections": [
+                    {
+                        "id": "Section1",
+                        "groups": [
+                            {
+                                "id": "Agile.User Story.System_History.History",
+                                "inherited": true,
+                                "label": "History",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "id": "System.History",
+                                        "inherited": true,
+                                        "controlType": "WorkItemLogControl",
+                                        "visible": true,
+                                        "isContribution": false
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Section2",
+                        "groups": [
+                            
+                        ]
+                    },
+                    {
+                        "id": "Section3",
+                        "groups": [
+                            
+                        ]
+                    },
+                    {
+                        "id": "Section4",
+                        "groups": [
+                            
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "Agile.User Story.System_Links",
+                "inherited": true,
+                "label": "Links",
+                "pageType": "links",
+                "locked": true,
+                "visible": true,
+                "isContribution": false,
+                "sections": [
+                    {
+                        "id": "Section1",
+                        "groups": [
+                            {
+                                "id": "Agile.User Story.System_Links.Links",
+                                "inherited": true,
+                                "label": "Links",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "inherited": true,
+                                        "controlType": "LinksControl",
+                                        "metadata": "<LinksControlOptions ZeroDataExperience=\"CallToAction\"><Columns><Column Name=\"System.State\" /><Column Name=\"System.ChangedDate\" /><Column Name=\"System.Links.Comment\" /></Columns></LinksControlOptions>",
+                                        "visible": true,
+                                        "isContribution": false
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Section2",
+                        "groups": [
+                            
+                        ]
+                    },
+                    {
+                        "id": "Section3",
+                        "groups": [
+                            
+                        ]
+                    },
+                    {
+                        "id": "Section4",
+                        "groups": [
+                            
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "Agile.User Story.System_Attachments",
+                "inherited": true,
+                "label": "Attachments",
+                "pageType": "attachments",
+                "locked": true,
+                "visible": true,
+                "isContribution": false,
+                "sections": [
+                    {
+                        "id": "Section1",
+                        "groups": [
+                            {
+                                "id": "Agile.User Story.System_Attachments.Attachments",
+                                "inherited": true,
+                                "label": "Attachments",
+                                "isContribution": false,
+                                "visible": true,
+                                "controls": [
+                                    {
+                                        "inherited": true,
+                                        "label": "Attachments",
+                                        "controlType": "AttachmentsControl",
+                                        "visible": true,
+                                        "isContribution": false
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Section2",
+                        "groups": [
+                            
+                        ]
+                    },
+                    {
+                        "id": "Section3",
+                        "groups": [
+                            
+                        ]
+                    },
+                    {
+                        "id": "Section4",
+                        "groups": [
+                            
+                        ]
+                    }
+                ]
+            }
+        ],
+        "systemControls": [
+            {
+                "id": "System.Title",
+                "label": "",
+                "controlType": "FieldControl",
+                "readOnly": false,
+                "watermark": "Enter title",
+                "visible": true,
+                "isContribution": false
+            },
+            {
+                "id": "System.AssignedTo",
+                "label": "Assi&gned To",
+                "controlType": "FieldControl",
+                "readOnly": false,
+                "watermark": "",
+                "visible": true,
+                "isContribution": false
+            },
+            {
+                "id": "System.State",
+                "label": "Stat&e",
+                "controlType": "FieldControl",
+                "readOnly": false,
+                "watermark": "",
+                "visible": true,
+                "isContribution": false
+            },
+            {
+                "id": "System.Reason",
+                "label": "Reason",
+                "controlType": "FieldControl",
+                "readOnly": false,
+                "watermark": "",
+                "visible": true,
+                "isContribution": false
+            },
+            {
+                "id": "System.AreaPath",
+                "label": "&Area",
+                "controlType": "WorkItemClassificationControl",
+                "readOnly": false,
+                "watermark": "",
+                "visible": true,
+                "isContribution": false
+            },
+            {
+                "id": "System.IterationPath",
+                "label": "Ite&ration",
+                "controlType": "WorkItemClassificationControl",
+                "readOnly": false,
+                "watermark": "",
+                "visible": true,
+                "isContribution": false
+            },
+            {
+                "id": "System.History",
+                "label": "History",
+                "controlType": "WorkItemLogControl",
+                "readOnly": false,
+                "watermark": "",
+                "visible": true,
+                "isContribution": false
+            },
+            {
+                "id": "Links",
+                "label": "Links",
+                "controlType": "LinksControl",
+                "readOnly": false,
+                "watermark": "",
+                "visible": true,
+                "isContribution": false
+            },
+            {
+                "id": "Attachments",
+                "label": "Attachments",
+                "controlType": "AttachmentsControl",
+                "readOnly": false,
+                "watermark": "",
+                "visible": true,
+                "isContribution": false
+            }
+        ]
+    }
+}

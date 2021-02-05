@@ -61,7 +61,9 @@ public class WebRunnerApp implements ApplicationRunner {
 	@Value('${sel.timeout.sec}')
 	int waitTimeoutSec
 
-	
+	@Value('${sel.driver}')
+	String driverPath
+
 	
 	/**
 	 * 
@@ -85,10 +87,15 @@ public class WebRunnerApp implements ApplicationRunner {
 				try {
 					action.validate(args);
 					// Open Chrome driver
-					System.setProperty("webdriver.chrome.driver","c:\\chrome-83\\chromedriver.exe");
+					System.setProperty("webdriver.chrome.driver",driverPath);
 					ChromeOptions options = new ChromeOptions()
 					options.addArguments("enable-automation")
 					options.addArguments("--window-size=1920,1080")
+					// Add proxy
+					String proxyHost = System.getProperty("proxy.Host")
+					String proxyPort = System.getProperty("proxy.Port")
+					options.addArguments("--proxy-server=http://$proxyHost:$proxyPort")
+					
 					driver = new ChromeDriver(options);
 					wait = new WebDriverWait(driver, waitTimeoutSec);
 					CompletedSteps steps = new CompletedSteps()

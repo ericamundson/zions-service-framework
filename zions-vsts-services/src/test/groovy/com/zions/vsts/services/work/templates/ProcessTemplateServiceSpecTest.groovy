@@ -409,9 +409,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 	
 	def 'ensureWitFieldLayout success flow' () {
 		given: 'stub rest call for layout'
-		def wit = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
-		def layout = new JsonSlurper().parseText(getClass().getResource('/testdata/layout.json').text)
-		genericRestClient.get(_) >> layout
+		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/wit.json').text)
 		
 		and: 'stub rest call for pages'
 		def pages = new JsonSlurper().parseText(getClass().getResource('/testdata/page.json').text)

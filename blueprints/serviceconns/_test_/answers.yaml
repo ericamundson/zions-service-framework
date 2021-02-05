@@ -1,0 +1,5 @@
+ConnName: XL Deploy - Production
+ConnectTo: XL Deploy
+Projects: Sandbox
+URL: https://xldeploy.cs.zionsbank.com
+TargetEnv: Production
