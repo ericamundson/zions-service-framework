@@ -1,0 +1,58 @@
+apiVersion: xl-deploy/v1
+kind: Applications
+spec:
+- name: Applications/DTS
+  type: core.Directory
+  children:
+  - name: zions-pipeline-execution-microservice
+    type: udm.Application
+    children:
+    - name: !value "app_version"
+      type: udm.DeploymentPackage
+      deployables:      
+      - name: zions-pipeline-execution-microservice0.service
+        type: file.File
+        scanPlaceholders: true
+        targetPath: '{{stage.path}}'
+        createTargetPath: "true"
+        file: !file "../service/microservice0.service"      
+      - name: zions-pipeline-execution-microservice1.service
+        type: file.File
+        scanPlaceholders: true
+        targetPath: '{{stage.path}}'
+        createTargetPath: "true"
+        file: !file "../service/microservice1.service"      
+      - name: zions-pipeline-execution-microservice2.service
+        type: file.File
+        scanPlaceholders: true
+        targetPath: '{{stage.path}}'
+        createTargetPath: "true"
+        file: !file "../service/microservice2.service"
+      - name: zions-pipeline-execution-microservice-hold.jar
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '{{stage.path}}'
+        createTargetPath: "true"
+        file: !file "../../build/libs/zions-pipeline-execution-microservice.jar"
+      - name: run install
+        type: advcmd.Command
+        command: |-
+          mkdir -p {{deploy.path}}
+          cp -f {{stage.path}}/zions-pipeline-execution-microservice-hold.jar {{deploy.path}}/zions-pipeline-execution-microservice.jar      
+          systemctl stop zions-pipeline-execution-microservice0.service
+          cp -f {{stage.path}}/zions-pipeline-execution-microservice0.service /etc/systemd/system
+          systemctl daemon-reload
+          systemctl start zions-pipeline-execution-microservice0.service      
+          systemctl stop zions-pipeline-execution-microservice1.service
+          cp -f {{stage.path}}/zions-pipeline-execution-microservice1.service /etc/systemd/system
+          systemctl daemon-reload
+          systemctl start zions-pipeline-execution-microservice1.service      
+          systemctl stop zions-pipeline-execution-microservice2.service
+          cp -f {{stage.path}}/zions-pipeline-execution-microservice2.service /etc/systemd/system
+          systemctl daemon-reload
+          systemctl start zions-pipeline-execution-microservice2.service          
+        createOrder: "62"
+        destroyOrder: "42"
+        alwaysRun: "true"
+        noopOrder: "62"
+        undoCommand: 'echo "No action needed for undoCommand"'

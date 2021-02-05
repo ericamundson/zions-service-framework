@@ -1,0 +1,17 @@
+[Unit]
+Description=zions-pipeline-execution-microservice
+
+[Service]
+WorkingDirectory={{deploy.path}}
+
+ExecStart=/bin/java -Xrs -Xmx256m -jar "{{deploy.path}}/zions-pipeline-execution-microservice.jar" --queue.name=GIT-pipelineexecution-queue --ado.topics=git.pullrequest.merged --tfs.url={{tfs.url}} --logging.file="{{deploy.path}}/zions-pipeline-execution-microservice2.log"
+
+User=jvmapps
+Type=simple
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+"{{CURL.USER}}"
