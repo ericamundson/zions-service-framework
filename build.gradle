@@ -74,7 +74,7 @@ allprojects {
 		}
 		
 		check.dependsOn jacocoTestReport
-	} else {
+	} else if ("${buildType}" == 'doc') {
 		apply plugin: 'io.errorlab.gradle.vault'
 		Properties props = new Properties()
 		props.load(new FileInputStream("${vaultResources}/bootstrap.properties"))
