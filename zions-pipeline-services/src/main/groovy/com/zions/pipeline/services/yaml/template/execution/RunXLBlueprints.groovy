@@ -79,7 +79,6 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 
 		def outrepo = gitService.loadChanges(repoData.remoteUrl, repoName)
 		gitService.checkout(outrepo, "blueprint/${new Date().time}", true)
-		updateIgnore(outrepo)
 		
 
 		File loadDir = new File(outrepo, "${pipelineFolder}")
@@ -90,6 +89,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 		if (!loadDir.exists()) {
 			loadDir.mkdirs()
 		}
+		updateIgnore(loadDir)
 		loadXLCli(loadDir)
 		String os = System.getProperty('os.name')
 		String command = 'cmd'
