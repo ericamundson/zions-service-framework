@@ -103,26 +103,25 @@ trait XLCliTrait extends CliRunnerTrait {
 		File ignore = new File(repo, '.gitignore')
 		Set ignoreItems = []
 		if (ignore.exists()) {
-			ignore.eachLine { line ->
-				ignoreItems.add(line)
-			}
-			
+			String iText = ignore.text
+			String[] items = iText.split('\n')
+			ignoreItems = items as Set			
 		}
-		ignore.withWriter { BufferedWriter writer ->
-			if (!ignoreItems.contains('xl.exe')) {
-				writer.writeLine 'xl.exe'
-			}
-			if (!ignoreItems.contains('xl')) {
-				writer.writeLine 'xl'
-			}
-			if (!ignoreItems.contains('.xebialabs')) {
-				writer.writeLine '.xebialabs'
-			}
-			if (!ignoreItems.contains('startup.bat')) {
-				writer.writeLine 'startup.bat'
-			}
+		if (!ignoreItems.contains('xl.exe')) {
+			ignore.append('xl.exe\n')
 		}
-		
+		if (!ignoreItems.contains('xl')) {
+			ignore.append('xl\n')
+		}
+		if (!ignoreItems.contains('.xebialabs')) {
+			ignore.append('.xebialabs\n')
+		}
+		if (!ignoreItems.contains('startup.bat')) {
+			ignore.append('startup.bat\n')
+		}
+		if (!ignoreItems.contains('*answers.yaml')) {
+			ignore.append('*answers.yaml\n')
+		}
 	}
 	
 	def fixBlueprint(File bpRepo, String folderName) {
