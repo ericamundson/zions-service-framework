@@ -13,13 +13,5 @@ public class ProjectProperties
 	List<String> inputFields = new ArrayList<String>();
 	String outputField;
 	String mapname;
-	
-	
-    // Getter/Setter for gateways
-    // ...
 
-
-	
-
-	
 }

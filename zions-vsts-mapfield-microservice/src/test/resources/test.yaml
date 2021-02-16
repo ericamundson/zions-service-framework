@@ -4,6 +4,7 @@ config:
         - 'Custom.Frequency'
     outputField: 'Custom.Impact'
     mapname: 'impactMap.json'
+    
 
 tfs.outputMapUID:  Zions/zions-color-form-control2/Data/Scopes/Default/Current/Collections/%24settings/Documents/outputMap 
 doc.resource.locations: file:///C:/Resources/

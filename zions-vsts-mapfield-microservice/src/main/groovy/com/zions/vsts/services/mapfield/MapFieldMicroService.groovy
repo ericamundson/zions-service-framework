@@ -48,6 +48,7 @@ class MapFieldMicroService implements MessageReceiverTrait {
 	@Value('${tfs.outputMapUID:}')
 	String outputMapUID
 
+	
 	@Autowired
 	public MapFieldMicroService() {
 	}
@@ -59,8 +60,8 @@ class MapFieldMicroService implements MessageReceiverTrait {
 	@Override
 	public Object processADOData(Object adoData) {
 //		Uncomment code below to capture adoData payload for test
-//		String json = new JsonBuilder(adoData).toPrettyString()
-//		println(json)
+		//String json = new JsonBuilder(adoData).toPrettyString()
+		//println(json)
 		def outData = adoData
 		def eventType = adoData.eventType
 		def wiResource = adoData.resource
@@ -102,7 +103,9 @@ class MapFieldMicroService implements MessageReceiverTrait {
 				log.info("Mapping for $wiType #$id")
 				try {
 					updateOutput(project, id, rev, genoutput, newOutput)
-					return logResult('Output value updated')
+					return logResult("Output value updated to: $newOutput")
+					//return logResult("Output value updated")
+					
 				}
 				catch (e){
 					log.error("Error getting Output: ${e.message}")
