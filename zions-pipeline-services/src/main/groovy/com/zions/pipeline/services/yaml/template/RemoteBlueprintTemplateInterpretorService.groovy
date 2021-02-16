@@ -117,7 +117,6 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			}
 			repoDir = gitService.loadChanges(outRepoUrl, null, repoTargetBranch)
 			gitService.checkout(repoDir, "blueprint/${new Date().time}", true)
-			updateIgnore(repoDir)
 
 
 			outDir = repoDir
@@ -133,6 +132,8 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			if (!pipelineDir.exists()) {
 				pipelineDir.mkdirs()
 			}
+			updateIgnore(pipelineDir)
+			
 			loadXLCli(pipelineDir)
 			buildConfigYaml(pipelineDir, blueprintDir)
 

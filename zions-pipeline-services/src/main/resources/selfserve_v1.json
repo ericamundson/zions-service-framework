@@ -1,0 +1,217 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "outdir": [
+                "ProjectName"
+            ],
+            "outRepo": {
+                "name": "project_devops"
+            },
+            "selectedProjectParm": {
+                "bpname": "ProjectName",
+                "dontUseForExecution": true
+            },
+            "permissions": {
+                "isVisible": false,
+                "allowedProjects": [
+                    "DTS"
+                ]
+            },
+            "documentation": {
+                "url": "https://zionsconfluence.cs.zionsbank.com/display/SCM/DS%3A+COE%3A+Blueprints%3A+Setup+Self-service"
+            }
+        }
+    ],
+    "required": [
+    ],
+    "properties": {
+        "outdir": {
+            "$id": "#/properties/outdir",
+            "type": "array",
+            "title": "The outdir schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": [],
+            "examples": [
+                [
+                    "ProjectName"
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/outdir/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/outdir/items/anyOf/0",
+                        "type": "string",
+                        "title": "The first anyOf schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "ProjectName"
+                        ]
+                    }
+                ]
+            }
+        },
+        "outRepo": {
+            "$id": "#/properties/outRepo",
+            "type": "object",
+            "title": "The outRepo schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "name": "project_devops"
+                }
+            ],
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "$id": "#/properties/outRepo/properties/name",
+                    "type": "string",
+                    "title": "The name schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "project_devops"
+                    ]
+                }
+            },
+            "additionalProperties": true
+        },
+        "selectedProjectParm": {
+            "$id": "#/properties/selectedProjectParm",
+            "type": "object",
+            "title": "The selectedProjectParm schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "bpname": "ProjectName",
+                    "dontUseForExecution": true
+                }
+            ],
+            "required": [
+                "bpname"
+            ],
+            "properties": {
+                "bpname": {
+                    "$id": "#/properties/selectedProjectParm/properties/bpname",
+                    "type": "string",
+                    "title": "The bpname schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "ProjectName"
+                    ]
+                },
+                "dontUseForExecution": {
+                    "$id": "#/properties/selectedProjectParm/properties/dontUseForExecution",
+                    "type": "boolean",
+                    "title": "The dontUseForExecution schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": false,
+                    "examples": [
+                        true
+                    ]
+                }
+            },
+            "additionalProperties": true
+        },
+        "permissions": {
+            "$id": "#/properties/permissions",
+            "type": "object",
+            "title": "The permissions schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "isVisible": false,
+                    "allowedProjects": [
+                        "DTS"
+                    ]
+                }
+            ],
+            "required": [
+            ],
+            "properties": {
+                "isVisible": {
+                    "$id": "#/properties/permissions/properties/isVisible",
+                    "type": "boolean",
+                    "title": "The isVisible schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": false,
+                    "examples": [
+                        false
+                    ]
+                },
+                "allowedProjects": {
+                    "$id": "#/properties/permissions/properties/allowedProjects",
+                    "type": "array",
+                    "title": "The allowedProjects schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": [],
+                    "examples": [
+                        [
+                            "DTS"
+                        ]
+                    ],
+                    "additionalItems": true,
+                    "items": {
+                        "$id": "#/properties/permissions/properties/allowedProjects/items",
+                        "anyOf": [
+                            {
+                                "$id": "#/properties/permissions/properties/allowedProjects/items/anyOf/0",
+                                "type": "string",
+                                "title": "The first anyOf schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "DTS"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            "additionalProperties": true
+        },
+        "documentation": {
+            "$id": "#/properties/documentation",
+            "type": "object",
+            "title": "The documentation schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "url": "https://zionsconfluence.cs.zionsbank.com/display/SCM/DS%3A+COE%3A+Blueprints%3A+Setup+Self-service"
+                }
+            ],
+            "required": [
+                "url"
+            ],
+            "properties": {
+                "url": {
+                    "$id": "#/properties/documentation/properties/url",
+                    "type": "string",
+                    "title": "The url schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "https://zionsconfluence.cs.zionsbank.com/display/SCM/DS%3A+COE%3A+Blueprints%3A+Setup+Self-service"
+                    ]
+                }
+            },
+            "additionalProperties": true
+        }
+    },
+    "additionalProperties": true
+}
