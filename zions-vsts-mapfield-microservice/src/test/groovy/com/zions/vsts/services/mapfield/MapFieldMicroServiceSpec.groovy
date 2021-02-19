@@ -83,13 +83,13 @@ class MapFieldMicroServiceSpec extends Specification {
 		Input1 | Input2 | Output
 		"Low" | "Infrequent" | "Low"
 		"Low" | "Monthly" | "Low"
-		"Low" | "Daily" | "Medium"
+		"Low" | "Daily" | "Low"
 		"Medium" | "Monthly" | "Medium"
 		"Medium" | "Infrequent" | "Medium"
 		"Medium" | "Daily" | "High"
 		"High" | "Infrequent" | "Medium"
 		"High" | "Daily" | "High"
-		"High" | "Monthly" | "Medium"
+		"High" | "Monthly" | "High"
 
 	}
 	

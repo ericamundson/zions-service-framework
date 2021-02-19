@@ -12,7 +12,7 @@
 {
 "Input1": "Low",
 "Input2": "Daily",
-"Output": "Medium"
+"Output": "Low"
 },
 {
 "Input1": "Medium",
@@ -43,6 +43,6 @@
 {
 "Input1": "High",
 "Input2": "Monthly",
-"Output": "Medium"
+"Output": "High"
 }
 ]
