@@ -1,4 +1,6 @@
 ---
+
+# Updated 2021-02-23 06:28:00.637325519 -0700 MST m=+1.285062563
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -9,12 +11,12 @@ spec:
     children:
     
     - name: Dev
-      type: overthere.CifsHost
+      type: overthere.SmbHost
       address: UTMSDEV0566
       username: svc-vsbuildagent@zbc.internal
       password: !value "svc_account_passwd"
     - name: Prod
-      type: overthere.CifsHost
+      type: overthere.SmbHost
       address: UTMVPI0144
       username: svc-vsbuildagent@zbc.internal
       password: !value "svc_account_passwd"
