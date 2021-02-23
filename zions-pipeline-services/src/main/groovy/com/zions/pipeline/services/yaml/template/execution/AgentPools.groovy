@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.vault.VaultService
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.pipeline.services.mixins.ReadSecretsTrait
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
@@ -35,7 +36,7 @@ import com.zions.vsts.services.endpoint.EndpointManagementService
  *
  */
 @Component
-class AgentPools implements IExecutableYamlHandler, ReadSecretsTrait {
+class AgentPools implements IExecutableYamlHandler, ReadSecretsTrait, FeedbackTrait {
 	@Autowired
 	VaultService vaultService
 
@@ -52,7 +53,7 @@ class AgentPools implements IExecutableYamlHandler, ReadSecretsTrait {
 	@Value('${endpoint.password:}')
 	String endpointPassword
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName, String pipelineId = null) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
 		def vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.path)
 		if (yaml.authorization && yaml.authorization.parameters && yaml.authorization.parameters.username && yaml.authorization.parameters.password) {

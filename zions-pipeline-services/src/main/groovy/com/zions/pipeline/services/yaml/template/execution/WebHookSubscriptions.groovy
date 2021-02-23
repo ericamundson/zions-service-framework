@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component
 import com.zions.common.services.vault.VaultService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.servicehooks.SubscriptionService
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.pipeline.services.mixins.ReadSecretsTrait
 /**
  * Accepts yaml in the form (publisherInputs will vary by eventType):
@@ -30,7 +31,7 @@ import com.zions.pipeline.services.mixins.ReadSecretsTrait
  *
  */
 @Component
-class WebHookSubscriptions implements IExecutableYamlHandler, ReadSecretsTrait {
+class WebHookSubscriptions implements IExecutableYamlHandler, ReadSecretsTrait, FeedbackTrait {
 	@Autowired
 	VaultService vaultService
 
@@ -49,7 +50,7 @@ class WebHookSubscriptions implements IExecutableYamlHandler, ReadSecretsTrait {
 	@Value('${webhook.password:}')
 	String consumerPassword
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName, String pipelineId = null) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
 		// TODO: Collection of event types dosn't makes sense as each different event type will have a different set of publisherInputs
 		String[] eventTypes = yaml.eventTypes.split(',')

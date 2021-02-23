@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.policy.PolicyManagementService
 import com.zions.vsts.services.code.CodeManagementService
@@ -29,7 +30,7 @@ import com.zions.vsts.services.code.CodeManagementService
  *
  */
 @Component
-class BranchPolicy implements IExecutableYamlHandler {
+class BranchPolicy implements IExecutableYamlHandler, FeedbackTrait {
 	
 
 	@Autowired
@@ -41,7 +42,7 @@ class BranchPolicy implements IExecutableYamlHandler {
 	@Autowired
 	CodeManagementService codeManagementService
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch, String pName) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String pName, String pipelineId = null) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
 		if (yaml.project) {
 			pName = yaml.project
@@ -67,6 +68,9 @@ class BranchPolicy implements IExecutableYamlHandler {
 			//System.out.println("BranchPolicy::handleYaml - subscriptionData:\n" + subscriptionData)
 			
 			policyManagementService.ensurePolicies('', repoData, branchName, policyData)
+			logInfo(pipelineId, 'Updated branch policy')
+		} else {
+			logError(pipelineId, "ADO project was not found:  ${pName}")
 		}
 	}
 }

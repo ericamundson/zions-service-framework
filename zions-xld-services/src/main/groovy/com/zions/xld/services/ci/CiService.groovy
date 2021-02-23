@@ -19,7 +19,18 @@ class CiService {
 		return result
 
 	}
-	
+	public def queryCIs(def query) {
+		def result = xldGenericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${xldGenericRestClient.xldUrl}/deployit/repository/v2/query",
+			query: query
+		)
+		if (result && result.ci) {
+			return result.ci
+		}
+		return null
+	}
+
 	public def createApplicationVersion(String path, def jsonData) {
 		def result = xldGenericRestClient.post(
 			contentType: ContentType.JSON,

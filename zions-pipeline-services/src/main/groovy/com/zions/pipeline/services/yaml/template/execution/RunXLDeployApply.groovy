@@ -6,6 +6,7 @@ import org.springframework.core.env.Environment
 import groovy.util.logging.Slf4j
 import com.zions.common.services.vault.VaultService
 import com.zions.pipeline.services.mixins.CliRunnerTrait
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.pipeline.services.mixins.XLCliTrait
 
 /**
@@ -31,7 +32,7 @@ import com.zions.pipeline.services.mixins.XLCliTrait
  */
 @Component
 @Slf4j
-class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait, XLCliTrait {
+class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait, XLCliTrait, FeedbackTrait {
 	
 	@Autowired
 	Environment env
@@ -55,12 +56,12 @@ class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait, XLCliT
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
+	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null) {
 		if (!performExecute(yaml, locations)) return
 		if (yaml.project) {
 			project = yaml.project
 		}
-
+		
 		//String xlOutPath = "${yaml.path}"
 		String xlDeployFile = "${repo.absolutePath}/${yaml.yamlFile}"
 		String wdir = xlDeployFile.substring(0, xlDeployFile.lastIndexOf('/'))
@@ -112,7 +113,7 @@ class RunXLDeployApply implements IExecutableYamlHandler, CliRunnerTrait, XLCliT
 		if (useProxy) {
 			env = [key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080"]
 		}
-		run(command, "${wdirF.absolutePath}", arg, env, log)
+		run(command, "${wdirF.absolutePath}", arg, env, log, pipelineId)
 	}
 	
 	def processSecrets(String wdir, vaultSecrets) {

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.policy.PolicyManagementService
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.vsts.services.admin.project.ProjectManagementService
 
 import groovy.util.logging.Slf4j
@@ -28,7 +29,7 @@ import groovy.yaml.YamlBuilder
  */
 @Component
 @Slf4j
-class GitRepository implements IExecutableYamlHandler {
+class GitRepository implements IExecutableYamlHandler, FeedbackTrait {
 	@Autowired
 	CodeManagementService codeManagementService
 	
@@ -42,7 +43,7 @@ class GitRepository implements IExecutableYamlHandler {
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations, String inBranch, String projectName) {
+	def handleYaml(def yaml, File repo, def locations, String inBranch, String projectName, String pipelineId = null) {
 //		String projectName = yaml.project
 		String repoName = yaml.name
 //		def answers = yaml.answers
@@ -55,16 +56,21 @@ class GitRepository implements IExecutableYamlHandler {
 		if (yaml.project) {
 			projectName = yaml.project
 		}
+		logInfo(pipelineId, "Ensure repo: ${repoName}")
 		def project = projectManagementService.getProject('', projectName)
 		def repository = codeManagementService.ensureRepo('', project, repoName)
 		try {
+			logInfo(pipelineId, "Ensuring README.md!")
 			def policies = policyManagementService.clearBranchPolicies('', project, repository.id, 'refs/heads/master')
 			codeManagementService.ensureFile('', project, repository, '/README.md', "##${repoName}")
 			policyManagementService.restoreBranchPolicies('', project, repository.id, 'refs/heads/master', policies)
 		} catch (e) {
 			log.error("Failed file push::  ${e.message}")
+			logError(pipelineId, "${e.message}")
 		}
+		
 		yaml.branches.each { def branch ->
+			logInfo(pipelineId, "Ensure branch: ${branch.name}")
 			String baseName = branch.baseName
 			String branchName = branch.name
 			def tbranch = codeManagementService.ensureBranch('', projectName, repoName, baseName, branchName)

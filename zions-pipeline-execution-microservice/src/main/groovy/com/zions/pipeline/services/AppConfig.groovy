@@ -75,7 +75,7 @@ public class AppConfig implements MessageFanoutConfigTrait {
 	@Value('${spring.data.mongodb.host:utmsdev0598}')
 	String dbHost
 
-	@Value('${spring.data.mongodb.database:pullrequests}')
+	@Value('${spring.data.mongodb.database:pipelines}')
 	String database
 	
 	@Bean

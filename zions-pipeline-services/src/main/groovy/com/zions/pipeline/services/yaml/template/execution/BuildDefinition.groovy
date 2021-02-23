@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.common.services.vault.VaultService
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.vsts.services.admin.project.ProjectManagementService
 
 /**
@@ -30,7 +31,7 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
  *
  */
 @Component
-class BuildDefinition implements IExecutableYamlHandler {
+class BuildDefinition implements IExecutableYamlHandler, FeedbackTrait {
 	@Autowired
 	VaultService vaultService
 
@@ -41,7 +42,7 @@ class BuildDefinition implements IExecutableYamlHandler {
 	@Autowired
 	ProjectManagementService projectManagementService
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName, String pipelineId = null) {
 		if (yaml.project) {
 			projectName = yaml.project
 		}
@@ -75,6 +76,7 @@ class BuildDefinition implements IExecutableYamlHandler {
 		def build = buildManagementService.getBuild('', project, bName)
 		def queue = buildManagementService.getQueue('',project, yaml.queue)
 		if (!build) {
+			logInfo(pipelineId, "Creating build definition.")
 			def trigger = [batchChanges: false, pollingJobId: null, pollingInterval: 0, pathFilters:[], branchFilters: ['+refs/heads/master'], defaultSettingsSourceType: 2, isSettingsSourceOptionSupported: true, settingsSourceType: 2, triggerType: 2]
 			def repo = codeManagementService.getRepo('', project, yaml.repository.name)
 			def bDef = [name: bName, project: projectName, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2], queue: queue, triggers:[trigger] ]
@@ -108,7 +110,9 @@ class BuildDefinition implements IExecutableYamlHandler {
 			}
 			def query = ['api-version':'5.1']
 			buildManagementService.writeBuildDefinition('', project, bDef, query)
+			logInfo(pipelineId, "Build definition created!")
 		} else {
+			logInfo(pipelineId, "Updating build definition.")
 			def repo = codeManagementService.getRepo('', project, yaml.repository.name)
 			def bDef = build
 			bDef.repository = repo
@@ -145,6 +149,7 @@ class BuildDefinition implements IExecutableYamlHandler {
 //			def bDef = [id: build.id, name: yaml.name, project: yaml.project, repository: [id: repo.id, url: repo.url, type: 'TfsGit'], process: [yamlFilename: yaml.buildyaml, type:2] ]
 			//def query = ['api-version':'5.1']
 			buildManagementService.updateBuildDefinition('', project, bDef)
+			logInfo(pipelineId, "Build definition updated!")
 			
 		}
 	}
