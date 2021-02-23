@@ -17,7 +17,7 @@ import org.springframework.test.context.ContextConfiguration
 
 import spock.lang.Specification
 
-@ContextConfiguration(classes=[UpdateIofApplicationSpecConfig])
+@ContextConfiguration(classes=[MapFieldApplicationSpecConfig])
 class MapFieldApplicationSpec extends Specification {
 	
 	@Autowired
@@ -42,8 +42,9 @@ class MapFieldApplicationSpec extends Specification {
 @TestConfiguration
 @Profile("test")
 //@ComponentScan("com.zions.vsts.services.tfs.rest")
-@PropertySource("classpath:test.yaml")
-class UpdateIofApplicationSpecConfig {
+@PropertySource("classpath:test.properties")
+//@PropertySource("classpath:test.yaml")
+class MapFieldApplicationSpecConfig {
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return new GenericRestClient('http://localhost:8080/ws', '', '')

@@ -4,7 +4,7 @@
       <description>This service runs zions-vsts-mapfield-microservice.</description>
       <executable>java</executable>
       
-      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-mapfield-microservice.jar" --queue.name=WorkItem-mapfield-queue --ado.topics=workitem.updated,workitem.created --tfs.collection={{tfs.collection}} --tfs.url=https://dev.azure.com --logging.file="{{deploy.path}}/zions-vsts-mapfield-microservice.log" </arguments>
+      <arguments>-Xrs -Xmx256m -jar "{{deploy.path}}/zions-vsts-mapfield-microservice.jar" --queue.name=WorkItem-mapfield-queue --ado.topics=Workaround --tfs.collection={{tfs.collection}} --tfs.url=https://dev.azure.com --logging.file="{{deploy.path}}/zions-vsts-mapfield-microservice.log" </arguments>
  	  
       <logmode>rotate</logmode>
       <logpath>D:\app\azure\services\wrapper-logs\zions-vsts-mapfield-microservice</logpath>
