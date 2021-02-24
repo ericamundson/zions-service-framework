@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/zions-vsts-cli/src/main/groovy/com/zions/vsts/services/cli/CliApplication.groovy"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="updateWorkItems &#13;&#10;--include.update=fields&#13;&#10;--calc.only=false&#13;&#10;--tfs.url=https://dev.azure.com &#13;&#10;--tfs.collection=ZionsETO&#13;&#10;--import.file=&quot;c:\Objectives\Objectives Field Migration2.xlsx&quot;&#13;&#10;--field.map=updateFieldMap.json&#13;&#10;--logging.level.root=INFO&#13;&#10;--logging.level.com.zions=INFO&#13;&#10;--logging.file=&quot;c:\\Objectives\\IMPORT-Objectives.log&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=work -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User= -Dproxy.Password="/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-ext-cli}"/>
+</launchConfiguration>
