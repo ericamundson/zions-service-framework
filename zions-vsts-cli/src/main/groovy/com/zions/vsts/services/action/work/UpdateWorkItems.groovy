@@ -126,7 +126,7 @@ class UpdateWorkItems implements CliAction {
 	public processWorkItemChanges(def includes, def id, Row row) {
 		def wiChange = getChanges(includes, id, row)
 		
-		if (wiChange) {
+		if (wiChange && wiChange.body.size() > 0) {
 			clManager.add("${id}", wiChange)
 			//log.debug("adding changes for requirement ${id}")
 		}
