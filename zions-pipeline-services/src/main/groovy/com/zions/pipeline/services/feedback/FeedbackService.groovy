@@ -66,7 +66,7 @@ class FeedbackService {
 		}
 		String lType = "${type}"
 		// add
-		PipelineLogItem item = [timestamp: new Date().toString(), logType: lType, pipelineId: pid, log: message, contexts: context]
+		PipelineLogItem item = [timestamp: new Date().toString(), logType: lType, pipelineId: pid, log: message, contexts: context, name:'']
 		pipelineLogItemRepository.save( item )
 		
 		//compose
@@ -87,7 +87,7 @@ class FeedbackService {
 		Map<String, LogNode> nodeMap = [:]
 		for (PipelineLogItem item in logs) {
 			if (item.logType == 'ContextStart') {
-				LogNode node = new LogNode( log: item.log, logItems: [], nodes: [] )
+				LogNode node = new LogNode( name: item.log, logItems: [], nodes: [] )
 				if (item.contexts.size() == 1) {
 					nodes.add(node)
 					nodeMap[item.log] = node

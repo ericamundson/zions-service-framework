@@ -5,7 +5,7 @@ import com.zions.pipeline.services.db.PipelineLogItem
 
 @Canonical
 public class LogNode {
-	String log
+	String name
 	List<LogNode> nodes = []
 	List<PipelineLogItem> logItems = []
 	

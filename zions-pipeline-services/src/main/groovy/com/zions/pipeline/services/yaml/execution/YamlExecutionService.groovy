@@ -97,9 +97,7 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 						try {
 							logContextStart(pipelineId, "Handle yaml: ${exe.type}")
 							YamlBuilder yaml = new YamlBuilder() 
-							yaml {
-								exe
-							}
+							yaml(exe)
 							String yStr = yaml.toString()
 							logInfo(pipelineId, "running: ${yStr}")					
 							yamlHandler.handleYaml(exe, repo, scanLocations, branch, project, pipelineId)

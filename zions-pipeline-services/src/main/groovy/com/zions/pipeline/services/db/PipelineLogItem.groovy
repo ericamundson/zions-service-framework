@@ -8,6 +8,7 @@ import groovy.transform.Canonical
 @Document
 @Canonical
 class PipelineLogItem {
+	String name
 	String timestamp
 	String pipelineId
 	String log

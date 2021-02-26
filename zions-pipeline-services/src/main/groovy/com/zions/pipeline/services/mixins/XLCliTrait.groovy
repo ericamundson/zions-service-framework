@@ -101,25 +101,26 @@ trait XLCliTrait extends CliRunnerTrait {
 	
 	def updateIgnore(File repo) {
 		File ignore = new File(repo, '.gitignore')
-		Set ignoreItems = []
+		Set<String> ignoreItems = []
 		if (ignore.exists()) {
-			String iText = ignore.text
-			String[] items = iText.split('\n')
-			ignoreItems = items as Set			
+			def r = ignore.newReader('utf-8')	
+			r.eachLine { line ->
+				ignoreItems.add(line)
+			}
 		}
-		if (!ignoreItems.contains('xl.exe')) {
+		if (!('xl.exe' in ignoreItems)) {
 			ignore.append('xl.exe\n')
 		}
-		if (!ignoreItems.contains('xl')) {
+		if (!('xl' in ignoreItems)) {
 			ignore.append('xl\n')
 		}
-		if (!ignoreItems.contains('.xebialabs')) {
+		if (!('.xebialabs' in ignoreItems)) {
 			ignore.append('.xebialabs\n')
 		}
-		if (!ignoreItems.contains('startup.bat')) {
+		if (!('startup.bat' in ignoreItems)) {
 			ignore.append('startup.bat\n')
 		}
-		if (!ignoreItems.contains('*answers.yaml')) {
+		if (!('*answers.yaml' in ignoreItems)) {
 			ignore.append('*answers.yaml\n')
 		}
 	}

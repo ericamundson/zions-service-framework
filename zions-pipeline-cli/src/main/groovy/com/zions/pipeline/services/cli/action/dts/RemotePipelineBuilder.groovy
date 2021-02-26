@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import org.springframework.beans.factory.annotation.Autowired
 
 import com.zions.common.services.cli.action.CliAction
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.pipeline.services.yaml.template.RemoteBlueprintTemplateInterpretorService
 import groovy.yaml.YamlSlurper
 import groovy.yaml.YamlBuilder
@@ -76,15 +77,24 @@ import groovy.util.logging.Slf4j
  */
 @Component
 @Slf4j
-class RemotePipelineBuilder implements CliAction {
+class RemotePipelineBuilder implements CliAction, FeedbackTrait {
 	
 	@Autowired
 	RemoteBlueprintTemplateInterpretorService remoteBlueprintTemplateInterpretorService
 	
 	@Value('${run.via.microservice:true}')
 	Boolean runViaMicroservice
+	
+	@Value('${pipeline.id:}')
+	String pipelineId
+
 
 	public def execute(ApplicationArguments data) {
+		logContextStart(pipelineId, "Run pipeline CLI")
+		
+		String args = data.sourceArgs.join(' ')
+		logInfo(pipelineId, args)
+		logContextComplete(pipelineId, "Run pipeline CLI")
 		//def answers = blueprintTemplateInterpretorService.loadAnswers()
 		//println "Answers:  ${answers}"
 		remoteBlueprintTemplateInterpretorService.outputPipeline()
