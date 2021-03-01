@@ -163,6 +163,8 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 					parentAdded = true
 				} else {
 					childAdded = true
+					curl = link.url
+					println(curl)
 				}
 				
 			}
@@ -214,9 +216,33 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 		}
 		//Process block adding a parent/child and updating the child's OTLNumber
 		else {
-		if (parentAdded || childAdded)
-			
-			rev = "${wiResource.rev}"
+		if (childAdded) {
+			//get work item info for child, id and revision number
+			result = workManagementService.getWorkItem(curl)
+			if (!result || result == 'null' || result == '' || result == []) {
+				
+				return logResult('child not present')
+			}
+			crev = "${result.rev}"
+			cid = "${result.id}"
+			id = cid
+			rev = crev
+		}			
+		
+		else if (parentAdded) {
+			//reset current fields
+			wiPfields.each { field ->
+				//def cVal = wiResource.revision.fields["${field}"]
+				def pVal = parentWI.fields["${field}"]
+				updField = "${pVal}"
+				if (!updField || updField == 'null' || updField == '')
+					updField = "";
+					parentValues.add(updField)
+					println (pVal)
+					println(updField)
+			}
+		}
+		
 			//add values from parent
 			
 			if (!parentWI){	
@@ -230,6 +256,9 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 				if (!updField || updField == 'null' || updField == '')
 					updField = "";
 					parentValues.add(updField)
+					println (pVal)
+					println(updField)
+					
 			}
 			
 			log.debug("Getting the changes for current work item $wiType #$id")
