@@ -59,26 +59,26 @@ stages:
       inputs:
         filename: '$(Build.SourcesDirectory)\pipelines\pipeline_cp.bat'
         arguments: '$(System.ArtifactsDirectory)\pipeline-drop\zions-pipeline-cli\build\libs\zions-pipeline-cli.jar d:\app\azure\pipeline_tools'
-  - job: Release_UTMVPI0157
-    pool:
-      name: On-Prem Production
-      demands:
-      - agent.computername -equals UTMVPI0157
-    steps:
-    - task: DownloadBuildArtifacts@0
-      displayName: 'Download Build Artifacts'
-      inputs:
-        buildType: specific
-        project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
-        pipeline: 1327
-        artifactName: 'pipeline-drop'
-        itemPattern: |
-          **/zions-pipeline-cli*.jar
-    - task: BatchScript@1
-      displayName: 'Run script $(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
-      inputs:
-        filename: '$(Build.SourcesDirectory)\pipelines\pipeline_cp.bat'
-        arguments: '$(System.ArtifactsDirectory)\pipeline-drop\zions-pipeline-cli\build\libs\zions-pipeline-cli.jar d:\app\azure\pipeline_tools'
+#   - job: Release_UTMVPI0157
+#     pool:
+#       name: On-Prem Production
+#       demands:
+#       - agent.computername -equals UTMVPI0157
+#     steps:
+#     - task: DownloadBuildArtifacts@0
+#       displayName: 'Download Build Artifacts'
+#       inputs:
+#         buildType: specific
+#         project: '4d92b2fc-cdec-4a2e-b598-3bfd9fb80648'
+#         pipeline: 1327
+#         artifactName: 'pipeline-drop'
+#         itemPattern: |
+#           **/zions-pipeline-cli*.jar
+#     - task: BatchScript@1
+#       displayName: 'Run script $(Build.SourcesDirectory)/pipelines/pipeline_cp.bat'
+#       inputs:
+#         filename: '$(Build.SourcesDirectory)\pipelines\pipeline_cp.bat'
+#         arguments: '$(System.ArtifactsDirectory)\pipeline-drop\zions-pipeline-cli\build\libs\zions-pipeline-cli.jar d:\app\azure\pipeline_tools'
   - job: Release_utlxa1846
     pool:
       name: On-Prem Production
