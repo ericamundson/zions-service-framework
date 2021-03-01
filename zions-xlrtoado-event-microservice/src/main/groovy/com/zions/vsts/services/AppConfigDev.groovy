@@ -80,7 +80,7 @@ public class AppConfigDev implements MessageFanoutGenericConfigTrait {
 	@Value('${spring.data.mongodb.host:utmsdev0598}')
 	String dbHost
 
-	@Value('${spring.data.mongodb.database:xlrevents_dev}')
+	@Value('${spring.data.mongodb.database:pipelines_dev}')
 	String database
 	
 	@Bean
