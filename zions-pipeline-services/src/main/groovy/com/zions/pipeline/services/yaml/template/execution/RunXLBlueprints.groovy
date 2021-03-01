@@ -8,6 +8,7 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.policy.PolicyManagementService
 import com.zions.pipeline.services.mixins.CliRunnerTrait
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.pipeline.services.mixins.XLCliTrait
 
 import groovy.yaml.YamlBuilder
@@ -36,7 +37,7 @@ import org.eclipse.jgit.api.Git
  */
 @Component
 @Slf4j
-class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTrait {
+class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTrait, FeedbackTrait {
 
 
 	@Value('${xl.user:}')
@@ -63,7 +64,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 	public RunXLBlueprints() {
 	}
 
-	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
+	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null) {
 		if (yaml.project) {
 			project = yaml.project
 		}
@@ -73,7 +74,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 		}
 		def repoName = yaml.repoName
 		//def project = yaml.project
-
+		logInfo(pipelineId, "Running blueprints against repo: ${repoName}")
 		def projectData = projectManagementService.getProject('', project)
 		def repoData = codeManagementService.getRepo('', projectData, repoName)
 
@@ -140,8 +141,9 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 					arg.line = arg.line.replace('/','\\')
 					arg.line = arg.line.replace('\\c', '/c')
 				}
-				run(command, "${loadDir.absolutePath}", arg, env, log)
+				run(command, "${loadDir.absolutePath}", arg, env, log, pipelineId)
 			} catch (e) {
+				logError(pipelineId, e.message)
 				throw e
 			} finally {
 				if (git) {
@@ -152,10 +154,10 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 		//		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
 		//		gitService.pushChanges(outrepo)
 		//		policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
-		runPullRequestOnChanges(outrepo, loadDir, project, projectData, repoData)
+		runPullRequestOnChanges(outrepo, loadDir, project, projectData, repoData, pipelineId)
 	}
 
-	def runPullRequestOnChanges(File repoDir, File outDir, String adoProject, def projectData, def repoData) {
+	def runPullRequestOnChanges(File repoDir, File outDir, String adoProject, def projectData, def repoData, String pipelineId) {
 		String repoPath = repoDir.absolutePath
 		String outDirPath = outDir.absolutePath
 		String fPattern = "${pipelineFolder}"
@@ -177,7 +179,11 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			def prd = codeManagementService.createPullRequest('', projectData.id, repoData.id, pullRequestData)
 			String prId = "${prd.pullRequestId}"
 			def id = [id: prd.createdBy.id]
-			def opts = [deleteSourceBranch: true, mergeCommitMessage: 'Update pipeline merge', mergeStrategy: 'noFastForward', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
+			String pullRequestComment = "Update pipeline merge"
+			if (pipelineId && pipelineId.length() > 0){
+				pullRequestComment = "${pullRequestComment}d\n  pipelineId: ${pipelineId}"
+			}
+			def opts = [deleteSourceBranch: true, mergeCommitMessage: pullRequestComment, mergeStrategy: 'noFastForward', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
 			def updateData = [completionOptions: opts, status: 'completed', lastMergeSourceCommit: prd.lastMergeSourceCommit]
 			//codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
 			while (true) {

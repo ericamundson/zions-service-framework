@@ -3,10 +3,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.vsts.services.work.WorkManagementService
 
 @Component
-class WorkItem implements IExecutableYamlHandler {
+class WorkItem implements IExecutableYamlHandler, FeedbackTrait {
 	
 	@Autowired
 	WorkManagementService workManagementService
@@ -15,7 +16,7 @@ class WorkItem implements IExecutableYamlHandler {
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
+	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null) {
 		if (yaml.project) {
 			project = yaml.project
 		}

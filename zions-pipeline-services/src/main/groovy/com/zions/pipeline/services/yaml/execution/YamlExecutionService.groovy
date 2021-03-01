@@ -20,12 +20,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.networknt.schema.JsonSchemaFactory
 import com.networknt.schema.SpecVersion
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.pipeline.services.mixins.FindExecutableYamlTrait
 
 
 @Component
 @Slf4j
-class YamlExecutionService implements FindExecutableYamlTrait {
+class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 	@Autowired
 	Map<String, IExecutableYamlHandler> yamlHandlerMap;
 	
@@ -46,7 +47,7 @@ class YamlExecutionService implements FindExecutableYamlTrait {
 	String alwaysExecuteFolder
 			
 
-	def runExecutableYaml(String repoUrl, String repoName, def scanLocations, String branch, String project, String pullRequestId = null) {
+	def runExecutableYaml(String repoUrl, String repoName, def scanLocations, String branch, String project, String pullRequestId = null, String pipelineId = null) {
 		File repo = null
 		def projectData = projectManagementService.getProject('', project)
 		def repoData = codeManagementService.getRepo('', projectData, repoName)
@@ -63,17 +64,44 @@ class YamlExecutionService implements FindExecutableYamlTrait {
 			sendFeedback(projectData, repoData, feedback, pullRequestId)
 			repo = null
 		}
-		if (!repo) return
+		//retry with full reload
+		if (!repo) {
+			try {
+				repo = gitService.loadChanges(repoUrl, repoName, branch, true)
+			} catch (e) {
+				StringWriter sw = new StringWriter()
+				PrintWriter pw = new PrintWriter(sw)
+				e.printStackTrace(pw);
+				String issue = sw
+				Set issues = [[message: issue]]
+				log.error('Failed to update GIT repo. Error: '+e.getMessage())
+				def feedback = [ messages: issues]
+				sendFeedback(projectData, repoData, feedback, pullRequestId)
+				repo = null
+			}
+		}
+		if (!repo) {
+			logFailed(pipelineId, "Could not properly load repo:  ${repoName}")
+			Set issues = [[message: "Could not properly load repo:  ${repoName}"]]
+			def feedback = [ messages: issues]
+			sendFeedback(projectData, repoData, feedback, pullRequestId)
+			return
+		}
 		def exeYaml = findExecutableYaml(repo, scanLocations, projectData, repoData, pullRequestId)
 		for (def yamldata in exeYaml) { 
 			if (yamldata.yaml.executables) {
 				Set issues = []
 				for (def exe in yamldata.yaml.executables) {
-									
 					IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 					if (yamlHandler) {
 						try {
-							yamlHandler.handleYaml(exe, repo, scanLocations, branch, project)
+							logContextStart(pipelineId, "Handle yaml: ${exe.type}")
+							YamlBuilder yaml = new YamlBuilder() 
+							yaml(exe)
+							String yStr = yaml.toString()
+							logInfo(pipelineId, "running: ${yStr}")					
+							yamlHandler.handleYaml(exe, repo, scanLocations, branch, project, pipelineId)
+							logContextComplete(pipelineId, "Handle yaml: ${exe.type}")					
 						} catch (e) {
 							StringWriter sw = new StringWriter()
 							PrintWriter pw = new PrintWriter(sw)
@@ -81,6 +109,8 @@ class YamlExecutionService implements FindExecutableYamlTrait {
 							pw.close()
 							String issue = sw
 							issues.add("${exe.type} error: ${issue}")
+							logError(pipelineId, "${exe.type} error: ${issue}")
+							logContextComplete(pipelineId, "Handle yaml: ${exe.type}")					
 						}
 					}
 				}

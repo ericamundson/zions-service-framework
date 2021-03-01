@@ -93,7 +93,7 @@ class GitService {
 		return outStr
 	}
 	
-	File loadChanges(String url,String repoName = null, String branch = null) {
+	File loadChanges(String url,String repoName = null, String branch = null, boolean reload = false) {
 		if (!repos) {
 			String osname = System.getProperty('os.name')
 			
@@ -126,13 +126,20 @@ class GitService {
 		}
 		File projectDir = new File(repos, "${projectName}")
 		File repo = new File(projectDir, "${repoName}")
+		if (reload && repo.exists()) {
+			boolean success = repo.deleteDir()
+			if (!success) {
+				return null
+			}
+		}
 		if (!repo.exists()) {
 			repo.mkdirs()
 		}
 		File dotGit = new File(repo, '.git')
 		if (!dotGit.exists()) {
-			
-			Git git = Git.cloneRepository()
+			Git git = null
+			try {
+				Git.cloneRepository()
 				.setURI(nUrl)
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
 				.setDirectory(repo)
@@ -140,7 +147,11 @@ class GitService {
 				.setBranch(branch)
 				.setRemote('origin')
 				.call();
-			git.close()
+			} finally {
+				if (git) {
+					git.close()
+				}
+			}
 		} else {
 			File lockFile = new File(dotGit, 'index.lock')
 			int i = 0;
@@ -151,48 +162,69 @@ class GitService {
 				if (!lockFile.exists()) {
 					if (!irepoDGit.exists()) {
 						irepo.mkdirs()
-						Git git = Git.cloneRepository()
-						.setURI(nUrl)
-						.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
-						.setDirectory(irepo)
-						.setBranchesToClone(Arrays.asList(branch))
-						.setBranch(branch)
-						.setRemote('origin')
-						.call();
-						git.close()
-						return irepo
+						Git git = null
+						try {
+							git = Git.cloneRepository()
+							.setURI(nUrl)
+							.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
+							.setDirectory(irepo)
+							.setBranchesToClone(Arrays.asList(branch))
+							.setBranch(branch)
+							.setRemote('origin')
+							.call();
+						} finally {
+							if (git) {
+								git.close()
+							}
+						}
+						
+						//return irepo
 					} else {
-						Git git = Git.open(irepo)
-						git.reset()
-						.setMode(ResetType.HARD)
-						.call()
-						StoredConfig config = git.getRepository().getConfig();
-						config.setString("remote", "origin", "url", nUrl);
-						config.save();
-						PullCommand pc = git.pull()
-						pc.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))			
-						.configure(pc)
-						.setRemote("origin")
-						.setRemoteBranchName(aBranch)
-						.call()
-						git.close()
+						Git git = null
+						try {
+							Git.open(irepo)
+							git.reset()
+							.setMode(ResetType.HARD)
+							.call()
+							StoredConfig config = git.getRepository().getConfig();
+							config.setString("remote", "origin", "url", nUrl);
+							config.save();
+							PullCommand pc = git.pull()
+							pc.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))			
+							.configure(pc)
+							.setRemote("origin")
+							.setRemoteBranchName(aBranch)
+							.call()
+						} finally {
+							if (git) {
+								git.close()
+							}
+						}
+						//return irepo
 					}
+					return irepo
 				}
 			}
-			Git git = Git.open(repo)
-			git.reset()
-			.setMode(ResetType.HARD)
-			.call()
-			StoredConfig config = git.getRepository().getConfig();
-			config.setString("remote", "origin", "url", nUrl);
-			config.save();
-						
-			PullCommand pc = git.pull()
-			pc.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))			
-			.setRemote("origin")
-			.setRemoteBranchName(aBranch)
-			.call()
-			git.close()
+			Git git = null
+			try {
+				git = Git.open(repo)
+				git.reset()
+				.setMode(ResetType.HARD)
+				.call()
+				StoredConfig config = git.getRepository().getConfig();
+				config.setString("remote", "origin", "url", nUrl);
+				config.save();
+							
+				PullCommand pc = git.pull()
+				pc.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))			
+				.setRemote("origin")
+				.setRemoteBranchName(aBranch)
+				.call()
+			} finally {
+				if (git) {
+					git.close()
+				}
+			}
 		}
 			
 		return repo

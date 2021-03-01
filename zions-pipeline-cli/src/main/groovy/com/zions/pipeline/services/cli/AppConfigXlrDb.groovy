@@ -24,7 +24,7 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 @Configuration
 @Profile("xlrdb")
 @ComponentScan(["com.zions.pipeline.services,com.zions.vsts.services,com.zions.xld.services,com.zions.xlr.services,com.zions.common.services.rest"])
-@EnableMongoRepositories(basePackages = "com.zions.xlr.services.events.db")
+@EnableMongoRepositories(basePackages=["com.zions.xlr.services.events.db","com.zions.pipeline.services.db"])
 public class AppConfigXlrDb {
 	Map<String, CliAction> actions;
 	
@@ -45,6 +45,7 @@ public class AppConfigXlrDb {
 	String tfsUser
 	@Value('${tfs.token:}')
 	String tfsToken
+	
 
 	@Bean
 	JavaMailSender sender() {
@@ -74,7 +75,7 @@ public class AppConfigXlrDb {
 	@Value('${spring.data.mongodb.host:utmsdev0598}')
 	String dbHost
 
-	@Value('${spring.data.mongodb.database:xlrevents_dev}')
+	@Value('${spring.data.mongodb.database:pipelines}')
 	String database
 	
 	@Bean

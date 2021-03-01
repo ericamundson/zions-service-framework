@@ -13,6 +13,7 @@ import java.util.regex.Matcher
 import com.zions.pipeline.services.mixins.FindExecutableYamlNoRepoTrait
 import com.zions.pipeline.services.mixins.XLCliTrait
 import com.zions.pipeline.services.mixins.CliRunnerTrait
+import com.zions.pipeline.services.mixins.FeedbackTrait
 
 import groovy.util.logging.Slf4j
 
@@ -34,10 +35,13 @@ import org.eclipse.jgit.api.Git
  */
 @Component
 @Slf4j
-class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait, XLCliTrait, CliRunnerTrait {
+class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNoRepoTrait, XLCliTrait, CliRunnerTrait, FeedbackTrait {
 
 	@Autowired
 	Map<String, IExecutableYamlHandler> yamlHandlerMap;
+	
+	@Value('${pipeline.id:}')
+	String pipelineId
 
 	@Value('${blueprint.repo.url:}')
 	String blueprintRepoUrl
@@ -105,6 +109,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		//		}
 		Git git = null
 		try {
+			logContextStart(pipelineId, "Run blueprint: ${blueprint}")
 			File blueprintDir = null
 			if (configContext == 'Dev') {
 				blueprintDir = gitService.loadChanges(blueprintRepoUrl)
@@ -174,12 +179,14 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 					args.line = args.line.replace('/','\\')
 					args.line = args.line.replace('\\c', '/c')
 				}
-				run(command, "${outDir}/${pipelineFolder}", args, null, log)
+				run(command, "${outDir}/${pipelineFolder}", args, null, log, pipelineId)
 			} else {
 				run("${outDir}/${pipelineFolder}/startup.bat", "${outDir}/${pipelineFolder}", [line: "${outDir}/${pipelineFolder}/xl blueprint  -l ${blueprintDir} -b \"${blueprint}\" "], null, log)
 
 			}
+			logContextComplete(pipelineId, "Run blueprint: ${blueprint}")
 		} catch (e) {
+			logFailed(pipelineId, "Blueprint failed:  ${blueprint}:  ${e.message}")
 			throw e
 		} finally {
 			if (git) {
@@ -204,9 +211,10 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 				IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 				if (yamlHandler) {
 					try {
-						yamlHandler.handleYaml(exe, repoDir, [], branchName, adoProject)
+						yamlHandler.handleYaml(exe, repoDir, [], branchName, adoProject, pipelineId)
 					} catch (e) {
 						log.error("Failed running executable yaml:  ${exe.type} :: ${e.message}")
+						logFailed("Failed running executable yaml:  ${exe.type} :: ${e.message}")
 						e.printStackTrace()
 					}
 				}
@@ -225,6 +233,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 
 
 	def runPullRequestOnChanges() {
+		logContextStart(pipelineId, "Blueprint pull request")
 		String repoPath = repoDir.absolutePath
 		String outDirPath = outDir.absolutePath
 		String fPattern = "${pipelineFolder}"
@@ -234,17 +243,19 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			fPattern = fPattern.replace('\\', '/')
 		}
 		String projectName = getProjectName(outRepoUrl)
-		log.info("fPattern:  ${fPattern}, repoDir: ${repoDir.absolutePath}")
+		logInfo(pipelineId, "fPattern:  ${fPattern}, repoDir: ${repoDir.absolutePath}")
 		def projectData = projectManagementService.getProject('', projectName)
 		int nIndex = outRepoUrl.lastIndexOf('/')+1
 		String repoName = outRepoUrl.substring(nIndex)
 		def repoData = codeManagementService.getRepo('', projectData, repoName)
+		String comment = "Adding pipline changes"
 		if (adoWorkitemId && adoWorkitemId.length() > 0) {
-			gitService.pushChanges(repoDir, fPattern, "Adding pipline changes \n#${adoWorkitemId}")
-		} else {
-			gitService.pushChanges(repoDir, fPattern, "Adding pipeline changes")
+			comment = "${comment}\n  #${adoWorkitemId}"
+		} 
+		if (pipelineId && pipelineId.length() > 0){
+			comment = "${comment}d\n  pipelineId: ${pipelineId}"
 		}
-
+		gitService.pushChanges(repoDir, fPattern, comment)
 		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, repoTargetBranch)
 		try {
 			String branchName = gitService.getBranchName(repoDir)
@@ -254,8 +265,13 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			def prd = codeManagementService.createPullRequest('', projectData.id, repoData.id, pullRequestData)
 			String prId = "${prd.pullRequestId}"
 			def id = [id: prd.createdBy.id]
-			def opts = [deleteSourceBranch: true, mergeCommitMessage: 'Update pipeline merge', mergeStrategy: 'noFastForward', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
+			String pullRequestComment = "Update pipeline merge"
+			if (pipelineId && pipelineId.length() > 0){
+				pullRequestComment = "${pullRequestComment}\n  pipelineId: ${pipelineId}"
+			}
+			def opts = [deleteSourceBranch: true, mergeCommitMessage: pullRequestComment, mergeStrategy: 'noFastForward', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
 			def updateData = [completionOptions: opts, status: 'completed', lastMergeSourceCommit: prd.lastMergeSourceCommit]
+			logInfo(pipelineId, "Updating pull request")
 			//codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
 			while (true) {
 				try {
@@ -266,12 +282,14 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 				if (status != 'active') break
 			}
 		} catch (Exception e) {
+			logFailed(pipelineId, e.message)
 			log.error(e.message)
 			throw e
 		}
 		finally {
 			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, repoTargetBranch, policies)
 		}
+		logContextComplete(pipelineId, '"Blueprint pull request"')
 	}
 
 	def getIdentity(String uniqueName) {

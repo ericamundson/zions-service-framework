@@ -24,7 +24,7 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 @Configuration
 @Profile("xlrdbdev")
 @ComponentScan(["com.zions.pipeline.services,com.zions.vsts.services,com.zions.xld.services,com.zions.xlr.services,com.zions.common.services.rest"])
-@EnableMongoRepositories(basePackages = "com.zions.xlr.services.events.db")
+@EnableMongoRepositories(basePackages=["com.zions.xlr.services.events.db","com.zions.pipeline.services.db"])
 public class AppConfigXlrDbDev {
 	Map<String, CliAction> actions;
 	
@@ -74,7 +74,7 @@ public class AppConfigXlrDbDev {
 	@Value('${spring.data.mongodb.host:utmsdev0598}')
 	String dbHost
 
-	@Value('${spring.data.mongodb.database:xlrevents_dev}')
+	@Value('${spring.data.mongodb.database:pipelines_test}')
 	String database
 	
 	@Bean

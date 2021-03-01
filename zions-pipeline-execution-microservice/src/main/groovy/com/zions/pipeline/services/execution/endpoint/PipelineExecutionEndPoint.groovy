@@ -19,6 +19,7 @@ import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
 
 import com.zions.pipeline.services.yaml.execution.YamlExecutionService
 import com.zions.pipeline.services.db.PullRequestCompletedRepository
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.pipeline.services.db.PullRequestCompleted
 
 /**
@@ -28,7 +29,7 @@ import com.zions.pipeline.services.db.PullRequestCompleted
  */
 @Slf4j
 @Component
-class PipelineExecutionEndPoint implements MessageReceiverTrait {
+class PipelineExecutionEndPoint implements MessageReceiverTrait, FeedbackTrait {
 
 	//    @Autowired
 	//    private PolicyManagementService policyManagementService;
@@ -72,6 +73,8 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 			String commitUrl = "${adoData.resource.lastMergeCommit.url}"
 			String status = "${adoData.resource.status}".toLowerCase()
 			if (status != 'completed') return null
+			String comment = "${adoData.resource.completionOptions.mergeCommitMessage}"
+			String pipelineId = getPipelineId(comment)
 			String pullRequestId = "${adoData.resource.pullRequestId}"
 			PullRequestCompleted prc = pullRequestCompletedRepository.findByPullRequestId(pullRequestId)
 			if (prc) return null
@@ -85,8 +88,19 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait {
 			if (locations.size() > 0) {
 				String repoUrl = "${adoData.resource.repository.remoteUrl}"
 				String name = "${adoData.resource.repository.name}"
-				yamlExecutionService.runExecutableYaml(repoUrl,name,locations, branch, project, pullRequestId)
+				logContextStart(pipelineId, "Pull request on '${repo}' completed.")
+				yamlExecutionService.runExecutableYaml(repoUrl,name,locations, branch, project, pullRequestId, pipelineId)
+				logContextComplete(pipelineId, "Pull request on '${repo}' completed.")
 			}
+		}
+		return null
+	}
+	
+	String getPipelineId(String comment) {
+		def pattern = /pipelineId:\s+(\S+)$/
+		def matcher = comment =~ pattern
+		if (matcher.size() == 1 && matcher[0].size() == 2) {
+			return matcher[0][1]
 		}
 		return null
 	}

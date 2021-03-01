@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 
 import com.zions.common.services.vault.VaultService
 import com.zions.pipeline.services.mixins.CliRunnerTrait
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.pipeline.services.mixins.XLCliTrait
 
 import groovy.util.logging.Slf4j
@@ -31,7 +32,7 @@ import groovy.util.logging.Slf4j
  *   
  * @author z091182
  *
- */class RunXLReleaseApply implements IExecutableYamlHandler, CliRunnerTrait, XLCliTrait {
+ */class RunXLReleaseApply implements IExecutableYamlHandler, CliRunnerTrait, XLCliTrait, FeedbackTrait {
 	@Autowired
 	Environment env
 	
@@ -54,7 +55,7 @@ import groovy.util.logging.Slf4j
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
+	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null) {
 		if (!performExecute(yaml, locations)) return
 		if (yaml.project) {
 			project = yaml.project
@@ -112,7 +113,7 @@ import groovy.util.logging.Slf4j
 		if (useProxy) {
 			env = [key:"https_proxy", value:"http://${xlUser}:${xlPassword}@172.18.4.115:8080"]
 		}
-		run(command, "${wdirF.absolutePath}", arg, env, log)
+		run(command, "${wdirF.absolutePath}", arg, env, log, pipelineId)
 		
 	}
 	def processSecrets(String wdir, vaultSecrets) {

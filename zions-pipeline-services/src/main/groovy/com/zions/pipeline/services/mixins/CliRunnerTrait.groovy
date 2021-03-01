@@ -1,10 +1,12 @@
 package com.zions.pipeline.services.mixins
 import org.slf4j.Logger
-trait CliRunnerTrait {
-	def run(String command, String dir, def iarg, def ienv = null, Logger log = null) {
-		if (log && iarg.line) {
+trait CliRunnerTrait extends FeedbackTrait {
+	def run(String command, String dir, def iarg, def ienv = null, Logger log = null, String pipelineId = null) {
+		if (log && iarg.line && "${iarg.line}".indexOf('password') == -1) {
 			log.info( "cmd: ${command} args: ${iarg.line}")
 		}
+		def checks = [[pattern: /password\s+\S+\s+/, replacement: "password ***** "], [pattern: /passwd=\S+,/, replacement: "passwd=*****,"],[pattern: /passwd=[^\s,]+$/, replacement: "passwd=*****"], [pattern: /password=\S+,/, replacement: "password=*****,"] ,[pattern: /password=[^\s,]$/, replacement: "password=*****"]]
+		logInfo(pipelineId, "OS Command: ${command} args: ${iarg.line}",checks)
 		AntBuilder ant = new AntBuilder()
 		ant.exec(outputproperty:"text",
 			 errorproperty: "error",
@@ -31,6 +33,7 @@ error: ${result.error}
 text: ${result.text}""")
 		} else if (log) {
 			log.info(result.text)
+			logInfo(pipelineId, result.text)
 		}
 
 	}

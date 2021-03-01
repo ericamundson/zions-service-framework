@@ -552,8 +552,8 @@ public class PolicyManagementService {
 		return retVal
 	}
 	
-	private loadProperties(def collection, def repoData, def branchName) {
-		def branch = "${branchName}".substring("refs/heads/".length())
+	private loadProperties(def collection, def repoData, String branchName) {
+		def branch = branchName.substring("refs/heads/".length())
 		log.debug("PolicyManagementService::loadProperties -- Get build properties for branch ${branch}")
 		// initialize branch properties instance
 		this.branchProps = null

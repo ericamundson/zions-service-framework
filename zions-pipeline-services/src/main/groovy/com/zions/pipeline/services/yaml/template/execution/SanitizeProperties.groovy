@@ -8,6 +8,7 @@ import com.zions.pipeline.services.git.GitService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.policy.PolicyManagementService
+import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.pipeline.services.mixins.PropertiesSanitizerTrait
 
 /**
@@ -24,9 +25,9 @@ import com.zions.pipeline.services.mixins.PropertiesSanitizerTrait
  *
  */
 @Component
-class SanitizeProperties implements IExecutableYamlHandler, PropertiesSanitizerTrait {
+class SanitizeProperties implements IExecutableYamlHandler, PropertiesSanitizerTrait, FeedbackTrait {
 
-	def handleYaml(def yaml, File repo, def locations, String branch, String project) {
+	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null) {
 		String propertyPath = "${repo.absolutePath}/${yaml.filePath}"
 		File pFile = new File(propertyPath)
 		String engine = 'secret'
