@@ -72,7 +72,7 @@ class XlrApply implements CliAction, XLCliTrait, CliRunnerTrait {
 			arg = [ line: "${option} ${xlFileParent.absolutePath}/xl apply -f ${buildSourcesDirectory.absolutePath}/${xlFileName} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}" ]
 			
 		}
-		log.info( "CLI: ${arg.line}")
+//		log.info( "CLI: ${arg.line}")
 		run(command, "${xlFileParent.absolutePath}", arg, env, log)
 	}
 	

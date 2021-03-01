@@ -73,7 +73,6 @@ class XldApply implements CliAction, XLCliTrait, CliRunnerTrait {
 			
 		}
 		
-		log.info( "CLI: ${arg.line}")
 			
 		run(command, "${xlFileParent.absolutePath}", arg, env, log)
 	}
