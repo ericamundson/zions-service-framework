@@ -117,6 +117,13 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 			
 		boolean parentAdded = false
 		boolean parentRemoved = false
+		boolean childAdded = false
+		boolean childRemoved = false
+		String curl
+		String cid
+		String crev
+		String rev
+		def result
 		def changes = []
 		def idMap = [:]
 		def count = 0
@@ -142,6 +149,11 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 				 if (link.attributes.name == 'Parent') {
 			 	
 					 parentRemoved = true
+				} else {
+					 childRemoved = true
+					 curl = link.url
+					 println(curl)
+					 
 				}
 			}
 		}
@@ -149,17 +161,32 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 			addLinks.each { link ->
 				if (link.attributes.name == 'Parent') {
 					parentAdded = true
+				} else {
+					childAdded = true
 				}
 				
 			}
 		}
-		if (!parentRemoved && !parentAdded)
+		if (!parentRemoved && !parentAdded && !childRemoved && !childAdded)
 			return logResult('Not a parent link change')
 			
-		//process block for parent link removal
-		if (parentRemoved) {
+		//process block for parent/child link removal
+		//Set OTLNumber to blank on the child
+		rev = "${wiResource.rev}"
+		if (childRemoved) {
 			updField = ""
-			String rev = "${wiResource.rev}"
+			//get work item info for child, id and revision number
+			result = workManagementService.getWorkItem(curl)
+			if (!result || result == 'null' || result == '' || result == []) {
+				
+				return logResult('child not present')
+			}
+			crev = "${result.rev}"
+			cid = "${result.id}"
+			id = cid
+			rev = crev
+		}
+		else if (parentRemoved) {
 			//reset current fields
 			wiPfields.each { field ->
 				def cVal = wiResource.revision.fields["${field}"]
@@ -167,6 +194,8 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 				updField = ""
 				parentValues.add(updField)
 			}
+			
+			
 			log.debug("Getting the changes for current work item $wiType #$id")
 			changes.add(getChanges(project, rev, id, parentValues))
 			idMap[count] = "${id}"
@@ -183,10 +212,11 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 			}
 		
 		}
-		//Process block adding a parent
+		//Process block adding a parent/child and updating the child's OTLNumber
 		else {
-		
-			String rev = "${wiResource.rev}"
+		if (parentAdded || childAdded)
+			
+			rev = "${wiResource.rev}"
 			//add values from parent
 			
 			if (!parentWI){	
