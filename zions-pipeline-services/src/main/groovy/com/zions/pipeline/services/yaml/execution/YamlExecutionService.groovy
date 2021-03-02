@@ -81,7 +81,9 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 			}
 		}
 		if (!repo) {
+			logContextStart(pipelineId, "Completed")
 			logFailed(pipelineId, "Could not properly load repo:  ${repoName}")
+			logContextComplete(pipelineId, "Completed")
 			Set issues = [[message: "Could not properly load repo:  ${repoName}"]]
 			def feedback = [ messages: issues]
 			sendFeedback(projectData, repoData, feedback, pullRequestId)
@@ -116,6 +118,10 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 							issues.add("${exe.type} error: ${issue}")
 							logError(pipelineId, "${exe.type} error: ${issue}")
 							logContextComplete(pipelineId, "Handle yaml: ${exe.type}")					
+							logContextStart(pipelineId, "Completed")
+							logFailed(pipelineId, "${exe.type} error: ${issue}")
+							logContextComplete(pipelineId, "Completed")
+							break;
 						}
 					}
 				}
