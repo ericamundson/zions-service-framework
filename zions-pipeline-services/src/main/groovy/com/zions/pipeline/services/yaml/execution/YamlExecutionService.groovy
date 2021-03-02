@@ -90,10 +90,16 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 			return
 		}
 		def exeYaml = findExecutableYaml(repo, scanLocations, projectData, repoData, pullRequestId)
+		int eyCount = 0
+		
 		for (def yamldata in exeYaml) { 
+			eyCount++
+			 
 			if (yamldata.yaml.executables) {
 				Set issues = []
+				int exeCount = 0;
 				for (def exe in yamldata.yaml.executables) {
+					exeCount++
 					IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 					if (yamlHandler) {
 						try {
@@ -104,7 +110,7 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 							logInfo(pipelineId, "running: ${yStr}")					
 							yamlHandler.handleYaml(exe, repo, scanLocations, branch, project, pipelineId)
 							logContextComplete(pipelineId, "Handle yaml: ${exe.type}")	
-							if (exe.isLast && exe.isLast == true) {
+							if (eyCount == exeYaml.size() && yamldata.yaml.executables.size() == exeCount && exe.type != 'runXLBlueprints') {
 								logContextStart(pipelineId, "Completed")
 								logCompleted(pipelineId, "Blueprint processing is complete!")
 								logContextComplete(pipelineId, "Completed")
