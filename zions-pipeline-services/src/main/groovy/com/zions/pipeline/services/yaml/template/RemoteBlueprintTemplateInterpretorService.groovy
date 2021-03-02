@@ -282,7 +282,10 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 				if (status != 'active') break
 			}
 		} catch (Exception e) {
+			logContextComplete(pipelineId, '"Blueprint pull request"')
+			logContextStart(pipelineId, "Completed")
 			logFailed(pipelineId, e.message)
+			logContextComplete(pipelineId, "Completed")
 			log.error(e.message)
 			throw e
 		}
