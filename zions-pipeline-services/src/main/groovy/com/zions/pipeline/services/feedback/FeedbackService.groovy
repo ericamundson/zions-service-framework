@@ -66,7 +66,7 @@ class FeedbackService {
 		}
 		String lType = "${type}"
 		// add
-		PipelineLogItem item = [timestamp: new Date().toString(), logType: lType, pipelineId: pid, log: message, contexts: context, name:'']
+		PipelineLogItem item = [timestamp: new Date().format("yyyy.MM.dd HH:mm:ss.SSS z"), logType: lType, pipelineId: pid, log: message, contexts: context, name:'']
 		pipelineLogItemRepository.save( item )
 		
 		//compose
