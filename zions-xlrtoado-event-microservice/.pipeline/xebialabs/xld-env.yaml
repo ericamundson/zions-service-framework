@@ -1,0 +1,27 @@
+---
+
+# Updated 2021-03-02 04:11:27.578750157 -0700 MST m=+1.616807207
+apiVersion: xl-deploy/v1
+kind: Environments
+spec:
+- name: Environments/DTS
+  type: core.Directory
+  children:
+  - directory: zions-xlrtoado-event-microservice
+    children:
+    - name: Prod
+      type: udm.Environment
+      members:
+      - Infrastructure/DTS/microservice/Prod
+      dictionaries:
+      - Environments/DTS/zions-xlrtoado-event-microservice/_Dictionaries/Prod_Dict
+    - directory: _Dictionaries
+      children:
+      - name: Prod_Dict
+        type: udm.Dictionary
+        entries:
+          stage.path: d:\app\azure\_work\zions-xlrtoado-event-microservice
+          deploy.path: d:\app\azure\services\zions-xlrtoado-event-microservice
+          ws.url: <no value>
+          tfs.url: https://dev.azure.com/zionseto          
+          spring.profile: default
