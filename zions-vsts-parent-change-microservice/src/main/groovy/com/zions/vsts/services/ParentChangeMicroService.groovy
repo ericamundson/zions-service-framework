@@ -238,8 +238,7 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 				if (!updField || updField == 'null' || updField == '')
 					updField = "";
 					parentValues.add(updField)
-					println (pVal)
-					println(updField)
+
 			}
 		}
 		
@@ -256,8 +255,7 @@ class ParentChangeMicroService implements MessageReceiverTrait {
 				if (!updField || updField == 'null' || updField == '')
 					updField = "";
 					parentValues.add(updField)
-					println (pVal)
-					println(updField)
+
 					
 			}
 			
