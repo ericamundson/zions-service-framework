@@ -101,7 +101,12 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 							String yStr = yaml.toString()
 							logInfo(pipelineId, "running: ${yStr}")					
 							yamlHandler.handleYaml(exe, repo, scanLocations, branch, project, pipelineId)
-							logContextComplete(pipelineId, "Handle yaml: ${exe.type}")					
+							logContextComplete(pipelineId, "Handle yaml: ${exe.type}")	
+							if (exe.isLast && exe.isLast == true) {
+								logContextStart(pipelineId, "Completed")
+								logCompleted(pipelineId, "Blueprint processing is complete!")
+								logContextComplete(pipelineId, "Completed")
+							}				
 						} catch (e) {
 							StringWriter sw = new StringWriter()
 							PrintWriter pw = new PrintWriter(sw)
