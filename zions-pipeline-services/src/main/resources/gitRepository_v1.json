@@ -23,6 +23,16 @@
         "type"
     ],
     "properties": {
+        "isLast": {
+            "$id": "#/properties/isLast",
+            "type": "boolean",
+            "title": "The type schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "true"
+            ]
+        },        
         "name": {
             "$id": "#/properties/name",
             "type": "string",

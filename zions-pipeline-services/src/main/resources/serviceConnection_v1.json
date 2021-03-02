@@ -1,8 +1,10 @@
 {
-	"definitions": {},
-	"$schema": "http://json-schema.org/draft-07/schema#", 
-	"$id": "https://example.com/object1601382249.json", 
-	"title": "Root", 
+	"definitions": {
+		
+	},
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://example.com/object1601382249.json",
+	"title": "Root",
 	"type": "object",
 	"required": [
 		"type",
@@ -16,9 +18,19 @@
 		"authorization"
 	],
 	"properties": {
+		"isLast": {
+			"$id": "#/properties/isLast",
+			"type": "boolean",
+			"title": "The type schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": "",
+			"examples": [
+				"true"
+			]
+		},
 		"type": {
-			"$id": "#root/type", 
-			"title": "Type", 
+			"$id": "#root/type",
+			"title": "Type",
 			"type": "string",
 			"default": "",
 			"examples": [
@@ -27,8 +39,8 @@
 			"pattern": "^.*$"
 		},
 		"context": {
-			"$id": "#root/context", 
-			"title": "Context", 
+			"$id": "#root/context",
+			"title": "Context",
 			"type": "string",
 			"default": "",
 			"examples": [
@@ -37,8 +49,8 @@
 			"pattern": "^.*$"
 		},
 		"projects": {
-			"$id": "#root/projects", 
-			"title": "Projects", 
+			"$id": "#root/projects",
+			"title": "Projects",
 			"type": "string",
 			"default": "",
 			"examples": [
@@ -47,8 +59,8 @@
 			"pattern": "^.*$"
 		},
 		"endpointType": {
-			"$id": "#root/endpointType", 
-			"title": "Endpointtype", 
+			"$id": "#root/endpointType",
+			"title": "Endpointtype",
 			"type": "string",
 			"default": "",
 			"examples": [
@@ -57,8 +69,8 @@
 			"pattern": "^.*$"
 		},
 		"endpointUrl": {
-			"$id": "#root/endpointUrl", 
-			"title": "Endpointurl", 
+			"$id": "#root/endpointUrl",
+			"title": "Endpointurl",
 			"type": "string",
 			"default": "",
 			"examples": [
@@ -67,8 +79,8 @@
 			"pattern": "^.*$"
 		},
 		"endpointName": {
-			"$id": "#root/endpointName", 
-			"title": "Endpointname", 
+			"$id": "#root/endpointName",
+			"title": "Endpointname",
 			"type": "string",
 			"default": "",
 			"examples": [
@@ -77,8 +89,8 @@
 			"pattern": "^.*$"
 		},
 		"endpointDescription": {
-			"$id": "#root/endpointDescription", 
-			"title": "Endpointdescription", 
+			"$id": "#root/endpointDescription",
+			"title": "Endpointdescription",
 			"type": "string",
 			"default": "",
 			"examples": [
@@ -87,8 +99,8 @@
 			"pattern": "^.*$"
 		},
 		"grantAllPerm": {
-			"$id": "#root/grantAllPerm", 
-			"title": "Grantallperm", 
+			"$id": "#root/grantAllPerm",
+			"title": "Grantallperm",
 			"type": "boolean",
 			"examples": [
 				true
@@ -96,8 +108,8 @@
 			"default": true
 		},
 		"vault": {
-			"$id": "#root/vault", 
-			"title": "Vault", 
+			"$id": "#root/vault",
+			"title": "Vault",
 			"type": "object",
 			"required": [
 				"engine",
@@ -105,8 +117,8 @@
 			],
 			"properties": {
 				"engine": {
-					"$id": "#root/vault/engine", 
-					"title": "Engine", 
+					"$id": "#root/vault/engine",
+					"title": "Engine",
 					"type": "string",
 					"default": "",
 					"examples": [
@@ -114,28 +126,27 @@
 					],
 					"pattern": "^.*$"
 				},
-        "paths": {
-          "$id": "#root/vault/paths", 
-          "title": "Paths", 
-          "type": "array",
-          "default": [],
-          "items":{
-            "$id": "#root/vault/paths/items", 
-            "title": "Items", 
-            "type": "string",
-            "default": "",
-            "examples": [
-              "zions-service-framework"
-            ],
-            "pattern": "^.*$"
-          }
-        }
+				"paths": {
+					"$id": "#root/vault/paths",
+					"title": "Paths",
+					"type": "array",
+					"default": [],
+					"items": {
+						"$id": "#root/vault/paths/items",
+						"title": "Items",
+						"type": "string",
+						"default": "",
+						"examples": [
+							"zions-service-framework"
+						],
+						"pattern": "^.*$"
+					}
+				}
 			}
-		}
-,
+		},
 		"authorization": {
-			"$id": "#root/authorization", 
-			"title": "Authorization", 
+			"$id": "#root/authorization",
+			"title": "Authorization",
 			"type": "object",
 			"required": [
 				"scheme",
@@ -143,8 +154,8 @@
 			],
 			"properties": {
 				"scheme": {
-					"$id": "#root/authorization/scheme", 
-					"title": "Scheme", 
+					"$id": "#root/authorization/scheme",
+					"title": "Scheme",
 					"type": "string",
 					"default": "",
 					"examples": [
@@ -153,8 +164,8 @@
 					"pattern": "^.*$"
 				},
 				"parameters": {
-					"$id": "#root/authorization/parameters", 
-					"title": "Parameters", 
+					"$id": "#root/authorization/parameters",
+					"title": "Parameters",
 					"type": "object",
 					"required": [
 						"username",
@@ -162,8 +173,8 @@
 					],
 					"properties": {
 						"username": {
-							"$id": "#root/authorization/parameters/username", 
-							"title": "Username", 
+							"$id": "#root/authorization/parameters/username",
+							"title": "Username",
 							"type": "string",
 							"default": "",
 							"examples": [
@@ -172,8 +183,8 @@
 							"pattern": "^.*$"
 						},
 						"password": {
-							"$id": "#root/authorization/parameters/password", 
-							"title": "Password", 
+							"$id": "#root/authorization/parameters/password",
+							"title": "Password",
 							"type": "string",
 							"default": "",
 							"examples": [
@@ -183,9 +194,7 @@
 						}
 					}
 				}
-
 			}
 		}
-
 	}
 }
