@@ -1,7 +1,0 @@
----
-AppName: "zions-xlrtoado-event-microservice"
-IsWindows: true
-RequiresCollection: false
-BuildIncludes: "zions-xlrtoado-event-microservice/*,zions-vsts-microservice/*,zions-xlr-services/*,zions-vsts-services/src/main/groovy/com/zions/vsts/services/build/*"
-Queuename: "XLRToADO-queue"
-WSTopics: "none"
