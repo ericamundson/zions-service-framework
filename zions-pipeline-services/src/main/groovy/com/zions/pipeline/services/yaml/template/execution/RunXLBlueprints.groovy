@@ -177,6 +177,9 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			gitService.deleteBranch(repoDir, branchName)
 			def pullRequestData = [sourceRefName: branchName, targetRefName: repoTargetBranch, title: "Update pipeline", description: "Making changes to pipeline implementation"]
 			def prd = codeManagementService.createPullRequest('', projectData.id, repoData.id, pullRequestData)
+			if (!prd) {
+				throw new Exception("Unable to create pull request.  Most likely service accounts don't have permissions!")
+			}
 			String prId = "${prd.pullRequestId}"
 			def id = [id: prd.createdBy.id]
 			String pullRequestComment = "Update pipeline merge"
@@ -194,6 +197,9 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 					System.sleep(5000)
 				} catch (e) {}
 				prd = codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
+				if (!prd) {
+					throw new Exception("Unable to update pull request.  Most likely service accounts don't have permissions!")
+				}
 				String status = "${prd.status}"
 				if (status != 'active') break
 			}
