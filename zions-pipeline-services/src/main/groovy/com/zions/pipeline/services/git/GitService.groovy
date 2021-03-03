@@ -184,7 +184,7 @@ class GitService {
 					} else {
 						Git git = null
 						try {
-							Git.open(irepo)
+							git = Git.open(irepo)
 							git.reset()
 							.setMode(ResetType.HARD)
 							.call()
