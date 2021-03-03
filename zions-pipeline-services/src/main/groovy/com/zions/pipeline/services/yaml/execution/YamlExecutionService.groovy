@@ -89,13 +89,13 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 			sendFeedback(projectData, repoData, feedback, pullRequestId)
 			return
 		}
+		Set issues = []
 		def exeYaml = findExecutableYaml(repo, scanLocations, projectData, repoData, pullRequestId)
 		boolean hasRunXLBlueprint = false
 		
 		for (def yamldata in exeYaml) { 
 			 
 			if (yamldata.yaml.executables) {
-				Set issues = []
 				for (def exe in yamldata.yaml.executables) {
 					IExecutableYamlHandler yamlHandler = yamlHandlerMap[exe.type]
 					if (yamlHandler) {
@@ -116,28 +116,17 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 							e.printStackTrace(pw);
 							pw.close()
 							String issue = sw
-							issues.add("${exe.type} error: ${issue}")
+							//issues.add("${exe.type} error: ${issue}")
 							logError(pipelineId, "${exe.type} error: ${issue}")
 							logContextComplete(pipelineId, "Handle yaml: ${exe.type}")					
-							logContextStart(pipelineId, "Completed")
-							logFailed(pipelineId, "${exe.type} error: ${issue}")
-							logContextComplete(pipelineId, "Completed")
-							break;
+							return [hasRunXLBlueprint: hasRunXLBlueprint, issue: issue];
 						}
 					}
-				}
-				if (issues.empty && !hasRunXLBlueprint) {
-					logContextStart(pipelineId, "Completed")
-					logCompleted(pipelineId, "Blueprint processing is complete!")
-					logContextComplete(pipelineId, "Completed")
-				}				
-				if (!issues.empty) {
-					def feedback = [location: yamldata.location, messages: issues]
-					sendFeedback(projectData, repoData, feedback, pullRequestId)
 				}
 			}
 		}
 		gitService.reset(repo)
+		return [hasRunXLBlueprint: hasRunXLBlueprint, issue: null]
 	}
 	
 	

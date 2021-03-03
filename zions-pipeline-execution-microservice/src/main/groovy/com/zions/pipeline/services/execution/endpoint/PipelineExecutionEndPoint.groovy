@@ -90,8 +90,21 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait, FeedbackTrait {
 				String repoUrl = "${adoData.resource.repository.remoteUrl}"
 				String name = "${adoData.resource.repository.name}"
 				logContextStart(pipelineId, "Pull request on '${repo}' completed.")
-				yamlExecutionService.runExecutableYaml(repoUrl,name,locations, branch, project, pullRequestId, pipelineId, userName)
+				def result = yamlExecutionService.runExecutableYaml(repoUrl,name,locations, branch, project, pullRequestId, pipelineId, userName)
 				logContextComplete(pipelineId, "Pull request on '${repo}' completed.")
+				def issue = result.issue
+				boolean hasRunXLBlueprint = result.hasRunXLBlueprint
+				if (!issue && !hasRunXLBlueprint) {
+					logContextStart(pipelineId, "Completed")
+					logCompleted(pipelineId, "Blueprint processing is complete!")
+					logContextComplete(pipelineId, "Completed")
+				}				
+				if (issue) {
+					logContextStart(pipelineId, "Completed")
+					logFailed(pipelineId, "Failed blueprint:  ${issue}")
+					logContextComplete(pipelineId, "Completed")
+					//sendFeedback(projectData, repoData, feedback, pullRequestId)
+				}
 			}
 		}
 		return null
