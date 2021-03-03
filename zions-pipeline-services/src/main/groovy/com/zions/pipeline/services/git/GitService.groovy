@@ -139,7 +139,7 @@ class GitService {
 		if (!dotGit.exists()) {
 			Git git = null
 			try {
-				Git.cloneRepository()
+				git = Git.cloneRepository()
 				.setURI(nUrl)
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider('',"${tfsToken}"))
 				.setDirectory(repo)
