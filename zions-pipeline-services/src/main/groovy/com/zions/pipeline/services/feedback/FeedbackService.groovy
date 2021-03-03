@@ -14,7 +14,7 @@ import groovy.util.logging.Slf4j
 @Component
 @Slf4j
 class FeedbackService {
-	@Autowired
+	@Autowired(required=false)
 	PipelineLogItemRepository pipelineLogItemRepository
 	
 	@Autowired
