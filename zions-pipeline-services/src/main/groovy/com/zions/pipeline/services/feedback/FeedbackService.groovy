@@ -49,6 +49,7 @@ class FeedbackService {
 
 	void addComposeAndSend(LogType type, String pid, String message) {
 		String extId = "COE_${pid}"
+		if (!pipelineLogItemRepository) return
 		List<PipelineLogItem> logs = pipelineLogItemRepository.findByPipelineId(pid)
 		int lsize = logs.size()
 		List<String> context = []

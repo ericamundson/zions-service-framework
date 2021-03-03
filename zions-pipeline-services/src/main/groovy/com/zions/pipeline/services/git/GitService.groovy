@@ -93,7 +93,7 @@ class GitService {
 		return outStr
 	}
 	
-	File loadChanges(String url,String repoName = null, String branch = null, boolean reload = false) {
+	File loadChanges(String url,String repoName = null, String branch = null, boolean reload = false, String userName = null) {
 		if (!repos) {
 			String osname = System.getProperty('os.name')
 			
@@ -147,6 +147,7 @@ class GitService {
 				.setBranch(branch)
 				.setRemote('origin')
 				.call();
+				setUser(git, userName)
 			} finally {
 				if (git) {
 					git.close()
@@ -172,6 +173,7 @@ class GitService {
 							.setBranch(branch)
 							.setRemote('origin')
 							.call();
+							setUser(git, userName)
 						} finally {
 							if (git) {
 								git.close()
@@ -195,6 +197,7 @@ class GitService {
 							.setRemote("origin")
 							.setRemoteBranchName(aBranch)
 							.call()
+							setUser(git, userName)
 						} finally {
 							if (git) {
 								git.close()
@@ -220,6 +223,7 @@ class GitService {
 				.setRemote("origin")
 				.setRemoteBranchName(aBranch)
 				.call()
+				setUser(git, userName)
 			} finally {
 				if (git) {
 					git.close()
@@ -228,6 +232,13 @@ class GitService {
 		}
 			
 		return repo
+	}
+	
+	def setUser(Git git, String userName) {
+		if (!userName || userName.length() == 0) return
+		StoredConfig config = git.getRepository().getConfig();
+		config.setString("user", null, "name", userName);
+		config.save();
 	}
 	
 	def checkout(File repo, String branchName, boolean create = false) {

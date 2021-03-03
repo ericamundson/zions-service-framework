@@ -42,6 +42,9 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 	
 	@Value('${pipeline.id:}')
 	String pipelineId
+	
+	@Value('${user.name:}')
+	String userName
 
 	@Value('${blueprint.repo.url:}')
 	String blueprintRepoUrl
@@ -102,6 +105,10 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 
 
 	def outputPipeline() {
+		
+		if (!userName || userName.trim().length() == 0) {
+			userName = null
+		}
 
 		//		if (blueprintFolderName && blueprintFolderName.length() > 0) {
 		//			blueprintDir = new File(blueprintDir, blueprintFolderName)
@@ -120,7 +127,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			if (repoTargetBranch == null || repoTargetBranch.length() == 0) {
 				repoTargetBranch = null
 			}
-			repoDir = gitService.loadChanges(outRepoUrl, null, repoTargetBranch)
+			repoDir = gitService.loadChanges(outRepoUrl, null, repoTargetBranch, false, userName)
 			gitService.checkout(repoDir, "blueprint/${new Date().time}", true)
 
 
@@ -266,8 +273,11 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			String prId = "${prd.pullRequestId}"
 			def id = [id: prd.createdBy.id]
 			String pullRequestComment = "Update pipeline merge"
+			if (userName && userName.length() > 0) {
+				pullRequestComment = "${pullRequestComment}, userName: ${userName}"
+			}
 			if (pipelineId && pipelineId.length() > 0){
-				pullRequestComment = "${pullRequestComment}\n  pipelineId: ${pipelineId}"
+				pullRequestComment = "${pullRequestComment}, pipelineId: ${pipelineId}"
 			}
 			def opts = [deleteSourceBranch: true, mergeCommitMessage: pullRequestComment, mergeStrategy: 'noFastForward', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
 			def updateData = [completionOptions: opts, status: 'completed', lastMergeSourceCommit: prd.lastMergeSourceCommit]

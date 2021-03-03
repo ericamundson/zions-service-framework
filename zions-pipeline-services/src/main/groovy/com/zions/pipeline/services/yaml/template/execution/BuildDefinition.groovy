@@ -42,7 +42,7 @@ class BuildDefinition implements IExecutableYamlHandler, FeedbackTrait {
 	@Autowired
 	ProjectManagementService projectManagementService
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName, String pipelineId = null) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName, String pipelineId = null, String userName = null) {
 		if (yaml.project) {
 			projectName = yaml.project
 		}

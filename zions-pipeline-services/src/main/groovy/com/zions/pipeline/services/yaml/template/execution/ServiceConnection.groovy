@@ -53,7 +53,7 @@ class ServiceConnection implements IExecutableYamlHandler, ReadSecretsTrait, Fee
 	@Value('${endpoint.password:}')
 	String endpointPassword
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName, String pipelineId = null) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String projectName, String pipelineId = null, String userName = null) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
 		def vaultSecrets = vaultService.getSecrets(yaml.vault.engine, yaml.vault.paths as String[])
 		if (yaml.authorization && yaml.authorization.parameters && yaml.authorization.parameters.username && yaml.authorization.parameters.password) {
