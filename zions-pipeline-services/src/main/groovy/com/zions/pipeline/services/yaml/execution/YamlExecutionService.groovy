@@ -47,12 +47,12 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 	String alwaysExecuteFolder
 			
 
-	def runExecutableYaml(String repoUrl, String repoName, def scanLocations, String branch, String project, String pullRequestId = null, String pipelineId = null) {
+	def runExecutableYaml(String repoUrl, String repoName, def scanLocations, String branch, String project, String pullRequestId = null, String pipelineId = null, String userName = null) {
 		File repo = null
 		def projectData = projectManagementService.getProject('', project)
 		def repoData = codeManagementService.getRepo('', projectData, repoName)
 		try {
-			repo = gitService.loadChanges(repoUrl, repoName, branch)
+			repo = gitService.loadChanges(repoUrl, repoName, branch, false, userName)
 		} catch (e) {
 			StringWriter sw = new StringWriter()
 			PrintWriter pw = new PrintWriter(sw)
@@ -67,7 +67,7 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 		//retry with full reload
 		if (!repo) {
 			try {
-				repo = gitService.loadChanges(repoUrl, repoName, branch, true)
+				repo = gitService.loadChanges(repoUrl, repoName, branch, true, userName)
 			} catch (e) {
 				StringWriter sw = new StringWriter()
 				PrintWriter pw = new PrintWriter(sw)
@@ -105,7 +105,7 @@ class YamlExecutionService implements FindExecutableYamlTrait, FeedbackTrait {
 							yaml(exe)
 							String yStr = yaml.toString()
 							logInfo(pipelineId, "running: ${yStr}")					
-							yamlHandler.handleYaml(exe, repo, scanLocations, branch, project, pipelineId)
+							yamlHandler.handleYaml(exe, repo, scanLocations, branch, project, pipelineId, userName)
 							logContextComplete(pipelineId, "Handle yaml: ${exe.type}")
 							if (exe.type == 'runXLBlueprints')	{
 								hasRunXLBlueprint = true

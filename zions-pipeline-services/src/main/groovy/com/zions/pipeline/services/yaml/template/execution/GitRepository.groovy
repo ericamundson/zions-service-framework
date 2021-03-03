@@ -43,7 +43,7 @@ class GitRepository implements IExecutableYamlHandler, FeedbackTrait {
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations, String inBranch, String projectName, String pipelineId = null) {
+	def handleYaml(def yaml, File repo, def locations, String inBranch, String projectName, String pipelineId = null, String userName = null) {
 //		String projectName = yaml.project
 		String repoName = yaml.name
 //		def answers = yaml.answers

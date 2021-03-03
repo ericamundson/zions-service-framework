@@ -64,7 +64,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 	public RunXLBlueprints() {
 	}
 
-	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null) {
+	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null, String userName = null) {
 		if (yaml.project) {
 			project = yaml.project
 		}
@@ -78,7 +78,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 		def projectData = projectManagementService.getProject('', project)
 		def repoData = codeManagementService.getRepo('', projectData, repoName)
 
-		def outrepo = gitService.loadChanges(repoData.remoteUrl, repoName)
+		def outrepo = gitService.loadChanges(repoData.remoteUrl, repoName, null, false, userName)
 		gitService.checkout(outrepo, "blueprint/${new Date().time}", true)
 		
 
@@ -154,10 +154,10 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 		//		def policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, 'refs/heads/master')
 		//		gitService.pushChanges(outrepo)
 		//		policyManagementService.restoreBranchPolicies('', projectData, repoData.id, 'refs/heads/master', policies)
-		runPullRequestOnChanges(outrepo, loadDir, project, projectData, repoData, pipelineId)
+		runPullRequestOnChanges(outrepo, loadDir, project, projectData, repoData, pipelineId, userName)
 	}
 
-	def runPullRequestOnChanges(File repoDir, File outDir, String adoProject, def projectData, def repoData, String pipelineId) {
+	def runPullRequestOnChanges(File repoDir, File outDir, String adoProject, def projectData, def repoData, String pipelineId, String userName) {
 		String repoPath = repoDir.absolutePath
 		String outDirPath = outDir.absolutePath
 		String fPattern = "${pipelineFolder}"
@@ -180,8 +180,11 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			String prId = "${prd.pullRequestId}"
 			def id = [id: prd.createdBy.id]
 			String pullRequestComment = "Update pipeline merge"
+			if (userName && userName.length() > 0) {
+				pullRequestComment = "${pullRequestComment}, userName: ${userName}"
+			}
 			if (pipelineId && pipelineId.length() > 0){
-				pullRequestComment = "${pullRequestComment}d\n  pipelineId: ${pipelineId}"
+				pullRequestComment = "${pullRequestComment}, pipelineId: ${pipelineId}"
 			}
 			def opts = [deleteSourceBranch: true, mergeCommitMessage: pullRequestComment, mergeStrategy: 'noFastForward', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
 			def updateData = [completionOptions: opts, status: 'completed', lastMergeSourceCommit: prd.lastMergeSourceCommit]

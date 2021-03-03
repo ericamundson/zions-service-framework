@@ -42,7 +42,7 @@ class BranchPolicy implements IExecutableYamlHandler, FeedbackTrait {
 	@Autowired
 	CodeManagementService codeManagementService
 
-	def handleYaml(def yaml, File containedRepo, def locations, String branch, String pName, String pipelineId = null) {
+	def handleYaml(def yaml, File containedRepo, def locations, String branch, String pName, String pipelineId = null, String userName = null) {
 		//System.out.println("In handleYaml - yaml:\n" + yaml)
 		if (yaml.project) {
 			pName = yaml.project

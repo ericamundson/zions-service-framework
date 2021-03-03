@@ -75,6 +75,7 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait, FeedbackTrait {
 			if (status != 'completed') return null
 			String comment = "${adoData.resource.completionOptions.mergeCommitMessage}"
 			String pipelineId = getPipelineId(comment)
+			String userName = getUserName(comment)
 			String pullRequestId = "${adoData.resource.pullRequestId}"
 			PullRequestCompleted prc = pullRequestCompletedRepository.findByPullRequestId(pullRequestId)
 			if (prc) return null
@@ -89,7 +90,7 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait, FeedbackTrait {
 				String repoUrl = "${adoData.resource.repository.remoteUrl}"
 				String name = "${adoData.resource.repository.name}"
 				logContextStart(pipelineId, "Pull request on '${repo}' completed.")
-				yamlExecutionService.runExecutableYaml(repoUrl,name,locations, branch, project, pullRequestId, pipelineId)
+				yamlExecutionService.runExecutableYaml(repoUrl,name,locations, branch, project, pullRequestId, pipelineId, userName)
 				logContextComplete(pipelineId, "Pull request on '${repo}' completed.")
 			}
 		}
@@ -98,6 +99,14 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait, FeedbackTrait {
 	
 	String getPipelineId(String comment) {
 		def pattern = /pipelineId:\s+(\S+)$/
+		def matcher = comment =~ pattern
+		if (matcher.size() == 1 && matcher[0].size() == 2) {
+			return matcher[0][1]
+		}
+		return null
+	}
+	String getUserName(String comment) {
+		def pattern = /userName:\s+(\S.+),/
 		def matcher = comment =~ pattern
 		if (matcher.size() == 1 && matcher[0].size() == 2) {
 			return matcher[0][1]

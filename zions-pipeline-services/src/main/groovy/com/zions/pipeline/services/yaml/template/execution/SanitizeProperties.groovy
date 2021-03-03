@@ -27,7 +27,7 @@ import com.zions.pipeline.services.mixins.PropertiesSanitizerTrait
 @Component
 class SanitizeProperties implements IExecutableYamlHandler, PropertiesSanitizerTrait, FeedbackTrait {
 
-	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null) {
+	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null, String userName = null) {
 		String propertyPath = "${repo.absolutePath}/${yaml.filePath}"
 		File pFile = new File(propertyPath)
 		String engine = 'secret'

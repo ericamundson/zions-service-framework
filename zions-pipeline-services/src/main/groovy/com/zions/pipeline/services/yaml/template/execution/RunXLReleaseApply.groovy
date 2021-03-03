@@ -55,7 +55,7 @@ import groovy.util.logging.Slf4j
 		
 	}
 	
-	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null) {
+	def handleYaml(def yaml, File repo, def locations, String branch, String project, String pipelineId = null, String userName = null) {
 		if (!performExecute(yaml, locations)) return
 		if (yaml.project) {
 			project = yaml.project
