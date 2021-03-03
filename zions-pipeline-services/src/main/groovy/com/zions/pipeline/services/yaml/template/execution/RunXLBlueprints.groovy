@@ -197,9 +197,10 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 					System.sleep(5000)
 				} catch (e) {}
 				prd = codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
-				if (!prd) {
-					throw new Exception("Unable to update pull request.  Most likely service accounts don't have permissions!")
-				}
+//				if (!prd) {
+//					throw new Exception("Unable to update pull request.  Most likely service accounts don't have permissions!")
+//				}
+				if (!prd) continue
 				String status = "${prd.status}"
 				if (status != 'active') break
 			}
