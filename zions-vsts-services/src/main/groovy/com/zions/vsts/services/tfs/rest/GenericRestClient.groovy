@@ -40,6 +40,16 @@ class GenericRestClient extends AGenericRestClient {
 		
 	String token
 	
+	Closure failureCallback = { resp ->
+			if (resp.entity) {
+				def outputStream = new ByteArrayOutputStream()
+				resp.entity.writeTo(outputStream)
+				def errorMsg = outputStream.toString('utf8')
+				log.error("ADO Http error response:  ${errorMsg}")
+			}
+			return resp
+		}
+	
 	public String getTfsUrl() {
 		return tfsUrl
 	}
@@ -61,15 +71,7 @@ class GenericRestClient extends AGenericRestClient {
 		delegate = new ARESTClient(tfsUrl)
 		delegate.ignoreSSLIssues()
 //		delegate.handler.failure = { it }
-		delegate.handler.failure = { resp ->
-			if (resp.entity) {
-				def outputStream = new ByteArrayOutputStream()
-				resp.entity.writeTo(outputStream)
-				def errorMsg = outputStream.toString('utf8')
-				log.error("ADO Http error response:  ${errorMsg}")
-			}
-			return resp
-		}
+		delegate.handler.failure = failureCallback
 		setProxy()
 		setCredentials(user, token);
 		//setupTimeouts()

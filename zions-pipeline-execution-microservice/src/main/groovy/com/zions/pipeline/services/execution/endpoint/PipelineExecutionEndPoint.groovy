@@ -21,6 +21,7 @@ import com.zions.pipeline.services.yaml.execution.YamlExecutionService
 import com.zions.pipeline.services.db.PullRequestCompletedRepository
 import com.zions.pipeline.services.mixins.FeedbackTrait
 import com.zions.pipeline.services.db.PullRequestCompleted
+import com.zions.pipeline.services.feedback.LogCallbackHandler
 
 /**
  * ReST Controller for pipeline yaml service. 
@@ -41,6 +42,9 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait, FeedbackTrait {
 	
 	@Autowired
 	PullRequestCompletedRepository pullRequestCompletedRepository
+	
+	@Autowired
+	LogCallbackHandler logCallbackHandler
 
 	@Value('${pipeline.folders:.pipeline,pipeline}')
 	String[] pipelineFolders
@@ -50,6 +54,8 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait, FeedbackTrait {
 	
 	@Value('${executables.folder:executables}')
 	String executablesFolder
+	
+	
 
 	public PipelineExecutionEndPoint() {
 		//init(websocketUrl, null, null)
@@ -75,6 +81,7 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait, FeedbackTrait {
 			if (status != 'completed') return null
 			String comment = "${adoData.resource.completionOptions.mergeCommitMessage}"
 			String pipelineId = getPipelineId(comment)
+			logCallbackHandler.pipelineId = pipelineId
 			String userName = getUserName(comment)
 			String pullRequestId = "${adoData.resource.pullRequestId}"
 			PullRequestCompleted prc = pullRequestCompletedRepository.findByPullRequestId(pullRequestId)

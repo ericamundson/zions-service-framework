@@ -25,6 +25,7 @@ import com.zions.vsts.services.tfs.rest.GenericRestClient
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.vsts.services.rmq.mixins.MessageFanoutConfigTrait
 import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
+import com.zions.pipeline.services.feedback.LogCallbackHandler
 
 @Configuration
 @ComponentScan(["com.zions.pipeline.services", "com.zions.vsts.services"])
@@ -56,10 +57,15 @@ public class AppConfig implements MessageFanoutConfigTrait {
 	String tfsUser
 	@Value('${tfs.token:}')
 	String tfsToken
+	
+	@Autowired
+	LogCallbackHandler logCallbackHandler
 
 	@Bean
 	IGenericRestClient genericRestClient() {
-		return new MultiUserGenericRestClient()
+		MultiUserGenericRestClient restClient = new MultiUserGenericRestClient()
+		restClient.failureCallback = logCallbackHandler.failureCallback
+		return restClient
 	}
 	
 	@Bean
