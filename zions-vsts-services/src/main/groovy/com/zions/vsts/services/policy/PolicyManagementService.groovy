@@ -89,6 +89,9 @@ public class PolicyManagementService {
 		boolean enforceMergeStrategy = true
 		boolean enforceCommentResolution = true
 		boolean isInitBranch = false
+		
+		//if (branchName.toLowerCase().equals("refs/heads/master")) return
+			
 
 		this.loadProperties(collection, repoData, branchName)
 		// if we're dealing with an 'IFB' branch, check for custom branch build / policy configuration
@@ -119,6 +122,8 @@ public class PolicyManagementService {
 			// need to establish an initial build tag for ifb branch
 			buildManagementService.ensureInitialTag(collection, repoData.project, repoData, branchName)
 		}
+		
+		if (branchName.toLowerCase().equals("refs/heads/adoinit"))
 		
 		// Check for special 'adoinit' branch used to patch master branch build / policy configuration
 		if (branchName.toLowerCase().equals("refs/heads/adoinit")) {
