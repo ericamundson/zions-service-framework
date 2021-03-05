@@ -24,7 +24,8 @@ import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import org.eclipse.jgit.api.Git
-
+import com.zions.pipeline.services.feedback.LogCallbackHandler
+ 
 
 /**
  * Performs the following behaviors:
@@ -39,6 +40,9 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 
 	@Autowired
 	Map<String, IExecutableYamlHandler> yamlHandlerMap;
+	
+	@Autowired
+	LogCallbackHandler logCallbackHandler
 	
 	@Value('${pipeline.id:}')
 	String pipelineId
@@ -105,6 +109,8 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 
 
 	def outputPipeline() {
+		
+		logCallbackHandler.pipelineId = pipelineId
 		
 		if (!userName || userName.trim().length() == 0) {
 			userName = null
@@ -286,11 +292,16 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 			def updateData = [completionOptions: opts, status: 'completed', lastMergeSourceCommit: prd.lastMergeSourceCommit]
 			logInfo(pipelineId, "Updating pull request")
 			//codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
+			int retryCount = 0
 			while (true) {
 				try {
 					System.sleep(5000)
 				} catch (e) {}
 				prd = codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
+				if (retryCount == 10) {
+					throw new Exception("Unable to update pull request.  Http 403.")
+				}
+				retryCount++
 				if (!prd) continue
 				
 				String status = "${prd.status}"

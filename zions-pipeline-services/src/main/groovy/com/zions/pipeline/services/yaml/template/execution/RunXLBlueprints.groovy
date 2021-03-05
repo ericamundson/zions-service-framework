@@ -192,6 +192,7 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 			def opts = [deleteSourceBranch: true, mergeCommitMessage: pullRequestComment, mergeStrategy: 'noFastForward', autoCompleteIgnoreConfigIds: [], bypassPolicy: false, transitionWorkItems: false]
 			def updateData = [completionOptions: opts, status: 'completed', lastMergeSourceCommit: prd.lastMergeSourceCommit]
 			//codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
+			int retryCount = 0
 			while (true) {
 				try {
 					System.sleep(5000)
@@ -200,10 +201,15 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 //				if (!prd) {
 //					throw new Exception("Unable to update pull request.  Most likely service accounts don't have permissions!")
 //				}
+				if (retryCount == 10) {
+					throw new Exception("Unable to update pull request.  Http 403.")
+				}
+				retryCount++
 				if (!prd) continue
 				String status = "${prd.status}"
 				if (status != 'active') break
 			}
+			codeManagementService.deleteBranch('', projectData.id, repoData.id, branchName)
 		} catch (Exception e) {
 			log.error(e.message)
 			throw e

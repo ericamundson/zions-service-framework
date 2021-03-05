@@ -7,6 +7,7 @@ import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import com.zions.pipeline.services.feedback.LogCallbackHandler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -61,9 +62,14 @@ public class AppConfigXlrDbTest {
 		return new CommandManagementService();
 	}
 	
+	@Autowired
+	LogCallbackHandler logCallbackHandler
+
 	@Bean
 	IGenericRestClient genericRestClient() {
-		return new MultiUserGenericRestClient()
+		MultiUserGenericRestClient restClient = new MultiUserGenericRestClient()
+		restClient.failureCallback = logCallbackHandler.failureCallback
+		return restClient
 	}
 	
 	@Bean

@@ -11,7 +11,15 @@ import org.springframework.stereotype.Component
 @Component('multiUserGenericRestClient')
 @Slf4j
 class MultiUserGenericRestClient implements IGenericRestClient {
-	
+	Closure failureCallback = { resp ->
+		if (resp.entity) {
+			def outputStream = new ByteArrayOutputStream()
+			resp.entity.writeTo(outputStream)
+			def errorMsg = outputStream.toString('utf8')
+			log.error("ADO Http error response:  ${errorMsg}")
+		}
+		return resp
+	}
 	//@Autowired(required = false)
 	List<GenericRestClient> genericRestClients = new ArrayList<GenericRestClient>()
 	
@@ -47,6 +55,7 @@ class MultiUserGenericRestClient implements IGenericRestClient {
 			int i = 0
 			tfsUsers.each { user ->
 				GenericRestClient client = new GenericRestClient(tfsUrl, user, tfsTokens[i])
+				client.delegate.handler.failure = failureCallback
 				genericRestClients.add(client)
 				i++
 			}
