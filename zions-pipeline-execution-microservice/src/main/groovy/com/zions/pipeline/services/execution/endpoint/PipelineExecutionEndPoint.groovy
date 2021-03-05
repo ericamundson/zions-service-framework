@@ -16,7 +16,7 @@ import groovy.json.JsonBuilder
 import com.zions.vsts.services.code.CodeManagementService
 
 import com.zions.vsts.services.rmq.mixins.MessageReceiverTrait
-
+import com.zions.vsts.services.tfs.rest.IFailureHandler
 import com.zions.pipeline.services.yaml.execution.YamlExecutionService
 import com.zions.pipeline.services.db.PullRequestCompletedRepository
 import com.zions.pipeline.services.mixins.FeedbackTrait
@@ -44,7 +44,7 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait, FeedbackTrait {
 	PullRequestCompletedRepository pullRequestCompletedRepository
 	
 	@Autowired
-	LogCallbackHandler logCallbackHandler
+	IFailureHandler defaultFailureHandler
 
 	@Value('${pipeline.folders:.pipeline,pipeline}')
 	String[] pipelineFolders
@@ -81,7 +81,7 @@ class PipelineExecutionEndPoint implements MessageReceiverTrait, FeedbackTrait {
 			if (status != 'completed') return null
 			String comment = "${adoData.resource.completionOptions.mergeCommitMessage}"
 			String pipelineId = getPipelineId(comment)
-			logCallbackHandler.pipelineId = pipelineId
+			defaultFailureHandler.pipelineId = pipelineId
 			String userName = getUserName(comment)
 			String pullRequestId = "${adoData.resource.pullRequestId}"
 			PullRequestCompleted prc = pullRequestCompletedRepository.findByPullRequestId(pullRequestId)
