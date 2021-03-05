@@ -309,7 +309,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 				if (status != 'active') break
 			}
 		} catch (Exception e) {
-			logContextComplete(pipelineId, '"Blueprint pull request"')
+			logContextComplete(pipelineId, "Blueprint pull request")
 			logContextStart(pipelineId, "Completed")
 			logFailed(pipelineId, e.message)
 			logContextComplete(pipelineId, "Completed")
@@ -319,7 +319,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 		finally {
 			policyManagementService.restoreBranchPolicies('', projectData, repoData.id, repoTargetBranch, policies)
 		}
-		logContextComplete(pipelineId, '"Blueprint pull request"')
+		logContextComplete(pipelineId, "Blueprint pull request")
 	}
 
 	def getIdentity(String uniqueName) {
