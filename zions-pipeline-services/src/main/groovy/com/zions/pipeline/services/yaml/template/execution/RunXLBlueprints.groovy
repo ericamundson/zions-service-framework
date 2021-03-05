@@ -198,9 +198,15 @@ class RunXLBlueprints implements IExecutableYamlHandler, CliRunnerTrait, XLCliTr
 					System.sleep(5000)
 				} catch (e) {}
 				prd = codeManagementService.updatePullRequest('', projectData.id, repoData.id, prId, updateData)
-//				if (!prd) {
-//					throw new Exception("Unable to update pull request.  Most likely service accounts don't have permissions!")
-//				}
+				if (!prd) {
+					//throw new Exception("Unable to update pull request.  Most likely service accounts don't have permissions!")
+					policies = policyManagementService.getBranchPolicies(project, repoId, branchName)
+					if (policies) {
+						logWarn(pipelineId, "Policy micro-service is still locking down 'master' branch")
+						policies = policyManagementService.clearBranchPolicies('', projectData, repoData.id, repoTargetBranch)
+					}
+					
+				}
 				if (retryCount == 10) {
 					throw new Exception("Unable to update pull request.  Http 403.")
 				}
