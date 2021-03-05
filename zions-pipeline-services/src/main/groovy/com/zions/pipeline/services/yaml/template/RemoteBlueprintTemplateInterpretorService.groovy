@@ -25,6 +25,7 @@ import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import org.eclipse.jgit.api.Git
 import com.zions.pipeline.services.feedback.LogCallbackHandler
+import com.zions.vsts.services.tfs.rest.IFailureHandler
  
 
 /**
@@ -42,7 +43,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 	Map<String, IExecutableYamlHandler> yamlHandlerMap;
 	
 	@Autowired
-	LogCallbackHandler logCallbackHandler
+	IFailureHandler defaultFailureHandler
 	
 	@Value('${pipeline.id:}')
 	String pipelineId
@@ -110,7 +111,7 @@ class RemoteBlueprintTemplateInterpretorService implements  FindExecutableYamlNo
 
 	def outputPipeline() {
 		
-		logCallbackHandler.pipelineId = pipelineId
+		defaultFailureHandler.pipelineId = pipelineId
 		
 		if (!userName || userName.trim().length() == 0) {
 			userName = null
