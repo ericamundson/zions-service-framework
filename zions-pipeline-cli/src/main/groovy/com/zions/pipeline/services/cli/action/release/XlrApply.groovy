@@ -67,9 +67,9 @@ class XlrApply implements CliAction, XLCliTrait, CliRunnerTrait {
 		String[] sValues = convertSecrets()
 		if (sValues.length > 0) {
 			String valuesStr = sValues.join(',')
-			arg = [line: "${option} ${xlFileParent.absolutePath}/xl apply  -f ${buildSourcesDirectory.absolutePath}/${xlFileName} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}"]
+			arg = [line: "${option} ${xlFileParent.absolutePath}/xl apply  -f ${buildSourcesDirectory.absolutePath}/${xlFileName} -d --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}  --values ${valuesStr}"]
 		} else {
-			arg = [ line: "${option} ${xlFileParent.absolutePath}/xl apply -f ${buildSourcesDirectory.absolutePath}/${xlFileName} --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}" ]
+			arg = [ line: "${option} ${xlFileParent.absolutePath}/xl apply -f ${buildSourcesDirectory.absolutePath}/${xlFileName} -d --xl-release-url ${xlrUrl} --xl-release-username ${xlUser} --xl-release-password ${xlPassword}" ]
 			
 		}
 //		log.info( "CLI: ${arg.line}")
