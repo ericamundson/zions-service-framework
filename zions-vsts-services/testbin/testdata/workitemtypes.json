@@ -1,0 +1,192 @@
+{
+	"count": 17,
+	"value": [
+		{
+			"referenceName": "DTSTest.EnhancementRequest",
+			"name": "Enhancement Request",
+			"description": "Translated work item 'Enhancement Request' from external system.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.EnhancementRequest",
+			"customization": "custom",
+			"color": "9eefdf",
+			"icon": "icon_clipboard",
+			"isDisabled": false,
+			"inherits": null
+		},
+		{
+			"referenceName": "DTSTest.Epic",
+			"name": "Epic",
+			"description": "Epics help teams effectively manage and groom their product backlog.  Update for external system extensions.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.Epic",
+			"customization": "inherited",
+			"color": "FF7B00",
+			"icon": "icon_crown",
+			"isDisabled": false,
+			"inherits": "Microsoft.VSTS.WorkItemTypes.Epic"
+		},
+		{
+			"referenceName": "DTSTest.Task",
+			"name": "Task",
+			"description": "Tracks work that needs to be done..  Update for external system extensions.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.Task",
+			"customization": "inherited",
+			"color": "F2CB1D",
+			"icon": "icon_clipboard",
+			"isDisabled": false,
+			"inherits": "Microsoft.VSTS.WorkItemTypes.Task"
+		},
+		{
+			"referenceName": "DTSTest.InfrastructureRequest",
+			"name": "Infrastructure Request",
+			"description": "Translated work item 'Infrastructure Request' from external system.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.InfrastructureRequest",
+			"customization": "custom",
+			"color": "c1d7ff",
+			"icon": "icon_clipboard",
+			"isDisabled": false,
+			"inherits": null
+		},
+		{
+			"referenceName": "DTSTest.Initiative",
+			"name": "Initiative",
+			"description": "Translated work item 'Initiative' from external system.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.Initiative",
+			"customization": "custom",
+			"color": "b7de40",
+			"icon": "icon_clipboard",
+			"isDisabled": false,
+			"inherits": null
+		},
+		{
+			"referenceName": "DTSTest.TestPlan",
+			"name": "Test Plan",
+			"description": "Tracks test activities for a specific milestone or release.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.TestPlan",
+			"customization": "inherited",
+			"color": "004B50",
+			"icon": "icon_test_plan",
+			"isDisabled": false,
+			"inherits": "Microsoft.VSTS.WorkItemTypes.TestPlan"
+		},
+		{
+			"referenceName": "DTSTest.Retrospective",
+			"name": "Retrospective",
+			"description": "Translated work item 'Retrospective' from external system.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.Retrospective",
+			"customization": "custom",
+			"color": "b07838",
+			"icon": "icon_clipboard",
+			"isDisabled": false,
+			"inherits": null
+		},
+		{
+			"referenceName": "DTSTest.Issue",
+			"name": "Issue",
+			"description": "Tracks an obstacle to progress..  Update for external system extensions.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.Issue",
+			"customization": "inherited",
+			"color": "B4009E",
+			"icon": "icon_traffic_cone",
+			"isDisabled": false,
+			"inherits": "Microsoft.VSTS.WorkItemTypes.Issue"
+		},
+		{
+			"referenceName": "DTSTest.Spike",
+			"name": "Spike",
+			"description": "Translated work item 'Spike' from external system.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.Spike",
+			"customization": "custom",
+			"color": "f775c1",
+			"icon": "icon_clipboard",
+			"isDisabled": false,
+			"inherits": null
+		},
+		{
+			"referenceName": "DTSTest.AdoptionItem",
+			"name": "Adoption Item",
+			"description": "Translated work item 'Adoption Item' from external system.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.AdoptionItem",
+			"customization": "custom",
+			"color": "7bc736",
+			"icon": "icon_clipboard",
+			"isDisabled": false,
+			"inherits": null
+		},
+		{
+			"referenceName": "DTSTest.Feature",
+			"name": "Feature",
+			"description": "Tracks a feature that will be released with the product.  Update for external system extensions.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.Feature",
+			"customization": "inherited",
+			"color": "773B93",
+			"icon": "icon_trophy",
+			"isDisabled": false,
+			"inherits": "Microsoft.VSTS.WorkItemTypes.Feature"
+		},
+		{
+			"referenceName": "DTSTest.AdhocRequest",
+			"name": "Adhoc Request",
+			"description": "Translated work item 'Adhoc Request' from external system.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.AdhocRequest",
+			"customization": "custom",
+			"color": "8cd968",
+			"icon": "icon_clipboard",
+			"isDisabled": false,
+			"inherits": null
+		},
+		{
+			"referenceName": "DTSTest.Impediment",
+			"name": "Impediment",
+			"description": "Translated work item 'Impediment' from external system.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.Impediment",
+			"customization": "custom",
+			"color": "381230",
+			"icon": "icon_clipboard",
+			"isDisabled": false,
+			"inherits": null
+		},
+		{
+			"referenceName": "DTSTest.UserStory",
+			"name": "User Story",
+			"description": "Tracks an activity the user will be able to perform with the product.  Update for external system extensions.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.UserStory",
+			"customization": "inherited",
+			"color": "009CCC",
+			"icon": "icon_book",
+			"isDisabled": false,
+			"inherits": "Microsoft.VSTS.WorkItemTypes.UserStory"
+		},
+		{
+			"referenceName": "DTSTest.Bug",
+			"name": "Bug",
+			"description": "Describes a divergence between required and actual behavior, and tracks the work done to correct the defect and verify the correction..  Update for external system extensions.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/DTSTest.Bug",
+			"customization": "inherited",
+			"color": "CC293D",
+			"icon": "icon_insect",
+			"isDisabled": false,
+			"inherits": "Microsoft.VSTS.WorkItemTypes.Bug"
+		},
+		{
+			"referenceName": "Microsoft.VSTS.WorkItemTypes.TestCase",
+			"name": "Test Case",
+			"description": "Server-side data for a set of steps to be tested.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/Microsoft.VSTS.WorkItemTypes.TestCase",
+			"customization": "system",
+			"color": "004B50",
+			"icon": "icon_test_case",
+			"isDisabled": false,
+			"inherits": null
+		},
+		{
+			"referenceName": "Microsoft.VSTS.WorkItemTypes.TestSuite",
+			"name": "Test Suite",
+			"description": "Tracks test activites for a specific feature, requirement, or user story.",
+			"url": "https://eto-dev.visualstudio.com/_apis/work/processes/b716aa6b-2aca-4fc2-a6d8-6f0c10f156d1/workItemTypes/Microsoft.VSTS.WorkItemTypes.TestSuite",
+			"customization": "system",
+			"color": "004B50",
+			"icon": "icon_test_suite",
+			"isDisabled": false,
+			"inherits": null
+		}
+	]
+}

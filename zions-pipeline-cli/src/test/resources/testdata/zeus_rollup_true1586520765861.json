@@ -1,9 +1,0 @@
-{
-    "method": "get",
-    "url": "https://dev.azure.com/zionseto//Zeus/_apis/build/builds/32356/workitems",
-    "query": {
-        "api-version": "5.1"
-    },
-    "type": "json",
-    "data": "{\n    \"count\": 2,\n    \"value\": [\n        {\n            \"id\": \"1035442\",\n            \"url\": \"https://dev.azure.com/ZionsETO/_apis/wit/workItems/1035442\"\n        },\n        {\n            \"id\": \"1114153\",\n            \"url\": \"https://dev.azure.com/ZionsETO/_apis/wit/workItems/1114153\"\n        }\n    ]\n}"
-}

@@ -6,7 +6,7 @@ jar {
 }
 
 dependencies {
-	compile("org.springframework.boot:spring-boot-starter-aop")
+	compile("org.springframework.boot:spring-boot-starter-aop:2.2.2.RELEASE")
 	compile 'org.apache.poi:poi:3.17'
 	compile 'org.apache.poi:poi-ooxml:3.17'
 	

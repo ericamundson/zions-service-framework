@@ -1,6 +1,6 @@
 /.gradle/
+/.settings/
 /bin/
 /build/
-/gitPublish/
 .classpath
 .project

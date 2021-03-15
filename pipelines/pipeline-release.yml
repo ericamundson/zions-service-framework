@@ -7,10 +7,7 @@ trigger:
     - master
   paths:
     include:
-    - 'zions-pipeline-cli/*'
-    - 'zions-pipeline-services/*'
-    - 'zions-xlr-services/*'
-    - 'zions-xld-services/*'
+    - 'none/*'
     
   
  
@@ -34,7 +31,7 @@ stages:
       displayName: 'Tag Pending'
       inputs:
         OutputVariable: buildTag
-        InitialVersionPrefix: 7.0.0
+        InitialVersionPrefix: 7.1.0
 
     - task: Gradle@2
       displayName: 'gradlew clean build updateBatJarVersion'
@@ -42,19 +39,10 @@ stages:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
         workingDirectory: '$(Build.SourcesDirectory)'
         options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=pipeline'
-        tasks: 'clean build updateBatJarVersion'
+        tasks: 'clean build zions-common:uploadArchives zions-vsts-service:uploadArchives zions-common-data:uploadArchives'
         publishJUnitResults: false
 
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: |
-         **/build/libs/*.jar
-        TargetFolder: '$(build.artifactstagingdirectory)'
-        CleanTargetFolder: true
-        OverWrite: true
-
+ 
     - task: PublishTestResults@2
       displayName: 'Publish Test Results **/TEST-*.xml'
       enabled: false
@@ -67,29 +55,4 @@ stages:
 #       continueOnError: true
 #       enabled: true
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: pipeline-drop'
-      inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
-        ArtifactName: 'pipeline-drop'
-
-    - task: Gradle@2
-      displayName: 'gradlew gitPublishPush'
-      inputs:
-        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
-        workingDirectory: '$(Build.SourcesDirectory)'
-        options: '--no-scan -Pversion=$(buildTag) -Pqueue=Hosted -PpublishLocation=$(system.defaultworkingdirectory)/gitPublish -DGRAPHVIZ_DOT=$(system.defaultworkingdirectory)/graphviz/bin/dot.exe'
-        tasks: gitPublishPush
-        publishJUnitResults: false
-      enabled: false
-
-    - task: xebialabs.tfs2015-xl-deploy-plugin.C36FC88A-B479-461F-8067-8C3254AF356C.XLDeploy@7
-      displayName: 'Publish to XL Deploy'
-      inputs:
-        manifestPath: 'dar/deployit-manifest.xml'
-        connectedServiceName: 'XL Deploy - Production'
-        version: true
-        versionNumber: '$(Tag)'
-      enabled: false
-      continueOnError: true
-      
+     

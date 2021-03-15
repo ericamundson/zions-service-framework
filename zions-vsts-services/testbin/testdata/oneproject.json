@@ -1,0 +1,14 @@
+{
+	"count": 1,
+	"value": [
+		{
+			"id": "76e58233-44a1-4241-8d2c-09db3fbca66d",
+			"name": "DigitalBanking",
+			"description": "DigitalBanking is a multi-team project consisting of Online Banking, Mobile Banking and D3 ",
+			"url": "https://eto-dev.visualstudio.com/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d",
+			"state": "wellFormed",
+			"revision": 81,
+			"visibility": "private"
+		}
+	]
+}

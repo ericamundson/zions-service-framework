@@ -1,9 +1,0 @@
-bootJar { enabled = false }
-jar {
-	enabled = true
-	baseName = 'zions-xld-services'
-}
-
-dependencies {
-	compile project(':zions-common')
-}

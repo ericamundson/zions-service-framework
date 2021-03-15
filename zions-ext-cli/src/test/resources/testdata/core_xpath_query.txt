@@ -1,1 +1,0 @@
-workitem/workItem[(projectArea/name='Zions FutureCore Program (Change Management)' and type/name='Task' and parent/type/name='Anomaly')]/(id|summary)
