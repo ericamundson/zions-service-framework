@@ -1,0 +1,22 @@
+---
+
+# Updated 2021-03-15 14:16:56.756795315 -0600 MDT m=+1.204445422
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+- name: Infrastructure/DTS
+  type: core.Directory
+  children:
+  - directory: microservice
+    children:
+    
+    - name: Dev
+      type: overthere.SmbHost
+      address: UTMSDEV0566
+      username: svc-vsbuildagent@zbc.internal
+      password: !value "svc_account_passwd"
+    - name: Prod
+      type: overthere.SmbHost
+      address: UTMVPI0144
+      username: svc-vsbuildagent@zbc.internal
+      password: !value "svc_account_passwd"

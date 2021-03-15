@@ -1,0 +1,10 @@
+executables:
+#Updated 2021-03-15 14:16:56.735044518 -0600 MDT m=+1.182694677
+- name: zions-vsts-mapfield-microservice-release
+  type: buildDefinition
+  context: zionseto
+  project: DTS
+  queue: 'On-Prem Production'
+  repository:
+    name: zions-service-framework
+  buildyaml: zions-vsts-mapfield-microservice/.pipeline/ado/microservice-release.yaml
