@@ -5,10 +5,10 @@ jar {
 	enabled = true
 }
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-websocket")
-    compile("org.springframework.boot:spring-boot-starter-amqp")
-	compile("org.springframework:spring-websocket")
-	compile("org.springframework:spring-messaging")
+    compile("org.springframework.boot:spring-boot-starter-websocket:2.2.2.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-amqp:2.2.2.RELEASE")
+	compile("org.springframework:spring-websocket:5.2.2.RELEASE")
+	compile("org.springframework:spring-messaging:5.2.2.RELEASE")
     //compile("org.springframework.amqp:spring-rabbit-test:")
 	compile 'org.apache.ant:ant:1.9.4'
 	compile project(':zions-vsts-services')

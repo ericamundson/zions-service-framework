@@ -1,9 +1,0 @@
-{
-    "method": "get",
-    "url": "https://dev.azure.com/ZionsETO/_apis/git/repositories/84fef424-8673-4193-8628-504d64cb285f/commits/e12803268f08d3ce94dc5548a614c4c808237f19/changes",
-    "query": {
-        "api-version": "5.1"
-    },
-    "type": "json",
-    "data": "{\n    \"changeCounts\": {\n        \"Edit\": 1\n    },\n    \"changes\": [\n        {\n            \"item\": {\n                \"objectId\": \"60dac9d0b79dd24b076a5b2b8e0dcfa366d88c9b\",\n                \"originalObjectId\": \"3f2cc7e2dfd5865d96cc98304703a4f862fefa0e\",\n                \"gitObjectType\": \"blob\",\n                \"commitId\": \"e12803268f08d3ce94dc5548a614c4c808237f19\",\n                \"path\": \"/azure-pipelines.yml\",\n                \"url\": \"https://dev.azure.com/ZionsETO/43518088-539f-4983-819e-af90f4c48c72/_apis/git/repositories/84fef424-8673-4193-8628-504d64cb285f/items/azure-pipelines.yml?versionType=Commit&version=e12803268f08d3ce94dc5548a614c4c808237f19\"\n            },\n            \"changeType\": \"edit\"\n        }\n    ]\n}"
-}

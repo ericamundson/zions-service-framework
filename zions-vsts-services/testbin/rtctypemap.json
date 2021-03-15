@@ -1,0 +1,8 @@
+{"typemaps":[{"source":"contributor", "target":"string"},
+{"source":"timestamp", "target":"dateTime"},
+{"source":"integer", "target":"integer"},
+{"source":"smalltext", "target":"string"},
+{"source":"mediumHtml", "target":"html"},
+{"source":"html", "target":"html"},
+{"source":"duration", "target":"string"}
+]}

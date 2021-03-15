@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <oslc:ResponseInfo xmlns:oslc="http://open-services.net/ns/core#" rdf:about="https://clm.cs.zionsbank.com/rm/folders?oslc.where=public_rm%3Aparent%3Dhttps%3A%2F%2Fclm.cs.zionsbank.com%2Frm%2Ffolders%2F_mxVp8L1REeS5FIAyBUGhBQ">
-    <dcterms:title xmlns:dcterms="http://purl.org/dc/terms/">Folder Query Results</dcterms:title>
-  </oslc:ResponseInfo>
-  <nav:Description xmlns:nav="http://jazz.net/ns/rm/navigation#" rdf:about="https://clm.cs.zionsbank.com/rm/folders"/>
-</rdf:RDF>

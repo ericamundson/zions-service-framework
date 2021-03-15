@@ -1,9 +1,0 @@
-{
-    "method": "get",
-    "url": "https://xldeploy.cs.zionsbank.com/deployit/deployment/exists",
-    "query": {
-        "application": "Applications/Zeus/Releases/1912/Zeus_1912_App",
-        "environment": "Environments/Zeus/Releases/2305/BL/BL Promote PROD"
-    },
-    "type": "xml"
-}

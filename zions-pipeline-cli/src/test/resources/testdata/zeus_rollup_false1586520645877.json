@@ -1,7 +1,0 @@
-{
-    "method": "get",
-    "url": "https://xldeploy.cs.zionsbank.com/deployit/repository/ci/Applications/Zeus/Releases/1912/Zeus_1912_Provision",
-    "query": null,
-    "type": "json",
-    "data": "{\n    \"id\": \"Applications/Zeus/Releases/1912/Zeus_1912_Provision\",\n    \"type\": \"udm.Application\",\n    \"$token\": \"fcca4cd8-3bc7-406c-b101-de61eb72414e\",\n    \"$createdBy\": \"z075060\",\n    \"$createdAt\": \"2020-03-18T15:10:05.606+0000\",\n    \"$lastModifiedBy\": \"z075060\",\n    \"$lastModifiedAt\": \"2020-04-08T22:11:33.503+0000\",\n    \"lastVersion\": \"\",\n    \"pipeline\": \"Configuration/Zeus/Zeus_1912_Provision_Pipeline\"\n}"
-}

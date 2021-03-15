@@ -17,5 +17,5 @@
 <listEntry value="clean"/>
 <listEntry value="build"/>
 </listAttribute>
-<stringAttribute key="working_dir" value="${workspace_loc:/zions-pipeline-execution-microservice}"/>
+<stringAttribute key="working_dir" value="${workspace_loc:/zions-xlrtoado-event-microservice}"/>
 </launchConfiguration>

@@ -1,1 +1,0 @@
-https://clm.cs.zionsbank.com/qm/service/com.ibm.rqm.integration.service.IIntegrationService/resources/Zions+FutureCore+Program+%28Quality+Management%29/testcase/FIN.EV000.SE000.SC000.SS000.TC001|BE

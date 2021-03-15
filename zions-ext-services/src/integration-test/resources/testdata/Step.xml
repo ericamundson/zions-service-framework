@@ -1,6 +1,0 @@
-<witd:WITD application='Work item type editor' version='1.0' xmlns:witd='http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef'>
-  <WORKITEMTYPE name='Step'>
-    <DESCRIPTION>general work item starter</DESCRIPTION>
-    <FIELDS />
-  </WORKITEMTYPE>
-</witd:WITD>

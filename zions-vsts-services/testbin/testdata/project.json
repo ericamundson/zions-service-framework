@@ -1,0 +1,25 @@
+{
+	"id": "76e58233-44a1-4241-8d2c-09db3fbca66d",
+	"name": "DigitalBanking",
+	"description": "DigitalBanking is a multi-team project consisting of Online Banking, Mobile Banking and D3 ",
+	"url": "https://eto-dev.visualstudio.com/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d",
+	"state": "wellFormed",
+	"revision": 81,
+	"_links": {
+		"self": {
+			"href": "https://eto-dev.visualstudio.com/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d"
+		},
+		"collection": {
+			"href": "https://eto-dev.visualstudio.com/_apis/projectCollections/1bec1897-29a0-44d0-80a8-670c5ae5ef4a"
+		},
+		"web": {
+			"href": "https://eto-dev.visualstudio.com/DigitalBanking"
+		}
+	},
+	"visibility": "private",
+	"defaultTeam": {
+		"id": "9c96508a-bdf7-4b46-8a0e-f2136b5a9a9d",
+		"name": "DigitalBanking Team",
+		"url": "https://eto-dev.visualstudio.com/_apis/projects/76e58233-44a1-4241-8d2c-09db3fbca66d/teams/9c96508a-bdf7-4b46-8a0e-f2136b5a9a9d"
+	}
+}

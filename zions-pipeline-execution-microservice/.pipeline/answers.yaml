@@ -1,9 +1,0 @@
----
-AppName: zions-pipeline-execution-microservice
-Platform: Windows
-RequiresCollection: false
-BuildIncludes: zions-pipeline-execution-microservice/*,zions-pipeline-services/*
-Queuename: GIT-pipelineexecution-queue
-WSTopics: git.pullrequest.merged
-IdList: 0,1,2
-DeployDev: false

@@ -1,1 +1,0 @@
-FS-CIF-084/PSA-CIF-063-111/Customer level has field "Last Customer Transaction Source" updated with the source which updated "Last Customer Transaction date"/Positive
