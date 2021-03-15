@@ -7,10 +7,10 @@ trigger:
     - master
   paths:
     include:
-    - 'zions-common/*'
-    - 'zions-common-data/*'
-    - 'zions-vsts-services/*'
-    - 'zions-vsts-microservice/*'
+    - 'zions-common/src/*'
+    - 'zions-common-data/src/*'
+    - 'zions-vsts-services/src/*'
+    - 'zions-vsts-microservice/src/*'
     
   
  
