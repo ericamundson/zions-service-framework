@@ -20,7 +20,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 
 @Configuration
 @Profile("code")
-@ComponentScan(["com.zions.vsts.services.action.code,com.zions.vsts.services.admin,com.zions.vsts.services.code,com.zions.vsts.services.build,com.zions.vsts.services.endpoint,com.zions.vsts.services.permissions,com.zions.vsts.services.release,com.zions.vsts.services.notification"])
+@ComponentScan(["com.zions.vsts.services.action.code,com.zions.vsts.services.admin,com.zions.vsts.services.code,com.zions.vsts.services.build,com.zions.vsts.services.endpoint,com.zions.vsts.services.permissions,com.zions.vsts.services.release,com.zions.common.services.notification"])
 public class CodeAppConfig {
     Map<String, CliAction> actions;
     
