@@ -8,8 +8,6 @@ import org.springframework.amqp.core.Message
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.beans.factory.annotation.Value
 
-import com.zions.vsts.services.notification.NotificationService
-
 trait MessageReceiverTrait implements MessageListener {
 	private static final String X_RETRIES_HEADER = "x-retries"
 	@Autowired(required=false)

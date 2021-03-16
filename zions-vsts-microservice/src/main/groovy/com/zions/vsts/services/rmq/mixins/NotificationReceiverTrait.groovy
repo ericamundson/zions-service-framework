@@ -8,7 +8,7 @@ import org.springframework.amqp.core.Message
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.beans.factory.annotation.Value
 
-import com.zions.vsts.services.notification.NotificationService
+import com.zions.common.services.notification.NotificationService
 
 trait NotificationReceiverTrait implements MessageListener {
 	

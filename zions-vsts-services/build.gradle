@@ -6,7 +6,4 @@ jar {
 }
 dependencies {
 	compile project(':zions-common')
-	compile 'org.springframework.boot:spring-boot-starter-mail:2.2.2.RELEASE'
-	compile 'javax.mail:javax.mail-api:1.6.2'
-
 }

@@ -8,11 +8,11 @@ import groovy.json.JsonBuilder;
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 
+import com.zions.common.services.notification.NotificationService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.release.ReleaseManagementService
-import com.zions.vsts.services.notification.NotificationService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 
 /**

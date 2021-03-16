@@ -6,9 +6,9 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.stereotype.Component
 
 import com.zions.common.services.attachments.IAttachments
+import com.zions.common.services.notification.NotificationService
 import com.zions.vsts.services.work.WorkManagementService
 import com.zions.webbot.cli.CliWebBot
-import com.zions.vsts.services.notification.NotificationService
 import com.zions.auto.base.CompletedSteps
 import com.zions.auto.base.Fiddler
 import com.zions.auto.pages.CollectionPage
