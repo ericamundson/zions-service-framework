@@ -1,6 +1,6 @@
 rootProject.name = 'zions-service-framework'
 if ("${context}" == 'all') {
-	include ':zions-vsts-cli'
+	//include ':zions-vsts-cli'
 	//include ':zions-vsts-scheduler'
 	include ':zions-vsts-services'
 	include ':zions-vsts-build-microservice'
@@ -57,7 +57,7 @@ if ("${context}" == 'nexus') {
 	
 }
 if ("${context}" == 'ALMOps') {
-	include ':zions-vsts-cli'
+	//include ':zions-vsts-cli'
 	//include ':zions-vsts-scheduler'
 	include ':zions-vsts-services'
 	//include ':zions-ext-cli'
