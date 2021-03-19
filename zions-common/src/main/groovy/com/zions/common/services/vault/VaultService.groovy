@@ -42,7 +42,7 @@ class VaultService {
 		}
 	}
 	
-	def getSecrets(String engine, String path, boolean rollup = true) {
+	def getSecrets(String engine, String path, boolean rollup = true, boolean actual = false) {
 		String vtoken = env.getProperty('spring.cloud.vault.token')
 		if (rollup) {
 			String[] parts = path.split('/')
@@ -71,6 +71,8 @@ class VaultService {
 				uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${path}",
 				headers: ['X-Vault-Token': vaultToken, Accept: 'application/json'],
 				)
+				
+			if (actual) return result
 			if (result && result.data && result.data.data) {
 				return result.data.data
 			}
@@ -83,8 +85,10 @@ class VaultService {
 		Map out = [:]
 		for (String path in paths) {
 			def amap = getSecrets(engine, path)
-			amap.each { key, val ->
-				out[key] = val
+			if (amap) {
+				amap.each { key, val ->
+					out[key] = val
+				}
 			}
 		}
 		return out
@@ -92,21 +96,34 @@ class VaultService {
 	
 	def ensureSecrets(String engine, String path, Map data) {
 		String vtoken = env.getProperty('spring.cloud.vault.token')
-		Map cData = getSecrets(engine, path, false)
+		Map cData = getSecrets(engine, path, false, true)
 		Map oData = data
-		if (cData) {
-			oData = cData
+		if (cData && cData.data && cData.data.data) {
+			oData = cData.data.data
 			data.each { key, val ->
 				oData[key] = val
 			}
 		} 
 		def body = [options: [cas: 0], data: oData]
-		def result = vaultRestClient.post(
+		def result = null
+		if (!cData) {
+			result = vaultRestClient.post(
+					requestContentType: ContentType.JSON,
+					uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${path}",
+					headers: ['X-Vault-Token': vaultToken, Accept: 'application/json'],
+					body: body
+					)
+		} else {
+			int version = cData.data.metadata.version
+			body.options.cas = version
+			result = vaultRestClient.put(
 				requestContentType: ContentType.JSON,
 				uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${path}",
 				headers: ['X-Vault-Token': vaultToken, Accept: 'application/json'],
 				body: body
 				)
+
+		}
 		return result
 	}
 	
