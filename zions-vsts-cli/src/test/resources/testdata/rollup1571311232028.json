@@ -1,8 +1,0 @@
-{
-    "url": "https://dev.azure.com/ZionsETO/_apis/git/repositories/84fef424-8673-4193-8628-504d64cb285f/commits/f45946f31992c5670140f756ae3d7325b1551ad9/changes",
-    "query": {
-        "api-version": "5.1"
-    },
-    "type": "json",
-    "data": "{\n    \"changeCounts\": {\n        \"Edit\": 2\n    },\n    \"changes\": [\n        {\n            \"item\": {\n                \"objectId\": \"2230ef71ec8bfa11000c3dcc72f9e8a31708c899\",\n                \"originalObjectId\": \"76b04e45b5882a65bb76e704c5d575bc84e4a3a1\",\n                \"gitObjectType\": \"tree\",\n                \"commitId\": \"f45946f31992c5670140f756ae3d7325b1551ad9\",\n                \"path\": \"/dar\",\n                \"isFolder\": true,\n                \"url\": \"https://dev.azure.com/ZionsETO/43518088-539f-4983-819e-af90f4c48c72/_apis/git/repositories/84fef424-8673-4193-8628-504d64cb285f/items/dar?versionType=Commit&version=f45946f31992c5670140f756ae3d7325b1551ad9\"\n            },\n            \"changeType\": \"edit\"\n        },\n        {\n            \"item\": {\n                \"objectId\": \"74d6f956e48268a894bd51048f0100a826060826\",\n                \"originalObjectId\": \"6726d1c0d942a0fe02ac4db674c7f04ddccb9868\",\n                \"gitObjectType\": \"blob\",\n                \"commitId\": \"f45946f31992c5670140f756ae3d7325b1551ad9\",\n                \"path\": \"/dar/deployit-manifest.xml\",\n                \"url\": \"https://dev.azure.com/ZionsETO/43518088-539f-4983-819e-af90f4c48c72/_apis/git/repositories/84fef424-8673-4193-8628-504d64cb285f/items/dar%2Fdeployit-manifest.xml?versionType=Commit&version=f45946f31992c5670140f756ae3d7325b1551ad9\"\n            },\n            \"changeType\": \"edit\"\n        }\n    ]\n}"
-}
