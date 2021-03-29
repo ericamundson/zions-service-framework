@@ -55,7 +55,7 @@ class VaultService {
 					uri: "${vaultRestClient.vaultUrl}/v1/${engine}/data/${opath}",
 					headers: ['X-Vault-Token': vaultToken, Accept: 'application/json'],
 					)
-				if (result.data && result.data.data) {
+				if (result && result.data && result.data.data) {
 					def amap = result.data.data
 					amap.each { key, val ->
 						out[key] = val
