@@ -1,9 +1,0 @@
-{
-    "url": "https://dev.azure.com/zionseto//Zeus/_apis/build/builds/15267/changes",
-    "query": {
-        "api-version": "5.1",
-        "includeSourceChange": true
-    },
-    "type": "json",
-    "data": "{\n    \"count\": 1,\n    \"value\": [\n        {\n            \"id\": \"6e16aced8de7136dad42edaeda83104945fbc8ee\",\n            \"message\": \"Merged PR 5495: Fix\",\n            \"type\": \"TfsGit\",\n            \"author\": {\n                \"displayName\": \"Eric Amundson\",\n                \"_links\": {\n                    \"avatar\": {\n                        \"href\": \"https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj\"\n                    }\n                },\n                \"id\": null,\n                \"uniqueName\": \"Eric.Amundson2@zionsbancorp.com\"\n            },\n            \"timestamp\": \"2019-09-25T19:25:35Z\",\n            \"location\": \"https://dev.azure.com/ZionsETO/_apis/git/repositories/84fef424-8673-4193-8628-504d64cb285f/commits/6e16aced8de7136dad42edaeda83104945fbc8ee\",\n            \"messageTruncated\": true,\n            \"pusher\": \"34cfc788-d82e-61e0-bf5d-9eabfb8194dc\"\n        }\n    ]\n}"
-}

@@ -1,9 +1,0 @@
-{
-    "url": "https://dev.azure.com/zionseto//Zeus/_apis/build/builds/15456/changes",
-    "query": {
-        "api-version": "5.1",
-        "includeSourceChange": true
-    },
-    "type": "json",
-    "data": "{\n    \"count\": 1,\n    \"value\": [\n        {\n            \"id\": \"581846fd5b52cf608a85d9ff077e318855bd5f58\",\n            \"message\": \"Merged PR 5564: New stuff\",\n            \"type\": \"TfsGit\",\n            \"author\": {\n                \"displayName\": \"Eric Amundson\",\n                \"_links\": {\n                    \"avatar\": {\n                        \"href\": \"https://dev.azure.com/ZionsETO/_apis/GraphProfile/MemberAvatars/aad.MzRjZmM3ODgtZDgyZS03MWUwLWJmNWQtOWVhYmZiODE5NGRj\"\n                    }\n                },\n                \"id\": null,\n                \"uniqueName\": \"Eric.Amundson2@zionsbancorp.com\"\n            },\n            \"timestamp\": \"2019-09-26T22:11:36Z\",\n            \"location\": \"https://dev.azure.com/ZionsETO/_apis/git/repositories/84fef424-8673-4193-8628-504d64cb285f/commits/581846fd5b52cf608a85d9ff077e318855bd5f58\",\n            \"messageTruncated\": true,\n            \"pusher\": \"34cfc788-d82e-61e0-bf5d-9eabfb8194dc\"\n        }\n    ]\n}"
-}
