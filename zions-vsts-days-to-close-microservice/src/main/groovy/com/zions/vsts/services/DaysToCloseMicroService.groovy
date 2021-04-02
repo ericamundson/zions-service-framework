@@ -63,11 +63,13 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			}
 			
 			def daystoClose = calcManagementService.calcDaysToClose(convClosedDate, attemptedCreateDate)
-
+			def daystoCount
+			String genPath
+			daystoClose = daystoCount
 			String rev = "${bugWI.rev}"
 			
 			
-			if (performIncrementCounter(this.attemptedProject, rev, this.attemptedId, daystoClose)) {
+			if (performIncrementCounter(this.attemptedProject, rev, genPath, this.attemptedId, daystoCount)) {
 				return logResult('Work item successfully counted after 412 retry')
 			}
 			
@@ -100,15 +102,20 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		
 		def outData = adoData
 		def wiResource = adoData.resource
-		
+		def daystoCount
+		String genPath
+		boolean resolveState = false
+		boolean closeState = false
+		String SysState
 		
 		//**Check for qualifying projects
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		if (includeProjects && !includeProjects.contains(project))
 			return logResult('Project not included')
 		
-		//get work item id and revision
+		//get work item id, state and revision
 		String id = "${wiResource.revision.id}"
+		SysState = "${wiResource.revision.fields.'System.State'}"
 		String rev = "${wiResource.rev}"
 		
 		//detect the work item type involved in the edit
@@ -130,31 +137,59 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		//Format the Created Date
 		Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
 		this.attemptedCreateDate = convCreateDate
-		//Get and format closedDate
 		
+		//evaluate state - resolved or closed?
+		if (SysState == 'Resolved') 
+			resolveState = true
+		
+		if (SysState == 'Closed')
+			closeState = true
+			
+				
+		//Get and format closedDate
 		def closedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ClosedDate'
 		Date convClosedDate 
 		
-		if (closedDate) {
+		if (closeState) {
 			convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
+			def daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
+			daystoCount = daystoClose
+			String closedPath = 'Custom.DaysToClose'
+			genPath = closedPath
 		}
+
 		
-		def daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
+		//Get and formate the Resolved Date
+		def resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
+		Date convResolvedDate
+		
+		if (resolveState) {
+			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
+			def daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
+			daystoCount = daystoResolve
+			String resolvedPath = 'Custom.DaysToResolve'
+			genPath = resolvedPath
+		}
+
 	
 		
 		log.debug("Updating count of $wiType #$id")
-		if (performIncrementCounter(project, rev, id, daystoClose, responseHandler)) {
+		if (performIncrementCounter(project, rev, id, daystoCount, genPath, responseHandler)) {
 			return logResult('Update Succeeded')
 		}
 	}
 
-		private def performIncrementCounter(String project, String rev, def id, def daystoClose, Closure respHandler = null) {
-	
+		//private def performIncrementCounter(String project, String rev, def id, def daystoClose, Closure respHandler = null) {
+		//generalize daystoClose value to daystoCount?
+		private def performIncrementCounter(String project, String rev, def id, def daystoCount, genPath, Closure respHandler = null) {
+			
+			String writePath = ("/fields/$genPath")
 			def data = []
 			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 			data.add(t)
 			
-			def e = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
+			//parameterize path: '/fields/Custom.DaysToClose to include DaysToResolve
+			def e = [op: 'add', path: writePath, value: daystoCount]
 			data.add(e)
 			this.retryFailed = false
 			this.attemptedProject = project
