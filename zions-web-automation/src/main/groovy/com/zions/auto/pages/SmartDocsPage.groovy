@@ -117,8 +117,12 @@ class SmartDocsPage extends BasePage {
 			String reviewXpath = "//div[@id=\'phReqReviewTitle\']/div"
 			// Try to click up to 4 times
 			waitMultiClick({By.xpath(reviewXpath)}, 'REVIEW VALIDATION: clicked on Review Title',1)
-			// Close the dialog
-			driver.findElement(By.cssSelector(".k-i-rvm-req-dialog-close")).click()
+			// Close the dialog - Added "moveToElement" fix for autologin where button is  not visible
+			WebElement element = driver.findElement(By.cssSelector(".k-i-rvm-req-dialog-close"));
+			Actions actions = new Actions(driver);
+			actions.moveToElement(element);
+			actions.perform();
+			element.click()
 			steps.add('REVIEW VALIDATION: clicked on Close Button')
 			// Try to click up to 4 times
 			waitMultiClick({By.id(CONFIRM_BUTTON)}, 'REVIEW VALIDATION: clicked on Confirm Button', 2000)
