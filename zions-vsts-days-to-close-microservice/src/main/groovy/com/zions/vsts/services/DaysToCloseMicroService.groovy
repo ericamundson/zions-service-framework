@@ -47,10 +47,16 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	String[] wiPfields
 	
 	@Value('${tfs.sourcestate}')
-	String sourceState
+	String[] sourceState
 	
 	@Value('${tfs.deststate}')
-	String destState
+	String[] destState
+	
+	@Value('${tfs.rsourcestate}')
+	String[] rsourceState
+	
+	@Value('${tfs.rdeststate}')
+	String[] rdestState
 	
 	// Handle HTTP 412 retry when work item revision has changed
 	boolean retryFailed
@@ -65,16 +71,39 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			// Get fresh copy of parent work item
 			def bugWI = workManagementService.getWorkItem(collection, attemptedProject, attemptedId)
 			def closedDate = bugWI.fields.'Microsoft.VSTS.Common.ClosedDate'
-			Date convClosedDate
-			Date convCreateDate
+			
+			String createDate = bugWI.fields.'System.CreatedDate'
+			Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
+			
 			def resolvedDate = bugWI.fields.'Microsoft.VSTS.Common.ResolvedDate'
 			Date convResolvedDate
+			Date convClosedDate
 			def daystoCount
 			String genPath
+			String project = bugWI.fields.'System.TeamProject'
 			boolean resolveState = false
 			boolean closeState = false
-			String SysState
+			boolean resetCount = false
+			boolean resetCloseCount = false
+			String SysState = bugWI.fields.'System.State'
 			String rev
+			String id = "${bugWI.id}"
+			def resetValues = []
+			def parentValues = []
+			String updField
+			def changes = []
+			def idMap = [:]
+			def count = 0
+			def stateField = bugWI.fields.'System.State'
+			//String oldState = stateField.oldValue
+			//String newState = stateField.newValue
+			String wiType = bugWI.fields.'System.WorkItemType'
+			
+			if (SysState == 'Resolved')
+				resolveState = true
+				
+			if (SysState == 'Closed')
+				closeState = true
 				
 			if (closeState) {
 			convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
@@ -92,14 +121,52 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			String resolvedPath = 'Custom.DaysToResolve'
 			genPath = resolvedPath
 			rev = "${bugWI.rev}"
-		}
-
-	
-			
-			if (performIncrementCounter(this.attemptedProject, rev, genPath, this.attemptedId, daystoCount)) {
-				return logResult('Work item successfully counted after 412 retry')
 			}
 			
+			if (resetCount) {
+				
+					wiPfields.each { field ->
+						def pVal = bugWI.fields["${field}"]
+						updField = "${pVal}"
+						daystoCount = 0;
+						parentValues.add(updField)
+					}
+				}
+			
+		
+			if (resetCloseCount) {
+			
+			rev = "${bugWI.rev}"
+			daystoCount = 0
+			String closedPath = 'Custom.DaysToClose'
+			genPath = closedPath
+			}
+
+				
+			if(resolveState || resetCloseCount) {
+				log.debug("Updating count of $wiType #$id")
+				performIncrementCounter(project, rev, id, daystoCount, genPath, responseHandler)
+			}
+				
+			if(resetCount || closeState ) {
+				log.debug("Setting count of $wiType #$id")
+				changes.add(getChanges(project, rev, id, daystoCount))
+				(getChanges(this.attemptedProject, rev, this.attemptedId, parentValues))
+				idMap[count] = "${id}"
+				
+				if (changes.size() > 0) {
+					changes.each{change ->
+						//capture test data
+						//println(change.body.toString())
+					}
+					// Process work item changes in Azure DevOps
+					log.debug("Processing work item changes...")
+					workManagementService.batchWIChanges(collection, changes, idMap)
+					return logResult('Add Update Succeeded')
+				}
+				
+			}
+				
 			else {
 				this.retryFailed = true
 				log.error('Failed update after 412 retry')
@@ -132,6 +199,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		def daystoCount
 		String genPath
 		boolean resolveState = false
+		boolean resetCloseCount = false
 		boolean closeState = false
 		boolean resetCount = false
 		String SysState
@@ -142,6 +210,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		def idMap = [:]
 		def count = 0
 		
+		
 		//**Check for qualifying projects
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
 		if (includeProjects && !includeProjects.contains(project))
@@ -151,6 +220,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		String id = "${wiResource.revision.id}"
 		SysState = "${wiResource.revision.fields.'System.State'}"
 		String rev = "${wiResource.rev}"
+		
 		//current values for daystoResolve and daystoClose
 		def cdaystoResolve = "${wiResource.revision.fields.'Custom.DaysToResolve'}"
 		def cdaystoClose = "${wiResource.revision.fields.'Custom.DaysToClose'}"
@@ -161,8 +231,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		
 		//NPE check
 		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('no changes made to state')
-		
-		
+			
 		//Get Created Date
 		String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
 		if (!createDate) {
@@ -172,14 +241,14 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		//Format the Created Date
 		Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
 		this.attemptedCreateDate = convCreateDate
-		
-		
+			
 		//Compare old/new system states
 		def stateField = wiResource.fields.'System.State'
 		
 		if (!stateField || stateField == 'null' || stateField == '') return logResult('not a state change')
 		//restrieve old/new state field values for comparison
 		String oldState = stateField.oldValue
+
 		if (!oldState || oldState == 'null') {
 			log.error("Error retrieving previous state for work item $id")
 			return 'Error Retrieving previous state'
@@ -190,39 +259,47 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			return 'Error Retrieving new state state'
 	}
 		
-		//evaluate state - resolved or closed?
+		//resetCloseCount check
+		if (oldState == 'Closed' && (newState == 'Resolved'))
+		resetCloseCount = true
+				
+		//set REsolve State True
 		if (SysState == 'Resolved')
 			resolveState = true
+		/*if (oldState == "New" || oldState == "Active" && (newState == "New" || newState == "Active"))
+			resolveState = false*/
 		
 		if (SysState == 'Closed')
 			closeState = true
 		
 		//from closed to new/active or resolved to new/active - otherwise no change.
-		//if (SysState == 'New' || SysState == 'Active')
 		if (sourceState.contains(oldState) && (destState.contains(newState)))
 			resetCount = true
-		else {
-			resetCount = false
-		}
-						
 				
 		//Get and format closedDate
 		def closedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ClosedDate'
 		Date convClosedDate
 		
 		if (closeState) {
-			convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
-			def daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
-			daystoCount = daystoClose
-			String closedPath = 'Custom.DaysToClose'
-			genPath = closedPath
+			
+			wiPfields.each { field ->
+				convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
+				def daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
+				daystoCount = daystoClose
+				def pVal = wiResource.revision.fields["${field}"]
+				updField = "${pVal}"
+				parentValues.add(updField)
+		
+			}
+		
 		}
 
-		
+	
 		//Get and formate the Resolved Date
 		def resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
 		Date convResolvedDate
 		
+				
 		if (resolveState) {
 			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
 			def daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
@@ -248,25 +325,24 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			
 		}
 		
-		if (resetCount == false && closeState == false && resolveState == false)
-			return logResult('Changes not applicable')
-		
-		
-		
-		/*if (getChanges(project, rev, id, daystoCount, resetValues, responseHandler)) {
-			return logResult('Update Succeeded')
+		if (resetCloseCount) {
+	
+			daystoCount = 0
+			String closedPath = 'Custom.DaysToClose'
+			genPath = closedPath
 		}
 		
-		if (performIncrementCounter(project, rev, id, daystoCount, genPath, responseHandler)) {
-			return logResult('Update Succeeded')
-		}*/
-		if(resolveState || closeState) {
+		
+		if (resetCount == false && closeState == false && resolveState == false && resetCloseCount == false)
+			return logResult('Changes not applicable')
+
+		if(resolveState || resetCloseCount) {
 			log.debug("Updating count of $wiType #$id")
 			performIncrementCounter(project, rev, id, daystoCount, genPath, responseHandler)
 		}
 			
-		if(resetCount) {
-			log.debug("Resetting count of $wiType #$id")
+		if(resetCount || closeState ) {
+			log.debug("Setting count of $wiType #$id")
 			changes.add(getChanges(project, rev, id, daystoCount))
 			idMap[count] = "${id}"
 			
@@ -280,7 +356,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				workManagementService.batchWIChanges(collection, changes, idMap)
 				return logResult('Add Update Succeeded')
 			}
-			//getChanges(project, rev, id, daystoCount, uField, responseHandler)
+			
 		}
 	}
 
@@ -292,7 +368,6 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 			data.add(t)
 			
-			//parameterize path: '/fields/Custom.DaysToClose to include DaysToResolve
 			def e = [op: 'add', path: writePath, value: daystoCount]
 			data.add(e)
 			this.retryFailed = false
@@ -302,11 +377,10 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			
 			return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
 		}
-		
-		//private def getChanges(String project, String rev, def id, def daystoCount, def resetValues, Closure respHandler = null) {
+
 		 
 		private def getChanges(String project, String rev, def id, def daystoCount, Closure respHandler = null) {
-					
+								
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${id}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
 		
@@ -318,12 +392,12 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		}
 	
 		return wiData
-
 		//412 retry block
 		this.retryFailed = false
 		this.attemptedProject = project
 		this.attemptedId = id
 		return workManagementService.updateWorkItem(collection, project, id, wiData, respHandler)
+		
 		}
 
 		private def logResult(def msg) {
