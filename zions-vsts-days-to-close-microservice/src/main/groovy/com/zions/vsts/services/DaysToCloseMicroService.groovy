@@ -63,6 +63,16 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	def attemptedProject
 	def attemptedId
 	Date attemptedCreateDate
+	Date attemptedCloseDate
+	String createDate
+	String closedDate
+	String resolvedDate
+	Date convCreateDate
+	Date convClosedDate
+	Date convResolvedDate
+	def stateField
+	def daystoResolve
+	def daystoClose
 	
 	Closure responseHandler = { resp ->
 		
@@ -89,20 +99,18 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			String rev
 			String id = "${bugWI.id}"
 			def resetValues = []
-			def parentValues = []
-			String updField
 			def changes = []
 			def idMap = [:]
 			def count = 0
-			def stateField = bugWI.fields.'System.State'
+			stateField = bugWI.fields.'System.State'
 			//String oldState = stateField.oldValue
 			//String newState = stateField.newValue
 			String wiType = bugWI.fields.'System.WorkItemType'
 			
-			if (SysState == 'Resolved')
+			if (stateField == 'Resolved')
 				resolveState = true
 				
-			if (SysState == 'Closed')
+			if (stateField == 'Closed')
 				closeState = true
 				
 			if (closeState) {
@@ -127,9 +135,9 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				
 					wiPfields.each { field ->
 						def pVal = bugWI.fields["${field}"]
-						updField = "${pVal}"
+						//updField = "${pVal}"
 						daystoCount = 0;
-						parentValues.add(updField)
+						//parentValues.add(updField)
 					}
 				}
 			
@@ -145,7 +153,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				
 			if(resolveState || resetCloseCount) {
 				log.debug("Updating count of $wiType #$id")
-				performIncrementCounter(project, rev, id, daystoCount, genPath, responseHandler)
+				//performIncrementCounter(project, rev, id, daystoCount, genPath, responseHandler)
 			}
 				
 			if(resetCount || closeState ) {
@@ -202,10 +210,10 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		boolean resetCloseCount = false
 		boolean closeState = false
 		boolean resetCount = false
-		String SysState
+	
 		def resetValues = []
-		def parentValues = []
-		String updField
+		
+		
 		def changes = []
 		def idMap = [:]
 		def count = 0
@@ -218,12 +226,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		
 		//get work item id, state and revision
 		String id = "${wiResource.revision.id}"
-		SysState = "${wiResource.revision.fields.'System.State'}"
 		String rev = "${wiResource.rev}"
-		
-		//current values for daystoResolve and daystoClose
-		def cdaystoResolve = "${wiResource.revision.fields.'Custom.DaysToResolve'}"
-		def cdaystoClose = "${wiResource.revision.fields.'Custom.DaysToClose'}"
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		
 		//If Bug execute counter code
@@ -233,17 +236,17 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		if (!wiResource.fields || !wiResource.fields.'System.State') return logResult('no changes made to state')
 			
 		//Get Created Date
-		String createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
+		createDate = "${wiResource.revision.fields.'System.CreatedDate'}"
 		if (!createDate) {
 			log.error("Error retrieving create date for work item $id")
 			return 'Error Retrieving Create Date'
 		}
 		//Format the Created Date
-		Date convCreateDate = Date.parse("yyyy-MM-dd", createDate);
+		convCreateDate = Date.parse("yyyy-MM-dd", createDate);
 		this.attemptedCreateDate = convCreateDate
 			
 		//Compare old/new system states
-		def stateField = wiResource.fields.'System.State'
+		stateField = wiResource.fields.'System.State'
 		
 		if (!stateField || stateField == 'null' || stateField == '') return logResult('not a state change')
 		//restrieve old/new state field values for comparison
@@ -264,12 +267,12 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		resetCloseCount = true
 				
 		//set REsolve State True
-		if (SysState == 'Resolved')
+		if (newState == 'Resolved')
 			resolveState = true
 		/*if (oldState == "New" || oldState == "Active" && (newState == "New" || newState == "Active"))
 			resolveState = false*/
 		
-		if (SysState == 'Closed')
+		if (newState == 'Closed')
 			closeState = true
 		
 		//from closed to new/active or resolved to new/active - otherwise no change.
@@ -277,35 +280,29 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			resetCount = true
 				
 		//Get and format closedDate
-		def closedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ClosedDate'
-		Date convClosedDate
+		
+		
 		
 		if (closeState) {
 			
 			wiPfields.each { field ->
+				closedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ClosedDate'
 				convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
-				def daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
-				daystoCount = daystoClose
-				def pVal = wiResource.revision.fields["${field}"]
-				updField = "${pVal}"
-				parentValues.add(updField)
+				daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
+				daystoResolve = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
 		
 			}
 		
 		}
 
-	
-		//Get and formate the Resolved Date
-		def resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
-		Date convResolvedDate
-		
-				
+
 		if (resolveState) {
+			resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
 			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
-			def daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
-			daystoCount = daystoResolve
-			String resolvedPath = 'Custom.DaysToResolve'
-			genPath = resolvedPath
+			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
+			log.debug("Updating count of $wiType #$id")
+			performIncrementCounter(project, rev, id, daystoResolve, responseHandler)
+			
 		}
 		
 		if (resetCount) {
@@ -314,9 +311,9 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			
 				wiPfields.each { field ->
 					def pVal = wiResource.revision.fields["${field}"]
-					updField = "${pVal}"
+					
 					daystoCount = 0;
-					parentValues.add(updField)
+					
 
 					
 				}
@@ -336,10 +333,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		if (resetCount == false && closeState == false && resolveState == false && resetCloseCount == false)
 			return logResult('Changes not applicable')
 
-		if(resolveState || resetCloseCount) {
-			log.debug("Updating count of $wiType #$id")
-			performIncrementCounter(project, rev, id, daystoCount, genPath, responseHandler)
-		}
+
 			
 		if(resetCount || closeState ) {
 			log.debug("Setting count of $wiType #$id")
@@ -360,16 +354,20 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		}
 	}
 
-		private def performIncrementCounter(String project, String rev, def id, def daystoCount, genPath, Closure respHandler = null) {
+			private def performIncrementCounter(String project, String rev, def id, daystoResolve, Closure respHandler = null) {
 			
-			String writePath = ("/fields/$genPath")
+			//String writePath = ("/fields/$genPath")
 			
 			def data = []
 			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 			data.add(t)
 			
-			def e = [op: 'add', path: writePath, value: daystoCount]
+			def e = [op: 'add', path: '/fields/Custom.DaysToResolve', value: daystoResolve]
 			data.add(e)
+			
+			/*def e2 = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
+			data.add(e2)*/
+			
 			this.retryFailed = false
 			this.attemptedProject = project
 			this.attemptedId = id
@@ -378,7 +376,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
 		}
 
-		 
+
 		private def getChanges(String project, String rev, def id, def daystoCount, Closure respHandler = null) {
 								
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
