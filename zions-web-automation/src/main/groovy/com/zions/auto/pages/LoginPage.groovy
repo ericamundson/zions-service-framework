@@ -8,10 +8,8 @@ import org.openqa.selenium.OutputType
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import org.springframework.beans.factory.annotation.Value
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
-import org.openqa.selenium.WebElement
 import org.openqa.selenium.TakesScreenshot
 import org.openqa.selenium.By
 import org.openqa.selenium.interactions.Actions
@@ -30,6 +28,9 @@ class LoginPage extends BasePage {
 	@Value('${ms.login}')
 	String msLogin
 	
+	@Value('${ms.officeHomeTitle}')
+	String msOfficeTitle
+
 	@Value('${tfs.user}')
 	String tfsUser
 	
@@ -51,8 +52,20 @@ class LoginPage extends BasePage {
 			steps.add('LOGIN: Launched Login Page')
 			
 			// Enter userid (email) and click Next
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.id(USERID_FIELD))).sendKeys(tfsUser)
-			steps.add('LOGIN: Entered userid')
+			try {
+				wait.until(ExpectedConditions.presenceOfElementLocated(By.id(USERID_FIELD))).sendKeys(tfsUser)
+				steps.add('LOGIN: Entered userid')
+			}
+			catch (e) { // Check to see if user is already logged in (seen this condition in Bug 1711427)
+				if (ExpectedConditions.titleIs(msOfficeTitle)) {
+					steps.add('LOGIN: User already logged in')
+					return true;
+				}
+				else {
+					error = e
+					return false
+				}
+			}
 			try {
 				wait.until(ExpectedConditions.elementToBeClickable(By.id(LOGIN_BUTTON))).click()
 				steps.add('LOGIN: Clicked Next')
@@ -92,7 +105,8 @@ class LoginPage extends BasePage {
 
 			// Click Log in
 			waitMultiClick({By.id(LOGIN_BUTTON)}, 'LOGIN: Clicked Sign in',1)	
-			wait.until(ExpectedConditions.titleIs('Microsoft Office Home'))
+			Thread.sleep(1000) //pause 1 sec, not sure this is needed, but Bug 1711427 indicates this might help
+			wait.until(ExpectedConditions.titleIs(msOfficeTitle))
 			
 			return true
 		}
