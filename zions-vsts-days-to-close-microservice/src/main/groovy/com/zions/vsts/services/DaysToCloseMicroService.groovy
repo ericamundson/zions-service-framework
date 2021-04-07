@@ -342,10 +342,9 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			
 			if (changes.size() > 0) {
 				changes.each{change ->
-					//capture test data
-					//println(change.body.toString())
+
 				}
-				// Process work item changes in Azure DevOps
+				
 				log.debug("Processing work item changes...")
 				workManagementService.batchWIChanges(collection, changes, idMap)
 				return logResult('Add Update Succeeded')
