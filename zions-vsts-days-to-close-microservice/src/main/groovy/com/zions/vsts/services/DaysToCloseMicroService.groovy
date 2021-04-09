@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component
 import groovy.json.JsonBuilder
 
 /**
- * Will count number of days taken to close bugs
+ * Will count number of days taken to close bugs and days to resolve
   *
  * @author z070187
  *
