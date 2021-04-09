@@ -62,6 +62,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	String createDate
 	String closedDate
 	String resolvedDate
+	String activationDate 
+	Date convActivationDate
 	Date convCreateDate
 	Date convClosedDate
 	Date convResolvedDate
@@ -224,10 +226,13 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		}
 
 		//resolveOnly - New/Active to Resolve reset DaystoResolve only
+		//******update to include activationDate and DateResolved
 		else if (openState.contains(oldState) && (newState == 'Resolved')) {
 			resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
 			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
-			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
+			activationDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ActivatedDate'
+			convActivationDate = Date.parse("yyyy-MM-dd", resolvedDate)
+			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convActivationDate)
 			
 		}
 		
