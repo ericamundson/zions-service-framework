@@ -160,8 +160,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		log.debug("Entering DaysToCloseMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
-		 /*String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)*/
+		 String json = new JsonBuilder(adoData).toPrettyString()
+		 println(json)
 		
 		def wiResource = adoData.resource
 
@@ -278,7 +278,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			
 			if (daystoClose && daystoClose != 'null' && daystoClose != '' || daystoClose >= 0) {
 			def e = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
-			println(e)
+			
 			data.add(e)
 			}
 			
@@ -287,7 +287,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			def e2 = [op: 'add', path: '/fields/Custom.DaysToResolve', value: daystoResolve]
 			data.add(e2)
 			}
-			println(data)
+			
 			this.retryFailed = false
 			this.attemptedProject = project
 			this.attemptedId = id

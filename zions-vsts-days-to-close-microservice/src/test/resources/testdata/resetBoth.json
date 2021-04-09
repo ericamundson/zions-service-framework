@@ -1,0 +1,193 @@
+{
+    "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
+    "notificationId": 7598,
+    "id": "f5a50669-85ba-4acf-9121-bf68035bb3d3",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": {
+        "text": "Bug #22276 (Services - Wires - Wires link is not available for ABT 855 account type) transitioned to New by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22276)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=22276\">Bug #22276</a> (Services - Wires - Wires link is not available for ABT 855 account type) transitioned to New by Michael Angelastro",
+        "markdown": "[Bug #22276](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22276) (Services - Wires - Wires link is not available for ABT 855 account type) transitioned to New by Michael Angelastro"
+    },
+    "detailedMessage": {
+        "text": "Bug #22276 (Services - Wires - Wires link is not available for ABT 855 account type) transitioned to New by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22276)\r\n\r\n- New State: New\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=22276\">Bug #22276</a> (Services - Wires - Wires link is not available for ABT 855 account type) transitioned to New by Michael Angelastro<ul>\r\n<li>New State: New</li></ul>",
+        "markdown": "[Bug #22276](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22276) (Services - Wires - Wires link is not available for ABT 855 account type) transitioned to New by Michael Angelastro\r\n\r\n* New State: New\r\n"
+    },
+    "resource": {
+        "id": 122,
+        "workItemId": 22276,
+        "rev": 122,
+        "revisedBy": {
+            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
+            "name": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+            "displayName": "Michael Angelastro",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                }
+            },
+            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
+            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+        },
+        "revisedDate": "9999-01-01T00:00:00Z",
+        "fields": {
+            "System.Rev": {
+                "oldValue": 121,
+                "newValue": 122
+            },
+            "System.AuthorizedDate": {
+                "oldValue": "2021-04-07T19:45:07.793Z",
+                "newValue": "2021-04-09T20:41:06.897Z"
+            },
+            "System.RevisedDate": {
+                "oldValue": "2021-04-09T20:41:06.897Z",
+                "newValue": "9999-01-01T00:00:00Z"
+            },
+            "System.State": {
+                "oldValue": "Closed",
+                "newValue": "New"
+            },
+            "System.Reason": {
+                "oldValue": "Verified",
+                "newValue": "Not fixed"
+            },
+            "System.ChangedDate": {
+                "oldValue": "2021-04-07T19:45:07.793Z",
+                "newValue": "2021-04-09T20:41:06.897Z"
+            },
+            "System.ChangedBy": {
+                "oldValue": "SVC-CLOUD-ADOMAINT003 <SVC-CLOUD-ADOMAINT003@zionsbancorporation.onmicrosoft.com>",
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "System.AuthorizedAs": {
+                "oldValue": "SVC-CLOUD-ADOMAINT003 <SVC-CLOUD-ADOMAINT003@zionsbancorporation.onmicrosoft.com>",
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "System.PersonId": {
+                "oldValue": 99895087,
+                "newValue": 88125542
+            },
+            "System.Watermark": {
+                "oldValue": 333596,
+                "newValue": 333836
+            },
+            "System.BoardColumn": {
+                "oldValue": "Closed",
+                "newValue": "New"
+            },
+            "Microsoft.VSTS.Common.StateChangeDate": {
+                "oldValue": "2021-04-07T19:44:59.557Z",
+                "newValue": "2021-04-09T20:41:06.897Z"
+            },
+            "Microsoft.VSTS.Common.ActivatedDate": {
+                "oldValue": "2021-04-07T19:44:35.783Z"
+            },
+            "Microsoft.VSTS.Common.ActivatedBy": {
+                "oldValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "Microsoft.VSTS.Common.ResolvedDate": {
+                "oldValue": "2021-04-07T19:44:35.783Z"
+            },
+            "Microsoft.VSTS.Common.ResolvedBy": {
+                "oldValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "Microsoft.VSTS.Common.ResolvedReason": {
+                "oldValue": "Fixed"
+            },
+            "Microsoft.VSTS.Common.ClosedDate": {
+                "oldValue": "2021-04-07T19:44:59.557Z"
+            },
+            "Microsoft.VSTS.Common.ClosedBy": {
+                "oldValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": {
+                "oldValue": "Closed",
+                "newValue": "New"
+            }
+        },
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22276/updates/122"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22276/updates"
+            },
+            "parent": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22276"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22276"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22276/updates/122",
+        "revision": {
+            "id": 22276,
+            "rev": 122,
+            "fields": {
+                "System.AreaPath": "ALMOpsTest",
+                "System.TeamProject": "ALMOpsTest",
+                "System.IterationPath": "ALMOpsTest",
+                "System.WorkItemType": "Bug",
+                "System.State": "New",
+                "System.Reason": "Not fixed",
+                "System.AssignedTo": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CreatedDate": "2016-08-30T23:24:45.477Z",
+                "System.CreatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.ChangedDate": "2021-04-09T20:41:06.897Z",
+                "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CommentCount": 1,
+                "System.Title": "Services - Wires - Wires link is not available for ABT 855 account type",
+                "System.BoardColumn": "New",
+                "System.BoardColumnDone": false,
+                "Microsoft.VSTS.Scheduling.RemainingWork": 0.0,
+                "Microsoft.VSTS.Common.StateChangeDate": "2021-04-09T20:41:06.897Z",
+                "Microsoft.VSTS.Common.Priority": 3,
+                "Microsoft.VSTS.Common.Severity": "3 - Medium",
+                "Microsoft.VSTS.Common.ValueArea": "Business",
+                "WEF_8036838721CC4DC0B35839429B90A6D8_Kanban.Column": "Closed",
+                "WEF_8036838721CC4DC0B35839429B90A6D8_Kanban.Column.Done": false,
+                "Custom.ExternalID": "RTC-21838",
+                "Custom.Classification": "Bug",
+                "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": "New",
+                "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column.Done": false,
+                "Custom.Color": "Green",
+                "Custom.FoundinProd": false,
+                "Custom.DaysToClose": 1681.0,
+                "Custom.DaysToResolve": 1681.0,
+                "Microsoft.VSTS.TCM.ReproSteps": "Details: The 'Wires' link is not available for the 855 account type for ABT.<br><div>jkjkkjkjk</div><div>Steps to Reproduce:kjkljk;l</div><div>5456465</div>1. Log into ABT POLB as 'tandreas1'.<br>2. Click 'Services'.<br><div>3.33kjlkjkl</div>Result: The 'Wires' link is not displayed.<br><div>jk</div>Expected Result: The 'Wires' link should be displayed, as the user has account type 855, which is 'Internet Savings'.",
+                "System.Tags": "previousstateopen; updateTest"
+            },
+            "_links": {
+                "self": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22276/revisions/122"
+                },
+                "workItemRevisions": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22276/revisions"
+                },
+                "parent": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22276"
+                }
+            },
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22276/revisions/122"
+        }
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1bec1897-29a0-44d0-80a8-670c5ae5ef4a",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "account": {
+            "id": "6e6d6b08-2e41-4c55-a624-0d1ec79969dd",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "project": {
+            "id": "030d62a4-ce8b-405e-a331-8678df1a6efe",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        }
+    },
+    "createdDate": "2021-04-09T20:41:13.6537954Z"
+}
