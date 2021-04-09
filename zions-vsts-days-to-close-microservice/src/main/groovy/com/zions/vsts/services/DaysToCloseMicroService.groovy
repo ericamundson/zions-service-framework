@@ -72,8 +72,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	boolean resolveToClose = false
 	boolean resetResolve = false
 	def stateField
-	int daystoResolve
-	int daystoClose
+	def daystoResolve
+	def daystoClose
 	
 	Closure responseHandler = { resp ->
 		
@@ -87,35 +87,51 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			String oldState2 = stateField.newValue
 			if (bugState != oldState2)  {
 			//recheck calculations and boolean conditions
-				if (oldState2 == 'Resolved' && (bugState == 'Closed'))
-					resolveToClose = true
+				if (oldState2 == 'Resolved' && (bugState == 'Closed')) {
+					closedDate = bugWI.fields.'Microsoft.VSTS.Common.ClosedDate'
+					convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
+					daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
+				
+				}
 				
 				//resetCloseCount check
-				if (oldState2 == 'Closed' && (bugState == 'Resolved'))
-				resetCloseCount = true
-						
-				//New/Active to Resolve reset DaystoResolve only
-				if (openState.contains(oldState2) && (bugState == 'Resolved'))
-					resolveOnly = true
-					if (resolveOnly) {
-						resolvedDate = bugWI.fields.'Microsoft.VSTS.Common.ResolvedDate'
-						convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
-						daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
-					}
-					
-				//set back to New/Active from Resolved 
-				if (openState.contains(bugState) && (oldState2 == 'Resolved'))
-					resetResolve = true
-					
-					//set back to New/Active from Resolved
-				if (openState.contains(bugState) && (oldState2 == 'Closed'))
-					resetCount = true
-					
-					//update both daysToResolve and daysToClose
-				if (openState.contains(oldState2) && (bugState == 'Closed'))
-					updateBoth = true
+				else if (oldState2 == 'Closed' && (bugState == 'Resolved')) {
+					daystoClose = 0
+				}		
 				
+				//resolveOnly - New/Active to Resolve reset DaystoResolve only
+				else if (openState.contains(oldState2) && (bugState == 'Resolved')) {
+					resolvedDate = bugWI.fields.'Microsoft.VSTS.Common.ResolvedDate'
+					convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
+					daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
+				}
+								
+				//Resolve To New/Active - if new state is open/active and old state was Resolved
+				else if (openState.contains(bugState) && (oldState2 == 'Resolved')) {
+					daystoResolve = 0
+				}
+	
+				//updateBoth daysToResolve and daysToClose
+				else if (openState.contains(oldState2) && (bugState == 'Closed')) {
+					resolvedDate = bugWI.fields.'Microsoft.VSTS.Common.ResolvedDate'
+					convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
+					daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
+					closedDate = bugWI.fields.'Microsoft.VSTS.Common.ClosedDate'
+					convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
+					daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
+					
+				}
 				
+				//resetCount reset both daystoClose and daystoresolve - if new state is open/active and old state was Resolved
+				else if (openState.contains(bugState) && (oldState2 == 'Closed')) {
+					daystoResolve = 0
+					daystoClose = 0
+					
+				}
+				
+				else if (oldState2 == 'New' || oldState2 == 'Active' && (bugState == 'Active' || bugState == 'New')) {
+					return logResult('Changes not applicable')
+				}
 			}
 			
 			if (performIncrementCounter(this.attemptedProject, rev, this.attemptedId, daystoResolve, daystoClose)) {
@@ -130,8 +146,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		}
 	}
 
-	
-	public DaysToCloseMicroService(){
+		public DaysToCloseMicroService(){
 			
 	}
 	
@@ -145,8 +160,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		log.debug("Entering DaysToCloseMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
-		 String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)
+		 /*String json = new JsonBuilder(adoData).toPrettyString()
+		 println(json)*/
 		
 		def wiResource = adoData.resource
 
@@ -192,114 +207,68 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		if (!newState || newState == 'null') {
 			log.error("Error retrieving new state for work item $id")
 			return 'Error Retrieving new state state'
-	}
-		
-	//Leave DaysToResolve only update DaysToClose - CloseState = true
-		if (oldState == 'Resolved' && (newState == 'Closed'))
-			resolveToClose = true
-		
-		//resetCloseCount check
-		if (oldState == 'Closed' && (newState == 'Resolved'))
-		resetCloseCount = true
-				
-		//New/Active to Resolve reset DaystoResolve only
-		if (openState.contains(oldState) && (newState == 'Resolved'))
-			
-			resolveOnly = true
-			
-		//if new state is open/active and old state was Resolved
-		
-		if (openState.contains(newState) && (oldState == 'Resolved'))
-			resetResolve = true
-
-		//update both daysToResolve and daysToClose
-		if (openState.contains(oldState) && (newState == 'Closed'))
-			updateBoth = true
-
-		//from closed to new/active reset count on both daystoResolve and daystoClose
-		if (openState.contains(newState) && (oldState == 'Closed'))
-			resetCount = true
-		
-
-		//only update DaysToClose
-		if (resolveToClose) {
-			
-			closedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ClosedDate'
-			convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
-			daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
-			log.debug("Updating count of $wiType #$id")
-			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)) {
-				return logResult('Update Succeeded')
-			}
-		
 		}
-
-		//update both values
-		if (updateBoth) {
-			resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
-			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
-			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
-			closedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ClosedDate'
-			convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
-			daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
-			log.debug("Updating count of $wiType #$id")
-			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)) {
-				return logResult('Update Succeeded')
-			}
-			
-		}
-		
-		
-		//only update DaysToResolve.
-		if (resolveOnly) {
-			resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
-			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
-			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
-			log.debug("Updating count of $wiType #$id")
-			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)){
-				return logResult('Update Succeeded')
-			}
-			
-		}
-		
-		//reset both DaysToResolve and DaysToClose
-		if (resetCount) {
-			daystoResolve = 0
-			daystoClose = 0
-			log.debug("Resetting count of $wiType #$id")
-			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)) {
-				return logResult('Update Succeeded')
-			}
-		}
-		
-		//reset only DaysToClose
-		if (resetCloseCount) {
 	
-			daystoClose = 0
-			log.debug("Resetting count of $wiType #$id")
-			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)) {
-				return logResult('Update Succeeded')
-			}
-		}
-		
-		if (resetResolve) {
+
+		//resolveToClose True
+		if (oldState == 'Resolved' && (newState == 'Closed')) {
+			closedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ClosedDate'
+			convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
+			daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
 			
-			daystoResolve = 0
-			daystoClose == null 
-			log.debug("Resetting count of $wiType #$id")
-			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)){
-				return logResult('Update Succeeded')
-			}
+		}
+		//resetCloseCount
+		else if (oldState == 'Closed' && (newState == 'Resolved')) {
+			daystoClose = 0
+			
+		}
+
+		//resolveOnly - New/Active to Resolve reset DaystoResolve only
+		else if (openState.contains(oldState) && (newState == 'Resolved')) {
+			resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
+			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
+			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
+			
 		}
 		
+		//Resolve To New/Active - if new state is open/active and old state was Resolved
+		else if (openState.contains(newState) && (oldState == 'Resolved')) {
+			daystoResolve = 0
+			
+		}
 		
-		if (resetCount == false && updateBoth == false && resolveOnly == false && resetCloseCount == false)
+		//updateBoth daysToResolve and daysToClose
+		else if (openState.contains(oldState) && (newState == 'Closed')) {
+			resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
+			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
+			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
+			closedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ClosedDate'
+			convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
+			daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
+			
+		}
+		
+		//resetCount reset both daystoClose and daystoresolve - if new state is open/active and old state was Resolved
+		else if (openState.contains(newState) && (oldState == 'Closed')) {
+			daystoResolve = 0
+			daystoClose = 0
+			
+		}
+		
+		else if (oldState == 'New' || oldState == 'Active' && (newState == 'Active' || newState == 'New')) {
 			return logResult('Changes not applicable')
+		}
+		
+		if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)){
+			log.debug("Updating count of $wiType #$id")
+			return logResult('Update Succeeded')
+		}
+		
 
 
 	}
 
-			private def performIncrementCounter(String project, String rev, def id, daystoResolve, daystoClose, Closure respHandler = null) {
+	private def performIncrementCounter(String project, String rev, def id, daystoResolve, daystoClose, Closure respHandler = null) {
 			
 				
 			//If daystoClose || daystoResolve == null - only update one item			
@@ -307,27 +276,18 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 			data.add(t)
 			
-			if (!daystoClose || daystoClose == 'null' || daystoClose == '') {
-				def e = [op: 'add', path: '/fields/Custom.DaysToResolve', value: daystoResolve]
-				data.add(e)
+			if (daystoClose && daystoClose != 'null' && daystoClose != '' || daystoClose >= 0) {
+			def e = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
+			println(e)
+			data.add(e)
 			}
 			
-			if (!daystoResolve || daystoResolve == 'null' || daystoResolve == '') {
-			 	//if (fields == null || update)
-				def e2 = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
-				data.add(e2)
+			if (daystoResolve && daystoResolve != 'null' && daystoResolve != '' || daystoResolve >= 0) {
+			 //if (fields == null || update)
+			def e2 = [op: 'add', path: '/fields/Custom.DaysToResolve', value: daystoResolve]
+			data.add(e2)
 			}
-			
-			if (daystoClose || !daystoClose == 'null' || !daystoClose == '' && daystoResolve || !daystoResolve == 'null' || !daystoResolve == '') {
-				def e3 = [op: 'add', path: '/fields/Custom.DaysToResolve', value: daystoResolve]
-				data.add(e3)
-				
-				def e4 = [op: 'add', path: '/fields/Custom.DaysToClose', value: daystoClose]
-				data.add(e4)
-				
-			}
-			
-			
+			println(data)
 			this.retryFailed = false
 			this.attemptedProject = project
 			this.attemptedId = id
@@ -339,9 +299,9 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	private def logResult(def msg) {
 			log.debug(msg)
 			return msg
-		}
-		
 	}
+		
+}
 		
 
 		
