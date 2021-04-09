@@ -207,7 +207,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			
 			resolveOnly = true
 			
-		//if new state is open/active and olds state was Resolved
+		//if new state is open/active and old state was Resolved
 		
 		if (openState.contains(newState) && (oldState == 'Resolved'))
 			resetResolve = true

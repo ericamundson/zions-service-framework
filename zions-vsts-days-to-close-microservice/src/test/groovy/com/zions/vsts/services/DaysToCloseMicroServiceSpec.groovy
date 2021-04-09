@@ -89,7 +89,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	}
 		
 	
-	def "valid event for calculating daystoResolve Ony"() {
+	def "valid event for calculating daystoResolve Only"() {
 		given: "A mock ADO event payload where work item has no parent"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resolveOnly.json').text)
 		//override work item and get work item details and return json file with valid bug count values
