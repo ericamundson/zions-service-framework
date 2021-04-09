@@ -145,8 +145,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		log.debug("Entering DaysToCloseMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
-		 /*String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)*/
+		 String json = new JsonBuilder(adoData).toPrettyString()
+		 println(json)
 		
 		def wiResource = adoData.resource
 
@@ -228,7 +228,9 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
 			daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
 			log.debug("Updating count of $wiType #$id")
-			performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)
+			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)) {
+				return logResult('Update Succeeded')
+			}
 		
 		}
 
@@ -241,7 +243,9 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			convClosedDate = Date.parse("yyyy-MM-dd", closedDate)
 			daystoClose = calcManagementService.calcDaysToClose(convClosedDate, convCreateDate)
 			log.debug("Updating count of $wiType #$id")
-			performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)
+			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)) {
+				return logResult('Update Succeeded')
+			}
 			
 		}
 		
@@ -252,7 +256,9 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
 			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
 			log.debug("Updating count of $wiType #$id")
-			performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)
+			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)){
+				return logResult('Update Succeeded')
+			}
 			
 		}
 		
@@ -261,7 +267,9 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			daystoResolve = 0
 			daystoClose = 0
 			log.debug("Resetting count of $wiType #$id")
-			performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)
+			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)) {
+				return logResult('Update Succeeded')
+			}
 		}
 		
 		//reset only DaysToClose
@@ -269,7 +277,9 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	
 			daystoClose = 0
 			log.debug("Resetting count of $wiType #$id")
-			performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)
+			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)) {
+				return logResult('Update Succeeded')
+			}
 		}
 		
 		if (resetResolve) {
@@ -277,8 +287,10 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			daystoResolve = 0
 			daystoClose == null 
 			log.debug("Resetting count of $wiType #$id")
-			performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)
-				}
+			if (performIncrementCounter(project, rev, id, daystoResolve, daystoClose, responseHandler)){
+				return logResult('Update Succeeded')
+			}
+		}
 		
 		
 		if (resetCount == false && updateBoth == false && resolveOnly == false && resetCloseCount == false)

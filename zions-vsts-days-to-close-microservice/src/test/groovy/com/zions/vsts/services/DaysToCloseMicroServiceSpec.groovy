@@ -102,10 +102,10 @@ class DaysToCloseMicroServiceSpec extends Specification {
 		//override update work item with test data values
 		and: "stub workManagementService.updateItem()"
 		
-			workManagementService.updateWorkItem(_,_,_,_) >> {
+			workManagementService.updateWorkItem(_,_,_,_,_) >> {
 			String data = "${args[3]}"
 			
-			  assert(data.toString() == '[[op:test, path:/rev, value:13], [op:add, path:/fields/Custom.DaysToResolve, value:6]]')
+			  assert(data.toString() == '[[op:test, path:/rev, value:75], [op:add, path:/fields/Custom.DaysToResolve, value:1683]]')
 		}
 		
 		when: "ADO sends notification for work item change who's type is in configured target list"
