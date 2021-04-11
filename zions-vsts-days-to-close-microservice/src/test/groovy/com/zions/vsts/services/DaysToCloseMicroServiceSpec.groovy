@@ -89,7 +89,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	}
 		
 	//mock calculate service
-	@Ignore
+	//@Ignore
 	def "valid event for calculating daystoResolve Only"() {
 		given: "A mock ADO event payload where work item has no parent"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resolveOnly.json').text)
@@ -100,10 +100,10 @@ class DaysToCloseMicroServiceSpec extends Specification {
 			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/resolveOnly.json').text)
 		}
 		
-		//override update work item with test data values
+		//override update work item with test data value
 		and: "stub workManagementService.updateItem()"
 		
-			workManagementService.updateWorkItem(_,_,_,_,_) >> {
+			workManagementService.updateWorkItem(_,_,_,_) >> {
 			String data = "${args[3]}"
 			
 			  assert(data.toString() == '[[op:test, path:/rev, value:75], [op:add, path:/fields/Custom.DaysToResolve, value:1683]]')
@@ -143,15 +143,15 @@ class DaysToCloseMicroServiceSpec extends Specification {
 		resp == 'Update Succeeded'
 	}
 	
-	@Ignore
-	def "valid event for calculating same day closures of 0.5"() {
+	
+	def "valid event for calculating activation date to the date resolved"() {
 		given: "A mock ADO event payload where work item has no parent"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/sameDayClosure.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/activationDate.json').text)
 		//override work item and get work item details and return json file with valid bug count values
 		and: "stub workManagementService.getWorkItem()"
 		workManagementService.getWorkItem(_,_,_) >> {
 		
-			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/sameDayClosure.json').text)
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/activationDate.json').text)
 		}
 		
 		//override update work item with test data values
@@ -160,7 +160,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 			workManagementService.updateWorkItem(_,_,_,_) >> {
 			String data = "${args[3]}"
 			
-			  assert(data.toString() == '[[op:test, path:/rev, value:2], [op:add, path:/fields/Custom.DaysToClose, value:0.5]]')
+			  assert(data.toString() == '[[op:test, path:/rev, value:30], [op:add, path:/fields/Custom.DaysToClose, value:187]]')
 		}
 		
 		when: "ADO sends notification for work item change who's type is in configured target list"

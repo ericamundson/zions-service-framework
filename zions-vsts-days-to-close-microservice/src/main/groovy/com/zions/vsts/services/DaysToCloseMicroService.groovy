@@ -59,6 +59,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	def attemptedId
 	Date attemptedCreateDate
 	Date attemptedCloseDate
+	Date attemptedActivationDate
 	String createDate
 	String closedDate
 	String resolvedDate
@@ -103,9 +104,13 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				
 				//resolveOnly - New/Active to Resolve reset DaystoResolve only
 				else if (openState.contains(oldState2) && (bugState == 'Resolved')) {
+					//resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
 					resolvedDate = bugWI.fields.'Microsoft.VSTS.Common.ResolvedDate'
 					convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
-					daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
+					//activationDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ActivatedDate'
+					activationDate = bugWI.fields.'Microsoft.VSTS.Common.ActivatedDate'
+					convActivationDate = Date.parse("yyyy-MM-dd", activationDate)
+					daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convActivationDate)
 				}
 								
 				//Resolve To New/Active - if new state is open/active and old state was Resolved
@@ -162,11 +167,11 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		log.debug("Entering DaysToCloseMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
-		 String json = new JsonBuilder(adoData).toPrettyString()
-		 println(json)
+		String json = new JsonBuilder(adoData).toPrettyString()
+		println(json)
 		
 		def wiResource = adoData.resource
-
+		
 		
 		//**Check for qualifying projects
 		String project = "${wiResource.revision.fields.'System.TeamProject'}"
@@ -231,7 +236,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
 			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
 			activationDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ActivatedDate'
-			convActivationDate = Date.parse("yyyy-MM-dd", resolvedDate)
+			convActivationDate = Date.parse("yyyy-MM-dd", activationDate)
 			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convActivationDate)
 			
 		}

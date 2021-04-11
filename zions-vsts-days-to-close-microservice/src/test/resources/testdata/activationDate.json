@@ -1,0 +1,199 @@
+{
+    "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
+    "notificationId": 7609,
+    "id": "7e56fc62-210a-4ec8-860e-e0d9ad1d5133",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": {
+        "text": "Bug #836438 (rrpd0220 failed without txn's) transitioned to Resolved by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=836438)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=836438\">Bug #836438</a> (rrpd0220 failed without txn&#39;s) transitioned to Resolved by Michael Angelastro",
+        "markdown": "[Bug #836438](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=836438) (rrpd0220 failed without txn's) transitioned to Resolved by Michael Angelastro"
+    },
+    "detailedMessage": {
+        "text": "Bug #836438 (rrpd0220 failed without txn's) transitioned to Resolved by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=836438)\r\n\r\n- New State: Resolved\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=836438\">Bug #836438</a> (rrpd0220 failed without txn&#39;s) transitioned to Resolved by Michael Angelastro<ul>\r\n<li>New State: Resolved</li></ul>",
+        "markdown": "[Bug #836438](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=836438) (rrpd0220 failed without txn's) transitioned to Resolved by Michael Angelastro\r\n\r\n* New State: Resolved\r\n"
+    },
+    "resource": {
+        "id": 30,
+        "workItemId": 836438,
+        "rev": 30,
+        "revisedBy": {
+            "id": "b469b2eb-26de-609a-a49a-a173e186971d",
+            "name": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+            "displayName": "Michael Angelastro",
+            "url": "https://spsprodcus1.vssps.visualstudio.com/A6e6d6b08-2e41-4c55-a624-0d1ec79969dd/_apis/Identities/b469b2eb-26de-609a-a49a-a173e186971d",
+            "_links": {
+                "avatar": {
+                    "href": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+                }
+            },
+            "uniqueName": "Michael.Angelastro@zionsbancorp.com",
+            "imageUrl": "https://dev.azure.com/eto-dev/_apis/GraphProfile/MemberAvatars/aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk",
+            "descriptor": "aad.YjQ2OWIyZWItMjZkZS03MDlhLWE0OWEtYTE3M2UxODY5NzFk"
+        },
+        "revisedDate": "9999-01-01T00:00:00Z",
+        "fields": {
+            "System.Rev": {
+                "oldValue": 29,
+                "newValue": 30
+            },
+            "System.AuthorizedDate": {
+                "oldValue": "2020-10-06T15:41:20.477Z",
+                "newValue": "2021-04-11T16:48:21.94Z"
+            },
+            "System.RevisedDate": {
+                "oldValue": "2021-04-11T16:48:21.94Z",
+                "newValue": "9999-01-01T00:00:00Z"
+            },
+            "System.State": {
+                "oldValue": "Active",
+                "newValue": "Resolved"
+            },
+            "System.Reason": {
+                "oldValue": "Regression",
+                "newValue": "Fixed"
+            },
+            "System.ChangedDate": {
+                "oldValue": "2020-10-06T15:41:20.477Z",
+                "newValue": "2021-04-11T16:48:21.94Z"
+            },
+            "System.ChangedBy": {
+                "oldValue": "SVC-CLOUD-ADOMAINT002 <SVC-CLOUD-ADOMAINT002@zionsbancorporation.onmicrosoft.com>",
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "System.AuthorizedAs": {
+                "oldValue": "SVC-CLOUD-ADOMAINT002 <SVC-CLOUD-ADOMAINT002@zionsbancorporation.onmicrosoft.com>",
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "System.PersonId": {
+                "oldValue": 99895084,
+                "newValue": 88125542
+            },
+            "System.Watermark": {
+                "oldValue": 331523,
+                "newValue": 333847
+            },
+            "System.BoardColumn": {
+                "oldValue": "Active",
+                "newValue": "Resolved"
+            },
+            "Microsoft.VSTS.Common.StateChangeDate": {
+                "oldValue": "2020-10-06T15:41:04.9Z",
+                "newValue": "2021-04-11T16:48:21.94Z"
+            },
+            "Microsoft.VSTS.Common.ResolvedDate": {
+                "newValue": "2021-04-11T16:48:21.94Z"
+            },
+            "Microsoft.VSTS.Common.ResolvedBy": {
+                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
+            },
+            "Microsoft.VSTS.Common.ResolvedReason": {
+                "newValue": "Fixed"
+            },
+            "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": {
+                "oldValue": "Active",
+                "newValue": "Resolved"
+            },
+            "Custom.FoundinProd": {
+                "newValue": false
+            }
+        },
+        "_links": {
+            "self": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/836438/updates/30"
+            },
+            "workItemUpdates": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/836438/updates"
+            },
+            "parent": {
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/836438"
+            },
+            "html": {
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=836438"
+            }
+        },
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/836438/updates/30",
+        "revision": {
+            "id": 836438,
+            "rev": 30,
+            "fields": {
+                "System.AreaPath": "ALMOpsTest",
+                "System.TeamProject": "ALMOpsTest",
+                "System.IterationPath": "ALMOpsTest",
+                "System.WorkItemType": "Bug",
+                "System.State": "Resolved",
+                "System.Reason": "Fixed",
+                "System.AssignedTo": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CreatedDate": "2016-07-19T15:20:21.273Z",
+                "System.CreatedBy": "svc-cloud-vsmigration004 <svc-cloud-vsmigration004@zionsbancorporation.onmicrosoft.com>",
+                "System.ChangedDate": "2021-04-11T16:48:21.94Z",
+                "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "System.CommentCount": 1,
+                "System.Title": "rrpd0220 failed without txn's",
+                "System.BoardColumn": "Resolved",
+                "System.BoardColumnDone": false,
+                "Microsoft.VSTS.Common.StateChangeDate": "2021-04-11T16:48:21.94Z",
+                "Microsoft.VSTS.Common.ActivatedDate": "2020-10-06T15:41:04.9Z",
+                "Microsoft.VSTS.Common.ActivatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "Microsoft.VSTS.Common.ResolvedDate": "2021-04-11T16:48:21.94Z",
+                "Microsoft.VSTS.Common.ResolvedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
+                "Microsoft.VSTS.Common.ResolvedReason": "Fixed",
+                "Microsoft.VSTS.Common.Priority": 4,
+                "Microsoft.VSTS.Common.Severity": "4 - Low",
+                "Microsoft.VSTS.Common.ValueArea": "Business",
+                "Custom.ExternalID": "RTC-19135",
+                "Custom.SubState": "Fixed With Config Change",
+                "Custom.Classification": "Defect",
+                "Custom.ReleaseFoundIn": "R3",
+                "Custom.ReleaseTargetedTo": "R3",
+                "Custom.ReleaseFixedIn": "R3",
+                "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": "Resolved",
+                "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column.Done": false,
+                "Custom.Color": "Green",
+                "Custom.ReleaseDeliveredIn": "R3",
+                "Custom.BaNCSEnvironment": "SITb / TEST2",
+                "Custom.RootCauseClassification": "Configuration - BaNCS",
+                "Custom.a357e270-0f08-405f-8b72-791eab63b406": "N/A",
+                "Custom.FoundInDrop": "R3 - 16.3.1.0 - 07/05/2016",
+                "Custom.FixedInBuild": "N/A",
+                "Custom.d44fd5d1-63ab-420a-a73c-c6640f378779": "R3",
+                "Custom.RTCTimeline": "BaNCS\\FutureCore\\FutureCore\\Deposits",
+                "Custom.FoundinProd": false,
+                "Custom.UpdateIndicator": "Yes",
+                "Custom.DaysToClose": 0.0,
+                "Custom.NewIntTest1": 6.0,
+                "System.Description": "rrpd0220 failed as there are not financial transactions. This shouldn't ideally happen once we have txns, keeping this defect for tracking",
+                "System.Tags": "eod; r3"
+            },
+            "_links": {
+                "self": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/836438/revisions/30"
+                },
+                "workItemRevisions": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/836438/revisions"
+                },
+                "parent": {
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/836438"
+                }
+            },
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/836438/revisions/30"
+        }
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1bec1897-29a0-44d0-80a8-670c5ae5ef4a",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "account": {
+            "id": "6e6d6b08-2e41-4c55-a624-0d1ec79969dd",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        },
+        "project": {
+            "id": "030d62a4-ce8b-405e-a331-8678df1a6efe",
+            "baseUrl": "https://dev.azure.com/eto-dev/"
+        }
+    },
+    "createdDate": "2021-04-11T16:48:29.360759Z"
+}
