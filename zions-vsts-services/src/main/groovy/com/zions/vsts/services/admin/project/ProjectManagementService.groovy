@@ -32,8 +32,11 @@ class ProjectManagementService {
 	 * @param name
 	 * @return
 	 */
-	public def getProject(String collection, String name, boolean noUrl = false) {
+	public def getProject(String collection, String name, boolean noUrl = false, def inquery = null) {
 		def query = ['api-version':'5.1']
+		if (inquery) {
+			query = inquery
+		}
 		def headers = [Accept: 'application/json']
 		if (noUrl) {
 			headers.Accept = 'application/json;excludeUrls=true'
