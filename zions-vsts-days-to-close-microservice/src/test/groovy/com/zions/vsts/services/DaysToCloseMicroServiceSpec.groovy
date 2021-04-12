@@ -35,7 +35,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	CalculationManagementService calcManagementService
 	
 	
-	@Ignore
+	
 	def "Not a valid type for days to close microservice"() {
 		given: "A mock ADO event payload exists for invalid child state"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/invalidType.json').text)
@@ -47,21 +47,21 @@ class DaysToCloseMicroServiceSpec extends Specification {
 		resp == 'not a valid work item type'
 	}
 	
-	@Ignore
+	
 	def "no applicable changes made"() {
 		given: "A mock ADO event payload exists for resetting reopen event"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resetafterCount.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/newToActive.json').text)
 
 		when: "ADO sends notification for work item change who's type is not in configured target list"
 		def resp = underTest.processADOData(adoMap)
 
 		then: "No Updates should be made"
-		resp == 'no changes made to state'
+		resp == 'Changes not applicable'
 
 	
 	}
 	
-	@Ignore
+	
 	def "valid event for resetting days to close"() {
 		given: "A mock ADO event payload where work item has no parent"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resetDaysToClose.json').text)
@@ -78,7 +78,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 			workManagementService.updateWorkItem(_,_,_,_) >> {
 			String data = "${args[3]}"
 			
-			  assert(data.toString() == '[[op:test, path:/rev, value:8], [op:add, path:/fields/Custom.DaysToClose, value:0]]')
+			  assert(data.toString() == '[[op:test, path:/rev, value:15], [op:add, path:/fields/Custom.DaysToClose, value:0]]')
 		}
 		
 		when: "ADO sends notification for work item change who's type is in configured target list"
@@ -88,16 +88,15 @@ class DaysToCloseMicroServiceSpec extends Specification {
 		resp == 'Update Succeeded'
 	}
 		
-	//mock calculate service
-	//@Ignore
-	def "valid event for calculating daystoResolve Only"() {
+	
+	def "valid event for resetting daystoResolve Only"() {
 		given: "A mock ADO event payload where work item has no parent"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resolveOnly.json').text)
+		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/resetResolve.json').text)
 		//override work item and get work item details and return json file with valid bug count values
 		and: "stub workManagementService.getWorkItem()"
 		workManagementService.getWorkItem(_,_,_) >> {
 		
-			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/resolveOnly.json').text)
+			return new JsonSlurper().parseText(this.getClass().getResource('/testdata/resetResolve.json').text)
 		}
 		
 		//override update work item with test data value
@@ -106,7 +105,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 			workManagementService.updateWorkItem(_,_,_,_) >> {
 			String data = "${args[3]}"
 			
-			  assert(data.toString() == '[[op:test, path:/rev, value:75], [op:add, path:/fields/Custom.DaysToResolve, value:1683]]')
+			  assert(data.toString() == '[[op:test, path:/rev, value:52], [op:add, path:/fields/Custom.DaysToResolve, value:0]]')
 		}
 		
 		when: "ADO sends notification for work item change who's type is in configured target list"

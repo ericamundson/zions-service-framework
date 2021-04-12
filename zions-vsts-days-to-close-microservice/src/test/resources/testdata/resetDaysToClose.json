@@ -1,23 +1,23 @@
 {
     "subscriptionId": "932254e6-e528-4576-89ab-03973f08fca3",
-    "notificationId": 5194,
-    "id": "b40b85c3-de37-4085-a5c5-cd4b0cb4aa6c",
+    "notificationId": 7614,
+    "id": "336a014c-0c11-4ec6-923c-3583cd93cb42",
     "eventType": "workitem.updated",
     "publisherId": "tfs",
     "message": {
-        "text": "Bug #22277 (SAM: Assist functionality doesn't work) transitioned to New by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22277)",
-        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=22277\">Bug #22277</a> (SAM: Assist functionality doesn&#39;t work) transitioned to New by Michael Angelastro",
-        "markdown": "[Bug #22277](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22277) (SAM: Assist functionality doesn't work) transitioned to New by Michael Angelastro"
+        "text": "Bug #22269 (Services - Stop Payment - Duplicate Check Numbers are currently allowed) transitioned to Resolved by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22269)",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=22269\">Bug #22269</a> (Services - Stop Payment - Duplicate Check Numbers are currently allowed) transitioned to Resolved by Michael Angelastro",
+        "markdown": "[Bug #22269](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22269) (Services - Stop Payment - Duplicate Check Numbers are currently allowed) transitioned to Resolved by Michael Angelastro"
     },
     "detailedMessage": {
-        "text": "Bug #22277 (SAM: Assist functionality doesn't work) transitioned to New by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22277)\r\n\r\n- New State: New\r\n",
-        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=22277\">Bug #22277</a> (SAM: Assist functionality doesn&#39;t work) transitioned to New by Michael Angelastro<ul>\r\n<li>New State: New</li></ul>",
-        "markdown": "[Bug #22277](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22277) (SAM: Assist functionality doesn't work) transitioned to New by Michael Angelastro\r\n\r\n* New State: New\r\n"
+        "text": "Bug #22269 (Services - Stop Payment - Duplicate Check Numbers are currently allowed) transitioned to Resolved by Michael Angelastro\r\n(https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22269)\r\n\r\n- New State: Resolved\r\n",
+        "html": "<a href=\"https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&amp;id=22269\">Bug #22269</a> (Services - Stop Payment - Duplicate Check Numbers are currently allowed) transitioned to Resolved by Michael Angelastro<ul>\r\n<li>New State: Resolved</li></ul>",
+        "markdown": "[Bug #22269](https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22269) (Services - Stop Payment - Duplicate Check Numbers are currently allowed) transitioned to Resolved by Michael Angelastro\r\n\r\n* New State: Resolved\r\n"
     },
     "resource": {
-        "id": 8,
-        "workItemId": 22277,
-        "rev": 8,
+        "id": 16,
+        "workItemId": 22269,
+        "rev": 15,
         "revisedBy": {
             "id": "b469b2eb-26de-609a-a49a-a173e186971d",
             "name": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
@@ -35,61 +35,49 @@
         "revisedDate": "9999-01-01T00:00:00Z",
         "fields": {
             "System.Rev": {
-                "oldValue": 7,
-                "newValue": 8
+                "oldValue": 14,
+                "newValue": 15
             },
             "System.AuthorizedDate": {
-                "oldValue": "2020-09-25T15:00:46.177Z",
-                "newValue": "2020-10-06T03:59:51.203Z"
+                "oldValue": "2021-01-27T21:19:36.813Z",
+                "newValue": "2021-04-12T13:34:07.473Z"
             },
             "System.RevisedDate": {
-                "oldValue": "2020-10-06T03:59:51.203Z",
+                "oldValue": "2021-04-12T13:34:07.473Z",
                 "newValue": "9999-01-01T00:00:00Z"
             },
             "System.State": {
                 "oldValue": "Closed",
-                "newValue": "New"
+                "newValue": "Resolved"
             },
             "System.Reason": {
                 "oldValue": "Fixed and verified",
-                "newValue": "Not fixed"
+                "newValue": "Resolved in error"
             },
             "System.ChangedDate": {
-                "oldValue": "2020-09-25T15:00:46.177Z",
-                "newValue": "2020-10-06T03:59:51.203Z"
-            },
-            "System.ChangedBy": {
-                "oldValue": "SVC-CLOUD-ADOMAINT001 <SVC-CLOUD-ADOMAINT001@zionsbancorporation.onmicrosoft.com>",
-                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
-            },
-            "System.AuthorizedAs": {
-                "oldValue": "SVC-CLOUD-ADOMAINT001 <SVC-CLOUD-ADOMAINT001@zionsbancorporation.onmicrosoft.com>",
-                "newValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
-            },
-            "System.PersonId": {
-                "oldValue": 99895085,
-                "newValue": 88125542
+                "oldValue": "2021-01-27T21:19:36.813Z",
+                "newValue": "2021-04-12T13:34:07.473Z"
             },
             "System.Watermark": {
-                "oldValue": 331268,
-                "newValue": 331496
+                "oldValue": 332174,
+                "newValue": 333852
             },
             "System.BoardColumn": {
                 "oldValue": "Closed",
-                "newValue": "New"
+                "newValue": "Resolved"
             },
             "Microsoft.VSTS.Common.StateChangeDate": {
-                "oldValue": "2020-09-25T15:00:26.877Z",
-                "newValue": "2020-10-06T03:59:51.203Z"
+                "oldValue": "2020-08-25T18:30:29.287Z",
+                "newValue": "2021-04-12T13:34:07.473Z"
             },
             "Microsoft.VSTS.Common.ActivatedDate": {
-                "oldValue": "2020-09-25T15:00:26.877Z"
+                "oldValue": "2020-08-25T18:30:29.287Z"
             },
             "Microsoft.VSTS.Common.ActivatedBy": {
                 "oldValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
             },
             "Microsoft.VSTS.Common.ResolvedDate": {
-                "oldValue": "2020-09-25T15:00:26.877Z"
+                "oldValue": "2020-08-25T18:30:29.287Z"
             },
             "Microsoft.VSTS.Common.ResolvedBy": {
                 "oldValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
@@ -98,78 +86,90 @@
                 "oldValue": "Fixed and verified"
             },
             "Microsoft.VSTS.Common.ClosedDate": {
-                "oldValue": "2020-09-25T15:00:26.877Z"
+                "oldValue": "2020-08-25T18:30:29.287Z"
             },
             "Microsoft.VSTS.Common.ClosedBy": {
                 "oldValue": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>"
             },
             "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": {
                 "oldValue": "Closed",
-                "newValue": "New"
+                "newValue": "Resolved"
             }
         },
         "_links": {
             "self": {
-                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22277/updates/8"
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22269/updates/16"
             },
             "workItemUpdates": {
-                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22277/updates"
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22269/updates"
             },
             "parent": {
-                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22277"
+                "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22269"
             },
             "html": {
-                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22277"
+                "href": "https://dev.azure.com/eto-dev/web/wi.aspx?pcguid=1bec1897-29a0-44d0-80a8-670c5ae5ef4a&id=22269"
             }
         },
-        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22277/updates/8",
+        "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22269/updates/16",
         "revision": {
-            "id": 22277,
-            "rev": 8,
+            "id": 22269,
+            "rev": 15,
             "fields": {
                 "System.AreaPath": "ALMOpsTest",
                 "System.TeamProject": "ALMOpsTest",
                 "System.IterationPath": "ALMOpsTest",
                 "System.WorkItemType": "Bug",
-                "System.State": "New",
-                "System.Reason": "Not fixed",
+                "System.State": "Resolved",
+                "System.Reason": "Resolved in error",
                 "System.AssignedTo": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
-                "System.CreatedDate": "2016-08-30T23:24:58.043Z",
+                "System.CreatedDate": "2016-08-30T23:24:36.183Z",
                 "System.CreatedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
-                "System.ChangedDate": "2020-10-06T03:59:51.203Z",
+                "System.ChangedDate": "2021-04-12T13:34:07.473Z",
                 "System.ChangedBy": "Michael Angelastro <Michael.Angelastro@zionsbancorp.com>",
                 "System.CommentCount": 1,
-                "System.Title": "SAM: Assist functionality doesn't work",
-                "System.BoardColumn": "New",
+                "System.Title": "Services - Stop Payment - Duplicate Check Numbers are currently allowed",
+                "System.BoardColumn": "Resolved",
                 "System.BoardColumnDone": false,
                 "Microsoft.VSTS.Scheduling.RemainingWork": 0.0,
-                "Microsoft.VSTS.Common.StateChangeDate": "2020-10-06T03:59:51.203Z",
-                "Microsoft.VSTS.Common.Priority": 3,
+                "Microsoft.VSTS.Common.StateChangeDate": "2021-04-12T13:34:07.473Z",
+                "Microsoft.VSTS.Common.Priority": 2,
                 "Microsoft.VSTS.Common.Severity": "3 - Medium",
                 "Microsoft.VSTS.Common.ValueArea": "Business",
                 "WEF_8036838721CC4DC0B35839429B90A6D8_Kanban.Column": "Closed",
                 "WEF_8036838721CC4DC0B35839429B90A6D8_Kanban.Column.Done": false,
-                "Custom.ExternalID": "RTC-21935",
+                "Custom.ExternalID": "RTC-21794",
                 "Custom.Classification": "Bug",
-                "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": "New",
+                "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column": "Resolved",
                 "WEF_C370B09E1EBD4AAD9A4CDBF70D2A00AB_Kanban.Column.Done": false,
-                "Custom.Color": "Green",
-                "Custom.DaysToClose": 1487.0,
-                "Microsoft.VSTS.TCM.ReproSteps": "Details: <br>When you click &quot;Assist&quot; hyperlink it kicks you back to login page. See attached &quot;Assist.jpg&quot;.<br><br>Steps to Reproduce: <br>1. Login in SAM<br>2. Find Zions POLB IBN = 1010000001823214<br>3. Click &quot;Assist&quot; hyperlink<br><br>Result: <br>Unble to view online banking for this person<br><br>Expected Result: <br>Able to view online banking for this person",
+                "Custom.Color": "Yellow",
+                "Custom.FoundinProd": false,
+                "Custom.UpdateIndicator": "Yes",
+                "Custom.DaysToClose": 1456.0,
+                "Microsoft.VSTS.TCM.ReproSteps": "Details: When inputting a duplicate check number for a stop payment, the system allows this, although the check amount is different.<br><br>Steps to Reproduce: <br><br>1. Log into VBC POLB as 'mwwacct' <br>2. Navigate to Services &gt; Check Services &gt; Create a Stop Payment<br>3. Input valid data for all required fields<br>4. Click 'Preview'<br>5. Click 'Submit'<br><br>Actual Results: The system allows the creation of an unlimited number of Stop Payments for the same user and Check number, s long as the amount is different.<br><br>Expected Result: The system should validate the check number",
                 "System.Tags": "previousstateopen; updateTest"
             },
+            "relations": [
+                {
+                    "rel": "System.LinkTypes.Hierarchy-Forward",
+                    "url": "https://dev.azure.com/eto-dev/7d441d20-11b2-45ee-b71b-8cdbc2370f20/_apis/wit/workItems/948303",
+                    "attributes": {
+                        "isLocked": false,
+                        "name": "Child"
+                    }
+                }
+            ],
             "_links": {
                 "self": {
-                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22277/revisions/8"
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22269/revisions/15"
                 },
                 "workItemRevisions": {
-                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22277/revisions"
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22269/revisions"
                 },
                 "parent": {
-                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22277"
+                    "href": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22269"
                 }
             },
-            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22277/revisions/8"
+            "url": "https://dev.azure.com/eto-dev/030d62a4-ce8b-405e-a331-8678df1a6efe/_apis/wit/workItems/22269/revisions/15"
         }
     },
     "resourceVersion": "1.0",
@@ -187,5 +187,5 @@
             "baseUrl": "https://dev.azure.com/eto-dev/"
         }
     },
-    "createdDate": "2020-10-06T03:59:59.5873874Z"
+    "createdDate": "2021-04-12T13:34:14.101534Z"
 }
