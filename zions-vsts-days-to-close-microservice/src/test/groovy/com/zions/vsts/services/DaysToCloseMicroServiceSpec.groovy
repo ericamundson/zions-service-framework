@@ -36,7 +36,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	
 	
 	
-	def "Not a valid type for days to close microservice"() {
+	def "Not a valid type for days to close microservices"() {
 		given: "A mock ADO event payload exists for invalid child state"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/invalidType.json').text)
 
@@ -143,7 +143,7 @@ class DaysToCloseMicroServiceSpec extends Specification {
 	}
 	
 	
-	def "valid event for calculating activation date to the date resolved"() {
+	def "valid event for calculating the date resolved"() {
 		given: "A mock ADO event payload where work item has no parent"
 		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/activationDate.json').text)
 		//override work item and get work item details and return json file with valid bug count values

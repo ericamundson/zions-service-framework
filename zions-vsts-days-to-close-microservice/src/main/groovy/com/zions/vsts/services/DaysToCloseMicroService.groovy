@@ -81,13 +81,13 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 	Closure responseHandler = { resp ->
 		
 		if (resp.status == 412) {
-			
+		
 			// Get fresh copy of parent work item
 			def bugWI = workManagementService.getWorkItem(collection, attemptedProject, attemptedId)
 			String rev = bugWI.rev
 			String bugState = bugWI.fields.'System.State'
 			String oldState = stateField
-			String oldState2 = stateField.newValue
+			String oldState2 = stateField.oldValue
 			if (bugState != oldState2)  {
 			//recheck calculations and boolean conditions
 				if (oldState2 == 'Resolved' && (bugState == 'Closed')) {
@@ -103,20 +103,30 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 				}		
 				
 				//resolveOnly - New/Active to Resolve reset DaystoResolve only
-				else if (openState.contains(oldState2) && (bugState == 'Resolved')) {
-					//resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
+				else if (oldState2 == 'Active' && (bugState == 'Resolved')) {
+				//else if (openState.contains(oldState2) && (bugState == 'Resolved')) {
 					resolvedDate = bugWI.fields.'Microsoft.VSTS.Common.ResolvedDate'
 					convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
-					//activationDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ActivatedDate'
-					activationDate = bugWI.fields.'Microsoft.VSTS.Common.ActivatedDate'
-					convActivationDate = Date.parse("yyyy-MM-dd", activationDate)
-					daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convActivationDate)
+					daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
+				}
+				
+				else if (oldState2 == 'New' && (bugState == 'Resolved')) {
+					//else if (openState.contains(oldState2) && (bugState == 'Resolved')) {
+					resolvedDate = bugWI.fields.'Microsoft.VSTS.Common.ResolvedDate'
+					convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
+					daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
 				}
 								
 				//Resolve To New/Active - if new state is open/active and old state was Resolved
-				else if (openState.contains(bugState) && (oldState2 == 'Resolved')) {
+				//else if (openState.contains(bugState) && (oldState2 == 'Resolved')) {
+				else if (oldState2 == 'Resolved' && (bugState == 'New')) {
 					daystoResolve = 0
 				}
+				
+				else if (oldState2 == 'Resolved' && (bugState == 'Active')) {
+					daystoResolve = 0
+				}
+	
 	
 				//updateBoth daysToResolve and daysToClose
 				else if (openState.contains(oldState2) && (bugState == 'Closed')) {
@@ -167,8 +177,8 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		log.debug("Entering DaysToCloseMicroService:: processADOData")
 		
 		/**		Uncomment code below to capture adoData payload for test*/
-		String json = new JsonBuilder(adoData).toPrettyString()
-		println(json)
+		//String json = new JsonBuilder(adoData).toPrettyString()
+		//println(json)
 		
 		def wiResource = adoData.resource
 		
@@ -235,9 +245,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		else if (openState.contains(oldState) && (newState == 'Resolved')) {
 			resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
 			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
-			activationDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ActivatedDate'
-			convActivationDate = Date.parse("yyyy-MM-dd", activationDate)
-			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convActivationDate)
+			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
 			
 		}
 		
@@ -248,7 +256,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 		}
 		
 		//updateBoth daysToResolve and daysToClose
-		else if (openState.contains(oldState) && (newState == 'Closed')) {
+		else if (openState.contains(oldState)&& (newState == 'Closed')) {
 			resolvedDate = wiResource.revision.fields.'Microsoft.VSTS.Common.ResolvedDate'
 			convResolvedDate = Date.parse("yyyy-MM-dd", resolvedDate)
 			daystoResolve = calcManagementService.calcDaysToClose(convResolvedDate, convCreateDate)
@@ -302,7 +310,7 @@ class DaysToCloseMicroService implements MessageReceiverTrait {
 			this.attemptedProject = project
 			this.attemptedId = id
 			
-			println(data)
+			//println(data)
 			return workManagementService.updateWorkItem(collection, project, id, data, respHandler)
 		}
 
