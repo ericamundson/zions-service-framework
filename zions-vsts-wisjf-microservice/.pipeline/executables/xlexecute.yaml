@@ -1,0 +1,36 @@
+executables:
+#Updated 2021-04-27 16:17:43.0178587 -0600 MDT m=+1.342941501
+- type: runXLDeployApply
+  yamlFile: zions-vsts-wisjf-microservice/.pipeline/xl-deploy.yaml
+  dependencies:
+  - /zions-vsts-wisjf-microservice/.pipeline/xebialabs/xld-env.yaml
+  - /zions-vsts-wisjf-microservice/.pipeline/xebialabs/xld-infra.yaml
+  vault:
+    engine: secret
+    paths: 
+    - zions-service-framework
+  values:
+  - name: xld_cli_user
+    value: ${xl.user}
+  - name: xld_cli_passwd
+    value: ${xl.password)
+  - name: svc_account_passwd
+    value: ${svc_account_passwd}
+    
+- type: runXLReleaseApply
+  yamlFile:  zions-vsts-wisjf-microservice/.pipeline/xl-release.yaml
+  dependencies:
+  - /zions-vsts-wisjf-microservice/.pipeline/xebialabs/xlr-pipeline-ci-cd.yaml
+  vault:
+    engine: secret
+    paths: 
+    - zions-service-framework
+  values:
+  - name: xld_cli_user
+    value: ${xl.user}
+  - name: xld_cli_passwd
+    value: ${xl.password)
+  - name: svc_account_passwd
+    value: ${svc_account_passwd}
+  - name: xlr_scriptUserPassword
+    value: ${xlr_scriptUserPassword}
