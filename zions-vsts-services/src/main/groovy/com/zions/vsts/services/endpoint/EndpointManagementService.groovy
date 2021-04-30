@@ -23,6 +23,9 @@ public class EndpointManagementService {
 		def endpoint = getServiceEndpoint('', projectId, endpointData.name)
 		if (endpoint == null) {
 			endpoint = createServiceEndpoint(endpointData)  
+		} else {
+			deleteServiceEndpoint('', projectId, endpoint)
+			endpoint = createServiceEndpoint(endpointData)  
 		}
 		
 		if (grantAllPermission) {
@@ -55,6 +58,17 @@ public class EndpointManagementService {
 		return endpoint
 	}
 	
+	public def deleteServiceEndpoint(String collection, String projectId, def endpoint) {
+		
+		def query = ['api-version': '6.0-preview.4', projectIds:projectId]
+		def result = genericRestClient.delete(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/_apis/serviceendpoint/endpoints/${endpoint.id}",
+			query: query
+			)
+		return result
+	}
+
 	def createServiceEndpoint( def endpointData ) {
 		def endpoint = genericRestClient.post(
 			contentType: ContentType.JSON,
