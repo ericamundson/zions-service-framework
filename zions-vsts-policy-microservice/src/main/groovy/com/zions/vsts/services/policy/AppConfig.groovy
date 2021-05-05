@@ -17,7 +17,7 @@ import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.vsts.services.rmq.mixins.MessageFanoutConfigTrait
 
 @Configuration
-@ComponentScan("com.zions.vsts.services")
+@ComponentScan("com.zions.vsts.services,com.zions.common.services.notification")
 public class AppConfig implements MessageFanoutConfigTrait {
 	@Bean 
 	ICacheManagementService cacheManagementService() {
