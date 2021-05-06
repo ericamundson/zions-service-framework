@@ -1,0 +1,11 @@
+<service>
+      <id>zions-queue-pubsub-microservice0</id>
+      <name>zions-queue-pubsub-microservice0</name>
+      <description>This service runs zions-queue-pubsub-microservice.</description>
+      <executable>java</executable>
+      
+      <arguments>-Xrs -Xmx256m -jar -Dspring.profiles.active={{spring.profile}} "{{deploy.path}}/zions-queue-pubsub-microservice.jar" --queue.name=none  --ado.topics=n/a --tfs.url={{tfs.url}} --logging.file="{{deploy.path}}/zions-queue-pubsub-microservice0.log" </arguments>
+	  
+      <logmode>rotate</logmode>
+      <logpath>{{deploy.path}}\wrapper-logs\zions-queue-pubsub-microservice0</logpath>
+</service>

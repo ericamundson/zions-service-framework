@@ -1,0 +1,10 @@
+executables:
+#Updated 2021-05-06 07:53:49.708705011 -0600 MDT m=+1.460993413
+- name: zions-queue-pubsub-microservice-release
+  type: buildDefinition
+  context: zionseto
+  project: DTS
+  queue: 'On-Prem Production'
+  repository:
+    name: zions-service-framework
+  buildyaml: zions-queue-pubsub-microservice/.pipeline/ado/microservice-release.yaml
