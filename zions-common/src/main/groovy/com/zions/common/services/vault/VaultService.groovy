@@ -26,6 +26,7 @@ class VaultService {
 			uri: "${vaultRestClient.vaultUrl}/v1/sys/seal-status",
 			contentType: ContentType.JSON
 			)
+		if (!result) return true
 		if (result && result.sealed) return true
 		return false
 	}
@@ -128,8 +129,13 @@ class VaultService {
 	}
 	
 	void ensureUnsealed() {
-		if (isSealed()) {
-			unseal()
+		while (isSealed()) {
+			try {
+				unseal()
+				System.sleep(10000)
+			} catch (e) {
+				
+			}
 		}
 	}
 }

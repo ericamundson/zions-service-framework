@@ -24,8 +24,14 @@ public class EndpointManagementService {
 		if (endpoint == null) {
 			endpoint = createServiceEndpoint(endpointData)  
 		} else {
-			deleteServiceEndpoint('', projectId, endpoint)
-			endpoint = createServiceEndpoint(endpointData)  
+			if (endpoint.type != endpointData.type) {
+				deleteServiceEndpoint('', projectId, endpoint)
+				endpoint = createServiceEndpoint(endpointData)
+				
+			} else {
+				endpointData.id = endpoint.id
+				updateServiceEndpoint(endpointData) 
+			}
 		}
 		
 		if (grantAllPermission) {
@@ -84,7 +90,7 @@ public class EndpointManagementService {
 		def endpoint = genericRestClient.put(
 			contentType: ContentType.JSON,
 			requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/_apis/serviceendpoint/endpoints",
+			uri: "${genericRestClient.getTfsUrl()}/_apis/serviceendpoint/endpoints/${endpointData.id}",
 			body: endpointData,
 			query: ['api-version':'6.0-preview.4', excludeUrls:true]
 			)
