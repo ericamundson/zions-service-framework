@@ -81,7 +81,7 @@ class CodeManagementService {
 	}
 	
 	public def createRepo(String collection, def project, String repoName) {
-		def query = ['api-version':'4.1']
+		def query = ['api-version':'6.0']
 		def reqObj = [name: repoName, project: [id: project.id, name: project.name]]
 		def body = new JsonBuilder(reqObj).toString()
 		def result = genericRestClient.post(
@@ -96,7 +96,7 @@ class CodeManagementService {
 	}
 	
 	public def getRepo(String collection, def project, String repoName) {
-		def query = ['api-version':'4.1']
+		def query = ['api-version':'6.0']
 		def repoNameE = URLEncoder.encode(repoName, 'UTF-8')
 		repoNameE= repoNameE.replace('+', '%20')
 		def result = genericRestClient.get(
@@ -109,7 +109,7 @@ class CodeManagementService {
 	}
 	
 	public def getRepoWithProjectName(String collection, String project, String repoName) {
-		def query = ['api-version':'4.1']
+		def query = ['api-version':'6.0']
 		def repoNameE = URLEncoder.encode(repoName, 'UTF-8')
 		repoNameE= repoNameE.replace('+', '%20')
 		String projectName = URLEncoder.encode(project, 'UTF-8').replace('+', '%20')
@@ -258,11 +258,14 @@ class CodeManagementService {
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/stats/branches",
 			query: query
 		)
+		log.debug("getBranch -- Looking for branch $name")
 		def branch = result.'value'.find { b -> 
 			String bName = "${b.name}"
 			bName == name
 		}
-		
+		if (branch != null) {
+			log.debug("getBranch -- Found branch $name")
+		}
 		return branch
 	}
 	
@@ -273,11 +276,11 @@ class CodeManagementService {
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/refs",
 			query: query
 		)
+		log.debug("getBranchRef -- Looking for branch $name")
 		def ref = result.'value'.find { b ->
 			String bName = "${b.name}"
 			bName == name
 		}
-		
 		return ref
 	}
 	

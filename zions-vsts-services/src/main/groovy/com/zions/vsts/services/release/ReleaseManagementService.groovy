@@ -58,7 +58,7 @@ public class ReleaseManagementService {
 	}
 	
 	public def ensureRelease(collection, projectData, repo, template, xldEndpoint, folder, team) {
-		def release = getRelease(collection, projectData, repo.name)
+		def release = getRelease(collection, projectData, repo.name, true)
 		if (release == null) {
 			release = createRelease(collection, projectData, repo, template, xldEndpoint, folder, team)
 		}
@@ -72,7 +72,7 @@ public class ReleaseManagementService {
 		def createdFlag = false
 		def foundFlag = false
 		log.debug("ReleaseManagementService::ensureReleaseForBuild -- Looking for existing release definition for ${repo.name}")
-		def releaseDef = getRelease(collection, projectData, "${repo.name}")
+		def releaseDef = getRelease(collection, projectData, "${repo.name}", true)
 		if (releaseDef == null) {
 			log.debug("ReleaseManagementService::ensureReleaseForBuild -- Did NOT find an existing release definition for ${repo.name}")
 			if (templateName == null) {
@@ -81,7 +81,7 @@ public class ReleaseManagementService {
 			def template = null
 			// first check for ADO template release definition
 			log.debug("ReleaseManagementService::ensureReleaseForBuild -- Loading ADO release template: " + templateName)
-			template = getRelease(collection, projectData, templateName)
+			template = getRelease(collection, projectData, templateName, true)
 			if (template == null) {
 				log.debug("ReleaseManagementService::ensureReleaseForBuild -- ADO Template release definition not found for project ${projectData.name}")
 				log.debug("ReleaseManagementService::ensureReleaseForBuild -- Using resource file.  File name: "+ templateName + ".json")
@@ -174,10 +174,10 @@ public class ReleaseManagementService {
 
 	private def ensureDRRelease(collection, projectData, repo, buildId) {
 		// Look for existing DR release for repo
-		def release = getRelease(collection, projectData, repo.name + "-dr")
+		def release = getRelease(collection, projectData, repo.name + "-dr", true)
 		if (release == null) {
 			// use existing release definition as template
-			def template = getRelease(collection, projectData, repo.name)
+			def template = getRelease(collection, projectData, repo.name, true)
 			release = createDRRelease(collection, projectData, repo, template, buildId)
 		}
 	}
@@ -295,9 +295,9 @@ public class ReleaseManagementService {
 		return result
 	}
 	
-	public def getRelease(def collection, def project, String name) {
+	public def getRelease(def collection, def project, String name, boolean exactMatch = true) {
 		log.debug("ReleaseManagementService::getRelease -- Looking for Release Definition with name ${name}")
-		def query = ['api-version':'4.1-preview.3','searchText':"${name}",isExactNameMatch:true]
+		def query = ['api-version':'6.0','searchText':"${name}",isExactNameMatch:exactMatch]
 		def releaseUri = getReleaseApiUrl(collection, project)
 		log.debug("ReleaseManagementService::getRelease -- URI = ${releaseUri}/definitions")
 		def result = genericRestClient.get(
@@ -310,7 +310,7 @@ public class ReleaseManagementService {
 			log.debug("ReleaseManagementService::getRelease -- Release Definition ${name} NOT found")
 			return null
 		}
-		query = ['api-version':'4.1-preview.3']
+		query = ['api-version':'6.0']
 		def result1 = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${releaseUri}/definitions/${result.value[0].id}",
