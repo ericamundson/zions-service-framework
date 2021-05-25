@@ -895,7 +895,6 @@ public class BuildManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${result.value[0].id}",
 				query: query,
 				)
-		// What is this doing ?? query = ['api-version':'4.1', 'propertyFilters':'processParameters']
 		return result1
 	}
 
@@ -1250,6 +1249,68 @@ public class BuildManagementService {
 		return result
 	}
 
+	public def getLatestBuild(def collection, def project, String name, def branchName) {
+		log.debug("BuildManagementService::getBuildYaml for build: " + name)
+		def result = null
+		def query = ['api-version':'6.0-preview.1']
+		if (branchName != null && branchName != "") {
+			query = ['branchName':"${branchName}", 'api-version':'6.0-preview.1']
+		}
+		def buildDef = getBuild(collection, project, name)
+		if (buildDef != null) {
+			result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/latest/${buildDef.id}?",
+				query: query,
+				headers: [accept: 'application/json;excludeUrls=true;enumsAsNumbers=true;msDateFormat=true'],
+			)
+		}
+		return result
+	}
+
+	public def getPipeline(def collection, def project, String name) {
+		log.debug("BuildManagementService::getBuild -- name = " + name)
+		def query = ['name':"*${name}"]
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
+				headers: [accept: 'application/json;api-version=5.0-preview.6;excludeUrls=true'],
+				query: query,
+				)
+		if (result == null || result.count == 0) {
+			log.debug("BuildManagementService::getBuild -- build " + name + " not found. Returning NULL ...")
+			return null
+		}
+		query = ['api-version':'6.0-preview.1']
+		def result1 = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/pipelines/${result.value[0].id}",
+				query: query,
+				)
+		return result1
+	}
+
+	public def getBuildYaml(def collection, def project, String name, def buildId) {
+		log.debug("BuildManagementService::getBuildYaml for build: " + name)
+		def result = null
+		if (buildId == null) {
+			def buildDef = getBuild(collection, project, name)
+			if (buildDef == null) {
+				return null
+			} else {
+				buildId = "${buildDef.id}"
+			}
+		}
+		def bResult = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${buildId}/yaml",
+			headers: [accept: 'application/json;api-version=6.0-preview.1;excludeUrls=true;enumsAsNumbers=true;msDateFormat=true'],
+		)
+		result = bResult.yaml
+
+		return result
+	}
+
 	public def getResource(String buildType, String phase, String resourceName) {
 		def template = null
 		def filename = "${buildType}-${phase}" 
@@ -1283,7 +1344,7 @@ public class BuildManagementService {
 
 	private def getLatestTag(def collection, def project, def repo) {
 		log.debug("BuildManagementService::getLatestTag for project ${project.name} and repo ${repo.name}")
-		def query = ['filter':'tags', 'api-version':'4.1']
+		def query = ['filter':'tags', 'api-version':'6.0']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repo.id}/refs",
