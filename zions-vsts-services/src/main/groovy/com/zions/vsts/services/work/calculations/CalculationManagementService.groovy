@@ -52,6 +52,20 @@ class CalculationManagementService {
 		else
 			return duration.days + new BigDecimal(duration.hours / 24).round()
 	}
+	
+	def calcDaysToResolve(Date resolvedDate, Date createdDate) {
+		// If wi is still open we set daysToClose to 0
+		if (!resolvedDate) return 0
+		
+		def duration = groovy.time.TimeCategory.minus(resolvedDate,createdDate)
+		
+		String strResolvedDate = resolvedDate.format('dd-MMM-yyyy')
+		String strCreatedDate = createdDate.format('dd-MMM-yyyy')
+		if (strResolvedDate == strCreatedDate)
+			return 0.5 // Return half day for same day closure
+		else
+			return duration.days + new BigDecimal(duration.hours / 24).round()
+	}
 
 }
 

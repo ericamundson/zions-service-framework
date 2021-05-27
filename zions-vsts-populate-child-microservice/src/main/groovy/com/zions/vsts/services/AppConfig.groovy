@@ -29,7 +29,7 @@ import com.zions.vsts.services.rmq.mixins.MessageFanoutConfigTrait
 /* Will set default configs for ContentApplication */
 
 @Configuration
-@ComponentScan(["com.zions.vsts.services","com.zions.common.services.logging"])
+@ComponentScan(["com.zions.vsts.services","com.zions.common.services.logging","com.zions.common.services.notification"])
 
 public class AppConfig implements MessageFanoutConfigTrait {
 	
