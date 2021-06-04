@@ -787,6 +787,48 @@ public class TestManagementService {
 
 	}
 	
+	public def getTestRunsById(def project, String runId) {
+		def collection = ""
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		//def queryHierarchy = getQueryHierarchy(project)
+//		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
+//
+//		def queryJson = [queryJson: query]
+//		def body = new JsonBuilder( queryJson ).toString()
+		
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runId}",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'5.0-preview.2', includeRunDetails: true]
+			)
+
+		return result;
+
+	}
+	
+	public def getTestRunsStatsById(def project, String runId) {
+		def collection = ""
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		//def queryHierarchy = getQueryHierarchy(project)
+//		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
+//
+//		def queryJson = [queryJson: query]
+//		def body = new JsonBuilder( queryJson ).toString()
+		
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runId}/Statistics",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'5.0-preview.2', includeRunDetails: true]
+			)
+
+		return result;
+
+	}
+	
 	
 	public def setFromADOParent(def parentData, def children, def map, boolean update = false) {
 //		String pname = "${parent.name()}"
@@ -954,6 +996,35 @@ public class TestManagementService {
 		}
 		
 	}
+	
+	public def getTestResultsById(def project, String runID) {
+		def collection = ""
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		//def queryHierarchy = getQueryHierarchy(project)
+//		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
+//
+//		def queryJson = [queryJson: query]
+//		def body = new JsonBuilder( queryJson ).toString()
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			//uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runID}",
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runID}/results",
+			//headers: ['Content-Type': 'application/json'],
+			//query: ['api-version':'5.0-preview.2', includeRunDetails: true]
+			query: [destroy: true, 'api-version': '5.0-preview.2', detailsToInclude:'workItems', '$top': 200]
+			
+			)
+
+		return result;
+
+	}
+	
+	
+	
+	
+	
+	
 	public def getResult(String uri) {
 		def result = genericRestClient.get(
 			uri: uri,
