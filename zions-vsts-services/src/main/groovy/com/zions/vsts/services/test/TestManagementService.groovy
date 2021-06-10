@@ -15,12 +15,12 @@ import groovyx.net.http.ContentType
 
 /**
  * Handles all ADO Test Manager specific requests.
- * 
+ *
  * <p><b>Design:</b></p>
  * <img src="TestManagementService.svg"/>
- * 
+ *
  * @author z091182
- * 
+ *
  * @startuml
  * annotation Component
  * annotation Autowired
@@ -58,7 +58,7 @@ import groovyx.net.http.ContentType
  * TestManagementService --> ICacheManagementService : @Autowired cacheManagementService
  * TestManagementService -> ProjectManagementService: @Autowired projectManagmentService
  * @enduml
- * 
+ *
  */
 @Component
 @Slf4j
@@ -84,12 +84,12 @@ public class TestManagementService {
 	
 	/**
 	 * Send changes for test case test results.
-	 * 
+	 *
 	 * @param collection ADO organization
 	 * @param project ADO project name
 	 * @param executionResult data for result data
 	 * @param id cache identity
-	 * @return ADO test result representation 
+	 * @return ADO test result representation
 	 */
 	public def sendResultChanges(String collection, String project, def executionResult, String id) {
 		//def executionResult = inexecutionResult.Result
@@ -220,7 +220,7 @@ public class TestManagementService {
 	
 	/**
 	 * Batch a set of plan item changes to ADO.
-	 * 
+	 *
 	 * @param collection - ADO organization
 	 * @param tfsProject - ADO project name
 	 * @param changeList - Set of ADO request objects
@@ -233,7 +233,7 @@ public class TestManagementService {
 //			String nuri = "${genericRestClient.getTfsUrl()}${change.uri}"
 //			change.uri = nuri
 //			String method = "${change.method}"
-//			
+//
 //			((Map) change).remove('method')
 //			def result = null
 //			String dataType = getTestChangeType(change)
@@ -251,16 +251,16 @@ public class TestManagementService {
 	
 	/**
 	 * Send a single plan item changesp
-	 * 
+	 *
 	 * <p><b>Flow</b></p>
 	 * <img src="TestManagmentService_sendPlanChanges.svg"/>
-	 * 
+	 *
 	 * @param collection - ADO organization
 	 * @param tfsProject - ADO project
 	 * @param change - ADO plan item request data
 	 * @param id - cache item ID
 	 * @return ADO request result.
-	 * 
+	 *
 	 * @startuml TestManagmentService_sendPlanChanges.svg
 	 * participant "TranslateRQMToMTM:caller" as caller
 	 * participant "TestManagementService:this" as this
@@ -281,7 +281,7 @@ public class TestManagementService {
 	 * 	this -> cacheManagementService: saveToCache(result, cacheId, cacheType)
 	 * end
 	 * @enduml
-	 * 
+	 *
 	 */
 	public def sendPlanChanges(String collection, String tfsProject, def change, String id) {
 		// Test data
@@ -410,7 +410,7 @@ public class TestManagementService {
 				String name = "${plan.name}"
 				if (name == planName) {
 					outPlan = plan
-					return outPlan 
+					return outPlan
 				}
 			}
 		}
@@ -517,7 +517,7 @@ public class TestManagementService {
 			requestContentType: ContentType.JSON,
 			contentType: ContentType.JSON,
 			uri: uri,
-			body: sbody,  
+			body: sbody,
 			//headers: [Accept: 'application/json'],
 			query: ['api-version': '5.1-preview.1' ]
 			)
@@ -731,7 +731,7 @@ public class TestManagementService {
 			//cacheManagementService.deleteFromCache(pid, ICacheManagementService.RUN_DATA)
 		}
 
-		def adoSuiteData 
+		def adoSuiteData
 		if (runData == null) {
 			adoSuiteData = cacheManagementService.getFromCache(pid, ICacheManagementService.SUITE_DATA)
 			if (!adoSuiteData) return [:]
@@ -779,6 +779,48 @@ public class TestManagementService {
 			contentType: ContentType.JSON,
 			//requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'5.0-preview.2', includeRunDetails: true]
+			)
+
+		return result;
+
+	}
+	
+	public def getTestRunsById(def project, String runId) {
+		def collection = ""
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		//def queryHierarchy = getQueryHierarchy(project)
+//		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
+//
+//		def queryJson = [queryJson: query]
+//		def body = new JsonBuilder( queryJson ).toString()
+		
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runId}",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'5.0-preview.2', includeRunDetails: true]
+			)
+
+		return result;
+
+	}
+	
+	public def getTestRunsStatsById(def project, String runId) {
+		def collection = ""
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		//def queryHierarchy = getQueryHierarchy(project)
+//		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
+//
+//		def queryJson = [queryJson: query]
+//		def body = new JsonBuilder( queryJson ).toString()
+		
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runId}/Statistics",
 			headers: ['Content-Type': 'application/json'],
 			query: ['api-version':'5.0-preview.2', includeRunDetails: true]
 			)
@@ -954,6 +996,35 @@ public class TestManagementService {
 		}
 		
 	}
+	
+	public def getTestResultsById(def project, String runID) {
+		def collection = ""
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		//def queryHierarchy = getQueryHierarchy(project)
+//		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
+//
+//		def queryJson = [queryJson: query]
+//		def body = new JsonBuilder( queryJson ).toString()
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			//uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runID}",
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runID}/results",
+			//headers: ['Content-Type': 'application/json'],
+			//query: ['api-version':'5.0-preview.2', includeRunDetails: true]
+			query: [destroy: true, 'api-version': '5.0-preview.2', detailsToInclude:'workItems', '$top': 200]
+			
+			)
+
+		return result;
+
+	}
+	
+	
+	
+	
+	
+	
 	public def getResult(String uri) {
 		def result = genericRestClient.get(
 			uri: uri,
@@ -1053,7 +1124,7 @@ public class TestManagementService {
 	
 	private def filterIds(def idList, def tcMap) {
 		Set<String> oid = []
-		idList.each { id -> 
+		idList.each { id ->
 			String key = "${id}"
 			if (!tcMap.containsKey(id)) {
 				oid.add(key)
@@ -1374,7 +1445,7 @@ public class TestManagementService {
 				}
 			}
 			if (fpoints && fpoints.size() > 0) {
-				fpoints.each { point -> 
+				fpoints.each { point ->
 					retVal.add(point.id)
 				}
 			}
@@ -1384,7 +1455,7 @@ public class TestManagementService {
 	}
 
 	private def getPlanTestSuites(String collection, String project, def planData) {
-		def retVal 
+		def retVal
 		if (!planData) return retVal
 		String url = "${planData.url}/suites"
 		def result = genericRestClient.get(
