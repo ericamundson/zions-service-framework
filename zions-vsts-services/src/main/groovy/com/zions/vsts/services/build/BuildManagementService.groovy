@@ -878,7 +878,7 @@ public class BuildManagementService {
 
 	public def getBuild(def collection, def project, String name) {
 		log.debug("BuildManagementService::getBuild -- name = " + name)
-		def query = ['name':"*${name}"]
+		def query = ['name':"${name}"]
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
