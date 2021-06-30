@@ -76,6 +76,15 @@ class ProjectManagementService {
 		return result
 	}
 	
+	def getProject(def collection, def projectId) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${projectId}",
+			query: ['api-version': '6.0' ]
+			)
+		return result
+	}
+	
 	def getProjectProperty(def collection, def project, def name) {
 		def projectData = getProject(collection, project)
 		if (projectData == null) return null

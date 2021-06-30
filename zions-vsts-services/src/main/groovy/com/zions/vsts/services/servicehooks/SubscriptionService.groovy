@@ -67,6 +67,17 @@ class SubscriptionService {
 		return retVal
 	}
 	
+	def getWebhookSubscriptions() {
+		//def query = [consumerId: subscriptionData.consumerId, eventType: subscriptionData.eventType, publisherId: subscriptionData.publisherId, 'api-version': '5.1']
+		def query = [consumerActionId: 'httpRequest', 'api-version': '5.1']
+		def results = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/_apis/hooks/subscriptions",
+			query: query
+			)
+		return results
+	}
+
 	def updateSubscription( def subscriptionData) {
 		def results = genericRestClient.put(
 			contentType: ContentType.JSON,
@@ -88,4 +99,15 @@ class SubscriptionService {
 		)
 		return results
 	}
+
+	def deleteSubscription( def subscriptionId) {
+		def results = genericRestClient.delete(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/_apis/hooks/subscriptions/${subscriptionId}",
+			query: ['api-version': '6.0']
+		)
+		return results
+	}
+
 }
