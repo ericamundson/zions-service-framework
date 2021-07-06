@@ -829,6 +829,27 @@ public class TestManagementService {
 
 	}
 	
+	public def getTestRunsByPlanId(def project, String planId) {
+		def collection = ""
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		//def queryHierarchy = getQueryHierarchy(project)
+//		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
+//
+//		def queryJson = [queryJson: query]
+//		def body = new JsonBuilder( queryJson ).toString()
+		
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'5.0-preview.2', includeRunDetails: true, planId: "${planId}" ]
+			)
+
+		return result;
+
+	}
+	
 	
 	public def setFromADOParent(def parentData, def children, def map, boolean update = false) {
 //		String pname = "${parent.name()}"
