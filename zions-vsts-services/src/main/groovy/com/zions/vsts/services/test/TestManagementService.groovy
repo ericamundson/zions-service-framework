@@ -536,7 +536,7 @@ public class TestManagementService {
 			String sbody = new JsonBuilder(body).toPrettyString()
 			//put stop here json builder to prettystring look at what sbody looks like as formatted json
 			//should have same format as body in successful talend execution
-			def result = genericRestClient.rateLimitPost(
+			def result = genericRestClient.patch(
 				requestContentType: ContentType.JSON,
 				contentType: ContentType.JSON,
 				uri: uri,
