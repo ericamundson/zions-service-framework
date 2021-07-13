@@ -339,7 +339,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		//JsonOutput t
 		
 		int status = resp.status
-		if (status != 200 && status != 201) {
+		if (status != 200 && status != 201 && status != 204) {
 			
 			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
 			if (sinput) {
