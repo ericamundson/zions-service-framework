@@ -433,6 +433,40 @@ public class TestManagementService {
 		
 	}
 	
+	def getTestSuite(String collection, String project, Integer Id) {
+		
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//verify API call for testplan ID
+			//should work//https://dev.azure.com/eto-dev/ALMOpsTest/_apis/test/plans/458154
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/testplan/Plans/${Id}/suites?api-version=5.1-preview.1",
+			query: ['api-version':'5.0']
+			)
+		
+		return result
+		
+	}
+	
+	def getTestPointFromSuite(String collection, String project, Integer testPlanId, String testSuiteId) {
+		
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//verify API call for testplan ID
+			//should work//https://dev.azure.com/eto-dev/ALMOpsTest/_apis/test/plans/458154
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testPlanId}/Suites/${testSuiteId}/points?api-version=6.0",
+			//uri: https://dev.azure.com/zionseto/Sandbox/_apis/test/Plans/1695461/Suites/1696010/points?api-version=6.0
+			query: ['api-version':'6.0']
+			)
+		
+		return result
+		
+	}
+	
+	
+
+	
 	def getSuite(def plan, String suiteName) {
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
@@ -451,6 +485,7 @@ public class TestManagementService {
 		}
 		return outSuite
 	}
+	
 	
 	def getSuiteMap(def plan) {
 		def suiteMap = [:]
@@ -529,7 +564,7 @@ public class TestManagementService {
 			def eproject = URLEncoder.encode(project, 'utf-8')
 			eproject = eproject.replace('+', '%20')
 			
-			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testplanId}/Suites/${testsuiteId}/points/${testpointId}?api-version=6.0&bypassRules=True"
+			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testplanId}/Suites/${testsuiteId}/points/${testpointId}?api-version=6.0&bypassRules=True&suppressNotifications=true"
 			//def body = ['destinationTestPlan': [ 'name': destPlanName, 'Project': [ 'Name': destProjectName ]], 'options': [ 'copyAncestorHierarchy': true, 'copyAllSuites': true, 'overrideParameters': [ 'System.AreaPath': destProjectName, 'System.IterationPath': destProjectName ]], 'suiteIds': [ 2 ]]
 			def body = ['outcome': outcome, 'state': state, 'runBy': [ 'displayName': runBy]]
 			
