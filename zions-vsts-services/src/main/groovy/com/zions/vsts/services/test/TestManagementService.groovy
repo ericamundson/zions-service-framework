@@ -433,7 +433,7 @@ public class TestManagementService {
 		
 	}
 	
-	def getTestSuite(String collection, String project, Integer Id) {
+	def getTestSuite(String collection, String project, String Id) {
 		
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def result = genericRestClient.get(
@@ -448,7 +448,7 @@ public class TestManagementService {
 		
 	}
 	
-	def getTestPointFromSuite(String collection, String project, Integer testPlanId, String testSuiteId) {
+	def getTestPointFromSuite(String collection, String project, String testPlanId, String testSuiteId) {
 		
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		def result = genericRestClient.get(
