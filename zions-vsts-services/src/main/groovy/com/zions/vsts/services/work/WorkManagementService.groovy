@@ -759,8 +759,15 @@ class WorkManagementService {
 			//Get work item
 			def wi = getWorkItem(collection, project, id)
 			def wiParent = getParent(collection, project, wi)
-			if (wiParent)
-				return wiParent.fields['System.AssignedTo'].uniqueName
+			if (wiParent) {
+				if (wiParent.fields['System.AssignedTo'] != null) 
+					return wiParent.fields['System.AssignedTo'].uniqueName
+				else if (wiParent.fields['System.State'] == 'Closed') {
+					return wiParent.fields['Microsoft.VSTS.Common.ClosedBy'].uniqueName
+				}
+				else
+					return null
+			} 
 			else
 				return null
 		}
