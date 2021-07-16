@@ -54,7 +54,7 @@ stages:
     - task: BatchScript@1
       displayName: 'XLW - xl-release.yaml'
       inputs:
-        filename: '$(Build.SourcesDirectory)\zions-vsts-populate-child-microservice\pipeline\xl.exe'
+        filename: '$(Build.SourcesDirectory)\zions-vsts-populate-child-microservice\pipeline\xlw'
         arguments: 'apply -f xl-release.yaml --xl-release-url $(xlr_cli_url) --xl-release-username $(xld_cli_user) --xl-release-password $(xld_cli_passwd) --values app_version=$(buildTag),xld_cli_user=$(xld_cli_user),xld_cli_passwd=$(xld_cli_passwd),svc_account_passwd=$(svc_account_passwd),xlr_scriptUserPassword=$(xlr_scriptUserPassword),release_name="zions-vsts-populate-child-microservice-$(buildTag)"'
         workingFolder: $(Build.SourcesDirectory)\zions-vsts-populate-child-microservice\pipeline
       continueOnError: true
