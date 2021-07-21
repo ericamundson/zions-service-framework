@@ -615,7 +615,6 @@ public class TestManagementService {
 				def eproject = URLEncoder.encode(project, 'utf-8')
 				eproject = eproject.replace('+', '%20')
 				
-				//https://dev.azure.com/zionseto/Sandbox/_apis/test/Runs/1325472/results?api-version=5.0
 				def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Runs/${runId}/results?api-version=6.0&bypassRules=True&suppressNotifications=true"
 				//def body = ['destinationTestPlan': [ 'name': destPlanName, 'Project': [ 'Name': destProjectName ]], 'options': [ 'copyAncestorHierarchy': true, 'copyAllSuites': true, 'overrideParameters': [ 'System.AreaPath': destProjectName, 'System.IterationPath': destProjectName ]], 'suiteIds': [ 2 ]]
 				//def body = ['name': name, 'state': state, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], , 'pointIds': [ testpointId ]]
