@@ -610,7 +610,31 @@ public class TestManagementService {
 				
 	
 	
-	
+			public def createTestResult(collection, project, runId, priority, outcome, testCaseTitle, state, startedDate, completedDate, lastupdatedDate, createdDate, configuration, comment, owner, runBy) {
+				
+				def eproject = URLEncoder.encode(project, 'utf-8')
+				eproject = eproject.replace('+', '%20')
+				
+				//https://dev.azure.com/zionseto/Sandbox/_apis/test/Runs/1325472/results?api-version=5.0
+				def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Runs/${runId}/results?api-version=6.0&bypassRules=True&suppressNotifications=true"
+				//def body = ['destinationTestPlan': [ 'name': destPlanName, 'Project': [ 'Name': destProjectName ]], 'options': [ 'copyAncestorHierarchy': true, 'copyAllSuites': true, 'overrideParameters': [ 'System.AreaPath': destProjectName, 'System.IterationPath': destProjectName ]], 'suiteIds': [ 2 ]]
+				//def body = ['name': name, 'state': state, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], , 'pointIds': [ testpointId ]]
+				def body = [['priority': priority, 'outcome': outcome, 'testCaseTitle': testCaseTitle, 'state': state, 'starteDate': startedDate, 'completedDate': completedDate, 'lastUpdatedDate': lastupdatedDate, 'createdDate': createdDate, 'comment': comment, 'owner': [ 'displayName': owner], 'runBy': [ 'displayName': runBy], 'configuration': [ 'id': configuration],]]
+				
+				String sbody = new JsonBuilder(body).toPrettyString()
+				//put stop here json builder to prettystring look at what sbody looks like as formatted json
+				//should have same format as body in successful talend execution
+				def result = genericRestClient.rateLimitPost(
+				  
+					requestContentType: ContentType.JSON,
+					contentType: ContentType.JSON,
+					uri: uri,
+					body: sbody,
+					//headers: [Accept: 'application/json'],
+					query: ['api-version': '5.1-preview.1' ]
+					)
+				return result
+				}
 	
 	
 	
