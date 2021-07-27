@@ -464,6 +464,22 @@ public class TestManagementService {
 		
 	}
 	
+	def getTestPointDataUsingPoint(String collection, String project, String testPlanId, String testSuiteId, String testPointId) {
+		
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//verify API call for testplan ID
+			//should work//https://dev.azure.com/eto-dev/ALMOpsTest/_apis/test/plans/458154
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testPlanId}/Suites/${testSuiteId}/points/${testPointId}?api-version=6.0",
+			//uri: https://dev.azure.com/zionseto/Sandbox/_apis/test/Plans/1695461/Suites/1696010/points?api-version=6.0
+			query: ['api-version':'6.0']
+			)
+		
+		return result
+		
+	}
+	
 	
 
 	
@@ -559,14 +575,16 @@ public class TestManagementService {
 		return result
 	}
 	
-	public def updateTestPoint(collection, project, testplanId, testsuiteId, testpointId, outcome, state, runBy) {
+	public def updateTestPoint(collection, project, testplanId, testsuiteId, testpointId, outcome, state, runBy, tester) {
 
 			def eproject = URLEncoder.encode(project, 'utf-8')
 			eproject = eproject.replace('+', '%20')
 			
 			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testplanId}/Suites/${testsuiteId}/points/${testpointId}?api-version=6.0&bypassRules=True&suppressNotifications=true"
-			//def body = ['destinationTestPlan': [ 'name': destPlanName, 'Project': [ 'Name': destProjectName ]], 'options': [ 'copyAncestorHierarchy': true, 'copyAllSuites': true, 'overrideParameters': [ 'System.AreaPath': destProjectName, 'System.IterationPath': destProjectName ]], 'suiteIds': [ 2 ]]
-			def body = ['outcome': outcome, 'state': state, 'runBy': [ 'displayName': runBy]]
+			
+			//def body = ['outcome': outcome, 'state': state, 'runBy': [ 'displayName': runBy]]
+			def body = ['outcome': outcome, 'state': state, 'runBy': [ 'displayName': runBy], 'tester': [ 'id': tester]]
+			
 			
 			String sbody = new JsonBuilder(body).toPrettyString()
 			//put stop here json builder to prettystring look at what sbody looks like as formatted json
@@ -581,16 +599,42 @@ public class TestManagementService {
 				)
 			return result
 		}
-	
-		public def createTestRun(collection, project, testplanId, comment, testpointId, owner, name, state, startedDate, completedDate) {
+		
+		public def updateTestPointTester(collection, project, testplanId, testsuiteId, testpointId, tester) {
 			
+				def eproject = URLEncoder.encode(project, 'utf-8')
+				eproject = eproject.replace('+', '%20')
+				
+				def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testplanId}/Suites/${testsuiteId}/points/${testpointId}?api-version=6.0&bypassRules=True&suppressNotifications=true"
+				
+				//def body = ['outcome': outcome, 'state': state, 'runBy': [ 'displayName': runBy]]
+				def body = ['tester': [ 'displayName': tester]]
+				
+				
+				String sbody = new JsonBuilder(body).toPrettyString()
+				//put stop here json builder to prettystring look at what sbody looks like as formatted json
+				//should have same format as body in successful talend execution
+				def result = genericRestClient.patch(
+					requestContentType: ContentType.JSON,
+					contentType: ContentType.JSON,
+					uri: uri,
+					body: sbody,
+					//headers: [Accept: 'application/json'],
+					query: ['api-version': '5.1-preview.1' ]
+					)
+				return result
+			}
+	
+		public def createTestRun(collection, project, testplanId, testpointIds, comment, owner, name, state, startedDate, completedDate) {
+		//public def createTestRun(collection, project, testplanId, comment, testpointId, owner, name, state, startedDate, completedDate) {
+				
 			def eproject = URLEncoder.encode(project, 'utf-8')
 			eproject = eproject.replace('+', '%20')
 			
 			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/runs?api-version=6.0&bypassRules=True&suppressNotifications=true"
-			//def body = ['destinationTestPlan': [ 'name': destPlanName, 'Project': [ 'Name': destProjectName ]], 'options': [ 'copyAncestorHierarchy': true, 'copyAllSuites': true, 'overrideParameters': [ 'System.AreaPath': destProjectName, 'System.IterationPath': destProjectName ]], 'suiteIds': [ 2 ]]
 			//def body = ['name': name, 'state': state, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], , 'pointIds': [ testpointId ]]
-			def body = ['name': name, 'state': state, 'comment': comment, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds': [ testpointId ]]
+			def body = ['name': name, 'state': state, 'comment': comment, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':  testpointIds ]
+			
 			
 			String sbody = new JsonBuilder(body).toPrettyString()
 			//put stop here json builder to prettystring look at what sbody looks like as formatted json
@@ -911,6 +955,22 @@ public class TestManagementService {
 			contentType: ContentType.JSON,
 			//requestContentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runId}",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'5.0-preview.2', includeRunDetails: true]
+			)
+
+		return result;
+
+	}
+	
+	public def getTestPointData(String project, String planId, String suiteId) {
+		def collection = ""
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/test/Plans/${planId}/Suites/${suiteId}",
 			headers: ['Content-Type': 'application/json'],
 			query: ['api-version':'5.0-preview.2', includeRunDetails: true]
 			)
