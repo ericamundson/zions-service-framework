@@ -266,7 +266,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		} catch (e) {}
 		HttpResponseDecorator resp = delegate.patch(input)
 		if (handleResponse) {
-			handleResponse(resp)
+			return handleResponse(resp)
 		}
 		int status = resp.status
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
