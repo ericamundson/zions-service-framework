@@ -1,8 +1,0 @@
-<service>
-      <id>daystoclosems</id>
-      <name>daystoclosems</name>
-      <description>This service runs days to close micro-service.</description>
-      <executable>java</executable>
-      <arguments>-Xrs -Xmx256m -jar "d:\bin\service\zions-vsts-days-to-close-microservice.jar" --websocket.url=wss://104.42.59.51/ws --tfs.url=https://dev.azure.com/eto-dev --tfs.user=z070187 --tfs.token=bhgqrrnixqhdt4loar2ea7z74oervswykldygrwo2yzolropyuqa --logging.file="d:\bin\service\zions-vsts-days-to-close-microservice.log"</arguments>
-      <logmode>rotate</logmode>
-</service>

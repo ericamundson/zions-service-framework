@@ -1,7 +1,0 @@
----
-AppName: "zions-vsts-days-to-close-bulkupdate"
-IsWindows: true
-RequiresCollection: true
-BuildIncludes: "zions-vsts-days-to-close-bulkupdate/*, zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*,zions-vsts-microservice/*"
-Queuename: "WorkItem-bulkupdate-queue"
-WSTopics: "workitem.updated"
