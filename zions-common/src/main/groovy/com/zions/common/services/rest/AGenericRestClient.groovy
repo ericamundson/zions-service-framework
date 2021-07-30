@@ -265,10 +265,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			sinput = deepcopy(input)
 		} catch (e) {}
 		HttpResponseDecorator resp = delegate.patch(input)
-		if (handleResponse) {
+		int status = resp.status
+		if (status == 412 && handleResponse) {
 			return handleResponse(resp)
 		}
-		int status = resp.status
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
 		if ((status == 200 || status == 201) && dHeader != null) {
 			log.error "GenericRestClient::patch --  ADO started throttling. Delaying 1 minutes."
