@@ -595,10 +595,40 @@ public class TestManagementService {
 				uri: uri,
 				body: sbody,
 				//headers: [Accept: 'application/json'],
-				query: ['api-version': '5.1-preview.1' ]
+				query: ['api-version': '5.1-preview.1', detailsToInclude:'workItems' ]
+				
+				
 				)
 			return result
 		}
+		
+		public def updateTestPointState(collection, project, testplanId, testsuiteId, testpointId, outcome, state) {
+	
+				def eproject = URLEncoder.encode(project, 'utf-8')
+				eproject = eproject.replace('+', '%20')
+				
+				def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testplanId}/Suites/${testsuiteId}/points/${testpointId}?api-version=6.0&bypassRules=True&suppressNotifications=true"
+				
+				//def body = ['outcome': outcome, 'state': state, 'runBy': [ 'displayName': runBy]]
+				def body = ['outcome': outcome, 'state': state]
+				
+				
+				String sbody = new JsonBuilder(body).toPrettyString()
+				//put stop here json builder to prettystring look at what sbody looks like as formatted json
+				//should have same format as body in successful talend execution
+				def result = genericRestClient.patch(
+					requestContentType: ContentType.JSON,
+					contentType: ContentType.JSON,
+					uri: uri,
+					body: sbody,
+					//headers: [Accept: 'application/json'],
+					query: ['api-version': '5.1-preview.1', detailsToInclude:'workItems' ]
+					
+					
+					)
+				return result
+			}
+					
 		
 		public def updateTestPointTester(collection, project, testplanId, testsuiteId, testpointId, tester) {
 			
@@ -632,7 +662,7 @@ public class TestManagementService {
 			
 			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/runs?api-version=6.0&bypassRules=True&suppressNotifications=true"
 			//def body = ['name': name, 'state': state, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], , 'pointIds': [ testpointId ]]
-			def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':  testpointIds ]
+			def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':  [ testpointIds ]]
 			
 			
 			String sbody = new JsonBuilder(body).toPrettyString()
@@ -965,7 +995,7 @@ public class TestManagementService {
 	}
 	
 	public def getTestRunsById(def project, String runId) {
-		def collection = ""
+		def collection = "zionseto"
 		def projectInfo = projectManagmentService.getProject(collection, project)
 		//def queryHierarchy = getQueryHierarchy(project)
 //		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
@@ -1224,6 +1254,29 @@ public class TestManagementService {
 			//requestContentType: ContentType.JSON,
 			//uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runID}",
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runID}/results",
+			//headers: ['Content-Type': 'application/json'],
+			//query: ['api-version':'5.0-preview.2', includeRunDetails: true]
+			query: [destroy: true, 'api-version': '5.0-preview.2', detailsToInclude:'workItems', '$top': 200]
+			
+			)
+
+		return result;
+
+	}
+	
+	public def getTestResultsDetails(collection, def project, String runID, String resultId) {
+		
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		//def queryHierarchy = getQueryHierarchy(project)
+//		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
+//
+//		def queryJson = [queryJson: query]
+//		def body = new JsonBuilder( queryJson ).toString()
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			//uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runID}",
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runID}/results/${resultId}",
 			//headers: ['Content-Type': 'application/json'],
 			//query: ['api-version':'5.0-preview.2', includeRunDetails: true]
 			query: [destroy: true, 'api-version': '5.0-preview.2', detailsToInclude:'workItems', '$top': 200]
