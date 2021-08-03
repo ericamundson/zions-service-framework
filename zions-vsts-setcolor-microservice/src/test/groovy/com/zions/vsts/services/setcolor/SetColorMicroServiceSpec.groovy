@@ -65,10 +65,10 @@ class SetColorMicroServiceSpec extends Specification {
 		when: "ADO sends notification with set Priority and Severity"
 		adoMap.resource.revision.fields.'Microsoft.VSTS.Common.Priority' = Priority
 		adoMap.resource.revision.fields.'Microsoft.VSTS.Common.Severity' = Severity
-		def resp = underTest.processADOData(adoMap)
+		String resp = underTest.processADOData(adoMap)
 
 		then: "Color is updated to the expected color"
-		resp == 'Color updated'
+		resp.startsWith('Color updated')
 		
 		where:
 		Priority | Severity | Color
@@ -90,26 +90,6 @@ class SetColorMicroServiceSpec extends Specification {
 		4 | "4 - Low" | "Green"
 
 	}
-	def "Severity and Priority are set, but Color is unassigned on a new bug"() {
-		given: "A mock ADO event payload where Assigned To is already set"
-		def adoMap = new JsonSlurper().parseText(this.getClass().getResource('/testdata/adoDataMissingColor-NewBug.json').text)
-		
-		and: "stub workManagementService.updateItem()"
-		workManagementService.updateWorkItem(_,_,_,_) >> { args ->
-			String data = "${args[3]}"
-			// Inject mapped color here to test full color map
-			assert(data.toString() == "[[op:test, path:/rev, value:1], [op:add, path:/fields/Custom.Color, value:Yellow]]")
-		}
-
-		and: "stub sharedAssetService.getAsset()"
-		sharedAssetService.getAsset(_,_) >> loadColormap()
-		
-		when: "ADO sends notification with set Priority and Severity"
-		def resp = underTest.processADOData(adoMap)
-
-		then: "Color is updated to the expected color"
-		resp == 'Color updated'
-	}
 
 	def "Severity and Priority are set, and Color is wrong"() {
 		given: "A mock ADO event payload where work item has no parent"
@@ -125,10 +105,10 @@ class SetColorMicroServiceSpec extends Specification {
 		sharedAssetService.getAsset(_,_) >> loadColormap()
 		
 		when: "ADO sends notification"
-		def resp = underTest.processADOData(adoMap)
+		String resp = underTest.processADOData(adoMap)
 
 		then: "Color is updated to the expected color"
-		resp == 'Color updated'
+		resp.startsWith('Color updated')
 	}
 
 	def "Severity and Priority are set, and Color is correct"() {
@@ -139,10 +119,10 @@ class SetColorMicroServiceSpec extends Specification {
 		sharedAssetService.getAsset(_,_) >> loadColormap()
 		
 		when: "ADO sends notification"
-		def resp = underTest.processADOData(adoMap)
+		String resp = underTest.processADOData(adoMap)
 
 		then: "No updates should be made"
-		resp == 'No updates needed'
+		resp.startsWith('No updates needed')
 	}
 	
 	def "Either Severity or Priority is unassigned, but Color is set"() {
@@ -159,10 +139,10 @@ class SetColorMicroServiceSpec extends Specification {
 		sharedAssetService.getAsset(_,_) >> loadColormap()
 		
 		when: "ADO sends notification"
-		def resp = underTest.processADOData(adoMap)
+		String resp = underTest.processADOData(adoMap)
 		
 		then: "Color should be updated to unassigned"
-		resp == 'Color set to unassigned'
+		resp.startsWith('Color set to unassigned')
 	}
 	
 	def loadColormap() {
