@@ -448,6 +448,22 @@ public class TestManagementService {
 		
 	}
 	
+	
+	def getTestSuiteDetails(String collection, String project, String planId, String suiteId) {
+		
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//verify API call for testplan ID
+			//should work//https://dev.azure.com/eto-dev/ALMOpsTest/_apis/test/plans/458154
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${planId}/suites/${suiteId}",
+			query: ['api-version':'5.0']
+			)
+		
+		return result
+		
+	}
+	
 	def getTestPointFromSuite(String collection, String project, String testPlanId, String testSuiteId) {
 		
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
