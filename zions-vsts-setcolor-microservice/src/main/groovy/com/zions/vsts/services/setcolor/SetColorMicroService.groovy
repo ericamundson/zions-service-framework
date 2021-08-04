@@ -41,6 +41,44 @@ class SetColorMicroService implements MessageReceiverTrait {
 	@Autowired
 	public SetColorMicroService() {
 	}
+	// Handle HTTP 412 retry when work item revision has changed
+	def attemptedProject
+	def attemptedId
+	Closure responseHandler = { resp ->
+		// Get fresh copy of work item
+		def wi = workManagementService.getWorkItem(collection, attemptedProject, attemptedId)
+		Integer priority = wi.fields.'Microsoft.VSTS.Common.Priority'
+		String severity = wi.fields.'Microsoft.VSTS.Common.Severity'
+		String color = wi.fields.'Custom.Color'
+		String rev = "${wi.rev}"
+		if (priority != null && severity != 'null') {
+			// Get associated color
+			String newColor = lookupColor(priority, severity)
+			if (color == 'null' || newColor != color) {
+				log.info("Second attempt to update color for $attemptedId")
+				def resp2 = updateColor(attemptedProject, attemptedId, rev, newColor)
+				if (resp2) 
+					return resp2
+				else {
+					log.error('Failed update after 412 retry')
+					return null
+				}
+			}
+			else // No update needed, so return true for success
+				return true
+		}
+		else if (color != 'null'){
+			// Need to set color to unassigned
+			def resp2 = updateColor(attemptedProject, attemptedId, rev, '')
+			if (resp2) 
+				return resp2
+			else {
+				log.error('Failed update after 412 retry')
+				return null
+			}
+		}
+		
+	}
 	/**
 	 * Perform assignment operation
 	 * 
@@ -54,45 +92,47 @@ class SetColorMicroService implements MessageReceiverTrait {
 		def outData = adoData
 		def eventType = adoData.eventType
 		def wiResource = adoData.resource
-		String id = getRootFieldValue('id', eventType, wiResource)
+		String id = getRootFieldValue('id', wiResource)
 		log.debug("Entering SetColorMicroService:: processADOData <$eventType> #$id")
-		String wiType = getFieldValue('System.WorkItemType', eventType, wiResource)
+		String wiType = getFieldValue('System.WorkItemType', wiResource)
 		if (wiType != 'Bug') return logResult('Not a Bug')
-		Integer priority = getFieldValue('Microsoft.VSTS.Common.Priority', eventType, wiResource)
-		String severity = getFieldValue('Microsoft.VSTS.Common.Severity', eventType, wiResource)
-		String color = getFieldValue('Custom.Color', eventType, wiResource)
-		String project = getFieldValue('System.TeamProject', eventType, wiResource)
-		String rev = getRootFieldValue('rev', eventType, wiResource)
+		Integer priority = getFieldValue('Microsoft.VSTS.Common.Priority', wiResource)
+		String severity = getFieldValue('Microsoft.VSTS.Common.Severity', wiResource)
+		String color = getFieldValue('Custom.Color', wiResource)
+		String project = getFieldValue('System.TeamProject', wiResource)
+		String rev = getRootFieldValue('rev', wiResource)
 		if (priority != null && severity != 'null') {
 			// Get associated color
-			String newColor = lookupColor(priority, severity)
-			if (color == 'null' || newColor != color) {
-				log.info("Updating color for $wiType #$id")
-				try {
-					updateColor(project, id, rev, newColor)
-					return logResult('Color updated')
+			try {
+				String newColor = lookupColor(priority, severity)
+				if (color == 'null' || newColor != color) {
+					if (updateColor(project, id, rev, newColor, this.responseHandler))
+						return logResult("Color updated for Bug #$id")
+					else {
+						log.error("Error updating color for Bug #$id")
+						return 'Failed update'
+					}
 				}
-				catch (e){
-					log.error("Error updating Custom.Color: ${e.message}")
-					return 'Failed update'
-				}
+				else return logResult("No updates needed for Bug #$id")
 			}
-			else return logResult('No updates needed')
+			catch(Exception e) {
+				log.error("Could not retrieve color map information for Bug #$id: ${e.message}")
+			}
 		}
 		else if (color != 'null'){
 			// Need to set color to unassigned
-			updateColor(project, id, rev, '')
-			return logResult('Color set to unassigned')
+			if (updateColor(project, id, rev, ''))
+				return logResult("Color set to unassigned for Bug #$id")
+			else {
+				log.error("Error updating color")
+				return 'Failed update'
+			}
 		}
 	}
 	
-	private def getFieldValue(def field, def eventType, def wiResource) {
-		def value
-		if (eventType == 'workitem.created') {
-			value = wiResource.fields[field]
-		} else {
-			value = wiResource.revision.fields[field]
-		}
+	private def getFieldValue(def field, def wiResource) {
+		def value = wiResource.revision.fields[field]
+
 		if (field == 'Microsoft.VSTS.Common.Priority') {
 			if (value == null) return null
 			return "$value".toInteger()
@@ -100,31 +140,27 @@ class SetColorMicroService implements MessageReceiverTrait {
 			return "$value"
 		}
 	}
-	private def getRootFieldValue(def field, def eventType, def wiResource) {
-		def value
-		if (eventType == 'workitem.created') {
-			value = wiResource[field]
-		} else {
-			value = wiResource.revision[field]
-		}
-		return "$value"
+	private def getRootFieldValue(def field, def wiResource) {
+		def value = wiResource.revision[field]
 	}
 	private def lookupColor(Integer priority, String severity) {
 		def colorMap = sharedAssetService.getAsset(collection, colorMapUID)
 		def colorElement = colorMap.find{it.Priority==priority && it.Severity==severity}
 		return colorElement.Color
 	}
-	private def updateColor(def project, def id, String rev, String color) {
+	private def updateColor(def project, def id, String rev, String color, Closure handler = null) {
 		def data = []
 		def t = [op: 'test', path: '/rev', value: rev.toInteger()]
 		data.add(t)
 		def e = [op: 'add', path: '/fields/Custom.Color', value: color]
 		data.add(e)
-		workManagementService.updateWorkItem(collection, project, id, data)
+		this.attemptedProject = project
+		this.attemptedId = id
+		return workManagementService.updateWorkItem(collection, project, id, data, handler)
 	}
 	
 	private def logResult(def msg) {
-		log.debug("Result: $msg")
+		log.info("Result: $msg")
 		return msg
 	}
 }

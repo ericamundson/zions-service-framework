@@ -29,56 +29,10 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 	String[] types
 	
 	@Value('${tfs.pfield}')
-	String[] wiPfields
-	
-	/*@Value('${tfs.pfield}')
-	 String[] wiPfields*/
-	
-	
-	//@Value('${tfs.pfield}')
-	//String[] wiPfields
-	
+	String[] wiPfields	
 	
 	@Value('${tfs.cfield}')
 	String wiCfields
-
-	// Handle HTTP 412 retry when work item revision has changed
-	boolean retryFailed
-	def attemptedProject
-	def attemptedId
-	//def attemptedUpdate
-	Closure responseHandler = { resp ->
-		
-		if (resp.status == 412) {
-			
-			// Get fresh copy of child work items
-			def childwi = workManagementService.getWorkItem(collection, attemptedProject, attemptedId)
-			def cid = childwi.id
-			String rev = "${childwi.rev}"
-			def parentValues = []
-			//will need to iterate through all child records to see if fields were populated
-			def wiData = [method:'PATCH', uri: "/_apis/wit/workitems/${cid}?api-version=5.0-preview.3&bypassRules=true", headers: ['Content-Type': 'application/json-patch+json'], body: []]
-			
-			//add data to the body with for loop for number of children under parent
-			wiData.body.add([op: 'test', path: '/rev', value: rev.toInteger()])
-			for(int i=0; i<wiPfields.size(); i++) {
-							
-				wiData.body.add([ op: 'add', path: "/fields/${wiPfields[i]}", value: "${parentValues[i]}"])
-			}
-
-				if (getChanges(this.attemptedProject, rev, this.attemptedId, parentValues)) {
-					return logResult('Work item successfully activated after 412 retry')
-				}
-				else {
-					this.retryFailed = true
-					log.error('Failed update after 412 retry')
-					return 'Failed update after 412 retry'
-				}
-			}
-		}
-	
-
-
 	
 	public PopulateChildMicroService() {
 			
@@ -97,7 +51,6 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		/*String json = new JsonBuilder(adoData).toPrettyString()
 		println(json)*/
 		
-		def outData = adoData
 		def wiResource = adoData.resource
 		String wiType = "${wiResource.revision.fields.'System.WorkItemType'}"
 		def parentValues = []
@@ -188,18 +141,14 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 				idMap[count] = "${childwi.id}"
 			}
 			
-
 		}
 			
-			
-			
 		if (changes.size() > 0) {
-			changes.each{change ->
 			//capture test data
-			//println(change.body.toString())
-			}
+			// changes.each{change -> println(change.body.toString())}
+			
 			// Process work item changes in Azure DevOps
-			log.debug("Processing work item changes...")
+			log.info("Processing child work item updates for $wiType #$id...")
 			workManagementService.batchWIChanges(collection, changes, idMap)
 			return logResult('Update Succeeded')
 		}
@@ -225,20 +174,12 @@ class PopulateChildMicroService implements MessageReceiverTrait {
 		}
 		
 
-		return wiData
-
-		//412 retry block
-		this.retryFailed = false
-		this.attemptedProject = project
-		this.attemptedId = child
-		return workManagementService.updateWorkItem(collection, project, child, wiData, respHandler)
-		
-		
+		return wiData		
 	}
 	
 	private def logResult(def msg)
 	{
-		log.debug(msg)
+		log.info(msg)
 		return msg
 	}
 }
