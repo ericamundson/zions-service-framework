@@ -677,8 +677,10 @@ public class TestManagementService {
 			eproject = eproject.replace('+', '%20')
 			
 			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/runs?api-version=6.0&bypassRules=True&suppressNotifications=true"
-			//def body = ['name': name, 'state': state, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], , 'pointIds': [ testpointId ]]
-			def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':  [ testpointIds ]]
+			//body for single test point processing
+			//def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':  [ testpointIds ],]
+			//body for multiple test point processing
+			def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':   testpointIds ]
 			
 			
 			String sbody = new JsonBuilder(body).toPrettyString()
@@ -1090,6 +1092,29 @@ public class TestManagementService {
 	}
 	
 	
+	public def deleteTestRunsId(collection, def project, def runId) {
+		
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		//def queryHierarchy = getQueryHierarchy(project)
+//		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
+//
+//		def queryJson = [queryJson: query]
+//		def body = new JsonBuilder( queryJson ).toString()
+		
+		def result = genericRestClient.delete(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runId}",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'5.0-preview.2']
+			)
+
+		return result;
+
+	}
+	
+	
+	
 	public def setFromADOParent(def parentData, def children, def map, boolean update = false) {
 //		String pname = "${parent.name()}"
 //		String ptname = getTargetName(pname, map)
@@ -1280,7 +1305,7 @@ public class TestManagementService {
 
 	}
 	
-	public def getTestResultsDetails(collection, def project, String runID, String resultId) {
+	public def getTestResultsDetails(collection, def project, def runID, def resultId) {
 		
 		def projectInfo = projectManagmentService.getProject(collection, project)
 		//def queryHierarchy = getQueryHierarchy(project)
