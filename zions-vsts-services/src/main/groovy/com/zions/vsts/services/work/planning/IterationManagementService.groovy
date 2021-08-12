@@ -159,5 +159,21 @@ class IterationManagementService {
 
 	}
 	
-
+	def createIterationPath(def collection, def projectName, def iterationPathBase, def iterationPathNode) {
+		
+				def eproject = URLEncoder.encode(projectName, 'UTF-8')
+				eproject = eproject.replace('+', '%20')
+		
+				def bodyData = ['name': iterationPathNode]
+				def body = new JsonBuilder( bodyData ).toString()
+		
+				def result = genericRestClient.post(
+					requestContentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/classificationnodes/Iterations/${iterationPathBase}".replace('\\','/'),
+					query: ['api-version': '5.1'],
+					body: body,
+					headers: [Accept: 'application/json'])
+				return result
+		
+			}
 }
