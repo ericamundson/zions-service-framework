@@ -69,7 +69,10 @@ class GenericRestClient extends AGenericRestClient {
 				def outputStream = new ByteArrayOutputStream()
 				resp.entity.writeTo(outputStream)
 				def errorMsg = outputStream.toString('utf8')
-				log.error("ADO Http error response:  ${errorMsg}")
+				if (resp.status == 400 || resp.status == 412)
+					log.info("ADO Http ${resp.status} response:  ${errorMsg}")
+				else
+					log.error("ADO Http ${resp.status} error response:  ${errorMsg}")
 			}
 			return resp
 		}
