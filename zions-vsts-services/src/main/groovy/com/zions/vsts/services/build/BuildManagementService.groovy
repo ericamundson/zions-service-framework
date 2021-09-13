@@ -1306,7 +1306,9 @@ public class BuildManagementService {
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions/${buildId}/yaml",
 			headers: [accept: 'application/json;api-version=6.0-preview.1;excludeUrls=true;enumsAsNumbers=true;msDateFormat=true'],
 		)
-		result = bResult.yaml
+		if (bResult) {
+			result = bResult.yaml
+		}
 
 		return result
 	}
