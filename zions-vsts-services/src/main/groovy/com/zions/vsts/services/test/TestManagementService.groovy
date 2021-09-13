@@ -697,8 +697,7 @@ public class TestManagementService {
 				)
 			return result
 		}
-				
-	
+		
 			
 			public def updateTestRunCreateDate(collection, project, runId, createdDate, completedDate) {
 				
