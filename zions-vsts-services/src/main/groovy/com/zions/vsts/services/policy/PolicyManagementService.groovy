@@ -13,6 +13,7 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.release.ReleaseManagementService
+import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 
 /**
@@ -41,6 +42,9 @@ public class PolicyManagementService {
 	ReleaseManagementService releaseManagementService
 	
 	@Autowired
+	MemberManagementService memberManagementService
+
+	@Autowired
 	NotificationService notificationService
 	
 	private java.util.Properties branchProps
@@ -61,6 +65,7 @@ public class PolicyManagementService {
 	private static final String LINKED_WI_POLICY_TYPE = "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e"
 	private static final String COMMENT_RES_POLICY_TYPE = "c6a1889d-b943-4856-b76f-9e46bb6b0df2"
 	private static final String MERGE_STRATEGY_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab"
+	private static final String CHECKMARX_STATUS_POLICY_TYPE = "cbdc66da-9728-4af8-aada-9a5a32e4a226"
 	
 	public PolicyManagementService() {
 	}
@@ -349,6 +354,22 @@ public class PolicyManagementService {
 		log.debug("PolicyManagementService::ensureCommentResolutionPolicy -- result = "+policyRes)
 
 		return policyRes
+	}
+	
+	def ensureCheckmarxBranchPolicy(String collection, def projectData, def repoData, String branchName) {
+		
+		def policyRes = getBranchPolicy(CHECKMARX_STATUS_POLICY_TYPE, projectData.id, repoData.id, branchName)
+		if (!policyRes) {
+			def scope = [[matchKind: 'Exact', refName: branchName, repositoryId: repoData.id]]
+			def identity = memberManagementService.getIdentity('', 'svc-cloud-vsbuildagent')
+			def settings = [authorId: '3b34d159-9e69-630b-9700-d7643a4d0fee', defaultDisplayName: "Checkmarx scan request sent", invalidateOnSourceUpdate: false, policyApplicability: null, statusGenre: 'sast', statusName: 'checkmarx', scope: scope]
+			if (identity.size() > 0) {				
+				settings = [authorId: "${identity[0].id}", defaultDisplayName: "Checkmarx scan request sent", invalidateOnSourceUpdate: false, policyApplicability: null, statusGenre: 'sast', statusName: 'checkmarx', scope: scope]
+			}
+			def policy = [isBlocking: true, isDeleted: false, isEnabled: true, settings: settings, type: [id: CHECKMARX_STATUS_POLICY_TYPE]]
+			policyRes = createPolicy(collection, projectData, policy)
+		}
+
 	}
 
 	public def ensureGitAttributesFile(def collection, def repoData) {
