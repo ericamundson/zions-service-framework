@@ -1,7 +1,0 @@
----
-AppName: "zions-vsts-populate-child-microservice"
-IsWindows: true
-RequiresCollection: false
-BuildIncludes: "zions-vsts-populate-child-microservice/*, zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*,zions-vsts-microservice/*"
-Queuename: "WorkItem-populatechild-queue"
-WSTopics: "workitem.updated"
