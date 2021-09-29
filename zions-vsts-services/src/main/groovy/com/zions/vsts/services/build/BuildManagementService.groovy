@@ -728,7 +728,7 @@ public class BuildManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}",
 				query: query,
 				)
-
+		return result
 	}
 
 	public def updateExecution(String collection, String project, String buildId, def data) {

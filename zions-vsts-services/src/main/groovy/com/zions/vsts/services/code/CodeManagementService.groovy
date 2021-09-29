@@ -194,10 +194,13 @@ class CodeManagementService {
 						def commits = getPullRequestCommits(collection, project, repo, "${pr.pullRequestId}")
 						if (commits.'value') {
 							commits.'value'.each { c -> 
-								String cUrl = "${c.url}"
-								def cc = getCommitChanges(cUrl)
-								if (cc.changes) {
-									changes.addAll(cc.changes)
+								String comment = "${c.comment}"
+								if (!comment.startsWith('Merged PR')) {
+									String cUrl = "${c.url}"
+									def cc = getCommitChanges(cUrl)
+									if (cc.changes) {
+										changes.addAll(cc.changes)
+									}
 								}
 							}
 						}
