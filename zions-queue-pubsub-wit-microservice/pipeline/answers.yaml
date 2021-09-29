@@ -1,7 +1,0 @@
----
-AppName: "zions-vsts-setowner-microservice"
-IsWindows: true
-RequiresCollection: true
-BuildIncludes: "zions-vsts-setowner-microservice/*, zions-vsts-services/src/main/groovy/com/zions/vsts/services/work/*"
-Queuename: "WorkItem-setowner-queue"
-WSTopics: "workitem.updated"
