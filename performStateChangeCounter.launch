@@ -9,7 +9,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.StateChangeCounterApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--tfs.url=https://dev.azure.com &#13;&#10;--tfs.collection=eto-dev&#13;&#10;--spring.rabbitmq.host=utmvti0192&#13;&#10;--routing.exchange.name=WorkItem-exchange &#13;&#10;--ado.topics=Bug&#13;&#10;--routing.direct.key=statechangecounter&#13;&#10;--queue.name=WorkItem-statechangecounter-queue&#13;&#10;--queue.autoDelete=true"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--tfs.url=https://dev.azure.com &#13;&#10;--tfs.collection=eto-dev&#13;&#10;--spring.rabbitmq.host=utmvti0192&#13;&#10;--routing.exchange.name=WorkItem-exchange &#13;&#10;--ado.topics=Bug-statechange   &#13;&#10;--routing.direct.key=statechangecounter&#13;&#10;--queue.name=WorkItem-statechangecounter-queue&#13;&#10;--queue.autoDelete=true"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-statechange-counter-microservice"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User= -Dproxy.Password="/>
 </launchConfiguration>

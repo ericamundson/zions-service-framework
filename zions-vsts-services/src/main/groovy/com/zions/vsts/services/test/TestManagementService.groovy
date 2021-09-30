@@ -749,6 +749,26 @@ public class TestManagementService {
 		}
 
 	
+	public def updateTestedByLink(collection, project, rev, id, tcId) {
+		
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+
+		String url = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}"
+		def body = [['op': 'test', 'path': '/rev', 'value': rev],['op': 'add', 'path': '/relations/-', 'value': ['rel': 'Microsoft.VSTS.Common.TestedBy-Forward',
+		'url': "https://dev.azure.com/org/project/_apis/wit/workItems/$tcId",]]]
+				
+		String sbody = new JsonBuilder(body).toPrettyString()
+			def result = genericRestClient.patch(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: url,
+			headers: ['Content-Type': 'application/json-patch+json'],
+			query: ['api-version':'5.1']
+			)
+					
+		return result
+		}
 	
 	
 	public def ensureTestRunForTestCaseAndPlan(String collection, String project, def planData, def testcaseData, def testCasePointsMap = null) {
