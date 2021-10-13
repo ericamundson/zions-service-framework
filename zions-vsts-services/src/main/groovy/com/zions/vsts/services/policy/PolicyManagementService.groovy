@@ -128,8 +128,6 @@ public class PolicyManagementService {
 			buildManagementService.ensureInitialTag(collection, repoData.project, repoData, branchName)
 		}
 		
-		if (branchName.toLowerCase().equals("refs/heads/adoinit"))
-		
 		// Check for special 'adoinit' branch used to patch master branch build / policy configuration
 		if (branchName.toLowerCase().equals("refs/heads/adoinit")) {
 			log.debug("PolicyManagementService::ensurePolicies -- Found ADO init branch. Applying policies to master")
@@ -176,22 +174,18 @@ public class PolicyManagementService {
 	 *  @return Response
 	 */
 	public def ensureBuildPolicy(def collection, def repoData, def branchName, boolean isInitBranch, def buildData = null) {
-		
+
 		// get the CI build
 		def projectData = repoData.project
-		// check for DR branch
-		boolean isDRBranch = ("${branchName}".toLowerCase().startsWith("refs/heads/dr/"))
 		def ciBuildTemplate = null
 		def relBuildTemplate = null
 		def yamlFile = null
-		if (!isDRBranch) {
-			if (this.branchProps != null) {
-				ciBuildTemplate = this.branchProps.getProperty(CI_BUILD_TEMPLATE)
-				relBuildTemplate = this.branchProps.getProperty(RELEASE_BUILD_TEMPLATE)
-				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified CI build template = ${ciBuildTemplate}")
-				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release build template = ${relBuildTemplate}")
-				yamlFile = this.branchProps.getProperty(CI_BUILD_YAML_FILE)
-			}
+		if (this.branchProps != null) {
+			ciBuildTemplate = this.branchProps.getProperty(CI_BUILD_TEMPLATE)
+			relBuildTemplate = this.branchProps.getProperty(RELEASE_BUILD_TEMPLATE)
+			log.debug("PolicyManagementService::ensureBuildPolicy -- Specified CI build template = ${ciBuildTemplate}")
+			log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release build template = ${relBuildTemplate}")
+			yamlFile = this.branchProps.getProperty(CI_BUILD_YAML_FILE)
 		}
 		// check for specified yaml file name
 		if (buildData == null) {
@@ -201,13 +195,13 @@ public class PolicyManagementService {
 			}
 		}
 		// result is a JSON object
-		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, isDRBranch, ciBuildTemplate, relBuildTemplate, isInitBranch, buildData)
+		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, ciBuildTemplate, relBuildTemplate, isInitBranch, buildData)
 		int ciBuildId = result.ciBuildId
 		if (ciBuildId == -1) {
 			log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was found or created. Unable to create the validation build policy!")
 			return null
 		}
-		def pipelineName = isDRBranch ? "${repoData.name} DR validation" : "${repoData.name} validation"
+		def pipelineName = "${repoData.name} validation"
 		def policy = [id: -2, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
 		    type: [id: BUILD_VALIDATION_POLICY_TYPE],
 		    settings:[buildDefinitionId: ciBuildId, displayName: pipelineName, manualQueueOnly: false, queueOnSourceUpdateOnly:true, validDuration: 720,
@@ -228,14 +222,12 @@ public class PolicyManagementService {
 		if (relBuildId > -1) {
 			def releaseTemplate = null
 			// look for specified release template
-			if (!isDRBranch) {
-				if (this.branchProps != null) {
-					releaseTemplate = this.branchProps.getProperty("release-template")
-					log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release template = ${releaseTemplate}")
-				}
+			if (this.branchProps != null) {
+				releaseTemplate = this.branchProps.getProperty("release-template")
+				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release template = ${releaseTemplate}")
 			}
 			log.debug("PolicyManagementService::ensureBuildPolicy -- Release Build Definition created. Will attempt to create a release definition")
-			relResult = releaseManagementService.ensureReleaseForBuild(collection, projectData, repoData, relBuildId, isDRBranch, releaseTemplate)
+			relResult = releaseManagementService.ensureReleaseForBuild(collection, projectData, repoData, relBuildId, releaseTemplate)
 			// check status for release definition creation
 			if (!relResult.relDefCreated && !relResult.relDefFound) {
 				log.error("PolicyManagementService::ensureBuildPolicy -- Release Definition NOT found and failed creation")

@@ -64,11 +64,7 @@ public class ReleaseManagementService {
 		}
 	}
 	
-	public def ensureReleaseForBuild(def collection, def projectData, def repo, def buildId, boolean isDRBranch, def templateName) {
-		// if this is for a DR branch, call special operation
-		if (isDRBranch) {
-			return ensureDRRelease(collection, projectData, repo, buildId)
-		}
+	public def ensureReleaseForBuild(def collection, def projectData, def repo, def buildId, def templateName) {
 		def createdFlag = false
 		def foundFlag = false
 		log.debug("ReleaseManagementService::ensureReleaseForBuild -- Looking for existing release definition for ${repo.name}")
