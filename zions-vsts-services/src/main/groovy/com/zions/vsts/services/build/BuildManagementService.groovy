@@ -139,11 +139,7 @@ public class BuildManagementService {
 		}
 	}
 	
-	public def ensureBuildsForBranch(def collection, def projectData, def repo, boolean isDRBranch, def ciTemplate, def releaseTemplate, boolean isInitBranch, def buildData = null) {
-		// if this is for a DR branch, call special operation
-		if (isDRBranch) {
-			return ensureDRBuilds(collection, projectData, repo)
-		}
+	public def ensureBuildsForBranch(def collection, def projectData, def repo, def ciTemplate, def releaseTemplate, boolean isInitBranch, def buildData = null) {
 		def buildTemplate = null
 		boolean buildFolderCreated = false
 		log.debug("BuildManagementService::ensureBuildsForBranch -- Look for existing CI Build ...")
