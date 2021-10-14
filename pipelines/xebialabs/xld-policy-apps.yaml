@@ -9,37 +9,37 @@ spec:
     - name: !value "app_version"
       type: udm.DeploymentPackage
       deployables:      
-      - name: zions-vsts-policy-microservice0.xml
+      - name: zions-vsts-policy.xml
         type: file.File
         scanPlaceholders: true
         targetPath: '{{stage.path}}'
         createTargetPath: "true"
-        file: !file "../service/service0.xml"
+        file: !file "../service/zions-vsts-policy.xml"
       - name: zions-ire-test-microservice-hold.jar
         type: file.File
         scanPlaceholders: false
         targetPath: '{{stage.path}}'
         createTargetPath: "true"
-        file: !file "../../build/libs/zions-ire-test-microservice.jar"
-      - name: zions-ire-test-microservice.exe.config
+        file: !file "../../build/libs/zions-vsts-policy.jar"
+      - name: zions-vsts-policy.exe.config
         type: file.File
         scanPlaceholders: false
         targetPath: '{{stage.path}}'
         createTargetPath: "true"
-        file: !file "../service/service.exe.config"
-      - name: zions-ire-test-microservice run install
+        file: !file "../service/zions-vsts-policy.exe.config"
+      - name: zions-vsts-policy-microservice run install
         type: advcmd.Command
         command: |-
           mkdir {{deploy.path}}
-          copy /Y {{stage.path}}\zions-ire-test-microservice-hold.jar {{deploy.path}}\zions-ire-test-microservice.jar
-          copy /Y {{deploy.path}}\..\WinSW.NET4.exe {{deploy.path}}\zions-ire-test-microservice0.exe
-          copy /Y {{stage.path}}\zions-ire-test-microservice0.xml {{deploy.path}}\zions-ire-test-microservice0.xml
-          for /f "delims=" %%i in ('{{deploy.path}}\zions-ire-test-microservice0.exe status') do set status0=%%i
+          copy /Y {{stage.path}}\zions-vsts-policy-hold.jar {{deploy.path}}\zions-vsts-policy.jar
+          copy /Y {{deploy.path}}\..\WinSW.NET4.exe {{deploy.path}}\zions-vsts-policy.exe
+          copy /Y {{stage.path}}\zions-vsts-policy.xml {{deploy.path}}\zions-vsts-policy.xml
+          for /f "delims=" %%i in ('{{deploy.path}}\zions-vsts-policy.exe status') do set status0=%%i
           if %status0%==NonExistent (
-            {{deploy.path}}\zions-ire-test-microservice0.exe install
-            {{deploy.path}}\zions-ire-test-microservice0.exe start 
+            {{deploy.path}}\zions-vsts-policy.exe install
+            {{deploy.path}}\zions-vsts-policy.exe start 
           ) else (
-            {{deploy.path}}\zions-ire-test-microservice0.exe restart
+            {{deploy.path}}\zions-vsts-policy.exe restart
           )      
         createOrder: "62"
         destroyOrder: "42"
