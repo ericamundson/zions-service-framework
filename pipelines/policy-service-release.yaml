@@ -86,6 +86,6 @@ stages:
           - task: Zions.ado-ext-release-status-control.CreateReleaseTask.CreateReleaseTask@0
             displayName: 'Create Release'
             inputs:
-              templateTitle: 'DTS/zions-ire-test-microservice - Master'
-              releaseTitle: 'zions-ire-test-microservice - $(releaseTag)'
+              templateTitle: 'DTS/zions-vsts-policy-microservice - Master'
+              releaseTitle: 'zions-vsts-policy-microservice - $(releaseTag)'
               releaseVariableSettings: 'deploymentPackage.name=$(releaseTag)'
