@@ -2,4 +2,4 @@ apiVersion: xl/v1
 kind: Import
 metadata:
   imports:
-  - xebialabs/xld-apps.yaml
+  - xebialabs/xld-policy-apps.yaml
