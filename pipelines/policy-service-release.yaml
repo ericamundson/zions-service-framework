@@ -65,7 +65,7 @@ stages:
     - task: Zions.ado-ext-release-status-control.XldApplyTask.XldApplyTask@0
       displayName: 'XLD Apply'
       inputs:
-        xldFile: pipelines\xld-policy-apps.yaml
+        xldFile: pipelines\xl-apps.yaml
         xlValues: |
           app_version=$(buildTag)
           xld_cli_user=$[xl.user]
