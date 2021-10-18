@@ -169,13 +169,30 @@ public class ReleaseManagementService {
 	}
 
 	private def ensureDRRelease(collection, projectData, repo, buildId) {
+		def createdFlag = false
+		def foundFlag = true
 		// Look for existing DR release for repo
 		def release = getRelease(collection, projectData, repo.name + "-dr", true)
 		if (release == null) {
+			foundFlag = false
 			// use existing release definition as template
 			def template = getRelease(collection, projectData, repo.name, true)
-			release = createDRRelease(collection, projectData, repo, template, buildId)
+			if (template == null) {
+				log.debug("ReleaseManagementService::ensureDRRelease -- Unable to retrieve DR release definition for ${repo.name}. Returning null ...")
+			} else {
+				release = createDRRelease(collection, projectData, repo, template, buildId)
+			}
 		}
+		def relDefName = ""
+		if (release != null && !foundFlag) {
+			createdFlag = true
+			relDefName = "${releaseDef.name}"
+		}
+		def returnObject = [relDefCreated: createdFlag,
+			relDefFound: foundFlag,
+			releaseDefName: relDefName]
+
+		return returnObject
 	}
 	
 	public def createRelease(collection, project, repo, template, xldEndpoint, folder, team) {
