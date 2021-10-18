@@ -161,6 +161,7 @@ public class IreTestService {
 				log.error("IreTestService::ensureBuildPolicy -- Release Definition NOT found and failed creation")
 			} else if (relResult.relDefCreated) {
 				relDefName = relResult.releaseDefName
+				relDefName = "N/A"
 				log.debug("IreTestService::ensureBuildPolicy -- Release Definition created: "+relDefName)
 			}
 		}
