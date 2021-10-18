@@ -49,6 +49,7 @@ public class IreTestService {
 	private static final String LINKED_WI_POLICY_TYPE = "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e"
 	private static final String COMMENT_RES_POLICY_TYPE = "c6a1889d-b943-4856-b76f-9e46bb6b0df2"
 	private static final String MERGE_STRATEGY_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab"
+	private static final int DEFAULT_NUM_APPROVERS = 1
 	
 	public IreTestService() {
 	}
@@ -71,6 +72,7 @@ public class IreTestService {
 	}
 
 	public def ensurePolicies(def collection, def repoData, def branchName, def policyData = null) {
+		// TODO: Need to change this to get the policies for the master branch and duplicate them for DR branch
 		boolean enforceBuildValidation = true
 		boolean enforceMinimumApprovers = true
 		boolean enforceLinkedWorkItems = true
