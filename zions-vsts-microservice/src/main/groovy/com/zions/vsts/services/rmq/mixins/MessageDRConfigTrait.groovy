@@ -26,26 +26,46 @@ import org.springframework.amqp.core.AcknowledgeMode
 trait MessageDRConfigTrait {
 
 	@Value('${spring.drrabbitmq.host:localhost}')
-	String host;
+	String drhost;
 	@Value('${spring.rabbitmq.username:}')
 	String username;
 	@Value('${spring.rabbitmq.password:}')
 	String password;
 	
+	@Value('${spring.rabbitmq.host:localhost}')
+	String host;
+
 	@Bean
 	CachingConnectionFactory drConnectionFactory() {
-		CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
+		CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(drhost);
 		cachingConnectionFactory.setUsername(username);
 		cachingConnectionFactory.setPassword(password);
 		return cachingConnectionFactory;
 	}
 	
 	@Bean
+	CachingConnectionFactory connectionFactory() {
+		CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
+		cachingConnectionFactory.setUsername(username);
+		cachingConnectionFactory.setPassword(password);
+		return cachingConnectionFactory;
+	}
+
+	@Bean
+	@Qualifier('drRabbitTemplate')
 	public RabbitTemplate drRabbitTemplate(ConnectionFactory drConnectionFactory) {
 		final RabbitTemplate rabbitTemplate = new RabbitTemplate(drConnectionFactory);
 		//rabbitTemplate.setMessageConverter(jsonMessageConverter());
 		return rabbitTemplate;
 	}
 	
-	
+	//@Primary
+	@Bean
+	@Qualifier('rabbitTemplate')
+	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+		//rabbitTemplate.setMessageConverter(jsonMessageConverter());
+		return rabbitTemplate;
+	}
+
 }
