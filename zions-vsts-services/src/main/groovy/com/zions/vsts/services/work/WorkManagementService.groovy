@@ -969,12 +969,13 @@ class WorkManagementService {
 				if ("${resp.code}" == '200') {
 					def wi = new JsonSlurper().parseText(resp.body)
 					String id = idMap[count]
-					cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
-					//cacheManagementService.deleteByIdAndByType(idMap[count], 'wiPrevious')
+					if (cacheManagementService != null) {
+						cacheManagementService.saveToCache(wi, idMap[count], ICacheManagementService.WI_DATA)
+					}
 				} else {
 					def issue = new JsonSlurper().parseText(resp.body)
 					log.error("WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}")
-					if (errorCaching) {
+					if (errorCaching && cacheManagementService != null) {
 						def wiCache = cacheManagementService.getFromCache(idMap[count], ICacheManagementService.WI_DATA)
 						cacheManagementService.saveToCache([item:wiCache, error: issue.'value'.Message] , idMap[count], 'wiErrored')
 					}
