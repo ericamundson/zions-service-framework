@@ -42,7 +42,7 @@ stages:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
         workingDirectory: '$(Build.SourcesDirectory)'
         options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=nexus -x test'
-        tasks: 'clean build zions-common:uploadArchives zions-vsts-service:uploadArchives zions-common-data:uploadArchives zions-vsts-microservice:uploadArchives zions-xlr-event-publisher-extension:uploadArchives'
+        tasks: 'clean build zions-common:uploadArchives zions-vsts-service:uploadArchives zions-common-data:uploadArchives zions-vsts-microservice:uploadArchives'
         publishJUnitResults: false
 
 
