@@ -35,7 +35,6 @@ trait MessageDRConfigTrait {
 	@Value('${spring.rabbitmq.host:localhost}')
 	String host;
 
-	@Bean
 	CachingConnectionFactory drConnectionFactory() {
 		CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(drhost);
 		cachingConnectionFactory.setUsername(username);
@@ -43,7 +42,6 @@ trait MessageDRConfigTrait {
 		return cachingConnectionFactory;
 	}
 	
-	@Bean
 	CachingConnectionFactory connectionFactory() {
 		CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
 		cachingConnectionFactory.setUsername(username);
@@ -53,8 +51,8 @@ trait MessageDRConfigTrait {
 
 	@Bean
 	@Qualifier('drRabbitTemplate')
-	public RabbitTemplate drRabbitTemplate(ConnectionFactory drConnectionFactory) {
-		final RabbitTemplate rabbitTemplate = new RabbitTemplate(drConnectionFactory);
+	public RabbitTemplate drRabbitTemplate() {
+		final RabbitTemplate rabbitTemplate = new RabbitTemplate(drConnectionFactory());
 		//rabbitTemplate.setMessageConverter(jsonMessageConverter());
 		return rabbitTemplate;
 	}
@@ -62,8 +60,8 @@ trait MessageDRConfigTrait {
 	//@Primary
 	@Bean
 	@Qualifier('rabbitTemplate')
-	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+	public RabbitTemplate rabbitTemplate() {
+		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
 		//rabbitTemplate.setMessageConverter(jsonMessageConverter());
 		return rabbitTemplate;
 	}

@@ -56,13 +56,34 @@ class ProjectManagementService {
 	
 	
 	public def getProjects(String collection) {
-		def result = genericRestClient.get(
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects",
-			headers: [Accept: 'application/json'],
-			query: ['api-version': '5.0']
-			)
-		return result
+		List projects = []
+		int top = 100
+		int count = 0
+		int size = 100
+		while (top == size) {
+			if (count == 0) {
+				def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects",
+					headers: [Accept: 'application/json'],
+					query: ['api-version': '5.0', '$top' : top]
+					)
+				size = result.count
+				projects.addAll(result.'value')
+				count += size
+			} else {
+				def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects",
+					headers: [Accept: 'application/json'],
+					query: ['api-version': '5.0', '$top' : top, continuationToken: "${count}"]
+					)
+				size = result.count
+				projects.addAll(result.'value')
+				count += size
+			}
+		}
+		return projects
 	}
 	
 	def getProjectProperties(def collection, def project) {
