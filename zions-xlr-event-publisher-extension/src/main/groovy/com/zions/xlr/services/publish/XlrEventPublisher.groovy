@@ -11,6 +11,16 @@ class XlrEventPublisher implements XLReleaseEventListener {
 	static EventController eventController
 	
 	static {
+		String hostName
+		try {
+			hostName = InetAddress.getLocalHost().getHostName()
+		 } catch(Exception ex) {
+			println("Unable to get Hostname")
+		}
+		if (hostName != null && hostName.toLowerCase().startsWith('dr')) {
+			System.setProperty('vault.url', 'https://vault-dr.cs.zionsbank.com')
+			System.setProperty('spring.cloud.vault.host', 'vault-dr.cs.zionsbank.com')
+		}
 		ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 		eventController = context.getBean(EventController)
 

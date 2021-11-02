@@ -1,0 +1,34 @@
+apiVersion: xl-deploy/v1
+kind: Applications
+spec:
+- directory: Applications/DTS
+  children:
+  - name: zions-vsts-policy-microservice
+    type: udm.Application
+    children:
+    - name: !value "app_version"
+      type: udm.DeploymentPackage
+      deployables:      
+      - name: zions-ire-test-microservice-hold.jar
+        type: file.File
+        scanPlaceholders: false
+        targetPath: '{{stage.path}}'
+        createTargetPath: "true"
+        file: !file "../../build/libs/zions-vsts-policy.jar"
+      - name: zions-vsts-policy-microservice run install
+        type: advcmd.Command
+        command: |-
+          mkdir {{deploy.path}}
+          copy /Y {{stage.path}}\zions-vsts-policy-hold.jar {{deploy.path}}\zions-vsts-policy.jar
+          for /f "delims=" %%i in ('{{deploy.path}}\zions-vsts-policy.exe status') do set status0=%%i
+          if %status0%==NonExistent (
+            {{deploy.path}}\zions-vsts-policy.exe install
+            {{deploy.path}}\zions-vsts-policy.exe start 
+          ) else (
+            {{deploy.path}}\zions-vsts-policy.exe restart
+          )      
+        createOrder: "62"
+        destroyOrder: "42"
+        alwaysRun: "true"
+        noopOrder: "62"
+        undoCommand: 'echo "No action needed for undoCommand"'

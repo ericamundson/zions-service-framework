@@ -52,8 +52,8 @@ public class PolicyEndPoint implements MessageReceiverTrait {
 			def changeSet = eventData.resource;
 			changeSet.refUpdates.each { update ->
 				// only when branch is new
-				if ("${update.oldObjectId}" == "0000000000000000000000000000000000000000") {
-					log.debug("In PolicyEndPoint - changes:\n"+changeSet)
+				if ("${update.name}".startsWith("refs/heads/") && "${update.oldObjectId}" == "0000000000000000000000000000000000000000") {
+					//log.debug("In PolicyEndPoint - changes:\n"+changeSet)
 					branchNames = branchNameStr.split(',')
 					// only protect certain branch types / patterns
 					String branchName = "${update.name}".toLowerCase()
