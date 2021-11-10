@@ -359,6 +359,40 @@ class CodeManagementService {
 
 	}
 	
+	public def createTag(String collection, String project, String repo, String commitId, String tag, String message = 'Adding tag') {
+		def data = [name: tag, taggedObject: [objectId: commitId], message: message]
+		def query = ['api-version': '6.0-preview.1']
+		
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			requestContentType: ContentType.JSON,
+			body: data,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/annotatedtags",
+			query: query
+		)
+		return result
+
+	}
+	
+	public def ensureTag(String collection, String project, String repo, String commitId, String tag, String message = 'Adding tag') {
+		def tagResult = getRef(collection, project, repo, "tags/${tag}")
+		if (!tagResult || tagResult.count == 0) {
+			tagResult = createTag(collection, project, repo, commitId, tag, message)
+		}
+		return tagResult
+	}
+
+	public def getRef(String collection, String project, String repo, String filter) {
+		def query = ['api-version': '5.0', filter: filter]
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/refs",
+			query: query
+		)
+		return result
+
+	}
+
 	public def getPullRequest(String collection, String project, String repo, String pullRequestId) {
 		def query = ['api-version': '5.0']
 		def result = genericRestClient.get(
