@@ -3,6 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.common.services.rest.IGenericRestClient
+import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 import groovyx.net.http.ContentType
 
@@ -77,6 +78,45 @@ class SubscriptionService {
 			)
 		return results
 	}
+	
+	public def getProjectSubscriptions(collection) {
+		//def collection = ""
+		//def projectInfo = projectManagmentService.getProject(collection, project)
+		
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/hooks/subscriptions",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'6.0']
+			)
+
+		return result;
+
+	}
+	
+	//hardcoded values are publisherId: tfs, resourceVersion: "1.0-preview.1", consumerId: "webHooks", "areaPath": "[Any]",
+	public def replaceSubscription(collection, projectId, subId, url, eventType, userName, passWord) {
+		
+		def uri = "${genericRestClient.getTfsUrl()}/${collection}/_apis/hooks/subscriptions/${subId}?api-version=6.0&bypassRules=True&suppressNotifications=true"
+		//def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':   testpointIds ]
+		def body = ['publisherId': 'tfs', 'eventType': eventType, 'resourceVersion': '1.0-preview.1', 'consumerId': 'webHooks', 'consumerActionId': 'httpRequest', 'publisherInputs': [ 'areaPath': '[Any]', 'workItemType': '', 'projectId': projectId], 'consumerInputs': [ 'url': url, 'basicAuthUsername': userName, 'basicAuthPassword': passWord]]
+		
+		String sbody = new JsonBuilder(body).toPrettyString()
+		//put stop here json builder to prettystring look at what sbody looks like as formatted json
+		//should have same format as body in successful talend execution
+		def result = genericRestClient.put(
+					  
+			requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri: uri,
+			body: sbody,
+			//headers: [Accept: 'application/json'],
+			query: ['api-version': '5.1-preview.1' ]
+			)
+		return result
+	}
+	
 
 	def updateSubscription( def subscriptionData) {
 		def results = genericRestClient.put(
