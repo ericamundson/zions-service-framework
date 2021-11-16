@@ -1286,6 +1286,17 @@ public class BuildManagementService {
 		return result1
 	}
 
+	public def getPipelines(def collection, def project) {
+		log.debug("BuildManagementService::getPipelines ... ")
+		def query = ['api-version':'6.0-preview.1']
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/pipelines",
+				query: query,
+				)
+		return result
+	}
+
 	public def getBuildYaml(def collection, def project, String name, def buildId) {
 		log.debug("BuildManagementService::getBuildYaml for build: " + name)
 		def result = null

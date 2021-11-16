@@ -15,8 +15,7 @@ class SubscriptionService {
 	IGenericRestClient genericRestClient
 	
 	def ensureSubscription(def projectInfo, def subscriptionData) {
-		System.out.println("projectInfo.id = "+projectInfo.id)
-		//System.out.println("projectId from publisherInputs = "+subscriptionData.publisherInputs.projectId)
+		log.debug("projectInfo.id = "+projectInfo.id)
 		subscriptionData.publisherInputs.projectId = projectInfo.id
 		def sub = getSubscription(projectInfo, subscriptionData)
 		if (sub) {
@@ -46,10 +45,10 @@ class SubscriptionService {
 					while( keys.hasNext() ) {
 						def key = keys.next()
 						if ("${key}" == "projectId") continue
-						System.out.println("SubscriptionService::getSubscription -- Comparing publisherInputs: key ${key}")
+						log.debug("SubscriptionService::getSubscription -- Comparing publisherInputs: key ${key}")
 						def inputValue = inputs.get(key)
 						def subValue = sub.publisherInputs.get(key)
-						System.out.println("Input value: ${inputValue} ... subscription value: ${subValue}")
+						log.debug("Input value: ${inputValue} ... subscription value: ${subValue}")
 						if ( sub.publisherInputs.get(key) != inputs.get(key) ) {
 							found = false
 							break;
@@ -57,7 +56,7 @@ class SubscriptionService {
 						}
 					}
 					if (found) {
-						System.out.println("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType}")
+						//System.out.println("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType}")
 						log.info("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType} in project ${project.name}")
 						return sub
 					}
