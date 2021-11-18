@@ -130,7 +130,7 @@ class ExcelManagementService {
 	def getColumn(String columnName) {
 		def col = headers[columnName]
 		if (col == null) {
-			col = headers.size()
+			col = headers.size() + 1
 			headers.put(columnName, col)
 			sheet.getRow(0).createCell(col).setCellValue(columnName)
 		}
