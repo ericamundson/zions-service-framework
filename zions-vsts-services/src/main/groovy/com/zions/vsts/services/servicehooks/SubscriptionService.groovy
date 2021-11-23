@@ -67,6 +67,16 @@ class SubscriptionService {
 		return retVal
 	}
 	
+	def getSubscriptionById( String subscriptionid) {
+		def query = ['api-version': '6.1-preview.1']
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/_apis/hooks/subscriptions/${subscriptionid}",
+			query: query
+			)
+		return result
+	}
+
 	def getWebhookSubscriptions() {
 		//def query = [consumerId: subscriptionData.consumerId, eventType: subscriptionData.eventType, publisherId: subscriptionData.publisherId, 'api-version': '5.1']
 		def query = [consumerActionId: 'httpRequest', 'api-version': '5.1']
