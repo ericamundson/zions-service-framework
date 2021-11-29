@@ -427,6 +427,11 @@ public class PolicyManagementService {
 								policyObj.creatorCanApprove = policy.settings.creatorVoteCounts
 								policyObj.allowDownvotes = policy.settings.allowDownvotes
 								policyObj.resetIfChanged = policy.settings.resetOnSourcePush
+								if (policyObj.resetIfChanged) {
+									policyObj.requireAtLeastOneApprover = policy.settings.requireVoteOnLastIteration
+									policyObj.resetAllVotes = policy.settings.resetRejectionsOnSourcePush
+									policyObj.resetApprovals = (policy.settings.resetRejectionsOnSourcePush == false)
+								}
 							} else
 							if ("${policy.type.id}" == "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e") {
 								policyObj.hasLinkedWorkItemsPolicy = true
@@ -434,10 +439,26 @@ public class PolicyManagementService {
 							if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab") {
 								policyObj.hasMergeStrategyPolicy = true
 								// what's the merge strategy -- NOT in settings ??
-								policyObj.allowNoFastForward = policy.settings.allowNoFastForward
-								policyObj.allowSquash = policy.settings.allowSquash
-								policyObj.allowRebase = policy.settings.allowRebase
-								policyObj.allowRebaseMerge = policy.settings.allowRebaseMerge
+								if (policy.settings.allowNoFastForward) {
+									policyObj.allowNoFastForward = policy.settings.allowNoFastForward
+								} else {
+									policyObj.allowNoFastForward = false
+								}
+								if (policy.settings.allowSquash) {
+									policyObj.allowSquash = policy.settings.allowSquash
+								} else {
+									policyObj.allowSquash = false
+								}
+								if (policy.settings.allowRebase) {
+									policyObj.allowRebase = policy.settings.allowRebase
+								} else {
+									policyObj.allowRebase = false
+								}
+								if (policy.settings.allowRebaseMerge) {
+									policyObj.allowRebaseMerge = policy.settings.allowRebaseMerge
+								} else {
+									policyObj.allowRebaseMerge = false
+								}
 							} else
 							if ("${policy.type.id}" == "c6a1889d-b943-4856-b76f-9e46bb6b0df2") {
 								policyObj.hasCommentResolutionPolicy = true
@@ -508,6 +529,11 @@ public class PolicyManagementService {
 								policyObj.creatorCanApprove = policy.settings.creatorVoteCounts
 								policyObj.allowDownvotes = policy.settings.allowDownvotes
 								policyObj.resetIfChanged = policy.settings.resetOnSourcePush
+								if (policyObj.resetIfChanged) {
+									policyObj.requireAtLeastOneApprover = policy.settings.requireVoteOnLastIteration
+									policyObj.resetAllVotes = policy.settings.resetRejectionsOnSourcePush
+									policyObj.resetApprovals = (policy.settings.resetRejectionsOnSourcePush == false)
+								}
 							} else
 							if ("${policy.type.id}" == "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e") {
 								policyObj.hasLinkedWorkItemsPolicy = true
@@ -515,10 +541,26 @@ public class PolicyManagementService {
 							if ("${policy.type.id}" == "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab") {
 								policyObj.hasMergeStrategyPolicy = true
 								// what's the merge strategy -- NOT in settings ??
-								policyObj.allowNoFastForward = policy.settings.allowNoFastForward
-								policyObj.allowSquash = policy.settings.allowSquash
-								policyObj.allowRebase = policy.settings.allowRebase
-								policyObj.allowRebaseMerge = policy.settings.allowRebaseMerge
+								if (policy.settings.allowNoFastForward) {
+									policyObj.allowNoFastForward = policy.settings.allowNoFastForward
+								} else {
+									policyObj.allowNoFastForward = false
+								}
+								if (policy.settings.allowSquash) {
+									policyObj.allowSquash = policy.settings.allowSquash
+								} else {
+									policyObj.allowSquash = false
+								}
+								if (policy.settings.allowRebase) {
+									policyObj.allowRebase = policy.settings.allowRebase
+								} else {
+									policyObj.allowRebase = false
+								}
+								if (policy.settings.allowRebaseMerge) {
+									policyObj.allowRebaseMerge = policy.settings.allowRebaseMerge
+								} else {
+									policyObj.allowRebaseMerge = false
+								}
 							} else
 							if ("${policy.type.id}" == "c6a1889d-b943-4856-b76f-9e46bb6b0df2") {
 								policyObj.hasCommentResolutionPolicy = true
