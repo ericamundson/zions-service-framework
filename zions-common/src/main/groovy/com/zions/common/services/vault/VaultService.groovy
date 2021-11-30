@@ -7,6 +7,7 @@ import groovyx.net.http.ContentType
 import org.springframework.core.env.Environment
 
 @Component
+@Slf4j
 class VaultService {
 	
 	@Autowired
@@ -129,13 +130,18 @@ class VaultService {
 	}
 	
 	void ensureUnsealed() {
+		int c = 0
 		while (isSealed()) {
+			if (c == 3) {
+				throw new Exception("Unable to unseal vault after ${c} attempts!")
+			}
 			try {
 				unseal()
 				System.sleep(10000)
 			} catch (e) {
-				
+				log.error(e.message)
 			}
+			c++
 		}
 	}
 }
