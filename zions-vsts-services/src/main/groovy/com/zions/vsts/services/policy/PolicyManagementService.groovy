@@ -430,7 +430,7 @@ public class PolicyManagementService {
 								if (policyObj.resetIfChanged) {
 									policyObj.requireAtLeastOneApprover = policy.settings.requireVoteOnLastIteration
 									policyObj.resetAllVotes = policy.settings.resetRejectionsOnSourcePush
-									policyObj.resetApprovals = (policy.settings.resetRejectionsOnSourcePush == false)
+									policyObj.resetApprovals = (!policy.settings.resetRejectionsOnSourcePush && !policy.settings.requireVoteOnLastIteration)
 								}
 							} else
 							if ("${policy.type.id}" == "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e") {
@@ -532,7 +532,7 @@ public class PolicyManagementService {
 								if (policyObj.resetIfChanged) {
 									policyObj.requireAtLeastOneApprover = policy.settings.requireVoteOnLastIteration
 									policyObj.resetAllVotes = policy.settings.resetRejectionsOnSourcePush
-									policyObj.resetApprovals = (policy.settings.resetRejectionsOnSourcePush == false)
+									policyObj.resetApprovals = (!policy.settings.resetRejectionsOnSourcePush && !policy.settings.requireVoteOnLastIteration)
 								}
 							} else
 							if ("${policy.type.id}" == "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e") {
