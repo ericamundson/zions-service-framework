@@ -23,7 +23,7 @@ class VaultUnsealConfig {
 		VaultService service = new VaultService()
 		service.vaultRestClient = vaultRestClient
 		service.unsealElements = unsealElements
-		service.ensureUnsealed()
+		//service.ensureUnsealed()
 		return service
 	}
 	

@@ -130,18 +130,15 @@ class VaultService {
 	}
 	
 	void ensureUnsealed() {
-		int c = 0
-		while (isSealed()) {
-			if (c == 3) {
-				throw new Exception("Unable to unseal vault after ${c} attempts!")
-			}
+		while (true) {
 			try {
-				unseal()
-				System.sleep(10000)
+				if (isSealed()) {
+					unseal()
+				}
+				System.sleep(60000)
 			} catch (e) {
 				log.error(e.message)
 			}
-			c++
 		}
 	}
 }
