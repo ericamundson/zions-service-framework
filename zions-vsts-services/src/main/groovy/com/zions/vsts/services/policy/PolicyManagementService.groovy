@@ -425,6 +425,7 @@ public class PolicyManagementService {
 								policyObj.hasMinimumReviewersPolicy = true
 								policyObj.minimumNumReviewers = policy.settings.minimumApproverCount
 								policyObj.creatorCanApprove = policy.settings.creatorVoteCounts
+								policyObj.prohibitMostRecentPusherApproval = policy.settings.blockLastPusherVote
 								policyObj.allowDownvotes = policy.settings.allowDownvotes
 								policyObj.resetIfChanged = policy.settings.resetOnSourcePush
 								if (policyObj.resetIfChanged) {
@@ -527,6 +528,7 @@ public class PolicyManagementService {
 								policyObj.hasMinimumReviewersPolicy = true
 								policyObj.minimumNumReviewers = policy.settings.minimumApproverCount
 								policyObj.creatorCanApprove = policy.settings.creatorVoteCounts
+								policyObj.prohibitMostRecentPusherApproval = policy.settings.blockLastPusherVote
 								policyObj.allowDownvotes = policy.settings.allowDownvotes
 								policyObj.resetIfChanged = policy.settings.resetOnSourcePush
 								if (policyObj.resetIfChanged) {
