@@ -12,6 +12,9 @@ import groovy.util.logging.Slf4j
 class VaultRestClient extends AGenericRestClient {
 	String vaultUrl
 	
+	@Value('${vault.use.proxy:true}')
+	boolean useProxy
+	
 	public VaultRestClient(@Value('${vault.url:}') String url) {
 		if (!url || url.length() == 0) {
 			url = 'http://utmvpi0144:8200'
@@ -31,7 +34,9 @@ class VaultRestClient extends AGenericRestClient {
 			}
 			return resp
 		}
-		setProxy()
+		if (useProxy) {
+			setProxy()
+		}
 	}
 	
 	public void setCredentials(String user, String token) {}
