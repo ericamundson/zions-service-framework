@@ -406,12 +406,15 @@ class CodeManagementService {
 	public def getFileContent(def collection, def project, def repo, def filename, def branchName) {
 		log.debug("CodeManagementService::getFileContent -- collection: ${collection}, project: ${project.name}, repo: ${repo.name}, filename: ${filename}, branchName: ${branchName}")
 		String filePath = "/${filename}"
+		def repoNameE = URLEncoder.encode(repo.name, 'UTF-8')
+		repoNameE = repoNameE.replace('+', '%20')
+
 		def query = ['api-version':'5.1','path':filePath, 'includeContent':true, 'versionDescriptor.version':"${branchName}",'versionDescriptor.versionType':'branch']
 		def result
 		try {
 			result = genericRestClient.get(
 				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.name}/_apis/git/repositories/${repo.name}/items",
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.name}/_apis/git/repositories/${repoNameE}/items",
 				query: query
 			)
 			log.debug("CodeManagementService::getFileContent -- Return result: "+result)
