@@ -13,14 +13,22 @@ class XlrEventPublisher implements XLReleaseEventListener {
 	static {
 		String hostName
 		try {
-			hostName = InetAddress.getLocalHost().getHostName()
+			hostName = InetAddress.getLocalHost().getHostName().toLowerCase()
 		 } catch(Exception ex) {
 			println("Unable to get Hostname")
 		}
-		if (hostName != null && hostName.toLowerCase().startsWith('dr')) {
-			System.setProperty('vault.url', 'https://vault-dr.cs.zionsbank.com')
-			System.setProperty('spring.cloud.vault.host', 'vault-dr.cs.zionsbank.com')
+		def profileMap = [utlxa221: 'default', utlxa220: 'test', drutlxa221: 'dr', utmsdev0527: 'dev']
+		def mqHost = [utlxa221: 'utmvpi0144', utlxa220: '172.20.104.15', drutlxa221: 'utmvpi0144', utmsdev0527: '172.20.104.15']
+		String profile = 'default'
+		if (profileMap[hostName] ){
+			profile = profileMap[hostName]
 		}
+		String host = 'utmvpi0144'
+		if (mqHost[hostName]) {
+			host = mqHost[hostName]
+		}
+		System.setProperty('spring.profiles.active', profile)
+		System.setProperty('spring.rabbitmq.host', host)
 		ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 		eventController = context.getBean(EventController)
 
