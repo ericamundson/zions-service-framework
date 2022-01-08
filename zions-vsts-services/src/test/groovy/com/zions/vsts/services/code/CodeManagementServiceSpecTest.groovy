@@ -115,24 +115,24 @@ class CodeManagementServiceSpecTest extends Specification {
 	}
 	
 	
-	def 'getFileContent success flow' () {
-		given: 'Stub of rest call to get file content'
-		String file = this.getClass().getResource('/testdata/dts-re-build.properties').text
-		//JsonSlurper js = new JsonSlurper()
-		//def out = js.parseText(json)
-		//def out = content.file
-		1 * genericRestClient.get(_) >> [content:file]
-		
-		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
-		
-		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repos.json').text)
-		
-		when: 'Call to get file content'
-		def result = underTest.getFileContent("eto-dev", project, repos,'', "master")
-
-		then: 'result != null'
-		result != null
-	}
+//	def 'getFileContent success flow' () {
+//		given: 'Stub of rest call to get file content'
+//		String file = this.getClass().getResource('/testdata/dts-re-build.properties').text
+//		//JsonSlurper js = new JsonSlurper()
+//		//def out = js.parseText(json)
+//		//def out = content.file
+//		1 * genericRestClient.get(_) >> [content:file]
+//		
+//		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
+//		
+//		def repos = new JsonSlurper().parseText(this.getClass().getResource('/testdata/repos.json').text)
+//		
+//		when: 'Call to get file content'
+//		def result = underTest.getFileContent("eto-dev", project, repos,'', "master")
+//
+//		then: 'result != null'
+//		result != null
+//	}
 	
 	
 	def 'getAuthUrl success flow' () {
