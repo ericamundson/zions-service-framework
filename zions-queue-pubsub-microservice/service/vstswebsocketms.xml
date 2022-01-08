@@ -1,8 +1,0 @@
-<service>
-      <id>vstswebsocketms</id>
-      <name>vstswebsocketms</name>
-      <description>This service runs ALMOps websocket micro-service.  Enables handling ADO events.</description>
-      <executable>java</executable>
-      <arguments>-Xrs -Xmx256m -jar "d:\bin\service\zions-vsts-websocket-microservice.jar" --logging.file="d:\bin\service\vstswebsocketms.log" </arguments>
-      <logmode>rotate</logmode>
-</service>
