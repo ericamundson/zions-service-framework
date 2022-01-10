@@ -44,11 +44,11 @@ class WorkManagementService {
 	@Autowired(required=false)
 	ICheckpointManagementService checkpointManagementService
 
-	@Value('${pageSize:200}')
-	private int pageSize
-	
 	@Value('${id.tracking.field:}')
 	private String idTrackingField
+	
+	@Value('${pageSize:200}')
+	private int pageSize
 	
 	@Value('${track.ado.changes:false}')
 	boolean trackAdoChanges
@@ -91,7 +91,7 @@ class WorkManagementService {
 	
 	/**
 	 * Bug fix for WI: 932997
-	 * 
+	 *
 	 * @param collection
 	 * @param project
 	 * @param teamArea
@@ -149,7 +149,7 @@ class WorkManagementService {
 	
 	private def stepFieldChanges(owi) {
 		String steps = "${owi.fields.'Microsoft.VSTS.TCM.Steps'}}"
-		// Address all double tags:  << blah blah >>				
+		// Address all double tags:  << blah blah >>
 		String val = steps.replaceAll(/&lt;&lt;[^&]*?&gt;&gt;/) { it ->
 							String s = it
 							s = s.replace('&', '&amp;')
@@ -289,13 +289,13 @@ class WorkManagementService {
 	
 	/**
 	 * Refresh work item cache by a query.
-	 * 
+	 *
 	 * <ul>
 	 * <li>Handles deleting duplicates from failure during cache update.</li>
 	 * <li>Clears cache prior to update of cache.</li>
 	 * <li>Full refresh</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param collection
 	 * @param project
 	 * @param query
@@ -407,7 +407,7 @@ class WorkManagementService {
 	 * <li>Clears cache prior to update of cache.</li>
 	 * <li>Full refresh</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param collection - ADO organization
 	 * @param project - ADO project
 	 * @param teamArea - ADO work item team area.
@@ -439,13 +439,13 @@ class WorkManagementService {
 	}
 
 	/**
-	 * Refreshes cache based upon existing cache elements. 
+	 * Refreshes cache based upon existing cache elements.
 	 * This has a flaw if process is stopped during processing of batch work item cache update.
-	 * 
+	 *
 	 * <ul>
 	 * <li>May look to deprecate this method.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param collection - ADO organization
 	 * @param project - ADO project
 	 * @return nothing
@@ -502,7 +502,7 @@ class WorkManagementService {
 
 	/**
 	 * Clean all work items via this query.
-	 * 
+	 *
 	 * @param collection - ADO organization
 	 * @param project - ADO project
 	 * @param query - work item wiql query
@@ -706,58 +706,6 @@ class WorkManagementService {
 		return children
 	}
 
-	def getChildren2(String collection, String project, String id) {
-		def pwi = getWorkItem(collection, project, id)
-		//handle deleted children records
-		if (!pwi) {
-			throw new Exception("$id could not be retrieved.  It may have been deleted")
-			return
-		}
-		
-		def childIds = []
-		
-		if (!pwi.relations) return childIds // no children
-		pwi.relations.each { relation ->
-			String rel = "${relation.rel}"
-			String url = "${relation.url}"
-			if (rel == 'System.LinkTypes.Hierarchy-Forward') {
-				int i = url.lastIndexOf('/');
-				String cid = null
-				if (i != -1) {
-					cid = url.substring(i+1);
-				}
-
-				//def cwi = getWorkitemViaUrl(rel)
-
-				childIds.add(cid)
-				
-			}
-		}
-
-		return childIds
-	}
-	
-	
-	def getListedWorkitems2(def collection, def project, def vstsIds) {
-		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		//def projectData = projectManagementService.getProject(collection, project)
-
-		def result = genericRestClient.get(
-				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems",
-				headers: [Accept: 'application/json'],
-				query: [ids: vstsIds.join(','), 'api-version': '4.1', '\$expand': 'all' ]
-				)
-		if (result == null) {
-			return []
-		}
-		println result.value
-		//it's iterating through all chunks in getListedWorkItems method
-		//Need it to send the first chunk back to populateChild
-		
-		return result.value
-	}
-	
 	def getParent(String collection, String project, def cwi) {
 		//def cwi = getWorkItem(collection, project, id)
 		def childIds = []
@@ -829,14 +777,14 @@ class WorkManagementService {
 			def wi = getWorkItem(collection, project, id)
 			def wiParent = getParent(collection, project, wi)
 			if (wiParent) {
-				if (wiParent.fields['System.AssignedTo'] != null) 
+				if (wiParent.fields['System.AssignedTo'] != null)
 					return wiParent.fields['System.AssignedTo'].uniqueName
 				else if (wiParent.fields['System.State'] == 'Closed') {
 					return wiParent.fields['Microsoft.VSTS.Common.ClosedBy'].uniqueName
 				}
 				else
 					return null
-			} 
+			}
 			else
 				return null
 		}
@@ -978,7 +926,7 @@ class WorkManagementService {
 		def body = new JsonBuilder(data).toPrettyString()
 		def result = genericRestClient.post(
 					[contentType: 'application/json',
-                    requestContentType: ContentType.JSON,
+					requestContentType: ContentType.JSON,
 					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}/comments",
 					body: body,
 					query: ['api-version': '5.1-preview.3'],
@@ -986,17 +934,17 @@ class WorkManagementService {
 					)
 	}
 	public def updateWorkItem(collection, project, id, data, Closure responseHandler = null) {
-            def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-            //def body = new JsonBuilder(data).toPrettyString()
-            def result = genericRestClient.patch(
-                        [contentType: 'application/json',
-                        requestContentType: 'application/json',
-                        uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
-                        body: data,
-                        query: ['api-version': '5.0', bypassRules:true],
-                        headers: ['Content-Type': 'application/json-patch+json']]
+			def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+			//def body = new JsonBuilder(data).toPrettyString()
+			def result = genericRestClient.patch(
+						[contentType: 'application/json',
+						requestContentType: 'application/json',
+						uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems/${id}",
+						body: data,
+						query: ['api-version': '5.0', bypassRules:true],
+						headers: ['Content-Type': 'application/json-patch+json']]
 						,responseHandler
-                        )
+						)
 						
 			return result
 	}
@@ -1014,7 +962,7 @@ class WorkManagementService {
 					log.error "Failed to save full batch of work items:  WI:  ${idMap[count]} failed to save, Error:  ${issue.'value'.Message}"
 					if (checkpointManagementService != null) {
 						checkpointManagementService.addLogentry("Failed to save full batch of work items, Error:  ${issue.'value'.Message}")
-					} 
+					}
 				}
 				else if (count > 1) {
 					if ("${resp.code}" == '200') {
@@ -1062,5 +1010,3 @@ class WorkManagementService {
 
 
 }
-
-
