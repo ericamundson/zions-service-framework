@@ -44,6 +44,9 @@ class WorkManagementService {
 	@Autowired(required=false)
 	ICheckpointManagementService checkpointManagementService
 
+	@Value('${pageSize:200}')
+	private int pageSize
+	
 	@Value('${id.tracking.field:}')
 	private String idTrackingField
 	
@@ -685,10 +688,76 @@ class WorkManagementService {
 				childIds.add(cid)
 			}
 		}
-		def children = getListedWorkitems(collection, project, childIds)
+		def children = []
+		def countrecords = childIds.size()
+		if (countrecords > pageSize) {
+			def	subChildren = childIds.collate(pageSize)
+			subChildren.each{ batch-> 
+				def batchChildren = getListedWorkitems(collection, project, batch)
+				
+				batchChildren.each{ wi -> children.add(wi)}
+				
+			}
+		} else {
+		
+			 children = getListedWorkitems(collection, project, childIds)
+		}
+		
 		return children
 	}
 
+	def getChildren2(String collection, String project, String id) {
+		def pwi = getWorkItem(collection, project, id)
+		//handle deleted children records
+		if (!pwi) {
+			throw new Exception("$id could not be retrieved.  It may have been deleted")
+			return
+		}
+		
+		def childIds = []
+		
+		if (!pwi.relations) return childIds // no children
+		pwi.relations.each { relation ->
+			String rel = "${relation.rel}"
+			String url = "${relation.url}"
+			if (rel == 'System.LinkTypes.Hierarchy-Forward') {
+				int i = url.lastIndexOf('/');
+				String cid = null
+				if (i != -1) {
+					cid = url.substring(i+1);
+				}
+
+				//def cwi = getWorkitemViaUrl(rel)
+
+				childIds.add(cid)
+				
+			}
+		}
+
+		return childIds
+	}
+	
+	
+	def getListedWorkitems2(def collection, def project, def vstsIds) {
+		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
+		//def projectData = projectManagementService.getProject(collection, project)
+
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/wit/workitems",
+				headers: [Accept: 'application/json'],
+				query: [ids: vstsIds.join(','), 'api-version': '4.1', '\$expand': 'all' ]
+				)
+		if (result == null) {
+			return []
+		}
+		println result.value
+		//it's iterating through all chunks in getListedWorkItems method
+		//Need it to send the first chunk back to populateChild
+		
+		return result.value
+	}
+	
 	def getParent(String collection, String project, def cwi) {
 		//def cwi = getWorkItem(collection, project, id)
 		def childIds = []
