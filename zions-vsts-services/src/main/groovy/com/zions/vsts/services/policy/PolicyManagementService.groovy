@@ -363,6 +363,16 @@ public class PolicyManagementService {
 		}
 
 	}
+	
+	def deleteCheckmarxBranchPolicy(def projectData, def repoData, String branchName = 'refs/heads/master') {
+		def policyRes = getBranchPolicy(CHECKMARX_STATUS_POLICY_TYPE, projectData.id, repoData.id, branchName)
+		if (policyRes) {
+			def result = genericRestClient.delete(
+				uri: "${policyRes._links.self.href}",
+				query: ['api-version': '5.1'])
+		}
+
+	}
 
 	public def ensureGitAttributesFile(def collection, def repoData) {
 		log.debug("PolicyManagementService::ensureGitAttributesFile -- ")
