@@ -850,10 +850,6 @@ class WorkManagementService {
 				query: [ids: vstsIds.join(','), 'api-version': '4.1', '\$expand': 'all' ]
 				)
 		
-		//if (!result) return logResult("No children present for this work item")
-		/*if (result == null) {
-			return []
-		}*/
 		return result.value
 	}
 
