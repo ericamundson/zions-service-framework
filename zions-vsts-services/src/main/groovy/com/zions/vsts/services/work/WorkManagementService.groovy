@@ -836,6 +836,10 @@ class WorkManagementService {
 	}
 
 	def getListedWorkitems(def collection, def project, def vstsIds) {
+		
+		if (vstsIds == [])  {
+		return null
+		}
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		//def projectData = projectManagementService.getProject(collection, project)
 
@@ -845,9 +849,11 @@ class WorkManagementService {
 				headers: [Accept: 'application/json'],
 				query: [ids: vstsIds.join(','), 'api-version': '4.1', '\$expand': 'all' ]
 				)
-		if (result == null) {
+		
+		//if (!result) return logResult("No children present for this work item")
+		/*if (result == null) {
 			return []
-		}
+		}*/
 		return result.value
 	}
 
@@ -948,6 +954,7 @@ class WorkManagementService {
 						
 			return result
 	}
+	
 	
 	def cacheResult(result, idMap) {
 		int count = 0
