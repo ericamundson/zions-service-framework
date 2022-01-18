@@ -683,27 +683,26 @@ class WorkManagementService {
 					cid = url.substring(i+1);
 				}
 
-				//def cwi = getWorkitemViaUrl(rel)
-
 				childIds.add(cid)
 			}
 		}
+			
 		def children = []
 		def countrecords = childIds.size()
 		if (countrecords > pageSize) {
 			def	subChildren = childIds.collate(pageSize)
 			subChildren.each{ batch-> 
 				def batchChildren = getListedWorkitems(collection, project, batch)
-				
 				batchChildren.each{ wi -> children.add(wi)}
 				
 			}
-		} else {
+		} else if (countrecords > 0) {
+			
+			children = getListedWorkitems(collection, project, childIds)
+			
+		} 
 		
-			 children = getListedWorkitems(collection, project, childIds)
-		}
-		
-		return children
+		return children 
 	}
 
 	def getParent(String collection, String project, def cwi) {
@@ -836,10 +835,6 @@ class WorkManagementService {
 	}
 
 	def getListedWorkitems(def collection, def project, def vstsIds) {
-		
-		if (vstsIds == [])  {
-		return null
-		}
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
 		//def projectData = projectManagementService.getProject(collection, project)
 
@@ -849,7 +844,9 @@ class WorkManagementService {
 				headers: [Accept: 'application/json'],
 				query: [ids: vstsIds.join(','), 'api-version': '4.1', '\$expand': 'all' ]
 				)
-		
+		if (result == null) {
+			return []
+		}
 		return result.value
 	}
 
@@ -950,7 +947,6 @@ class WorkManagementService {
 						
 			return result
 	}
-	
 	
 	def cacheResult(result, idMap) {
 		int count = 0
