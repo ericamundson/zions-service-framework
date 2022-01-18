@@ -683,8 +683,6 @@ class WorkManagementService {
 					cid = url.substring(i+1);
 				}
 
-				//def cwi = getWorkitemViaUrl(rel)
-
 				childIds.add(cid)
 			}
 		}
@@ -837,9 +835,8 @@ class WorkManagementService {
 	}
 
 	def getListedWorkitems(def collection, def project, def vstsIds) {
-		
 		def eproject = URLEncoder.encode(project, 'utf-8').replace('+', '%20')
-		
+		//def projectData = projectManagementService.getProject(collection, project)
 
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
@@ -847,7 +844,9 @@ class WorkManagementService {
 				headers: [Accept: 'application/json'],
 				query: [ids: vstsIds.join(','), 'api-version': '4.1', '\$expand': 'all' ]
 				)
-		
+		if (result == null) {
+			return []
+		}
 		return result.value
 	}
 
@@ -948,7 +947,6 @@ class WorkManagementService {
 						
 			return result
 	}
-	
 	
 	def cacheResult(result, idMap) {
 		int count = 0
