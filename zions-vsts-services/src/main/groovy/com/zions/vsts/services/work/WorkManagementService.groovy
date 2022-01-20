@@ -582,7 +582,11 @@ class WorkManagementService {
 	def getWorkItems(String collection, String project, String aquery, String lastId = null) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def query = [query: "${aquery} ORDER BY [System.Id] ASC"]
+		def query
+		if (aquery.contains('ORDER BY'))
+			query = [query: "${aquery}"]
+		else
+			query = [query: "${aquery} ORDER BY [System.Id] ASC"]
 		if (lastId != null) {
 			query = [query: "${aquery} AND [System.Id] > ${lastId}  ORDER BY [System.Id] ASC"]
 		}
