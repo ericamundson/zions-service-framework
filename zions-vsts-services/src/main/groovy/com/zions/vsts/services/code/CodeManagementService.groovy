@@ -99,11 +99,20 @@ class CodeManagementService {
 		def query = ['api-version':'6.0']
 		def repoNameE = URLEncoder.encode(repoName, 'UTF-8')
 		repoNameE= repoNameE.replace('+', '%20')
-		def result = genericRestClient.get(
-			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repoNameE}",
-			query: query,
-			)
+		def result
+		try {
+			result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/git/repositories/${repoNameE}",
+				query: query,
+				)
+		} catch (HttpResponseException hre) {
+			// check for Not Found
+			if (hre.getStatusCode() == 404) {
+				log.debug("CodeManagementService::getRepo -- " + hre.message)
+				result = null
+			}
+		}
 		return result
 
 	}
