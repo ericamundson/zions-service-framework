@@ -683,27 +683,26 @@ class WorkManagementService {
 					cid = url.substring(i+1);
 				}
 
-				//def cwi = getWorkitemViaUrl(rel)
-
 				childIds.add(cid)
 			}
 		}
+			
 		def children = []
 		def countrecords = childIds.size()
 		if (countrecords > pageSize) {
 			def	subChildren = childIds.collate(pageSize)
 			subChildren.each{ batch-> 
 				def batchChildren = getListedWorkitems(collection, project, batch)
-				
 				batchChildren.each{ wi -> children.add(wi)}
 				
 			}
-		} else {
+		} else if (countrecords > 0) {
+			
+			children = getListedWorkitems(collection, project, childIds)
+			
+		} 
 		
-			 children = getListedWorkitems(collection, project, childIds)
-		}
-		
-		return children
+		return children 
 	}
 
 	def getParent(String collection, String project, def cwi) {
