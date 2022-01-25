@@ -7,6 +7,7 @@ import org.springframework.amqp.core.MessageListener
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.beans.factory.annotation.Value
+import java.text.SimpleDateFormat
 
 trait MessageReceiverTrait implements MessageListener {
 	private static final String X_RETRIES_HEADER = "x-retries"
@@ -51,6 +52,8 @@ trait MessageReceiverTrait implements MessageListener {
 			this.rabbitTemplate.send('delay-exchange', "${queueName}", failedMessage);
 		}
 		else {
+			def sdf = new SimpleDateFormat("MM.dd.yyyy HH.mm.ss")
+			headers['x-transaction-date'] = "${sdf.format(new Date())}"
 			headers['x-origin-queue'] = queueName
 			headers['x-error'] = "Queue: ${queueName} :: had failed message with error: ${exception.message}"
 			StringWriter sw = new StringWriter();
