@@ -1297,6 +1297,21 @@ public class BuildManagementService {
 		return result
 	}
 
+	public def getPipelineById(def collection, def project, def id) {
+		log.debug("BuildManagementService::getPipelineById -- ID = " + id)
+		def query = ['api-version':'6.0-preview.1']
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/pipelines/${id}",
+				query: query,
+				)
+		if (result == null) {
+			log.debug("BuildManagementService::getPipelineById -- pipeline with ID " + id + " not found. Returning NULL ...")
+			return null
+		}
+		return result
+	}
+
 	public def getBuildYaml(def collection, def project, String name, def buildId) {
 		log.debug("BuildManagementService::getBuildYaml for build: " + name)
 		def result = null
