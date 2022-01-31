@@ -77,6 +77,34 @@ public class NotificationService {
         return "success";
     }
 	
+	public def sendGenericNotification(String title, String body) {
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		try {
+			helper.setValidateAddresses(false)
+			if (senderAddress) {
+				helper.setFrom(senderAddress)
+			}
+			if (recipientEmailAddresses.length > 0) {
+				recipientEmailAddresses.each { String address ->
+					helper.addTo(address)
+				}
+			} else {
+				helper.setTo("${recipientEmailAddress}")
+			}
+			helper.setText(body)
+			helper.setSubject(title)
+			
+			sender.send(message)
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error"
+		}
+		return "success";
+
+	}
+	
 	public def sendActionCompleteNotification(String action, String phasesRun) {
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
