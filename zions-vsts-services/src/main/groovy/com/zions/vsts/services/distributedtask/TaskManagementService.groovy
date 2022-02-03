@@ -64,6 +64,39 @@ public class TaskManagementService {
 		return result1
 	}
 
+	def ensureEnvironment(def collection, def project, def envName, def envDescr) {
+		def result = getEnvironment(collection, project, envName)
+		if (result == null) {
+			//System.out.println("Adding environment ${envName} for project ${project.name}")
+			System.out.println("Adding environment ${envName} for project ${project}")
+			def env = ['name':"${envName}", 'description':"${envDescr}"]
+			def body = new JsonBuilder(env).toPrettyString()
+			log.debug("TaskManagementService::ensureEnvironment --> ${body}")
+			result = genericRestClient.post(
+					requestContentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/distributedtask/environments",
+					body: body,
+					headers: [Accept: 'application/json;api-version=5.0-preview.1;excludeUrls=true'],
+			)
+		}
+		return result
+	}
+	
+	def getEnvironment(def collection, def project, def envName) {
+		def query = ['name':"${envName}", "api-version": "6.0-preview.1"]
+		log.debug("TaskManagementService::getEnvironment --> ${envName}")
+		def result = genericRestClient.get(
+				requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/distributedtask/environments",
+				query: query,
+		)
+		if (result.count < 1) {
+			return null
+		}
+		System.out.println("Found existing environment ${envName} in project ${project}")
+		return result.value[0]
+	}
+	
 	public def updateBuildnumberRefs(def collection, def project, def newOutputVar) {
 		def taskGroups = getTaskGroups(collection, project)
 		taskGroups.value.each { taskGroup ->
