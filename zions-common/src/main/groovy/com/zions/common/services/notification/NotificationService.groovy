@@ -77,7 +77,7 @@ public class NotificationService {
         return "success";
     }
 	
-	public def sendGenericNotification(String title, String body) {
+	public def sendGenericNotification(String title, String body, String[] overrideToEmailAddresses=null, boolean html=false) {
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
@@ -86,14 +86,18 @@ public class NotificationService {
 			if (senderAddress) {
 				helper.setFrom(senderAddress)
 			}
-			if (recipientEmailAddresses.length > 0) {
+			if (overrideToEmailAddresses) {
+				overrideToEmailAddresses.each { String address ->
+					helper.addTo(address)
+				}
+			} else if (recipientEmailAddresses.length > 0) {
 				recipientEmailAddresses.each { String address ->
 					helper.addTo(address)
 				}
 			} else {
 				helper.setTo("${recipientEmailAddress}")
 			}
-			helper.setText(body)
+			helper.setText(body, html)
 			helper.setSubject(title)
 			
 			sender.send(message)
