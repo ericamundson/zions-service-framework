@@ -437,8 +437,8 @@ public class PolicyManagementService {
 			}
 			
 			// Create the policy
-			def settings = ["filenamePatterns": filenamePatterns, "creatorVoteCounts": creatorVoteCounts, "message": message, "minimumApproverCount": minimumApproverCount, "requiredReviewerIds": reviewersById, scope: scope]
-			def policy = [isBlocking: isBlocking, isDeleted: false, isEnabled: true, settings: settings, type: [id: AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE]]
+			def settings = ["filenamePatterns": filenamePatterns, "creatorVoteCounts": creatorVoteCounts.toString(), "message": message, "minimumApproverCount": minimumApproverCount, "requiredReviewerIds": reviewersById, scope: scope]
+			def policy = [isBlocking: isBlocking.toString(), isDeleted: false, isEnabled: true, settings: settings, type: [id: AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE]]
 			policyRes = createPolicy(collection, repoData.project, policy)
 		}
 	}
