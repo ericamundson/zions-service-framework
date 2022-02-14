@@ -490,38 +490,29 @@ public class PolicyManagementService {
 	public def modifyBranchPolicies(def collection, def repoData, def branchName, def policyData = null) {
 		log.info("PolicyManagementService::modifyBranchPolicies -- Started")
 		
-		//def all = new JsonBuilder(policyData).toPrettyString()
-		//log.info("BURP: " + all)
-		
 		if (policyData) {
 			def approvalData = null
 			if (policyData.approvalData) {
-				log.info("PolicyManagementService::modifyBranchPolicies -- approvalData -- Started")
+				log.info("PolicyManagementService::modifyBranchPolicies -- approvalData")
 				approvalData = policyData.approvalData
-				def aD = new JsonBuilder(approvalData).toPrettyString()
-				log.info("aD: " + aD)
 				ensureMinimumApproversPolicy(collection, repoData, branchName, approvalData)
 			}
 		
-			def buildData = null
-			if (policyData.buildData) {
-				log.info("PolicyManagementService::modifyBranchPolicies -- buildData -- Started")
-				buildData = policyData.buildData
-				def bD = new JsonBuilder(buildData).toPrettyString()
-				log.info("BURP: " + bD)
-			    // Need new code to handle collections of build validation policies
-				// YAML usage in the wild today
-				//   1) single CI YAML that has conditionals within the YAML on build.reason to control PR vs Release build (legacy)
-				//   2) YAML for CI, Release and Dev builds (blueprint)
-				//   3) YAML to meet singular pipelines (custom)
-			}
+			//def buildData = null
+			//if (policyData.buildData) {
+			//	log.info("PolicyManagementService::modifyBranchPolicies -- buildData")
+			//	buildData = policyData.buildData
+			//    // Need new code to handle collections of build validation policies
+			//	// YAML usage in the wild today
+			//	//   1) single CI YAML that has conditionals within the YAML on build.reason to control PR vs Release build (legacy)
+			//	//   2) YAML for CI, Release and Dev builds (blueprint)
+			//	//   3) YAML to meet singular pipelines (custom)
+			//}
 		
 			def automaticallyIncludedReviewersData = null
 			if (policyData.automaticallyIncludedReviewersData) {
-				log.info("PolicyManagementService::modifyBranchPolicies -- automaticallyIncludedReviewersData -- Started")
+				log.info("PolicyManagementService::modifyBranchPolicies -- automaticallyIncludedReviewersData")
 				automaticallyIncludedReviewersData = policyData.automaticallyIncludedReviewersData
-				def aIRD = new JsonBuilder(automaticallyIncludedReviewersData).toPrettyString()
-				log.info("aIRD: " + aIRD)
 				ensureAutomaticallyIncludedReviewersBranchPolicy(collection, repoData, branchName, automaticallyIncludedReviewersData)
 			}
 		}
