@@ -7,6 +7,7 @@ import groovy.util.logging.Slf4j
 import groovy.json.JsonBuilder;
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
+import groovy.yaml.YamlSlurper
 
 import com.zions.common.services.notification.NotificationService
 import com.zions.common.services.rest.IGenericRestClient
@@ -59,13 +60,14 @@ public class PolicyManagementService {
 	private static final String CI_BUILD_TEMPLATE = "build-template-ci"
 	private static final String RELEASE_BUILD_TEMPLATE = "build-template-release"
 	private static final String CI_BUILD_YAML_FILE = "build-yaml-file"
-	// AOD policy types
+	// ADO policy types
 	private static final String BUILD_VALIDATION_POLICY_TYPE = "0609b952-1397-4640-95ec-e00a01b2c241"
 	private static final String MIN_APPROVERS_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd"
 	private static final String LINKED_WI_POLICY_TYPE = "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e"
 	private static final String COMMENT_RES_POLICY_TYPE = "c6a1889d-b943-4856-b76f-9e46bb6b0df2"
 	private static final String MERGE_STRATEGY_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab"
 	private static final String CHECKMARX_STATUS_POLICY_TYPE = "cbdc66da-9728-4af8-aada-9a5a32e4a226"
+	private static final String AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE = "fd2167ab-b0be-447a-8ec8-39368250530e"
 	
 	public PolicyManagementService() {
 	}
@@ -96,7 +98,6 @@ public class PolicyManagementService {
 		boolean isInitBranch = false
 		
 		//if (branchName.toLowerCase().equals("refs/heads/master")) return
-			
 
 		this.loadProperties(collection, repoData, branchName)
 		// if we're dealing with an 'IFB' branch, check for custom branch build / policy configuration
@@ -257,37 +258,56 @@ public class PolicyManagementService {
 		return result
 	}
 
+	private def updatePolicy(def collection, def projectData, def policy) {
+		def body = new JsonBuilder(policy).toPrettyString()
+		log.debug("PolicyManagementService::updatePolicy -- Request body = "+body)
+		def result = genericRestClient.put(
+				requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectData.id}/_apis/policy/configurations/${policy.id}",
+				body: body,
+				headers: [Accept: 'application/json;api-version=6.0;excludeUrls=true']
+		)
+		return result
+	}
+
 	public def ensureMinimumApproversPolicy(def collection, def repoData, def branchName, def approvalData = null) {
-		def projectData = repoData.project
+		def policyRes
 		def numMinApprovers = DEFAULT_NUM_APPROVERS
-		if (this.branchProps != null) {
-			String tempNum = this.branchProps.getProperty(NUM_MIN_APPROVERS)
-			if (tempNum != null && isNumeric(tempNum)) {
-				numMinApprovers = Integer.parseInt(tempNum)
-				// must have at least 1 approver
-				if (numMinApprovers < DEFAULT_NUM_APPROVERS) numMinApprovers = DEFAULT_NUM_APPROVERS
-				log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- Number of minimum approvers = ${numMinApprovers}")
-			}
-		}
-		if (approvalData && approvalData.minApprovers) {
-			numMinApprovers = approvalData.minApprovers
-		}
 		boolean creatorVoteCounts = false
-		if (approvalData && approvalData.creatorVoteCounts) {
-			creatorVoteCounts = approvalData.creatorVoteCounts
-		}
-		log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- ")
-		def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-		    type: [id: MIN_APPROVERS_POLICY_TYPE],
-		    settings:[minimumApproverCount: numMinApprovers, creatorVoteCounts: creatorVoteCounts, allowDownvotes: false, resetOnSourcePush: true,
-				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
-			]
-		]
-		def policyRes = getBranchPolicy(MIN_APPROVERS_POLICY_TYPE, projectData.id, repoData.id, branchName)
-		if (!policyRes) {
-			policyRes = createPolicy(collection, projectData, policy)
-		} else {
-			// update for minimum approvers??
+		if (approvalData) {
+			if (approvalData.minApprovers) {
+				numMinApprovers = approvalData.minApprovers
+			}
+			if (approvalData.creatorVoteCounts) {
+				creatorVoteCounts = approvalData.creatorVoteCounts
+			}
+			def projectData = repoData.project
+			// check for existing policy
+			policyRes = getBranchPolicy(MIN_APPROVERS_POLICY_TYPE, projectData.id, repoData.id, branchName)
+			if (!policyRes) {
+				if (this.branchProps != null) {
+					String tempNum = this.branchProps.getProperty(NUM_MIN_APPROVERS)
+					if (tempNum != null && isNumeric(tempNum)) {
+						numMinApprovers = Integer.parseInt(tempNum)
+						// must have at least 1 approver
+						if (numMinApprovers < DEFAULT_NUM_APPROVERS) numMinApprovers = DEFAULT_NUM_APPROVERS
+						log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- Number of minimum approvers = ${numMinApprovers}")
+					}
+				}
+				log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- ")
+				def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
+				    type: [id: MIN_APPROVERS_POLICY_TYPE],
+				    settings:[minimumApproverCount: numMinApprovers, creatorVoteCounts: creatorVoteCounts, allowDownvotes: false, resetOnSourcePush: true,
+						scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+					]
+				]
+				policyRes = createPolicy(collection, projectData, policy)
+			} else {
+				policyRes.settings.minimumApproverCount = numMinApprovers
+				policyRes.settings.creatorVoteCounts = creatorVoteCounts
+				// update policy for minimum approvers
+				policyRes = updatePolicy(collection, projectData, policyRes)
+			}
 		}
 		log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- result = "+policyRes)
 
@@ -348,6 +368,91 @@ public class PolicyManagementService {
 		return policyRes
 	}
 	
+	public def ensureAutomaticallyIncludedReviewersBranchPolicy(String collection, def repoData, String branchName, def automaticallyIncludedReviewersData = null) {
+		log.info("PolicyManagementService::ensureAutomaticallyIncludedReviewersBranchPolicy -- ")
+				
+		def policyRes = getBranchPolicy(AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE, repoData.project.id, repoData.id, branchName)
+		if (policyRes) {
+			// Remove the collection of AutomaticallyIncludedReviewers branch policies
+			deleteAutomaticallyIncludedReviewersBranchPolicy(repoData, branchName)
+		}
+		
+		def scope = [[matchKind: 'Exact', refName: branchName, repositoryId: repoData.id]]
+		
+		// Create the collection of AutomaticallyIncludedReviewers branch policies
+		for (item in automaticallyIncludedReviewersData){
+			// reviewers
+			boolean aGroupIsInTheReviewersList = false
+			def reviewersById = []
+			if (item.reviewers) {
+				for (reviewer in item.reviewers) {
+					// Get the reviewer's identity
+					def identity = memberManagementService.getIdentity('', reviewer.toString())
+					// Determine if the reviewer is a Team
+					if (identity[0].properties.SchemaClassName.$value.toLowerCase() == "group") {
+						aGroupIsInTheReviewersList = true
+					}
+					reviewersById.add("${identity[0].id}")
+				}
+			}
+
+			// policyRequirement - Default: optional
+			boolean isBlocking = false
+			if (item.policyRequirement && item.policyRequirement.toLowerCase() == "required") {
+				isBlocking = true
+			}
+
+			// TBD: add code to log when YAML configuration is doing something the UI would not allow
+			// minimumApproverCount - Default: 1 (always pass in the REST call)
+			def minimumApproverCount = 1
+			// If our 1 reviewer is a group and this is a required policy, set minimumApproverCount to the YAML value
+			if (reviewersById.size() == 1 && aGroupIsInTheReviewersList && isBlocking) {
+				if (item.minimumApproverCount) {
+					minimumApproverCount = item.minimumApproverCount
+				}
+			}
+
+			// TBD: add code to log when YAML configuration is doing something the UI would not allow
+			// filenamePatterns - Default: empty list (always pass in the REST call)
+			def filenamePatterns = []
+			if (item.filenamePatterns) {
+				// WARN: We expect the YAML to be entered as 1 pattern per line. (afterwall the YAML syntax is a collection of entries) 
+				// In the UI a semi-colon ';' in the string appears to create 1 entry per part.
+				// In the UI a comma in the string appears to create a pattern within a single entry. 
+				for (fP in item.filenamePatterns) {
+					filenamePatterns.add(fP)
+				}
+			}
+
+			// creatorVoteCounts - Default: false
+			boolean creatorVoteCounts = false
+			if (item.creatorVoteCounts) {
+				creatorVoteCounts = item.creatorVoteCounts
+			}
+			
+			// message - Default: empty string
+			def message = ""
+			if (item.message) {
+				message = item.message.toString()
+			}
+			
+			// Create the policy
+			def settings = ["filenamePatterns": filenamePatterns, "creatorVoteCounts": creatorVoteCounts.toString(), "message": message, "minimumApproverCount": minimumApproverCount, "requiredReviewerIds": reviewersById, scope: scope]
+			def policy = [isBlocking: isBlocking.toString(), isDeleted: false, isEnabled: true, settings: settings, type: [id: AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE]]
+			policyRes = createPolicy(collection, repoData.project, policy)
+		}
+	}
+	
+	def deleteAutomaticallyIncludedReviewersBranchPolicy(def repoData, String branchName = 'refs/heads/master') {
+		def policyRes = getBranchPolicy(AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE, repoData.project.id, repoData.id, branchName)
+		if (policyRes) {
+			def result = genericRestClient.delete(
+				uri: "${policyRes._links.self.href}",
+				query: ['api-version': '5.1'])
+		}
+
+	}
+	
 	def ensureCheckmarxBranchPolicy(String collection, def projectData, def repoData, String branchName) {
 		
 		def policyRes = getBranchPolicy(CHECKMARX_STATUS_POLICY_TYPE, projectData.id, repoData.id, branchName)
@@ -379,7 +484,38 @@ public class PolicyManagementService {
 		def res = codeManagementService.ensureGitAttributes(collection, repoData.project, repoData)
 		log.debug("PolicyManagementService::ensureGitAttributesFile -- result = "+res)
 		
-		retunr res
+		return res
+	}
+	
+	public def modifyBranchPolicies(def collection, def repoData, def branchName, def policyData = null) {
+		log.info("PolicyManagementService::modifyBranchPolicies -- Started")
+		
+		if (policyData) {
+			def approvalData = null
+			if (policyData.approvalData) {
+				log.info("PolicyManagementService::modifyBranchPolicies -- approvalData")
+				approvalData = policyData.approvalData
+				ensureMinimumApproversPolicy(collection, repoData, branchName, approvalData)
+			}
+		
+			//def buildData = null
+			//if (policyData.buildData) {
+			//	log.info("PolicyManagementService::modifyBranchPolicies -- buildData")
+			//	buildData = policyData.buildData
+			//    // Need new code to handle collections of build validation policies
+			//	// YAML usage in the wild today
+			//	//   1) single CI YAML that has conditionals within the YAML on build.reason to control PR vs Release build (legacy)
+			//	//   2) YAML for CI, Release and Dev builds (blueprint)
+			//	//   3) YAML to meet singular pipelines (custom)
+			//}
+		
+			def automaticallyIncludedReviewersData = null
+			if (policyData.automaticallyIncludedReviewersData) {
+				log.info("PolicyManagementService::modifyBranchPolicies -- automaticallyIncludedReviewersData")
+				automaticallyIncludedReviewersData = policyData.automaticallyIncludedReviewersData
+				ensureAutomaticallyIncludedReviewersBranchPolicy(collection, repoData, branchName, automaticallyIncludedReviewersData)
+			}
+		}
 	}
 
 	public def getBranchPolicyReport(def collection, def project) {
