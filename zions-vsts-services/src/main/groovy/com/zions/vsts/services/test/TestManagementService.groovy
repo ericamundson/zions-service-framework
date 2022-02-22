@@ -618,6 +618,53 @@ public class TestManagementService {
 			return result
 		}
 		
+		public def setTestRetentionSettings(collection, project) {
+
+			def eproject = URLEncoder.encode(project, 'utf-8')
+			eproject = eproject.replace('+', '%20')
+			
+			//def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Plans/${testplanId}/Suites/${testsuiteId}/points/${testpointId}?api-version=6.0&bypassRules=True&suppressNotifications=true"
+			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/resultretentionsettings?api-version=6.0-preview.1"
+			https://dev.azure.com/zionseto/AFOracleFAM /_apis/test/resultretentionsettings?api-version=6.0-preview.1
+			
+			//set retention settings to permanent retention
+			def body = ['automatedResultsRetentionDuration': -1, 'manualResultsRetentionDuration': -1]
+			
+			
+			String sbody = new JsonBuilder(body).toPrettyString()
+			//put stop here json builder to prettystring look at what sbody looks like as formatted json
+			//should have same format as body in successful talend execution
+			def result = genericRestClient.patch(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: uri,
+				body: sbody,
+				//headers: [Accept: 'application/json'],
+				query: ['api-version': '5.1-preview.1']
+				
+				
+				)
+			return result
+		}
+		
+		//get test retention settings for a project and collection
+		def getTestRetention(String collection, String project) {
+			def eproject = URLEncoder.encode(project, 'utf-8')
+			eproject = eproject.replace('+', '%20')
+			//def query = [query: aquery]
+			//String body = new JsonBuilder(query).toPrettyString()
+			def result = genericRestClient.get(
+					requestContentType: ContentType.JSON,
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/resultretentionsettings?",
+					//headers: [Accept: 'application/json'],
+					query: ['api-version': '6.0-preview.1']
+					)
+			return result
+	
+		}
+				
+		
 		public def updateTestPointState(collection, project, testplanId, testsuiteId, testpointId, outcome, state) {
 	
 				def eproject = URLEncoder.encode(project, 'utf-8')
@@ -1113,6 +1160,26 @@ public class TestManagementService {
 
 	}
 	
+	public def deleteTestCasesId(collection, def project, def tcId) {
+		
+		def projectInfo = projectManagmentService.getProject(collection, project)
+		//def queryHierarchy = getQueryHierarchy(project)
+//		def query = new JsonBuilder( queryHierarchy.queries[0] ).toString()
+//
+//		def queryJson = [queryJson: query]
+//		def body = new JsonBuilder( queryJson ).toString()
+		
+		def result = genericRestClient.delete(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/testcases/${tcId}",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'6.0-preview.1']
+			)
+
+		return result;
+
+	}
 	
 	
 	public def setFromADOParent(def parentData, def children, def map, boolean update = false) {
