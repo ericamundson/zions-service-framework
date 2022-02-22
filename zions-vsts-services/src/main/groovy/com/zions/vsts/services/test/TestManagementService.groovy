@@ -647,6 +647,24 @@ public class TestManagementService {
 			return result
 		}
 		
+		//get test retention settings for a project and collection
+		def getTestRetention(String collection, String project) {
+			def eproject = URLEncoder.encode(project, 'utf-8')
+			eproject = eproject.replace('+', '%20')
+			//def query = [query: aquery]
+			//String body = new JsonBuilder(query).toPrettyString()
+			def result = genericRestClient.get(
+					requestContentType: ContentType.JSON,
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/resultretentionsettings?",
+					//headers: [Accept: 'application/json'],
+					query: ['api-version': '6.0-preview.1']
+					)
+			return result
+	
+		}
+				
+		
 		public def updateTestPointState(collection, project, testplanId, testsuiteId, testpointId, outcome, state) {
 	
 				def eproject = URLEncoder.encode(project, 'utf-8')
