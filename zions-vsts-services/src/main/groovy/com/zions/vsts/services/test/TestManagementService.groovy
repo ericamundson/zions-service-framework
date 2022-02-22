@@ -627,7 +627,7 @@ public class TestManagementService {
 			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/resultretentionsettings?api-version=6.0-preview.1"
 			https://dev.azure.com/zionseto/AFOracleFAM /_apis/test/resultretentionsettings?api-version=6.0-preview.1
 			
-			//set retention settings to retain permanently
+			//set retention settings to permanent retention
 			def body = ['automatedResultsRetentionDuration': -1, 'manualResultsRetentionDuration': -1]
 			
 			
