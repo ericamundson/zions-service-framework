@@ -17,6 +17,8 @@ import groovyx.net.http.ContentType
 class ProjectManagementService {
 	@Autowired(required=true)
 	private IGenericRestClient genericRestClient;
+	
+	private def projectDataCache = [:]
 
 	public ProjectManagementService() {
 		
@@ -107,7 +109,15 @@ class ProjectManagementService {
 	}
 	
 	def getProjectProperty(def collection, def project, def name) {
-		def projectData = getProject(collection, project)
+		// Get projectData from cache if available
+		def projectData
+		String key = "$collection-$project"
+		if (projectDataCache.containsKey(key))
+			projectData = projectDataCache[key]
+		else {
+			projectData = getProject(collection, project)
+			projectDataCache.put(key, projectData)
+		}
 		if (projectData == null) return null
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
