@@ -109,11 +109,11 @@ class SubscriptionService {
 		
 		def uri = "${genericRestClient.getTfsUrl()}/${collection}/_apis/hooks/subscriptions/${subId}?api-version=6.0&bypassRules=True&suppressNotifications=true"
 		//def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':   testpointIds ]
-		def body = ['publisherId': 'tfs', 'eventType': eventType, 'resourceVersion': '1.0-preview.1', 'consumerId': 'webHooks', 'consumerActionId': 'httpRequest', 'publisherInputs': [ 'areaPath': '[Any]', 'workItemType': '', 'projectId': projectId], 'consumerInputs': [ 'url': url, 'basicAuthUsername': userName, 'basicAuthPassword': passWord]]
+		def body = ['publisherId': 'tfs', 'eventType': eventType, 'resourceVersion': '1.0-preview.1', 'consumerId': 'webHooks', 'consumerActionId': 'httpRequest', 'publisherInputs': [ 'areaPath': '', 'workItemType': '', 'projectId': projectId], 'consumerInputs': [ 'url': url, 'basicAuthUsername': userName, 'basicAuthPassword': passWord]]
 		
 		String sbody = new JsonBuilder(body).toPrettyString()
 		//put stop here json builder to prettystring look at what sbody looks like as formatted json
-		//should have same format as body in successful talend execution
+		
 		def result = genericRestClient.put(
 					  
 			requestContentType: ContentType.JSON,
