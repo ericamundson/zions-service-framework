@@ -37,38 +37,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 	ProjectManagementService projectManagementService
 	
 	@Autowired
-	ProcessTemplateService underTest
-
-	def 'getTypeMapResource bad map file.'() {
-		given: 'No stubs'
-		
-		when: 'call method (getTypeMapResource) under test.'
-		def maps = underTest.getTypeMapResource('bad.json')
-		
-		then: 'maps.size() == 0'
-		maps.size() == 0
-	}
-	
-	def 'getTypeMapResource success flow.'() {
-		given: 'No stubs'
-		
-		when: 'call method (getTypeMapResource) under test.'
-		def maps = underTest.getTypeMapResource('rtctypemap.json')
-		
-		then: 'maps.size() == 7'
-		maps.size() == 7
-	}
-
-	def 'getNameMapResource bad map file.'() {
-		given: 'No stubs'
-		
-		when: 'call method (getNameMapResource) under test.'
-		def maps = underTest.getNameMapResource('bad.json')
-		
-		then: 'maps.size() == 0'
-		maps.size() == 0
-	}
-	
+	ProcessTemplateService underTest	
 
 	def 'getWorkitems success flow.'() {
 		given: 'project management service getProjecProperty stub'
@@ -101,22 +70,6 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		
 		then: 'result.name == Enhancement Request'
 		"${result.name}" == "Enhancement Request"
-	}
-	
-	def 'getWorkitemTemplateFields success flow.'() {
-		given: 'project management service getProject stub'
-		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
-		1 * projectManagementService.getProject(_, _ ) >> project
-		
-		and: 'azure rest client http get stub'
-		def out = new JsonSlurper().parseText(getClass().getResource('/testdata/dfprocessfields.json').text)
-		1 * genericRestClient.get(_) >> out
-		
-		when: 'call method (getWorkitemTemplateFields) under test.'
-		def result = underTest.getWorkitemTemplateFields('',  '',  '')
-		
-		then: 'result.count == 58'
-		"${result.count}" == "58"
 	}
 	
 	/*def 'getWorkitemTemplateXML success flow.'() {
@@ -165,15 +118,15 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		String json = this.getClass().getResource('/testdata/processfields.json').text
 		JsonSlurper js = new JsonSlurper()
 		def out = js.parseText(json)
-		1 * genericRestClient.get(_) >> out
+		genericRestClient.get(_) >> out  // May or may not be called depending on caching
 		
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
 		
 		when: 'call method (queryForField) under test.'
-		def result = underTest.queryForField('', project, '', true)
+		def result = underTest.queryForField('', project, 'System.State')
 		
 		then: 'No exception'
-		result == null
+		result != null
 	}
 	
 	def 'getField success flow with three params'() {
@@ -207,30 +160,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		then: 'result.name == Bug'
 		"${result.name}" == "Bug"
 	}
-	
-	def 'getDefaultMapping success flow '() {
-		given: 'Stub of default mapping data'
-		def xmlMappingData = new XmlSlurper().parse(new File(testMappingFileName))
 		
-		when: 'call method (getDefaultMapping) under test.'
-		def result = underTest.getDefaultMapping(xmlMappingData)
-		
-		then: 'result != null'
-		result != null;
-	}
-	
-	def 'hasMapping success flow with three params'() {
-		given: 'Stub of mapping and wit arguments'
-		def mapping =[:]
-		def wit =[:]
-		
-		when: 'call method (hasMapping) under test.'
-		def result = underTest.hasMapping(mapping, wit)
-		
-		then: 'result == false'
-		result == false;
-	}
-	
 	def 'createPickList success flow'() {
 		given: 'stub of rest call for process lists'
 		String json = this.getClass().getResource('/testdata/processlists.json').text
@@ -281,34 +211,6 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		//result != null
 	}*/
 	
-	def 'updateWorkitemTemplates exception flow.'() {
-		given: 'No stubs'
-		def mapping = underTest.getTypeMapResource('rtctypemap.json')
-		
-		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
-		
-		def ccmWits = new XmlSlurper().parse(new File(testWorkItemFileName))
-		
-		when: 'call updateWorkitemTemplates'
-		def result = underTest.updateWorkitemTemplates('', project, mapping, ccmWits)
-		
-		then: 'throws null pointer'
-		thrown NullPointerException
-	}
-	
-	def 'getWITMapping success flow.'() {
-		given: 'No stubs'
-		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
-		
-		def wits = new XmlSlurper().parse(new File(testWorkItemFileName))
-		
-		when: 'call getWITMapping'
-		def result = underTest.getWITMapping(mapping, wits)
-		
-		then: 'No exception'
-		true
-	}
-	
 	def 'ensureWITChanges success flow.'() {
 		given: 'Stub data'
 		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
@@ -336,59 +238,6 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		}
 		return wits
 	}
-	
-	
-	def 'getTranslateMapping success flow one' () {
-		given: 'setup data'
-		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
-		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
-		def ccmWits = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
-		
-		and: 'stub rest call'
-		String json = this.getClass().getResource('/testdata/processfields.json').text
-		JsonSlurper js = new JsonSlurper()
-		def out = js.parseText(json)
-		1 * genericRestClient.get(_) >> out
-		
-		when: 'call getTranslateMapping'
-		def result = underTest.getTranslateMapping('', project, mapping, ccmWits)
-		
-		then: 'No exception'
-		true
-	}
-	
-	
-	def 'getTranslateMapping success flow two' () {
-		given: 'setup data'
-		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)
-		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
-		def ccmWits = new XmlSlurper().parse(new File('./src/test/resources/testdata/workitems.xml'))
-		
-		and: 'stub rest call for process fields'
-		String json = this.getClass().getResource('/testdata/processfields.json').text
-		JsonSlurper js = new JsonSlurper()
-		def out = js.parseText(json)
-		1 * genericRestClient.get(_) >> out
-		
-		when: 'call getTranslateMapping'
-		def result = underTest.getTranslateMapping('', project, mapping, ccmWits)
-		
-		then: 'result != null'
-		true
-	}
-
-	
-	def 'getLinkMapping success flow' () {
-		given: 'Setup return data'
-		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
-		
-		when: 'call getLinkMapping'
-		def result = underTest.getLinkMapping(mapping)
-		
-		then: 'result != null'
-		result != null
-	}
-	
 	
 	def 'getWIT success flow' () {
 		given: 'stub rest call for work item type data'
@@ -616,30 +465,6 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		true
 	}
 	
-	
-	def 'requiresField success flow' () {
-		given: 'setup arguments for requiresField'
-		def field = new JsonSlurper().parseText(getClass().getResource('/testdata/field.json').text)
-		def witMapping = new XmlSlurper().parse(new File(testMappingFileName))
-		when: 'call requiresField'
-		def result = underTest.requiresField(field, witMapping)
-		then: 'result == true'
-		result == true
-	}
-	
-	
-	def 'addUnmappedFields exception flow' () {
-		given: 'setup arguments for addUnmappedField'
-		def wit = new JsonSlurper().parseText(getClass().getResource('/testdata/actualwit.json').text)
-		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
-		def witMap = [:]
-		
-		when: 'call addUnmappedFields'
-		def result = underTest.addUnmappedFields(witMap, wit, mapping)
-		
-		then: 'throws MissingFieldException'
-		thrown MissingFieldException
-	}
 }
 
 @TestConfiguration
