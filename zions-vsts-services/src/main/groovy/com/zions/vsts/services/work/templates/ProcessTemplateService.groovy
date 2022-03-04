@@ -63,35 +63,229 @@ public class ProcessTemplateService {
 	
     public ProcessTemplateService() {
 	}
+	// The following public methods are the main entry points for extracting and updating (synching) WIT metadata
+	// Extracts all WIT metadata from a source ADO org
+	public def extractWitMetadata(collection, project, String wiName, def index, def count) {
+		// Retain source collection and project to support synching to a target collection
+		sourceCollection = collection
+		sourceProject = project
+		
+		log.info(">>>>>>>>>> $index of $count: Retrieving <$wiName> metadata from $collection...")
+		
+		// Get WIT general properties
+		def wit = getWIT(collection, project, wiName)
+
+		// Initialize the structure that will hold all the WIT data
+		def witChanges = [ensureType: wiName, ensureFields: [], ensureRules: [], ensureStates: []]
+		
+		// Extract WIT rules
+		witChanges.ensureRules = getWITRules(collection, project, wit)
+		
+		// Extract WIT states
+		witChanges.ensureStates = getWITStates(collection, project, wit)
+		
+		// Extract all WIT fields/controls
+		def fieldMap = [:]
+		def witFields = getWITFields(collection, project, wiName)
+		witFields.'value'.each { field ->
+			def fieldDetails = getField(collection, project, field.referenceName)
+			String type = 'string'
+			if (!fieldDetails) {
+				log.error("Could ot get field details for ${field.referenceName}")
+				return
+			}
+			type = getFieldType(fieldDetails)
+			def cField = [name: "${field.name}", label: "${fieldDetails.label}", refName:"${field.referenceName}",
+						type: type, description: "${fieldDetails.description}", page: null, section: null, group: null,suggestedValues:[]]
+			field.allowedValues.each { value ->
+				if (type == "integer")
+					cField.suggestedValues.add(value.toInteger())
+				else
+					cField.suggestedValues.add(value)
+			}
+			fieldMap["${field.referenceName}"] = cField
+		}
+		
+		wit.layout.pages.each { page ->
+			page.sections.each { section ->
+				section.groups.each { group ->
+					group.controls.each { control ->
+						def cfield = fieldMap["${control.id}"]
+						if (cfield) {
+							cfield.page = "${page.label}"
+							cfield.section = "${section.id}"
+							cfield.group = "${group.label}"
+							cfield.label = "${control.label}"
+							cfield.visible = "${control.visible}"
+							cfield.readOnly = "${control.readOnly}"
+						} else {
+							cfield = [name: "${control.label}", label: null, refName:"${control.id}",
+									visible:"${control.visible}", readOnly:"${control.readOnly}", type: '',
+									description: 'custom control', page: page.label, section: section.id,
+									group: group.label, control: control]
+							if (control.contribution && control.contribution.contributionId) {
+								fieldMap["${control.id}"] = cfield
+//								println control.id
+							}
+						}
+						// Output controls/fields that are in groups to preserve order
+						if (cfield &&
+							cfield.page != "History" &&
+							cfield.page != "Links" &&
+							cfield.page != "Attachments" &&
+							cfield.name != "")
+							witChanges.ensureFields.add(cfield)
+					}
+				}
+			}
+		}
+		// Output State (only System field not on the layout that we care about)
+		witChanges.ensureFields.add(fieldMap['System.State'])
+		
+		return witChanges
+	}
 	
-	public def getTypeMapResource(fileName) {
-		def data = null
-		if (typeMap.size() > 0) return typeMap
-		try {
-			def s = getClass().getResourceAsStream("/${fileName}")
-			JsonSlurper js = new JsonSlurper()
-			data = js.parse(s)
-			data.typemaps.each { map ->
-				typeMap["${map.source}"] = "${map.target}"
+	// Ensure the creation/update of WIT metadata changes
+	public def ensureWITChanges(def collection , def project, def changes, boolean updateLayout = false) {
+		changes.each { witChange ->
+			def witName = witChange.ensureType
+			log.info("<<<<<<<<<< Applying <$witName> metadata to $collection...")
+			
+			// Make sure the WIT exists.  If not, create it.
+			def wit = ensureWit(collection, project, witName)
+			
+			// Apply any changes to fields/controls
+			witChange.ensureFields.each { witFieldChange ->
+				ensureWitField(collection, project, wit, witFieldChange, updateLayout)
 			}
-		} catch (e) {}
-		return typeMap
-	}
+			
+			// Now, make sure the states are in sync (this will impact rules)
+			ensureWITStates(collection, project, wit, witChange.ensureStates)
+						
+			// Finally, make sure the rules are up to date
+			ensureWITRules(collection, project, wit, witChange.ensureRules)
 
-	public def getNameMapResource(fileName) {
-		def data = null
-		if (nameMap.size()>0) return nameMap
-		try {
-			def s = getClass().getResourceAsStream("/${fileName}")
-			JsonSlurper js = new JsonSlurper()
-			data = js.parse(s)
-			data.namemaps.each { map ->
-				nameMap["${map.source}"] = "${map.target}"
+			
+		}
+	}
+	
+	private def ensureWitField(collection, project, wit, witFieldChange, boolean updateLayout = false) {
+		String refName = "${witFieldChange.refName}"
+		boolean isNewField
+		if (witFieldChange.control) {
+			def layout = ensureWitFieldLayout(collection, project, wit, null, witFieldChange)
+			return
+		}
+		def field = queryForField(collection, project, witFieldChange.refName)
+		if (field == null) {  // New field
+			isNewField = true
+			def pickList = null
+			if (witFieldChange.suggestedValues.size() > 0) {
+				log.info("Creating picklist for field ${witFieldChange.refName}")
+				pickList = createPickList(collection, project, witFieldChange)
 			}
-		} catch (e) {}
-		return nameMap
-	}
+			field = createField(collection, project, witFieldChange, pickList)
+			// Bug??? API does not return the field referenceName in the response
+			// So have to fetch field to get full field content
+			field = queryForField(collection, project, witFieldChange.refName)
+		}
+		else { // Field already exists, need to update it
+			// Make sure field type matches
+			if (!checkTypeMatch(witFieldChange,field)) {
+				log.error("Field type does not match existing field:  refname: ${witFieldChange.refName}, name: ${witFieldChange.name}")
+				return null
+			}
+			
+			// if there is a picklist, make sure it is up to date
+			def pickList = null
+			if (witFieldChange.suggestedValues.size() > 0 && field.picklistId) {
+				pickList = updatePickList(collection, project, witFieldChange, field.picklistId)
+			}
+			if ("${field.referenceName}".substring(0,6) == "Custom.")
+				field = updateField(collection, project, witFieldChange, pickList, field)
 
+		}
+		
+		// Make sure the field has been added to this WIT, and update the field layout on the WIT editor form
+		if (field == null) {
+			log.error("Unable to create field:  refname: ${witFieldChange.refName}, name: ${witFieldChange.name}")
+			return null
+		}
+		def witField
+		if (!isNewField) witField = getWITField(collection, project, wit.referenceName, field.referenceName)
+		if (witField == null || "${field.referenceName}" != "${witField.referenceName}") {
+			witField = addWITField(collection, project, wit.referenceName, field.referenceName, field.type)
+		}
+		if (witField != null && updateLayout) {
+			def layout = ensureWitFieldLayout(collection, project, wit, field, witFieldChange)
+		}
+		
+	}
+	
+	private def ensureWITRules(collection, project, wit, ruleChanges) {
+		// If rules don't match, do complete refresh (update api does not work)
+		def existingRules = getWITRules(collection, project, wit)
+		if (!rulesCompare(existingRules, ruleChanges)) {
+			log.info("Refreshing WIT rules")
+			existingRules.each { existingRule ->
+				deleteWITRule(collection, project, wit, existingRule.id)
+			}
+			
+			// Create new rules
+			ruleChanges.each() { ruleChange ->
+				addWITRule(collection, project, wit, ruleChange)
+			}
+		}
+	}
+	
+	private boolean rulesCompare(existingRules, ruleChanges) {
+		if (existingRules.size() != ruleChanges.size())
+			return false		
+			
+		boolean match = true
+		ruleChanges.each() { ruleChange ->
+			if (!match) return
+			// See if the rule exists
+			def existingRule = existingRules.find { rule ->
+				"${rule.name}" == "${ruleChange.name}"
+			}
+			// If rule does not exist, no match
+			if (!existingRule)
+				match = false
+
+			// If rule exists, and data is different, then no match
+			else if ((existingRule.actions.toString()!= ruleChange.actions.toString()) ||
+					 (existingRule.conditions.toString()!= ruleChange.conditions.toString()) ||
+					 (existingRule.isDisabled != ruleChange.isDisabled))
+				match = false
+
+		}
+		return match
+	}
+	
+	private def ensureWITStates(collection, project, wit, stateChanges) {
+		// Make sure every source state exists
+		def existingStates = getWITStates(collection, project, wit)
+		def newStates = []
+		stateChanges.each { stateChange ->
+			def foundState = existingStates.find { existingState ->
+				"${stateChange.name}" == "${existingState.name}"
+			}
+			if (!foundState) {
+				// Create new state
+				addWITState(collection, project, wit, stateChange)
+			}
+		}
+	}
+	
+	private def getFieldType(field) {
+		def type = "${field.type}".trim()
+		if (type == 'string' && field.isIdentity == true) {
+			type = 'identity'
+		}
+		return type
+	}
+	
 	def getWorkItemTypes(String collection, String project, expand = 'none', projectProperty = 'System.ProcessTemplateType') {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, projectProperty)
 		def aproject = encode(project)
@@ -131,13 +325,6 @@ public class ProcessTemplateService {
 			query: ['api-version': '5.0-preview.3', '$expand': 'all']
 			)
 		return result;
-	}
-	
-	def getWorkitemTemplateXML(String collection, String project,  String workItemName) {
-		def xml = new StringBuilder(), serr = new StringBuilder()
-		def proc = "witadmin exportwitd /collection:\"${genericRestClient.getTfsUrl()}/${collection}\" /p:\"${project}\" /n:\"${workItemName}\"".execute()
-		proc.waitForProcessOutput(xml, serr)
-		return xml
 	}
 	
 	def getField(String url) {
@@ -194,398 +381,17 @@ public class ProcessTemplateService {
 			)
 		return result;
 	}
-	
-	def updateWorkitemTemplates(def collection, def project, def mapping, def ccmWits) {
-		typeMap = getTypeMapResource(typeMapFileName)
-		nameMap = getNameMapResource(nameMapFileName)
-		def changes = getWITChanges(mapping, ccmWits)
-		
-		def result = ensureWITChanges(collection, project, changes)
-	}
-	
-	def getWITChanges(def mapping, def ccmWits) {
-		
-		def changes = []
-		def defaultMapping = getDefaultMapping(mapping)
-		ccmWits.each { wit ->
-//			def mapping = getWITMapping(mapping, wit)
-			if (!isExcluded(mapping, wit)) {
-				if (!hasMapping(mapping, wit)) {
-					def witChanges = [ensureType: "${wit.WORKITEMTYPE.@name}", ensureFields: []]
-					witChanges = setFieldChanges(witChanges, wit, defaultMapping)
-					changes.add(witChanges)
-				} else {
-					def witMapping = getWITMapping(mapping, wit)
-					def witChanges = [ensureType: "${witMapping.@target}", ensureFields: []]
-					witChanges = setFieldChanges(witChanges, wit, witMapping)
-					changes.add(witChanges)
-				}
-			}
-		}
-		return changes
-		
-	}
-	// Extracts all WIT fields/controls and rules
-	def translateWitChanges(collection, project, String wiName) {
-		// Retain source collection and project to support synching to a target collection
-		sourceCollection = collection
-		sourceProject = project
-		
-		log.info(">>>>>>>>>> Retrieving <$wiName> metadata from $collection...")
-		
-		// Get WIT general properties
-		def wit = getWIT(collection, project, wiName)
 
-		// Initialize the structure that will hold all the WIT data		
-		def witChanges = [ensureType: wiName, ensureFields: [], ensureRules: [], ensureStates: []]
-		
-		// Extract WIT rules
-		witChanges.ensureRules = getWITRules(collection, project, wit)
-		
-		// Extract WIT states
-		witChanges.ensureStates = getWITStates(collection, project, wit)
-		
-		// Extract all WIT fields/controls
-		def fieldMap = [:]
-		def witFields = getWITFields(collection, project, wiName)
-		witFields.'value'.each { field ->
-			def fieldDetails = getField(collection, project, field.referenceName)
-			String type = 'string'
-			if (!fieldDetails) {
-				log.error("Could ot get field details for ${field.referenceName}")
-				return
-			}
-			type = getFieldType(fieldDetails)
-			def cField = [name: "${field.name}", label: "${fieldDetails.label}", refName:"${field.referenceName}", 
-						type: type, description: "${fieldDetails.description}", page: null, section: null, group: null,suggestedValues:[]]
-			field.allowedValues.each { value ->
-				if (type == "integer")
-					cField.suggestedValues.add(value.toInteger())
-				else
-					cField.suggestedValues.add(value) 
-			}
-			fieldMap["${field.referenceName}"] = cField
-			//witChanges.ensureFields.add(cField)
-		}
-		
-		wit.layout.pages.each { page ->
-			page.sections.each { section ->
-				section.groups.each { group ->
-					group.controls.each { control ->
-						def cfield = fieldMap["${control.id}"]
-						if (cfield) {
-							cfield.page = "${page.label}"
-							cfield.section = "${section.id}"
-							cfield.group = "${group.label}"
-							cfield.label = "${control.label}"
-							cfield.visible = "${control.visible}"
-							cfield.readOnly = "${control.readOnly}"
-						} else {
-							cfield = [name: "${control.label}", label: null, refName:"${control.id}", 
-									visible:"${control.visible}", readOnly:"${control.readOnly}", type: '', 
-									description: 'custom control', page: page.label, section: section.id, 
-									group: group.label, control: control]
-							if (control.contribution && control.contribution.contributionId) {
-								fieldMap["${control.id}"] = cfield
-//								println control.id
-							}
-						}
-						// Output controls/fields that are in groups to preserve order
-						if (cfield && 
-							cfield.page != "History" && 
-							cfield.page != "Links" && 
-							cfield.page != "Attachments" &&
-							cfield.name != "") 
-							witChanges.ensureFields.add(cfield)
-					}
-				}
-			}
-		}
-		// Output State (only System field not on the layout that we care about)
-		witChanges.ensureFields.add(fieldMap['System.State'])
-		
-		return witChanges
-	}
-	def getFieldType(field) {
-		def type = "${field.type}".trim()
-		if (type == 'string' && field.isIdentity == true) {
-			type = 'identity'
-		}
-		return type
-	}
-	def getLinkMapping(mapping) {
-		def ilinkMapping = [:]
-		mapping.links.link.each { link -> 
-			ilinkMapping["${link.@source}"] = link
-		}
-		return ilinkMapping
-	}
-	
-	def getTranslateMapping(def collection, def project, def mapping, def ccmWits) {
-		def outType = queryForField(collection, project, 'stuff')
-		def defaultMapping = getDefaultMapping(mapping)
-		def translateMapping = [:]
-		ccmWits.each { wit ->
-			if (!isExcluded(mapping, wit)) {
-				if (!hasMapping(mapping, wit)) {
-					def witMap = [source: "${wit.WORKITEMTYPE.@name}", target: "${wit.WORKITEMTYPE.@name}", fieldMaps: [], defaultMap: null]
-					witMap = addMappedFields(witMap, defaultMapping)
-					witMap = addUnmappedFields(witMap, wit, defaultMapping)
-					translateMapping["${wit.WORKITEMTYPE.@name}"] = witMap
-				} else {
-					def witMapping = getWITMapping(mapping, wit)
-					def witMap = [source: "${witMapping.@source}", target: "${witMapping.@target}", fieldMaps: [], defaultMap: null]
-					witMap = addMappedFields(witMap, witMapping)
-					witMap = addUnmappedFields(witMap, wit, witMapping)
-					translateMapping["${witMapping.@source}"] = witMap
-				}
-			}
-		}
-		return translateMapping
-	}
-	
-	boolean isExcluded(mapping, wit) {
-		if (mapping.exclude == null) return false
-		def excluded = mapping.exclude.wit.findAll { awit ->
-			"${awit.@name}" == "${wit.WORKITEMTYPE.@name}"
-		}
-		return excluded.size() != 0
-	}
-	
-	def addMappedFields(witMap, mapping ) {
-		mapping.field.each { field ->
-			def vstsField = queryForField(null, null, "${field.@target}")
-			if (vstsField != null) {
-				def outType = vstsField.type
-				def fieldMap = [source: "${field.@source}", target: "${field.@target}", outName: "${vstsField.name}", outType: outType, valueMap: [], defaultMap: null]
-				if (field.value != null) {
-					field.value.each { value ->
-						fieldMap.valueMap.add([source: "${value.@source}", target: "${value.@target}"])
-					}
-				}
-				field.defaultvalue.each { dV ->
-					fieldMap.defaultMap = [target:"${field.defaultvalue.@target}"]					
-				}
-				witMap.fieldMaps.add(fieldMap)
-			
-			}
-		}
-		return witMap
-		
-	}
-	
-	def addUnmappedFields(witMap, wit, mapping) {
-		wit.WORKITEMTYPE.FIELDS.FIELD.each { field ->
-			if (requiresField(field, mapping)) {
-				def vstsField = queryForField(null, null, "${externalName}.${field.@refname}")
-				if (vstsField != null) {
-					def outType = vstsField.type
-					def outName = "${field.@name}"
-					if (nameMap[outName] != null) {
-						outName = nameMap[outName]
-					}
-					def fieldMap = [source: "${field.@refname}", target: "${externalName}.${field.@refname}", outName: outName, outType: outType, valueMap: []]
-					witMap.fieldMaps.add(fieldMap)
-				}
-			}
-		}
-		return witMap
-	}
-	
-	def setFieldChanges(witChanges, wit, witMapping) {
-		wit.WORKITEMTYPE.FIELDS.FIELD.each { field -> 
-			if (requiresField(field, witMapping)) {
-				def type = 'string'
-				String key = "${field.@type}"
-				if (typeMap[key] != null) {
-					type = typeMap[key]
-				}
-				def refName = "${externalName}.${field.@refname}"
-				def name = "${field.@name}"
-				if (nameMap[name] != null) {
-					name = nameMap[name]
-				}
-				def groupName = "${externalName}"
-				if ("${type}" == 'html') {
-					groupName = "${name}"
-				}
-				def cField = [name:name, refName:refName, type:type, description: field.HELPTEXT.text(), page: "${externalName}", section: 'Section1', group: "${groupName} Fields",suggestedValues:[]]
-				if (field.ALLOWEDVALUES != null) {
-					field.ALLOWEDVALUES.LISTITEM.each { item ->
-						cField.suggestedValues.add("${item.@value}")
-					}
-				}
-				witChanges.ensureFields.add(cField)
-			}
-		}
-		witMapping.newfields.field.each { field ->
-			def cField = [name:"${field.@name}", refName:"${field.@refname}", type:"${field.@type}", description: "Imported ${field.@name}", page: "${field.@page}", section: "${field.@section}", group: "${field.@group}",suggestedValues:[]]
-			witChanges.ensureFields.add(cField)
-		}
-		return witChanges
-	}
-	
-	
-	boolean requiresField(field, witMapping) {
-		boolean reqField = true
-		if ("${witMapping.@translateUnmappedFields}" == 'false') {
-			return false;
-		}
-		witMapping.field.each { witField ->
-			if ("${witField.@source}" == "${field.@refname}") {
-				reqField = false
-			}
-		}
-		witMapping.excluded.field.each { mField ->
-			if ("${mField.@name}" == "${field.@refname}") {
-				reqField = false
-			}
-		}
-		return reqField
-	}
-	
-	def getWITMapping(mapping, wit) {
-		def witMapping = null
-		mapping.wit.each { witMap ->
-			if ("${witMap.@source}" == "${wit.WORKITEMTYPE.@name}") {
-				witMapping = witMap
-			}
-		}
-		return witMapping
-	}
-
-	
-	def getDefaultMapping(mapping) {
-		def witMapping = null
-		mapping.wit.each { witMap ->
-			if ("${witMap.@source}" == 'Default') {
-				witMapping = witMap 
-			}
-		}
-		return witMapping
-	}
-	
-	boolean hasMapping(mapping, wit) {
-		boolean hasMap = false
-		mapping.wit.each { witMap ->
-			if ("${witMap.@source}" == "${wit.WORKITEMTYPE.@name}") {
-				hasMap = true
-			}
-		}
-		return hasMap
-
-	}
-	
-	// Create/update WIT using WIT definition (changes)
-	def ensureWITChanges(def collection , def project, def changes, boolean updateLayout = false) {
-		changes.each { witChange -> 
-			def witName = witChange.ensureType
-			log.info("<<<<<<<<<< Applying <$witName> metadata to $collection...")
-			
-			// Make sure the WIT exists.  If not, create it.
-			def wit = ensureWit(collection, project, witName)
-			
-			// Apply any changes to fields/controls
-			witChange.ensureFields.each { witFieldChange ->
-				ensureWitField(collection, project, wit, witFieldChange, updateLayout)
-			}
-			
-			// Now that all fields exist, make sure the rules are up to date
-			ensureWITRules(collection, project, wit, witChange.ensureRules)
-			
-			// Finally, make sure the states are in sync
-			ensureWITStates(collection, project, wit, witChange.ensureStates)
-			
-		}
-	}
-	
-	def ensureWitField(collection, project, wit, witFieldChange, boolean updateLayout = false) {
-		String refName = "${witFieldChange.refName}"
-		boolean isNewField
-		if (witFieldChange.control) {
-			def layout = ensureWitFieldLayout(collection, project, wit, null, witFieldChange)
-			return
-		}
-		def field = queryForField(collection, project, witFieldChange.refName)
-		if (field == null) {  // New field
-			isNewField = true
-			def pickList = null
-			if (witFieldChange.suggestedValues.size() > 0) {
-				log.info("Creating picklist for field ${witFieldChange.refName}")
-				pickList = createPickList(collection, project, witFieldChange)
-			}
-			field = createField(collection, project, witFieldChange, pickList)
-			// Bug??? API does not return the field referenceName in the response
-			// So have to fetch field to get full field content
-			field = queryForField(collection, project, witFieldChange.refName)
-		} 
-		else { // Field already exists, need to update it
-			// Make sure field type matches
-			if (!checkTypeMatch(witFieldChange,field)) {
-				log.error("Field type does not match existing field:  refname: ${witFieldChange.refName}, name: ${witFieldChange.name}")
-				return null
-			}
-			
-			// if there is a picklist, make sure it is up to date
-			def pickList = null
-			if (witFieldChange.suggestedValues.size() > 0 && field.picklistId) {
-				pickList = updatePickList(collection, project, witFieldChange, field.picklistId)
-			}
-			if ("${field.referenceName}".substring(0,6) == "Custom.")
-				field = updateField(collection, project, witFieldChange, pickList, field)
-
-		}
-		
-		// Make sure the field has been added to this WIT, and update the field layout on the WIT editor form
-		if (field == null) {
-			log.error("Unable to create field:  refname: ${witFieldChange.refName}, name: ${witFieldChange.name}")
-			return null
-		}
-		def witField
-		if (!isNewField) witField = getWITField(collection, project, wit.referenceName, field.referenceName)
-		if (witField == null || "${field.referenceName}" != "${witField.referenceName}") {
-			witField = addWITField(collection, project, wit.referenceName, field.referenceName, field.type)
-		}
-		if (witField != null && updateLayout) {
-			def layout = ensureWitFieldLayout(collection, project, wit, field, witFieldChange)
-		}
-		
-	}
-	
-	def ensureWITRules(collection, project, wit, ruleChanges) {
-		log.info("Refreshing WIT rules")
-		// Delete any existing rules (update api does not work)
-		def existingRules = getWITRules(collection, project, wit)
-		existingRules.each { existingRule ->
-			deleteWITRule(collection, project, wit, existingRule.id)
-		}
-		
-		// Create new rules
-		ruleChanges.each() { ruleChange ->
-			addWITRule(collection, project, wit, ruleChange)
-		}		
-	}
-	
-	def ensureWITStates(collection, project, wit, stateChanges) {
-		// Make sure every source state exists
-		def existingStates = getWITStates(collection, project, wit)
-		def newStates = []
-		stateChanges.each { stateChange ->
-			def foundState = existingStates.find { existingState ->
-				"${stateChange.name}" != "${existingState.name}"
-			}
-			if (!foundState) {
-				// Create new state
-				addWITState(collection, project, wit, stateChange)
-			}
-		}
-	}
 
 	// Make sure import field type matches existing field type in target org
 	def checkTypeMatch(def witFieldChange, def field) {
-		if (witFieldChange.type == field.type)
+		if ("${witFieldChange.refName}".substring(0,6) != 'Custom')
+			return true // don't worry about system fields
+		else if ("${witFieldChange.type}" == "${field.type}" &&
+				(witFieldChange.suggestedValues == [] && field.isPicklist == false) ||
+				(witFieldChange.suggestedValues != [] && field.isPicklist == true))
 			return true
-		else if (witFieldChange.type == 'identity' && field.isIdentity == true)
+		else if ("${witFieldChange.type}" == 'identity' && field.isIdentity == true)
 			return true
 		else
 			return false
@@ -643,6 +449,7 @@ public class ProcessTemplateService {
 		def control = group.controls.find { control ->
 			"${control.id}" == "${witFieldChange.refName}"
 		}
+
 		if (control == null) {
 		// Control does not currently exist.  It must be added
 			// Check if this is an external control with associated field
@@ -1027,7 +834,6 @@ public class ProcessTemplateService {
 	
 	def createWorkitemTemplate(collection, project, name) {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
-		def defaultWitFields = getWITFields(collection, project, "${this.defaultWITName}")
 		def defaultWit = getWIT(collection, project, "${this.defaultWITName}")
 		
 		defaultWit.name = name
@@ -1056,11 +862,6 @@ public class ProcessTemplateService {
 			)
 		def actualWit = getWIT(collection, project, name)
 		
-		// Add fields from default WIT since there are certain fields needed by our back-end processes
-		defaultWitFields.value.each { field ->
-			addWITField(collection, project, actualWit.referenceName, field.referenceName, field.type)
-		}
-		ensureLayout(collection, project, actualWit, defaultWit)
 //		def wStr = new JsonBuilder(actualWit).toPrettyString()
 //		File s = new File('actualwit.json')
 //		def w = s.newDataOutputStream()
@@ -1179,10 +980,13 @@ public class ProcessTemplateService {
 			)
 
 		def customStates = []
-		result.value.each() { state ->
-			if (state.customizationType == 'custom')
-				customStates.add(state)
+			if (result) {
+			result.value.each() { state ->
+				if (state.customizationType == 'custom')
+					customStates.add(state)
+			}
 		}
+		return customStates
 	}
 	def getWITRules(collection, project, wit) {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
@@ -1194,11 +998,12 @@ public class ProcessTemplateService {
 			query: ['api-version': '7.1-preview.2']
 			)
 		def customRules = []
-		result.value.each() { rule ->
-			if (rule.customizationType == 'custom')
-				customRules.add(rule)
+		if (result) {
+			result.value.each() { rule ->
+				if (rule.customizationType == 'custom')
+					customRules.add(rule)
+			}	
 		}
-
 		return customRules
 	}
 	def addWITState(collection, project, wit, stateChange) {
