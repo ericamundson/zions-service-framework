@@ -34,6 +34,13 @@ trait MessageK8sConfigTrait {
 	@Value('${spring.k8srabbitmq.password:}')
 	String k8sPassword;
 	
+	@Value('${spring.rabbitmq.username:}')
+	String username;
+	@Value('${spring.rabbitmq.password:}')
+	String password;
+	
+	@Value('${spring.rabbitmq.host:localhost}')
+	String host;
 
 	CachingConnectionFactory k8sConnectionFactory() {
 		CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(k8shost, k8sport);
@@ -41,6 +48,14 @@ trait MessageK8sConfigTrait {
 		cachingConnectionFactory.setPassword(k8sPassword);
 		return cachingConnectionFactory;
 	}
+	
+	CachingConnectionFactory connectionFactory() {
+		CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
+		cachingConnectionFactory.setUsername(username);
+		cachingConnectionFactory.setPassword(password);
+		return cachingConnectionFactory;
+	}
+
 	
 
 	@Bean
@@ -52,5 +67,12 @@ trait MessageK8sConfigTrait {
 	}
 	
 	//@Primary
+	@Bean
+	@Qualifier('rabbitTemplate')
+	public RabbitTemplate rabbitTemplate() {
+		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
+		//rabbitTemplate.setMessageConverter(jsonMessageConverter());
+		return rabbitTemplate;
+	}
 
 }
