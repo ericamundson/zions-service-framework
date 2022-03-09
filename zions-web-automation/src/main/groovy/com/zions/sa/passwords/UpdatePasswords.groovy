@@ -45,9 +45,18 @@ class UpdatePasswords  implements CliWebBot {
 	
 	@Autowired
 	LoginPage loginPage
-	
+
 	@Value('${tfs.collection:}')
 	String collection
+	
+	@Value('${tfs.sausers:}')
+	String[] saccounts
+	
+	@Value('${tfs.oldpws:}')
+	String[] saOldPasswords
+	
+	@Value('${tfs.newpws:}')
+	String[] saNewPasswords
 	
 	String email
 	String oldpw
@@ -57,6 +66,8 @@ class UpdatePasswords  implements CliWebBot {
 		
 		
 		// Get all projects for Org
+		
+		
 		def projects = ["abc", "bcd"]
 		if (!projects) {
 			log.error("Could not retrieve projects for: $collection")
@@ -75,11 +86,6 @@ class UpdatePasswords  implements CliWebBot {
 	public def execute(ApplicationArguments data, WebDriver driver, WebDriverWait wait, CompletedSteps steps) {
 	
 		// Get all service account usernames
-		//def saccounts = ["svc-cloud2-adomaint001@zionsbancorporation.onmicrosoft.com", "svc-cloud-adomaint002@zionsbancorporation.onmicrosoft.com"]
-		def saccounts = ["joe@msn.com", "pete@msn.com"]
-		println(saccounts)
-		def saOldPasswords = ["oldpw", "oldpw2"]
-		def saNewPasswords = ["newpw", "newpw2"]
 
 		//******** for each service account access the password change page ******
 		for(int i=0; i<saccounts.size(); i++) {
@@ -111,9 +117,9 @@ class UpdatePasswords  implements CliWebBot {
 				
 			}
 			catch (e) {
-				log.error("Aborting: ${e.message}")
-				log.error(steps.formatForLog())
-				return
+				log.error("Unable to update password for the user $email: ${e.message}")
+				//log.error(steps.formatForLog())
+				//return
 			}
 			
 						

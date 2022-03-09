@@ -10,7 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
-
+import org.springframework.context.annotation.PropertySource
 import com.zions.common.services.attachments.IAttachments
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
@@ -30,6 +30,7 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
 @Configuration
 @Profile("setpassword")
+@PropertySource("classpath:pwapplication.properties")
 @ComponentScan(["com.zions.sa.passwords","com.zions.auto","com.zions.vsts.services.asset","com.zions.vsts.services.work","com.zions.vsts.services.admin","com.zions.common.services.logging","com.zions.common.services.notification"])
 public class SetPasswordAppConfig {
 	@Bean

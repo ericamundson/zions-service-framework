@@ -91,13 +91,13 @@ class SetPasswordPage extends BasePage {
 		driver.findElement(By.id(submitButton)).click()
 		//If successfully updated the following message will appear:
 		/*Your password is successfully updated*/
-		String message = driver.findElement(By.id("errorMessage")).getText() == "An error occurred. Contact your administrator for more information."
-		println(message)
+		def message = driver.findElement(By.id("expiredNotification")).getText() == "Your password is successfully updated."
+		def abc
 		if (message) {
-			return false
+			return true
 		}
 		else {
-			return true
+			return false
 		}
 		//dev Properties show-  span#expiredNotification
 		Thread.sleep(10000) //pause 10 sec
