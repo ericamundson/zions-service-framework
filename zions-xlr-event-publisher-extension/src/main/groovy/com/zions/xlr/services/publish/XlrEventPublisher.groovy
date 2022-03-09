@@ -17,13 +17,13 @@ class XlrEventPublisher implements XLReleaseEventListener {
 		 } catch(Exception ex) {
 			println("Unable to get Hostname")
 		}
-		def profileMap = [utlxa221: 'default', utlxa220: 'test', drutlxa221: 'dr', utmsdev0527: 'dev']
-		def mqHost = [utlxa221: 'utmvpi0144', utlxa220: '172.20.104.15', drutlxa221: 'utmvpi0144', utmsdev0527: '172.20.104.15']
-		String profile = 'default'
+		def profileMap = [utlxa221: 'k8sprod', utlxa220: 'test', drutlxa221: 'dr', utmsdev0527: 'dev']
+		def mqHost = [utlxa221: 'utlxvpi00286', utlxa220: '172.20.104.15', drutlxa221: 'utmvpi0144', utmsdev0527: '172.20.104.15']
+		String profile = 'k8sprod'
 		if (profileMap[hostName] ){
 			profile = profileMap[hostName]
 		}
-		String host = 'utmvpi0144'
+		String host = 'utlxvpi00286'
 		if (mqHost[hostName]) {
 			host = mqHost[hostName]
 		}
