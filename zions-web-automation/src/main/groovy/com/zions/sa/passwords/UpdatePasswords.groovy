@@ -61,23 +61,17 @@ class UpdatePasswords  implements CliWebBot {
 	String email
 	String oldpw
 	String newpw
+	//def count
 	
 	public boolean checkPreconditions(ApplicationArguments data) {
 		
+
 		
-		// Get all projects for Org
-		
-		
-		def projects = ["abc", "bcd"]
-		if (!projects) {
-			log.error("Could not retrieve projects for: $collection")
+		if (!saccounts || !saOldPasswords || !saNewPasswords) {
+			log.error("please load user login old password and new password in properties file")
 			return false
 		}
-		
-		if (projects.size() == 0) {
-			log.info("No more projects to process.  To process all projects, delete the history")
-			return false
-		}
+
 		else
 			return true
 	
@@ -85,25 +79,26 @@ class UpdatePasswords  implements CliWebBot {
 	
 	public def execute(ApplicationArguments data, WebDriver driver, WebDriverWait wait, CompletedSteps steps) {
 	
-		// Get all service account usernames
+		// Get all service account usernames and passwords
 
 		//******** for each service account access the password change page ******
 		for(int i=0; i<saccounts.size(); i++) {
 			def numAccountsToProcess = saccounts.size()
-			//def count = 0
+			
 			email = saccounts[i]
 			oldpw = saOldPasswords[i]
 			newpw = saNewPasswords[i]
-			//def test = "abc"
-			
+
+			//update the passwords			
 			try {
-				log.info("There are $numAccountsToProcess accounts to process")
+				
 				if (!setPasswordPage) {
 					log.error("Could not load password settings page for user $saccounts[i]")
 					return
 				}
 				
-				log.info("*** Processing password updates for user: $saccounts[i]")
+				int count = i + 1
+				log.info("*** Updating password for $count of $numAccountsToProcess accounts for user: $email")
 				def updatePw = setPasswordPage.setNewPassword(email, oldpw, newpw, newpw)
 				
 				if (updatePw) {
@@ -117,9 +112,8 @@ class UpdatePasswords  implements CliWebBot {
 				
 			}
 			catch (e) {
-				log.error("Unable to update password for the user $email: ${e.message}")
-				//log.error(steps.formatForLog())
-				//return
+				log.error("Unable to update password for the user $email: ${e.message} moving to next user")
+
 			}
 			
 						

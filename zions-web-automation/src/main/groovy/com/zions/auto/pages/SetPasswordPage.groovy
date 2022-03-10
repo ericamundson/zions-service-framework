@@ -28,49 +28,18 @@ class SetPasswordPage extends BasePage {
 	@Value('${pw.url:}')
 	String pwUrl
 		
-	//static String emailBox = 'input#userNameInput.text.fullWidth'
 	static String emailBox = 'userNameInput'
-												
-		//div#userNameArea
 	static String oldpwBox = 'oldPasswordInput'
-							//div#oldPasswordArea
-	
 	static String newpwBox = 'newPasswordInput'
-							//div#newPasswordArea
-	
 	static String confpwBox = 'confirmNewPasswordInput'
-							//div#confirmNewPasswordArea
-	
 	static String submitButton = 'submitButton'
-							//div#submissionArea.submitMargin
-	
 	static String cancelButtom = 'cancelButton'
-							//div#submissionArea.submitMargin
-		
 
-	
-	boolean signout() {
-		
-		error = null
-		try {
-			
-
-			
-		}
-		catch (e) {
-			error = e
-			return false
-		}
-	}
 	
 	def setNewPassword(String email, String oldpw, String newpw, String confpw) {
 		driver.get("$pwUrl")
 		driver.switchTo().defaultContent()
-		
-		 //driver.findElement(By.id("userNameInput")).click()
-		 //driver.findElement(By.id("userNameInput")).sendKeys("myemail@email.com")
-		
-		//wait.until(ExpectedConditions.elementToBeClickable(By.id(emailBox)))
+
 		driver.findElement(By.id(emailBox)).click()
 		driver.findElement(By.id(emailBox)).sendKeys(email)
 		
@@ -92,17 +61,15 @@ class SetPasswordPage extends BasePage {
 		//If successfully updated the following message will appear:
 		/*Your password is successfully updated*/
 		def message = driver.findElement(By.id("expiredNotification")).getText() == "Your password is successfully updated."
-		def abc
+		
 		if (message) {
 			return true
 		}
 		else {
 			return false
 		}
-		//dev Properties show-  span#expiredNotification
-		Thread.sleep(10000) //pause 10 sec
-		//return true
-		//return true
 		
+		Thread.sleep(10000) //pause 10 sec
+				
 	}
 }
