@@ -12,16 +12,12 @@ import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.context.annotation.PropertySource
 import com.zions.common.services.attachments.IAttachments
-import com.zions.common.services.cache.CacheManagementService
-import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.cli.action.CliAction
 import com.zions.common.services.command.CommandManagementService
 import com.zions.common.services.notification.NotificationService
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.mr.services.rest.MrGenericRestClient
 import com.zions.vsts.services.asset.SharedAssetService
-import com.zions.vsts.services.attachments.AttachmentManagementService
-import com.zions.vsts.services.test.TestManagementService
 import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 
 
@@ -31,25 +27,14 @@ import com.zions.vsts.services.tfs.rest.MultiUserGenericRestClient
 @Configuration
 @Profile("setpassword")
 @PropertySource("classpath:pwapplication.properties")
-@ComponentScan(["com.zions.sa.passwords","com.zions.auto","com.zions.vsts.services.asset","com.zions.vsts.services.work","com.zions.vsts.services.admin","com.zions.common.services.logging","com.zions.common.services.notification"])
+@ComponentScan(["com.zions.sa.passwords","com.zions.auto","com.zions.vsts.services.asset","com.zions.vsts.services.admin","com.zions.common.services.logging","com.zions.common.services.notification"])
 public class SetPasswordAppConfig {
-	@Bean
-	ICacheManagementService cacheManagementService() {
-		return new CacheManagementService('na')
-	}
+
 	
 	@Bean
 	IGenericRestClient genericRestClient() {
 		return new MultiUserGenericRestClient()
 	}
 
-	@Bean
-	IAttachments attachmentService() {
-		return new AttachmentManagementService();
-	}
-	
-	@Bean
-	TestManagementService testService() {
-		return new TestManagementService();
-	}
+
 }

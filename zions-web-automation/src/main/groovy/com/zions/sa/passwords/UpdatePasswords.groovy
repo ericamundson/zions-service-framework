@@ -49,6 +49,9 @@ class UpdatePasswords  implements CliWebBot {
 	@Value('${tfs.collection:}')
 	String collection
 	
+	@Value('${pw.url:}')
+	String pwurl
+	
 	@Value('${tfs.sausers:}')
 	String[] saccounts
 	
@@ -61,7 +64,7 @@ class UpdatePasswords  implements CliWebBot {
 	String email
 	String oldpw
 	String newpw
-	//def count
+
 	
 	public boolean checkPreconditions(ApplicationArguments data) {
 		
@@ -79,7 +82,7 @@ class UpdatePasswords  implements CliWebBot {
 	
 	public def execute(ApplicationArguments data, WebDriver driver, WebDriverWait wait, CompletedSteps steps) {
 	
-		// Get all service account usernames and passwords
+		//Input usernames and passwords in the pwapplication.properties file before running.
 
 		//******** for each service account access the password change page ******
 		for(int i=0; i<saccounts.size(); i++) {
@@ -128,13 +131,10 @@ class UpdatePasswords  implements CliWebBot {
 		log.error("$newFailType: ${e.message}")
 
 	}
+	
 	public Object validate(ApplicationArguments args) throws Exception {
-		def required = ['pw.url']
-		required.each { name ->
-			if (!args.containsOption(name)) {
-				throw new Exception("Missing required argument:  ${name}")
-			}
-		}
+
+
 		return true
 	}
 
