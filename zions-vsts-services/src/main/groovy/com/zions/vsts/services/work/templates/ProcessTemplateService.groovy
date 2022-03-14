@@ -851,8 +851,37 @@ public class ProcessTemplateService {
 		return result
 
 	}
+
+	def createWorkitemTemplate(String collection, String project, String name) {
+		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
+		def defaultWit = getWIT(collection, project, "${this.defaultWITName}")
+		
+		defaultWit.name = name
+		defaultWit.inherits = null
+		defaultWit.referenceName = null
+		defaultWit.id = null
+		defaultWit.description = "Translated work item '${name}' from external system."
+		defaultWit.url = null
+		defaultWit.'class' = null
+		defaultWit.isDisabled = false
+		defaultWit.color = "${genColor()}"
+		defaultWit.icon = 'icon_clipboard'
+		
+		def body = new JsonBuilder(defaultWit).toPrettyString()
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes",
+			body: body,
+			headers: [accept: 'application/json'],
+			query: ['api-version': '5.0-preview.2']
+			
+			)
+		def actualWit = getWIT(collection, project, name)
+		
+		return actualWit;
+	}
 	
-	def createWorkitemTemplate(collection, project, witChanges) {
+	def createWorkitemTemplate(String collection, String project, def witChanges) {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
 		def defaultWit = getWIT(collection, project, "${this.defaultWITName}")
 		
@@ -878,11 +907,6 @@ public class ProcessTemplateService {
 			)
 		def actualWit = getWIT(collection, project, witChanges.name)
 		
-//		def wStr = new JsonBuilder(actualWit).toPrettyString()
-//		File s = new File('actualwit.json')
-//		def w = s.newDataOutputStream()
-//		w << wStr
-//		w.close()
 		return actualWit;
 
 	}
