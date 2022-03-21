@@ -140,7 +140,7 @@ public class ProcessTemplateService {
 														'suggestedValues': suggestedValues]
 								}
 							}
-							cfield = [name: "${control.label}", label: null, refName:"${control.id}",
+							cfield = [name: "${control.label}", label: "${control.label}", refName:"${control.id}",
 									visible:"${control.visible}", readOnly:"${control.readOnly}", type: '',
 									description: 'custom control', page: page.label, section: section.id,
 									group: group.label, control: control, associatedField: associatedField]
