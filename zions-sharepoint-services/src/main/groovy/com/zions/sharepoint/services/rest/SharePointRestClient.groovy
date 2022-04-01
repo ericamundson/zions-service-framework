@@ -16,16 +16,19 @@ import org.springframework.stereotype.Component
 @Component
 @Slf4j
 class SharePointRestClient extends AGenericRestClient {
-	String url;
+	String graphHost
+	String zionsHost
 	String user;
 	String token
 	
 	@Autowired
-	public SharePointRestClient(@Value('$sp.url:}') String url,
-							   @Value('${sp.user:}') String user,
-							   @Value('${sp.token}') String token) {
+	public SharePointRestClient(String graphHost,
+								String zionsHost,
+								String user,
+								String token) {
 
-		this.url = url
+		this.graphHost = graphHost
+		this.zionsHost = zionsHost
 		this.user = user
 		delegate = new ARESTClient(url)
 		delegate.ignoreSSLIssues()
@@ -45,10 +48,12 @@ class SharePointRestClient extends AGenericRestClient {
 		setCredentials(user, token)
 	}
 	
-	public String getUrl() {
-		return url
+	public String getGraphHost() {
+		return graphHost
 	}
-
+	public String getZionsHost() {
+		return zionsHost
+	}
 	@Override
 	void setCredentials(String user, String token) {
 		String auth = "$user:$token".bytes.encodeBase64()

@@ -13,7 +13,7 @@ class SharePointFileManagementService {
 	def listDrives(def site) {
 		def result = sharePointRestClient.get(
 				contentType: ContentType.JSON,
-				uri: "${sharePointRestClient.getUrl()}/beta/sites/zionsbancorporation.sharepoint.com,$site/drives"
+				uri: "https://${sharePointRestClient.getGraphHost()}/beta/sites/${sharePointRestClient.getZionsHost()},$site/drives"
 				)
 		if (result)
 			return result
@@ -23,7 +23,7 @@ class SharePointFileManagementService {
 	def searchFile(def site, def filename) {
 		def result = sharePointRestClient.get(
 				contentType: ContentType.JSON,
-				uri: "${sharePointRestClient.getUrl()}/beta/sites/zionsbancorporation.sharepoint.com,$site/drive/root/search(q=${filename})"
+				uri: "$https://${sharePointRestClient.getGraphHost()}/beta/sites/${sharePointRestClient.getZionsHost()},$site/drive/root/search(q=${filename})"
 				)
 		if (result)
 			return result
@@ -34,7 +34,7 @@ class SharePointFileManagementService {
 	def uploadFile(def site, def fileContent) {
 		def result = sharePointRestClient.put(
 				contentType: ContentType.BINARY,
-				uri: "${sharePointRestClient.getUrl()}/beta/sites/zionsbancorporation.sharepoint.com,$site/drive/items/root:/${fileContent.filename}:/content",
+				uri: "https://${sharePointRestClient.getGraphHost()}/beta/sites/${sharePointRestClient.getZionsHost()},$site/drive/items/root:/${fileContent.filename}:/content",
 				body: fileContent.buf
 				)
 		if (result)
@@ -46,7 +46,7 @@ class SharePointFileManagementService {
 	def uploadFile(def site, def itemid, def fileContent) {
 		def result = sharePointRestClient.put(
 				contentType: ContentType.BINARY,
-				uri: "${sharePointRestClient.getUrl()}/beta/sites/zionsbancorporation.sharepoint.com,$site/drive/items/${itemid}:/content",
+				uri: "https://${sharePointRestClient.getGraphHost()}/beta/sites/${sharePointRestClient.getZionsHost()},$site/drive/items/${itemid}:/content",
 				body: fileContent.buf
 				)
 		if (result)
