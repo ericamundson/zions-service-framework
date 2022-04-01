@@ -25,12 +25,6 @@ if ("${context}" == 'all') {
 	//include ':zions-blueprint-microservice'
 	include ':zions-vsts-rollup-microservice'
 	include ':zions-issue-notification-microservice'
-	//include ':zions-vsts-parent-activation-microservice'
-	//include ':zions-vsts-setcolor-microservice'
-	//include ':zions-vsts-days-to-close-microservice'
-	//include ':zions-vsts-days-to-close-bulkupdate'
-	//include ':zions-vsts-updateiof-microservice'
-	//include ':zions-vsts-mapfield-microservice'
 	include ':zions-vsts-websocket-microservice'
 	include ':zions-vsts-microservice'
 	include ':zions-vsts-event-microservice'
@@ -40,6 +34,8 @@ if ("${context}" == 'all') {
 //	include ':zions-pipeline-services'
 	include ':zions-xlr-event-publisher-extension'
 	//include ':zions-xlrtoado-event-microservice'
+	include ':zions-confluence-services'
+	include ':zions-sharepoint-services'
 }
 if ("${context}" == 'nexus') {
 	include ':zions-common'

@@ -53,12 +53,11 @@ class ExtensionDataManagementService implements IExtensionData {
 	
 	def getExtensionData(String collection, String publisher, String name, String key) {
 		def ekey = URLEncoder.encode(key, 'utf-8').replace('+', '%20')
-		def url = (collection ? "${extUrl}/$collection" : "${extUrl}")
+		def url = (collection ? "${extUrl}/$collection" : "${extUrl}".toString())
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${url}/_apis/ExtensionManagement/InstalledExtensions/${publisher}/${name}/Data/Scopes/Default/Current/Collections/${docCollection}/Documents/${ekey}",
-			headers: [Accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true']
-			//query: query,
+			query: ['api-version': '5.1-preview.1', 'excludeUrls' : 'true']
 			)
 		return result
 	}
@@ -101,7 +100,7 @@ class ExtensionDataManagementService implements IExtensionData {
 			requestContentType: ContentType.JSON,
 			uri: "${url}/_apis/ExtensionManagement/InstalledExtensions/${publisher}/${name}/Data/Scopes/Default/Current/Collections/${docCollection}/Documents",
 			body: body,
-			headers: [Accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true']
+			query: ['api-version': '5.1-preview.1', 'excludeUrls' : 'true']
 			)
 		return result
 
@@ -121,7 +120,7 @@ class ExtensionDataManagementService implements IExtensionData {
 			requestContentType: ContentType.JSON,
 			uri: "${url}/_apis/ExtensionManagement/InstalledExtensions/${publisher}/${name}/Data/Scopes/Default/Current/Collections/${docCollection}/Documents",
 			body: body,
-			headers: [Accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true']
+			query: ['api-version': '5.1-preview.1', 'excludeUrls' : 'true']
 			)
 		return result
 
