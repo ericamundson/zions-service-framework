@@ -38,14 +38,16 @@ public class HeartbeatLoggingConfig implements SchedulingConfigurer {
 	String appName
 	
 	@Value('${heartbeat.minutes:25}')
+	String springHeartbeatMinutes
+	
 	int heartbeatMinutes
-
+	
 	// Heartbeat Implementation
 	@Bean
 	public Executor taskExecutor() {
 		return Executors.newSingleThreadScheduledExecutor();
 	}
-
+	
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
 		taskRegistrar.setScheduler(taskExecutor());
@@ -53,12 +55,20 @@ public class HeartbeatLoggingConfig implements SchedulingConfigurer {
 		  new Runnable() {
 			  @Override
 			  public void run() {
-				  log.info("$appName heartbeat")
+				  if (heartbeatMinutes > 0)
+					  log.info("$appName heartbeat")
 			  }
 		  },
 		  new Trigger() {
 			  @Override
 			  public Date nextExecutionTime(TriggerContext context) {
+				  // Get interval minutes from Environment Var (injected from K8s ConfigMap) or default to spring boot config
+				  if (heartbeatMinutes == 0) {
+					  heartbeatMinutes = springHeartbeatMinutes.toInteger()
+					  if (heartbeatMinutes > 0)
+						  log.info("Heartbeat logging set for every $heartbeatMinutes minutes")
+				  }
+				  
 				  Instant nextExecutionTime = new Date().toInstant()
 					  .plusMillis(heartbeatMinutes * 60000)
 				  return Date.from(nextExecutionTime)
