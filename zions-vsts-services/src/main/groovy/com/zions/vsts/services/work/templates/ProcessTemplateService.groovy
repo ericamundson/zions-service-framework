@@ -53,8 +53,6 @@ public class ProcessTemplateService {
 	@Autowired
 	@Value('${external.name:Attributes}')
 	private String externalName
-	private sourceCollection 
-	private sourceProject
 	private def collectionFields = [:]
 	
 	private def typeMap = [:]
@@ -66,9 +64,6 @@ public class ProcessTemplateService {
 	// The following public methods are the main entry points for extracting and updating (synching) WIT metadata
 	// Extracts all WIT metadata from a source ADO org
 	public def extractWitMetadata(collection, project, String wiName, def index, def count) {
-		// Retain source collection and project to support synching to a target collection
-		sourceCollection = collection
-		sourceProject = project
 		
 		log.info(">>>>>>>>>> $index of $count: Retrieving <$wiName> metadata from $collection...")
 		
@@ -76,7 +71,7 @@ public class ProcessTemplateService {
 		def wit = getWIT(collection, project, wiName)
 
 		// Initialize the structure that will hold all the WIT data
-		def witChanges = [ensureType: wiName, ensureFields: [], ensureRules: [], ensureStates: []]
+		def witChanges = [collection: collection, project: project, ensureType: wit, ensureFields: [], ensureRules: [], ensureStates: []]
 		
 		// Extract WIT rules
 		witChanges.ensureRules = getWITRules(collection, project, wit)
@@ -84,7 +79,7 @@ public class ProcessTemplateService {
 		// Extract WIT states
 		witChanges.ensureStates = getWITStates(collection, project, wit)
 		
-		// Extract all WIT fields/controls
+		// Extract all WIT fields/controls and save to fieldMap
 		def fieldMap = [:]
 		def witFields = getWITFields(collection, project, wiName)
 		witFields.'value'.each { field ->
@@ -106,57 +101,77 @@ public class ProcessTemplateService {
 			fieldMap["${field.referenceName}"] = cField
 		}
 		
+		// Process by page/group layout to preserve order
 		wit.layout.pages.each { page ->
 			page.sections.each { section ->
 				section.groups.each { group ->
 					group.controls.each { control ->
-						def cfield = fieldMap["${control.id}"]
-						if (cfield) {
+						def cfield
+						def foundField = fieldMap["${control.id}"]
+						if (foundField) {
+							// have to clone the field because there could be multiple instances in the WIT layout
+							cfield = new LinkedHashMap<String,Object>(foundField)
 							cfield.page = "${page.label}"
 							cfield.section = "${section.id}"
 							cfield.group = "${group.label}"
 							cfield.label = "${control.label}"
 							cfield.visible = "${control.visible}"
 							cfield.readOnly = "${control.readOnly}"
-						} else {
-							cfield = [name: "${control.label}", label: null, refName:"${control.id}",
+						} else {  // This is a control, not a field
+							// Need to capture field associated with control
+							def associatedField = ''
+							if (control && control.contribution && control.contribution.inputs && control.contribution.inputs.FieldName) {
+								def refName = control.contribution.inputs.FieldName
+								def adoField = queryForField(collection, project, refName)
+								def pickList
+								if (adoField) {
+									def suggestedValues = []
+									if (adoField.isPicklist) {
+										// Retrieve picklist values from picklistID
+										def picklist = getPickList(collection, project, adoField.picklistId)
+										picklist.items.each { val ->
+											suggestedValues.add(val)
+										}
+									}
+									associatedField = [	'name': adoField.name,
+														'refName': refName, 
+														'type': adoField.type,
+														'description': adoField.description,
+														'suggestedValues': suggestedValues]
+								}
+							}
+							cfield = [name: "${control.label}", label: "${control.label}", refName:"${control.id}",
 									visible:"${control.visible}", readOnly:"${control.readOnly}", type: '',
 									description: 'custom control', page: page.label, section: section.id,
-									group: group.label, control: control]
-							if (control.contribution && control.contribution.contributionId) {
-								fieldMap["${control.id}"] = cfield
-//								println control.id
-							}
+									group: group.label, control: control, associatedField: associatedField]
+
 						}
 						// Output controls/fields that are in groups to preserve order
 						if (cfield &&
 							cfield.page != "History" &&
 							cfield.page != "Links" &&
-							cfield.page != "Attachments" &&
-							cfield.name != "")
+							cfield.page != "Attachments")
 							witChanges.ensureFields.add(cfield)
 					}
 				}
 			}
 		}
-		// Output State (only System field not on the layout that we care about)
-		witChanges.ensureFields.add(fieldMap['System.State'])
 		
 		return witChanges
 	}
 	
 	// Ensure the creation/update of WIT metadata changes
-	public def ensureWITChanges(def collection , def project, def changes, boolean updateLayout = false) {
+	public def ensureWITChanges(def collection , def project, def changes) {
 		changes.each { witChange ->
-			def witName = witChange.ensureType
+			def witName = "${witChange.ensureType.name}"
 			log.info("<<<<<<<<<< Applying <$witName> metadata to $collection...")
 			
 			// Make sure the WIT exists.  If not, create it.
-			def wit = ensureWit(collection, project, witName)
+			def wit = ensureWit(collection, project, witChange.ensureType)
 			
 			// Apply any changes to fields/controls
 			witChange.ensureFields.each { witFieldChange ->
-				ensureWitField(collection, project, wit, witFieldChange, updateLayout)
+				ensureWitField(collection, project, wit, witFieldChange)
 			}
 			
 			// Now, make sure the states are in sync (this will impact rules)
@@ -169,54 +184,74 @@ public class ProcessTemplateService {
 		}
 	}
 	
-	private def ensureWitField(collection, project, wit, witFieldChange, boolean updateLayout = false) {
-		String refName = "${witFieldChange.refName}"
-		boolean isNewField
-		if (witFieldChange.control) {
+	private def ensureWitField(collection, project, wit, witFieldChange) {
+		// If this is an external control only, without associated field, just update layout and return
+		// Pass null field
+		if (witFieldChange.control && !witFieldChange.associatedField) {
 			def layout = ensureWitFieldLayout(collection, project, wit, null, witFieldChange)
 			return
 		}
-		def field = queryForField(collection, project, witFieldChange.refName)
+			
+		// Select the field to be updated from witFieldChange
+		def changeField
+		if (witFieldChange.associatedField) // The field is in an external control
+			changeField = witFieldChange.associatedField
+		else 
+			changeField = witFieldChange
+			
+		String refName = "${changeField.refName}"
+		if (!refName) {
+			log.error("Unexpected null refName for field:  ${changeField.toString()}")
+			return null
+		}
+		
+		boolean isNewField
+		def field = queryForField(collection, project, refName)
 		if (field == null) {  // New field
 			isNewField = true
 			def pickList = null
-			if (witFieldChange.suggestedValues.size() > 0) {
-				log.info("Creating picklist for field ${witFieldChange.refName}")
-				pickList = createPickList(collection, project, witFieldChange)
+			if (changeField.suggestedValues.size() > 0) {
+				log.info("Creating picklist for field $refName")
+				pickList = createPickList(collection, project, changeField)
 			}
-			field = createField(collection, project, witFieldChange, pickList)
+			field = createField(collection, project, changeField, pickList)
 			// Bug??? API does not return the field referenceName in the response
 			// So have to fetch field to get full field content
-			field = queryForField(collection, project, witFieldChange.refName)
+			field = queryForField(collection, project, refName)
 		}
-		else { // Field already exists, need to update it
+		else { // Field already exists, check if any updates are needed
 			// Make sure field type matches
-			if (!checkTypeMatch(witFieldChange,field)) {
-				log.error("Field type does not match existing field:  refname: ${witFieldChange.refName}, name: ${witFieldChange.name}")
+			if (!checkTypeMatch(changeField,field)) {
+				log.error("Field type does not match existing field:  refname: $refName, name: ${changeField.name}")
 				return null
 			}
 			
-			// if there is a picklist, make sure it is up to date
-			def pickList = null
-			if (witFieldChange.suggestedValues.size() > 0 && field.picklistId) {
-				pickList = updatePickList(collection, project, witFieldChange, field.picklistId)
+			// if this is a custom field and either there is a picklist, or description has changed, then make update
+			if (refName.substring(0,7) == "Custom.") {
+				def pickList = null
+				if (changeField.suggestedValues.size() > 0 && field.picklistId) {
+					pickList = updatePickList(collection, project, changeField, field.picklistId)
+				}
+				if (field.description != changeField.description) {
+					// Update field description (and picklist if it exists)
+					log.info("Updating field $refName")
+					updateField(collection, project, changeField, pickList, field)
+				}
 			}
-			if ("${field.referenceName}".substring(0,6) == "Custom.")
-				field = updateField(collection, project, witFieldChange, pickList, field)
-
 		}
 		
 		// Make sure the field has been added to this WIT, and update the field layout on the WIT editor form
 		if (field == null) {
-			log.error("Unable to create field:  refname: ${witFieldChange.refName}, name: ${witFieldChange.name}")
+			log.error("Unable to create field:  refname: $refName, name: ${changeField.name}")
 			return null
 		}
 		def witField
-		if (!isNewField) witField = getWITField(collection, project, wit.referenceName, field.referenceName)
+		if (!isNewField) 
+			witField = getWITField(collection, project, wit.referenceName, field.referenceName)
 		if (witField == null || "${field.referenceName}" != "${witField.referenceName}") {
 			witField = addWITField(collection, project, wit.referenceName, field.referenceName, field.type)
 		}
-		if (witField != null && updateLayout) {
+		if (witField != null) {
 			def layout = ensureWitFieldLayout(collection, project, wit, field, witFieldChange)
 		}
 		
@@ -399,8 +434,8 @@ public class ProcessTemplateService {
 	
 	def ensureWitFieldLayout(collection, project, wit, field, witFieldChange) {
 		// Check for null label or description
-		if (witFieldChange.label == 'null') witFieldChange.label = witFieldChange.name
-		if (witFieldChange.description == 'null') witFieldChange.description = ''
+//		if (witFieldChange.label == 'null') witFieldChange.label = witFieldChange.name
+//		if (witFieldChange.description == 'null') witFieldChange.description = ''
 		
 		//	Check if new page needs to be created
 		if (witFieldChange.page == null) return
@@ -451,52 +486,21 @@ public class ProcessTemplateService {
 		}
 
 		if (control == null) {
-		// Control does not currently exist.  It must be added
-			// Check if this is an external control with associated field
-			def associatedFieldName
-			if (witFieldChange.control && witFieldChange.control.contribution && witFieldChange.control.contribution.inputs)
-				associatedFieldName = witFieldChange.control.contribution.inputs.FieldName
-			if (associatedFieldName) { // External control with associated field
-				// Make sure the associated field name exists in the collection
-				boolean isNewField = false
-				def foundField = queryForField(collection,project,associatedFieldName)
-				if (!foundField && sourceCollection) {
-					// Must get field from source collection
-					foundField = queryForField(sourceCollection, sourceProject, associatedFieldName)
-					if (foundField) {
-						isNewField = true
-						def type = getFieldType(foundField)
-						def wiField = [refName: foundField.referenceName, name: foundField.name, type: type, description: foundField.description]
-						def pickList
-						if (foundField.isPicklist) {
-							// Retrieve picklist values from picklistID
-							def picklist = getPickList(sourceCollection, sourceProject, foundField.picklistId)
-							def picklistChanges = [type: picklist.type, suggestedValues: []]
-							picklist.items.each { val ->
-								picklistChanges.suggestedValues.add(val)
-							}
-							log.info("Creating picklist for field ${wiField.referenceName}")
-							pickList = createPickList(collection, project, picklistChanges)
-						}
-						createField(collection, project, wiField, pickList)
-					}
-				}
-				
-				// Next, make sure this field has been added to the WIT
-				def witField
-				if (!isNewField) witField = getWITField(collection, project, wit.referenceName, associatedFieldName)
-				if (witField == null) {
-					witField = addWITField(collection, project, wit.referenceName, associatedFieldName, getFieldType(foundField))
-				}
-				
-			}
-			// Make sure the external control exists on the WIT layout
+			// Control does not currently exist.  It must be added
 			ensureExternalControl(collection, project, wit, group, witFieldChange, genericRestClient.&post)
 		}
 		else {
-			boolean updateRequired = ("${control.label}" != "${witFieldChange.label}") ||
+			// Control already exists on the layout, so only update if needed
+			boolean updateRequired
+			if (witFieldChange.control)
+				updateRequired = ("${control.label}" != "${witFieldChange.control.label}") ||
+									("${control.visible}" != "${witFieldChange.control.visible}") ||
+									("${control.readOnly}" != "${witFieldChange.control.readOnly}")
+			else
+				updateRequired = ("${control.label}" != "${witFieldChange.label}") ||
 									("${control.visible}" != "${witFieldChange.visible}") ||
-									("${control.readOnly}" != "${witFieldChange.readOnly}")  // more conditions to be added
+									("${control.readOnly}" != "${witFieldChange.readOnly}")
+
 			if (updateRequired) {
 				ensureExternalControl(collection, project, wit, group, witFieldChange, genericRestClient.&patch)
 			}
@@ -535,7 +539,10 @@ public class ProcessTemplateService {
 		if (field.control) {
 			controlData = field.control
 		} else {
-			controlData = [order:null, label:field.label, id: field.refName, readOnly: field.readOnly, visible:field.visible, isContribution: false, controlType:null, metadata:null, inherited:null, overridden:null, watermark:null, height:null]
+			def label
+			if ("${field.label}" != "null")
+				label = "${field.label}"
+			controlData = [order:null, label:label, id: field.refName, readOnly: field.readOnly, visible:field.visible, isContribution: false, controlType:null, metadata:null, inherited:null, overridden:null, watermark:null, height:null]
 		}
 		
 		String eControlId = encode("${controlData.id}")
@@ -543,7 +550,7 @@ public class ProcessTemplateService {
 		def body = new JsonBuilder(controlData).toPrettyString()
 		
 		//def pName = URLEncoder.encode(this.processName, 'utf-8').replace('+', '%20')
-		
+		log.info("Updating layout for field ${field.refName}")
 		def result = operation(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workItemTypes/${wit.referenceName}/layout/groups/${groupId}/Controls/${eControlId}",
@@ -691,7 +698,10 @@ public class ProcessTemplateService {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
 		def eRefName = encode("${witFieldChange.refName}")
 		def pickId = null
-		def wiData = [id: "${field.referenceName}", name: "${field.name}", type: "${field.type}", description: "${witFieldChange.description}", pickList: null]
+		def description
+		if ("${witFieldChange.description}" != null)
+			description = "${witFieldChange.description}"
+		def wiData = [id: "${field.referenceName}", name: "${field.name}", type: "${field.type}", description: description, pickList: null]
 		if (pickList != null) {
 			wiData.pickList = pickList
 		}
@@ -771,10 +781,20 @@ public class ProcessTemplateService {
 		return result
 	}
 	
-	def ensureWit(collection, project, name) {
-		def wit = getWIT(collection, project, name)
+	def ensureWit(collection, project, witChanges) {
+		def wit = getWIT(collection, project, witChanges.name)
 		if (wit == null) {
-			wit = createWorkitemTemplate(collection, project, name)
+			log.info("Creating new WIT: ${witChanges.name}")
+			wit = createWorkitemTemplate(collection, project, witChanges)
+		} else { // Check for updates
+			boolean updatesNeeded = (wit.color != witChanges.color ||
+									 wit.isDisabled != witChanges.isDisabled ||
+									 wit.icon != witChanges.icon ||
+									 wit.description != witChanges.description)
+			if (updatesNeeded) {
+				log.info("Updating properties for WIT: ${witChanges.name}")
+				updateWorkitemTypeProperties(collection, project, witChanges, wit.referenceName)
+			}
 		}
 		return wit 
 	}
@@ -831,8 +851,8 @@ public class ProcessTemplateService {
 		return result
 
 	}
-	
-	def createWorkitemTemplate(collection, project, name) {
+
+	def createWorkitemTemplate(String collection, String project, String name) {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
 		def defaultWit = getWIT(collection, project, "${this.defaultWITName}")
 		
@@ -848,10 +868,6 @@ public class ProcessTemplateService {
 		defaultWit.icon = 'icon_clipboard'
 		
 		def body = new JsonBuilder(defaultWit).toPrettyString()
-//		File s = new File('defaultwit.json')
-//		def w = s.newDataOutputStream()
-//		w << body
-//		w.close()
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes",
@@ -862,15 +878,54 @@ public class ProcessTemplateService {
 			)
 		def actualWit = getWIT(collection, project, name)
 		
-//		def wStr = new JsonBuilder(actualWit).toPrettyString()
-//		File s = new File('actualwit.json')
-//		def w = s.newDataOutputStream()
-//		w << wStr
-//		w.close()
+		return actualWit;
+	}
+	
+	def createWorkitemTemplate(String collection, String project, def witChanges) {
+		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
+		def defaultWit = getWIT(collection, project, "${this.defaultWITName}")
+		
+		defaultWit.name = witChanges.name
+		defaultWit.inherits = null
+		defaultWit.referenceName = null
+		defaultWit.id = null
+		defaultWit.description = witChanges.description
+		defaultWit.url = null
+		defaultWit.'class' = null
+		defaultWit.isDisabled = false
+		defaultWit.color = witChanges.color
+		defaultWit.icon = witChanges.icon
+		
+		def body = new JsonBuilder(defaultWit).toPrettyString()
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes",
+			body: body,
+			headers: [accept: 'application/json'],
+			query: ['api-version': '5.0-preview.2']
+			
+			)
+		def actualWit = getWIT(collection, project, witChanges.name)
+		
 		return actualWit;
 
 	}
-	
+	def updateWorkitemTypeProperties(collection, project, witChanges, referenceName) {
+		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
+		def witData = [description: witChanges.description,isDisabled: witChanges.isDisabled, color: witChanges.color, icon: witChanges.icon]
+
+		
+		def body = new JsonBuilder(witData).toPrettyString()
+		def result = genericRestClient.patch(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/work/processes/${processTemplateId}/workitemtypes/${referenceName}",
+			body: body,
+			headers: [accept: 'application/json'],
+			query: ['api-version': '7.1-preview.2']
+			
+			)
+		return result
+	}
 	def ensureLayout(collection, project, wit, defaultWit) {
 		def dDataGroups = defaultWit.layout.pages.find { page ->
 			"${page.label}" == 'Details'
@@ -979,14 +1034,10 @@ public class ProcessTemplateService {
 			query: ['api-version': '7.1-preview.1']
 			)
 
-		def customStates = []
-			if (result) {
-			result.value.each() { state ->
-				if (state.customizationType == 'custom')
-					customStates.add(state)
-			}
-		}
-		return customStates
+		if (result)
+			return result.value
+		else
+			return null
 	}
 	def getWITRules(collection, project, wit) {
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')

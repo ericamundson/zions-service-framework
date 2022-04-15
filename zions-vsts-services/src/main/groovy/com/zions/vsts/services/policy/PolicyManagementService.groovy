@@ -281,34 +281,44 @@ public class PolicyManagementService {
 			if (approvalData.creatorVoteCounts) {
 				creatorVoteCounts = approvalData.creatorVoteCounts
 			}
-			def projectData = repoData.project
-			// check for existing policy
-			policyRes = getBranchPolicy(MIN_APPROVERS_POLICY_TYPE, projectData.id, repoData.id, branchName)
-			if (!policyRes) {
-				if (this.branchProps != null) {
-					String tempNum = this.branchProps.getProperty(NUM_MIN_APPROVERS)
-					if (tempNum != null && isNumeric(tempNum)) {
-						numMinApprovers = Integer.parseInt(tempNum)
-						// must have at least 1 approver
-						if (numMinApprovers < DEFAULT_NUM_APPROVERS) numMinApprovers = DEFAULT_NUM_APPROVERS
-						log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- Number of minimum approvers = ${numMinApprovers}")
-					}
+		}
+		def projectData = repoData.project
+		// check for existing policy
+		policyRes = getBranchPolicy(MIN_APPROVERS_POLICY_TYPE, projectData.id, repoData.id, branchName)
+		if (!policyRes) {
+			if (this.branchProps != null) {
+				String tempNum = this.branchProps.getProperty(NUM_MIN_APPROVERS)
+				if (tempNum != null && isNumeric(tempNum)) {
+					numMinApprovers = Integer.parseInt(tempNum)
+					// must have at least 1 approver
+					if (numMinApprovers < DEFAULT_NUM_APPROVERS) numMinApprovers = DEFAULT_NUM_APPROVERS
+					log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- Number of minimum approvers = ${numMinApprovers}")
 				}
-				log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- ")
-				def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-				    type: [id: MIN_APPROVERS_POLICY_TYPE],
-				    settings:[minimumApproverCount: numMinApprovers, creatorVoteCounts: creatorVoteCounts, allowDownvotes: false, resetOnSourcePush: true,
-						scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
-					]
+			}
+			log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- ")
+			def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
+			    type: [id: MIN_APPROVERS_POLICY_TYPE],
+			    settings:[minimumApproverCount: numMinApprovers, creatorVoteCounts: creatorVoteCounts, allowDownvotes: false, resetOnSourcePush: true,
+					scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 				]
-				policyRes = createPolicy(collection, projectData, policy)
-			} else {
+			]
+			policyRes = createPolicy(collection, projectData, policy)
+		} else {
+			boolean valuesChanged = false
+			if (policyRes.settings.minimumApproverCount != numMinApprovers) {
 				policyRes.settings.minimumApproverCount = numMinApprovers
+				valuesChanged = true
+			}
+			if (policyRes.settings.creatorVoteCounts != creatorVoteCounts) {
 				policyRes.settings.creatorVoteCounts = creatorVoteCounts
-				// update policy for minimum approvers
+				valuesChanged = true
+			}
+			// update policy for minimum approvers if changes were made
+			if (valuesChanged) {
 				policyRes = updatePolicy(collection, projectData, policyRes)
 			}
 		}
+
 		log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- result = "+policyRes)
 
 		return policyRes

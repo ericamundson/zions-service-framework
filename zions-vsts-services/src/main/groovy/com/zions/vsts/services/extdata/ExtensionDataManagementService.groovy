@@ -41,21 +41,37 @@ class ExtensionDataManagementService implements IExtensionData {
 	String extName
 	
 	@Value('${ext.collection:eto-dev}')
-	String tfsCollection
+	String docCollection
 	
 	
 	@Autowired
 	private IGenericRestClient genericRestClient;
 	
 	def getExtensionData(String key) {
+		return getExtensionData(null, extPublisher, extName, key)
+	}
+	
+	def getExtensionData(String collection, String publisher, String name, String key) {
 		def ekey = URLEncoder.encode(key, 'utf-8').replace('+', '%20')
+		def url = (collection ? "${extUrl}/$collection" : "${extUrl}".toString())
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
-			uri: "${extUrl}/_apis/ExtensionManagement/InstalledExtensions/${extPublisher}/${extName}/Data/Scopes/Default/Current/Collections/${tfsCollection}/Documents/${ekey}",
-			headers: [Accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true']
-			//query: query,
+			uri: "${url}/_apis/ExtensionManagement/InstalledExtensions/${publisher}/${name}/Data/Scopes/Default/Current/Collections/${docCollection}/Documents/${ekey}",
+			query: ['api-version': '5.1-preview.1', 'excludeUrls' : 'true']
 			)
 		return result
+	}
+	
+	def ensureExtensionData(String collection, String publisher, String name, String key, def content) {
+		def doc = getExtensionData(collection, publisher, name, key)
+		if (!doc) {
+			doc = [id: key, value: content, __etag: null]
+			doc = createExtensionData(collection, publisher, name, doc)
+		} else {
+			doc.value = content
+			doc = updateExtensionData(collection, publisher, name, doc)
+		}
+		return doc
 	}
 	
 	def ensureExtensionData(def data) {
@@ -70,29 +86,41 @@ class ExtensionDataManagementService implements IExtensionData {
 		}
 		return doc
 	}
-	
+
 	private def createExtensionData(def data) {
+		return createExtensionData(null, extPublisher, extName, data)
+
+	}
+	
+	private def createExtensionData(collection, publisher, name, data) {
 		String body = new JsonBuilder(data).toString()
-		def result = genericRestClient.post(
+		def url = (collection ? "${extUrl}/$collection" : "${extUrl}")
+		def result = genericRestClient.put(
 			contentType: ContentType.JSON,
 			requestContentType: ContentType.JSON,
-			uri: "${extUrl}/_apis/ExtensionManagement/InstalledExtensions/${extPublisher}/${extName}/Data/Scopes/Default/Current/Collections/${tfsCollection}/Documents",
+			uri: "${url}/_apis/ExtensionManagement/InstalledExtensions/${publisher}/${name}/Data/Scopes/Default/Current/Collections/${docCollection}/Documents",
 			body: body,
-			headers: [Accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true']
+			query: ['api-version': '5.1-preview.1', 'excludeUrls' : 'true']
 			)
 		return result
 
 	}
-	
+
 	private def updateExtensionData(def data) {
+		return updateExtensionData(null, extPublisher, extName, data)
+
+	}
+
+	private def updateExtensionData(collection, publisher, name, data) {
 		String id = data.id
 		String body = new JsonBuilder(data).toString()
+		def url = (collection ? "${extUrl}/$collection" : "${extUrl}")
 		def result = genericRestClient.patch(
 			contentType: ContentType.JSON,
 			requestContentType: ContentType.JSON,
-			uri: "${extUrl}/_apis/ExtensionManagement/InstalledExtensions/${extPublisher}/${extName}/Data/Scopes/Default/Current/Collections/${tfsCollection}/Documents",
+			uri: "${url}/_apis/ExtensionManagement/InstalledExtensions/${publisher}/${name}/Data/Scopes/Default/Current/Collections/${docCollection}/Documents",
 			body: body,
-			headers: [Accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true']
+			query: ['api-version': '5.1-preview.1', 'excludeUrls' : 'true']
 			)
 		return result
 

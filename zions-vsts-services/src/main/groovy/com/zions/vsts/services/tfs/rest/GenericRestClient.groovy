@@ -64,6 +64,7 @@ class GenericRestClient extends AGenericRestClient {
 		delegate = new ARESTClient(tfsUrl)
 		delegate.ignoreSSLIssues()
 //		delegate.handler.failure = { it }
+		/*
 		delegate.handler.failure = { resp ->
 			if (resp.entity) {
 				def outputStream = new ByteArrayOutputStream()
@@ -76,6 +77,7 @@ class GenericRestClient extends AGenericRestClient {
 			}
 			return resp
 		}
+		*/
 		setProxy()
 		setCredentials(user, token);
 		//setupTimeouts()
