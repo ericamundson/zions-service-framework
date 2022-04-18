@@ -265,11 +265,6 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			sinput = deepcopy(input)
 		} catch (e) {}
 		HttpResponseDecorator resp = delegate.patch(input)
-		/*int status = resp.status
-		if (status == 412 && handleResponse) {
-			return handleResponse(resp)
-		}*/
-		
 
 		int status = resp.status
 		if ((status == 412 || status == 409) && handleResponse) {

@@ -13,7 +13,7 @@ class MicroserviceFailureHandler implements IFailureHandler {
 				def outputStream = new ByteArrayOutputStream()
 				resp.entity.writeTo(outputStream)
 				def errorMsg = outputStream.toString('utf8')
-				def logMsg = "ADO Http ${resp.status} response:  ${errorMsg}"
+				def logMsg = "ADO Http ${resp.status} response: ${errorMsg}"
 				if (resp.status == 400  || resp.status == 412 || resp.status == 409)
 					log.info(logMsg)
 				else {
