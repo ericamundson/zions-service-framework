@@ -84,14 +84,22 @@ public class ProcessTemplateService {
 		def witFields = getWITFields(collection, project, wiName)
 		witFields.'value'.each { field ->
 			def fieldDetails = getField(collection, project, field.referenceName)
-			String type = 'string'
 			if (!fieldDetails) {
 				log.error("Could ot get field details for ${field.referenceName}")
 				return
 			}
-			type = getFieldType(fieldDetails)
-			def cField = [name: "${field.name}", label: "${fieldDetails.label}", refName:"${field.referenceName}",
-						type: type, description: "${fieldDetails.description}", page: null, section: null, group: null,suggestedValues:[]]
+			String foo = "${field.referenceName}".toString()
+			String type = getFieldType(fieldDetails)
+			def cField = [name: "${field.name}", 
+						  label: "${fieldDetails.label}", 
+						  refName:"${field.referenceName}",
+						  type: type, 
+						  required: "${field.alwaysRequired}",
+						  isPicklistSuggested: "${fieldDetails.isPicklistSuggested}", 
+						  description: "${fieldDetails.description}", 
+						  page: null, section: null, 
+						  group: null,
+						  suggestedValues:[]]
 			field.allowedValues.each { value ->
 				if (type == "integer")
 					cField.suggestedValues.add(value.toInteger())
@@ -116,34 +124,50 @@ public class ProcessTemplateService {
 							cfield.group = "${group.label}"
 							cfield.label = "${control.label}"
 							cfield.visible = "${control.visible}"
-							cfield.readOnly = "${control.readOnly}"
 						} else {  // This is a control, not a field
 							// Need to capture field associated with control
 							def associatedField = ''
-							if (control && control.contribution && control.contribution.inputs && control.contribution.inputs.FieldName) {
-								def refName = control.contribution.inputs.FieldName
-								def adoField = queryForField(collection, project, refName)
-								def pickList
-								if (adoField) {
-									def suggestedValues = []
-									if (adoField.isPicklist) {
-										// Retrieve picklist values from picklistID
-										def picklist = getPickList(collection, project, adoField.picklistId)
-										picklist.items.each { val ->
-											suggestedValues.add(val)
+							if (control && control.contribution && control.contribution.inputs) {
+								def refName
+								if (control.contribution.inputs.FieldName)
+									refName = control.contribution.inputs.FieldName
+								// Need specific check for our custom color control, because it does not carry the inputs.FieldName property
+								else if ("${control.contribution.contributionId}".indexOf("color-control-contribution") > -1)
+									refName = "Custom.Color"
+								
+								if (refName) {
+									def adoField = queryForField(collection, project, refName)
+									def pickList
+									if (adoField) {
+										def suggestedValues = []
+										if (adoField.isPicklist) {
+											// Retrieve picklist values from picklistID
+											def picklist = getPickList(collection, project, adoField.picklistId)
+											picklist.items.each { val ->
+												suggestedValues.add(val)
+											}
 										}
+										associatedField = [	'name': adoField.name,
+															'refName': refName, 
+															'type': adoField.type,
+															'isPicklistSuggested': adoField.isPicklistSuggested,
+															'description': adoField.description,
+															'suggestedValues': suggestedValues]
 									}
-									associatedField = [	'name': adoField.name,
-														'refName': refName, 
-														'type': adoField.type,
-														'description': adoField.description,
-														'suggestedValues': suggestedValues]
 								}
 							}
-							cfield = [name: "${control.label}", label: "${control.label}", refName:"${control.id}",
-									visible:"${control.visible}", readOnly:"${control.readOnly}", type: '',
-									description: 'custom control', page: page.label, section: section.id,
-									group: group.label, control: control, associatedField: associatedField]
+							cfield = [name: "${control.label}", 
+								      label: "${control.label}", 
+									  refName:"${control.id}",
+									  visible:"${control.visible}", 
+									  required: false, 
+									  type: '',
+									  description: 'custom control', 
+									  page: page.label, 
+									  section: section.id,
+									  group: group.label, 
+									  control: control, 
+									  associatedField: associatedField]
 
 						}
 						// Output controls/fields that are in groups to preserve order
@@ -494,12 +518,10 @@ public class ProcessTemplateService {
 			boolean updateRequired
 			if (witFieldChange.control)
 				updateRequired = ("${control.label}" != "${witFieldChange.control.label}") ||
-									("${control.visible}" != "${witFieldChange.control.visible}") ||
-									("${control.readOnly}" != "${witFieldChange.control.readOnly}")
+									("${control.visible}" != "${witFieldChange.control.visible}")
 			else
 				updateRequired = ("${control.label}" != "${witFieldChange.label}") ||
-									("${control.visible}" != "${witFieldChange.visible}") ||
-									("${control.readOnly}" != "${witFieldChange.readOnly}")
+									("${control.visible}" != "${witFieldChange.visible}") 
 
 			if (updateRequired) {
 				ensureExternalControl(collection, project, wit, group, witFieldChange, genericRestClient.&patch)
@@ -542,7 +564,7 @@ public class ProcessTemplateService {
 			def label
 			if ("${field.label}" != "null")
 				label = "${field.label}"
-			controlData = [order:null, label:label, id: field.refName, readOnly: field.readOnly, visible:field.visible, isContribution: false, controlType:null, metadata:null, inherited:null, overridden:null, watermark:null, height:null]
+			controlData = [order:null, label:label, id: field.refName, readOnly: false, visible:field.visible, isContribution: false, controlType:null, metadata:null, inherited:null, overridden:null, watermark:null, height:null]
 		}
 		
 		String eControlId = encode("${controlData.id}")
@@ -672,7 +694,12 @@ public class ProcessTemplateService {
 		log.info("Creating field ${witFieldChange.refName}")
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
 		def pickId = null
-		def wiData = [id: "${witFieldChange.refName}", name: "${witFieldChange.name}", type: "${witFieldChange.type}", description: "${witFieldChange.description}", pickList: null]
+		def wiData = [id: "${witFieldChange.refName}",   
+					  name: "${witFieldChange.name}", 
+					  type: "${witFieldChange.type}", 
+					  isPicklistSuggested: "${witFieldChange.isPicklistSuggested}", 
+					  description: "${witFieldChange.description}", 
+					  pickList: null]
 		if (pickList != null) {
 			wiData.pickList = pickList
 		}
@@ -701,7 +728,12 @@ public class ProcessTemplateService {
 		def description
 		if ("${witFieldChange.description}" != null)
 			description = "${witFieldChange.description}"
-		def wiData = [id: "${field.referenceName}", name: "${field.name}", type: "${field.type}", description: description, pickList: null]
+		def wiData = [id: "${field.referenceName}", 
+					  name: "${field.name}", 
+					  type: "${field.type}", 
+					  isPicklistSuggested: "${witFieldChange.isPicklistSuggested}", 
+					  description: description, 
+					  pickList: null]
 		if (pickList != null) {
 			wiData.pickList = pickList
 		}
@@ -996,7 +1028,7 @@ public class ProcessTemplateService {
 			defVal = 'false'
 		}
 		def processTemplateId = projectManagementService.getProjectProperty(collection, project, 'System.ProcessTemplateType')
-		def witField = [defaultValue: defVal, referenceName: refName, type: type, readOnly: false, required: req,  allowedGroups: null]
+		def witField = [defaultValue: defVal, referenceName: refName, type: type, readOnly: false	, required: req,  allowedGroups: null]
 		def body = new JsonBuilder(witField).toPrettyString()
 		def result = genericRestClient.post(
 			contentType: ContentType.JSON,
