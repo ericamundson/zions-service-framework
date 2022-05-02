@@ -1,4 +1,4 @@
-package com.zions.common.services.logging;
+package com.zions.common.services.slf4j;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
