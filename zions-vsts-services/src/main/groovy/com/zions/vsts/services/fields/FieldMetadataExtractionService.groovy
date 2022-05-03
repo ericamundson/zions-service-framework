@@ -31,7 +31,7 @@ class FieldMetadataExtractionService {
 	@Autowired
 	ExtensionDataManagementService extensionDataManagementService
 	
-	@Autowired
+	@Autowired(required=false)
 	ExcelManagementService excelManagementService
 		
 	List<String> witFields = []
