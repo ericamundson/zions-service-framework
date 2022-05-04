@@ -61,13 +61,6 @@ public class MongoAppender extends UnsynchronizedAppenderBase<ILoggingEvent> imp
         }
     }
 
-    private class LogEntity {
-        String threadName;
-        String level;
-        String formattedMessage;
-        String loggerName;
-        Long timestamp;
-    }
 
     public String getCollectionName() {
         return collectionName;
