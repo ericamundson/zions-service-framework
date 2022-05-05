@@ -220,6 +220,7 @@ public class PolicyManagementService {
 		// create release definition for release build
 		def relResult = null
 		def relDefName = ""
+		/*  SKIP creating release definition which we no longer use 
 		if (relBuildId > -1) {
 			def releaseTemplate = null
 			// look for specified release template
@@ -236,7 +237,7 @@ public class PolicyManagementService {
 				relDefName = relResult.releaseDefName
 				log.debug("PolicyManagementService::ensureBuildPolicy -- Release Definition created: "+relDefName)
 			}
-		}
+		}*/
 		
 		// send email if builds were created
 		if (result.ciBuildName != "" || result.releaseBuildName != "") {
