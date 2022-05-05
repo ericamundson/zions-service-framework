@@ -15,7 +15,7 @@ class LogEntity {
 		
 		String toString() {
 			String stimestamp = new Date(timestamp).format('yyyy-MM-dd HH:mm:ss')
-			return "${stimestamp} ${level} ${loggerName} $formattedMessage"
+			return "${stimestamp} ${level} [${threadName}] ${loggerName} $formattedMessage"
 		}
 }
  
