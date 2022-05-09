@@ -1103,6 +1103,44 @@ public class TestManagementService {
 
 	}
 	
+	public def getResAttInfo(project, runId, resultId) {
+		def collection = "zionseto"
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/test/Runs/${runId}/Results/${resultId}/attachments/?",
+			headers: ['Content-Type': 'application/json'],
+			query: ['api-version':'6.0-preview.1', includeRunDetails: true]
+			)
+
+		return result;
+
+	}
+	
+	public def downloadResAttachments(project, runId, resultId, attachId) {
+		def collection = "zionseto"
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		
+		def result = genericRestClient.get(
+			//contentType: ContentType.JSON,
+			contentType: 'application/octet-stream',
+			//requestContentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/test/Runs/${runId}/Results/${resultId}/attachments/${attachId}?",
+			//uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/test/Runs/${runId}/Results/${resultId}/attachments/?",
+			
+			//headers: ['Content-Type': 'application/json'],
+			headers: ['Content-Type': 'application/octet-stream'],
+			query: ['api-version':'6.0-preview.1', 'expand': 'all']
+			)
+
+		return result;
+
+	}
+	
 	public def getTestPointData(String project, String planId, String suiteId) {
 		def collection = ""
 		def projectInfo = projectManagmentService.getProject(collection, project)
