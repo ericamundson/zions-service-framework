@@ -50,6 +50,16 @@ public class EndpointManagementService {
 		return endpoint
 	}
 	
+	public def getServiceEndpointsByType(String collection, String projectId, String typeName) {
+		def query = ['api-version': '7.1-preview.1', type:typeName]
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${projectId}/_apis/serviceendpoint/endpoints",
+			query: query
+			)
+		return result
+	}
+	
 	public def getServiceEndpoint(String collection, String projectId, String name) {
 		def query = ['api-version': '6.0-preview.4', endpointNames:name]
 		def result = genericRestClient.get(
