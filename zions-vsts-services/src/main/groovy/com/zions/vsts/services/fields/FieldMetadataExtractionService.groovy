@@ -36,62 +36,26 @@ class FieldMetadataExtractionService {
 		
 	List<String> witFields = []
 	List<String> projectNames = []
+	
+	String collection
+	String project
+	boolean includeUnusedFields
 
-	public def exportFields(collection, project, witNames, outDir) {
-
+	public def intializeReport(String collection, String project, String outDir, boolean includeUnusedFields) {
+		this.collection = collection
+		this.project = project
+		this.includeUnusedFields = includeUnusedFields
+		
 		// get all projects for retrieving Custom Attributes control fields for each project
 		def projects = projectManagementService.getProjects(collection)
 		projects.each {proj -> 
 			projectNames.add("${proj.name}".toString()) 
 		}
-
-		def witExportList = []
-		boolean validationError = false
-		def wits = processTemplateService.getWorkItemTypes(collection, project)
-
-		// If "all" requested, then get all WITs for the process template
-		if (witNames.length == 1 && witNames[0].toLowerCase() == 'all') {
-			wits.value.each { wit ->
-				if (!wit.isDisabled)
-					witExportList.add(wit.name)
-			}
-		}
-		// Else, make sure that all of the requested WITs exist in the source collection
-		else {
-			witNames.each { name ->
-				def foundWit = wits.value.find { wit ->
-					"${wit.name}" == "$name"
-				}
-				if ( foundWit) {
-					witExportList.add(name)
-				} else {
-					log.error("ERROR:  WIT <$name> is not found in source collection $collection.")
-					validationError = true
-				}
-			}
-		}
 		
-		// Extract and export all requested WITs
-		if (!validationError) {
-			def index = 0
-			def count = witExportList.size()
-			excelManagementService.CreateExcelFile(outDir,"Field Report")
-			witExportList.each { name ->
-				def witChanges = processTemplateService.extractWitMetadata(collection, project, "${name}", ++index, count)
-				insertWitIntoExcel(name, witChanges)				
-			}
-		
-			// Output any fields that are not used by any wits
-			if (witNames[0].toLowerCase() == 'all')
-				insertUnusedFieldsIntoExcel()
-			
-			excelManagementService.CloseExcelFile()
-
-		}
-		return null;
+		excelManagementService.CreateExcelFile(outDir,"Field Report")
 	}
 	
-	def insertWitIntoExcel(String witName, def witChanges) {
+	public def addWitToReport(String witName, def witChanges) {
 		//each attribute must be inserted into the workbook without making it too messy
 		//perhaps ExcelManager can add columns to current row based on insertion by header
 		//log.debug("wi made it to insert method")
@@ -179,7 +143,16 @@ class FieldMetadataExtractionService {
 		}
 		
 	}
-	def insertUnusedFieldsIntoExcel() {
+	
+	public def closeReport()	{	
+		// Output any fields that are not used by any wits
+		if (includeUnusedFields)
+			insertUnusedFieldsIntoExcel()
+		
+		excelManagementService.CloseExcelFile()
+	}
+	
+	private def insertUnusedFieldsIntoExcel() {
 		//each attribute must be inserted into the workbook without making it too messy
 		//perhaps ExcelManager can add columns to current row based on insertion by header
 		//log.debug("wi made it to insert method")
