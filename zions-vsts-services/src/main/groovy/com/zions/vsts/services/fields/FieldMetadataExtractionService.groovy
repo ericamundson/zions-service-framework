@@ -33,7 +33,13 @@ class FieldMetadataExtractionService {
 	
 	@Autowired(required=false)
 	ExcelManagementService excelManagementService
-		
+	
+	@Value('${ext.publisher:}')
+	String extPublisher
+	
+	@Value('${ext.name:}')
+	String extName
+
 	List<String> witFields = []
 	List<String> projectNames = []
 	
@@ -91,7 +97,13 @@ class FieldMetadataExtractionService {
 					// Retrieve control for each project
 					projectNames.each { projectName ->
 						String key = "${witName}_Custom.CustomAttributes_$projectName"
-						def extData = extensionDataManagementService.getExtensionData(key)
+						def extData
+						try {
+							extData = extensionDataManagementService.getExtensionData(collection, extPublisher, extName, key)
+						} catch (groovyx.net.http.HttpResponseException e) {
+							// Ignore 404 error.  Not all projects will have that document
+							if (! e.statusCode == 404) throw e
+						}
 						if (extData) {
 							extData.descriptors.each { extField ->
 								outfield = ['page': field.page, 
