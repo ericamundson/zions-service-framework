@@ -1103,6 +1103,24 @@ public class TestManagementService {
 
 	}
 	
+	public def getResAttDetails(project, runId, resultId) {
+		def collection = "zionseto"
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			//uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/test/Runs/${runId}/Results/${resultId}/attachments/?",
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/test/Runs/${runId}/Results/${resultId}/?detailsToInclude=Iterations&api-version=6.0",
+			headers: ['Content-Type': 'application/json'],
+			//query: ['api-version':'6.0-preview.1', includeRunDetails: true]
+			)
+
+		return result;
+
+	}
+	
 	public def getResAttInfo(project, runId, resultId) {
 		def collection = "zionseto"
 		def eproject = URLEncoder.encode(project, 'utf-8')
