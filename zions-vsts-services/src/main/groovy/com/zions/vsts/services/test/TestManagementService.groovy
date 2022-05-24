@@ -1116,7 +1116,7 @@ public class TestManagementService {
 			
 			)
 
-		return result;
+		return result.iterationDetails.attachments 
 
 	}
 	

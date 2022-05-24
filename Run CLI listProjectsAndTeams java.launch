@@ -9,6 +9,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
+<stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="zions-vsts-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="listProjectsAndTeams&#13;&#10;--tfs.url=https://dev.azure.com&#13;&#10;--tfs.collection=zionseto&#13;&#10;--tfs.testplanIds=1456161&#13;&#10;--tfs.destProjectName=&quot;Sandbox&quot;&#13;&#10;--tfs.destPlanName=Sandbox&#13;&#10;--export.dir=&quot;c:\bin&quot;&#13;&#10;--tfs.srcProjectName=DTS&#13;&#10;--tfs.destProjectName=&quot;Sandbox&quot;&#13;&#10;--tfs.suiteName=&quot;StaticSuite&quot;&#13;&#10;--tfs.user=&quot;Michael.Angelastro@zionsbancorp.com&quot;&#13;&#10;--tfs.token=&quot;ml7fwu4hmczrcx66ag3tlvvyne5g5lgbq53wwaguarsv2fty2fha&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=project -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User= -Dproxy.Password="/>
