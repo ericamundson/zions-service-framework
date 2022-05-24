@@ -536,6 +536,65 @@ class CodeManagementService {
 		commandManagementService.executeCommand("git push", repoDir)
 	}
 	
+	def cloneGitRepo(String collection, String project, String repoName, String importUrl, String localGitDir) {
+		// Get project and repo data and ensure these exist
+		def projectData = projectManagementService.getProject(collection, project)
+		if (!projectData) {
+			log.error("Repository $repoName was not found.")
+			return false
+		}
+		def repo = getRepo(collection, projectData, repoName)
+		if (!repo) {
+			log.error("Repository $repoName was not found.")	
+			return false
+		}		
+		
+		// Proceed with the git clone process
+		def ourl = getAuthUrl(importUrl, genericRestClient.tfsUsers[0], genericRestClient.tfsTokens[0])
+		File gitDir
+		File repoDir
+		try {
+			gitDir = new File(localGitDir)
+			
+			if (!gitDir.exists()) {
+				gitDir.mkdir()
+			}
+			repoDir = new File(gitDir, repoName )
+			// Make sure the repo directory does not exist, or clone will fail
+			if (repoDir.exists()) {
+				repoDir.deleteDir()
+				Thread.sleep(1000) // Wait 1 sec for file deletion to complete
+				repoDir.delete()
+				if (repoDir.exists()) {
+					log.error("Error deleting local repo directory.")
+					return false
+				}
+			}
+		}
+		catch (e) {
+			log.error("Error ensuring git directory: ${e.message}")
+			return false
+		}
+		commandManagementService.executeCommand("git config --global http.proxy http://172.18.4.40:8080", gitDir)
+		commandManagementService.executeCommand("git clone ${ourl}", gitDir)
+		if (repoDir.exists())
+			return true
+		else {
+			log.error("Error cloning repo: $repoName")
+			return false
+		}
+	}
+
+	
+	def commitAndPushRepo(String repoPath, String comment = 'auto-checkin') {
+		File repoDir = new File(repoPath)
+		commandManagementService.executeCommand("git config --global user.email ${genericRestClient.tfsUsers[0]}@zionsbancorporation.onmicrosoft.com", repoDir)
+		commandManagementService.executeCommand("git config --global user.name ${genericRestClient.tfsUsers[0]}", repoDir)
+		commandManagementService.executeCommand("git add .", repoDir)
+		commandManagementService.executeCommand("git commit -m $comment", repoDir)
+		commandManagementService.executeCommand("git push", repoDir)
+	}
+
 	def getAuthUrl(def url, def userid, def password) {
 		String encodedPassword = URLEncoder.encode(password, 'utf-8')
 		url = "https://" + userid + ":" + encodedPassword + "@"+ url.substring("https://".length())

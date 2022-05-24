@@ -81,8 +81,8 @@ class ExcelManagementService {
 	def CreateExcelFile(def dir, def filename) {
 		//in case other file is open
 		CloseExcelFile()
-		
-		outputFileName = "${dir}\\${filename}.xlsx"
+		// Directory path in configuration must use forward slashes so as to support both Windows and Linux file systems
+		outputFileName = "${dir}/${filename}.xlsx"
 		workbook = new SXSSFWorkbook(-1)
 		sheet = workbook.createSheet()
 		rownum = 1
