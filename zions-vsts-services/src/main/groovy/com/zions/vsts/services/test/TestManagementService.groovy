@@ -724,7 +724,6 @@ public class TestManagementService {
 			eproject = eproject.replace('+', '%20')
 			
 			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/runs?api-version=6.0&bypassRules=True&suppressNotifications=true"
-
 			//body for single test point processing
 			//def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':  [ testpointIds ],]
 			//body for multiple test point processing
@@ -747,29 +746,6 @@ public class TestManagementService {
 		}
 				
 	
-		public def uploadResAttachment(collection, project, runId, resultId, stream, fileName, comment) {
-			
-		def eproject = URLEncoder.encode(project, 'utf-8')
-		eproject = eproject.replace('+', '%20')
-		//def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/runs?api-version=6.0&bypassRules=True&suppressNotifications=true"
-		def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/Runs/${runId}/Results/${resultId}/attachments?api-version=6.0&bypassRules=True&suppressNotifications=true"
-		def body = ['stream': stream, 'fileName': fileName, 'comment': comment, 'attachmentType': 'GeneralAttachment']
-		
-		String sbody = new JsonBuilder(body).toPrettyString()
-		//put stop here json builder to prettystring look at what sbody looks like as formatted json
-		//should have same format as body in successful talend execution
-		def result = genericRestClient.rateLimitPost(
-					  
-			requestContentType: ContentType.JSON,
-			contentType: ContentType.JSON,
-			uri: uri,
-			body: sbody,
-			//headers: [Accept: 'application/json'],
-			query: ['api-version': '5.1-preview.1' ]
-			)
-		return result
-		}
-
 			
 			public def updateTestRunCreateDate(collection, project, runId, createdDate, completedDate) {
 				
@@ -1098,61 +1074,6 @@ public class TestManagementService {
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${projectInfo.id}/_apis/test/runs/${runId}",
 			headers: ['Content-Type': 'application/json'],
 			query: ['api-version':'5.0-preview.2', includeRunDetails: true]
-			)
-
-		return result;
-
-	}
-	
-	public def getResAttDetails(project, runId, resultId) {
-		def collection = "zionseto"
-		def eproject = URLEncoder.encode(project, 'utf-8')
-		eproject = eproject.replace('+', '%20')
-		
-		def result = genericRestClient.get(
-			contentType: ContentType.JSON,
-			
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/test/Runs/${runId}/Results/${resultId}/?detailsToInclude=Iterations&api-version=6.0",
-			headers: ['Content-Type': 'application/json'],
-			
-			)
-
-		return result.iterationDetails.attachments 
-
-	}
-	
-	public def getResAttInfo(project, runId, resultId) {
-		def collection = "zionseto"
-		def eproject = URLEncoder.encode(project, 'utf-8')
-		eproject = eproject.replace('+', '%20')
-		
-		def result = genericRestClient.get(
-			contentType: ContentType.JSON,
-			//requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/test/Runs/${runId}/Results/${resultId}/attachments/?",
-			headers: ['Content-Type': 'application/json'],
-			query: ['api-version':'6.0-preview.1', includeRunDetails: true]
-			)
-
-		return result;
-
-	}
-	
-	public def downloadResAttachments(project, runId, resultId, attachId) {
-		def collection = "zionseto"
-		def eproject = URLEncoder.encode(project, 'utf-8')
-		eproject = eproject.replace('+', '%20')
-		
-		def result = genericRestClient.get(
-			//contentType: ContentType.JSON,
-			contentType: 'application/octet-stream',
-			//requestContentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/test/Runs/${runId}/Results/${resultId}/attachments/${attachId}?",
-			//uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/test/Runs/${runId}/Results/${resultId}/attachments/?",
-			
-			//headers: ['Content-Type': 'application/json'],
-			headers: ['Content-Type': 'application/octet-stream'],
-			query: ['api-version':'6.0-preview.1', 'expand': 'all']
 			)
 
 		return result;
