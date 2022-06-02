@@ -793,7 +793,8 @@ public class TestManagementService {
 			//headers: [Accept: 'application/json'],
 			query: ['api-version': '5.1-preview.1' ]
 			)
-		return result
+			//return result
+			return result.value[0].id
 		}
 
 	
