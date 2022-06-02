@@ -726,7 +726,8 @@ public class TestManagementService {
 			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/runs?api-version=6.0&bypassRules=True&suppressNotifications=true"
 
 	
-			def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds': [ testpointIds ] ]
+			def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':  testpointIds  ]
+			
 			//def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':  [ + "${testpointIds}"  ]]
 			
 			String sbody = new JsonBuilder(body).toPrettyString()
