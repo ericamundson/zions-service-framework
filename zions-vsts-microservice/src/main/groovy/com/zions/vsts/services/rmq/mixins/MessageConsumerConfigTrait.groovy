@@ -13,6 +13,7 @@ import org.apache.kafka.clients.CommonClientConfigs
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.DependsOn
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
@@ -24,10 +25,6 @@ import org.springframework.util.backoff.FixedBackOff
 
 
 trait MessageConsumerConfigTrait {
-	@Value('${kafka.keytab:}')
-	String keytab
-	@Value('${kafka.krb5.conf:}')
-	String krb5Conf
 	@Value('${kafka.servers:}')
 	String servers
 	@Value('${kafka.groupid:}')
@@ -38,13 +35,10 @@ trait MessageConsumerConfigTrait {
 	 * @return
 	 */
 	@Bean
+	@DependsOn("kafkaInitializer")
 	public ConsumerFactory<String, String> consumerFactory() {
 		Map<String, Object> props = new HashMap<>();
-		
-		System.setProperty("java.security.auth.login.config", keytab)
-		System.setProperty("sun.security.krb5.debug","false")
-		System.setProperty("java.security.krb5.conf", krb5Conf)
-		
+				
 		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, servers)
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, group)
 		props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, 'SASL_SSL')
@@ -59,14 +53,6 @@ trait MessageConsumerConfigTrait {
 
 		return new DefaultKafkaConsumerFactory<>(props)
 	}
-	/*
-	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<String, String>()
-		factory.setConsumerFactory(consumerFactory())
-		return factory
-	}
-	*/
 	@Bean
 	public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(
 			ConcurrentKafkaListenerContainerFactoryConfigurer configurer,

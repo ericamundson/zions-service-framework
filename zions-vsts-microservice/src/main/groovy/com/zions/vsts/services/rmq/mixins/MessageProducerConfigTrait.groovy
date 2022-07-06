@@ -15,6 +15,7 @@ import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.DependsOn
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.ProducerFactory
 import org.springframework.kafka.support.LoggingProducerListener
@@ -31,12 +32,6 @@ trait MessageProducerConfigTrait {
 	
 	@Value('${kafka.max-block-ms:}')
 	Long kafkaMaxBlockMs
-	
-	@Value('${kafka.keytab:}')
-	private String keytab;
-	
-	@Value('${kafka.krb5.conf:}')
-	private String krb5conf;
 
 	/**
 	 * Create a {@link KafkaTemplate} to be made available in the Spring Application Context
@@ -56,13 +51,10 @@ trait MessageProducerConfigTrait {
 	 * @return
 	 */
 	@Bean
+	@DependsOn("kafkaInitializer")
 	public ProducerFactory<String, String> producerFactory() {
 		// Create property map
 		Map<String, Object> props = new HashMap<>()
-		
-		System.setProperty("java.security.auth.login.config", keytab)
-		System.setProperty("sun.security.krb5.debug","false")
-		System.setProperty("java.security.krb5.conf", krb5conf)
 		
 		// List of host:port pairs used for establishing the initial connections to the Kafka cluster
 		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServers)
