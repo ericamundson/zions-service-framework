@@ -586,10 +586,12 @@ class CodeManagementService {
 	}
 
 	
-	def commitAndPushRepo(String repoPath) {
+	def commitAndPushRepo(String repoPath, String comment = 'auto-checkin') {
 		File repoDir = new File(repoPath)
+		commandManagementService.executeCommand("git config --global user.email ${genericRestClient.tfsUsers[0]}@zionsbancorporation.onmicrosoft.com", repoDir)
+		commandManagementService.executeCommand("git config --global user.name ${genericRestClient.tfsUsers[0]}", repoDir)
 		commandManagementService.executeCommand("git add .", repoDir)
-		commandManagementService.executeCommand("git commit -m \"Auto commit by ArchiveConfig service\"", repoDir)
+		commandManagementService.executeCommand("git commit -m $comment", repoDir)
 		commandManagementService.executeCommand("git push", repoDir)
 	}
 
