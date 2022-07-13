@@ -10,13 +10,13 @@ import com.fasterxml.jackson.core.JsonProcessingException
 
 import java.text.SimpleDateFormat
 
-trait MessageConsumerTrait {
+trait MessageConsumerSpecialTrait {
 	@KafkaListener(topics = ["#{'\${kafka.topic.names}'.split(',')}"], groupId = "\${kafka.topic.group.id}")
 	public def receivedMessage(String message) throws JsonProcessingException {
 		String mStr = new String(message)
 		def adoData = new JsonSlurper().parseText(mStr)
-		processADOData(adoData)
+		processADOData(message, adoData)
 	}
 	
-	abstract def processADOData(def adoData)
+	abstract def processADOData(def message, def adoData)
 }
