@@ -724,20 +724,22 @@ public class TestManagementService {
 			eproject = eproject.replace('+', '%20')
 			
 			def uri = "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/test/runs?api-version=6.0&bypassRules=True&suppressNotifications=true"
-			def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate, 
+			def body = ['name': name, 'state': state, 'comment': comment, 'createdDate': createdDate, 'starteDate': startedDate, 'completedDate': completedDate,
 				'owner': [ 'displayName': owner], 'plan': [ 'id': testplanId], 'pointIds':  testpointIds  ]
 			String sbody = new JsonBuilder(body).toPrettyString()
 			//put stop here json builder to prettystring look at what sbody looks like as formatted json
 			//should have same format as body in successful talend execution
-			def result = genericRestClient.rateLimitPost(
-						  
+			
+			def result = genericRestClient.post(
+							  
 				requestContentType: ContentType.JSON,
 				contentType: ContentType.JSON,
 				uri: uri,
 				body: sbody,
 				query: ['api-version': '5.1-preview.1' ]
 				)
-			return result
+			
+			return result.id
 		}
 				
 	

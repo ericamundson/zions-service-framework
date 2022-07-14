@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 
 /**
  * Sends files to be used as attachments to ADO.
- * 
+ *
  * @author z091182
  *
  */
