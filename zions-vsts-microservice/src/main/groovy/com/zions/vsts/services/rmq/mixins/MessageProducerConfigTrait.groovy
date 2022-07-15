@@ -34,10 +34,19 @@ trait MessageProducerConfigTrait {
 	Long kafkaMaxBlockMs
 
 	/**
+	 * Creater Kerberos keytab file and set kerberos system variables
+	 */
+	@Bean
+	public KafkaInitializer kafkaInitializer() {
+		return new KafkaInitializer()
+	}
+
+	/**
 	 * Create a {@link KafkaTemplate} to be made available in the Spring Application Context
 	 * @return a configured template instance
 	 */
 	@Bean
+	@DependsOn("kafkaInitializer")
 	public KafkaTemplate<String, String> kafkaTemplate() {
 		
 		// Create the template

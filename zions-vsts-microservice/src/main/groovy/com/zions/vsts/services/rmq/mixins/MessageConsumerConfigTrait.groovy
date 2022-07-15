@@ -2,18 +2,20 @@ package com.zions.vsts.services.rmq.mixins
 
 import java.util.HashMap
 import java.util.Map
-
+import java.time.Duration
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.serialization.StringSerializer
+import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.clients.CommonClientConfigs
-
+import org.springframework.kafka.listener.ContainerProperties.AckMode
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.DependsOn
+import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
@@ -29,6 +31,8 @@ trait MessageConsumerConfigTrait {
 	String servers
 	@Value('${kafka.groupid:}')
 	String group
+	@Value('${kafka.dlq.name}')
+	String dlqTopic
 
 	/**
 	 * Create a default Kafka ConsumerFactory
@@ -58,11 +62,24 @@ trait MessageConsumerConfigTrait {
 			ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
 			ConsumerFactory<String, String> consumerFactory,
 			KafkaTemplate<String, String> kafkaTemplate) {
-		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-		configurer.configure(factory, consumerFactory);
-		factory.setErrorHandler(new SeekToCurrentErrorHandler(
-			new DeadLetterPublishingRecoverer(kafkaTemplate), 3)) // dead-letter after 3 tries
-		return factory
-	}
-	
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>()
+        configurer.configure(factory, consumerFactory)
+        factory.getContainerProperties().setAckMode(AckMode.MANUAL_IMMEDIATE)
+		/*
+       	factory.setConsumerFactory(consumerFactory())
+        factory.getContainerProperties().setSyncCommits(true)
+        factory.setAckDiscarded(true)
+        factory.getContainerProperties().setAuthorizationExceptionRetryInterval(Duration.ofMillis(20000))
+        factory.setRecordFilterStrategy(recordFilterStrategy)
+		*/
+        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
+                {r, e -> new TopicPartition("$dlqTopic", -1)}
+        )
+        SeekToCurrentErrorHandler seekToCurrentErrorHandler = new SeekToCurrentErrorHandler(recoverer,
+                new FixedBackOff(0L, 3L))
+        seekToCurrentErrorHandler.setCommitRecovered(true)
+        factory.setErrorHandler(seekToCurrentErrorHandler)
+
+        return factory;
+    }	
 }

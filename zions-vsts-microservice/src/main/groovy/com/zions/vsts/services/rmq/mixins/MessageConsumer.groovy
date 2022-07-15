@@ -10,13 +10,18 @@ import com.fasterxml.jackson.core.JsonProcessingException
 
 import java.text.SimpleDateFormat
 
-trait MessageConsumerTrait {
+public abstract class MessageConsumer {
 	@KafkaListener(topics = ["#{'\${kafka.topic.names}'.split(',')}"], groupId = "\${kafka.topic.group.id}")
+	@KafkaListener(id = 'dlq', topics = ["#{'\${kafka.dlq.name}'.split(',')}"], groupId = "\${kafka.topic.group.id}", autoStartup = "\${kafka.dlq.processing}")
 	public def receivedMessage(String message) throws JsonProcessingException {
 		String mStr = new String(message)
 		def adoData = new JsonSlurper().parseText(mStr)
-		processADOData(adoData)
+		processADOData(adoData, message)
 	}
 	
-	abstract def processADOData(def adoData)
+	abstract def processADOData(def adoData, def message)
+	
+	public def processADOData(def adoData) {
+		processADOData(adoData, null)
+	}
 }
