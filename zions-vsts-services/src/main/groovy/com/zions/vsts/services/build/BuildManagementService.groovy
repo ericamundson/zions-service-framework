@@ -458,7 +458,7 @@ public class BuildManagementService {
 		return createBuildDefinition(collection, project, repo, bDef, buildStage, folder);
 	}
 	
-	def createBuildDefinition(def collection, def project, def repo, def bDef, String buildStage, def folder) {
+	def createBuildDefinition(def collection, def project, def repo, def bDef, String buildStage, def folder, def query = null) {
 		// set all the necessary properties and post the request
 		bDef.remove('authoredBy')
 		bDef.name = "${repo.name}-${buildStage}"
@@ -503,7 +503,7 @@ public class BuildManagementService {
 			}
 		}
 		//def memberData = memberManagementService.getMember(collection, 'z091182')
-		return writeBuildDefinition(collection, project, bDef)
+		return writeBuildDefinition(collection, project, bDef, query)
 	}
 
 	def createDRBuildDefinition(def collection, def project, def repo, def bDef, String buildStage, def folder) {
@@ -595,7 +595,7 @@ public class BuildManagementService {
 			result = genericRestClient.post(
 					requestContentType: ContentType.JSON,
 					uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
-					body: body,
+					body: bDef,
 					query: query
 					//headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true'],
 					)
@@ -603,7 +603,7 @@ public class BuildManagementService {
 			result = genericRestClient.post(
 				requestContentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
-				body: body,
+				body: bDef,
 				headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true'],
 				)
 
