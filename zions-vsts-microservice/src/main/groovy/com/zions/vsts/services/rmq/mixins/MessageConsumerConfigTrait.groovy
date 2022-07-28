@@ -33,7 +33,8 @@ trait MessageConsumerConfigTrait {
 	String group
 	@Value('${kafka.dlq.name}')
 	String dlqTopic
-
+	@Value('${kafka.dlq.processing}')
+	Boolean dlqProcessing
 	/**
 	 * Create a default Kafka ConsumerFactory
 	 * @return
@@ -75,6 +76,13 @@ trait MessageConsumerConfigTrait {
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
                 {r, e -> new TopicPartition("$dlqTopic", -1)}
         )
+		if (dlqProcessing) {
+			println("=================================================================")
+			println("= Warning:  DLQ Processing is turned on!!!")
+			println("=           Remember to turn off and restart service when done.")
+			println("=           The setting can be found in ConfigMap: dlq-config.")
+			println("=================================================================")
+		}
         SeekToCurrentErrorHandler seekToCurrentErrorHandler = new SeekToCurrentErrorHandler(recoverer,
                 new FixedBackOff(0L, 3L))
         seekToCurrentErrorHandler.setCommitRecovered(true)
