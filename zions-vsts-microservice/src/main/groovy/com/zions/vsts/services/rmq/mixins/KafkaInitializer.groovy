@@ -15,16 +15,26 @@ class KafkaInitializer {
 	@Value('${kafka.init.commandline:}')
 	String scriptCommand
 	
+	@Value('${kafka.user:}')
+	String kafkaUser
+	
+	@Value('${kafka.password:}')
+	String kafkaPassword
+	
+	@Value('${kafka.realm:}')
+	String kafkaRealm
+	
     @PostConstruct
     private void init() {
 		System.setProperty("java.security.auth.login.config", keytab)
 		System.setProperty("sun.security.krb5.debug","false")
 		System.setProperty("java.security.krb5.conf", krb5Conf)
 
-				if (scriptCommand) {
-			 Process proc = scriptCommand.split(',').execute()
-			 proc.waitForProcessOutput(System.out, System.err)
-			 proc.waitForOrKill(100000L)
+		if (scriptCommand) {
+			String scriptCommand = "$scriptCommand $kafkaUser $kafkaPassword $kafkaRealm"
+			Process proc = scriptCommand.execute()
+			proc.waitForProcessOutput(System.out, System.err)
+			proc.waitForOrKill(100000L)
 		}
     }
  
