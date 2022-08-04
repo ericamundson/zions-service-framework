@@ -126,7 +126,7 @@ public class PolicyManagementService {
 				}
 			}
 			// need to establish an initial build tag for ifb branch
-			buildManagementService.ensureInitialTag(collection, repoData.project, repoData, branchName)
+			//buildManagementService.ensureInitialTag(collection, repoData.project, repoData, branchName)
 		}
 		
 		// Check for special 'adoinit' branch used to patch master branch build / policy configuration

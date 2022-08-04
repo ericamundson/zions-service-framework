@@ -64,6 +64,20 @@ public class TaskManagementService {
 		return result1
 	}
 
+	public def getTaskGroupById(def collection, def project, String taskId) {
+		log.debug("TaskManagementService::getTaskGroupById -- id = " + taskId)
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/distributedtask/taskgroups/${taskId}",
+				headers: [accept: 'application/json;api-version=6.0-preview.1;excludeUrls=true'],
+		)
+		if (result == null || result.count == 0) {
+			log.debug("TaskManagementService::getTaskGroupById -- task group " + taskId + " not found. Returning NULL ...")
+			return null
+		}
+		return result.value[0]
+	}
+
 	def ensureEnvironment(def collection, def project, def envName, def envDescr) {
 		def result = getEnvironment(collection, project, envName)
 		if (result == null) {

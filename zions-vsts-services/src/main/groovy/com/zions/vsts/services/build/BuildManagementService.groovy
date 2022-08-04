@@ -61,7 +61,7 @@ public class BuildManagementService {
 	
 	public def ensureInitialTag(def collection, def project, def repo, def branchName) {
 		// get tags and sort in reverse order to get latest tag / version
-		def latestTag = getLatestTag(collection, project, repo)
+		def latestTag = getLatestTag(collection, project, repo, branchName)
 		if (latestTag != null) {
 			log.debug("BuildManagementService::ensureInitialTag -- Latest tag = ${latestTag.name}")
 			createInitialBuildTag(collection, project, repo, latestTag, branchName)
@@ -1366,8 +1366,17 @@ public class BuildManagementService {
 		return yamlFilename
 	}
 
-	private def getLatestTag(def collection, def project, def repo) {
-		log.debug("BuildManagementService::getLatestTag for project ${project.name} and repo ${repo.name}")
+	private def getLatestTag(def collection, def project, def repo, def branchName = "") {
+		log.debug("BuildManagementService::getLatestTag for project ${project.name}, repo ${repo.name} , branchName ${branchName}")
+		def qualifier = ""
+		if (branchName != "") {
+			if (branchName.toLowerCase().startsWith("refs/heads/ifb/")) {
+				qualifier = branchName.substring("refs/heads/ifb/".length())
+			} else if (branchName.toLowerCase().startsWith("refs/heads/feature/ifb/")) {
+				qualifier = branchName.substring("refs/heads/feature/ifb/".length())
+			}
+			log.debug("BuildManagementService::getLatestTag -- qualifier = ${qualifier}")
+		}
 		def query = ['filter':'tags', 'api-version':'6.0']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
@@ -1387,7 +1396,7 @@ public class BuildManagementService {
 		// check tag name to ensure that it represents a valid semantic version string
 		def tagName = latestTag.name
 		tagName = tagName.substring("refs/tags/".length(), tagName.length())
-		while (notValidTag(tagName) && lastTagIdx > 0) {
+		while (notValidTag(tagName, qualifier) && lastTagIdx > 0) {
 			lastTagIdx--
 			latestTag = result.value[lastTagIdx]
 			tagName = latestTag.name
@@ -1397,12 +1406,32 @@ public class BuildManagementService {
 		return latestTag
 	}
 
-	private boolean notValidTag(def tagName) {
-		log.debug("BuildManagementService::notValidTag -- Validing Tag ${tagName}")
+	private boolean notValidTag(def tagName, def qualifier) {
+		log.debug("BuildManagementService::notValidTag -- Validing Tag ${tagName}. Qualifier is ${qualifier}")
 		String tag = tagName
+		// look for tag with qualifier
 		if (tag.indexOf("-") > -1) {
-			// look for tag with qualifier
+			String compQual = ""
 			String[] tagParts = tag.split("-")
+			// compare tag with qualifier
+			if ("${qualifier}" != "") {
+				if (tagParts.size() == 3) {
+					compQual = tagParts[1]
+				} else {
+					boolean first = true
+					for (int i = 1; i < tagParts.size()-2; i++) {
+						if (first) {
+							first = false
+						} else {
+							compQual = compQual + "-"
+						}
+						compQual = compQual + tagParts[i]
+					}
+				}
+				if (compQual != "${qualifier}") {
+					return false
+				}
+			}
 			tag = tagParts[0]
 		}
 		String[] versionParts = tag.split("\\.")
