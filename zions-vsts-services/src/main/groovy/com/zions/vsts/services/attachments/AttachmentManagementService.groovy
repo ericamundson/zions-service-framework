@@ -45,13 +45,17 @@ class AttachmentManagementService implements IAttachments {
 		}
 	}
 	
-	public def sendAttachment(byte[] content, String filename) {
+	public def sendAttachment(String project, byte[] content, String filename) {
 		if (content) {
-			return fileManagementService.uploadAttachment(tfsCollection, this.tfsProject, this.tfsProject, content, filename)
+			return fileManagementService.uploadAttachment(tfsCollection, project, project, content, filename)
 		} else {
 			log.debug("sendAttachment was provided with a null file, skipping upload attempt")
 			return null
 		}
+	}
+
+	public def sendAttachment(byte[] content, String filename) {
+		return sendAttachment(this.tfsProject, content, filename)
 	}
 
 	/* (non-Javadoc)
