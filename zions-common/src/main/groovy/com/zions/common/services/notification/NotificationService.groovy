@@ -128,7 +128,7 @@ public class NotificationService {
 
 	}
 
-	def sendModernRequirementsFailureNotification(String recipientEmailAddresses, String senderAddress, def msg) {
+	def sendModernRequirementsFailureNotification(String[] recipientEmailAddresses, String senderAddress, def msg) {
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
 		
