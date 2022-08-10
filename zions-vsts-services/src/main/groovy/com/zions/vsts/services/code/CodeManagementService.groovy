@@ -185,6 +185,17 @@ class CodeManagementService {
 
 	}
 	
+	// Takes project name or id and repo name or id
+	public def getPullRequestCommits(String collection, String project, String repo, String pId) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/pullrequests/${pId}/commits",
+			query: ['api-version': '6.1'],
+			)
+		return result
+
+	}
+	
 	public def getChangesForWorkitems(String collection, def project, def repo, String[] workItemIds, String branch = 'refs/heads/master') {
 		def pullRequests = getPullRequests(collection, project, repo, 'completed', branch)
 		def changes = []
