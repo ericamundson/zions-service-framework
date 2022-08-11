@@ -379,6 +379,20 @@ class CodeManagementService {
 
 	}
 	
+	public def updatePullRequestStatus(String collection, String project, String repo, String pullRequestId, def updateData) {
+		def query = ['api-version': '6.1']
+		String body = new JsonBuilder(updateData).toPrettyString()
+		def result = genericRestClient.post(
+			contentType: ContentType.JSON,
+			//requestContentType: ContentType.JSON,
+			body: body,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/pullrequests/${pullRequestId}/statuses",
+			query: query
+		)
+		return result
+
+	}
+	
 	public def createTag(String collection, String project, String repo, String commitId, String tag, String message = 'Adding tag') {
 		def data = [name: tag, taggedObject: [objectId: commitId], message: message]
 		def query = ['api-version': '6.0-preview.1']
