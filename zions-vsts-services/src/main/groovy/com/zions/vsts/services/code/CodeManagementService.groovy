@@ -393,6 +393,17 @@ class CodeManagementService {
 
 	}
 	
+	// Takes project name or id and repo name or id
+	public def getPullRequestIterations(String collection, String project, String repo, String pId) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/pullrequests/${pId}/iterations",
+			query: ['api-version': '6.1'],
+			)
+		return result
+
+	}
+	
 	public def createTag(String collection, String project, String repo, String commitId, String tag, String message = 'Adding tag') {
 		def data = [name: tag, taggedObject: [objectId: commitId], message: message]
 		def query = ['api-version': '6.0-preview.1']
