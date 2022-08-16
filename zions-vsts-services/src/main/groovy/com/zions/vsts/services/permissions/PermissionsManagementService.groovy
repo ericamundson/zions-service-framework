@@ -27,7 +27,6 @@ class PermissionsManagementService {
 	@Autowired
 	private MemberManagementService memberManagementService
 
-
 	public PermissionsManagementService() {
 		
 	}
