@@ -8,6 +8,8 @@ import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.code.CodeManagementService
 import com.zions.vsts.services.endpoint.EndpointManagementService
+import com.zions.vsts.services.permissions.db.FilePermissions
+import com.zions.vsts.services.permissions.db.FilePermissionsRepository
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
@@ -27,6 +29,8 @@ class PermissionsManagementService {
 	@Autowired
 	private MemberManagementService memberManagementService
 
+	@Autowired
+	FilePermissionsRepository filePermissionsRepository
 
 	public PermissionsManagementService() {
 		
@@ -166,4 +170,24 @@ class PermissionsManagementService {
 		return template
 	}
 
+	public def addPolicyPermissions(String fullFilePath, boolean canDeleteFlag, def authorizedUsers) {
+		FilePermissions fp = null
+
+		// persist the new permissions data to Mongo DB
+		if (filePermissionsRepository) {
+			fp = [filePath: fullFilePath, canDelete: canDeleteFlag, authorizedUsers: authorizedUsers]
+			filePermissionsRepository.save( fp )
+		}
+		return fp
+	}
+
+	public def getPolicyPermissions(String filePath) {
+		FilePermissions fp = null
+
+		// retrieve the permissions data from Mongo DB
+		if (filePermissionsRepository) {
+			fp = filePermissionsRepository.findByFilePath(filePath)
+		}
+		return fp
+	}
 }
