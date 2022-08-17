@@ -333,13 +333,13 @@ public class MemberManagementService {
 
 	}
 
-	def getTeamMembers(collection, project, teamName) {
+	def getTeamMembers(def collection, String project, String teamName) {
 		def members = []
 		def eteam = URLEncoder.encode(teamName, 'utf-8')
 		eteam = eteam.replace('+', '%20')
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${project.id}/teams/${eteam}/members",
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${project}/teams/${eteam}/members",
 				query: ['api-version': '6.1']
 				)
 		if (result && result.value) {
