@@ -16,6 +16,7 @@ import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -42,6 +43,7 @@ class BacklogHierarchyServiceSpecTest extends Specification {
 	@Autowired
 	BacklogHierarchyService underTest
 
+	@Ignore
 	def 'getCategoryLevelMap success flow.'() {
 		given: 'process template management service getProcessConfiguration stub'
 		def processConfigData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/processConfiguration.json').text)
@@ -54,6 +56,7 @@ class BacklogHierarchyServiceSpecTest extends Specification {
 		categoryLevelMap == '[LevelOne:1, PortfolioEpic:2, Epics:3, Features:4, Stories:5, Tasks:6]'
 	}
 	
+	@Ignore
 	def 'getWitCategoryMap success flow.'() {
 		given: 'process template management service getProcessConfiguration stub'
 		def processConfigData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/processConfiguration.json').text)
