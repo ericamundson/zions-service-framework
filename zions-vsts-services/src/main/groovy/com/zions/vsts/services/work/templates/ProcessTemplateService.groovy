@@ -208,6 +208,18 @@ public class ProcessTemplateService {
 		}
 	}
 	
+	public def getProcessConfiguration(def collection, def project) {
+		def aproject = encode(project)
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${aproject}/_apis/work/processconfiguration",
+			headers: ['Content-Type': 'application/json', accept: 'application/json'],
+			query: ['api-version': '6.0-preview.1']
+			)
+		return result
+
+	}
+
 	private def ensureWitField(collection, project, wit, witFieldChange) {
 		// If this is an external control only, without associated field, just update layout and return
 		// Pass null field

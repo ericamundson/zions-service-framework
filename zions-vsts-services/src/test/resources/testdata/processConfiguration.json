@@ -1,0 +1,122 @@
+{
+	"typeFields": {
+		"Effort": {
+			"referenceName": "Microsoft.VSTS.Scheduling.StoryPoints",
+			"name": "Story Points",
+			"url": "https://dev.azure.com/ZionsETO/_apis/wit/fields/Microsoft.VSTS.Scheduling.StoryPoints"
+		},
+		"Order": {
+			"referenceName": "Microsoft.VSTS.Common.StackRank",
+			"name": "Stack Rank",
+			"url": "https://dev.azure.com/ZionsETO/_apis/wit/fields/Microsoft.VSTS.Common.StackRank"
+		},
+		"RemainingWork": {
+			"referenceName": "Microsoft.VSTS.Scheduling.RemainingWork",
+			"name": "Remaining Work",
+			"url": "https://dev.azure.com/ZionsETO/_apis/wit/fields/Microsoft.VSTS.Scheduling.RemainingWork"
+		},
+		"Team": {
+			"referenceName": "System.AreaPath",
+			"name": "Area Path",
+			"url": "https://dev.azure.com/ZionsETO/_apis/wit/fields/System.AreaPath"
+		},
+		"Activity": {
+			"referenceName": "Microsoft.VSTS.Common.Activity",
+			"name": "Activity",
+			"url": "https://dev.azure.com/ZionsETO/_apis/wit/fields/Microsoft.VSTS.Common.Activity"
+		}
+	},
+	"taskBacklog": {
+		"name": "Tasks",
+		"referenceName": "Microsoft.TaskCategory",
+		"workItemTypes": [
+			{
+				"name": "Task",
+				"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Task"
+			}
+		]
+	},
+	"requirementBacklog": {
+		"name": "Stories",
+		"referenceName": "Microsoft.RequirementCategory",
+		"workItemTypes": [
+			{
+				"name": "User Story",
+				"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/User%20Story"
+			},
+			{
+				"name": "Impediment",
+				"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Impediment"
+			},
+			{
+				"name": "Idea",
+				"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Idea"
+			},
+			{
+				"name": "PEN",
+				"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/PEN"
+			},
+			{
+				"name": "Change Request",
+				"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Change%20Request"
+			},
+			{
+				"name": "Spike",
+				"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Spike"
+			}
+		]
+	},
+	"portfolioBacklogs": [
+		{
+			"name": "Epics",
+			"referenceName": "Microsoft.EpicCategory",
+			"workItemTypes": [
+				{
+					"name": "Epic",
+					"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Epic"
+				},
+				{
+					"name": "LPM Task",
+					"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/LPM%20Task"
+				},
+				{
+					"name": "AP Request",
+					"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/AP%20Request"
+				},
+				{
+					"name": "Component",
+					"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Component"
+				}
+			]
+		},
+		{
+			"name": "Features",
+			"referenceName": "Microsoft.FeatureCategory",
+			"workItemTypes": [
+				{
+					"name": "Feature",
+					"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Feature"
+				},
+				{
+					"name": "Sub Component",
+					"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Sub%20Component"
+				},
+				{
+					"name": "DAG",
+					"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/DAG"
+				}
+			]
+		}
+	],
+	"bugWorkItems": {
+		"name": "Bugs",
+		"referenceName": "Microsoft.BugCategory",
+		"workItemTypes": [
+			{
+				"name": "Bug",
+				"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/wit/workItemTypes/Bug"
+			}
+		]
+	},
+	"url": "https://dev.azure.com/ZionsETO/f5b48f08-0085-4814-875a-a3dbc9736967/_apis/work/processconfiguration"
+}
