@@ -18,35 +18,35 @@ class BacklogHierarchyService {
 
 	String project = 'BaNCS' // Default project to retrieve process config
 	
-	def static categories = []
-	def static witCategoryMap = [:]
-	def static categoryLevelMap = [:]
+	def categories = []
+	def witCatMap = [:]
+	def catLevelMap = [:]
 	
 	// Get all wits mapped to associated category name
 	public def getWitCategoryMap() {
-		if (witCategoryMap.size() > 0) return witCategoryMap
+		if (witCatMap.size() > 0) return witCatMap
 		
 		buildProcessCategories()
 
 		categories.each { cat ->
 			cat.wiTypes.each { type ->
-				witCategoryMap.put("$type".toString(), "${cat.name}".toString())
+				witCatMap.put("$type".toString(), "${cat.name}".toString())
 			}
 		}
-		return witCategoryMap
+		return witCatMap
 	}
 	
 	// Get all backlog categories with associated numeric level #
 	public def getCategoryLevelMap() {
-		if (categoryLevelMap.size() > 0) return categoryLevelMap
+		if (catLevelMap.size() > 0) return catLevelMap
 		
 		buildProcessCategories()
 		
 		int level = 1
 		categories.each { cat ->
-			categoryLevelMap.put("${cat.name}".toString(), level++)
+			catLevelMap.put("${cat.name}".toString(), level++)
 		}
-		return categoryLevelMap
+		return catLevelMap
 	}
 	
 	private def buildProcessCategories() {
