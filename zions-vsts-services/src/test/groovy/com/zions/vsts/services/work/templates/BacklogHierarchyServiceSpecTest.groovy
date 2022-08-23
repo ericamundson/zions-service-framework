@@ -43,11 +43,10 @@ class BacklogHierarchyServiceSpecTest extends Specification {
 	@Autowired
 	BacklogHierarchyService underTest
 
-	@Ignore
 	def 'getCategoryLevelMap success flow.'() {
 		given: 'process template management service getProcessConfiguration stub'
 		def processConfigData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/processConfiguration.json').text)
-		processTemplateService.getProcessConfiguration(_, _) >> processConfigData
+		genericRestClient.get(_) >> processConfigData
 		
 		when: 'call method (getCategoryLevelMap) under test.'
 		def categoryLevelMap = underTest.getCategoryLevelMap().toString()
@@ -56,11 +55,10 @@ class BacklogHierarchyServiceSpecTest extends Specification {
 		categoryLevelMap == '[LevelOne:1, PortfolioEpic:2, Epics:3, Features:4, Stories:5, Tasks:6]'
 	}
 	
-	@Ignore
 	def 'getWitCategoryMap success flow.'() {
 		given: 'process template management service getProcessConfiguration stub'
 		def processConfigData = new JsonSlurper().parseText(this.getClass().getResource('/testdata/processConfiguration.json').text)
-		processTemplateService.getProcessConfiguration(_, _) >> processConfigData
+		genericRestClient.get(_) >> processConfigData
 		
 		when: 'call method (getWitCategoryMap) under test.'
 		def witCategoryMap = underTest.getWitCategoryMap().toString()
@@ -89,7 +87,7 @@ class BacklogHierarchyServiceSpecTestConfig {
 	
 	@Bean
 	ProcessTemplateService processTemplateService() {
-		return mockFactory.Mock(ProcessTemplateService)
+		return new ProcessTemplateService()
 	}
 	
 	@Bean
