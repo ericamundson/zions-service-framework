@@ -18,7 +18,7 @@ class BacklogHierarchyService {
 
 	String project = 'BaNCS' // Default project to retrieve process config
 	
-	List<Category> categories = new ArrayList<Category>()
+	def static categories = []
 	def static witCategoryMap = [:]
 	def static categoryLevelMap = [:]
 	
