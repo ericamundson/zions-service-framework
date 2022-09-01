@@ -234,7 +234,6 @@ allprojects {
 			implementation group: 'org.springframework.data', name: 'spring-data-ldap', version: '2.2.3.RELEASE'
 		
 		}
-		compile 'org.ajoberstar:grgit:1.7.1'
 		compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
 		compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.1'
 		compile 'org.codehaus.groovy:groovy-dateutil:3.0.1'
