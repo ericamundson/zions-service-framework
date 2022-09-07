@@ -14,10 +14,10 @@ trigger:
     
   
  
-#Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named â€˜buildTagâ€™. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named â€˜Tagâ€™. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named â€˜buildTagâ€™. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named â€˜Tagâ€™. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 stages:
 - stage: Build
   jobs:
@@ -45,6 +45,9 @@ stages:
         tasks: 'clean build zions-common:uploadArchives zions-vsts-service:uploadArchives zions-common-data:uploadArchives zions-vsts-microservice:uploadArchives'
         publishJUnitResults: false
 
-
- 
-      
+    - task: SonatypeIntegrations.nexus-iq-azure-extension.nexus-iq-azure-pipeline-task.NexusIqPipelineTask@1
+      displayName: 'Nexus IQ policy evaluation'
+      inputs:
+        nexusIqService: 'Nexus IQ - Production'
+        applicationId: 'zions-service-framework-jars'
+        scanTargets: 'build/libs/*.jar'
