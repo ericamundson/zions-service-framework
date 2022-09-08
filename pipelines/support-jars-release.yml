@@ -46,12 +46,8 @@ stages:
         publishJUnitResults: false
 
     - task: SonatypeIntegrations.nexus-iq-azure-extension.nexus-iq-azure-pipeline-task.NexusIqPipelineTask@1
-      displayName: 'Nexus IQ policy evaluation'
+      displayName: 'Nexus IQ: zions-service-framework-jars - Build'
       inputs:
         nexusIqService: 'Nexus IQ - Production'
         applicationId: 'zions-service-framework-jars'
-        scanTargets:
-        - 'zions-common/build/libs/*.jar'
-        - 'zions-common-data/build/libs/*.jar'
-        - 'zions-vsts-services/build/libs/*.jar'
-        - 'zions-vsts-microservice/build/libs/*.jar'
+        scanTargets: 'zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar'
