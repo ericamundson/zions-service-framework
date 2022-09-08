@@ -50,4 +50,8 @@ stages:
       inputs:
         nexusIqService: 'Nexus IQ - Production'
         applicationId: 'zions-service-framework-jars'
-        scanTargets: 'build/libs/*.jar'
+        scanTargets:
+        - 'zions-common/build/libs/*.jar'
+        - 'zions-common-data/build/libs/*.jar'
+        - 'zions-vsts-services/build/libs/*.jar'
+        - 'zions-vsts-microservice/build/libs/*.jar'
