@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Component
@@ -26,9 +25,6 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	/**
 	 * Mongodb setup configuration
 	 */
-	@Autowired(required=false)
-	MongoTemplate mongoTemplate
-	
 	private static int PAGE_SIZE = 200
 
 	/**
@@ -129,7 +125,6 @@ class MongoDBCacheManagementService implements ICacheManagementService {
 	@Override
 	public void clear() {
 //		Criteria c = Criteria.where('project').is(dbProject)
-//		mongoTemplate.remove(new Query(c), CacheItem.class)
 		repository.deleteCacheItemByProjectAndModule(dbProject, cacheModule)
 
 	}

@@ -1,6 +1,7 @@
 package com.zions.common.services.mongo;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import cz.jirutka.spring.embedmongo.slf4j.Slf4jLevel;
 import cz.jirutka.spring.embedmongo.slf4j.Slf4jProgressListener;
 import cz.jirutka.spring.embedmongo.slf4j.Slf4jStreamProcessor;
@@ -88,7 +89,7 @@ public class EmbeddedMongoBuilder {
         LOG.info("Starting embedded MongoDB instance");
         mongodExe.start();
 
-        return new MongoClient(bindIp, getPort());
+        return MongoClients.create("mongodb://$bindIp:${getPort()}")
     }
 
 

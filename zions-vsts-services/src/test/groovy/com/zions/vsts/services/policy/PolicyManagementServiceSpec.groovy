@@ -14,7 +14,9 @@ import com.zions.common.services.rest.IGenericRestClient
 import com.zions.vsts.services.admin.member.MemberManagementServiceTestConfig
 import com.zions.vsts.services.build.BuildManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
+import spock.lang.Ignore
 
+/*
 @ContextConfiguration(classes=[PolicyManagementServiceSpecConfig])
 class PolicyManagementServiceSpec {
 	@Autowired
@@ -25,7 +27,8 @@ class PolicyManagementServiceSpec {
 	
 	@Autowired
 	PolicyManagementService underTest
-
+	
+	@Ignore
 	def 'ensurePolicies main flow.'() {
 //		when:  'buildManagementService.ensureBuildsForBranch stub'
 //		1 * buildManagementService.ensureBuildsForBranch(_, _, _) >> [ciBuildId: 3456]
@@ -54,3 +57,4 @@ class PolicyManagementServiceSpecConfig {
 		return new PolicyManagementService()
 	}
 }
+*/
