@@ -7,7 +7,6 @@ import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoClient
 import com.mongodb.MongoClientSettings
 import com.zions.common.services.cache.db.CacheItemRepository
-import com.zions.common.services.mongo.EmbeddedMongoBuilder
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.DataGenerationService
 import com.zions.common.services.test.SpockLabeler
