@@ -208,16 +208,12 @@ allprojects {
 
 	dependencies {
 		if (context != 'nexus') {
-			implementation 'org.springframework.boot:spring-boot-starter'
+			implementation "org.springframework.boot:spring-boot-starter:${project.springBootVersion}"
 			implementation('org.springframework.cloud:spring-cloud-starter-vault-config:2.2.7.RELEASE')
 		} else {
 			implementation group: 'org.springframework', name: 'spring-beans', version: '5.2.2.RELEASE'
 			implementation group: 'org.springframework', name: 'spring-context', version: '5.2.2.RELEASE'
-			implementation group: 'org.springframework', name: 'spring-core', version: '5.2.2.RELEASE'
-			implementation group: 'org.springframework.data', name: 'spring-data-commons', version: "${project.springBootVersion}"
-			implementation group: 'org.springframework.data', name: 'spring-data-mongodb', version: "${project.springBootVersion}"
-			implementation group: 'org.springframework.data', name: 'spring-data-ldap', version: "${project.springBootVersion}"
-		
+			implementation group: 'org.springframework', name: 'spring-core', version: '5.2.2.RELEASE'		
 		}
 		implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
 		implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
