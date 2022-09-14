@@ -3,7 +3,7 @@ package com.zions.common.services.restart
 import static org.junit.Assert.*
 
 import com.mongodb.Mongo
-import com.mongodb.MongoClient
+import com.mongodb.client.MongoClient
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.test.SpockLabeler
@@ -16,8 +16,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
-import org.springframework.data.mongodb.config.AbstractMongoConfiguration
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.test.context.ContextConfiguration
 
@@ -108,13 +106,5 @@ class CheckpointManagementServiceSpecConfig {
 		return new CacheManagementService()
 	}
 
-//	@Bean
-//	MongoClient mongoClient() throws UnknownHostException {
-//		return new MongoClient("localhost");
-//	}
-//	
-//	public @Bean MongoTemplate mongoTemplate() throws Exception {
-//		return new MongoTemplate(mongoClient(), "adomigration");
-//	}
   
 }

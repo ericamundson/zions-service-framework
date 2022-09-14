@@ -5,8 +5,8 @@ jar {
 	enabled = true
 }
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-websocket:2.2.2.RELEASE")
-    compile("org.springframework.boot:spring-boot-starter-amqp:2.2.2.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-websocket:2.3.12.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-amqp:2.3.12.RELEASE")
 	compile('org.springframework.kafka:spring-kafka')
 	compile("org.springframework:spring-websocket:5.2.2.RELEASE")
 	compile("org.springframework:spring-messaging:5.2.2.RELEASE")
