@@ -11,6 +11,6 @@
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.vsts.services.cli.CliApplication"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="setClosedDates&#13;&#10;--tfs.url=https://dev.azure.com&#13;&#10;--tfs.cloneSrcProjectName=Sandbox&#13;&#10;--tfs.targetProject=Sandbox&#13;&#10;--tfs.cloneDestProjectName=Sandbox&#13;&#10;--tfs.collection=zionseto&#13;&#10;--tfs.user=&quot;myuser&quot;&#13;&#10;--tfs.token=mytoken&#13;&#10;--out.file=d:\eBizDTSTestResults070721.json&#13;&#10;--tfs.project=Sandbox"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-vsts-cli"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=work -Dproxy.Host=172.18.4.115  -Dproxy.Port=8080 -Dproxy.User= -Dproxy.Password="/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=work -Dproxy.Host=proxy.cs.zionsbank.com -Dproxy.Port=8080 -Dproxy.User= -Dproxy.Password="/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:zions-vsts-cli}"/>
 </launchConfiguration>

@@ -1,6 +1,0 @@
-[http "https://dev.azure.com"]
-	proxy=http://v070873@172.18.4.115:8080
-	sslVerify = true
-[http "https://zionseto.visualstudio.com"]
-	proxy=http://v070873@172.18.4.115:8080
-	sslVerify = true
