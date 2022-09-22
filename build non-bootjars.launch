@@ -12,7 +12,7 @@
 <stringAttribute key="gradle_user_home" value=""/>
 <stringAttribute key="java_home" value=""/>
 <listAttribute key="jvm_arguments">
-<listEntry value="-Dhttp.proxyHost=172.18.4.115"/>
+<listEntry value="-Dhttp.proxyHost=proxy.cs.zionsbank.com"/>
 <listEntry value="-Dhttp.proxyPort=8080"/>
 </listAttribute>
 <booleanAttribute key="offline_mode" value="false"/>
