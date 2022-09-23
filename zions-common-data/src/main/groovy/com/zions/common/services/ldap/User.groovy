@@ -7,7 +7,7 @@ import org.springframework.ldap.odm.annotations.Entry
 import org.springframework.ldap.odm.annotations.Id
 
 @Entry(
-  base = "ou=TOPS", 
+  base = "", 
   objectClasses = [ 'user' ])
 @Canonical
 final class User {
@@ -17,5 +17,4 @@ final class User {
     @Attribute(name = "uid") String uid;
 	@Attribute(name = "mail") String email;
 	@Attribute(name = "displayName") String displayName;
-	
 }
