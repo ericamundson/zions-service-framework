@@ -2,7 +2,6 @@ package com.zions.common.services.restart
 
 import static org.junit.Assert.*
 
-import com.mongodb.Mongo
 import com.mongodb.client.MongoClient
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
