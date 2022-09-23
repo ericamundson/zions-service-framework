@@ -215,7 +215,7 @@ allprojects {
 			implementation group: 'org.springframework', name: 'spring-context', version: '5.2.2.RELEASE'
 			implementation group: 'org.springframework', name: 'spring-core', version: '5.2.2.RELEASE'		
 		}
-		implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
+		//implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
 		implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 		implementation 'org.codehaus.groovy:groovy-dateutil:3.0.1'
 		implementation 'org.codehaus.groovy:groovy-yaml:3.0.1'
