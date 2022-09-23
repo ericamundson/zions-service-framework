@@ -2,7 +2,6 @@ package com.zions.common.services.cache;
 
 
 import groovy.json.JsonSlurper
-import com.mongodb.Mongo
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoClient
 import com.mongodb.MongoClientSettings
