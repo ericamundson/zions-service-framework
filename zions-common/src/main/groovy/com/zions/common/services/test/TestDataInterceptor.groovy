@@ -24,6 +24,8 @@ trait TestDataInterceptor implements Interceptor {
 	
 	List<String> methods
 	
+	String methodPrefix = ''
+	
 	boolean ignore
 	
 	String outType
@@ -37,9 +39,10 @@ trait TestDataInterceptor implements Interceptor {
 	 * @param methods - list of object methods to store output.
 	 * @param closure
 	 */
-	void provideTestData(def obj, String saveLocation, boolean ignore = false, List<String> methods= null,  String type = 'json', Closure closure) {
+	void provideTestData(def obj, String saveLocation, String methodPrefix = null, boolean ignore = false, List<String> methods= null,  String type = 'json', Closure closure) {
 		doRun = true
 		this.methods = methods
+		this.methodPrefix = methodPrefix
 		this.ignore = ignore
 		this.saveLocation = saveLocation
 		this.outType = type
@@ -64,8 +67,10 @@ trait TestDataInterceptor implements Interceptor {
 	public Object afterInvoke(Object object, String methodName, Object[] arguments, Object result) {
 		if (!ignore && (!methods || methods.contains(methodName))) {
 			File saveDir = new File(saveLocation)
+			String outMethodName = methodName
+			if (methodPrefix != null) outMethodName = "${methodPrefix}_${methodName}"
 			if (outType == 'json') {
-				File jFile = new File(saveDir, "${methodName}.json")
+				File jFile = new File(saveDir, "${outMethodName}.json")
 				try {
 					String json = new JsonBuilder(result).toPrettyString()
 					def os = jFile.newDataOutputStream()
@@ -73,7 +78,7 @@ trait TestDataInterceptor implements Interceptor {
 					os.close()
 				} catch (e) {}
 			} else if (outType == 'xml') {
-				File jFile = new File(saveDir, "${methodName}.xml")
+				File jFile = new File(saveDir, "${outMethodName}.xml")
 				try {
 					String xml = new XmlUtil().serialize(result)
 					def os = jFile.newDataOutputStream()

@@ -25,4 +25,7 @@ class UserManagementService {
 		return userRepository.findByEmail(email)
 	}
 
+	User getUserByUidAndPassword(String uid, String password) {
+		return userRepository.findByUidAndPassword(uid, password)
+	}
 }
