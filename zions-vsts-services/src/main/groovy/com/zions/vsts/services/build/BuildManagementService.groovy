@@ -142,7 +142,6 @@ public class BuildManagementService {
 	public def ensureBuildsForBranch(def collection, def projectData, def repo, def ciTemplate, def releaseTemplate, boolean isInitBranch, def buildData = null) {
 		def buildTemplate = null
 		boolean buildFolderCreated = false
-		log.debug("BuildManagementService::ensureBuildsForBranch -- Look for existing CI Build ...")
 		Integer ciBldId = -1
 		def ciBldName = ""
 		def buildFolderName = ""
@@ -173,6 +172,7 @@ public class BuildManagementService {
 			if (buildData && buildData.ciBuildName) {
 				ciBuildInt = buildData.ciBuildName
 			}
+			log.debug("BuildManagementService::ensureBuildsForBranch -- Look for existing CI Build ...")
 			def yamlBuild = getBuild(collection, projectData, ciBuildInt)
 			if (yamlBuild != null) {
 				log.debug("BuildManagementService::ensureBuildsForBranch -- Found existing YAML CI Build. Setting Id for return to ${yamlBuild.id}")
@@ -194,6 +194,7 @@ public class BuildManagementService {
 				}
 			}
 		} else {
+			log.debug("BuildManagementService::ensureBuildsForBranch -- Look for existing CI Build ...")
 			def build = getBuild(collection, projectData, repo, 'ci')
 			if (build.count == 0) {
 				buildTemplate = getBuildTemplate(collection, projectData, repo, 'ci', ciTemplate)
@@ -595,7 +596,7 @@ public class BuildManagementService {
 			result = genericRestClient.post(
 					requestContentType: ContentType.JSON,
 					uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
-					body: bDef,
+					body: body,
 					query: query
 					//headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true'],
 					)
@@ -603,7 +604,7 @@ public class BuildManagementService {
 			result = genericRestClient.post(
 				requestContentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
-				body: bDef,
+				body: body,
 				headers: [Accept: 'application/json;api-version=5.1;excludeUrls=true'],
 				)
 
