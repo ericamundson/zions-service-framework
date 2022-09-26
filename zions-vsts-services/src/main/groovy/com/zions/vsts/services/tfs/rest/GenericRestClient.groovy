@@ -91,8 +91,8 @@ class GenericRestClient extends AGenericRestClient {
 		
 		
 		//HTTPBuilder has no direct methods to add timeouts.  We have to add them to the HttpParams of the underlying HttpClient
-		delegate.getClient().getParams().setParameter("http.connection.timeout", new Integer(TENSECONDS))
-		delegate.getClient().getParams().setParameter("http.socket.timeout", new Integer(THIRTYSECONDS))
+		delegate.getClient().getParams().setParameter("http.connection.timeout", Integer.valueOf(TENSECONDS))
+		delegate.getClient().getParams().setParameter("http.socket.timeout", Integer.valueOf(THIRTYSECONDS))
 	}
 	
 	private retryConnect() {
