@@ -772,6 +772,25 @@ public class BuildManagementService {
 		return wis
 	}
 	
+	public String getFinalYaml(def collection, def project, def buildId) {
+		def json = ["PreviewRun": true]
+		def body = new JsonBuilder(json).toPrettyString()
+		log.debug("BuildManagementService::getFinalYaml")
+		
+		String finalYaml = null
+		def result = genericRestClient.post(
+				requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/pipelines/${buildId}/runs",
+				body: body,
+				headers: [Accept: 'application/json;api-version=6.1-preview.1'],
+				)
+		if (result && result.finalYaml) {
+			finalYaml = result.finalYaml
+		}
+
+		return finalYaml
+	}
+	
 	public def getTags(String collection, String project, String prefix = null) {
 		def tags = []
 		def eproject = URLEncoder.encode(project, 'utf-8')
