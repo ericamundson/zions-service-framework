@@ -1,14 +1,34 @@
+name: $(date:yyyyMMdd)$(rev:.rrr)
+
+parameters:
+- name: pool_name
+  displayName: Pool Name
+  type: string
+  default: On-Prem Production
+  values:
+  - On-Prem Production
+  - On-Prem DR
+
 trigger: none
 
-pool:
-  name: Default
-  demands:
-  - agent.name -equals bagent
-
-steps:
-- task: Gradle@2
-  displayName: 'gradlew clean build'
-  inputs:
-    options: '--no-scan -Pqueue=default -Pcontext=all'
-    tasks: 'clean build'
-    publishJUnitResults: false
+stages:
+- stage: Build
+  jobs:
+  # Job: build - checkout, compile
+  - job: build
+    pool:
+      name: ${{ parameters.pool_name }}
+      demands:
+        - agent.computername -equals UTMVPI0144
+    workspace:
+      # all - delete these dirs: _work/1, _work/1/a, _work/1/TestResults, _work\1\b, _work\1\s
+      # resources - delete these dirs: _work/1/a, _work/1/TestResults, _work\1\s
+      # outputs - delete these dirs: _work/1/a, _work/1/TestResults, _work\1\b
+      clean: resources 
+    steps:
+    - task: Gradle@2
+      displayName: 'gradlew clean build'
+      inputs:
+        options: '--no-scan -Pqueue=default -Pcontext=all -PbuildType=ci'
+        tasks: 'clean build'
+        publishJUnitResults: false

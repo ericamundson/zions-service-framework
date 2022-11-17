@@ -1,3 +1,14 @@
+name: $(date:yyyyMMdd)$(rev:.rrr)
+
+parameters:
+- name: pool_name
+  displayName: Pool Name
+  type: string
+  default: On-Prem Production
+  values:
+  - On-Prem Production
+  - On-Prem DR
+
 variables:
 - group: 'XebiaLabs CLI (Prod)'
 
@@ -11,31 +22,26 @@ trigger:
     - 'zions-common-data/src/*'
     - 'zions-vsts-services/src/*'
     - 'zions-vsts-microservice/src/*'
-    
-  
- 
-#Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘buildTag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘Tag’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+
 stages:
 - stage: Build
   jobs:
-  - job: Build
+  - job: build
     pool:
-      name: On-Prem Production
+      name: ${{ parameters.pool_name }}
       demands:
       - agent.computername -equals UTMVPI0144
-#    workspace:
-#      clean: none
-
+    workspace:
+      # all - delete these dirs: _work/1, _work/1/a, _work/1/TestResults, _work\1\b, _work\1\s
+      # resources - delete these dirs: _work/1/a, _work/1/TestResults, _work\1\s
+      # outputs - delete these dirs: _work/1/a, _work/1/TestResults, _work\1\b
+      clean: resources
     steps:
     - task: Zions.zions-vsts-build.tag-build-task.TagBuild@3
       displayName: 'Tag Pending'
       inputs:
         OutputVariable: buildTag
         InitialVersionPrefix: 7.1.0
-
     - task: Gradle@2
       displayName: 'gradlew clean build uploadArchives'
       inputs:
@@ -44,10 +50,9 @@ stages:
         options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=nexus -x test'
         tasks: 'clean build zions-common:uploadArchives zions-vsts-service:uploadArchives zions-common-data:uploadArchives zions-vsts-microservice:uploadArchives'
         publishJUnitResults: false
-
     - task: SonatypeIntegrations.nexus-iq-azure-extension.nexus-iq-azure-pipeline-task.NexusIqPipelineTask@1
-      displayName: 'Nexus IQ: zions-service-framework-jars - Build'
+      displayName: 'Nexus IQ: $(System.TeamProject)-$(Build.Repository.Name) - Build'
       inputs:
         nexusIqService: 'Nexus IQ - Production'
-        applicationId: 'zions-service-framework-jars'
+        applicationId: 'Nexus IQ: $(System.TeamProject)-$(Build.Repository.Name) - Build'
         scanTargets: 'zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar'
