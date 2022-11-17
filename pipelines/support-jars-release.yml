@@ -54,5 +54,5 @@ stages:
       displayName: 'Nexus IQ: $(System.TeamProject)-$(Build.Repository.Name) - Build'
       inputs:
         nexusIqService: 'Nexus IQ - Production'
-        applicationId: 'Nexus IQ: $(System.TeamProject)-$(Build.Repository.Name) - Build'
+        applicationId: '$(System.TeamProject)-$(Build.Repository.Name)'
         scanTargets: 'zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar'
