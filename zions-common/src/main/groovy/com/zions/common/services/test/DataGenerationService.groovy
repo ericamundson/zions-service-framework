@@ -1,6 +1,7 @@
 package com.zions.common.services.test
 
 import groovy.json.JsonSlurper
+import groovy.yaml.YamlSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -32,7 +33,9 @@ class DataGenerationService {
 		String outData = parse(template)
 		if (name.endsWith('.json')) {
 			return new JsonSlurper().parseText(outData)
-		} 
+		} else if (name.endsWith('.yaml')) {
+				return new YamlSlurper().parseText(outData)
+		}
 		return new XmlSlurper().parseText(outData)
 
 	}
@@ -43,7 +46,9 @@ class DataGenerationService {
 		String outData = parse(template)
 		if (name.endsWith('.json')) {
 			return new JsonSlurper().parseText(outData)
-		} 
+		} else if (name.endsWith('.yaml')) {
+				return new YamlSlurper().parseText(outData)
+		}
 		return new XmlSlurper().parseText(outData)
 	}
 
@@ -60,7 +65,9 @@ class DataGenerationService {
 		if (!raw) {
 			if (resource.endsWith('.json')) {
 				return new JsonSlurper().parseText(outData)
-			} 
+			} else if (resource.endsWith('.yaml')) {
+				return new YamlSlurper().parseText(outData)
+			}
 			return new XmlSlurper().parseText(outData)
 		}
 		return outData
