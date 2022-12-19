@@ -5,6 +5,7 @@ import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 import groovy.xml.XmlUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 
 /**
  * This trait can be added to any class anonymous or not to enable ability to surround a method call with ability 
@@ -16,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired
 @Slf4j
 trait TestDataInterceptor implements Interceptor {
 	
-	
+	@Value('${init.test.data:false}')
+	boolean initTestData
+
 	
 	boolean doRun = true
 	
@@ -40,6 +43,7 @@ trait TestDataInterceptor implements Interceptor {
 	 * @param closure
 	 */
 	void provideTestData(def obj, String saveLocation, String methodPrefix = null, boolean ignore = false, List<String> methods= null,  String type = 'json', Closure closure) {
+		if (!initTestData) return
 		doRun = true
 		this.methods = methods
 		this.methodPrefix = methodPrefix
@@ -54,6 +58,7 @@ trait TestDataInterceptor implements Interceptor {
 		closure.call()
 		obj.metaClass = cMetaClass
 		proxy.interceptor = null
+		
 			
 	}
 	
