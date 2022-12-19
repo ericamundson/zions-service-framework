@@ -55,6 +55,9 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	@Value('${output.test.data.prefix:testdata}')
 	String outputTestDataPrefix
 	
+	@Value('${web.scheme:http}')
+	String webScheme
+	
 	@Value('${retry.copy:false}')
 	boolean rcopy
 	
@@ -82,7 +85,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 					new UsernamePasswordCredentials(proxyUser, proxyPassword)
 				)
 			}
-			delegate.setProxy(proxyHost, Integer.parseInt(proxyPort), 'http')
+			delegate.setProxy(proxyHost, Integer.parseInt(proxyPort), webScheme)
 			
 		}
 	}
@@ -99,6 +102,15 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	}
 	
 	
+	Map fixUri(Map input) {
+		String uri = "${input.uri}"
+		if (uri !== null) {
+			uri = uri.replace('+', '%20').replace(' ', '%20')
+			input.uri = uri
+		}
+		return input
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.zions.vsts.services.tfs.rest.IGenericRestClient#get(java.util.Map)
 	 */
@@ -107,6 +119,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		//log.debug("GenericRestClient::get -- URI before checkBlankCollection: "+input.uri)
 		String url
 		def query = null
+		input = fixUri( input )
 		if (outputTestDataFlag) {
 			url = "${input.uri}"
 			if (input.query) {
@@ -217,6 +230,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	@Override
 	def put(Map input) {
 		boolean withHeader = false
+		input = fixUri( input )
 		if (input.withHeader) {
 			withHeader = input.withHeader
 		}
@@ -243,6 +257,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def delete(Map input) {
+		input = fixUri( input )
 		HttpResponseDecorator resp = delegate.delete(input)
 		if (resp.status != 204) {
 			return null;
@@ -255,6 +270,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def patch(Map input, Closure handleResponse = null) {
+		input = fixUri( input )
 		boolean withHeader = false
 		if (input.withHeader) {
 			withHeader = input.withHeader
@@ -317,6 +333,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	 */
 	@Override
 	def post(Map input) {
+		input = fixUri( input )
 		String url
 		def query = null
 		def body = null
@@ -376,6 +393,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 	
 
 	public Object rateLimitPost(Map input,  Closure encoderFunction = null) {
+		input = fixUri( input )
 		boolean withHeader = false
 		if (input.withHeader) {
 			withHeader = input.withHeader

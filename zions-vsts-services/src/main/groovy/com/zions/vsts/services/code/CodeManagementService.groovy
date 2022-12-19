@@ -477,7 +477,7 @@ class CodeManagementService {
 		String filePath = "/${filename}"
 		def repoNameE = URLEncoder.encode(repo, 'UTF-8')
 		repoNameE = repoNameE.replace('+', '%20')
-
+		project = URLEncoder.encode(project, 'UTF-8').replace('+', '%20')
 		def query = ['api-version':'5.1','path':filePath, 'includeContent':true, 'versionDescriptor.version':"${branchName}",'versionDescriptor.versionType':'branch']
 		def result
 		try {
