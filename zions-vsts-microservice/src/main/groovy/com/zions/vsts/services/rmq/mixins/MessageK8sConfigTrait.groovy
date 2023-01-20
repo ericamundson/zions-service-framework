@@ -49,12 +49,12 @@ trait MessageK8sConfigTrait {
 		return cachingConnectionFactory;
 	}
 	
-	CachingConnectionFactory connectionFactory() {
-		CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
-		cachingConnectionFactory.setUsername(username);
-		cachingConnectionFactory.setPassword(password);
-		return cachingConnectionFactory;
-	}
+//	CachingConnectionFactory connectionFactory() {
+//		CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
+//		cachingConnectionFactory.setUsername(username);
+//		cachingConnectionFactory.setPassword(password);
+//		return cachingConnectionFactory;
+//	}
 
 	
 
@@ -67,12 +67,12 @@ trait MessageK8sConfigTrait {
 	}
 	
 	//@Primary
-	@Bean
-	@Qualifier('rabbitTemplate')
-	public RabbitTemplate rabbitTemplate() {
-		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
-		//rabbitTemplate.setMessageConverter(jsonMessageConverter());
-		return rabbitTemplate;
-	}
+//	@Bean
+//	@Qualifier('rabbitTemplate')
+//	public RabbitTemplate rabbitTemplate() {
+//		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
+//		//rabbitTemplate.setMessageConverter(jsonMessageConverter());
+//		return rabbitTemplate;
+//	}
 
 }
