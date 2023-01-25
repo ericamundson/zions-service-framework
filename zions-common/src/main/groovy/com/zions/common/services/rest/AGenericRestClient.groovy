@@ -237,7 +237,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		input.remove('withHeader')
 		HttpResponseDecorator resp = delegate.put(input)
 		
-		if (resp.status != 200 && resp.status != 204) {
+		if (resp.status != 200) {
 			log.error("GenericRestClient::put -- Failed. Status: "+resp.getStatusLine());
 			return null;
 		}
