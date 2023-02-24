@@ -664,12 +664,12 @@ class CodeManagementService {
 		}
 	}
 	
-	public def ensureFile(def collection, def project, def repo,  def filepath, String fileContent, String branch = 'master') {
+	public def ensureFile(def collection, def project, def repo,  def filepath, String fileContent, String branch = 'master', String comment = null) {
 		def content = getFileContent(collection, project, repo, filepath, branch)
 		if (!content) {
-			content = createFile(collection, project, repo, filepath, fileContent, branch)
+			content = createFile(collection, project, repo, filepath, fileContent, branch, comment)
 		} else {
-			content = updateFile(collection, project, repo, filepath, fileContent, branch)
+			content = updateFile(collection, project, repo, filepath, fileContent, branch, comment)
 		}
 		return content
 	}
@@ -740,14 +740,15 @@ class CodeManagementService {
 			body: body
 			)
 	}
-	def createFile(def collection, def project, def repo, String filepath, String outC, String branch = 'master') {
+	def createFile(def collection, def project, def repo, String filepath, String outC, String branch = 'master', String comment = null) {
 		def query = [filter:'head', 'api-version': '4.1']
 		def head = getRefHead(collection, project, repo)
 //		if (head == null) return null
-		def fileData = [commits: [[changes:[[changeType: 'add', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "Added ${filepath}"]],
+		if (comment == null) comment = "Added ${filepath}"
+		def fileData = [commits: [[changes:[[changeType: 'add', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "${comment}"]],
 			refUpdates:[[name:"refs/heads/${branch}", oldObjectId: '0000000000000000000000000000000000000000']]]
 		if (head != null) {
-			fileData = [commits: [[changes:[[changeType: 'add', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "Added/Updated ${filepath}"]],
+			fileData = [commits: [[changes:[[changeType: 'add', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "${comment}"]],
 				refUpdates:[[name:"refs/heads/${branch}", oldObjectId: head.objectId]]]
 		}
 		def body = new JsonBuilder(fileData).toString()
@@ -780,13 +781,14 @@ class CodeManagementService {
 //			)
 	}
 	
-	def updateFile(def collection, def project, def repo, String filepath, String outC, String branch = 'master') {
+	def updateFile(def collection, def project, def repo, String filepath, String outC, String branch = 'master', String comment = null) {
 		def query = [filter:'head', 'api-version': '4.1']
 		def head = getRefHead(collection, project, repo)
-		def fileData = [commits: [[changes:[[changeType: 'edit', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "Added ${filepath}"]],
+		if (comment == null) comment = "Updated ${filepath}"
+		def fileData = [commits: [[changes:[[changeType: 'edit', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "${comment}"]],
 			refUpdates:[[name:"refs/heads/${branch}", oldObjectId: '0000000000000000000000000000000000000000']]]
 		if (head != null) {
-			fileData = [commits: [[changes:[[changeType: 'edit', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "Added/Updated ${filepath}"]],
+			fileData = [commits: [[changes:[[changeType: 'edit', item:[path:"${filepath}"], newContent: [content: outC, contentType:0]]], comment: "${comment}"]],
 				refUpdates:[[name:"refs/heads/${branch}", oldObjectId: head.objectId]]]
 		}
 		def body = new JsonBuilder(fileData).toString()
