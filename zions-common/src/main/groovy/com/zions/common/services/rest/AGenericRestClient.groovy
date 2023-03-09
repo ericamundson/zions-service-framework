@@ -505,7 +505,58 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		}
 		return resp.data;
 	}
-	
+
+	public Object multipartPost(Map input,  Closure encoderFunction = null) {
+		input = fixUri( input )
+		boolean withHeader = false
+		if (input.withHeader) {
+			withHeader = input.withHeader
+		}
+		input.remove('withHeader')
+		def currentEncoder = null
+		if (encoderFunction) {
+			String requestContentType = 'multipart/form-data'
+			if (input.requestContentType) {
+				requestContentType  = "${input.requestContentType}"
+			}
+			currentEncoder = delegate.encoder."${requestContentType}"
+			delegate.encoder."${requestContentType}" = encoderFunction
+			
+		}
+
+		HttpResponseDecorator resp
+		try {
+			resp = delegate.post(input)
+		} catch (e) {
+			log.error "CheckmarxGenericRestClient::multipartPost --  Response error: ${e.message}"
+			System.sleep(10000)
+			throw new Exception("Response issue: http ${e.message}")
+		} finally {
+			if (encoderFunction || currentEncoder) {
+				String requestContentType = 'multipart/form-data'
+				if (input.requestContentType) {
+					requestContentType  = "${input.requestContentType}"
+				}
+				delegate.encoder."${requestContentType}" = currentEncoder
+			}
+		}
+
+		int status = resp.status
+		if (status != 200 && status != 201 && status != 204) {
+			log.error("GenericRestClient::multipartPost -- Failed. Status: "+resp.getStatusLine());
+			log.error(""+resp.getData())
+		}
+		if (withHeader) {
+			def headerMap = [:]
+			resp.allHeaders.each { Header header ->
+				headerMap[header.name] = header.value
+			}
+			def result = [data: resp.data, headers: headerMap]
+			return result
+		}
+		return resp;
+	}
+
 	def deepcopy(orig) {
 //		def bos = new ByteArrayOutputStream()
 //		def oos = new ObjectOutputStream(bos)
