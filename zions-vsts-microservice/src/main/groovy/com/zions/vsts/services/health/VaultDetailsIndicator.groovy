@@ -65,6 +65,7 @@ class VaultDetailsIndicator implements HealthIndicator {
 	}
 }
 
+@Slf4j
 class InternalVaultRestClient {
 	AsyncHTTPBuilder delegate 
 	String vaultUrl
