@@ -135,7 +135,7 @@ class VaultService {
 				if (isSealed()) {
 					unseal()
 				}
-				System.sleep(60000)
+				System.sleep(10000)
 			} catch (e) {
 				log.error(e.message)
 			}
