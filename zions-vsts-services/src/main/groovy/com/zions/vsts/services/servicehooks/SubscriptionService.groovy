@@ -40,20 +40,26 @@ class SubscriptionService {
 			// TODO: only checking project. probably need to verify other publisher inputs, ie. changedFields, workItemType, etc.
 			if (projectIdSub == cProjectId) {
 				if ("${sub.status}" != "disabledByUser") {
-					def inputs = subscriptionData.publisherInputs
-					Iterator<?> keys = inputs.keySet().iterator()
+					// check for matching consyumer URL
+					String inConsumerUrl = subscriptionData.consumerInputs.url
+					String subConsumerUrl = sub.consumerInputs.url
+
 					boolean found = true
-					while( keys.hasNext() ) {
-						def key = keys.next()
-						if ("${key}" == "projectId") continue
-						log.debug("SubscriptionService::getSubscription -- Comparing publisherInputs: key ${key}")
-						def inputValue = inputs.get(key)
-						def subValue = sub.publisherInputs.get(key)
-						log.debug("Input value: ${inputValue} ... subscription value: ${subValue}")
-						if ( sub.publisherInputs.get(key) != inputs.get(key) ) {
-							found = false
-							break;
-							//return null
+					if (inConsumerUrl == subConsumerUrl) {
+						def inputs = subscriptionData.publisherInputs
+						Iterator<?> keys = inputs.keySet().iterator()
+						while( keys.hasNext() ) {
+							def key = keys.next()
+							if ("${key}" == "projectId") continue
+							log.debug("SubscriptionService::getSubscription -- Comparing publisherInputs: key ${key}")
+							def inputValue = inputs.get(key)
+							def subValue = sub.publisherInputs.get(key)
+							log.debug("Input value: ${inputValue} ... subscription value: ${subValue}")
+							if ( sub.publisherInputs.get(key) != inputs.get(key) ) {
+								found = false
+								break;
+								//return null
+							}
 						}
 					}
 					if (found) {
