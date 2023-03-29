@@ -43,7 +43,7 @@ class SubscriptionService {
 					// check for matching consyumer URL
 					String inConsumerUrl = subscriptionData.consumerInputs.url
 					String subConsumerUrl = sub.consumerInputs.url
-
+					log.debug("Comparing ConsumerUrl: inConsumerUrl = <${inConsumerUrl}> -- subConsumerUrl = <${subConsumerUrl}>")
 					boolean found = true
 					if (inConsumerUrl == subConsumerUrl) {
 						def inputs = subscriptionData.publisherInputs
@@ -61,6 +61,8 @@ class SubscriptionService {
 								//return null
 							}
 						}
+					} else {
+						found = false
 					}
 					if (found) {
 						//System.out.println("SubscriptionService::getSubscription -- Found existing web hook subscription for ${subscriptionData.eventType}")
