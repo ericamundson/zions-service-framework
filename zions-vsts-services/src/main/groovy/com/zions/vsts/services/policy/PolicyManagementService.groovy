@@ -60,6 +60,8 @@ public class PolicyManagementService {
 	private static final String CI_BUILD_TEMPLATE = "build-template-ci"
 	private static final String RELEASE_BUILD_TEMPLATE = "build-template-release"
 	private static final String CI_BUILD_YAML_FILE = "build-yaml-file"
+	private static final String WATCHDOG_STATUS_NAME = "unauthorized-changes"
+	private static final String WATCHDOG_STATUS_GENRE = "continuous-integration"
 	// ADO policy types
 	private static final String BUILD_VALIDATION_POLICY_TYPE = "0609b952-1397-4640-95ec-e00a01b2c241"
 	private static final String MIN_APPROVERS_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd"
@@ -68,6 +70,7 @@ public class PolicyManagementService {
 	private static final String MERGE_STRATEGY_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab"
 	private static final String CHECKMARX_STATUS_POLICY_TYPE = "cbdc66da-9728-4af8-aada-9a5a32e4a226"
 	private static final String AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE = "fd2167ab-b0be-447a-8ec8-39368250530e"
+	private static final String WATCHDOG_STATUS_POLICY_TYPE = "cbdc66da-9728-4af8-aada-9a5a32e4a226"
 	
 	public PolicyManagementService() {
 	}
@@ -490,6 +493,41 @@ public class PolicyManagementService {
 
 	}
 
+	public def ensureWatchdogBranchPolicy(def collection, def repoData, String branchName = 'refs/heads/master') {
+		def policyRes
+		def projectData = repoData.project
+		// check for existing policy
+		policyRes = getBranchPolicy(WATCHDOG_STATUS_POLICY_TYPE, projectData.id, repoData.id, branchName)
+		if (!policyRes) {
+			log.debug("PolicyManagementService::ensureWatchdogBranchPolicy -- ")
+			def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
+			    type: [id: WATCHDOG_STATUS_POLICY_TYPE],
+			    settings:[statusName: WATCHDOG_STATUS_NAME, statusGenre: WATCHDOG_STATUS_GENRE, invalidateOnSourceUpdate: true, defaultDisplayName: 'Watchdog status',
+					scope:[[matchKind: 'Exact', refName: branchName, repositoryId: repoData.id]]
+				]
+			]
+			policyRes = createPolicy(collection, projectData, policy)
+		} else {
+			boolean valuesChanged = false
+			if (policyRes.settings.minimumApproverCount != numMinApprovers) {
+				policyRes.settings.minimumApproverCount = numMinApprovers
+				valuesChanged = true
+			}
+			if (policyRes.settings.creatorVoteCounts != creatorVoteCounts) {
+				policyRes.settings.creatorVoteCounts = creatorVoteCounts
+				valuesChanged = true
+			}
+			// update policy for minimum approvers if changes were made
+			if (valuesChanged) {
+				policyRes = updatePolicy(collection, projectData, policyRes)
+			}
+		}
+
+		log.debug("PolicyManagementService::ensureWatchdogBranchPolicy -- result = "+policyRes)
+
+		return policyRes
+	}
+	
 	public def ensureGitAttributesFile(def collection, def repoData) {
 		log.debug("PolicyManagementService::ensureGitAttributesFile -- ")
 		def res = codeManagementService.ensureGitAttributes(collection, repoData.project, repoData)
