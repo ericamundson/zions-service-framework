@@ -649,7 +649,30 @@ public class BuildManagementService {
 				)
 		return result
 	}
-	
+	public def getBuildsForRepository(def collection,  def project, def pDefs, String repoName) {
+		def builds = []
+		
+		for (def bd in pDefs) {
+			if (bd && bd.repository) {
+				String name = bd.repository.name
+				if (name == repoName) {
+					builds.add(bd)
+				}
+			}
+		}
+		return builds
+	}
+
+	public def getBuildsWithQuery(def collection, def project, Map query) {
+		query.'api-version' = '5.1'
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
+				query: query,
+				)
+		return result
+	}
+
 	public def tagBuild(def build, String tag) {
 		
 		String url = "${build.url}/tags/${tag}"
@@ -1249,6 +1272,17 @@ public class BuildManagementService {
 		}
 		return result
 	}
+	
+	public getBuildDefs(def collection, def project) {
+		def result = getBuilds(collection, project)
+		def defs = []
+		if (result != null) {
+			for (def bRef in result.'value') {
+				defs.add(getBuildById(collection, project, bRef.id))
+			}
+		}
+		return defs
+	}
 
 	public def getBuildById(def collection, def project, def id) {
 		log.debug("BuildManagementService::getBuildById -- ID = " + id)
@@ -1282,6 +1316,61 @@ public class BuildManagementService {
 			)
 		}
 		return result
+	}
+	
+	String  getPipelinePreview(def collection, def project, String name, Integer rev = null) {
+		def pipeline = getPipeline(collection, project, name)
+		if (pipeline) {
+			def result = null
+			String body = new JsonBuilder([previewRun: true]).toPrettyString()
+			if (rev != null) {
+				result = genericRestClient.post(
+					contentType: ContentType.JSON,
+					//requestContentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/pipelines/${pipeline.id}/preview",
+					body: body,
+					query: [revision: rev],
+					headers: [Accept: 'application/json;api-version=7.0;excludeUrls=true'],
+					)
+				if (result == null) {
+					result = genericRestClient.post(
+						contentType: ContentType.JSON,
+						//requestContentType: ContentType.JSON,
+						uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/pipelines/${pipeline.id}/preview",
+						//body: body,
+						query: [revision: rev],
+						headers: [Accept: 'application/json;api-version=7.0;excludeUrls=true'],
+						)
+	
+				}
+			
+			} else {
+				result = genericRestClient.post(
+					contentType: ContentType.JSON,
+					//requestContentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/pipelines/${pipeline.id}/preview",
+					body: body,
+					headers: [Accept: 'application/json;api-version=7.0;excludeUrls=true'],
+					)
+				if (result == null) {
+					result = genericRestClient.post(
+						contentType: ContentType.JSON,
+						//requestContentType: ContentType.JSON,
+						uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/pipelines/${pipeline.id}/preview",
+						//body: body,
+						//query: [revision: rev],
+						headers: [Accept: 'application/json;api-version=7.0;excludeUrls=true'],
+						)
+	
+				}
+			}
+
+			if (result) {
+				return result.finalYaml
+			}
+		}
+		return null
+
 	}
 
 	public def getPipeline(def collection, def project, String name) {
