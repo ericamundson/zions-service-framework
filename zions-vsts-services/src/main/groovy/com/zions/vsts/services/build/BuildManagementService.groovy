@@ -664,13 +664,20 @@ public class BuildManagementService {
 	}
 
 	public def getBuildsWithQuery(def collection, def project, Map query) {
-		query.'api-version' = '5.1'
+		query.'api-version' = '7.0'
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
 				query: query,
 				)
-		return result
+		def bDefs = []
+		if (result.'value' && result.'value'.size() > 0) {
+			for (def bRef in result.value) {
+				bDefs.add(getBuildById('', project, bRef.id))
+			}
+			//return bDef
+		}
+		return bDefs
 	}
 
 	public def tagBuild(def build, String tag) {
