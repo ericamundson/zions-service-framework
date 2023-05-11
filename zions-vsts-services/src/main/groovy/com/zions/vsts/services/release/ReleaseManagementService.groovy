@@ -363,24 +363,54 @@ public class ReleaseManagementService {
 		}
 	}
 
-	public def getReleases(def collection, def project) {
+	public def getReleases(def collection, def project, def query = null) {
+		log.debug("ReleaseManagementService::getReleases for project = ${project.name}")
+		//def query = ['name':"*${name}"]
+		def releaseUri = getReleaseApiUrl(collection, project)
+		def result = null
+		if (query == null) {
+			result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${releaseUri}/definitions",
+				headers: [accept: 'application/json;api-version=7.0;excludeUrls=true'],
+			)
+		} else {
+			result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${releaseUri}/definitions",
+				query: query,
+				headers: [accept: 'application/json;api-version=7.0;excludeUrls=true'],
+			)
+
+		}
+		if (result == null || result.count == 0) {
+			log.debug("ReleaseManagementService::getReleases -- No release defs found for project ${project.name}.")
+			return null
+		}
+		return result.'value'
+	}
+	
+	public def getReleasesViaQuery(def collection, def project, def query) {
 		log.debug("ReleaseManagementService::getReleases for project = ${project.name}")
 		//def query = ['name':"*${name}"]
 		def releaseUri = getReleaseApiUrl(collection, project)
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${releaseUri}/definitions",
+			query: query,
 			headers: [accept: 'application/json;api-version=5.1;excludeUrls=true'],
 		)
+		def releases = []
 		if (result == null || result.count == 0) {
 			log.debug("ReleaseManagementService::getReleases -- No release defs found for project ${project.name}.")
 		}
-		return result
+		
+		return result.'value'
 	}
 
 	public def updateReleases(def collection, def project, boolean deleteUnwantedTasks) {
 		def releaseDefs = getReleases(collection, project)
-		releaseDefs.value.each { releaseDef ->
+		releaseDefs.each { releaseDef ->
 			if (!releaseDef.name.startsWith("d3") && !releaseDef.name.startsWith("zbc")) {
 				def result = updateRelease(collection, project, releaseDef.id, deleteUnwantedTasks)
 				if (result == null) {
