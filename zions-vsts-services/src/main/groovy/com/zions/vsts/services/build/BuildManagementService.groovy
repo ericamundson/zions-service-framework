@@ -1387,7 +1387,7 @@ public class BuildManagementService {
 	}
 
 	private def getLatestTag(def collection, def project, def repo, def branchName = "") {
-		log.debug("BuildManagementService::getLatestTag for project ${project.name}, repo ${repo.name} , branchName ${branchName}")
+		log.debug("getLatestTag for project ${project.name}, repo ${repo.name} , branchName ${branchName}")
 		def qualifier = ""
 		if (branchName != "") {
 			if (branchName.toLowerCase().startsWith("refs/heads/ifb/")) {
@@ -1395,7 +1395,7 @@ public class BuildManagementService {
 			} else if (branchName.toLowerCase().startsWith("refs/heads/feature/ifb/")) {
 				qualifier = branchName.substring("refs/heads/feature/ifb/".length())
 			}
-			log.debug("BuildManagementService::getLatestTag -- qualifier = ${qualifier}")
+			log.debug("getLatestTag -- qualifier = ${qualifier}")
 		}
 		def query = ['filter':'tags', 'api-version':'6.0']
 		def result = genericRestClient.get(
@@ -1408,7 +1408,7 @@ public class BuildManagementService {
 			resultCount = result.count
 		}
 		if (resultCount == 0) {
-			log.debug("BuildManagementService::getLatestTag -- No tags found for project ${project.name} and repo ${repo.name}")
+			log.debug("getLatestTag -- No tags found for project ${project.name} and repo ${repo.name}")
 			return null
 		}
 		def lastTagIdx = resultCount - 1
@@ -1427,7 +1427,7 @@ public class BuildManagementService {
 	}
 
 	private boolean notValidTag(def tagName, def qualifier) {
-		log.debug("BuildManagementService::notValidTag -- Validing Tag ${tagName}. Qualifier is ${qualifier}")
+		log.debug("Validing Tag ${tagName}. Qualifier is ${qualifier}")
 		String tag = tagName
 		// look for tag with qualifier
 		if (tag.indexOf("-") > -1) {
@@ -1449,7 +1449,8 @@ public class BuildManagementService {
 					}
 				}
 				if (compQual != "${qualifier}") {
-					return false
+					log.debug("compQual NOT = ${qualifier}. Returning not valid")
+					return true
 				}
 			}
 			tag = tagParts[0]
@@ -1457,7 +1458,7 @@ public class BuildManagementService {
 		String[] versionParts = tag.split("\\.")
 
 		if (versionParts.length < 3) {
-			log.debug("BuildManagementService::notValidTag -- Did not find all 3 parts for version number")
+			log.info("notValidTag -- Did not find all 3 parts for version number")
 			return true
 		}
 		for (int idx = 0; idx++; idx < 3) {
@@ -1465,7 +1466,7 @@ public class BuildManagementService {
 				Integer.parseInt(versionParts[idx])
 			} catch (NumberFormatException e) {
 				// Not a number so version string is invalid
-				log.debug("BuildManagementService::notValidTag -- Version part " + idx + ", '${versionParts[idx]}' is not a number")
+				log.info("BuildManagementService::notValidTag -- Version part " + idx + ", '${versionParts[idx]}' is not a number")
 				return true
 			}
 		}
