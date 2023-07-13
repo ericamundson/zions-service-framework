@@ -22,7 +22,9 @@ stages:
     pool:
       name: On-Prem Production
       demands:
-      - agent.computername -equals UTMVPI0144
+      #- agent.computername -equals UTMVPI0144
+      - agent.os -equals Linux
+      
 #    workspace:
 #      clean: none
 
@@ -34,9 +36,9 @@ stages:
         InitialVersionPrefix: 7.1.0
 
     - task: Gradle@2
-      displayName: 'gradlew clean build updateBatJarVersion'
+      displayName: 'v'Gradle: gradlew clean build updateBatJarVersion'
       inputs:
-        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
+        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
         workingDirectory: '$(Build.SourcesDirectory)'
         options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=pipeline'
         tasks: 'clean build zions-common:uploadArchives zions-vsts-service:uploadArchives zions-common-data:uploadArchives'
