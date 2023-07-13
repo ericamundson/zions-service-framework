@@ -36,7 +36,7 @@ stages:
         InitialVersionPrefix: 7.1.0
 
     - task: Gradle@2
-      displayName: 'v'Gradle: gradlew clean build updateBatJarVersion'
+      displayName: 'Gradle: gradlew clean build updateBatJarVersion'
       inputs:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
         workingDirectory: '$(Build.SourcesDirectory)'
