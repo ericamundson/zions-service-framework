@@ -31,6 +31,6 @@ stages:
     - task: Gradle@2
       displayName: 'Gradle: gradlew clean build'
       inputs:
-        options: '-Pqueue=default -Pcontext=all -PbuildType=ci'
+        options: '-Pqueue=default -Pcontext=all -PbuildType=ci -Dorg.gradle.daemon=false'
         tasks: 'clean build'
         publishJUnitResults: false

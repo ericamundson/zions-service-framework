@@ -46,7 +46,7 @@ stages:
       inputs:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
         workingDirectory: '$(Build.SourcesDirectory)'
-        options: '-Pversion=$(buildTag) -Pqueue=default -Pcontext=pipeline'
+        options: '-Pversion=$(buildTag) -Pqueue=default -Pcontext=pipeline -Dorg.gradle.daemon=false'
         tasks: 'clean build updateBatJarVersion'
         publishJUnitResults: false
 
