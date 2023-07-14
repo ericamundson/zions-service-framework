@@ -49,10 +49,9 @@ stages:
     - task: Gradle@2
       displayName: 'Gradle: gradlew clean build'
       inputs:
-        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
+        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
         workingDirectory: '$(Build.SourcesDirectory)'
-        #options: '--no-daemon --no-scan  --refresh-dependencies -Pversion=$(buildTag) -Pqueue=default -Pcontext=release'
-        options: '--no-daemon --no-scan  --refresh-dependencies -Pversion=$(buildTag) -Pcontext=release'
+        options: '--no-daemon --refresh-dependencies -Pversion=$(buildTag) -Pqueue=default -Pcontext=release'
         tasks: 'zions-vsts-policy-microservice:clean zions-vsts-policy-microservice:build'
         publishJUnitResults: false
 #    - task: SonatypeIntegrations.nexus-iq-azure-extension.nexus-iq-azure-pipeline-task.NexusIqPipelineTask@1
