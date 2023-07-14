@@ -83,7 +83,7 @@ stages:
       inputs:
         gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
         workingDirectory: '$(Build.SourcesDirectory)'
-        options: '--no-scan -Pversion=$(buildTag) -Pqueue=Hosted -PpublishLocation=$(system.defaultworkingdirectory)/gitPublish -DGRAPHVIZ_DOT=$(system.defaultworkingdirectory)/graphviz/bin/dot.exe'
+        options: '-Pversion=$(buildTag) -Pqueue=Hosted -PpublishLocation=$(system.defaultworkingdirectory)/gitPublish -DGRAPHVIZ_DOT=$(system.defaultworkingdirectory)/graphviz/bin/dot.exe'
         tasks: gitPublishPush
         publishJUnitResults: false
       enabled: false
