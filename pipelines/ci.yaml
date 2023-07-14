@@ -32,6 +32,6 @@ stages:
       displayName: 'Gradle: gradlew clean build'
       inputs:
         #options: '--no-scan -Pqueue=default -Pcontext=all -PbuildType=ci'
-        options: '--no-scan --refresh-dependencies -Pcontext=release'
+        options: '--no-scan --refresh-dependencies -Pcontext=all'
         tasks: 'clean build'
         publishJUnitResults: false

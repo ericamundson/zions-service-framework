@@ -25,7 +25,8 @@ stages:
     pool:
       name: On-Prem Production
       demands:
-      - agent.computername -equals utmsdev0566
+      #- agent.computername -equals utmsdev0566
+      - agent.os -equals Linux
 #    workspace:
 #      clean: none
 
@@ -43,9 +44,10 @@ stages:
     - task: Gradle@2
       displayName: 'gradlew clean build updateBatJarVersion'
       inputs:
-        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
+        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
         workingDirectory: '$(Build.SourcesDirectory)'
-        options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=pipeline'
+        #options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=pipeline'
+        options: '--no-scan -Pversion=$(buildTag) -Pcontext=pipeline'
         tasks: 'clean build updateBatJarVersion'
         publishJUnitResults: false
 
