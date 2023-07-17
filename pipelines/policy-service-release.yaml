@@ -8,6 +8,7 @@ parameters:
   values:
   - On-Prem Production
   - On-Prem DR
+  - Rancher - demo
 
 trigger:
   branches:
@@ -26,7 +27,8 @@ stages:
     pool:
       name: ${{ parameters.pool_name }}
       demands:
-        - agent.computername -equals UTMVPI0144
+        #- agent.computername -equals UTMVPI0144
+        - agent.os -equals Linux
     workspace:
       # all - delete these dirs: _work/1, _work/1/a, _work/1/TestResults, _work\1\b, _work\1\s
       # resources - delete these dirs: _work/1/a, _work/1/TestResults, _work\1\s
@@ -45,11 +47,11 @@ stages:
       name: 'oTag'
     # Gradle: execute gradle tasks with options
     - task: Gradle@2
-      displayName: 'gradlew clean build'
+      displayName: 'Gradle: gradlew clean build'
       inputs:
-        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
+        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
         workingDirectory: '$(Build.SourcesDirectory)'
-        options: '--no-daemon --no-scan  --refresh-dependencies -Pversion=$(buildTag) -Pqueue=default -Pcontext=release'
+        options: '--no-daemon --refresh-dependencies -Pversion=$(buildTag) -Pqueue=default -Pcontext=release'
         tasks: 'zions-vsts-policy-microservice:clean zions-vsts-policy-microservice:build'
         publishJUnitResults: false
 #    - task: SonatypeIntegrations.nexus-iq-azure-extension.nexus-iq-azure-pipeline-task.NexusIqPipelineTask@1

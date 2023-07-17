@@ -28,6 +28,7 @@ buildscript {
 		classpath 'com.bmuschko:gradle-docker-plugin:6.6.1'
 		classpath 'gradle.plugin.io.errorlab.gradle.vault:vault:0.1.0'
 		classpath 'com.github.qwazer:markdown-confluence-gradle-plugin:0.9.2'
+		classpath 'com.zions.dts.services:zions-boot:latest.release'
 	}
 }
 
@@ -43,8 +44,9 @@ allprojects {
 	apply plugin: 'com.bmuschko.docker-remote-api'
 	apply plugin: 'com.bmuschko.docker-spring-boot-application'
 	apply plugin: 'com.github.qwazer.markdown-confluence'
-	
-	File bootstrap = new File("${vaultResources}/bootstrap.properties")
+
+	//File bootstrap = new File("${vaultResources}/bootstrap.properties")
+	InputStream istream = this.getClass().getResourceAsStream('/bootstrap.properties')
 	if ("${buildType}" == 'ci') {
 		apply plugin: 'jacoco'
 		//apply plugin: 'codenarc'
@@ -79,10 +81,15 @@ allprojects {
 
 		check.dependsOn jacocoTestReport
 	}
-	if (bootstrap.exists()) {
+	//	if (bootstrap.exists()) {
+	//		apply plugin: 'io.errorlab.gradle.vault'
+	//		Properties props = new Properties()
+	//		props.load(new FileInputStream("${vaultResources}/bootstrap.properties"))
+	if (istream != null) {
 		apply plugin: 'io.errorlab.gradle.vault'
 		Properties props = new Properties()
-		props.load(new FileInputStream("${vaultResources}/bootstrap.properties"))
+		props.load(istream)
+
 		props.each { prop ->
 			project.ext.set(prop.key, prop.value)
 		}
@@ -170,11 +177,11 @@ allprojects {
 	//
 	//	}
 	// End generation of framework documentation
-	sourceSets.main.resources {
-		srcDir '../common/resources'
-		//srcDir '../common/groovydoc'
-		srcDir "${vaultResources}"
-	}
+	//	sourceSets.main.resources {
+	//		srcDir '../common/resources'
+	//srcDir '../common/groovydoc'
+	//		srcDir "${vaultResources}"
+	//	}
 
 
 
@@ -213,7 +220,7 @@ allprojects {
 		} else {
 			implementation group: 'org.springframework', name: 'spring-beans', version: '5.2.2.RELEASE'
 			implementation group: 'org.springframework', name: 'spring-context', version: '5.2.2.RELEASE'
-			implementation group: 'org.springframework', name: 'spring-core', version: '5.2.2.RELEASE'		
+			implementation group: 'org.springframework', name: 'spring-core', version: '5.2.2.RELEASE'
 		}
 		//implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
 		implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
@@ -232,26 +239,26 @@ allprojects {
 			constraints {
 				implementation 'commons-beanutils:commons-beanutils:1.9.4'
 				implementation 'commons-collections:commons-collections:3.2.2'
-			}		
+			}
 		}
-		
+
 		if (context != 'nexus')
 
-		testImplementation(
-				"org.springframework.boot:spring-boot-starter-test:${project.springBootVersion}",
-				'org.springframework:spring-mock:2.0.8',
-				'cglib:cglib-nodep:3.1',
-				//'com.athaydes:spock-reports:1.6.2',
-				//files('../libs/spock-reports-1.6.2.jar'),
-				//'junit:junit:4.12'
-				'org.junit.jupiter:junit-jupiter-api:5.6.2',
-				'org.junit.jupiter:junit-jupiter-params:5.6.2',
-				'org.objenesis:objenesis:2.4',
-				'org.codehaus.groovy:groovy-all:3.0.1',
-				'org.spockframework:spock-core:2.0-M2-groovy-3.0',
-				//'org.spockframework:spock-junit4:2.0-M2-groovy-3.0',
-				'org.spockframework:spock-spring:2.0-M2-groovy-3.0'
-				)
+			testImplementation(
+					"org.springframework.boot:spring-boot-starter-test:${project.springBootVersion}",
+					'org.springframework:spring-mock:2.0.8',
+					'cglib:cglib-nodep:3.1',
+					//'com.athaydes:spock-reports:1.6.2',
+					//files('../libs/spock-reports-1.6.2.jar'),
+					//'junit:junit:4.12'
+					'org.junit.jupiter:junit-jupiter-api:5.6.2',
+					'org.junit.jupiter:junit-jupiter-params:5.6.2',
+					'org.objenesis:objenesis:2.4',
+					'org.codehaus.groovy:groovy-all:3.0.1',
+					'org.spockframework:spock-core:2.0-M2-groovy-3.0',
+					//'org.spockframework:spock-junit4:2.0-M2-groovy-3.0',
+					'org.spockframework:spock-spring:2.0-M2-groovy-3.0'
+					)
 		//testImplementation files('libs/spock-reports-1.6.2.jar')
 		//implementation ('org.junit.jupiter:junit-jupiter-api:5.5.2')
 		testRuntime('org.junit.jupiter:junit-jupiter-engine:5.6.2')
@@ -296,16 +303,16 @@ allprojects {
 				repository(url: "${nexusUrl}/repository/releases") {
 					authentication(userName: nexusUsername, password: nexusPassword)
 				}
-	//			snapshotRepository(url: "${nexusUrl}/repository/maven-snapshots") {
-	//				authentication(userName: nexusUsername, password: nexusPassword)
-	//			}
+				//			snapshotRepository(url: "${nexusUrl}/repository/maven-snapshots") {
+				//				authentication(userName: nexusUsername, password: nexusPassword)
+				//			}
 				addFilter("${rootProject.name}") {artifact, file ->
 					artifact.name != "${rootProject.name}"
 				}
-	//			addFilter("${project.name}") {artifact, file ->
-	//				artifact.name == "${project.name}"
-	//			}
-				
+				//			addFilter("${project.name}") {artifact, file ->
+				//				artifact.name == "${project.name}"
+				//			}
+
 				pom.version = "${version}"
 				pom.artifactId = "${project.name}"
 				pom.groupId = "com.zions.dts.services"

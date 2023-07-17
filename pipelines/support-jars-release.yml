@@ -8,6 +8,7 @@ parameters:
   values:
   - On-Prem Production
   - On-Prem DR
+  - Rancher - demo
 
 variables:
 - group: 'XebiaLabs CLI (Prod)'
@@ -30,7 +31,8 @@ stages:
     pool:
       name: ${{ parameters.pool_name }}
       demands:
-      - agent.computername -equals UTMVPI0144
+      #- agent.computername -equals UTMVPI0144
+      - agent.os -equals Linux
     workspace:
       # all - delete these dirs: _work/1, _work/1/a, _work/1/TestResults, _work\1\b, _work\1\s
       # resources - delete these dirs: _work/1/a, _work/1/TestResults, _work\1\s
@@ -43,11 +45,11 @@ stages:
         OutputVariable: buildTag
         InitialVersionPrefix: 7.1.0
     - task: Gradle@2
-      displayName: 'gradlew clean build uploadArchives'
+      displayName: 'Gradle: gradlew clean build uploadArchives'
       inputs:
-        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew.bat'
+        gradleWrapperFile: '$(Build.SourcesDirectory)/gradlew'
         workingDirectory: '$(Build.SourcesDirectory)'
-        options: '--no-scan -Pversion=$(buildTag) -Pqueue=default -Pcontext=nexus -x test'
+        options: '-Pversion=$(buildTag) -Pqueue=default -Pcontext=nexus -x test'
         tasks: 'clean build zions-common:uploadArchives zions-vsts-service:uploadArchives zions-common-data:uploadArchives zions-vsts-microservice:uploadArchives'
         publishJUnitResults: false
     - task: SonatypeIntegrations.nexus-iq-azure-extension.nexus-iq-azure-pipeline-task.NexusIqPipelineTask@1
