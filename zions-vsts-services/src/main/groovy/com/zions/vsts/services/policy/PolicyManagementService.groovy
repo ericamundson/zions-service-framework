@@ -264,7 +264,7 @@ public class PolicyManagementService {
 		return result
 	}
 
-	private def updatePolicy(def collection, def projectData, def policy) {
+	public def updatePolicy(def collection, def projectData, def policy) {
 		def body = new JsonBuilder(policy).toPrettyString()
 		log.debug("PolicyManagementService::updatePolicy -- Request body = "+body)
 		def result = genericRestClient.put(
@@ -304,7 +304,7 @@ public class PolicyManagementService {
 			log.debug("PolicyManagementService::ensureMinimumApproversPolicy -- ")
 			def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
 			    type: [id: MIN_APPROVERS_POLICY_TYPE],
-			    settings:[minimumApproverCount: numMinApprovers, creatorVoteCounts: creatorVoteCounts, allowDownvotes: false, resetOnSourcePush: true,
+			    settings:[minimumApproverCount: numMinApprovers, creatorVoteCounts: creatorVoteCounts, allowDownvotes: false, resetOnSourcePush: true, blockLastPusherVote: true,
 					scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 				]
 			]
