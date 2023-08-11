@@ -304,7 +304,7 @@ class CodeManagementService {
 	}
 	
 	public def getBranchRef(String collection, String project, String repo, String name) {
-		def query = ['api-version':'5.1']
+		def query = [filter:'heads/','api-version':'5.1']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/refs",
