@@ -21,7 +21,8 @@ stages:
       name: ${{ parameters.pool_name }}
       demands:
         #- agent.computername -equals UTMVPI0144
-        - agent.os -equals Linux
+        # - agent.os -equals Linux
+        - agent.computername -equals utlxa1846
     workspace:
       # all - delete these dirs: _work/1, _work/1/a, _work/1/TestResults, _work\1\b, _work\1\s
       # resources - delete these dirs: _work/1/a, _work/1/TestResults, _work\1\s
