@@ -49,7 +49,7 @@ public class NotificationService {
 
 		log.debug("NotificationService::sendBuildCreatedNotification -- Folder: ${folder}, CI build name: ${ciBuildDef}, Release build name: ${releaseBuildDef}")
         try {
-            helper.setTo("${recipientEmailAddress}")
+            helper.setTo("${recipientEmailAddresses}")
             String body = "The following build definitions were created from templates: \n" +
             			"Folder name: "+folder+"\n Builds: \n"
             if (ciBuildDef != "") {
