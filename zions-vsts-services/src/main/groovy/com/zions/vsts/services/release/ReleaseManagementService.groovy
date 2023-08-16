@@ -389,7 +389,19 @@ public class ReleaseManagementService {
 		}
 		return result.'value'
 	}
-	
+	public def getReleasesExecutions(def collection, def project, def rDef) {
+		def releaseUri = getReleaseApiUrl('', project)
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${releaseUri}/releases",
+			query: [definitionId: "${rDef.id}"],
+			headers: [accept: 'application/json;api-version=5.1;excludeUrls=true']
+		)
+		if (result == null) {
+			return []
+		}
+		return result.'value'
+	}
 	public def getReleasesViaQuery(def collection, def project, def query) {
 		log.debug("ReleaseManagementService::getReleases for project = ${project.name}")
 		//def query = ['name':"*${name}"]
