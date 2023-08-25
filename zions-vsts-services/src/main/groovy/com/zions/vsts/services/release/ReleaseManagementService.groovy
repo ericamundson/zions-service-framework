@@ -390,6 +390,7 @@ public class ReleaseManagementService {
 		return result.'value'
 	}
 	public def getReleasesExecutions(def collection, def project, def rDef) {
+		if (rDef == null) return []
 		def releaseUri = getReleaseApiUrl('', project)
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
