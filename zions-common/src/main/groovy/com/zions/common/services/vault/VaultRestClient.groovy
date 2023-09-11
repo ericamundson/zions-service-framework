@@ -22,7 +22,9 @@ class VaultRestClient extends AGenericRestClient {
 		this.vaultUrl = url
 		delegate = new ARESTClient(vaultUrl)
 		try {
-			delegate.ignoreSSLIssues()
+			if (vaultUrl.startsWith('https')) {
+				delegate.ignoreSSLIssues()
+			}
 		} catch (e) {}
 		delegate.handler.failure = { resp ->
 			if (resp.entity) {
