@@ -21,7 +21,9 @@ class VaultRestClient extends AGenericRestClient {
 		}
 		this.vaultUrl = url
 		delegate = new ARESTClient(vaultUrl)
-		delegate.ignoreSSLIssues()
+		try {
+			delegate.ignoreSSLIssues()
+		} catch (e) {}
 		delegate.handler.failure = { resp ->
 			if (resp.entity) {
 				def outputStream = new ByteArrayOutputStream()
