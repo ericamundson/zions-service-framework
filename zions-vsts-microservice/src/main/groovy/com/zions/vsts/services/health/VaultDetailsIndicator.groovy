@@ -77,7 +77,12 @@ class InternalVaultRestClient {
 		this.vaultUrl = url
 		this.vaultToken = vaultToken
 		delegate = new AsyncHTTPBuilder(uri: url)
-		delegate.ignoreSSLIssues()
+		log.info("Vault URL:  ${vaultUrl}")
+		try {
+			if (vaultUrl.startsWith('https')) {
+				delegate.ignoreSSLIssues()
+			}
+		} catch (e) { }
 		delegate.handler.failure = { resp ->
 			if (resp.entity) {
 				def outputStream = new ByteArrayOutputStream()
