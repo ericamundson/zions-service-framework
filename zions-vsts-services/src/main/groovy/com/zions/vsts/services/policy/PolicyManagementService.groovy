@@ -280,14 +280,26 @@ public class PolicyManagementService {
 		def policyRes
 		def numMinApprovers = DEFAULT_NUM_APPROVERS
 		boolean creatorVoteCounts = false
+		boolean prohibitMostRecentPusher = true
 		if (approvalData) {
+			log.info("In ensureMinimumApproversPolicy. Found approvalData values. Approval data: ${approvalData}")
 			if (approvalData.minApprovers) {
 				numMinApprovers = approvalData.minApprovers
 			}
-			if (approvalData.creatorVoteCounts) {
+			if (approvalData.creatorVoteCounts != null) {
+				log.info("In ensureMinimumApproversPolicy. Found value for approvalData.creatorVoteCounts. Value is: ${approvalData.creatorVoteCounts}")
 				creatorVoteCounts = approvalData.creatorVoteCounts
 			}
+			boolean temp = approvalData.get("prohibitMostRecentPusher")
+			if (approvalData.prohibitMostRecentPusher != null) {
+				log.info("In ensureMinimumApproversPolicy. Found value for approvalData.prohibitMostRecentPusher. Value is: ${approvalData.prohibitMostRecentPusher}")
+				prohibitMostRecentPusher = approvalData.prohibitMostRecentPusher
+			}
 		}
+		log.info("In ensureMinimumApproversPolicy. Values are:")
+		log.info("   numMinApprovers: ${numMinApprovers}")
+		log.info("   creatorVoteCounts: ${creatorVoteCounts}")
+		log.info("   prohibitMostRecentPusher: ${prohibitMostRecentPusher}")
 		def projectData = repoData.project
 		// check for existing policy
 		policyRes = getBranchPolicy(MIN_APPROVERS_POLICY_TYPE, projectData.id, repoData.id, branchName)
@@ -310,18 +322,51 @@ public class PolicyManagementService {
 			]
 			policyRes = createPolicy(collection, projectData, policy)
 		} else {
+			log.info("Existing policy found.  Checking for changes ...")
 			boolean valuesChanged = false
 			if (policyRes.settings.minimumApproverCount != numMinApprovers) {
+				log.info("minimumApproverCount was changed to ${numMinApprovers}")
 				policyRes.settings.minimumApproverCount = numMinApprovers
 				valuesChanged = true
 			}
 			if (policyRes.settings.creatorVoteCounts != creatorVoteCounts) {
+				log.info("creatorVoteCounts was changed to ${creatorVoteCounts}")
 				policyRes.settings.creatorVoteCounts = creatorVoteCounts
+				valuesChanged = true
+			}
+			if (policyRes.settings.blockLastPusherVote != prohibitMostRecentPusher) {
+				log.info("blockLastPusherVote was changed to ${prohibitMostRecentPusher}")
+				policyRes.settings.blockLastPusherVote = prohibitMostRecentPusher
 				valuesChanged = true
 			}
 			// update policy for minimum approvers if changes were made
 			if (valuesChanged) {
-				policyRes = updatePolicy(collection, projectData, policyRes)
+				log.info("Changes were made.  Validating changes ...")
+				boolean changesAreValid = true
+				// validate changes before applying
+				if (policyRes.settings.minimumApproverCount < 1 || policyRes.settings.minimumApproverCount > 10) {
+					log.error("Invalid input for Miniumum number of reviewers.")
+					changesAreValid = false
+				} else if (policyRes.settings.minimumApproverCount == 1) {
+					if (policyRes.settings.creatorVoteCounts != false) {
+						log.error("Invalid input for Allow requestor to approve their own changes.")
+						changesAreValid = false
+					}
+					if (policyRes.settings.blockLastPusherVote != true) {
+						log.error("Invalid input for Prohibit most recent pusher from approving their own changes.")
+						changesAreValid = false
+					}
+				//} else {
+					//if ((policyRes.settings.creatorVoteCounts && policyRes.settings.blockLastPusherVote != false) 
+					//	|| (policyRes.settings.blockLastPusherVote && policyRes.settings.creatorVoteCounts != false)) {
+					//	log.error("Invalid input combination for Allow requestor to approve their own changes and Prohibit most recent pusher from approving their own changes.")
+					//	changesAreValid = false
+					//}
+				}
+				if (changesAreValid) {
+					log.info("Changes are valid.  Updating policy ...")
+					policyRes = updatePolicy(collection, projectData, policyRes)
+				}
 			}
 		}
 
@@ -550,11 +595,11 @@ public class PolicyManagementService {
 		log.info("PolicyManagementService::modifyBranchPolicies -- Started")
 		
 		if (policyData) {
-			def approvalData = null
+			//def approvalData = null
 			if (policyData.approvalData) {
 				log.info("PolicyManagementService::modifyBranchPolicies -- approvalData")
-				approvalData = policyData.approvalData
-				ensureMinimumApproversPolicy(collection, repoData, branchName, approvalData)
+				//approvalData = policyData.approvalData
+				ensureMinimumApproversPolicy(collection, repoData, branchName, policyData.approvalData)
 			}
 		
 			//def buildData = null
