@@ -282,24 +282,17 @@ public class PolicyManagementService {
 		boolean creatorVoteCounts = false
 		boolean prohibitMostRecentPusher = true
 		if (approvalData) {
-			log.info("In ensureMinimumApproversPolicy. Found approvalData values. Approval data: ${approvalData}")
 			if (approvalData.minApprovers) {
 				numMinApprovers = approvalData.minApprovers
 			}
 			if (approvalData.creatorVoteCounts != null) {
-				log.info("In ensureMinimumApproversPolicy. Found value for approvalData.creatorVoteCounts. Value is: ${approvalData.creatorVoteCounts}")
 				creatorVoteCounts = approvalData.creatorVoteCounts
 			}
 			boolean temp = approvalData.get("prohibitMostRecentPusher")
 			if (approvalData.prohibitMostRecentPusher != null) {
-				log.info("In ensureMinimumApproversPolicy. Found value for approvalData.prohibitMostRecentPusher. Value is: ${approvalData.prohibitMostRecentPusher}")
 				prohibitMostRecentPusher = approvalData.prohibitMostRecentPusher
 			}
 		}
-		log.info("In ensureMinimumApproversPolicy. Values are:")
-		log.info("   numMinApprovers: ${numMinApprovers}")
-		log.info("   creatorVoteCounts: ${creatorVoteCounts}")
-		log.info("   prohibitMostRecentPusher: ${prohibitMostRecentPusher}")
 		def projectData = repoData.project
 		// check for existing policy
 		policyRes = getBranchPolicy(MIN_APPROVERS_POLICY_TYPE, projectData.id, repoData.id, branchName)
@@ -322,26 +315,26 @@ public class PolicyManagementService {
 			]
 			policyRes = createPolicy(collection, projectData, policy)
 		} else {
-			log.info("Existing policy found.  Checking for changes ...")
+			log.debug("Existing policy found.  Checking for changes ...")
 			boolean valuesChanged = false
 			if (policyRes.settings.minimumApproverCount != numMinApprovers) {
-				log.info("minimumApproverCount was changed to ${numMinApprovers}")
+				log.debug("minimumApproverCount was changed to ${numMinApprovers}")
 				policyRes.settings.minimumApproverCount = numMinApprovers
 				valuesChanged = true
 			}
 			if (policyRes.settings.creatorVoteCounts != creatorVoteCounts) {
-				log.info("creatorVoteCounts was changed to ${creatorVoteCounts}")
+				log.debug("creatorVoteCounts was changed to ${creatorVoteCounts}")
 				policyRes.settings.creatorVoteCounts = creatorVoteCounts
 				valuesChanged = true
 			}
 			if (policyRes.settings.blockLastPusherVote != prohibitMostRecentPusher) {
-				log.info("blockLastPusherVote was changed to ${prohibitMostRecentPusher}")
+				log.debug("blockLastPusherVote was changed to ${prohibitMostRecentPusher}")
 				policyRes.settings.blockLastPusherVote = prohibitMostRecentPusher
 				valuesChanged = true
 			}
 			// update policy for minimum approvers if changes were made
 			if (valuesChanged) {
-				log.info("Changes were made.  Validating changes ...")
+				log.debug("Changes were made.  Validating changes ...")
 				boolean changesAreValid = true
 				// validate changes before applying
 				if (policyRes.settings.minimumApproverCount < 1 || policyRes.settings.minimumApproverCount > 10) {
@@ -359,7 +352,7 @@ public class PolicyManagementService {
 				// When minimum reviewers > 1, all combinations of the other 2, creatorVoteCounts and blockLastPusherVote are valid
 				}
 				if (changesAreValid) {
-					log.info("Changes are valid.  Updating policy ...")
+					log.debug("Changes are valid.  Updating policy ...")
 					policyRes = updatePolicy(collection, projectData, policyRes)
 				}
 			}
@@ -560,10 +553,10 @@ public class PolicyManagementService {
 		def policyRes
 		def projectData = repoData.project
 		// check for existing policy
-			log.info("Checking for existing custom status policy for ${CI_STATUS_GENRE}/${SNOWCI_STATUS_NAME}")
+			log.debug("Checking for existing custom status policy for ${CI_STATUS_GENRE}/${SNOWCI_STATUS_NAME}")
 		policyRes = getBranchPolicy(CUSTOM_STATUS_POLICY_TYPE, projectData.id, repoData.id, branchName, CI_STATUS_GENRE, SNOWCI_STATUS_NAME)
 		if (!policyRes) {
-			log.info("PolicyManagementService::ensureSNowCIBranchPolicy -- Adding custom status policy for ${CI_STATUS_GENRE}/${SNOWCI_STATUS_NAME}")
+			log.debug("PolicyManagementService::ensureSNowCIBranchPolicy -- Adding custom status policy for ${CI_STATUS_GENRE}/${SNOWCI_STATUS_NAME}")
 			def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
 			    type: [id: CUSTOM_STATUS_POLICY_TYPE],
 			    settings:[statusName: SNOWCI_STATUS_NAME, statusGenre: CI_STATUS_GENRE, invalidateOnSourceUpdate: true, defaultDisplayName: 'SNow CI status',
@@ -590,11 +583,11 @@ public class PolicyManagementService {
 		log.info("PolicyManagementService::modifyBranchPolicies -- Started")
 		
 		if (policyData) {
-			//def approvalData = null
+			def approvalData = null
 			if (policyData.approvalData) {
-				log.info("PolicyManagementService::modifyBranchPolicies -- approvalData")
-				//approvalData = policyData.approvalData
-				ensureMinimumApproversPolicy(collection, repoData, branchName, policyData.approvalData)
+				log.debug("PolicyManagementService::modifyBranchPolicies -- approvalData")
+				approvalData = policyData.approvalData
+				ensureMinimumApproversPolicy(collection, repoData, branchName, approvalData)
 			}
 		
 			//def buildData = null
@@ -610,7 +603,7 @@ public class PolicyManagementService {
 		
 			def automaticallyIncludedReviewersData = null
 			if (policyData.automaticallyIncludedReviewersData) {
-				log.info("PolicyManagementService::modifyBranchPolicies -- automaticallyIncludedReviewersData")
+				log.debug("PolicyManagementService::modifyBranchPolicies -- automaticallyIncludedReviewersData")
 				automaticallyIncludedReviewersData = policyData.automaticallyIncludedReviewersData
 				ensureAutomaticallyIncludedReviewersBranchPolicy(collection, repoData, branchName, automaticallyIncludedReviewersData)
 			}
