@@ -356,12 +356,7 @@ public class PolicyManagementService {
 						log.error("Invalid input for Prohibit most recent pusher from approving their own changes.")
 						changesAreValid = false
 					}
-				//} else {
-					//if ((policyRes.settings.creatorVoteCounts && policyRes.settings.blockLastPusherVote != false) 
-					//	|| (policyRes.settings.blockLastPusherVote && policyRes.settings.creatorVoteCounts != false)) {
-					//	log.error("Invalid input combination for Allow requestor to approve their own changes and Prohibit most recent pusher from approving their own changes.")
-					//	changesAreValid = false
-					//}
+				// When minimum reviewers > 1, all combinations of the other 2, creatorVoteCounts and blockLastPusherVote are valid
 				}
 				if (changesAreValid) {
 					log.info("Changes are valid.  Updating policy ...")
