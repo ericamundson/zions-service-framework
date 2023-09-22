@@ -288,7 +288,6 @@ public class PolicyManagementService {
 			if (approvalData.creatorVoteCounts != null) {
 				creatorVoteCounts = approvalData.creatorVoteCounts
 			}
-			boolean temp = approvalData.get("prohibitMostRecentPusher")
 			if (approvalData.prohibitMostRecentPusher != null) {
 				prohibitMostRecentPusher = approvalData.prohibitMostRecentPusher
 			}
