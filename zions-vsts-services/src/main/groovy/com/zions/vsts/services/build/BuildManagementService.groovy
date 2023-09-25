@@ -801,7 +801,57 @@ public class BuildManagementService {
 //		def swis = wis.toSet()
 		return wis
 	}
+	public String getRunFinalYaml(String collection, String project, String pipelineId, String runId) {
+		def json = ["PreviewRun": true]
+		def body = new JsonBuilder(json).toPrettyString()
+		log.debug("BuildManagementService::getFinalYaml")
+		
+		String finalYaml = null
+		def result = genericRestClient.get(
+				requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/pipelines/${pipelineId}/runs/${runId}",
+				headers: [Accept: 'application/json;api-version=7.0'],
+				)
+		if (result && result.finalYaml) {
+			finalYaml = result.finalYaml
+		}
+
+		return finalYaml
+	}
 	
+	public String getRunLogs(String collection, String project, String pipelineId, String runId, int logTail = 2) {
+		def json = ["PreviewRun": true]
+		def body = new JsonBuilder(json).toPrettyString()
+		log.debug("BuildManagementService::getRunLogs")
+		
+		//String finalYaml = null
+		def result = genericRestClient.get(
+				requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/build/builds/${runId}/logs",
+				headers: [Accept: 'application/json;api-version=7.0'],
+				query: ["\$expand": 'signedContent']
+				)
+
+		if (result) {
+			String allout = ''
+			int length = result.'value'.size()
+			int logStart = length - logTail
+			for (int i = logStart; i < length; i++) {
+				StringReader out = genericRestClient.get( 
+					contentType: ContentType.TEXT,
+					uri: result.'value'[i].url 
+					)
+				
+				out.eachLine { String line ->
+					allout += '      ' + line + '\n'
+				}
+			}
+			//println allout
+			return allout
+		}
+		return null
+	}
+
 	public String getFinalYaml(def collection, def project, def buildId) {
 		def json = ["PreviewRun": true]
 		def body = new JsonBuilder(json).toPrettyString()
