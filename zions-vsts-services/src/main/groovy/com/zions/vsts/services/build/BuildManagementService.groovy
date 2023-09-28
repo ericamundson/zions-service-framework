@@ -819,7 +819,7 @@ public class BuildManagementService {
 		return finalYaml
 	}
 	
-	public String getRunLogs(String collection, String project, String pipelineId, String runId, int logTail = 2) {
+	public String getRunLogs(String collection, String project, String pipelineId, String runId, int logTail = 2, boolean all = false) {
 		def json = ["PreviewRun": true]
 		def body = new JsonBuilder(json).toPrettyString()
 		log.debug("BuildManagementService::getRunLogs")
@@ -835,15 +835,29 @@ public class BuildManagementService {
 		if (result) {
 			String allout = ''
 			int length = result.'value'.size()
-			int logStart = length - logTail
-			for (int i = logStart; i < length; i++) {
-				StringReader out = genericRestClient.get( 
-					contentType: ContentType.TEXT,
-					uri: result.'value'[i].url 
-					)
-				
-				out.eachLine { String line ->
-					allout += '      ' + line + '\n'
+			if (all) {
+				for (int i = 0; i < length; i++) {
+					StringReader out = genericRestClient.get(
+						contentType: ContentType.TEXT,
+						uri: result.'value'[i].url
+						)
+					
+					out.eachLine { String line ->
+						allout += '      ' + line + '\n'
+					}
+				}
+
+			} else if (logTail > 0) {
+				int logStart = length - logTail
+				for (int i = logStart; i < length; i++) {
+					StringReader out = genericRestClient.get( 
+						contentType: ContentType.TEXT,
+						uri: result.'value'[i].url 
+						)
+					
+					out.eachLine { String line ->
+						allout += '      ' + line + '\n'
+					}
 				}
 			}
 			//println allout
