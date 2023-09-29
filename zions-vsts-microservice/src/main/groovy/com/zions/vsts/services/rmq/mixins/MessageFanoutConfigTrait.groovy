@@ -42,6 +42,9 @@ trait MessageFanoutConfigTrait {
 	
 	@Value('${queue.autoDelete:false}')
 	boolean queueAutoDelete
+	
+	@Value('${rabbitmq.is.testing:false}')
+	Boolean isTesting
 
 //	@Bean
 //	@Qualifier('primaryQueue')
@@ -62,71 +65,73 @@ trait MessageFanoutConfigTrait {
 	@Bean
 	Declarables declarables() {
 		Declarables dec = new Declarables()
-		DirectExchange dle = new DirectExchange('dead-letter-exchange', exchangeDurable, false)
-		dec.declarables.add(dle)
-		DirectExchange delaye = new DirectExchange('delay-exchange', exchangeDurable, false)
-		delaye.setDelayed(true)
-		dec.declarables.add(delaye)
-		Queue parked = null	
-		if (queueAutoDelete) {
-			parked = QueueBuilder.durable('parked-queue')
-					.autoDelete()
-		            //.deadLetterExchange('dead-letter-exchange')
-		            //.deadLetterRoutingKey("${queueName}")
-					//.ttl(1000)
-		            .build();
-		} else {
-			parked = QueueBuilder.durable('parked-queue')
-					//.deadLetterExchange('dead-letter-exchange')
-					//.deadLetterRoutingKey("${queueName}")
-					//.ttl(1000)
-					.build();
-
-		}
-		dec.declarables.add(parked)
-		Queue notify = null	
-		if (queueAutoDelete) {
-			notify = QueueBuilder.durable('notification-queue')
-					.autoDelete()
-		            //.deadLetterExchange('dead-letter-exchange')
-		            //.deadLetterRoutingKey("${queueName}")
-					//.ttl(1000)
-		            .build();
-		} else {
-			notify = QueueBuilder.durable('notification-queue')
-					//.deadLetterExchange('dead-letter-exchange')
-					//.deadLetterRoutingKey("${queueName}")
-					//.ttl(1000)
-					.build();
-
-		}
-		dec.declarables.add(notify)
-		Queue prim = null 
-		if (queueAutoDelete) {
-			prim = QueueBuilder.durable(queueName)
-					.autoDelete()
-		            //.deadLetterExchange('dead-letter-exchange')
-		            //.deadLetterRoutingKey("${queueName}-dead")
-		            .build();
-		} else {
-			prim = QueueBuilder.durable(queueName)
-					//.deadLetterExchange('dead-letter-exchange')
-					//.deadLetterRoutingKey("${queueName}-dead")
-					.build();
-
-		}
-		dec.declarables.add(prim)
-		adoTopics.each { topic ->
-			dec.declarables.add(new FanoutExchange(topic, exchangeDurable, false))
-			Binding b = new Binding(queueName, Binding.DestinationType.QUEUE, topic, '', null)
+		if (!isTesting) {
+			DirectExchange dle = new DirectExchange('dead-letter-exchange', exchangeDurable, false)
+			dec.declarables.add(dle)
+			DirectExchange delaye = new DirectExchange('delay-exchange', exchangeDurable, false)
+			delaye.setDelayed(true)
+			dec.declarables.add(delaye)
+			Queue parked = null	
+			if (queueAutoDelete) {
+				parked = QueueBuilder.durable('parked-queue')
+						.autoDelete()
+			            //.deadLetterExchange('dead-letter-exchange')
+			            //.deadLetterRoutingKey("${queueName}")
+						//.ttl(1000)
+			            .build();
+			} else {
+				parked = QueueBuilder.durable('parked-queue')
+						//.deadLetterExchange('dead-letter-exchange')
+						//.deadLetterRoutingKey("${queueName}")
+						//.ttl(1000)
+						.build();
+	
+			}
+			dec.declarables.add(parked)
+			Queue notify = null	
+			if (queueAutoDelete) {
+				notify = QueueBuilder.durable('notification-queue')
+						.autoDelete()
+			            //.deadLetterExchange('dead-letter-exchange')
+			            //.deadLetterRoutingKey("${queueName}")
+						//.ttl(1000)
+			            .build();
+			} else {
+				notify = QueueBuilder.durable('notification-queue')
+						//.deadLetterExchange('dead-letter-exchange')
+						//.deadLetterRoutingKey("${queueName}")
+						//.ttl(1000)
+						.build();
+	
+			}
+			dec.declarables.add(notify)
+			Queue prim = null 
+			if (queueAutoDelete) {
+				prim = QueueBuilder.durable(queueName)
+						.autoDelete()
+			            //.deadLetterExchange('dead-letter-exchange')
+			            //.deadLetterRoutingKey("${queueName}-dead")
+			            .build();
+			} else {
+				prim = QueueBuilder.durable(queueName)
+						//.deadLetterExchange('dead-letter-exchange')
+						//.deadLetterRoutingKey("${queueName}-dead")
+						.build();
+	
+			}
+			dec.declarables.add(prim)
+			adoTopics.each { topic ->
+				dec.declarables.add(new FanoutExchange(topic, exchangeDurable, false))
+				Binding b = new Binding(queueName, Binding.DestinationType.QUEUE, topic, '', null)
+				dec.declarables.add(b)
+			}
+			Binding b = new Binding("${queueName}", Binding.DestinationType.QUEUE, 'delay-exchange', "${queueName}", null)
+			dec.declarables.add(b)
+			b = new Binding('parked-queue', Binding.DestinationType.QUEUE, 'dead-letter-exchange', 'parked-queue', null)
+			dec.declarables.add(b)
+			b = new Binding('notification-queue', Binding.DestinationType.QUEUE, 'dead-letter-exchange', 'notification-queue', null)
 			dec.declarables.add(b)
 		}
-		Binding b = new Binding("${queueName}", Binding.DestinationType.QUEUE, 'delay-exchange', "${queueName}", null)
-		dec.declarables.add(b)
-		b = new Binding('parked-queue', Binding.DestinationType.QUEUE, 'dead-letter-exchange', 'parked-queue', null)
-		dec.declarables.add(b)
-		b = new Binding('notification-queue', Binding.DestinationType.QUEUE, 'dead-letter-exchange', 'notification-queue', null)
-		dec.declarables.add(b)
 		return dec;
 	}
 	
@@ -148,9 +153,11 @@ trait MessageFanoutConfigTrait {
 			MessageListenerAdapter listenerAdapter) {
 		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
 		container.setConnectionFactory(connectionFactory);
-		container.setQueueNames(queueName);
 		container.setMessageListener(listenerAdapter);
-		container.setDefaultRequeueRejected(false);
+		if (!isTesting) {
+			container.setQueueNames(queueName);
+			container.setDefaultRequeueRejected(false);
+		}
 		//container.setAcknowledgeMode(AcknowledgeMode.AUTO);
 		return container;
 	}
