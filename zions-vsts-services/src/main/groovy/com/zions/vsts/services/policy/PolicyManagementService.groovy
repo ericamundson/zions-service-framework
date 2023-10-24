@@ -837,26 +837,25 @@ public class PolicyManagementService {
 				if (policyType == CUSTOM_STATUS_POLICY_TYPE) {
 					if (policy.settings.statusName == statusName && policy.settings.statusGenre == statusGenre) {
 						retVal = policy
-						log.info("PolicyManagementService::getBranchPolicy -- Found existing custom status policy for ${statusGenre}/${statusName}")
+						log.debug("PolicyManagementService::getBranchPolicy -- Found existing custom status policy for ${statusGenre}/${statusName}")
 					}
 				} else if (policyType == AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE) {
 					// should we loop through and compare the set of reviewers
 					List<String> requiredReviewerIds = policy.settings.requiredReviewerIds
 					boolean reviewersExist = true
 					for (String reviewerId in reviewerIds) {
-						log.info("Checking for presence of required reviewer with Id ${reviewerId} ...")
 						if (!requiredReviewerIds.contains(reviewerId)) {
-							log.info("Required reviewer with Id ${reviewerId} not found.")
+							log.debug("Required reviewer with Id ${reviewerId} not found.")
 							reviewersExist = false
 						}
 					}
 					if (reviewersExist) {
 						retVal = policy
-						log.info("PolicyManagementService::getBranchPolicy -- Found existing automatically included reviewers policy for ${reviewerIds}")
+						log.debug("PolicyManagementService::getBranchPolicy -- Found existing automatically included reviewers policy for ${reviewerIds}")
 					}
 				} else {
 					retVal = policy
-					log.info("PolicyManagementService::getBranchPolicy -- Found existing branch policy for ${policyType}")
+					log.debug("PolicyManagementService::getBranchPolicy -- Found existing branch policy for ${policyType}")
 				}
 			}
 		}
