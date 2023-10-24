@@ -485,12 +485,9 @@ public class PolicyManagementService {
 	}
 	
 	def deleteAutomaticallyIncludedReviewersBranchPolicy(def policyRes) {
-		//def policyRes = getBranchPolicy(AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE, repoData.project.id, repoData.id, branchName)
-		//if (policyRes) {
-			def result = genericRestClient.delete(
-				uri: "${policyRes._links.self.href}",
-				query: ['api-version': '5.1'])
-		//}
+		def result = genericRestClient.delete(
+			uri: "${policyRes._links.self.href}",
+			query: ['api-version': '5.1'])
 	}
 	
 	def ensureCheckmarxBranchPolicy(String collection, def projectData, def repoData, String branchName) {
