@@ -419,86 +419,78 @@ public class PolicyManagementService {
 	public def ensureAutomaticallyIncludedReviewersBranchPolicy(String collection, def repoData, String branchName, def automaticallyIncludedReviewersData = null) {
 		log.info("PolicyManagementService::ensureAutomaticallyIncludedReviewersBranchPolicy -- ")
 				
-		def policyRes = getBranchPolicy(AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE, repoData.project.id, repoData.id, branchName)
+		// Create the collection of reviewer Ids first so we can use in policy lookup
+		String[] rNames = automaticallyIncludedReviewersData.reviewers.split(',')
+		boolean aGroupIsInTheReviewersList = false
+		def reviewersById = []
+		for (reviewer in rNames) {
+			// replace the () in the reviewer names provided with [] and '/' with '\' due to constraints in yaml validation
+			reviewer = reviewer.replace('(', '[').replace(')', ']').replace('/', '\'')
+			// Get the reviewer's identity
+			def identity = memberManagementService.getIdentity('', reviewer)
+			// Determine if the reviewer is a Team
+			if (identity[0].properties.SchemaClassName.$value.toLowerCase() == "group") {
+				aGroupIsInTheReviewersList = true
+			}
+			reviewersById.add("${identity[0].id}")
+		}
+
+		def policyRes = getBranchPolicy(AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE, repoData.project.id, repoData.id, branchName, null, null, reviewersById)
 		if (policyRes) {
-			// Remove the collection of AutomaticallyIncludedReviewers branch policies
-			deleteAutomaticallyIncludedReviewersBranchPolicy(repoData, branchName)
+			// Remove the existing AutomaticallyIncludedReviewers branch policy that was found
+			// Should we try to update instead of delete and re-add??
+			deleteAutomaticallyIncludedReviewersBranchPolicy(policyRes)
 		}
 		
+		// policyRequirement - Default: optional
+		boolean isBlocking = automaticallyIncludedReviewersData.policyRequirement
+
+		// TBD: add code to log when YAML configuration is doing something the UI would not allow
+		// minimumApproverCount - Default: 1 (always pass in the REST call)
+		def minimumApproverCount = 1
+		// If our 1 reviewer is a group and this is a required policy, set minimumApproverCount to the YAML value
+		if (reviewersById.size() == 1 && aGroupIsInTheReviewersList && isBlocking) {
+			if (automaticallyIncludedReviewersData.minimumApproverCount) {
+				minimumApproverCount = automaticallyIncludedReviewersData.minimumApproverCount
+			}
+		}
+
+		// TBD: add code to log when YAML configuration is doing something the UI would not allow
+		// filenamePatterns - Default: empty list (always pass in the REST call)
+		def filenamePatterns = []
+		if (automaticallyIncludedReviewersData.filenamePatterns && automaticallyIncludedReviewersData.filenamePatterns != "n/a") {
+			// We expect the YAML to be entered as comma-separated list of paths / patterns. 
+			String[] fnPaths = automaticallyIncludedReviewersData.filenamePatterns.split(',')
+			for (fP in fnPaths) {
+				filenamePatterns.add(fP)
+			}
+		}
+
+		// creatorVoteCounts - Default: false
+		boolean creatorVoteCounts = automaticallyIncludedReviewersData.creatorVoteCounts
+		
+		// message - Default: empty string
+		def message = ""
+		if (automaticallyIncludedReviewersData.message && automaticallyIncludedReviewersData.message != "n/a") {
+			message = item.message.toString()
+		}
+
 		def scope = [[matchKind: 'Exact', refName: branchName, repositoryId: repoData.id]]
-		
-		// Create the collection of AutomaticallyIncludedReviewers branch policies
-		for (item in automaticallyIncludedReviewersData){
-			// reviewers
-			boolean aGroupIsInTheReviewersList = false
-			def reviewersById = []
-			if (item.reviewers) {
-				for (reviewer in item.reviewers) {
-					// Get the reviewer's identity
-					def identity = memberManagementService.getIdentity('', reviewer.toString())
-					// Determine if the reviewer is a Team
-					if (identity[0].properties.SchemaClassName.$value.toLowerCase() == "group") {
-						aGroupIsInTheReviewersList = true
-					}
-					reviewersById.add("${identity[0].id}")
-				}
-			}
 
-			// policyRequirement - Default: optional
-			boolean isBlocking = false
-			if (item.policyRequirement && item.policyRequirement.toLowerCase() == "required") {
-				isBlocking = true
-			}
+		// Create the policy
+		def settings = ["filenamePatterns": filenamePatterns, "creatorVoteCounts": creatorVoteCounts.toString(), "message": message, "minimumApproverCount": minimumApproverCount, "requiredReviewerIds": reviewersById, scope: scope]
+		def policy = [isBlocking: isBlocking.toString(), isDeleted: false, isEnabled: true, settings: settings, type: [id: AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE]]
+		policyRes = createPolicy(collection, repoData.project, policy)
 
-			// TBD: add code to log when YAML configuration is doing something the UI would not allow
-			// minimumApproverCount - Default: 1 (always pass in the REST call)
-			def minimumApproverCount = 1
-			// If our 1 reviewer is a group and this is a required policy, set minimumApproverCount to the YAML value
-			if (reviewersById.size() == 1 && aGroupIsInTheReviewersList && isBlocking) {
-				if (item.minimumApproverCount) {
-					minimumApproverCount = item.minimumApproverCount
-				}
-			}
-
-			// TBD: add code to log when YAML configuration is doing something the UI would not allow
-			// filenamePatterns - Default: empty list (always pass in the REST call)
-			def filenamePatterns = []
-			if (item.filenamePatterns) {
-				// WARN: We expect the YAML to be entered as 1 pattern per line. (afterwall the YAML syntax is a collection of entries) 
-				// In the UI a semi-colon ';' in the string appears to create 1 entry per part.
-				// In the UI a comma in the string appears to create a pattern within a single entry. 
-				for (fP in item.filenamePatterns) {
-					filenamePatterns.add(fP)
-				}
-			}
-
-			// creatorVoteCounts - Default: false
-			boolean creatorVoteCounts = false
-			if (item.creatorVoteCounts) {
-				creatorVoteCounts = item.creatorVoteCounts
-			}
-			
-			// message - Default: empty string
-			def message = ""
-			if (item.message) {
-				message = item.message.toString()
-			}
-			
-			// Create the policy
-			def settings = ["filenamePatterns": filenamePatterns, "creatorVoteCounts": creatorVoteCounts.toString(), "message": message, "minimumApproverCount": minimumApproverCount, "requiredReviewerIds": reviewersById, scope: scope]
-			def policy = [isBlocking: isBlocking.toString(), isDeleted: false, isEnabled: true, settings: settings, type: [id: AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE]]
-			policyRes = createPolicy(collection, repoData.project, policy)
-		}
 	}
 	
-	def deleteAutomaticallyIncludedReviewersBranchPolicy(def repoData, String branchName = 'refs/heads/master') {
-		def policyRes = getBranchPolicy(AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE, repoData.project.id, repoData.id, branchName)
-		if (policyRes) {
+	def deleteAutomaticallyIncludedReviewersBranchPolicy(def policyRes) {
+		//def policyRes = getBranchPolicy(AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE, repoData.project.id, repoData.id, branchName)
+		//if (policyRes) {
 			def result = genericRestClient.delete(
 				uri: "${policyRes._links.self.href}",
 				query: ['api-version': '5.1'])
-		}
-
+		//}
 	}
 	
 	def ensureCheckmarxBranchPolicy(String collection, def projectData, def repoData, String branchName) {
@@ -830,7 +822,7 @@ public class PolicyManagementService {
 		return result
 	}
 
-	def getBranchPolicy( def policyType, def projectId, def repoId, def branchName, def statusGenre=null, def statusName=null ) {
+	def getBranchPolicy( def policyType, def projectId, def repoId, def branchName, def statusGenre=null, def statusName=null, def reviewerIds=null ) {
 		def query = ['repositoryId':"${repoId}", 'refName':"${branchName}" , 'policyType':"${policyType}" ]
 		def results = genericRestClient.get(
 			contentType: ContentType.JSON,
@@ -846,6 +838,21 @@ public class PolicyManagementService {
 					if (policy.settings.statusName == statusName && policy.settings.statusGenre == statusGenre) {
 						retVal = policy
 						log.info("PolicyManagementService::getBranchPolicy -- Found existing custom status policy for ${statusGenre}/${statusName}")
+					}
+				} else if (policyType == AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE) {
+					// should we loop through and compare the set of reviewers
+					List<String> requiredReviewerIds = policy.settings.requiredReviewerIds
+					boolean reviewersExist = true
+					for (String reviewerId in reviewerIds) {
+						log.info("Checking for presence of required reviewer with Id ${reviewerId} ...")
+						if (!requiredReviewerIds.contains(reviewerId)) {
+							log.info("Required reviewer with Id ${reviewerId} not found.")
+							reviewersExist = false
+						}
+					}
+					if (reviewersExist) {
+						retVal = policy
+						log.info("PolicyManagementService::getBranchPolicy -- Found existing automatically included reviewers policy for ${reviewerIds}")
 					}
 				} else {
 					retVal = policy
