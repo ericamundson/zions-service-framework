@@ -417,7 +417,7 @@ public class PolicyManagementService {
 	}
 	
 	public def ensureAutomaticallyIncludedReviewersBranchPolicy(String collection, def repoData, String branchName, def automaticallyIncludedReviewersData = null) {
-		log.info("PolicyManagementService::ensureAutomaticallyIncludedReviewersBranchPolicy -- ")
+		log.debug("PolicyManagementService::ensureAutomaticallyIncludedReviewersBranchPolicy -- ")
 				
 		// Create the collection of reviewer Ids first so we can use in policy lookup
 		String[] rNames = automaticallyIncludedReviewersData.reviewers.split(',')
@@ -425,13 +425,15 @@ public class PolicyManagementService {
 		def reviewersById = []
 		for (reviewer in rNames) {
 			// replace the () in the reviewer names provided with [] and '/' with '\' due to constraints in yaml validation
-			reviewer = reviewer.replace('(', '[').replace(')', ']').replace('/', '\'')
+			reviewer = reviewer.replace('(', '[').replace(')', ']').replace('/', '\\')
 			// Get the reviewer's identity
+			log.debug("Getting ID for reviewer with name "+reviewer)
 			def identity = memberManagementService.getIdentity('', reviewer)
 			// Determine if the reviewer is a Team
 			if (identity[0].properties.SchemaClassName.$value.toLowerCase() == "group") {
 				aGroupIsInTheReviewersList = true
 			}
+			log.debug("Adding ID ${identity[0].id} for reviewer with name "+reviewer)
 			reviewersById.add("${identity[0].id}")
 		}
 
@@ -848,11 +850,11 @@ public class PolicyManagementService {
 					}
 					if (reviewersExist) {
 						retVal = policy
-						log.debug("PolicyManagementService::getBranchPolicy -- Found existing automatically included reviewers policy for ${reviewerIds}")
+						log.info("PolicyManagementService::getBranchPolicy -- Found existing automatically included reviewers policy for ${reviewerIds}")
 					}
 				} else {
 					retVal = policy
-					log.debug("PolicyManagementService::getBranchPolicy -- Found existing branch policy for ${policyType}")
+					log.info("PolicyManagementService::getBranchPolicy -- Found existing branch policy for ${policyType}")
 				}
 			}
 		}
