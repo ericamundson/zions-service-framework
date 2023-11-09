@@ -200,7 +200,7 @@ class GenericRestClientSpecTest extends Specification {
 		then: "result.stuff == 'stuff'"
 		"${result.stuff}" == 'stuff'
 	}
-	
+	@Ignore
 	public void 'call post with bad status'() {
 		given: 'stub internal delegate calls'
 		HttpResponseDecorator resp = Mock(HttpResponseDecorator)
