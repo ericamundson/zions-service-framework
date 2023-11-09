@@ -168,11 +168,6 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		}
 		int status = resp.status
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
-		if ((status == 200 || status == 201) && dHeader != null) {
-			log.warn "GenericRestClient::get --  ADO started throttling. Delaying 10 second."
-			System.sleep(10000)
-			throw new ThrottleException("Throttled: http ${status}")
-		}
 
 		if (withHeader) {
 			def headerMap = [:]
@@ -289,11 +284,6 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		
 		
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
-		if ((status == 200 || status == 201) && dHeader != null) {
-			log.warn "GenericRestClient::patch --  ADO started throttling. Delaying 1 minutes."
-			System.sleep(10000)			
-			throw new ThrottleException("Throttled: http ${status}")
-		}
 		if (status != 200) {
 			log.warn("GenericRestClient::patch -- Warning. Status: "+resp.getStatusLine());
 			if (status == 408) {
@@ -433,22 +423,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			}
 		}
 
-
-		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
 		int status = resp.status
-		if ((status == 200 || status == 201) && dHeader != null) {
-			log.warn "GenericRestClient::rateLimitPost --  ADO started throttling. Delaying 1 minutes."
-			System.sleep(10000)			
-			if (encoderFunction || currentEncoder) {
-				String requestContentType = 'application/json'
-				if (input.requestContentType) {
-					requestContentType  = "${input.requestContentType}"
-				}
-				delegate.encoder."${requestContentType}" = currentEncoder
-				
-			}
-			throw new ThrottleException("Throttled: http ${status}")
-		}
 		//JsonOutput t
 		if (status != 200 && status != 201) {
 			log.warn("GenericRestClient::rateLimitPost -- Failed. Status: "+resp.getStatusLine());
