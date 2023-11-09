@@ -423,6 +423,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			}
 		}
 
+		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
 		int status = resp.status
 		//JsonOutput t
 		if (status != 200 && status != 201) {
