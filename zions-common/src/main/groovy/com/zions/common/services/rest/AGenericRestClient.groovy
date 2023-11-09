@@ -359,12 +359,12 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		//JsonOutput t
 		
 		int status = resp.status
-		if (status != 200 && status != 201 && status != 204 && status != 202) {
+		if (status < 200 && status > 299) {
 			
 			log.warn("GenericRestClient::post -- Issue. Status: "+resp.getStatusLine());
 			if (sinput) {
-				//String json = new JsonBuilder(sinput).toPrettyString()
-				//log.warn("Input data: ${json}");
+				String json = new JsonBuilder(sinput).toPrettyString()
+				log.warn("Input data: ${json}");
 				if (resp.status == 503) {
 					log.warn("Starting retry!")
 					System.sleep(30000)
