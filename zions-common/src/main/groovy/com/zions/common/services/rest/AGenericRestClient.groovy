@@ -169,7 +169,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		int status = resp.status
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
 		if ((status == 200 || status == 201) && dHeader != null) {
-			log.error "GenericRestClient::get --  ADO started throttling. Delaying 10 second."
+			log.warn "GenericRestClient::get --  ADO started throttling. Delaying 10 second."
 			System.sleep(10000)
 			throw new ThrottleException("Throttled: http ${status}")
 		}
@@ -238,7 +238,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		HttpResponseDecorator resp = delegate.put(input)
 		
 		if (resp.status != 200) {
-			log.error("GenericRestClient::put -- Failed. Status: "+resp.getStatusLine());
+			log.warn("GenericRestClient::put -- Failed. Status: "+resp.getStatusLine());
 			return null;
 		}
 		if (withHeader) {
@@ -290,12 +290,12 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
 		if ((status == 200 || status == 201) && dHeader != null) {
-			log.error "GenericRestClient::patch --  ADO started throttling. Delaying 1 minutes."
+			log.warn "GenericRestClient::patch --  ADO started throttling. Delaying 1 minutes."
 			System.sleep(10000)			
 			throw new ThrottleException("Throttled: http ${status}")
 		}
 		if (status != 200) {
-			log.error("GenericRestClient::patch -- Warning. Status: "+resp.getStatusLine());
+			log.warn("GenericRestClient::patch -- Warning. Status: "+resp.getStatusLine());
 			if (status == 408) {
 				System.sleep(20000)
 				throw new ThrottleException("Throttled: http ${status}")
@@ -303,15 +303,15 @@ abstract class AGenericRestClient implements IGenericRestClient {
 			}
 			if (sinput) {
 				String json = new JsonBuilder(sinput).toPrettyString()
-				log.error("Input data: ${json}");
+				log.warn("Input data: ${json}");
 				if (status == 503) {
-					log.error("Starting retry!")
+					log.warn("Starting retry!")
 					System.sleep(30000)
 					resp = delegate.post(sinput)
 					if (resp.status != 200) {
-						log.error("Failed retry!")
+						log.warn("Failed retry!")
 					} else {
-						log.error("Finished retry!")
+						log.warn("Finished retry!")
 					}
 				}
 			}
@@ -359,20 +359,20 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		//JsonOutput t
 		
 		int status = resp.status
-		if (status != 200 && status != 201 && status != 204) {
+		if (status != 200 && status != 201 && status != 204 && status != 202) {
 			
-			log.error("GenericRestClient::post -- Failed. Status: "+resp.getStatusLine());
+			log.warn("GenericRestClient::post -- Issue. Status: "+resp.getStatusLine());
 			if (sinput) {
-				String json = new JsonBuilder(sinput).toPrettyString()
-				log.error("Input data: ${json}");
+				//String json = new JsonBuilder(sinput).toPrettyString()
+				//log.warn("Input data: ${json}");
 				if (resp.status == 503) {
-					log.error("Starting retry!")
+					log.warn("Starting retry!")
 					System.sleep(30000)
 					resp = delegate.post(sinput)
 					if (resp.status != 200 && resp.status!= 201) {
-						log.error("Failed retry!")
+						log.warn("Failed retry!")
 					} else {
-						log.error("Finished retry!")
+						log.warn("Finished retry!")
 					}
 				}
 			}
@@ -419,7 +419,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		try {
 			resp = delegate.post(input)
 		} catch (e) {
-			log.error "GenericRestClient::rateLimitPost --  Response error: ${e.message}"
+			log.warn "GenericRestClient::rateLimitPost --  Response error: ${e.message}"
 			System.sleep(10000)			
 			throw new ThrottleException("Response issue: http ${e.message}")
 		} finally {
@@ -437,7 +437,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		Header dHeader = resp.getLastHeader('x-ratelimit-delay')
 		int status = resp.status
 		if ((status == 200 || status == 201) && dHeader != null) {
-			log.error "GenericRestClient::rateLimitPost --  ADO started throttling. Delaying 1 minutes."
+			log.warn "GenericRestClient::rateLimitPost --  ADO started throttling. Delaying 1 minutes."
 			System.sleep(10000)			
 			if (encoderFunction || currentEncoder) {
 				String requestContentType = 'application/json'
@@ -451,10 +451,10 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		}
 		//JsonOutput t
 		if (status != 200 && status != 201) {
-			log.error("GenericRestClient::rateLimitPost -- Failed. Status: "+resp.getStatusLine());
+			log.warn("GenericRestClient::rateLimitPost -- Failed. Status: "+resp.getStatusLine());
 			if (retryCopy) {
 				String json = new JsonBuilder(retryCopy).toPrettyString()
-				log.error("Input data: ${json}");
+				log.warn("Input data: ${json}");
 			} 
 			if (status == 413) {
 				if (encoderFunction || currentEncoder) {
@@ -528,7 +528,7 @@ abstract class AGenericRestClient implements IGenericRestClient {
 		try {
 			resp = delegate.post(input)
 		} catch (e) {
-			log.error "CheckmarxGenericRestClient::multipartPost --  Response error: ${e.message}"
+			//log.error "CheckmarxGenericRestClient::multipartPost --  Response error: ${e.message}"
 			System.sleep(10000)
 			throw new Exception("Response issue: http ${e.message}")
 		} finally {
@@ -543,8 +543,8 @@ abstract class AGenericRestClient implements IGenericRestClient {
 
 		int status = resp.status
 		if (status != 200 && status != 201 && status != 204) {
-			log.error("GenericRestClient::multipartPost -- Failed. Status: "+resp.getStatusLine());
-			log.error(""+resp.getData())
+			log.warn("GenericRestClient::multipartPost -- Failed. Status: "+resp.getStatusLine());
+			log.warn(""+resp.getData())
 		}
 		if (withHeader) {
 			def headerMap = [:]
