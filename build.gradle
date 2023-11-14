@@ -284,6 +284,10 @@ allprojects {
 			}
 		}
 	}
+	boolean doDebug = false
+	if ("${debugTests}" == 'true' && project.name == 'zions-vsts-services') {
+		doDebug = true
+	}
 	test {
 		//String activeProfile =  System.properties['spring.profiles.active']
 		doFirst {
@@ -291,6 +295,7 @@ allprojects {
 		}
 		systemProperty "spring.profiles.active", 'test'
 		useJUnitPlatform()
+		debug doDebug
 	}
 
 	uploadArchives {

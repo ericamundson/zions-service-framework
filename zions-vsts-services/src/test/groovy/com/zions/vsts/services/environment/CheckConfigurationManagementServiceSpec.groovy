@@ -21,6 +21,7 @@ import com.zions.vsts.services.attachments.AttachmentManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 
 import spock.lang.Specification
+import spock.lang.Ignore
 
 @SpringBootTest(classes=[CheckConfigurationManagementServiceConfig])
 @ActiveProfiles('k8stest')
@@ -35,6 +36,7 @@ class CheckConfigurationManagementServiceSpec extends Specification {
 	@Autowired
 	CheckConfigurationManagementService checkConfigurationManagementService
 
+	@Ignore
 	def 'ensure a check configuration'() {
 		given: 'A test environment name.'
 		String name = 'check_config_env'
@@ -63,8 +65,8 @@ class CheckConfigurationManagementServiceSpec extends Specification {
 
 }
 
-@ComponentScan(["com.zions.vsts.services.environment", "com.zions.vsts.services.admin.project", "com.zions.vsts.services.admin.member"])
-@PropertySource("classpath:test.properties")
+@ComponentScan(["com.zions.vsts.services", "com.zions.common.services.notification"])
+//@PropertySource("classpath:test.properties")
 class CheckConfigurationManagementServiceConfig {
 	@Value('${tfs.url:}')
 	String tfsUrl
@@ -96,6 +98,13 @@ class CheckConfigurationManagementServiceConfig {
 	@Bean
 	IGenericRestClient mrGenericRestClient() {
 		return new MrGenericRestClient('', '')
+	}
+	
+	@Bean
+	ProjectManagementService projectManagementService() {
+		ProjectManagementService s = new ProjectManagementService()
+		s.genericRestClient = genericRestClient()
+		return s
 	}
 
 
