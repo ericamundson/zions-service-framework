@@ -51,7 +51,38 @@ public class MemberManagementService {
 	public MemberManagementService() {
 		
 	}
-	
+	public def getGroup(String collection, String principalName) {
+		def groups = []
+		String url = "${genericRestClient.getTfsUrl()}".replace('//dev.', '//vssps.dev.')
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${url}/${collection}/_apis/graph/groups",
+			query: ['api-version': '7.2-preview.1'],
+			withHeader: true
+			)
+		//if (result && result.data && result.data.'value') {
+		while (true) {
+			for (def group in result.data.'value') {
+				if (group.principalName == principalName) {
+					return group
+				}
+			}
+			if (result.headers.'X-MS-ContinuationToken') {
+				result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${url}/${collection}/_apis/graph/groups",
+					query: ['api-version': '7.2-preview.1', continuationToken: result.headers.'X-MS-ContinuationToken'],
+					withHeader: true
+					
+					)
+			} else {
+				break
+			}
+		}
+		//}
+		return null
+	}
+		
 	public def getUsers(String collection) {
 		def users = []
 		String url = "${genericRestClient.getTfsUrl()}".replace('//dev.', '//vssps.dev.')
