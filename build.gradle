@@ -231,7 +231,8 @@ allprojects {
 		implementation 'bsf:bsf:2.4.0'
 		implementation 'commons-io:commons-io:2.5'
 		implementation 'commons-cli:commons-cli:1.3.1'
-
+		implementation 'com.zions.dts.services:zions-boot:latest.release'
+		
 		implementation('org.codehaus.groovy.modules.http-builder:http-builder:0.7.2') { exclude(module: 'groovy') }
 		constraints {
 			// Upgrade commons libraries that have vulnerabilities
