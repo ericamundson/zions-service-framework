@@ -25,7 +25,17 @@ class SubscriptionService {
 		}
 		return createSubscription(subscriptionData)
 	}
-	
+	def ensureSubscriptionAlt(def projectInfo, def subscriptionData) {
+		log.debug("projectInfo.id = "+projectInfo.id)
+		subscriptionData.publisherInputs.projectId = projectInfo.id
+		def sub = getSubscription(projectInfo, subscriptionData)
+		if (sub) {
+			deleteSubscription(sub.id)
+			return createSubscription(subscriptionData)
+		}
+		return createSubscription(subscriptionData)
+	}
+
 	def getSubscription( def project, def subscriptionData) {
 		def query = [consumerId: subscriptionData.consumerId, eventType: subscriptionData.eventType, publisherId: subscriptionData.publisherId, 'api-version': '5.1']
 		def results = genericRestClient.get(
