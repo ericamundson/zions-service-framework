@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 import org.springframework.amqp.core.Queue
+import org.springframework.amqp.core.AcknowledgeMode
 import org.springframework.amqp.core.QueueBuilder
 import org.springframework.amqp.core.FanoutExchange
 import org.springframework.amqp.core.DirectExchange
@@ -45,6 +46,9 @@ trait MessageFanoutConfigTrait {
 	
 	@Value('${rabbitmq.is.testing:false}')
 	Boolean isTesting
+	
+	@Value('${rabbitmq.autoack:false}')
+	Boolean autoAck
 
 //	@Bean
 //	@Qualifier('primaryQueue')
@@ -153,6 +157,9 @@ trait MessageFanoutConfigTrait {
 			MessageListenerAdapter listenerAdapter) {
 		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
 		container.setConnectionFactory(connectionFactory);
+		if (autoAck) {
+			container.setAcknowledgeMode(AcknowledgeMode.AUTO)
+		}
 		container.setMessageListener(listenerAdapter);
 		if (!isTesting) {
 			container.setQueueNames(queueName);
