@@ -36,6 +36,16 @@ public class CheckConfigurationManagementService {
 		return null
 	}
 	
+	def ensureDeleteEnvCheckConfiguration(def col, def proj, def env) {
+		def config = getEnvCheckConfiguration('', proj, env)
+		if (config) {
+			def result = genericRestClient.delete(
+					uri: "${genericRestClient.getTfsUrl()}/${col}/${proj.id}/_apis/pipelines/checks/configurations/${config.id}",
+					query: ['api-version': '7.2-preview.1']
+				)
+		}
+	}
+	
 	def ensureEnvCheckConfiguration(def col, def proj, def env, String[] users, def settings = [blockedApprovers:[], executionOrder: 1, instructions: "", minRequiredApprovers: 1, requesterCannotBeApprover: true]) {
 		def config = getEnvCheckConfiguration('', proj, env)
 		def approvers = []
