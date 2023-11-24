@@ -67,7 +67,7 @@ class EnvironmentManagementService {
 			if (!url.contains('eto-dev')) {
 				org = 'ZionsETO'
 			}
-			def codeops = memberManagementService.getGroup('', "[${org}]\\CodeBuildOps")
+			def codeops = memberManagementService.getGroup('', "[${project.name}]\\Project Valid Users")
 			if (codeops) {
 				def inperms = [userId: codeops.originId, roleName: 'Administrator']
 				def inp = json(inperms)
