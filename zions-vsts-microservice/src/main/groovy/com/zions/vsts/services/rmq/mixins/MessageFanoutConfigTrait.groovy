@@ -158,7 +158,7 @@ trait MessageFanoutConfigTrait {
 	}
 
 	@Bean
-	SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
+	MessageListenerContainer container(ConnectionFactory connectionFactory,
 			MessageListenerAdapter listenerAdapter) {
 		MessageListenerContainer oContainer = null
 		if (useDirectListener) {			
