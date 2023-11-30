@@ -54,6 +54,9 @@ trait MessageFanoutConfigTrait {
 	
 	@Value('${rabbitmq.use.direct.listener:false}')
 	Boolean useDirectListener
+	
+	@Value('${rabbitmq.direct.listener.timeout:120000}')
+	Long directTimeout
 
 //	@Bean
 //	@Qualifier('primaryQueue')
@@ -168,6 +171,7 @@ trait MessageFanoutConfigTrait {
 				//container.setAcknowledgeMode(AcknowledgeMode.AUTO)
 			}
 			container.setMessageListener(listenerAdapter);
+			container.setAckTimeout(directTimeout)
 			if (!isTesting) {
 				container.setQueueNames(queueName);
 				container.setDefaultRequeueRejected(false);
