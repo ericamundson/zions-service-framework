@@ -15,7 +15,7 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer
 import org.springframework.amqp.rabbit.listener.DirectMessageListenerContainer
-import org.springframework.amqp.rabbit.listener.MessageListenerContainer
+import org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -158,9 +158,9 @@ trait MessageFanoutConfigTrait {
 	}
 
 	@Bean
-	SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
+	AbstractMessageListenerContainer container(ConnectionFactory connectionFactory,
 			MessageListenerAdapter listenerAdapter) {
-		MessageListenerContainer oContainer = null
+		AbstractMessageListenerContainer oContainer = null
 		if (useDirectListener) {			
 			DirectMessageListenerContainer container = new DirectMessageListenerContainer();
 			container.setConnectionFactory(connectionFactory);
