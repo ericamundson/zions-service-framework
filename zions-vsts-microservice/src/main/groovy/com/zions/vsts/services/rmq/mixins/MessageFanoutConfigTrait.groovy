@@ -14,6 +14,8 @@ import org.springframework.amqp.core.AmqpAdmin
 import org.springframework.amqp.rabbit.core.RabbitAdmin
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer
+import org.springframework.amqp.rabbit.listener.DirectMessageListenerContainer
+import org.springframework.amqp.rabbit.listener.MessageListenerContainer
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -49,6 +51,9 @@ trait MessageFanoutConfigTrait {
 	
 	@Value('${rabbitmq.autoack:false}')
 	Boolean autoAck
+	
+	@Value('${rabbitmq.use.direct.listener:false}')
+	Boolean useDirectListener
 
 //	@Bean
 //	@Qualifier('primaryQueue')
@@ -155,18 +160,34 @@ trait MessageFanoutConfigTrait {
 	@Bean
 	SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
 			MessageListenerAdapter listenerAdapter) {
-		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-		container.setConnectionFactory(connectionFactory);
-		if (autoAck) {
-			container.setAcknowledgeMode(AcknowledgeMode.AUTO)
-		}
-		container.setMessageListener(listenerAdapter);
-		if (!isTesting) {
-			container.setQueueNames(queueName);
-			container.setDefaultRequeueRejected(false);
+		MessageListenerContainer oContainer = null
+		if (useDirectListener) {			
+			DirectMessageListenerContainer container = new DirectMessageListenerContainer();
+			container.setConnectionFactory(connectionFactory);
+			if (autoAck) {
+				//container.setAcknowledgeMode(AcknowledgeMode.AUTO)
+			}
+			container.setMessageListener(listenerAdapter);
+			if (!isTesting) {
+				container.setQueueNames(queueName);
+				container.setDefaultRequeueRejected(false);
+			}
+			oContainer = container
+		} else {
+			SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+			container.setConnectionFactory(connectionFactory);
+			if (autoAck) {
+				//container.setAcknowledgeMode(AcknowledgeMode.AUTO)
+			}
+			container.setMessageListener(listenerAdapter);
+			if (!isTesting) {
+				container.setQueueNames(queueName);
+				container.setDefaultRequeueRejected(false);
+			}
+			oContainer = container
 		}
 		//container.setAcknowledgeMode(AcknowledgeMode.AUTO);
-		return container;
+		return oContainer;
 	}
 
 	@Bean
