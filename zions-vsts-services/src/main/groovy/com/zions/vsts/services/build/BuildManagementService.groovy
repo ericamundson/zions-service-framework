@@ -14,6 +14,7 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
+import java.util.regex.Pattern
 
 /**
  * @author z091182
@@ -647,7 +648,10 @@ public class BuildManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
 				query: query,
 				)
-		return result
+		if (result.'value') {
+			return result.'value'
+		} 
+		return null
 	}
 	public def getBuildsForRepository(def collection,  def project, def pDefs, String repoName) {
 		def builds = []
@@ -819,7 +823,7 @@ public class BuildManagementService {
 		return finalYaml
 	}
 	
-	public String getRunLogs(String collection, String project, String pipelineId, String runId, int logTail = 2, boolean all = false) {
+	public String getRunLogs(String collection, String project, String pipelineId, String runId, int logTail = 2, boolean all = false, int start = 0) {
 		def json = ["PreviewRun": true]
 		def body = new JsonBuilder(json).toPrettyString()
 		log.debug("BuildManagementService::getRunLogs")
@@ -833,18 +837,28 @@ public class BuildManagementService {
 				)
 
 		if (result) {
+			Date d = new Date()
+			String ds = d.format('yyyy-MM-dd')
 			String allout = ''
+			Set<String> oLines = []
+			String dRegex = /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{7}Z /
+			int trimLength = '2023-12-01T11:51:44.4284870Z '.length()
 			int length = result.'value'.size()
-			if (all) {
-				for (int i = 0; i < length; i++) {
+			if (all && length > start) {
+				for (int i = start; i < length; i++) {
 					StringReader out = genericRestClient.get(
 						contentType: ContentType.TEXT,
 						uri: result.'value'[i].url
 						)
-					
-					out.eachLine { String line ->
-						allout += '      ' + line + '\n'
+					if (out) {
+						out.eachLine { String line ->
+							if ((line =~ dRegex).size() > 0) {
+								line = line.substring(trimLength)
+								oLines.add(line)
+							} 
+						}
 					}
+					
 				}
 
 			} else if (logTail > 0) {
@@ -854,11 +868,18 @@ public class BuildManagementService {
 						contentType: ContentType.TEXT,
 						uri: result.'value'[i].url 
 						)
-					
-					out.eachLine { String line ->
-						allout += '      ' + line + '\n'
+					if (out) {
+						out.eachLine { String line ->
+							if ((line =~ dRegex).size() > 0) {
+								line = line.substring(trimLength)
+								oLines.add(line)
+							} 
+						}
 					}
 				}
+			}
+			for (String line in oLines) {
+				allout += line + '\n'
 			}
 			//println allout
 			return allout
@@ -885,6 +906,37 @@ public class BuildManagementService {
 		return finalYaml
 	}
 	
+	public def runPipeline(def collection, def project, def buildId, def parms) {
+		//def json = ["PreviewRun": true]
+		//def body = new JsonBuilder(json).toPrettyString()
+		log.debug("BuildManagementService::runPipeline")
+		
+		def body = [resource: [repositories: [self: [refName: "refs/head/master"]]], stagesToSkip: [], variables: [:]]
+		body['templateParameters'] = parms
+		
+		def json = new JsonBuilder(body).toPrettyString()
+		def result = genericRestClient.post(
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/pipelines/${buildId}/runs",
+				body: body,
+				query: ['api-version': '6.1-preview.1'],
+				)
+
+		return result
+	}
+	
+	public def getPipelineRun(def collection, String project, String buildId, String runId) {
+		def result = genericRestClient.get(
+			//requestContentType: ContentType.JSON,
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/pipelines/${buildId}/runs/${runId}",
+			//body: body,
+			query: ['api-version': '6.1-preview.1'],
+			)
+		return result
+	}
+
 	public def getTags(String collection, String project, String prefix = null) {
 		def tags = []
 		def eproject = URLEncoder.encode(project, 'utf-8')
