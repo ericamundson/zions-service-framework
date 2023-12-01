@@ -648,10 +648,7 @@ public class BuildManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/build/definitions",
 				query: query,
 				)
-		if (result.'value') {
-			return result.'value'
-		} 
-		return null
+		return result
 	}
 	public def getBuildsForRepository(def collection,  def project, def pDefs, String repoName) {
 		def builds = []
