@@ -111,13 +111,13 @@ public class MemberManagementService {
 		}
 		return users
 	}
-	public def getIdentity(String collection, String email) {
+	public def getIdentity(String collection, String email, String membership = 'None') {
 		def identities = []
 		String url = "${genericRestClient.getTfsUrl()}".replace('//dev.', '//vssps.dev.')
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
 			uri: "${url}/${collection}/_apis/identities",
-			query: ['api-version': '6.0', 'searchFilter': 'General', filterValue: "${email}", queryMembership: 'None'],
+			query: ['api-version': '6.0', 'searchFilter': 'General', filterValue: "${email}", queryMembership: membership ],
 			withHeader: true
 			)
 		if (result && result.data) {
