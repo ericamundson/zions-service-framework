@@ -9,7 +9,7 @@ import groovy.json.JsonBuilder
 import groovyx.net.http.ContentType
 
 /**
- * Provides behaviors to manage users on a VSTS project.  Adding users to projects and teams.
+ * Provides behaviors to manage users on a VSTS project.  Adding users to projects and teams testing PR.
  * 
  * <p/>Design
  * <img src="MemberManagementService.svg"/>
