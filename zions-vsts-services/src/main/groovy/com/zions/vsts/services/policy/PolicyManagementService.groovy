@@ -17,6 +17,8 @@ import com.zions.vsts.services.release.ReleaseManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 
+import static PolicyType.*
+
 /**
  * 
  * @author James McNabb
@@ -60,19 +62,6 @@ public class PolicyManagementService {
 	private static final String CI_BUILD_TEMPLATE = "build-template-ci"
 	private static final String RELEASE_BUILD_TEMPLATE = "build-template-release"
 	private static final String CI_BUILD_YAML_FILE = "build-yaml-file"
-	private static final String CHECKMARX_STATUS_NAME = "checkmarx"
-	private static final String SAST_STATUS_GENRE = "sast"
-	private static final String SNOWCI_STATUS_NAME = "snowci-check"
-	private static final String WATCHDOG_STATUS_NAME = "unauthorized-changes"
-	private static final String CI_STATUS_GENRE = "continuous-integration"
-	// ADO policy types
-	private static final String BUILD_VALIDATION_POLICY_TYPE = "0609b952-1397-4640-95ec-e00a01b2c241"
-	private static final String MIN_APPROVERS_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4906e5d171dd"
-	private static final String LINKED_WI_POLICY_TYPE = "40e92b44-2fe1-4dd6-b3d8-74a9c21d0c6e"
-	private static final String COMMENT_RES_POLICY_TYPE = "c6a1889d-b943-4856-b76f-9e46bb6b0df2"
-	private static final String MERGE_STRATEGY_POLICY_TYPE = "fa4e907d-c16b-4a4c-9dfa-4916e5d171ab"
-	private static final String AUTOMATICALLY_INCLUDED_REVIEWERS_POLICY_TYPE = "fd2167ab-b0be-447a-8ec8-39368250530e"
-	private static final String CUSTOM_STATUS_POLICY_TYPE = "cbdc66da-9728-4af8-aada-9a5a32e4a226"
 	
 	public PolicyManagementService() {
 	}
@@ -179,49 +168,85 @@ public class PolicyManagementService {
 	 *  
 	 *  @return Response
 	 */
-	public def ensureBuildPolicy(def collection, def repoData, def branchName, boolean isInitBranch, def buildData = null) {
+	public def ensureBuildPolicy(def collection, def repoData, def branchName, boolean isInitBranch, def buildData = null, boolean ciBuildOnly = false) {
 
-		// get the CI build
 		def projectData = repoData.project
-		def ciBuildTemplate = null
-		def relBuildTemplate = null
-		def yamlFile = null
-		if (this.branchProps != null) {
-			ciBuildTemplate = this.branchProps.getProperty(CI_BUILD_TEMPLATE)
-			relBuildTemplate = this.branchProps.getProperty(RELEASE_BUILD_TEMPLATE)
-			log.debug("PolicyManagementService::ensureBuildPolicy -- Specified CI build template = ${ciBuildTemplate}")
-			log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release build template = ${relBuildTemplate}")
-			yamlFile = this.branchProps.getProperty(CI_BUILD_YAML_FILE)
-		}
-		// check for specified yaml file name
-		if (buildData == null) {
-			if (yamlFile) {
-				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified YAML build file = ${yamlFile}")
-				buildData = [ciBuildFile: "${yamlFile}"]
-			}
-		}
-		// result is a JSON object
-		def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, ciBuildTemplate, relBuildTemplate, isInitBranch, buildData)
-		int ciBuildId = result.ciBuildId
-		if (ciBuildId == -1) {
-			log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was found or created. Unable to create the validation build policy!")
-			return null
-		}
+		int ciBuildId, relBuildId
+		String ciBuildName = "", releaseBuildName = ""
 		def pipelineName = "${repoData.name} validation"
-		def policy = [id: -2, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
-		    type: [id: BUILD_VALIDATION_POLICY_TYPE],
-		    settings:[buildDefinitionId: ciBuildId, displayName: pipelineName, manualQueueOnly: false, queueOnSourceUpdateOnly:true, validDuration: 720,
-				scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
-			]
-		]
+		// if only establishing the build validation policy, get the CI build
+		if (ciBuildOnly) {
+			def ciBuild = buildManagementService.getBuild(collection, projectData, buildData.ciBuildName)
+			if (ciBuild == null) {
+				log.error("Pipeline with name ${buildData.ciBuildName} not found. Unable to create build validation policy.")
+				return null
+			} else {
+				ciBuildId = Integer.parseInt("${ciBuild.id}")
+			}
+		} else {
+			def ciBuildTemplate = null
+			def relBuildTemplate = null
+			def yamlFile = null
+			if (this.branchProps != null) {
+				ciBuildTemplate = this.branchProps.getProperty(CI_BUILD_TEMPLATE)
+				relBuildTemplate = this.branchProps.getProperty(RELEASE_BUILD_TEMPLATE)
+				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified CI build template = ${ciBuildTemplate}")
+				log.debug("PolicyManagementService::ensureBuildPolicy -- Specified Release build template = ${relBuildTemplate}")
+				yamlFile = this.branchProps.getProperty(CI_BUILD_YAML_FILE)
+			}
+			// check for specified yaml file name
+			if (buildData == null) {
+				if (yamlFile) {
+					log.debug("PolicyManagementService::ensureBuildPolicy -- Specified YAML build file = ${yamlFile}")
+					buildData = [ciBuildFile: "${yamlFile}"]
+				}
+			}
+			// result is a JSON object
+			def result = buildManagementService.ensureBuildsForBranch(collection, projectData, repoData, ciBuildTemplate, relBuildTemplate, isInitBranch, buildData)
+			ciBuildId = result.ciBuildId
+			if (ciBuildId == -1) {
+				log.debug("PolicyManagementService::ensureBuildPolicy -- No CI Build Definition was found or created. Unable to create the validation build policy!")
+				return null
+			}
+			// set value for return object and notification
+			relBuildId = result.releaseBuildId
+			ciBuildName = result.ciBuildName
+			releaseBuildName = result.releaseBuildName
+		}
 		// check for existing build validation policy
+		// Should we be checking for an existing policy since we can now have multiple build validation policies??
 		def policyRes = getBranchPolicy(BUILD_VALIDATION_POLICY_TYPE, projectData.id, repoData.id, branchName)
 		if (!policyRes) {
+			def policy
+			if (buildData) {
+				boolean queueOnUpdateOnly = true
+				boolean queueManually = false
+				int duration = 0
+				if (buildData.expires == "afterNHours") {
+					//duration = Integer.parseInt("${buildData.numHours}" * 60
+					duration = buildData.numHours * 60
+				} else if (buildData.expires == "immediate") {
+					queueOnUpdateOnly = false
+				}
+				policy = [id: -2, isBlocking: buildData.required, isDeleted: false, isEnabled: true, revision: 1,
+					type: [id: BUILD_VALIDATION_POLICY_TYPE],
+					settings:[buildDefinitionId: ciBuildId, displayName: buildData.ciBuildName, manualQueueOnly: queueManually, queueOnSourceUpdateOnly:queueOnUpdateOnly, validDuration: duration,
+						scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+					]
+				]
+
+			} else {
+				policy = [id: -2, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
+				    type: [id: BUILD_VALIDATION_POLICY_TYPE],
+				    settings:[buildDefinitionId: ciBuildId, displayName: pipelineName, manualQueueOnly: false, queueOnSourceUpdateOnly:true, validDuration: 720,
+						scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
+					]
+				]
+			}
 			policyRes = createPolicy(collection, projectData, policy)
 		}
 		log.debug("PolicyManagementService::ensureBuildPolicy -- result = "+policyRes)
 		
-		int relBuildId = result.releaseBuildId
 		// create release definition for release build
 		def relResult = null
 		def relDefName = ""
@@ -245,9 +270,9 @@ public class PolicyManagementService {
 		}*/
 		
 		// send email if builds were created
-		if (result.ciBuildName != "" || result.releaseBuildName != "") {
+		if (ciBuildName != "" || releaseBuildName != "") {
 			// send notification of new builds created
-			notificationService.sendBuildCreatedNotification("${repoData.name}", result.ciBuildName, result.releaseBuildName, relDefName)
+			notificationService.sendBuildCreatedNotification("${repoData.name}", ciBuildName, releaseBuildName, relDefName)
 		}
 		return policyRes
 	}
@@ -580,16 +605,25 @@ public class PolicyManagementService {
 				ensureMinimumApproversPolicy(collection, repoData, branchName, approvalData)
 			}
 		
-			//def buildData = null
-			//if (policyData.buildData) {
-			//	log.info("PolicyManagementService::modifyBranchPolicies -- buildData")
-			//	buildData = policyData.buildData
-			//    // Need new code to handle collections of build validation policies
-			//	// YAML usage in the wild today
-			//	//   1) single CI YAML that has conditionals within the YAML on build.reason to control PR vs Release build (legacy)
-			//	//   2) YAML for CI, Release and Dev builds (blueprint)
-			//	//   3) YAML to meet singular pipelines (custom)
-			//}
+			def buildData = null
+			if (policyData.buildData) {
+				log.info("PolicyManagementService::modifyBranchPolicies -- buildData")
+				buildData = policyData.buildData
+			    // Need new code to handle collections of build validation policies??
+				// YAML usage in the wild today
+				//   1) single CI YAML that has conditionals within the YAML on build.reason to control PR vs Release build (legacy)
+				//   2) YAML for CI, Release and Dev builds (blueprint)
+				//   3) YAML to meet singular pipelines (custom)
+				
+				// ensure pipeline name does not include folder
+				if (buildData.ciBuildName.contains('\\')) {
+					log.info("Found folder name in ci build name ...")
+					//String[] nameParts = buildData.ciBuildName.split('\\')
+					buildData.ciBuildName = buildData.ciBuildName.substring(buildData.ciBuildName.lastIndexOf('\\')+1)
+					log.info("Ci build name changed to ${buildData.ciBuildName}")
+				}
+				ensureBuildPolicy(collection, repoData, branchName, false, buildData, true)
+			}
 		
 			def automaticallyIncludedReviewersData = null
 			if (policyData.automaticallyIncludedReviewersData) {
@@ -821,7 +855,7 @@ public class PolicyManagementService {
 		return result
 	}
 
-	def getBranchPolicy( def policyType, def projectId, def repoId, def branchName, def statusGenre=null, def statusName=null, def reviewerIds=null ) {
+	public def getBranchPolicy( def policyType, def projectId, def repoId, def branchName, def statusGenre=null, def statusName=null, def reviewerIds=null ) {
 		def query = ['repositoryId':"${repoId}", 'refName':"${branchName}" , 'policyType':"${policyType}" ]
 		def results = genericRestClient.get(
 			contentType: ContentType.JSON,
