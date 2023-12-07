@@ -230,7 +230,7 @@ public class PolicyManagementService {
 				}
 				policy = [id: -2, isBlocking: buildData.required, isDeleted: false, isEnabled: true, revision: 1,
 					type: [id: BUILD_VALIDATION_POLICY_TYPE],
-					settings:[buildDefinitionId: ciBuildId, displayName: buildData.ciBuildName, manualQueueOnly: queueManually, queueOnSourceUpdateOnly:queueOnUpdateOnly, validDuration: duration,
+					settings:[buildDefinitionId: ciBuildId, displayName: buildData.displayName, manualQueueOnly: queueManually, queueOnSourceUpdateOnly:queueOnUpdateOnly, validDuration: duration,
 						scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 					]
 				]
@@ -617,10 +617,8 @@ public class PolicyManagementService {
 				
 				// ensure pipeline name does not include folder
 				if (buildData.ciBuildName.contains('\\')) {
-					log.info("Found folder name in ci build name ...")
 					//String[] nameParts = buildData.ciBuildName.split('\\')
 					buildData.ciBuildName = buildData.ciBuildName.substring(buildData.ciBuildName.lastIndexOf('\\')+1)
-					log.info("Ci build name changed to ${buildData.ciBuildName}")
 				}
 				ensureBuildPolicy(collection, repoData, branchName, false, buildData, true)
 			}
