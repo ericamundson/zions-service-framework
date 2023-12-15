@@ -29,6 +29,19 @@ public class TaskManagementService {
 
 	public TaskManagementService() {
 	}
+	
+	def getDistributedTasks(def collection) {
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/distributedtask/tasks",
+			headers: [accept: 'application/json;api-version=5.0;excludeUrls=true'],
+		)
+		def r = []
+		if (result != null) {
+			return result.'value'
+		}
+		return r
+	}
 
 	def writeTaskGroup(def collection, def project, def tgDef) {
 		def body = new JsonBuilder(tgDef).toPrettyString()
@@ -41,7 +54,28 @@ public class TaskManagementService {
 		)
 		return result
 	}
-	
+	public def getVariableGroup(def collection, def project, String name) {
+		log.debug("TaskManagementService::getTaskGroup -- name = " + name)
+		def query = ['groupName':"${name}"]
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/distributedtask/variablegroups",
+				headers: [accept: 'application/json;api-version=5.1-preview.1;excludeUrls=true'],
+				query: query,
+		)
+		if (result == null || result.count == 0) {
+			log.debug("TaskManagementService::getTaskGroup -- task group " + name + " not found. Returning NULL ...")
+			return null
+		}
+		query = ['api-version':'5.1-preview.1']
+		def result1 = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/distributedtask/variablegroups/${result.value[0].id}",
+				query: query,
+		)
+		return result1
+	}
+
 	public def getTaskGroup(def collection, def project, String name) {
 		log.debug("TaskManagementService::getTaskGroup -- name = " + name)
 		def query = ['name':"*${name}"]
