@@ -219,18 +219,24 @@ public class PolicyManagementService {
 		if (!policyRes) {
 			def policy
 			if (buildData) {
+				String displayName = "${repoData.name} validation"
+				if (buildData.displayName && buildData.displayName != "") displayName = buildData.displayName
+				boolean required = true
+				if (buildData.required) required = buildData.required
 				boolean queueOnUpdateOnly = true
 				boolean queueManually = false
-				int duration = 0
-				if (buildData.expires == "afterNHours") {
-					//duration = Integer.parseInt("${buildData.numHours}" * 60
-					duration = buildData.numHours * 60
-				} else if (buildData.expires == "immediate") {
-					queueOnUpdateOnly = false
+				int duration = 720
+				if (buildData.expires) {
+					if (buildData.expires == "afterNHours") {
+						//duration = Integer.parseInt("${buildData.numHours}" * 60
+						duration = buildData.numHours * 60
+					} else if (buildData.expires == "immediate") {
+						queueOnUpdateOnly = false
+					}
 				}
-				policy = [id: -2, isBlocking: buildData.required, isDeleted: false, isEnabled: true, revision: 1,
+				policy = [id: -2, isBlocking: required, isDeleted: false, isEnabled: true, revision: 1,
 					type: [id: BUILD_VALIDATION_POLICY_TYPE],
-					settings:[buildDefinitionId: ciBuildId, displayName: buildData.displayName, manualQueueOnly: queueManually, queueOnSourceUpdateOnly:queueOnUpdateOnly, validDuration: duration,
+					settings:[buildDefinitionId: ciBuildId, displayName: displayName, manualQueueOnly: queueManually, queueOnSourceUpdateOnly:queueOnUpdateOnly, validDuration: duration,
 						scope:[[matchKind: 'Exact',refName: branchName, repositoryId: repoData.id]]
 					]
 				]
