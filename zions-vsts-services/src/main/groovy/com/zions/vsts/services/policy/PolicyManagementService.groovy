@@ -160,6 +160,10 @@ public class PolicyManagementService {
 		if (enforceCommentResolution) {
 			ensureCommentResolutionPolicy(collection, repoData, branchName)
 		}
+		// adding No CI PR Blocker policy to default policies for master
+		if (branchName == "refs/heads/master") {
+			ensureSNowCIBranchPolicy('', repoData)
+		}
 
 	}
 	/**
