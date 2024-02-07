@@ -779,19 +779,32 @@ public class BuildManagementService {
 	public def getExecutionWorkItems(String collection, String project, String buildId) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def query = ['api-version':'5.1']
-		def wis = []
-		def result = genericRestClient.get(
-				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
-				query: query,
-				)
-		if (result) {
-			result.'value'.each { build ->
-				wis.add(build)
+		def workitems = []
+		int top = 50
+		int count = 0
+		int size = 50
+		while (top == size) {
+			if (count == 0) {
+				def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
+					query: ['api-version': '7.1-preview.2', '$top' : top]
+					)
+				size = result.count
+				workitems.addAll(result.'value')
+				count += size
+			} else {
+				def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
+					query: ['api-version': '7.1-preview.2', '$top' : top, continuationToken: "${count}"]
+					)
+				size = result.count
+				workitems.addAll(result.'value')
+				count += size
 			}
 		}
-		return wis
+		return workitems
 	}
 	
 	public def getExecutionWorkItemsByBuilds(String collection, String project, def builds) {
