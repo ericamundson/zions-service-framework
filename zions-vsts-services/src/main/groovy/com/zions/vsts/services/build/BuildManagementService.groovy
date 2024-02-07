@@ -729,9 +729,12 @@ public class BuildManagementService {
 				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds",
 				query: query,
 				)
-		def builds = []
+		List builds = []
 		if (result) {
 			builds.addAll(result.'value')
+		}
+		builds = builds.sort { b1, b2 ->
+			b1.id <=> b2.id
 		}
 		return builds
 	}
@@ -981,21 +984,96 @@ public class BuildManagementService {
 	public def getExecutionChanges(String collection, String project, String buildId, boolean includeSourceChange = false) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
-		def query = ['api-version':'5.1', includeSourceChange: includeSourceChange]
 		def changes = []
-		def result = genericRestClient.get(
-				contentType: ContentType.JSON,
-				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/changes",
-				query: query,
-				)
-		if (result) {
-			result.'value'.each { change ->
-				changes.add(change)
+		int top = 50
+		int count = 0
+		int size = 50
+		while (top == size) {
+			if (count == 0) {
+				def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/changes",
+					query: ['api-version': '7.1-preview.2', '$top' : top, includeSourceChange: includeSourceChange]
+					)
+				size = result.count
+				changes.addAll(result.'value')
+				count += size
+			} else {
+				def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/changes",
+					query: ['api-version': '7.1-preview.2', '$top' : top, continuationToken: "${count}", includeSourceChange: includeSourceChange]
+					)
+				size = result.count
+				changes.addAll(result.'value')
+				count += size
 			}
 		}
 		return changes
 	}
 	
+	public def getExecutionChangesBetweenBuilds(String collection, String project, String fromBuildId, String toBuildId) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def changes = []
+		int top = 50
+		int count = 0
+		int size = 50
+		while (top == size) {
+			if (count == 0) {
+				def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/changes",
+					query: ['api-version': '7.1-preview.2', '$top' : top, fromBuildId: fromBuildId, toBuildId: toBuildId]
+					)
+				size = result.count
+				changes.addAll(result.'value')
+				count += size
+			} else {
+				def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/changes",
+					query: ['api-version': '7.1-preview.2', '$top' : top, continuationToken: "${count}", fromBuildId: fromBuildId, toBuildId: toBuildId]
+					)
+				size = result.count
+				changes.addAll(result.'value')
+				count += size
+			}
+		}
+		return changes
+	}
+
+	public def getExecutionWorkitemsBetweenBuilds(String collection, String project, String fromBuildId, String toBuildId) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def workitems = []
+		int top = 50
+		int count = 0
+		int size = 50
+		while (top == size) {
+			if (count == 0) {
+				def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/workitems",
+					query: ['api-version': '7.1-preview.2', '$top' : top, fromBuildId: fromBuildId, toBuildId: toBuildId]
+					)
+				size = result.count
+				workitems.addAll(result.'value')
+				count += size
+			} else {
+				def result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/workitems",
+					query: ['api-version': '7.1-preview.2', '$top' : top, continuationToken: "${count}", fromBuildId: fromBuildId, toBuildId: toBuildId]
+					)
+				size = result.count
+				workitems.addAll(result.'value')
+				count += size
+			}
+		}
+		return workitems
+	}
+
 	public def getExecutionChangesByBuilds(String collection, String project, def builds, boolean includeSourceChange = false) {
 		def changes = []
 		builds.each { build ->
