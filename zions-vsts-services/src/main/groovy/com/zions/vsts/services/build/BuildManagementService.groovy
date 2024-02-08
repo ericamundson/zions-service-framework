@@ -776,7 +776,7 @@ public class BuildManagementService {
 		return result
 	}
 
-	public def getExecutionWorkItems(String collection, String project, String buildId) {
+	public def getExecutionWorkItems(String collection, String project, String buildId, def commits = null) {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		def workitems = []
@@ -785,20 +785,43 @@ public class BuildManagementService {
 		int size = 50
 		while (top == size) {
 			if (count == 0) {
-				def result = genericRestClient.get(
-					contentType: ContentType.JSON,
-					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
-					query: ['api-version': '7.1-preview.2', '$top' : top]
-					)
+				def result = null
+				if (commits) {
+					result = genericRestClient.post(
+						contentType: ContentType.JSON,
+						requestContentType: ContentType.JSON,
+						uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
+						query: ['api-version': '7.1-preview.2', '$top' : top],
+						body: commits
+						)
+				} else {
+					result = genericRestClient.get(
+						contentType: ContentType.JSON,
+						uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
+						query: ['api-version': '7.1-preview.2', '$top' : top]
+						)
+				}
 				size = result.count
 				workitems.addAll(result.'value')
 				count += size
 			} else {
-				def result = genericRestClient.get(
-					contentType: ContentType.JSON,
-					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
-					query: ['api-version': '7.1-preview.2', '$top' : top, continuationToken: "${count}"]
-					)
+				def result
+				if (commits) {
+					result = genericRestClient.post(
+						contentType: ContentType.JSON,
+						requestContentType: ContentType.JSON,
+						uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
+						query: ['api-version': '7.1-preview.2', '$top' : top, continuationToken: "${count}"],
+						body: commits
+						)
+	
+				} else {
+					result = genericRestClient.get(
+						contentType: ContentType.JSON,
+						uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
+						query: ['api-version': '7.1-preview.2', '$top' : top, continuationToken: "${count}"]
+						)
+				}
 				size = result.count
 				workitems.addAll(result.'value')
 				count += size
