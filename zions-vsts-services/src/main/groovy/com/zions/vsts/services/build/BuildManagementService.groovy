@@ -780,53 +780,26 @@ public class BuildManagementService {
 		def eproject = URLEncoder.encode(project, 'utf-8')
 		eproject = eproject.replace('+', '%20')
 		def workitems = []
-		int top = 50
-		int count = 0
-		int size = 50
-		while (top == size) {
-			if (count == 0) {
-				def result = null
-				if (commits) {
-					result = genericRestClient.post(
-						contentType: ContentType.JSON,
-						requestContentType: ContentType.JSON,
-						uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
-						query: ['api-version': '7.1-preview.2', '$top' : top],
-						body: commits
-						)
-				} else {
-					result = genericRestClient.get(
-						contentType: ContentType.JSON,
-						uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
-						query: ['api-version': '7.1-preview.2', '$top' : top]
-						)
-				}
-				size = result.count
-				workitems.addAll(result.'value')
-				count += size
-			} else {
-				def result
-				if (commits) {
-					result = genericRestClient.post(
-						contentType: ContentType.JSON,
-						requestContentType: ContentType.JSON,
-						uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
-						query: ['api-version': '7.1-preview.2', '$top' : top, continuationToken: "${count}"],
-						body: commits
-						)
-	
-				} else {
-					result = genericRestClient.get(
-						contentType: ContentType.JSON,
-						uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
-						query: ['api-version': '7.1-preview.2', '$top' : top, continuationToken: "${count}"]
-						)
-				}
-				size = result.count
-				workitems.addAll(result.'value')
-				count += size
-			}
+		def result = null
+		if (commits) {
+			result = genericRestClient.post(
+				contentType: ContentType.JSON,
+				requestContentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
+				query: ['api-version': '7.1-preview.2'],
+				body: commits
+				)
+		} else {
+			result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/workitems",
+				query: ['api-version': '7.1-preview.2']
+				)
 		}
+
+		if (!result) []		
+		workitems.addAll(result.'value')
+		
 		return workitems
 	}
 	
@@ -1031,6 +1004,7 @@ public class BuildManagementService {
 					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/changes",
 					query: ['api-version': '7.1-preview.2', '$top' : top, includeSourceChange: includeSourceChange]
 					)
+			    if (!result) break
 				size = result.count
 				changes.addAll(result.'value')
 				count += size
@@ -1040,6 +1014,7 @@ public class BuildManagementService {
 					uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds/${buildId}/changes",
 					query: ['api-version': '7.1-preview.2', '$top' : top, continuationToken: "${count}", includeSourceChange: includeSourceChange]
 					)
+				if (!result) break
 				size = result.count
 				changes.addAll(result.'value')
 				count += size
