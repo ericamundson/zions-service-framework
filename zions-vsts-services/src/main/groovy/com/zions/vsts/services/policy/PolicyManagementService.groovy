@@ -584,7 +584,7 @@ public class PolicyManagementService {
 			log.debug("PolicyManagementService::ensureSNowCIBranchPolicy -- Adding custom status policy for ${CI_STATUS_GENRE}/${SNOWCI_STATUS_NAME}")
 			def policy = [id: -3, isBlocking: true, isDeleted: false, isEnabled: true, revision: 1,
 			    type: [id: CUSTOM_STATUS_POLICY_TYPE],
-			    settings:[statusName: SNOWCI_STATUS_NAME, statusGenre: CI_STATUS_GENRE, invalidateOnSourceUpdate: true, defaultDisplayName: 'SNow CI status',
+			    settings:[statusName: SNOWCI_STATUS_NAME, statusGenre: CI_STATUS_GENRE, invalidateOnSourceUpdate: false, defaultDisplayName: 'SNow CI status',
 					scope:[[matchKind: 'Exact', refName: branchName, repositoryId: repoData.id]]
 				]
 			]
