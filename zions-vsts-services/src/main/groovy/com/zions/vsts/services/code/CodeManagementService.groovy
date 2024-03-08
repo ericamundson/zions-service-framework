@@ -196,6 +196,17 @@ class CodeManagementService {
 
 	}
 	
+	public def getRepoCommits(String collection, String project, String repo, def query) {
+		query['api-version'] = '6.1'
+		def result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/commits",
+			query: query,
+			)
+		return result
+
+	}
+	
 	// Takes project name or id and repo name or id
 	public def getPullRequestIterationCommits(String collection, String project, String repo, String pId, String iterId) {
 		def result = genericRestClient.get(
