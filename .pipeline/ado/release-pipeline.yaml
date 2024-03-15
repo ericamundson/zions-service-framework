@@ -1,0 +1,51 @@
+name: $(date:yyyyMMdd)$(rev:.rrr)
+variables:
+- group: "Release Engineering - secrets"
+parameters:
+- name: pool_name
+  displayName: Pool Name
+  type: string
+  default: Ephemeral PROD
+  values:
+  - "Ephemeral PROD"
+  - "Ephemeral STAGE"
+  - "Ephemeral TESTQA"
+  - "Ephemeral DEBUG_P"
+  - "Ephemeral DEBUG_T"
+trigger:
+  branches:
+    include:
+    - "master"
+  paths:
+    exclude:
+    - ".pipeline/*"
+    - "README.md"
+    - ".dockerignore"
+resources:
+  repositories:
+  - repository: zions-ado-templates
+    name: DTS/zions-ado-templates
+    ref: refs/tags/v0.2.6
+    type: git
+extends:
+  template: /required-templates/dts-release-template.yaml@zions-ado-templates
+  parameters:
+    # Build
+    build_pool_name: ${{ parameters.pool_name }}
+    build_pool_demands:
+    - "agent.os -equals Linux"
+    build_tagbuild_InitialVersionPrefix: 0.0.1
+    build_tagbuild_NodeBuild: false
+   
+    build_steps:
+    - template: /templates/step/build/gradle.yaml@zions-ado-templates
+      parameters:
+        gradleWrapperFile: $(Build.SourcesDirectory)/gradlew
+        workingDirectory: $(Build.SourcesDirectory)
+        options: '-b build.gradle --no-scan -Pqueue=default -Pcontext=nexus -x test -Pversion=$(zionsbuildnumber)'
+        tasks: 'clean build zions-common:uploadArchives zions-vsts-service:uploadArchives zions-common-data:uploadArchives zions-vsts-microservice:uploadArchives'
+        publishJUnitResults: true   
+    
+    build_scan_object: 
+      nexusiq_scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
+      nexusiq_organizationId: "bc29079689124c8bbef346a3d149e714"

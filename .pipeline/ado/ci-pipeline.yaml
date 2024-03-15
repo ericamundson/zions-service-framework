@@ -1,0 +1,37 @@
+name: $(date:yyyyMMdd)$(rev:.rrr)
+variables:
+- group: "Release Engineering - secrets"
+parameters:
+- name: pool_name
+  displayName: Pool Name
+  type: string
+  default: Ephemeral PROD
+  values:
+  - "Ephemeral PROD"
+  - "Ephemeral STAGE"
+  - "Ephemeral TESTQA"
+  - "Ephemeral DEBUG_P"
+  - "Ephemeral DEBUG_T"
+trigger: none
+resources:
+  repositories:
+  - repository: zions-ado-templates
+    name: DTS/zions-ado-templates
+    ref: refs/tags/v0.2.6
+    type: git
+extends:
+  template: required-templates/dts-ci-template.yaml@zions-ado-templates
+  parameters:
+    # Build
+    build_pool_name: ${{ parameters.pool_name }}
+    build_pool_demands:
+    - "agent.os -equals Linux"
+   
+    build_steps:
+    - template: /templates/step/build/gradle.yaml@zions-ado-templates
+      parameters:
+        gradleWrapperFile: $(Build.SourcesDirectory)/gradlew
+        workingDirectory: $(Build.SourcesDirectory)
+        options: '-b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
+        tasks: 'clean build'
+        publishJUnitResults: true   
