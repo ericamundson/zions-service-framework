@@ -17,10 +17,11 @@ trigger:
     include:
     - "master"
   paths:
-    exclude:
-    - ".pipeline/*"
-    - "README.md"
-    - ".dockerignore"
+    include:
+    - "zions-common/src/*"
+    - "zions-common-data/src/*"
+    - "zions-vsts-services/src/*"
+    - "zions-vsts-microservice/src/*"
 resources:
   repositories:
   - repository: zions-ado-templates
