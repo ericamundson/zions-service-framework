@@ -509,7 +509,7 @@ public class PolicyManagementService {
 		// message - Default: empty string
 		def message = ""
 		if (automaticallyIncludedReviewersData.message && automaticallyIncludedReviewersData.message != "n/a") {
-			message = item.message.toString()
+			message = automaticallyIncludedReviewersData.message
 		}
 
 		def scope = [[matchKind: 'Exact', refName: branchName, repositoryId: repoData.id]]
