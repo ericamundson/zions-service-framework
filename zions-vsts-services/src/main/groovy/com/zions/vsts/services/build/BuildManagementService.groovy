@@ -1653,6 +1653,31 @@ public class BuildManagementService {
 		return result
 	}
 
+	public def getYamlFileForBuild( def collection, def project, String name, def buildId) {
+		log.debug("BuildManagementService::getYamlFileForBuild for buildId: " + buildId)
+		def yamlFile = null
+		if (buildId == null) {
+			log.debug("BuildManagementService::getYamlFileForBuild for build name: " + name)
+			def buildDef = getBuild(collection, project, name)
+			if (buildDef == null) {
+				return null
+			} else {
+				buildId = "${buildDef.id}"
+			}
+		}
+		def bResult = getBuildById(collection, project, buildId)
+		if (bResult) {
+			log.debug("Found build for buildId: ${buildId}.  Getting yaml file ...")
+			String fileName = bResult.process.yamlFilename
+			yamlFile = codeManagementService.getFileContent(collection, bResult.project.name, bResult.repository.name, fileName, "master")
+			if (yamlFile != null) {
+				log.debug("BuildManagementService::getYamlFileForBuild -- YAML file found: " + fileName)
+			}
+		}
+
+		return yamlFile
+	}
+
 	public def getResource(String buildType, String phase, String resourceName) {
 		def template = null
 		def filename = "${buildType}-${phase}" 
