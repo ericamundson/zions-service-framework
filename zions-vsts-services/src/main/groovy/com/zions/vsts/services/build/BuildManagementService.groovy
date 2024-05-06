@@ -702,6 +702,31 @@ public class BuildManagementService {
 			)
 		return result
 	}
+	
+	def getBuildsByDef(def collection, String project, def bDef) {
+		def eproject = URLEncoder.encode(project, 'utf-8')
+		eproject = eproject.replace('+', '%20')
+		def query = ['api-version':'5.1', definitions: bDef.id ]
+		//		if (isProdBranch) {
+		//			query.tagFilters = 'PR'
+		//		} else if (buildTagFilter != 'none') {
+		//			query.tagFilters = buildTagFilter
+		//		}
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${eproject}/_apis/build/builds",
+				query: query,
+				)
+		List builds = []
+		if (result) {
+			builds.addAll(result.'value')
+		}
+		builds = builds.sort { b1, b2 ->
+			b1.id <=> b2.id
+		}
+		return builds
+		
+	}
 
 	public def getRelatedBuilds(def collection, def project, def build, boolean isProdBranch = false, String buildTagFilter = 'none') {
 		//log.debug("BuildManagementService::getBuild -- buildName = "+repo.name+"-"+qualifier)
