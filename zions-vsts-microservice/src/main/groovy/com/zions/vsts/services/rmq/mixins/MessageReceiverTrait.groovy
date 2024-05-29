@@ -24,6 +24,7 @@ trait MessageReceiverTrait implements MessageListener {
 	boolean doRetries
 
 	void onMessage(Message message) {
+		
 		try {
 			String mStr = new String(message.body)
 			def adoData = new JsonSlurper().parseText(mStr)

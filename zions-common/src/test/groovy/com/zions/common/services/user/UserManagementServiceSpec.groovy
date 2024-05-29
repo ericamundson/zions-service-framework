@@ -30,13 +30,13 @@ class UserManagementServiceSpec extends Specification {
 	public 'Find user info'() {
 		
 		when: 'Access user by id'
-		User testU = userManagementService.getUserById('z004421')
+		User testU = userManagementService.getUserById('z091182')
 		
 		then: 'validate user found'
 		testU != null
 		
 		when: 'Access user by email'
-		User eU = userManagementService.getUserByEmail('Michael.Angelastro@zionsbancorp.com')
+		User eU = userManagementService.getUserByEmail('Eric.Amundson2@zionsbancorp.com')
 		
 		then: 'validate user found'
 		eU != null

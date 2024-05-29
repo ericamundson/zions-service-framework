@@ -162,6 +162,7 @@ public class NotificationService {
 	def sendMicroServiceIssueNotification(def msg) {
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
+		log.info()
 		
 		try {
 			helper.setValidateAddresses(false)

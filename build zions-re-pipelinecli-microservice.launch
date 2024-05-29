@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.buildship.core.launch.runconfiguration">
     <listAttribute key="arguments">
-        <listEntry value="-Pcontext=all"/>
-        <listEntry value="-PdebugTests=false"/>
+        <listEntry value="-Pcontext=release"/>
+        <listEntry value="--refresh-dependencies"/>
+        <listEntry value="-x"/>
+        <listEntry value="jib"/>
     </listAttribute>
     <booleanAttribute key="build_scans_enabled" value="false"/>
     <stringAttribute key="gradle_distribution" value="GRADLE_DISTRIBUTION(WRAPPER)"/>
@@ -16,5 +18,5 @@
     <listAttribute key="tasks">
         <listEntry value="build"/>
     </listAttribute>
-    <stringAttribute key="working_dir" value="${workspace_loc:/zions-service-framework}"/>
+    <stringAttribute key="working_dir" value="${workspace_loc:/zions-re-pipelinecli-microservice}"/>
 </launchConfiguration>
