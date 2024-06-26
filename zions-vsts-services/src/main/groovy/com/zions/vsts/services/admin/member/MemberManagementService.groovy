@@ -189,7 +189,7 @@ public class MemberManagementService {
 			)
 	}
 	
-	private def getEntitlement(String collection, String email) {
+	public def getEntitlement(String collection, String email) {
 		def retEntitlement = null
 		int skip = 0
 		String eUrl = "${genericRestClient.getTfsUrl()}".replace('https://dev.', 'https://vsaex.dev.')
@@ -212,7 +212,29 @@ public class MemberManagementService {
 		return retEntitlement
 	}
 	
-	
+	public def getEntitlementViaPrincipal(String collection, String principal) {
+		def retEntitlement = null
+		int skip = 0
+		String eUrl = "${genericRestClient.getTfsUrl()}".replace('https://dev.', 'https://vsaex.dev.')
+		while (true) {
+			def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${eUrl}/${collection}/_apis/userentitlements",
+				query: ['api-version': '5.0-preview.2', skip: skip]
+				)
+			if (result == null) return null
+			retEntitlement = result.'members'.find { entitlement ->
+				String auid = "${entitlement.user.directoryAlias}"
+				String cuid = "${principal}"
+				auid.toLowerCase() == cuid.toLowerCase()
+			}
+			if (retEntitlement != null) break
+			if (result.members.size() < 100) break
+			skip = skip + 100
+		}
+		return retEntitlement
+	}
+
 	/**
 	 * Get member from VSTS
 	 * 

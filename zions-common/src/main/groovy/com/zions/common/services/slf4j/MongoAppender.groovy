@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.stereotype.Component;
+import groovyx.net.http.ContentType
 
 @Component
 public class MongoAppender extends UnsynchronizedAppenderBase<ILoggingEvent> implements ApplicationContextAware {
@@ -22,6 +24,12 @@ public class MongoAppender extends UnsynchronizedAppenderBase<ILoggingEvent> imp
 	
 	@Value('${override.collectionName:#{null}}')
 	private String overrideCollectionName
+	
+	@Value('${post.log.types:}')
+	String[] postLogTypes
+	
+	@Autowired
+	LogPubSubGenericRestClient logPubSubGenericRestClient
 
     protected void append(ILoggingEvent event) {
         if (!started || mongoTemplate == null) {
@@ -39,6 +47,17 @@ public class MongoAppender extends UnsynchronizedAppenderBase<ILoggingEvent> imp
         log.formattedMessage = event.getFormattedMessage();
         log.loggerName = event.getLoggerName();
         log.timestamp = event.getTimeStamp();
+		List<String> pLogTypes = postLogTypes as List
+		if (pLogTypes && pLogTypes.size() > 0 && pLogTypes.contains(log.level)) {
+			ErrorEvent e = new ErrorEvent(logEntity: log, collectionName: collectionName)
+			def result = logPubSubGenericRestClient.post(
+				uri: "${logPubSubGenericRestClient.pubSubUrl}",
+				body: e,
+				requestContentType: ContentType.JSON,
+				contentType: ContentType.TEXT
+				)
+
+		}
         mongoTemplate.save(log, collectionName);
     }
 
