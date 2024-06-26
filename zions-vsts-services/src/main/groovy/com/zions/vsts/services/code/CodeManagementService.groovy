@@ -511,7 +511,7 @@ class CodeManagementService {
 	
 	public def getFileList(def collection, String project, String repo, String regex, def branchName) {
 //		def query = ['api-version':'5.1','versionDescriptor.version':"${branchName}",'versionDescriptor.versionType':'branch']
-		def query = ['api-version':'5.1','recursionLevel': 'Full']
+		def query = ['api-version':'5.1','recursionLevel': 'Full','versionDescriptor.version':"${branchName}",'versionDescriptor.versionType':'branch']
 		def result
 		def fileList = []
 		try {
