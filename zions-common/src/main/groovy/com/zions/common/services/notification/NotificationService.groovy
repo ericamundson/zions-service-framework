@@ -77,14 +77,26 @@ public class NotificationService {
         return "success";
     }
 	
-	public def sendGenericNotification(String title, String body, String[] overrideToEmailAddresses=null, boolean html=false) {
+	public def sendGenericNotification(String title, String body, String[] overrideToEmailAddresses=null, boolean html=false, String[] attachments = []) {
 		MimeMessage message = sender.createMimeMessage();
+		
 		MimeMessageHelper helper = new MimeMessageHelper(message);
+		if (attachments.size() > 0) {
+			helper = new MimeMessageHelper(message, true);
+		}
 
 		try {
 			helper.setValidateAddresses(false)
 			if (senderAddress) {
 				helper.setFrom(senderAddress)
+			}
+			if (attachments.size() > 0) {
+				for (String att in attachments) {
+					File attFile = new File(att)
+					if (attFile.exists()) {
+						helper.addAttachment(attFile.name, attFile)
+					}
+				}
 			}
 			if (overrideToEmailAddresses) {
 				overrideToEmailAddresses.each { String address ->
