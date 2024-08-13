@@ -470,10 +470,10 @@ class CodeManagementService {
 	}
 
 	public def getPullRequest(String collection, String project, String repo, String pullRequestId) {
-		def query = ['api-version': '5.0']
+		def query = ['api-version': '6.0']
 		def result = genericRestClient.get(
 			contentType: ContentType.JSON,
-			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/repositories/${repo}/pullrequests/${pullRequestId}",
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project}/_apis/git/pullrequests/${pullRequestId}",
 			query: query
 		)
 		return result
