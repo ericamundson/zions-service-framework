@@ -630,7 +630,21 @@ public class BuildManagementService {
 		return theQueue
 
 	}
-	
+	public def getAllQueues(String collection, def project) {
+		def query = ['name':"${name}", ]
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/distributedtask/queues",
+				query: query,
+				headers: [Accept: 'application/json;api-version=4.1-preview.1;excludeUrls=true'],
+				)
+		def theQueue = null
+		if (result && result.value) {
+			return result.value
+		}
+		return null
+	}
+
 	public def getRetentionSettings(String collection) {
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
