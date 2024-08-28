@@ -80,6 +80,10 @@ class ProjectManagementService {
 					headers: [Accept: 'application/json'],
 					query: ['api-version': '5.0', '$top' : top, continuationToken: "${count}"]
 					)
+				if (result == null) {
+					top = 0
+					continue;
+				}
 				size = result.count
 				projects.addAll(result.'value')
 				count += size

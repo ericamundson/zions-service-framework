@@ -386,6 +386,41 @@ public class MemberManagementService {
 
 	}
 
+	def getTeamMembersMap(def collection, String project, String teamName) {
+		def members = [:]
+		def eteam = URLEncoder.encode(teamName, 'utf-8')
+		eteam = eteam.replace('+', '%20')
+		def result = genericRestClient.get(
+				contentType: ContentType.JSON,
+				uri: "${genericRestClient.getTfsUrl()}/${collection}/_apis/projects/${project}/teams/${eteam}/members",
+				query: ['api-version': '6.1']
+				)
+		if (result && result.value) {
+			result.value.each { member ->
+				def memberObj = ["name": member.identity.displayName,
+								 "email": member.identity.uniqueName]
+				
+				members[memberObj.name] = memberObj
+			}
+		}		
+		return members
+	}
+	
+	def getMemberTeam(def c, String project, String memberName) {
+		def projectData = projectManagementService.getProject(c, project)
+		def teams = getAllTeams(c, projectData)
+		Map mteam = null
+		for (def team in teams.'value') {
+			Map memberMap = getTeamMembersMap(c, project, team.name)
+			if (memberMap[memberName]) {
+				if (mteam == null || mteam.size() < memberMap.size()) {
+					mteam = memberMap
+				}								
+			}
+		}
+		return mteam
+	}
+	
 	def getTeamMembers(def collection, String project, String teamName) {
 		def members = []
 		def eteam = URLEncoder.encode(teamName, 'utf-8')
@@ -401,10 +436,10 @@ public class MemberManagementService {
 								 "email": member.identity.uniqueName]
 				members.add(memberObj)
 			}
-		}		
+		}
 		return members
 	}
-	
+
 	/**
 	 * Query for a specific team from VSTS using IdentityPicker interaction.
 	 * 

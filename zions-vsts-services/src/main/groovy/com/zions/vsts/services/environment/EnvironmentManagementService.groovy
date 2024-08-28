@@ -100,5 +100,34 @@ class EnvironmentManagementService {
 				)
 			return result
 	}
+	
+	def getDeploymentRecords(String collection, def project, String name) {
+		def env = getEnvironment(collection, project, name)
+		List executions = []
+		int top = 100
+		def result = null
+		result = genericRestClient.get(
+			contentType: ContentType.JSON,
+			uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/pipelines/environments/${env.id}/environmentdeploymentrecords",
+			headers: [Accept: 'application/json'],
+			query: ['api-version': '7.2-preview.1'],
+			withHeader: true					
+			)
+		while (true) {
+			executions.addAll(result.data.'value')
+			if (result.headers.'X-MS-ContinuationToken') {
+				result = genericRestClient.get(
+					contentType: ContentType.JSON,
+					uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/pipelines/environments/${env.id}/environmentdeploymentrecords",
+					headers: [Accept: 'application/json'],
+					query: ['api-version': '7.2-preview.1', continuationToken: result.headers.'X-MS-ContinuationToken'],
+					withHeader: true					
+					)
+			} else {
+				break;
+			}
+		}
+		return executions
+	}
 
 }
