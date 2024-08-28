@@ -120,7 +120,7 @@ class EnvironmentManagementService {
 					contentType: ContentType.JSON,
 					uri: "${genericRestClient.getTfsUrl()}/${collection}/${project.id}/_apis/pipelines/environments/${env.id}/environmentdeploymentrecords",
 					headers: [Accept: 'application/json'],
-					query: ['api-version': '7.2-preview.1', , continuationToken: result.headers.'X-MS-ContinuationToken'],
+					query: ['api-version': '7.2-preview.1', continuationToken: result.headers.'X-MS-ContinuationToken'],
 					withHeader: true					
 					)
 			} else {
