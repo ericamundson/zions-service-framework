@@ -388,7 +388,7 @@ public class MemberManagementService {
 
 	def getTeamMembersMap(def collection, String project, String teamName) {
 		def members = [:]
-		def eteam = URLEncoder.encode(teamName, 'utf-8')
+		def eteam = URLEncoder.encode(teamName.toLowerCase(), 'utf-8')
 		eteam = eteam.replace('+', '%20')
 		def result = genericRestClient.get(
 				contentType: ContentType.JSON,
@@ -398,21 +398,21 @@ public class MemberManagementService {
 		if (result && result.value) {
 			result.value.each { member ->
 				def memberObj = ["name": member.identity.displayName,
-								 "email": member.identity.uniqueName]
+								 "email": member.identity.uniqueName.toLowerCase()]
 				
-				members[memberObj.name] = memberObj
+				members[memberObj.email] = memberObj
 			}
 		}		
 		return members
 	}
 	
-	def getMemberTeam(def c, String project, String memberName) {
+	def getMemberTeam(def c, String project, String memberEmail) {
 		def projectData = projectManagementService.getProject(c, project)
 		def teams = getAllTeams(c, projectData)
 		Map mteam = null
 		for (def team in teams.'value') {
 			Map memberMap = getTeamMembersMap(c, project, team.name)
-			if (memberMap[memberName]) {
+			if (memberMap[memberEmail.toLowerCase()]) {
 				if (mteam == null || mteam.size() < memberMap.size()) {
 					mteam = memberMap
 				}								
