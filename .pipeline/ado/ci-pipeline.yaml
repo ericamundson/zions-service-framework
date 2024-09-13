@@ -76,10 +76,8 @@ extends:
 
     - task: AdvancedSecurity-Codeql-Init@1
       inputs:
-        enableAutomaticCodeQLInstall: false
-        languages: 'java'
-        buildtype: None
-        querysuite: code-scanning
+        languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
+        querysuite: 'code-scanning'
 
     - template: /templates/step/build/gradle.yaml@zions-ado-templates
       parameters:
