@@ -80,8 +80,8 @@ extends:
           tools:
             - name: dotnet
               version: 6
-            # - name: gradle
-            #   version: 6.8.3
+            - name: gradle
+              version: 6.8.3
             # - name: maven
             #   version: 3.9.6
 
@@ -108,13 +108,18 @@ extends:
     #     tasks: clean build
     #     publishJUnitResults: true
     
-    - task: Gradle@3
-      displayName: 'Gradle: clean build'
-      inputs:
-        gradleWrapperFile: $(Build.SourcesDirectory)/gradlew
-        workingDirectory: $(Build.SourcesDirectory)
-        options: '--write-locks'
-        tasks: dependencies
+    # - task: Gradle@3
+    #   displayName: 'Gradle: clean build'
+    #   inputs:
+    #     gradleWrapperFile: $(Build.SourcesDirectory)/gradlew
+    #     workingDirectory: $(Build.SourcesDirectory)
+    #     options: '--write-locks'
+    #     tasks: dependencies
+
+    - script: |
+        ./gradlew dependencies --write-locks
+        ls -al
+        find . -name *.lockfile
 
     # - script: |
     #     codeql database create cpp-database --language=cpp --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
