@@ -89,8 +89,7 @@ extends:
       inputs:
         # languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
         languages: 'cpp,java'
-        querysuite: 'security-extended'
-        buildtype: 'None'
+        querysuite: 'code-scanning'
 
     # - template: /templates/step/build/gradle.yaml@zions-ado-templates
     #   parameters:
