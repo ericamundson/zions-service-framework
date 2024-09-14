@@ -117,6 +117,7 @@ extends:
     #     tasks: dependencies
 
     - script: |
+        chmod +x gradlew
         ./gradlew dependencies --write-locks
         ls -al
         find . -name *.lockfile
