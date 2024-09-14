@@ -110,11 +110,12 @@ extends:
     #     publishJUnitResults: true
     
     - script: |
-        codeql database create java-database --language=java --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
+        codeql database create cpp-database --language=cpp --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
 
     - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
       parameters:
         scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
         organizationId: "bc29079689124c8bbef346a3d149e714"
     - task: AdvancedSecurity-Dependency-Scanning@1
+    - task: AdvancedSecurity-Publish@1
     - task: AdvancedSecurity-Codeql-Analyze@1
