@@ -99,6 +99,8 @@ extends:
     #     publishJUnitResults: true
     
     - script: |
+        NAME=gradle VERSION=6.8.3 ephemeral-tool-installer
+    - script: |
         codeql database create java-database --language=java-kotlin --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
 
     - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
