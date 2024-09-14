@@ -108,7 +108,7 @@ extends:
     #     publishJUnitResults: true
     
     - script: |
-        codeql database create java-database --language=java-kotlin --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
+        codeql database create java-database --language=java- --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
 
     - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
       parameters:
