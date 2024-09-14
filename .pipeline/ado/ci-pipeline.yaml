@@ -80,16 +80,16 @@ extends:
           tools:
             - name: dotnet
               version: 6
-            - name: gradle
-              version: 6.8.3
+            # - name: gradle
+            #   version: 6.8.3
             # - name: maven
             #   version: 3.9.6
 
-    - task: AdvancedSecurity-Codeql-Init@1
-      inputs:
-        # languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
-        languages: 'cpp,java'
-        querysuite: 'code-scanning'
+    # - task: AdvancedSecurity-Codeql-Init@1
+    #   inputs:
+    #     # languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
+    #     languages: 'java'
+    #     querysuite: 'code-scanning'
 
     # - template: /templates/step/build/gradle.yaml@zions-ado-templates
     #   parameters:
@@ -108,6 +108,14 @@ extends:
     #     tasks: clean build
     #     publishJUnitResults: true
     
+    - task: Gradle@3
+      displayName: 'Gradle: clean build'
+      inputs:
+        gradleWrapperFile: $(Build.SourcesDirectory)/gradlew
+        workingDirectory: $(Build.SourcesDirectory)
+        options: '--write-locks'
+        tasks: dependencies
+
     # - script: |
     #     codeql database create cpp-database --language=cpp --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
 
@@ -116,7 +124,7 @@ extends:
     #     scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
     #     organizationId: "bc29079689124c8bbef346a3d149e714"
 
-    # - task: AdvancedSecurity-Dependency-Scanning@1
+    - task: AdvancedSecurity-Dependency-Scanning@1
     # - task: AdvancedSecurity-Publish@1
 
-    - task: AdvancedSecurity-Codeql-Analyze@1
+    # - task: AdvancedSecurity-Codeql-Analyze@1
