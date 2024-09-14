@@ -76,7 +76,8 @@ extends:
 
     - task: AdvancedSecurity-Codeql-Init@1
       inputs:
-        languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
+        # languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
+        languages: 'java'
         querysuite: 'security-extended'
         buildtype: 'None'
 
