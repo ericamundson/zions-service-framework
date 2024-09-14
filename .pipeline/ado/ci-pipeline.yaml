@@ -29,40 +29,40 @@ extends:
    
     build_steps:
     
-    - script: |
-        # Alternatively, you may manually implement the following steps:
-        #   1) Pick the latest CodeQL release bundle from GitHub.
-        #      TBD: scrape release page, find version to download from here: https://api.github.com/repos/github/codeql-action/releases/latest
-        #   2) Download and unzip the bundle to the following directory inside the agent tool directory, 
-        #      typically located under _work/_tool: ./CodeQL/0.0.0-[codeql-release-bundle-tag]/x64/. 
-        #      Using the current release of v2.16.0, the folder name would be titled ./CodeQL/0.0.0-codeql-bundle-v2.16.0/x64/
-        NEXUS_REPO=https://nexus.cs.zionsbank.com/repository/github-releases
-        VERSION=v2.18.3
-        BUNDLE=${NEXUS_REPO}/github/codeql-action/releases/download/codeql-bundle-${VERSION}/codeql-bundle-linux64.tar.gz
-        echo "##[group]Installing CodeQL Bundle ${VERSION} on agent."
-        echo "##[debug]Downloading [${BUNDLE}]"
-        mkdir -p ${AGENT_TEMPDIRECTORY}/codeql-bundle
-        curl -L --retry 5 --retry-connrefused -o ${AGENT_TEMPDIRECTORY}/codeql-bundle/codeql-bundle-linux64.tar.gz ${BUNDLE}
-        if ! [[ -s "${AGENT_TEMPDIRECTORY}/codeql-bundle/codeql-bundle-linux64.tar.gz" ]]; then
-          echo "##vso[task.logissue type=error]File doesn't exist or is empty, download failed."
-          exit 1
-        elif ! gzip -t -v "${AGENT_TEMPDIRECTORY}/codeql-bundle/codeql-bundle-linux64.tar.gz"; then
-          echo "##vso[task.logissue type=error]File isn't valid gzip, download failed."
-          exit 1
-        fi
-        echo "##[debug]Extracting archive to ${AGENT_TOOLSDIRECTORY} directory"
-        TOOL_DEST=${AGENT_TOOLSDIRECTORY}/CodeQL/0.0.0-codeql-bundle-${VERSION}
-        mkdir -p ${TOOL_DEST}/x64
-        tar -xzf ${AGENT_TEMPDIRECTORY}/codeql-bundle/codeql-bundle-linux64.tar.gz -C ${TOOL_DEST}/x64
-        echo "##[debug]Checking CodeQL Bundle version"
-        ${TOOL_DEST}/x64/codeql/codeql --version
-        # #   3) Create an empty file titled x64.complete within the ./CodeQL/0.0.0-[codeql-release-bundle-tag] folder. 
-        # #      Using the previous example, the end file path to your x64.complete file should be ./CodeQL/0.0.0-codeql-bundle-v2.16.0/x64.complete.
-        touch ${TOOL_DEST}/x64.complete
-        echo "##[debug]Exporting updated environment variable(s)"
-        echo "##vso[task.prependpath]${TOOL_DEST}/x64/codeql"
-        echo "##[endgroup]"
-      displayName: "Install CodeQL Bundle"
+    # - script: |
+    #     # Alternatively, you may manually implement the following steps:
+    #     #   1) Pick the latest CodeQL release bundle from GitHub.
+    #     #      TBD: scrape release page, find version to download from here: https://api.github.com/repos/github/codeql-action/releases/latest
+    #     #   2) Download and unzip the bundle to the following directory inside the agent tool directory, 
+    #     #      typically located under _work/_tool: ./CodeQL/0.0.0-[codeql-release-bundle-tag]/x64/. 
+    #     #      Using the current release of v2.16.0, the folder name would be titled ./CodeQL/0.0.0-codeql-bundle-v2.16.0/x64/
+    #     NEXUS_REPO=https://nexus.cs.zionsbank.com/repository/github-releases
+    #     VERSION=v2.18.3
+    #     BUNDLE=${NEXUS_REPO}/github/codeql-action/releases/download/codeql-bundle-${VERSION}/codeql-bundle-linux64.tar.gz
+    #     echo "##[group]Installing CodeQL Bundle ${VERSION} on agent."
+    #     echo "##[debug]Downloading [${BUNDLE}]"
+    #     mkdir -p ${AGENT_TEMPDIRECTORY}/codeql-bundle
+    #     curl -L --retry 5 --retry-connrefused -o ${AGENT_TEMPDIRECTORY}/codeql-bundle/codeql-bundle-linux64.tar.gz ${BUNDLE}
+    #     if ! [[ -s "${AGENT_TEMPDIRECTORY}/codeql-bundle/codeql-bundle-linux64.tar.gz" ]]; then
+    #       echo "##vso[task.logissue type=error]File doesn't exist or is empty, download failed."
+    #       exit 1
+    #     elif ! gzip -t -v "${AGENT_TEMPDIRECTORY}/codeql-bundle/codeql-bundle-linux64.tar.gz"; then
+    #       echo "##vso[task.logissue type=error]File isn't valid gzip, download failed."
+    #       exit 1
+    #     fi
+    #     echo "##[debug]Extracting archive to ${AGENT_TOOLSDIRECTORY} directory"
+    #     TOOL_DEST=${AGENT_TOOLSDIRECTORY}/CodeQL/0.0.0-codeql-bundle-${VERSION}
+    #     mkdir -p ${TOOL_DEST}/x64
+    #     tar -xzf ${AGENT_TEMPDIRECTORY}/codeql-bundle/codeql-bundle-linux64.tar.gz -C ${TOOL_DEST}/x64
+    #     echo "##[debug]Checking CodeQL Bundle version"
+    #     ${TOOL_DEST}/x64/codeql/codeql --version
+    #     # #   3) Create an empty file titled x64.complete within the ./CodeQL/0.0.0-[codeql-release-bundle-tag] folder. 
+    #     # #      Using the previous example, the end file path to your x64.complete file should be ./CodeQL/0.0.0-codeql-bundle-v2.16.0/x64.complete.
+    #     touch ${TOOL_DEST}/x64.complete
+    #     echo "##[debug]Exporting updated environment variable(s)"
+    #     echo "##vso[task.prependpath]${TOOL_DEST}/x64/codeql"
+    #     echo "##[endgroup]"
+    #   displayName: "Install CodeQL Bundle"
 
     # - script: |
     #     VERSION=6
@@ -80,10 +80,10 @@ extends:
           tools:
             - name: dotnet
               version: 6
-            - name: gradle
-              version: 6.8.3
-            - name: maven
-              version: 3.9.6
+            # - name: gradle
+            #   version: 6.8.3
+            # - name: maven
+            #   version: 3.9.6
 
     # - task: AdvancedSecurity-Codeql-Init@1
     #   inputs:
@@ -109,13 +109,13 @@ extends:
     #     tasks: clean build
     #     publishJUnitResults: true
     
-    - script: |
-        codeql database create cpp-database --language=cpp --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
+    # - script: |
+    #     codeql database create cpp-database --language=cpp --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
 
-    - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
-      parameters:
-        scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
-        organizationId: "bc29079689124c8bbef346a3d149e714"
+    # - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
+    #   parameters:
+    #     scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
+    #     organizationId: "bc29079689124c8bbef346a3d149e714"
     - task: AdvancedSecurity-Dependency-Scanning@1
     - task: AdvancedSecurity-Publish@1
-    - task: AdvancedSecurity-Codeql-Analyze@1
+    # - task: AdvancedSecurity-Codeql-Analyze@1
