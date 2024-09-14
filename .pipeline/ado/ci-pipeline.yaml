@@ -82,6 +82,8 @@ extends:
               version: 6
             - name: gradle
               version: 6.8.3
+            - name: maven
+              version: 3.9.6
 
     # - task: AdvancedSecurity-Codeql-Init@1
     #   inputs:
@@ -108,7 +110,7 @@ extends:
     #     publishJUnitResults: true
     
     - script: |
-        codeql database create java-database --language=java- --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
+        codeql database create java-database --language=java --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
 
     - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
       parameters:
