@@ -76,9 +76,9 @@ extends:
 
     - task: AdvancedSecurity-Codeql-Init@1
       inputs:
-        # languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
-        languages: 'java'
+        languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
         querysuite: 'security-extended'
+        buildtype: 'None'
 
     # - template: /templates/step/build/gradle.yaml@zions-ado-templates
     #   parameters:
