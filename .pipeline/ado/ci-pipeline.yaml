@@ -64,15 +64,24 @@ extends:
         echo "##[endgroup]"
       displayName: "Install CodeQL Bundle"
 
-    - script: |
-        VERSION=6
-        echo "##[group]Installing .Net ${VERSION}.0 on agent."
-        sudo dnf install dotnet-sdk-${VERSION}.0
-        echo "##[debug].NET version"
-        dotnet --version
-        echo "##vso[task.prependpath]$HOME/.dotnet/tools"
-        echo "##[endgroup]"
-      displayName: "Install .Net 6.0"
+    # - script: |
+    #     VERSION=6
+    #     echo "##[group]Installing .Net ${VERSION}.0 on agent."
+    #     sudo dnf install dotnet-sdk-${VERSION}.0
+    #     echo "##[debug].NET version"
+    #     dotnet --version
+    #     echo "##vso[task.prependpath]$HOME/.dotnet/tools"
+    #     echo "##[endgroup]"
+    #   displayName: "Install .Net 6.0"
+    
+    - ${{ if contains(lower(parameters.pool_name), 'ephemeral') }}:
+      - template: /templates/step/install-tools.yaml@zions-ado-templates
+        parameters:
+          tools:
+            - name: dotnet
+              version: 6
+            - name: gradle
+              version: 6.8.3
 
     # - task: AdvancedSecurity-Codeql-Init@1
     #   inputs:
@@ -98,8 +107,6 @@ extends:
     #     tasks: clean build
     #     publishJUnitResults: true
     
-    - script: |
-        NAME=gradle VERSION=6.8.3 ephemeral-tool-installer
     - script: |
         codeql database create java-database --language=java-kotlin --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
 
