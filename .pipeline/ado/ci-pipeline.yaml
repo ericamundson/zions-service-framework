@@ -77,7 +77,7 @@ extends:
     - task: AdvancedSecurity-Codeql-Init@1
       inputs:
         languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
-        querysuite: 'code-scanning'
+        querysuite: 'security-extended'
 
     - template: /templates/step/build/gradle.yaml@zions-ado-templates
       parameters:
@@ -86,6 +86,10 @@ extends:
         options: '-b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
         tasks: 'clean build'
         publishJUnitResults: true
+
+    - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
+      parameters:
+        scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
 
     - task: AdvancedSecurity-Dependency-Scanning@1
     - task: AdvancedSecurity-Codeql-Analyze@1
