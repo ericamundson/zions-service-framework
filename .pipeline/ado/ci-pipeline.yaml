@@ -5,14 +5,13 @@ parameters:
 - name: pool_name
   displayName: Pool Name
   type: string
-  default: "Ephemeral DEV"
+  default: "Ephemeral PROD"
   values:
   - "Ephemeral PROD"
   - "Ephemeral STAGE"
   - "Ephemeral TESTQA"
   - "Ephemeral DEBUG_P"
   - "Ephemeral DEBUG_T"
-  - "Ephemeral DEV"
 trigger: none
 resources:
   repositories:
@@ -27,7 +26,6 @@ extends:
     build_pool_name: ${{ parameters.pool_name }}
     build_pool_demands:
     - "agent.os -equals Linux"
-    - "helm_fullname -equals bc-local-re-ephemeral-agent"
    
     build_steps:
     
@@ -121,8 +119,9 @@ extends:
     - script: |
         chmod +x gradlew
         ./gradlew dependencies --write-locks
-        ls -al
+        echo "BBBBBBBBBBBUUUUUUUUUUUUUUUURRRRRRRRRRRRRRRRRRRRPPPPPPPPPPPPPPPP"
         find . -name *.lockfile
+        echo "BBBBBBBBBBBUUUUUUUUUUUUUUUURRRRRRRRRRRRRRRRRRRRPPPPPPPPPPPPPPPP"
 
     # - script: |
     #     codeql database create cpp-database --language=cpp --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
