@@ -12,6 +12,7 @@ parameters:
   - "Ephemeral TESTQA"
   - "Ephemeral DEBUG_P"
   - "Ephemeral DEBUG_T"
+  - "Ephemeral DEV"
 trigger: none
 resources:
   repositories:
