@@ -121,9 +121,22 @@ extends:
 
     - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
       parameters:
-        # scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
+        # scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,
         scanTargets: zions-common-data/build/libs/*.jar
         organizationId: "bc29079689124c8bbef346a3d149e714"
+
+    - task: CopyFiles@2
+      inputs:
+        Contents: |
+          zions-common/build/libs/*.jar
+          zions-common-data/build/libs/*.jar
+          zions-vsts-services/build/libs/*.jar
+          zions-vsts-microservice/build/libs/*.jar
+        TargetFolder: '$(build.artifactstagingdirectory)/jars'
+
+    - template: /templates/step/publish/publish-pipeline-artifact.yaml@zions-ado-templates
+      parameters:
+        targetPath: $(build.artifactstagingdirectory)/jars
 
     - task: AdvancedSecurity-Dependency-Scanning@1
     # - task: AdvancedSecurity-Publish@1
