@@ -1,6 +1,10 @@
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 
+dependencyLocking {
+    lockAllConfigurations()
+}
+
 buildscript {
 	ext {
 		springCloudVersion = 'Greenwich.SR2'
