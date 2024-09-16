@@ -222,7 +222,7 @@ allprojects {
 			implementation "org.springframework.boot:spring-boot-starter:${project.springBootVersion}"
 			implementation('org.springframework.cloud:spring-cloud-starter-vault-config:2.2.7.RELEASE')
 		} else {
-			implementation group: 'org.springframework', name: 'spring-beans', version: '5.2.2.RELEASE'
+			implementation group: 'org.springframework', name: 'spring-beans', version: '5.2.20.RELEASE'
 			implementation group: 'org.springframework', name: 'spring-context', version: '5.2.2.RELEASE'
 			implementation group: 'org.springframework', name: 'spring-core', version: '5.2.2.RELEASE'
 		}
