@@ -122,7 +122,7 @@ extends:
     - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
       parameters:
         # scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
-        scanTargets: '**/*.lockfiles'
+        scanTargets: './gradle/dependency-locks/productionRuntimeClasspath.lockfile'
         organizationId: "bc29079689124c8bbef346a3d149e714"
 
     - task: AdvancedSecurity-Dependency-Scanning@1
