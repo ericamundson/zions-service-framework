@@ -108,17 +108,17 @@ extends:
     #     tasks: clean build
     #     publishJUnitResults: true
     
-    # - task: Gradle@3
-    #   displayName: 'Gradle: clean build'
-    #   inputs:
-    #     gradleWrapperFile: $(Build.SourcesDirectory)/gradlew
-    #     workingDirectory: $(Build.SourcesDirectory)
-    #     options: '--write-locks'
-    #     tasks: dependencies
+    - task: Gradle@3
+      displayName: 'Gradle: clean build'
+      inputs:
+        gradleWrapperFile: $(Build.SourcesDirectory)/gradlew
+        workingDirectory: $(Build.SourcesDirectory)
+        options: '--write-locks'
+        tasks: dependencies
 
     - script: |
-        chmod +x gradlew
-        ./gradlew dependencies --write-locks
+        # chmod +x gradlew
+        # ./gradlew dependencies --write-locks
         echo "BBBBBBBBBBBUUUUUUUUUUUUUUUURRRRRRRRRRRRRRRRRRRRPPPPPPPPPPPPPPPP"
         find . -name *.lockfile
         echo "BBBBBBBBBBBUUUUUUUUUUUUUUUURRRRRRRRRRRRRRRRRRRRPPPPPPPPPPPPPPPP"
@@ -126,10 +126,10 @@ extends:
     # - script: |
     #     codeql database create cpp-database --language=cpp --command='gradle --no-daemon -b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
 
-    # - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
-    #   parameters:
-    #     scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
-    #     organizationId: "bc29079689124c8bbef346a3d149e714"
+    - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
+      parameters:
+        scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
+        organizationId: "bc29079689124c8bbef346a3d149e714"
 
     - task: AdvancedSecurity-Dependency-Scanning@1
     # - task: AdvancedSecurity-Publish@1
