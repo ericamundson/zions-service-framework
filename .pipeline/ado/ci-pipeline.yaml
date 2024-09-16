@@ -5,7 +5,7 @@ parameters:
 - name: pool_name
   displayName: Pool Name
   type: string
-  default: Ephemeral PROD
+  default: "Ephemeral DEV"
   values:
   - "Ephemeral PROD"
   - "Ephemeral STAGE"
