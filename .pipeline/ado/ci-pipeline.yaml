@@ -18,7 +18,7 @@ resources:
   repositories:
   - repository: zions-ado-templates
     name: DTS/zions-ado-templates
-    ref: refs/tags/v0.2.6
+    ref: refs/heads/feature/bmc
     type: git
 extends:
   template: required-templates/dts-ci-template.yaml@zions-ado-templates
