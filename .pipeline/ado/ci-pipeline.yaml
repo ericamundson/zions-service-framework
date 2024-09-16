@@ -26,6 +26,7 @@ extends:
     build_pool_name: ${{ parameters.pool_name }}
     build_pool_demands:
     - "agent.os -equals Linux"
+    - helm_fullname -equals bc-local-re-ephemeral-agent
    
     build_steps:
     
