@@ -99,14 +99,14 @@ extends:
     #     tasks: 'clean build'
     #     publishJUnitResults: true
 
-    - task: Gradle@3
-      displayName: 'Gradle: clean build'
-      inputs:
-        gradleWrapperFile: $(Build.SourcesDirectory)/gradlew
-        workingDirectory: $(Build.SourcesDirectory)
-        options: '-b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
-        tasks: clean build
-        publishJUnitResults: true
+    # - task: Gradle@3
+    #   displayName: 'Gradle: clean build'
+    #   inputs:
+    #     gradleWrapperFile: $(Build.SourcesDirectory)/gradlew
+    #     workingDirectory: $(Build.SourcesDirectory)
+    #     options: '-b build.gradle -Pqueue=default -Pcontext=all -PbuildType=ci'
+    #     tasks: clean build
+    #     publishJUnitResults: true
     
     - task: Gradle@3
       displayName: 'Gradle: clean build'
@@ -122,7 +122,7 @@ extends:
     - template: /templates/step/scan/nexusiq.yaml@zions-ado-templates
       parameters:
         # scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
-        scanTargets: zions-common/build/libs/*.jar
+        scanTargets: '**/*.lockfiles'
         organizationId: "bc29079689124c8bbef346a3d149e714"
 
     - task: AdvancedSecurity-Dependency-Scanning@1
