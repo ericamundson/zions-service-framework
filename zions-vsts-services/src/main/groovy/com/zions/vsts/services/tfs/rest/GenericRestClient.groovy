@@ -10,7 +10,7 @@ import groovyx.net.http.RESTClient;
 import groovy.util.logging.Slf4j;
 
 import java.util.Map
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 import org.apache.http.Header
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials

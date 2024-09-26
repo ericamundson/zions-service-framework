@@ -8,7 +8,7 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 import com.zions.common.services.vault.VaultService;
 import com.zions.common.services.vault.VaultRestClient;
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;

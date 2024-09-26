@@ -1,12 +1,12 @@
 package com.zions.vsts.services
 
-import static org.junit.Assert.*
+
 
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovyx.net.http.ContentType
-import org.junit.Test
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean

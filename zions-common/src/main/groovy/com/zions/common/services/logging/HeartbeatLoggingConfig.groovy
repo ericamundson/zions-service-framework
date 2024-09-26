@@ -73,6 +73,12 @@ public class HeartbeatLoggingConfig implements SchedulingConfigurer {
 					  .plusMillis(heartbeatMinutes * 60000)
 				  return Date.from(nextExecutionTime)
 			  }
+
+			@Override
+			public Instant nextExecution(TriggerContext triggerContext) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		  }
 		)
 	}

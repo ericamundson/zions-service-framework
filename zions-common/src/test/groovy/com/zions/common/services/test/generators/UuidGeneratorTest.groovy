@@ -1,7 +1,6 @@
 package com.zions.common.services.test.generators;
 
 import com.zions.common.services.test.SpockLabeler
-import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

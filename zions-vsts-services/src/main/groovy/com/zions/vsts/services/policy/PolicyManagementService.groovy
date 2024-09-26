@@ -17,7 +17,7 @@ import com.zions.vsts.services.release.ReleaseManagementService
 import com.zions.vsts.services.admin.member.MemberManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 
-import static PolicyType.*
+import static com.zions.vsts.services.policy.PolicyType.*
 
 /**
  * 

@@ -1,9 +1,7 @@
 package com.zions.common.services.logging
 
-import static org.junit.Assert.*
 
 import groovy.util.logging.Slf4j
-import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean

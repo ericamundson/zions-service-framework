@@ -1,10 +1,8 @@
 package com.zions.common.services.user
 
-import static org.junit.Assert.*
 
 import com.zions.common.services.ldap.User
 import com.zions.common.services.test.SpockLabeler
-import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration

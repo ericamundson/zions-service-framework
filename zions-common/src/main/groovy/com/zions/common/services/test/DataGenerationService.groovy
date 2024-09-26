@@ -2,6 +2,7 @@ package com.zions.common.services.test
 
 import groovy.json.JsonSlurper
 import groovy.yaml.YamlSlurper
+import groovy.xml.XmlSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -49,7 +50,7 @@ class DataGenerationService {
 		} else if (name.endsWith('.yaml')) {
 				return new YamlSlurper().parseText(outData)
 		}
-		return new XmlSlurper().parseText(outData)
+		return new XmlSlurper(false,false).parseText(outData)
 	}
 
 	/**

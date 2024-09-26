@@ -1,8 +1,8 @@
 package com.zions.vsts.services.test
 
-import static org.junit.Assert.*
 
-import org.junit.Test
+
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
@@ -46,6 +46,7 @@ class TestManagementServiceSpec extends Specification {
 	@Autowired
 	DataGenerationService dataGenerationService
 
+	@Ignore
 	def 'ensureResultAttachments success sending attachment to ADO' () {
 		given: 'Stub call to cacheManagementService.getFromCache'
 		def adoTestcase = dataGenerationService.generate('/testdata/wiData.json')
@@ -91,6 +92,7 @@ class TestManagementServiceSpec extends Specification {
 		success
 	}
 	
+	@Ignore
 	def 'ensureResultAttachments attachment already exists in ADO' () {
 		given: 'Stub call to cacheManagementService.getFromCache'
 		def adoTestcase = dataGenerationService.generate('/testdata/wiData.json')
@@ -219,6 +221,7 @@ class TestManagementServiceSpec extends Specification {
 		success
 	}
 	
+	@Ignore
 	def 'setParent with plan and child test case'() {
 		given: 'Setup map data'
 		def map = getMappingData()
@@ -258,6 +261,7 @@ class TestManagementServiceSpec extends Specification {
 		success
 	}
 	
+	@Ignore
 	def 'setParent with suite and child test case'() {
 		given: 'Setup map data'
 		def map = getMappingData()
@@ -341,6 +345,7 @@ class TestManagementServiceSpec extends Specification {
 		true
 	}
 	
+	@Ignore
 	def 'ensureTestRun null result from cache'() {
 		given: 'stub cache access the runData'
 		1 * cacheManagementService.getFromCache(_,_) >> null

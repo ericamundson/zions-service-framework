@@ -5,14 +5,13 @@ jar {
 	enabled = true
 }
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-websocket:2.3.12.RELEASE")
-    compile("org.springframework.boot:spring-boot-starter-amqp:2.3.12.RELEASE")
-    compile("org.springframework.boot:spring-boot-starter-actuator:2.3.12.RELEASE")
-	compile('org.springframework.kafka:spring-kafka')
-	compile("org.springframework:spring-websocket:5.2.2.RELEASE")
-	compile("org.springframework:spring-messaging:5.2.2.RELEASE")
+    implementation "org.springframework.boot:spring-boot-starter-websocket:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-starter-amqp:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+	implementation "org.springframework:spring-websocket"
+	implementation "org.springframework:spring-messaging"
     //compile("org.springframework.amqp:spring-rabbit-test:")
-	compile 'org.apache.ant:ant:1.9.4'
+	implementation 'org.apache.ant:ant:1.9.4'
 	//compile project(':zions-vsts-services')
-	compile project(':zions-common')
+	implementation project(':zions-common')
 }

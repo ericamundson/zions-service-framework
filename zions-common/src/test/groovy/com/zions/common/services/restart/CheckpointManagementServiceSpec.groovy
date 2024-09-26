@@ -1,13 +1,11 @@
 package com.zions.common.services.restart
 
-import static org.junit.Assert.*
 
 import com.mongodb.client.MongoClient
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
 import com.zions.common.services.test.SpockLabeler
 
-import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration

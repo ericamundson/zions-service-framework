@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import groovy.util.logging.Slf4j
 import groovyx.net.http.ContentType
+
 import org.springframework.core.env.Environment
 
 @Component

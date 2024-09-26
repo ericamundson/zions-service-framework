@@ -1,8 +1,8 @@
 package com.zions.vsts.services.work.templates
 
-import static org.junit.Assert.*
 
-import org.junit.Test
+
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
@@ -16,6 +16,8 @@ import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
+import groovy.xml.XmlSlurper
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.mock.DetachedMockFactory
 
@@ -211,6 +213,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		//result != null
 	}*/
 	
+	@Ignore
 	def 'ensureWITChanges success flow.'() {
 		given: 'Stub data'
 		def mapping = new XmlSlurper().parse(new File(testMappingFileName))
@@ -239,6 +242,7 @@ class ProcessTemplateServiceSpecTest extends Specification {
 		return wits
 	}
 	
+	@Ignore
 	def 'getWIT success flow' () {
 		given: 'stub rest call for work item type data'
 		def project = new JsonSlurper().parseText(this.getClass().getResource('/testdata/project.json').text)

@@ -18,7 +18,7 @@ import java.security.NoSuchAlgorithmException
 import groovyx.net.http.ContentType
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 
 @Component

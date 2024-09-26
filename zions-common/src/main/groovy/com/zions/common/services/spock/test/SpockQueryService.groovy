@@ -1,6 +1,7 @@
 package com.zions.common.services.spock.test
 
 import groovy.json.JsonSlurper
+import groovy.xml.XmlSlurper
 import org.springframework.stereotype.Component
 
 @Component

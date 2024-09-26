@@ -1,6 +1,6 @@
 package com.zions.vsts.services.work
 
-import static org.junit.Assert.*
+
 
 import com.zions.common.services.cache.CacheManagementService
 import com.zions.common.services.cache.ICacheManagementService
@@ -12,8 +12,7 @@ import com.zions.common.services.test.SpockLabeler
 import com.zions.vsts.services.admin.project.ProjectManagementService
 import com.zions.vsts.services.tfs.rest.GenericRestClient
 import groovy.json.JsonSlurper
-import org.junit.Test
-import org.junit.runner.RunWith
+
 import org.spockframework.mock.MockUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value

@@ -6,9 +6,9 @@ jar {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-	compile("org.springframework.boot:spring-boot-starter-data-mongodb:2.3.12.RELEASE")
-	compile("org.springframework.boot:spring-boot-starter-data-ldap:2.3.12.RELEASE")
-	compile('com.h2database:h2:1.3.148')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation "org.springframework.boot:spring-boot-starter-data-mongodb:$springBootVersion"
+	implementation "org.springframework.boot:spring-boot-starter-data-ldap:$springBootVersion"
+	implementation 'com.h2database:h2:1.3.148'
 	 
 }

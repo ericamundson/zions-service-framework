@@ -38,9 +38,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.socket.WebSocketHttpHeaders
-import org.springframework.web.socket.WebSocketHttpHeaders
-import javax.websocket.ContainerProvider
-import javax.websocket.WebSocketContainer
+import jakarta.websocket.ContainerProvider
+import jakarta.websocket.WebSocketContainer
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.messaging.WebSocketStompClient
 import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport

@@ -6,11 +6,24 @@ jar {
 }
 
 dependencies {
-	compile("org.springframework.boot:spring-boot-starter-aop:2.3.12.RELEASE")
-	compile 'org.springframework.boot:spring-boot-starter-mail:2.3.12.RELEASE'
-	compile 'javax.mail:javax.mail-api:1.6.2'
-	compile 'org.apache.poi:poi:4.1.0'
-	compile 'org.apache.poi:poi-ooxml:4.1.0'
+	implementation "org.springframework.boot:spring-boot-starter-aop:$springBootVersion"
+	implementation "org.springframework.boot:spring-boot-starter-mail:$springBootVersion"
+	implementation "org.springframework.boot:spring-boot-starter-data-mongodb:$springBootVersion"
+	implementation "org.springframework.boot:spring-boot-starter-data-ldap:$springBootVersion"
+	implementation 'javax.mail:javax.mail-api:1.6.2'
+	implementation 'org.apache.poi:poi:4.1.0'
+	implementation 'org.apache.poi:poi-ooxml:4.1.0'
+	implementation 'oauth.signpost:signpost-commonshttp4:2.1.1'
+	implementation 'oauth.signpost:signpost-core:2.1.1'
+//	implementation ('net.sf.json-lib:json-lib:2.4') {
+//		exclude group: 'org.jruby', module: 'ruby'
+//		exclude group: 'xmlunit', module: 'xmlunit'
+//		exclude group: 'xom', module: 'xom'
+//	}
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+	implementation 'org.apache.commons:commons-collections4:4.4'
+	// https://mvnrepository.com/artifact/org.apache.xml/resolver
+	implementation 'xml-resolver:xml-resolver:1.2'
 	
-	compile project(':zions-common-data')
+	implementation project(':zions-common-data')
 }

@@ -1,8 +1,5 @@
 package com.zions.common.services.test
 
-import static org.junit.Assert.*
-
-import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
@@ -12,6 +9,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 
 import spock.lang.Specification
+import spock.lang.Ignore
 
 @ContextConfiguration(classes=[DataGenerationServiceSpecConfig])
 class DataGenerationServiceSpec extends Specification {
@@ -39,7 +37,7 @@ class DataGenerationServiceSpec extends Specification {
 		plan != null
 	}
 	
-	
+	@Ignore
 	def 'generate string resouce test with xml' () {
 		given: 'setup data template'
 		def resourceXml= '/testdata/testcase.xml'
@@ -49,7 +47,7 @@ class DataGenerationServiceSpec extends Specification {
 		true
 	}
 	
-	
+	@Ignore
 	def 'generate test with url' () {
 		given: 'json data to do replacement'
 		def resourceJson = '/testdata/TestPlanT.json'

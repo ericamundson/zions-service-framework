@@ -1,10 +1,10 @@
 package com.zions.vsts.services.tfs.rest
 
-import static org.junit.Assert.*
+
 
 import com.zions.common.services.rest.IGenericRestClient
 import com.zions.common.services.rest.ThrottleException
-import org.junit.Test
+
 
 import spock.lang.Specification
 
