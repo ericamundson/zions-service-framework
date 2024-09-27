@@ -236,6 +236,7 @@ public class PolicyManagementService {
 						duration = buildData.numHours * 60
 					} else if (buildData.expires == "immediate") {
 						queueOnUpdateOnly = false
+						duration = 0
 					}
 				}
 				policy = [id: -2, isBlocking: required, isDeleted: false, isEnabled: true, revision: 1,
