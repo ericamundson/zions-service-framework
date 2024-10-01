@@ -85,11 +85,11 @@ extends:
             # - name: maven
             #   version: 3.9.6
 
-    # - task: AdvancedSecurity-Codeql-Init@1
-    #   inputs:
-    #     # languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
-    #     languages: 'java'
-    #     querysuite: 'code-scanning'
+    - task: AdvancedSecurity-Codeql-Init@1
+      inputs:
+        # languages: 'csharp, cpp, go, java, javascript, python, ruby, swift'
+        languages: 'javascript'
+        querysuite: 'code-scanning'
 
     # - template: /templates/step/build/gradle.yaml@zions-ado-templates
     #   parameters:
@@ -143,4 +143,4 @@ extends:
 
     - task: AdvancedSecurity-Dependency-Scanning@1
     # - task: AdvancedSecurity-Publish@1
-    # - task: AdvancedSecurity-Codeql-Analyze@1
+    - task: AdvancedSecurity-Codeql-Analyze@1
