@@ -87,7 +87,7 @@ public class PolicyManagementService {
 		boolean enforceBuildValidation = true
 		boolean enforceMinimumApprovers = true
 		boolean enforceLinkedWorkItems = true
-		boolean enforceMergeStrategy = true
+		boolean enforceMergeStrategy = false
 		boolean enforceCommentResolution = true
 		boolean isInitBranch = false
 		
@@ -477,7 +477,7 @@ public class PolicyManagementService {
 		if (policyRes) {
 			// Remove the existing AutomaticallyIncludedReviewers branch policy that was found
 			// Should we try to update instead of delete and re-add??
-			deleteAutomaticallyIncludedReviewersBranchPolicy(policyRes)
+			deleteBranchPolicy(policyRes)
 		}
 		
 		// policyRequirement - Default: optional
@@ -522,7 +522,7 @@ public class PolicyManagementService {
 
 	}
 	
-	def deleteAutomaticallyIncludedReviewersBranchPolicy(def policyRes) {
+	def deleteBranchPolicy(def policyRes) {
 		def result = genericRestClient.delete(
 			uri: "${policyRes._links.self.href}",
 			query: ['api-version': '5.1'])
@@ -547,9 +547,7 @@ public class PolicyManagementService {
 	def deleteCheckmarxBranchPolicy(def projectData, def repoData, String branchName = 'refs/heads/master') {
 		def policyRes = getBranchPolicy(CUSTOM_STATUS_POLICY_TYPE, projectData.id, repoData.id, branchName, SAST_STATUS_GENRE, CHECKMARX_STATUS_NAME)
 		if (policyRes) {
-			def result = genericRestClient.delete(
-				uri: "${policyRes._links.self.href}",
-				query: ['api-version': '5.1'])
+			deleteBranchPolicy(policyRes)
 		}
 
 	}
