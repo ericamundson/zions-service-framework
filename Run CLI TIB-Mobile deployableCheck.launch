@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
-<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/zions-pipeline-cli/src/main/groovy/com/zions/pipeline/services/cli/CliApplication.groovy"/>
-</listAttribute>
-<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
-<listEntry value="1"/>
-</listAttribute>
-<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
-<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.pipeline.services.cli.CliApplication"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="deployableCheck --scan.dir=&quot;\\utnafp01_05\common\Otmane&quot; --out.dir=&quot;D:\git\TIB-Mobile\xl\build\packages&quot; --xld.url=https://xldeploy.cs.zionsbank.com --xl.user=z091182 --xl.password=4878Middy004 --xlw.location=&quot;D:\git\TIB-Mobile\xl&quot; --file.filter=&quot;S1Mobile_.+[.]jar&quot; --version.regex=&quot;(install|update)_[\d][_][\d]{2}[_][\d]{4}&quot;  --package.yaml.path=&quot;D:\git\TIB-Mobile\xl\xebialabs\xld-package.yaml&quot; --xld.application.name=&quot;Applications/TIB-Mobile/TIB-Mobile&quot;"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-pipeline-cli"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=default"/>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/zions-pipeline-cli/src/main/groovy/com/zions/pipeline/services/cli/CliApplication.groovy"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.zions.pipeline.services.cli.CliApplication"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="deployableCheck --scan.dir=&quot;\\utnafp01_05\common\Otmane&quot; --out.dir=&quot;D:\git\TIB-Mobile\xl\build\packages&quot; --xld.url=https://xldeploy.cs.zionsbank.com --xl.user=z091182 --xl.password=4878Middy004 --xlw.location=&quot;D:\git\TIB-Mobile\xl&quot; --file.filter=&quot;S1Mobile_.+[.]jar&quot; --version.regex=&quot;(install|update)_[\d][_][\d]{2}[_][\d]{4}&quot;  --package.yaml.path=&quot;D:\git\TIB-Mobile\xl\xebialabs\xld-package.yaml&quot; --xld.application.name=&quot;Applications/TIB-Mobile/TIB-Mobile&quot;"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="zions-pipeline-cli"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=default"/>
 </launchConfiguration>

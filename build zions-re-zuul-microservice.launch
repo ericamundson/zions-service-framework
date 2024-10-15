@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.buildship.core.launch.runconfiguration">
     <listAttribute key="arguments">
-        <listEntry value="-Dcontext=all"/>
+        <listEntry value="-Dcontext=release"/>
         <listEntry value="-x"/>
         <listEntry value="jib"/>
         <listEntry value="-x"/>

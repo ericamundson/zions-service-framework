@@ -15,6 +15,7 @@
     <listAttribute key="tasks">
         <listEntry value="clean"/>
         <listEntry value="build"/>
+        <listEntry value="publish"/>
     </listAttribute>
     <stringAttribute key="working_dir" value="${workspace_loc:/zions-service-framework}"/>
 </launchConfiguration>
