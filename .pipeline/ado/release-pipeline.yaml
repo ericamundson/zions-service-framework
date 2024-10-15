@@ -26,7 +26,7 @@ resources:
   repositories:
   - repository: zions-ado-templates
     name: DTS/zions-ado-templates
-    ref: refs/tags/v0.2.6
+    ref: refs/tags/v0.4.4
     type: git
 extends:
   template: /required-templates/dts-release-template.yaml@zions-ado-templates
@@ -37,15 +37,19 @@ extends:
     - "agent.os -equals Linux"
     build_tagbuild_InitialVersionPrefix: 0.0.1
     build_tagbuild_NodeBuild: false
-   
     build_steps:
+    - template: templates/step/install-tools.yaml@zions-ado-templates
+      parameters:
+        tools:
+        - name: java
+          version: 17
     - template: /templates/step/build/gradle.yaml@zions-ado-templates
       parameters:
         gradleWrapperFile: $(Build.SourcesDirectory)/gradlew
         workingDirectory: $(Build.SourcesDirectory)
-        options: '-b build.gradle --no-scan -Pqueue=default -Pcontext=nexus -x test -Pversion=$(zionsbuildnumber)'
-        tasks: 'clean build zions-common:uploadArchives zions-vsts-service:uploadArchives zions-common-data:uploadArchives zions-vsts-microservice:uploadArchives'
-        publishJUnitResults: true   
+        publishJUnitResults: true
+        options: -b build.gradle --no-scan -Pqueue=default -Pcontext=nexus -x test -Pversion=$(zionsbuildnumber)
+        tasks: clean build zions-common:publish zions-vsts-service:publish zions-common-data:publish zions-vsts-microservice:uploadArchives
     
     build_scan_object: 
       nexusiq_scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
