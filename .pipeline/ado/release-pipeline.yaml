@@ -49,7 +49,7 @@ extends:
         workingDirectory: $(Build.SourcesDirectory)
         publishJUnitResults: true
         options: -b build.gradle --no-scan -Pqueue=default -Pcontext=nexus -x test -Pversion=$(zionsbuildnumber)
-        tasks: clean build zions-common:publish zions-vsts-service:publish zions-common-data:publish zions-vsts-microservice:uploadArchives
+        tasks: clean build zions-common:publish zions-vsts-service:publish zions-common-data:publish zions-vsts-microservice:publish
     
     build_scan_object: 
       nexusiq_scanTargets: "zions-common/build/libs/*.jar,zions-common-data/build/libs/*.jar,zions-vsts-services/build/libs/*.jar,zions-vsts-microservice/build/libs/*.jar"
